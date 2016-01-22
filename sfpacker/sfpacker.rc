@@ -1,0 +1,143 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG DIALOGEX 0, 0, 246, 153
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_ACCEPTFILES
+CAPTION "SoundFont Packer"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&Pack!",ID_PACK,192,60,50,14
+    PUSHBUTTON      "E&xit",IDCANCEL,192,78,50,14
+    EDITTEXT        IDC_FILENAME,3,42,237,14,ES_AUTOHSCROLL
+    LTEXT           "Simply drag'n'drop a *.sf2/*.sf2pack file to pack it/depack it.\nFiles are packed/depacked in the same directory as the dragged file.\n\nIt's that simple!",IDC_STATIC,3,3,234,33
+    LTEXT           "Compress with:",IDC_STATIC,3,63,51,9
+    COMBOBOX        IDC_COMPTYPE,57,60,132,141,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Compression type:",IDC_STATIC,3,75,63,12
+    LTEXT           "",IDC_COMPSTR,78,75,111,12
+    GROUPBOX        "Encoder Path",IDC_STATIC,3,96,237,54
+    EDITTEXT        IDC_PATH,6,108,234,15,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Browse",IDC_BROWSE,6,129,39,18
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 93
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDP_ERR_INIT_OLE        "Unable to initialize OLE libraries!"
+    IDS_FORMATS             "// {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}\r\nIMPLEMENT_OLECREATE(<<class>>, <<external_name>>, \r\n0x%lx, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x);\r\n"
+    IDS_STRING105           "// {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}\r\nDEFINE_GUID(<<name>>, \r\n0x%lx, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x);\r\n"
+    IDS_STRING106           "// {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}\r\nstatic const GUID <<name>> = \r\n{ 0x%lx, 0x%x, 0x%x, { 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x } };\r\n"
+    IDS_STRING107           "{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}\r\n"
+END
+
+STRINGTABLE
+BEGIN
+    IDP_ERR_CREATE_GUID     "Unable to create new GUID."
+    IDP_ERR_OPEN_CLIP       "Clipboard is busy. Unable to copy result to clipboard."
+    IDS_ABOUTBOX            "&About Create GUID"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Australia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (Australia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+    <title>Driver changelog</title>
+</head>
+<body>
+Release 1.5.0.25
+<ul style="list-style-type:disc">
+  <li>Added debug mode to the configurator! (You can use it manually, by launching the configurator within a CMD window, and adding the -debug parameter, or by using the link in the Start menu)</li>
+  <li>Added a secret mode in the configurator! :)</li>
+  <li>Minor fixes to the driver.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 220
+<ul style="list-style-type:disc">
+  <li>Added debug mode to the configurator! (You can use it manually, by launching the configurator within a CMD window, and adding the -debug parameter, or by using the link in the Start menu)</li>
+  <li>Added a secret mode in the configurator! :)</li>
+  <li>Minor fixes to the driver.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 218
+<ul style="list-style-type:disc">
+  <li>Added basic support for SFZ files, that allows you to change both bank and preset parameters of it.</li>
+  <li>New fancy volume label.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 215
+<ul style="list-style-type:disc">
+  <li>Added exception handlers to the code, to avoid crashes when you're using the configurator without the Internet enabled.</li>
+  <li>Now the "Restore default" button in the "Driver blacklist" tab will automatically load the blacklisted processes from the online database, stored in this repository! (If it fails to do so, it'll automatically load the list from the local one)</li>
+  <li>Added ShellExperienceHost.exe to the blacklist.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 213
+<ul style="list-style-type:disc">
+  <li>The uninstaller now deletes EVERYTHING, including the soundfont lists and the blacklist!</li>
+  <li>The default blacklist textfile is now called "keppymididrv.defaultblacklist", and can be found in "X:\Windows". (Where X is your current partition, default is C)</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 210
+<ul style="list-style-type:disc">
+  <li>Editable blacklist system, integrated in both driver and configurator! (Thanks Kode54 for helping me with that!)</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 207
+<ul style="list-style-type:disc">
+  <li>Added rudimental blacklist system, to prevent system processes/other programs from locking the driver.</li>
+  <li>Minor changes to the configurator.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 204
+<ul style="list-style-type:disc">
+  <li>Sinc interpolation should work now. (Leave it off if you're going to play Black MIDIs)</li>
+  <li>Software rendering should work now. (It only works on XP tho)</li>
+  <li>Fixed support for Windows XP.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 200
+<ul style="list-style-type:disc">
+  <li>You can now disable the 32-bit floating point decoding.</li>
+  <li>You can now force BASS to work in software mode only. (No hardware acceleration)</li>
+  <li>Soundfont preloading checkbox is disabled, since it doesn't work.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 195
+<ul style="list-style-type:disc">
+  <li>Added the volume bar back. (Requested by an user)</li>
+  <li>Added DirectSound back. (Requested by an user)</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 189
+<ul style="list-style-type:disc">
+  <li>Removed 32-bit floating point setting that allows people to disable it.</li>
+  <li>Removed the volume bar. (Kinda useless)</li>
+  <li>Minor bug fixes to the driver</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 185
+<ul style="list-style-type:disc">
+  <li>Fixed the memory leak issue!</li>
+  <li>Added some new functions.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 179
+<ul style="list-style-type:disc">
+  <li>DirectSound audio system has been deprecated, in favor of XAudio.</li>
+  <li>Fixed some delay issues. (Sounds being delayed for unknown reasons)</li>
+  <li>Better user interface for the configurator.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 147
+<ul style="list-style-type:disc">
+  <li>Fixed the bugged support for 32-bit O.S., now both configurator and uninstaller should work.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 141
+<ul style="list-style-type:disc">
+  <li>Fixed a bug that could disable floating point audio by setting the audio frequency of the driver as the same of the sound card!</li>
+  <li>Fixed an exploit to enable Debug mode.</li>
+  <li>Minor fixes to the DirectSound engine.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 135
+<ul style="list-style-type:disc">
+  <li>Now you can change the buffer size in both DirectSound and XAudio!</li>
+  <li>Added a nice .gif to the "Advanced settings" tab.</li>
+  <li>Added an easter egg about someone that I hate.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 127
+<ul style="list-style-type:disc">
+  <li>Advanced settings are now working properly! No needs of the button anymore!</li>
+  <li>Added option to change the frequency of the driver.</li>
+  <li>Minor edits and bug fixes to the driver.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 106
+<ul style="list-style-type:disc">
+  <li>Completely redesigned configurator!</li>
+  <li>Minor bug fixes to the driver.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 98
+<ul style="list-style-type:disc">
+  <li>Added info about the compiler and such.</li>
+  <li>Fixed a bug in the "Reset" button.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 95
+<ul style="list-style-type:disc">
+  <li>If the old driver doesn't want to go away, try uninstall it/removing the files manually in Safe mode.</li>
+  <li>Fixed bug: "If you try to add a soundfont to port B, it will be automatically added to port A."</li>
+  <li>Added floating point option. (You can turn it off)</li>
+  <li>Minor bug fixes to the driver.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 89
+<ul style="list-style-type:disc">
+  <li>Now the configurator will automatically show DLS, SoundFont and SFZ files.</li>
+  <li>Minor bug fixes to the driver.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 85
+<ul style="list-style-type:disc">
+  <li>So, DirectSound and XAudio are both supported by all the Windows. Fixed configurator. (XAudio from Windows XP)</li>
+  <li>Minor bug fixes.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 79
+<ul style="list-style-type:disc">
+  <li>Added support for Windows XP.</li>
+  <li>Now the DLLs are optimized/compressed by Visual Studio.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 77
+<ul style="list-style-type:disc">
+  <li>Fixed regression from Bugfix 51. (Incorrect volume values detected by the driver)</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 74
+<ul style="list-style-type:disc">
+  <li>Fixed regression from Bugfix 64. (More lag than Bugfix 51)</li>
+  <li>Added updater.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 64
+<ul style="list-style-type:disc">
+  <li>Fixed some lag issues.</li>
+</ul>  
+<hr>
+Release 1.5 Bugfix 51
+<ul style="list-style-type:disc">
+  <li>External driver, doesn't depend on BASSMIDI Driver anymore.</li>
+  <li>New configurator.</li>
+</ul>  
+<hr>
+Release 1.2
+<ul style="list-style-type:disc">
+  <li>External driver, but still depends on BASSMIDI Driver.</li>
+  <li>Fixed some lag issues.</li>
+</ul>  
+<hr>
+Release 1.1
+<ul style="list-style-type:disc">
+  <li>Depends on BASSMIDI Driver.</li>
+  <li>Fixed some lag issues.</li>
+</ul>  
+<hr>
+Release 1.0
+<ul style="list-style-type:disc">
+  <li>First release, depends on BASSMIDI Driver.</li>
+</ul>  
+</body>
+</html>

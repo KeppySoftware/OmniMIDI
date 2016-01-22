@@ -1,0 +1,9 @@
+While focused on a MIDI app that is using the driver, you will be able to do the following:
+
+CTRL + 1: Reload soundfont list 1
+CTRL + 2: Reload soundfont list 2
+CTRL + 3: Reload soundfont list 3
+CTRL + 4: Reload soundfont list 4
+INSERT: Reset the MIDI synth, by dropping all the current notes.
+
+(The speed of the soundfont preloading is mainly influenced by your hard disk/solid state drive.)
