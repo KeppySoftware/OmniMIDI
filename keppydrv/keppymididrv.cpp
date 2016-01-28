@@ -557,7 +557,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wPid = 0xffff;
 		memcpy(myCapsA->szPname, synthName, strlen(synthName));
 		memcpy(myCapsA->szPname + strlen(synthName), synthPorts[uDeviceID], strlen(synthPorts[uDeviceID]) + 1);
-		myCapsA->wTechnology = MOD_SWSYNTH;
+		myCapsA->wTechnology = MOD_SYNTH;
 		myCapsA->vDriverVersion = 0x0090;
 		myCapsA->wVoices = 100000;
 		myCapsA->wNotes = 0;
@@ -571,7 +571,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wPid = 0xffff;
 		memcpy(myCapsW->szPname, synthNameW, wcslen(synthNameW) * sizeof(wchar_t));
 		memcpy(myCapsW->szPname + wcslen(synthNameW), synthPortsW[uDeviceID], (wcslen(synthPortsW[uDeviceID]) + 1) * sizeof(wchar_t));
-		myCapsW->wTechnology = MOD_SWSYNTH;
+		myCapsW->wTechnology = MOD_SYNTH;
 		myCapsW->vDriverVersion = 0x0090;
 		myCapsW->wVoices = 100000;
 		myCapsW->wNotes = 0;
@@ -585,7 +585,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wPid = 0xffff;
 		memcpy(myCaps2A->szPname, synthName, strlen(synthName));
 		memcpy(myCaps2A->szPname + strlen(synthName), synthPorts[uDeviceID], strlen(synthPorts[uDeviceID]) + 1);
-		myCaps2A->wTechnology = MOD_SWSYNTH;
+		myCaps2A->wTechnology = MOD_SYNTH;
 		myCaps2A->vDriverVersion = 0x0090;
 		myCaps2A->wVoices = 100000;
 		myCaps2A->wNotes = 0;
@@ -599,7 +599,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wPid = 0xffff;
 		memcpy(myCaps2W->szPname, synthNameW, wcslen(synthNameW) * sizeof(wchar_t));
 		memcpy(myCaps2W->szPname + wcslen(synthNameW), synthPortsW[uDeviceID], (wcslen(synthPortsW[uDeviceID]) + 1) * sizeof(wchar_t));
-		myCaps2W->wTechnology = MOD_SWSYNTH;
+		myCaps2W->wTechnology = MOD_SYNTH;
 		myCaps2W->vDriverVersion = 0x0090;
 		myCaps2W->wVoices = 100000;
 		myCaps2W->wNotes = 0;
@@ -924,12 +924,6 @@ void debug_info() {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver", 0, KEY_ALL_ACCESS, &hKey);
 	float currentvoices0;
 	float currentcpuusage0;
-	float currentvoices1;
-	float currentcpuusage1;
-	float currentvoices2;
-	float currentcpuusage2;
-	float currentvoices3;
-	float currentcpuusage3;
 	int tempo;
 	BASS_ChannelGetAttribute(hStream[0], BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 	BASS_ChannelGetAttribute(hStream[0], BASS_ATTRIB_CPU, &currentcpuusage0);
@@ -1098,6 +1092,86 @@ BOOL IsVistaOrNewer(){
 	return FALSE;
 }
 
+void keybindings()
+{
+	if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x31) & 0x8000) {
+		if (consent == 1) {
+			const int result = MessageBox(NULL, L"Do you want to (re)load list 1?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+			switch (result)
+			{
+			case IDYES:
+				ResetSynth();
+				LoadSoundfont(1);
+				break;
+			case IDNO:
+				break;
+			}
+		}
+		else {
+			//NULL 
+		}
+	}
+	else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x32) & 0x8000) {
+		if (consent == 1) {
+			const int result = MessageBox(NULL, L"Do you want to (re)load list 2?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+			switch (result)
+			{
+			case IDYES:
+				ResetSynth();
+				LoadSoundfont(2);
+				break;
+			case IDNO:
+				break;
+			}
+		}
+		else {
+			//NULL 
+		}
+	}
+	else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x33) & 0x8000) {
+		if (consent == 1) {
+			const int result = MessageBox(NULL, L"Do you want to (re)load list 3?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+			switch (result)
+			{
+			case IDYES:
+				ResetSynth();
+				LoadSoundfont(3);
+				break;
+			case IDNO:
+				break;
+			}
+		}
+		else {
+			//NULL 
+		}
+	}
+	else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x34) & 0x8000) {
+		if (consent == 1) {
+			const int result = MessageBox(NULL, L"Do you want to (re)load list 4?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+			switch (result)
+			{
+			case IDYES:
+				ResetSynth();
+				LoadSoundfont(4);
+				break;
+			case IDNO:
+				break;
+			}
+		}
+		else {
+			//NULL 
+		}
+	}
+	if (GetAsyncKeyState(VK_INSERT) & 1) {
+		if (consent == 1) {
+			ResetSynth();
+		}
+		else {
+			//NULL 
+		}
+	}
+}
+
 unsigned __stdcall threadfunc(LPVOID lpV){
 	unsigned i;
 	int pot;
@@ -1176,7 +1250,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			reset_synth[0] = 0;
 		}
 	}
-
 	while (stop_thread == 0){
 		if (reset_synth[0] != 0){
 			reset_synth[0] = 0;
@@ -1217,82 +1290,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			}
 		}
 		realtime_load_settings();
-		if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x31) & 0x8000) {
-			if (consent == 1) {
-				const int result = MessageBox(NULL, L"Do you want to (re)load list 1?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
-				switch (result)
-				{
-				case IDYES:
-					ResetSynth();
-					LoadSoundfont(1);
-					break;
-				case IDNO:
-					break;
-				}
-			}
-			else {
-				//NULL 
-			}
-		}
-		else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x32) & 0x8000) {
-			if (consent == 1) {
-				const int result = MessageBox(NULL, L"Do you want to (re)load list 2?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
-				switch (result)
-				{
-				case IDYES:
-					ResetSynth();
-					LoadSoundfont(2);
-					break;
-				case IDNO:
-					break;
-				}
-			}
-			else {
-				//NULL 
-			}
-		}
-		else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x33) & 0x8000) {
-			if (consent == 1) {
-				const int result = MessageBox(NULL, L"Do you want to (re)load list 3?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
-				switch (result)
-				{
-				case IDYES:
-					ResetSynth();
-					LoadSoundfont(3);
-					break;
-				case IDNO:
-					break;
-				}
-			}
-			else {
-				//NULL 
-			}
-		}
-		else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(0x34) & 0x8000) {
-			if (consent == 1) {
-				const int result = MessageBox(NULL, L"Do you want to (re)load list 4?", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
-				switch (result)
-				{
-				case IDYES:
-					ResetSynth();
-					LoadSoundfont(4);
-					break;
-				case IDNO:
-					break;
-				}
-			}
-			else {
-				//NULL 
-			}
-		}
-		if (GetAsyncKeyState(VK_INSERT) & 1) {
-			if (consent == 1) { 
-				ResetSynth(); 
-			}
-			else { 
-				//NULL 
-			}
-		}
+		keybindings();
 		debug_info();
 	}
 	stop_thread = 0;
@@ -1386,12 +1384,6 @@ void DoStopClient() {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentvoices1", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentcpuusage1", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentvoices2", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentcpuusage2", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentvoices3", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentcpuusage3", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
 	if (consent == 1) {
 		ResetSynth();

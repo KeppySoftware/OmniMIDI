@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="gear.ico" />
+    <None Include="Resources\sfzguide.txt" />
     <None Include="Resources\keppydriverlogobyfrozennotrasparency2.jpg" />
     <None Include="Resources\Warning_Box_Yellow.png" />
     <None Include="Resources\exclamation_red.png" />

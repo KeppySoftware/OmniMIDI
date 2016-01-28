@@ -56,7 +56,7 @@ Public Class MainWindow
         Dim keppykey = My.Computer.Registry.CurrentUser.OpenSubKey(UserString + "\Settings", True)
         Dim keppykeyfx = My.Computer.Registry.CurrentUser.OpenSubKey(UserString + "\Effects", True)
         Dim IsDebugActivated As Integer
-        
+
         Dim strStartupArguments() As String, intCount As Integer
         strStartupArguments = System.Environment.GetCommandLineArgs
         For intCount = 0 To UBound(strStartupArguments)
@@ -2486,19 +2486,27 @@ Public Class MainWindow
     End Sub
 
     Private Sub SFZ1_Click(sender As Object, e As EventArgs) Handles SFZ1.Click
-        Process.Start("sfzguide.txt")
+        Dim helpFile = Path.Combine(Path.GetTempPath(), "sfzguidetemp.txt")
+        File.WriteAllText(helpFile, My.Resources.sfzguide.ToString)
+        Process.Start(helpFile)
     End Sub
 
     Private Sub SFZ2_Click(sender As Object, e As EventArgs) Handles SFZ2.Click
-        Process.Start("sfzguide.txt")
+        Dim helpFile = Path.Combine(Path.GetTempPath(), "sfzguidetemp.txt")
+        File.WriteAllText(helpFile, My.Resources.sfzguide.ToString)
+        Process.Start(helpFile)
     End Sub
 
     Private Sub SFZ3_Click(sender As Object, e As EventArgs) Handles SFZ3.Click
-        Process.Start("sfzguide.txt")
+        Dim helpFile = Path.Combine(Path.GetTempPath(), "sfzguidetemp.txt")
+        File.WriteAllText(helpFile, My.Resources.sfzguide.ToString)
+        Process.Start(helpFile)
     End Sub
 
     Private Sub SFZ4_Click(sender As Object, e As EventArgs) Handles SFZ4.Click
-        Process.Start("sfzguide.txt")
+        Dim helpFile = Path.Combine(Path.GetTempPath(), "sfzguidetemp.txt")
+        File.WriteAllText(helpFile, My.Resources.sfzguide.ToString)
+        Process.Start(helpFile)
     End Sub
 
     Private Sub PolyphonyLimit_ValueChanged(sender As Object, e As EventArgs) Handles PolyphonyLimit.ValueChanged
