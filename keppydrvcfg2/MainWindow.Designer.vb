@@ -40,6 +40,7 @@ Partial Class MainWindow
         Me.FloatingDisabled = New System.Windows.Forms.CheckBox()
         Me.SoftwareRendering = New System.Windows.Forms.CheckBox()
         Me.RealTimeSet = New System.Windows.Forms.CheckBox()
+        Me.NoDX8FX = New System.Windows.Forms.CheckBox()
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.AppToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -91,7 +92,6 @@ Partial Class MainWindow
         Me.VolumeBar = New System.Windows.Forms.TrackBar()
         Me.CurrentVolumeHUE = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.NoDX8FX = New System.Windows.Forms.CheckBox()
         Me.BufferWarning = New System.Windows.Forms.PictureBox()
         Me.VoiceWarning = New System.Windows.Forms.PictureBox()
         Me.SysResetIgnore = New System.Windows.Forms.CheckBox()
@@ -123,7 +123,6 @@ Partial Class MainWindow
         Me.UserProgramsBlackList = New System.Windows.Forms.ListBox()
         Me.Port4 = New System.Windows.Forms.TabPage()
         Me.SFZ4 = New System.Windows.Forms.Button()
-        Me.Label16 = New System.Windows.Forms.Label()
         Me.Button8 = New System.Windows.Forms.Button()
         Me.DisableCheckPortD = New System.Windows.Forms.CheckBox()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -135,7 +134,6 @@ Partial Class MainWindow
         Me.PortDBox = New System.Windows.Forms.ListBox()
         Me.Port3 = New System.Windows.Forms.TabPage()
         Me.SFZ3 = New System.Windows.Forms.Button()
-        Me.Label15 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.DisableCheckPortC = New System.Windows.Forms.CheckBox()
         Me.Label25 = New System.Windows.Forms.Label()
@@ -147,7 +145,6 @@ Partial Class MainWindow
         Me.PortCBox = New System.Windows.Forms.ListBox()
         Me.Port2 = New System.Windows.Forms.TabPage()
         Me.SFZ2 = New System.Windows.Forms.Button()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.ExtListPortB = New System.Windows.Forms.Button()
         Me.DisableCheckPortB = New System.Windows.Forms.CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -162,7 +159,6 @@ Partial Class MainWindow
         Me.ExtListPortA = New System.Windows.Forms.Button()
         Me.DisableCheckPortA = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
         Me.ClearPortA = New System.Windows.Forms.Button()
         Me.MoveDownPortA = New System.Windows.Forms.Button()
         Me.MoveUpPortA = New System.Windows.Forms.Button()
@@ -308,6 +304,13 @@ Partial Class MainWindow
         Me.RealTimeSet.Name = "RealTimeSet"
         Me.Information.SetToolTip(Me.RealTimeSet, resources.GetString("RealTimeSet.ToolTip"))
         Me.RealTimeSet.UseVisualStyleBackColor = True
+        '
+        'NoDX8FX
+        '
+        resources.ApplyResources(Me.NoDX8FX, "NoDX8FX")
+        Me.NoDX8FX.Name = "NoDX8FX"
+        Me.Information.SetToolTip(Me.NoDX8FX, resources.GetString("NoDX8FX.ToolTip"))
+        Me.NoDX8FX.UseVisualStyleBackColor = True
         '
         'MainMenu
         '
@@ -659,13 +662,6 @@ Partial Class MainWindow
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.TabStop = False
         '
-        'NoDX8FX
-        '
-        resources.ApplyResources(Me.NoDX8FX, "NoDX8FX")
-        Me.NoDX8FX.Name = "NoDX8FX"
-        Me.Information.SetToolTip(Me.NoDX8FX, resources.GetString("NoDX8FX.ToolTip"))
-        Me.NoDX8FX.UseVisualStyleBackColor = True
-        '
         'BufferWarning
         '
         Me.BufferWarning.Cursor = System.Windows.Forms.Cursors.Hand
@@ -856,7 +852,6 @@ Partial Class MainWindow
         '
         Me.Port4.BackColor = System.Drawing.SystemColors.Control
         Me.Port4.Controls.Add(Me.SFZ4)
-        Me.Port4.Controls.Add(Me.Label16)
         Me.Port4.Controls.Add(Me.Button8)
         Me.Port4.Controls.Add(Me.DisableCheckPortD)
         Me.Port4.Controls.Add(Me.Label27)
@@ -874,11 +869,6 @@ Partial Class MainWindow
         resources.ApplyResources(Me.SFZ4, "SFZ4")
         Me.SFZ4.Name = "SFZ4"
         Me.SFZ4.UseVisualStyleBackColor = True
-        '
-        'Label16
-        '
-        resources.ApplyResources(Me.Label16, "Label16")
-        Me.Label16.Name = "Label16"
         '
         'Button8
         '
@@ -938,7 +928,6 @@ Partial Class MainWindow
         '
         Me.Port3.BackColor = System.Drawing.SystemColors.Control
         Me.Port3.Controls.Add(Me.SFZ3)
-        Me.Port3.Controls.Add(Me.Label15)
         Me.Port3.Controls.Add(Me.Button1)
         Me.Port3.Controls.Add(Me.DisableCheckPortC)
         Me.Port3.Controls.Add(Me.Label25)
@@ -956,11 +945,6 @@ Partial Class MainWindow
         resources.ApplyResources(Me.SFZ3, "SFZ3")
         Me.SFZ3.Name = "SFZ3"
         Me.SFZ3.UseVisualStyleBackColor = True
-        '
-        'Label15
-        '
-        resources.ApplyResources(Me.Label15, "Label15")
-        Me.Label15.Name = "Label15"
         '
         'Button1
         '
@@ -1020,7 +1004,6 @@ Partial Class MainWindow
         '
         Me.Port2.BackColor = System.Drawing.SystemColors.Control
         Me.Port2.Controls.Add(Me.SFZ2)
-        Me.Port2.Controls.Add(Me.Label8)
         Me.Port2.Controls.Add(Me.ExtListPortB)
         Me.Port2.Controls.Add(Me.DisableCheckPortB)
         Me.Port2.Controls.Add(Me.Label2)
@@ -1038,11 +1021,6 @@ Partial Class MainWindow
         resources.ApplyResources(Me.SFZ2, "SFZ2")
         Me.SFZ2.Name = "SFZ2"
         Me.SFZ2.UseVisualStyleBackColor = True
-        '
-        'Label8
-        '
-        resources.ApplyResources(Me.Label8, "Label8")
-        Me.Label8.Name = "Label8"
         '
         'ExtListPortB
         '
@@ -1105,7 +1083,6 @@ Partial Class MainWindow
         Me.Port1.Controls.Add(Me.ExtListPortA)
         Me.Port1.Controls.Add(Me.DisableCheckPortA)
         Me.Port1.Controls.Add(Me.Label1)
-        Me.Port1.Controls.Add(Me.Label11)
         Me.Port1.Controls.Add(Me.ClearPortA)
         Me.Port1.Controls.Add(Me.MoveDownPortA)
         Me.Port1.Controls.Add(Me.MoveUpPortA)
@@ -1137,11 +1114,6 @@ Partial Class MainWindow
         '
         resources.ApplyResources(Me.Label1, "Label1")
         Me.Label1.Name = "Label1"
-        '
-        'Label11
-        '
-        resources.ApplyResources(Me.Label11, "Label11")
-        Me.Label11.Name = "Label11"
         '
         'ClearPortA
         '
@@ -1374,7 +1346,6 @@ Partial Class MainWindow
     Friend WithEvents ExtListPortA As System.Windows.Forms.Button
     Friend WithEvents DisableCheckPortA As System.Windows.Forms.CheckBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents ClearPortA As System.Windows.Forms.Button
     Friend WithEvents MoveDownPortA As System.Windows.Forms.Button
     Friend WithEvents MoveUpPortA As System.Windows.Forms.Button
@@ -1385,11 +1356,8 @@ Partial Class MainWindow
     Friend WithEvents OpenDebugWindowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CurrentVolumeHUE2 As System.Windows.Forms.Label
     Friend WithEvents SFZ4 As System.Windows.Forms.Button
-    Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents SFZ3 As System.Windows.Forms.Button
-    Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents SFZ2 As System.Windows.Forms.Button
-    Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents SFZ1 As System.Windows.Forms.Button
     Friend WithEvents NoDX8FX As System.Windows.Forms.CheckBox
 

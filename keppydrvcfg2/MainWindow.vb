@@ -2317,7 +2317,7 @@ Public Class MainWindow
                 NoteOff.Text = "* Only release the oldest instance upon a note off event when there are overlapping instances of the note."
                 SysResetIgnore.Text = "* Ignore system reset events when the system mode is unchanged."
                 Label3.Text = "* Set the voice limit for the driver, from 1 to 100000:"
-                Label4.Text = "* && ** Set the MIDI tracks that BASSMIDI is allowed to use (Different values from 16 will set the drums channel to melodic):"
+                Label4.Text = "* && ** Set the channels the driver is allowed to use (Different values from 16 will set the drums channel to melodic):"
                 Label5.Text = "* Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:"
             Catch ex As Exception
                 Console.ForegroundColor = ConsoleColor.Red
@@ -2338,7 +2338,7 @@ Public Class MainWindow
                 NoteOff.Text = "Only release the oldest instance upon a note off event when there are overlapping instances of the note."
                 SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged."
                 Label3.Text = "Set the voice limit for the driver, from 1 to 100000:"
-                Label4.Text = "** Set the MIDI tracks that BASSMIDI is allowed to use (Different values from 16 will set the drums channel to melodic):"
+                Label4.Text = "** Set the channels the driver is allowed to use (Different values from 16 will set the drums channel to melodic):"
                 Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:"
             Catch ex As Exception
                 Console.ForegroundColor = ConsoleColor.Red

@@ -1008,43 +1008,55 @@ BOOL ProcessBlackList(){
 	TCHAR defaultblacklistdirectory[MAX_PATH];
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
+	OSVERSIONINFO osvi;
+	BOOL bIsWindowsXPorLater;
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	GetVersionEx(&osvi);
+	bIsWindowsXPorLater = ((osvi.dwMajorVersion > 5) || ((osvi.dwMajorVersion == 5) && (osvi.dwMinorVersion >= 1)));
 	try {
-		GetModuleFileName(NULL, modulename, MAX_PATH);
-		PathStripPath(modulename);
-		if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
-			_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
-			std::wifstream file(defaultblacklistdirectory);
-			if (file) {
-				// The default blacklist exists, continue
-				OutputDebugString(defaultblacklistdirectory);
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+		if (bIsWindowsXPorLater) {
+			MessageBox(NULL, L"Windows XP is not supported by the driver.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
+			return 0x0;
+		}
+		else {
+			GetModuleFileName(NULL, modulename, MAX_PATH);
+			PathStripPath(modulename);
+			if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
+				_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
+				std::wifstream file(defaultblacklistdirectory);
+				if (file) {
+					// The default blacklist exists, continue
+					OutputDebugString(defaultblacklistdirectory);
+					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+					{
+						if (_tcscmp(modulename, defaultstring) == 0) {
+							return 0x0;
+						}
+					}
+				}
+				else {
+					MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR);
+					exit(0);
+				}
+			}
+			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, userblacklistdirectory))) {
+				PathAppend(userblacklistdirectory, _T("\\Keppy's Driver\\blacklist\\keppymididrv.blacklist"));
+				std::wifstream file(userblacklistdirectory);
+				OutputDebugString(userblacklistdirectory);
+				while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 				{
-					if (_tcscmp(modulename, defaultstring) == 0) {
+					if (_tcscmp(modulename, userstring) == 0) {
+						std::wstring modulenamelpcwstr(modulename);
+						std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
+						LPCWSTR messageboxtitle = concatted_stdstr.c_str();
+						MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION);
 						return 0x0;
 					}
 				}
 			}
-			else {
-				MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR);
-				exit(0);
-			}
+			return 0x1;
 		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, userblacklistdirectory))) {
-			PathAppend(userblacklistdirectory, _T("\\Keppy's Driver\\blacklist\\keppymididrv.blacklist"));
-			std::wifstream file(userblacklistdirectory);
-			OutputDebugString(userblacklistdirectory);
-			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
-			{
-				if (_tcscmp(modulename, userstring) == 0) {
-					std::wstring modulenamelpcwstr(modulename);
-					std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
-					LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-					MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION);
-					return 0x0;
-				}
-			}
-		}
-		return 0x1;
 	}
 	catch (std::exception & e) {
 		OutputDebugStringA(e.what());
