@@ -20,7 +20,7 @@ DefaultGroupName=Keppy's Driver
 ExtraDiskSpaceRequired=6
 InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
-MinVersion=5.01.2600sp3
+MinVersion=0,6.0.6000
 OutputBaseFilename=KeppysDriverSetup
 OutputDir="C:\Users\KaleidonKep99\Desktop"
 SetupIconFile=midiicon.ico
@@ -37,10 +37,10 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP and newer
 VersionInfoProductName=Keppy's Driver 3.0
-VersionInfoProductTextVersion=3.0.0.0
+VersionInfoProductTextVersion=3.0.0.2
 VersionInfoProductVersion=3.0
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP and newer
-VersionInfoVersion=3.0.0.0
+VersionInfoVersion=3.0.0.2
 
 [Files]
 ; 64-bit OS
