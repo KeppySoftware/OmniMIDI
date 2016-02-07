@@ -37,8 +37,6 @@ Partial Class MainWindow
         Me.BufferText = New System.Windows.Forms.Label()
         Me.TracksLimit = New System.Windows.Forms.NumericUpDown()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.FloatingDisabled = New System.Windows.Forms.CheckBox()
-        Me.SoftwareRendering = New System.Windows.Forms.CheckBox()
         Me.RealTimeSet = New System.Windows.Forms.CheckBox()
         Me.NoDX8FX = New System.Windows.Forms.CheckBox()
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
@@ -283,20 +281,6 @@ Partial Class MainWindow
         resources.ApplyResources(Me.Label4, "Label4")
         Me.Label4.Name = "Label4"
         Me.Information.SetToolTip(Me.Label4, resources.GetString("Label4.ToolTip"))
-        '
-        'FloatingDisabled
-        '
-        resources.ApplyResources(Me.FloatingDisabled, "FloatingDisabled")
-        Me.FloatingDisabled.Name = "FloatingDisabled"
-        Me.Information.SetToolTip(Me.FloatingDisabled, resources.GetString("FloatingDisabled.ToolTip"))
-        Me.FloatingDisabled.UseVisualStyleBackColor = True
-        '
-        'SoftwareRendering
-        '
-        resources.ApplyResources(Me.SoftwareRendering, "SoftwareRendering")
-        Me.SoftwareRendering.Name = "SoftwareRendering"
-        Me.Information.SetToolTip(Me.SoftwareRendering, resources.GetString("SoftwareRendering.ToolTip"))
-        Me.SoftwareRendering.UseVisualStyleBackColor = True
         '
         'RealTimeSet
         '
@@ -603,8 +587,6 @@ Partial Class MainWindow
         '
         Me.GroupBox1.Controls.Add(Me.CurrentVolumeHUE2)
         Me.GroupBox1.Controls.Add(Me.Label10)
-        Me.GroupBox1.Controls.Add(Me.SoftwareRendering)
-        Me.GroupBox1.Controls.Add(Me.FloatingDisabled)
         Me.GroupBox1.Controls.Add(Me.VolumeBar)
         Me.GroupBox1.Controls.Add(Me.CurrentVolumeHUE)
         resources.ApplyResources(Me.GroupBox1, "GroupBox1")
@@ -1268,8 +1250,6 @@ Partial Class MainWindow
     Friend WithEvents ReverbFX As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents SoftwareRendering As System.Windows.Forms.CheckBox
-    Friend WithEvents FloatingDisabled As System.Windows.Forms.CheckBox
     Friend WithEvents VolumeBar As System.Windows.Forms.TrackBar
     Friend WithEvents CurrentVolumeHUE As System.Windows.Forms.Label
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox

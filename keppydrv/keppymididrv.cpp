@@ -93,7 +93,7 @@ static int frames = 0; //default
 static int realtimeset = 0; //Real-time settings
 static int midivoices = 0; //Max voices INT
 static int maxcpu = 0; //CPU usage INT
-static int softwaremode = 0; //Software rendering
+static int softwaremode = 1; //Software rendering
 static int preload = 0; //Soundfont preloading
 static int availableports = 4; //How many ports are available
 static int reverb = 0; //Reverb FX
@@ -106,7 +106,7 @@ static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
 static int tracks = 0; //Tracks limit
 static int volume = 0; //Volume limit
-static int nofloat = 0; //Enable or disable the float engine
+static int nofloat = 1; //Enable or disable the float engine
 static int nofx = 0; //Enable or disable FXs
 static int nodx8 = 0; //Enable or disable DX8 effects
 static int noteoff1 = 0; //Note cut INT
@@ -824,28 +824,11 @@ BOOL load_bassfuncs()
 }
 
 int IsFloatingPointEnabled(){
-	long lResult;
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"nofloat", NULL, &dwType, (LPBYTE)&nofloat, &dwSize);
-	return nofloat;
+	return 1;
 }
 
 BOOL IsFloatingPointEnabledBool(){
-	long lResult;
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"nofloat", NULL, &dwType, (LPBYTE)&nofloat, &dwSize);
-	if (nofloat == 1) {
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+	return TRUE;
 }
 
 int AreEffectsDisabled(){
@@ -870,14 +853,7 @@ int IsNoteOff1TurnedOn(){
 
 int IsSoftwareModeEnabled()
 {
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"softwaremode", NULL, &dwType, (LPBYTE)&softwaremode, &dwSize);
-	RegCloseKey(hKey);
-	return softwaremode;
+	return 1;
 }
 
 int IgnoreSystemReset()
@@ -1013,9 +989,8 @@ BOOL ProcessBlackList(){
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
 	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 	GetVersionEx(&osvi);
-	bIsWindowsXPorLater = ((osvi.dwMajorVersion > 5) || ((osvi.dwMajorVersion == 5) && (osvi.dwMinorVersion >= 1)));
 	try {
-		if (bIsWindowsXPorLater) {
+		if (osvi.dwMajorVersion == 5) {
 			MessageBox(NULL, L"Windows XP is not supported by the driver.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
 			return 0x0;
 		}

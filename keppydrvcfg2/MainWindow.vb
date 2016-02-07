@@ -104,25 +104,6 @@ Public Class MainWindow
             Versionlabel.Text = "Your current O.S. is: Windows Vista or Windows Server 2008"
             Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. version: Windows Vista/Windows Server 2008")
             Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. build number: " + osVer.ToString)
-        ElseIf osVer.Major = 5 And osVer.Minor = 2 Then
-            Versionlabel.Text = "Your current O.S. is: Windows XP (32-bit)"
-            FloatingDisabled.Enabled = False
-            FloatingDisabled.Checked = True
-            keppykey.SetValue("nofloat", "1")
-            Versionlabel.Text = "Your current O.S. is: Windows XP (64-bit) or Windows Server 2003"
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. version: Windows XP x64/Windows Server 2003")
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. build number: " + osVer.ToString)
-        ElseIf osVer.Major = 5 And osVer.Minor = 1 Then
-            Versionlabel.Text = "Your current O.S. is: Windows XP (32-bit)"
-            FloatingDisabled.Enabled = False
-            FloatingDisabled.Checked = True
-            keppykey.SetValue("nofloat", "1")
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. version: Windows XP (Unsupported)")
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. build number: " + osVer.ToString)
-        ElseIf osVer.Major = 5 And osVer.Minor = 0 Then
-            Versionlabel.Text = "Your current O.S. is: Windows 2000"
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. version: Windows 2000 (Unsupported)")
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. build number: " + osVer.ToString)
         Else
             Versionlabel.Text = "Your current O.S. is: Unknown"
             Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Current O.S. version: Unknown")
@@ -401,16 +382,6 @@ Public Class MainWindow
             Else
                 NoDX8FX.Checked = False
             End If
-            If keppykey.GetValue("softwaremode") = 1 Then
-                SoftwareRendering.Checked = True
-            Else
-                SoftwareRendering.Checked = False
-            End If
-            If keppykey.GetValue("nofloat") = 0 Then
-                FloatingDisabled.Checked = True
-            Else
-                FloatingDisabled.Checked = False
-            End If
             If keppykey.GetValue("noteoff") = 1 Then
                 NoteOff.Checked = True
             Else
@@ -478,12 +449,6 @@ Public Class MainWindow
             Dim x As Double = VolumeBar.Value.ToString / 100
             VolumeValue = Convert.ToInt32(x)
             CurrentVolumeHUE.Text = VolumeValue.ToString
-            If osVer.Major >= 6 Then
-                SoftwareRendering.Checked = True
-                SoftwareRendering.Enabled = False
-                SoftwareRendering.Text = "Only software rendering available"
-                keppykey.SetValue("softwaremode", "1", RegistryValueKind.DWord)
-            End If
             bufsize_ValueChanged()
         Catch ex As Exception
             If IsDebugActivated = 1 Then
@@ -1650,20 +1615,6 @@ Public Class MainWindow
                 keppykey.SetValue("noteoff", "0", RegistryValueKind.DWord)
                 Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Notes will be deleted after a noteoff event.")
             End If
-            If FloatingDisabled.Checked Then
-                keppykey.SetValue("nofloat", "0", RegistryValueKind.DWord)
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Floating point audio rendering disabled.")
-            Else
-                keppykey.SetValue("nofloat", "1", RegistryValueKind.DWord)
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Floating point audio rendering enabled.")
-            End If
-            If SoftwareRendering.Checked Then
-                keppykey.SetValue("softwaremode", "1", RegistryValueKind.DWord)
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "BASS software render enabled.")
-            Else
-                keppykey.SetValue("softwaremode", "0", RegistryValueKind.DWord)
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "BASS software render disabled.")
-            End If
             If SysResetIgnore.Checked Then
                 keppykey.SetValue("sysresetignore", "1", RegistryValueKind.DWord)
                 Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "System MIDI reset commands are not going to be ignored.")
@@ -1787,13 +1738,9 @@ Public Class MainWindow
             Preload.Checked = True
             NoDX8FX.Checked = True
             SincInter.Checked = False
-            DisableFX.Checked = False
+            DisableFX.Checked = True
             SysResetIgnore.Checked = True
-            SoftwareRendering.Checked = False
-            FloatingDisabled.Checked = False
             NoteOff.Checked = True
-            FloatingDisabled.Checked = False
-            SoftwareRendering.Checked = True
             keppykey.SetValue("maxports", "4", RegistryValueKind.DWord)
             keppykey.SetValue("dsorxaudio", "0", RegistryValueKind.DWord)
             keppykey.SetValue("noteoff", "1", RegistryValueKind.DWord)
@@ -1801,8 +1748,8 @@ Public Class MainWindow
             keppykey.SetValue("cpu", "75", RegistryValueKind.DWord)
             keppykey.SetValue("nofloat", "1", RegistryValueKind.DWord)
             keppykey.SetValue("softwaremode", "1", RegistryValueKind.DWord)
-            keppykey.SetValue("nofx", "0", RegistryValueKind.DWord)
-            keppykey.SetValue("nodx8", 1, RegistryValueKind.DWord)
+            keppykey.SetValue("nofx", "1", RegistryValueKind.DWord)
+            keppykey.SetValue("nodx8", "1", RegistryValueKind.DWord)
             keppykey.SetValue("sysresetignore", "1", RegistryValueKind.DWord)
             keppykey.SetValue("preload", "1", RegistryValueKind.DWord)
             keppykey.SetValue("buflen", "12", RegistryValueKind.DWord)
@@ -1840,11 +1787,7 @@ Public Class MainWindow
             DisableFX.Checked = False
             NoDX8FX.Checked = True
             SysResetIgnore.Checked = False
-            SoftwareRendering.Checked = False
-            FloatingDisabled.Checked = False
             NoteOff.Checked = False
-            FloatingDisabled.Checked = False
-            SoftwareRendering.Checked = True
             ReverbFX.Checked = False
             ChorusFX.Checked = False
             SittingFX.Checked = False
@@ -1857,8 +1800,6 @@ Public Class MainWindow
             keppykey.SetValue("noteoff", "0", RegistryValueKind.DWord)
             keppykey.SetValue("polyphony", "512", RegistryValueKind.DWord)
             keppykey.SetValue("cpu", "65", RegistryValueKind.DWord)
-            keppykey.SetValue("nofloat", "1", RegistryValueKind.DWord)
-            keppykey.SetValue("softwaremode", "1", RegistryValueKind.DWord)
             keppykey.SetValue("nofx", "0", RegistryValueKind.DWord)
             keppykey.SetValue("nodx8", "1", RegistryValueKind.DWord)
             keppykey.SetValue("sysresetignore", "0", RegistryValueKind.DWord)
@@ -1894,35 +1835,6 @@ Public Class MainWindow
             Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Error while writing to the registry.")
             MsgBox(ex.Message.ToString, MsgBoxStyle.Critical, "Error")
             Console.ForegroundColor = ConsoleColor.Green
-        End Try
-    End Sub
-
-    Private Sub UpdateDownload_Click() Handles UpdateDownload.Click
-        Try
-            Dim request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-MIDI-Driver/master/output/keppydriverupdate.txt")
-            Dim response As System.Net.HttpWebResponse = request.GetResponse()
-            Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response.GetResponseStream())
-            Dim newestversion As String = sr.ReadToEnd()
-            Dim Driver As FileVersionInfo = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\keppydrv\keppydrv.dll")
-            ThisVersionDriver.Text = "The current version of the driver, installed on your system, is: " + Driver.FileVersion.ToString
-            LatestVersionDriver.Text = "The latest version online, in the GitHub repository, is: " + newestversion.ToString
-            If newestversion > Driver.FileVersion Then
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Update found!")
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "New version: " + newestversion)
-                MsgBox("New update found, press OK to open the release page.", 48, "New update found!")
-                Process.Start("http://goo.gl/BHgazb")
-            Else
-                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "No updates found.")
-                MsgBox("This release is already updated.", 64, "No updates found.")
-            End If
-        Catch ex As Exception
-            Dim Driver As FileVersionInfo = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\keppydrv\keppydrv.dll")
-            Console.ForegroundColor = ConsoleColor.Red
-            Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Can not check for updates!")
-            Console.ForegroundColor = ConsoleColor.Green
-            ThisVersionDriver.Text = "The current version of the driver, installed on your system, is: " + Driver.FileVersion.ToString
-            LatestVersionDriver.Text = "Can not check for updates. You're offline, or maybe the website is temporarily down."
-            MsgBox("Can not check for updates!" & vbCrLf & vbCrLf & "Specific .NET error:" & vbCrLf & ex.Message.ToString, MsgBoxStyle.Critical, "Error")
         End Try
     End Sub
 
@@ -2384,7 +2296,7 @@ Public Class MainWindow
         End Try
     End Sub
 
-    Private Sub UpdateDownload_Click(sender As Object, e As EventArgs) Handles UpdateDownload.Click
+    Private Sub UpdateDownload_Click() Handles UpdateDownload.Click
         Try
             Dim request As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-MIDI-Driver/master/output/keppydriverupdate.txt")
             Dim response As System.Net.HttpWebResponse = request.GetResponse()

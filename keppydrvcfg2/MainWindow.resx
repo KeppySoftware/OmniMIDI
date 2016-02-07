@@ -532,72 +532,6 @@
   <data name="&gt;&gt;Label4.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="FloatingDisabled.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="FloatingDisabled.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="FloatingDisabled.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 15</value>
-  </data>
-  <data name="FloatingDisabled.Size" type="System.Drawing.Size, System.Drawing">
-    <value>186, 17</value>
-  </data>
-  <data name="FloatingDisabled.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="FloatingDisabled.Text" xml:space="preserve">
-    <value>Disable 32-bit floating point audio</value>
-  </data>
-  <data name="FloatingDisabled.ToolTip" xml:space="preserve">
-    <value>Use 16-bit integer rendering instead of the 32-bit floating point one. (Useful for old PCs)</value>
-  </data>
-  <data name="&gt;&gt;FloatingDisabled.Name" xml:space="preserve">
-    <value>FloatingDisabled</value>
-  </data>
-  <data name="&gt;&gt;FloatingDisabled.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FloatingDisabled.Parent" xml:space="preserve">
-    <value>GroupBox1</value>
-  </data>
-  <data name="&gt;&gt;FloatingDisabled.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="SoftwareRendering.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="SoftwareRendering.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="SoftwareRendering.Location" type="System.Drawing.Point, System.Drawing">
-    <value>198, 15</value>
-  </data>
-  <data name="SoftwareRendering.Size" type="System.Drawing.Size, System.Drawing">
-    <value>148, 17</value>
-  </data>
-  <data name="SoftwareRendering.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="SoftwareRendering.Text" xml:space="preserve">
-    <value>Force software rendering</value>
-  </data>
-  <data name="SoftwareRendering.ToolTip" xml:space="preserve">
-    <value>Force software rendering, instead of using the main hardware.</value>
-  </data>
-  <data name="&gt;&gt;SoftwareRendering.Name" xml:space="preserve">
-    <value>SoftwareRendering</value>
-  </data>
-  <data name="&gt;&gt;SoftwareRendering.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;SoftwareRendering.Parent" xml:space="preserve">
-    <value>GroupBox1</value>
-  </data>
-  <data name="&gt;&gt;SoftwareRendering.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="RealTimeSet.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -641,13 +575,13 @@
     <value>6, 118</value>
   </data>
   <data name="NoDX8FX.Size" type="System.Drawing.Size, System.Drawing">
-    <value>190, 17</value>
+    <value>231, 17</value>
   </data>
   <data name="NoDX8FX.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
   </data>
   <data name="NoDX8FX.Text" xml:space="preserve">
-    <value>Disable audio effects. (See below)</value>
+    <value>Disable DirectSound 8 effects. (See below)</value>
   </data>
   <data name="NoDX8FX.ToolTip" xml:space="preserve">
     <value>Disabling it can reduce latency. Disable the effects to get a small performance boost with Black MIDIs.</value>
@@ -1311,7 +1245,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>16</value>
   </data>
   <data name="GroupBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 351</value>
+    <value>3, 350</value>
   </data>
   <data name="GroupBox3.Size" type="System.Drawing.Size, System.Drawing">
     <value>655, 102</value>
@@ -1338,7 +1272,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>False</value>
   </data>
   <data name="CurrentVolumeHUE2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>484, 61</value>
+    <value>484, 57</value>
   </data>
   <data name="CurrentVolumeHUE2.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 13</value>
@@ -1374,7 +1308,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>NoControl</value>
   </data>
   <data name="Label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 61</value>
+    <value>8, 57</value>
   </data>
   <data name="Label10.Size" type="System.Drawing.Size, System.Drawing">
     <value>334, 13</value>
@@ -1404,7 +1338,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>NoControl</value>
   </data>
   <data name="VolumeBar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 32</value>
+    <value>3, 28</value>
   </data>
   <data name="VolumeBar.Size" type="System.Drawing.Size, System.Drawing">
     <value>547, 25</value>
@@ -1422,7 +1356,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>GroupBox1</value>
   </data>
   <data name="&gt;&gt;VolumeBar.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>2</value>
   </data>
   <data name="CurrentVolumeHUE.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 44.25pt, style=Italic</value>
@@ -1431,7 +1365,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>NoControl</value>
   </data>
   <data name="CurrentVolumeHUE.Location" type="System.Drawing.Point, System.Drawing">
-    <value>418, 13</value>
+    <value>418, 10</value>
   </data>
   <data name="CurrentVolumeHUE.Size" type="System.Drawing.Size, System.Drawing">
     <value>236, 60</value>
@@ -1455,13 +1389,13 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>GroupBox1</value>
   </data>
   <data name="&gt;&gt;CurrentVolumeHUE.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>3</value>
   </data>
   <data name="GroupBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 1</value>
   </data>
   <data name="GroupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>655, 80</value>
+    <value>655, 79</value>
   </data>
   <data name="GroupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -1689,7 +1623,7 @@ the opposite if "Reverb" is 2 and "Chorus" is 1.
     <value>17</value>
   </data>
   <data name="GroupBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 87</value>
+    <value>3, 86</value>
   </data>
   <data name="GroupBox2.Size" type="System.Drawing.Size, System.Drawing">
     <value>655, 258</value>
@@ -1867,7 +1801,7 @@ DA/TE/YEAR</value>
     <value>4</value>
   </data>
   <data name="GroupBox4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 459</value>
+    <value>3, 458</value>
   </data>
   <data name="GroupBox4.Size" type="System.Drawing.Size, System.Drawing">
     <value>655, 99</value>
