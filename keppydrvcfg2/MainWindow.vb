@@ -389,8 +389,10 @@ Public Class MainWindow
             End If
             If keppykey.GetValue("realtimeset") = 1 Then
                 RealTimeSet.Checked = True
+                RealTimeSet2.Checked = True
             Else
                 RealTimeSet.Checked = False
+                RealTimeSet2.Checked = False
             End If
             If keppykey.GetValue("sinc") = 1 Then
                 SincInter.Checked = True
@@ -1602,7 +1604,7 @@ Public Class MainWindow
 
     ' Soundfont list part is over!
 
-    Private Sub AdvancedApply_Click(sender As Object, e As EventArgs) Handles AdvancedApply.Click
+    Private Sub Apply_Click() Handles Apply.Click
         Try
             Dim UserString As String
             UserString = "Software\Keppy's Driver"
@@ -1725,7 +1727,7 @@ Public Class MainWindow
         End Try
     End Sub
 
-    Private Sub BlackMIDIPreset_Click(sender As Object, e As EventArgs) Handles BlackMIDIPreset.Click
+    Private Sub BlackMIDIPreset_Click() Handles BlackMIDIPreset.Click
         Try
             Dim UserString As String
             UserString = "Software\Keppy's Driver"
@@ -1770,7 +1772,7 @@ Public Class MainWindow
         End Try
     End Sub
 
-    Private Sub AdvancedReset_Click(sender As Object, e As EventArgs) Handles AdvancedReset.Click
+    Private Sub AdvancedReset_Click() Handles Reset.Click
         Try
             Dim UserString As String
             UserString = "Software\Keppy's Driver"
@@ -1839,7 +1841,7 @@ Public Class MainWindow
     End Sub
 
     Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckForUpdatesToolStripMenuItem.Click
-        Tabs1.SelectedTab = TabPage4
+        Tabs1.SelectedTab = Settings
         Panel2.AutoScrollPosition = New Point(0, 99999)
         UpdateDownload_Click()
     End Sub
@@ -2211,11 +2213,11 @@ Public Class MainWindow
         MsgBox("Be careful with these values!" & vbCrLf & "If the value is too high, the driver will likely start stuttering, or, in the worst cases, crash.", 48, "Warning")
     End Sub
 
-    Private Sub BufferWarning_Click(sender As Object, e As EventArgs) Handles BufferWarning.Click
+    Private Sub BufferWarning_Click(sender As Object, e As EventArgs)
         MsgBox("Be careful with these values!" & vbCrLf & "If the value is too high, the driver will likely start stuttering, or, in the worst cases, crash.", 48, "Warning")
     End Sub
 
-    Private Sub RealTimeSet_CheckedChanged(sender As Object, e As EventArgs) Handles RealTimeSet.CheckedChanged
+    Private Sub RealTimeSet_CheckedChanged() Handles RealTimeSet.CheckedChanged
         If RealTimeSet.Checked = True Then
             Try
                 Dim UserString As String
@@ -2223,14 +2225,10 @@ Public Class MainWindow
                 Dim keppykey = My.Computer.Registry.CurrentUser.OpenSubKey(UserString + "\Settings", True)
                 keppykey.SetValue("realtimeset", "1", RegistryValueKind.DWord)
                 RealTimeSetText.Visible = True
-                SincInter.Text = "* Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the audio with Black MIDIs.)"
+                RealTimeSet2.Checked = True
                 DisableFX.Text = "* Disable sound effects. (Disable the sound effects, such as reverb and chorus. Also, this can reduce the CPU usage.)"
-                BufferText.Text = "* Set a buffer length for the driver, from 1 to 100:"
                 NoteOff.Text = "* Only release the oldest instance upon a note off event when there are overlapping instances of the note."
-                SysResetIgnore.Text = "* Ignore system reset events when the system mode is unchanged."
                 Label3.Text = "* Set the voice limit for the driver, from 1 to 100000:"
-                Label4.Text = "* && ** Set the channels the driver is allowed to use (Different values from 16 will set the drums channel to melodic):"
-                Label5.Text = "* Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:"
             Catch ex As Exception
                 Console.ForegroundColor = ConsoleColor.Red
                 Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Error while disabling the real-time settings!!!")
@@ -2244,12 +2242,62 @@ Public Class MainWindow
                 Dim keppykey = My.Computer.Registry.CurrentUser.OpenSubKey(UserString + "\Settings", True)
                 keppykey.SetValue("realtimeset", "0", RegistryValueKind.DWord)
                 RealTimeSetText.Visible = False
-                SincInter.Text = "Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the audio with Black MIDIs.)"
+                RealTimeSet2.Checked = False
                 DisableFX.Text = "Disable sound effects. (Disable the sound effects, such as reverb and chorus. Also, this can reduce the CPU usage.)"
-                BufferText.Text = "Set a buffer length for the driver, from 1 to 100:"
                 NoteOff.Text = "Only release the oldest instance upon a note off event when there are overlapping instances of the note."
-                SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged."
                 Label3.Text = "Set the voice limit for the driver, from 1 to 100000:"
+            Catch ex As Exception
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Error while disabling the real-time settings!!!")
+                MsgBox(ex.Message.ToString, MsgBoxStyle.Critical, "Error")
+                Console.ForegroundColor = ConsoleColor.Green
+            End Try
+        End If
+    End Sub
+
+    Private Sub AdvancedReset_Click_1(sender As Object, e As EventArgs) Handles AdvancedReset.Click
+        AdvancedReset_Click()
+    End Sub
+
+    Private Sub BlackMIDIPreset2_Click(sender As Object, e As EventArgs) Handles BlackMIDIPreset2.Click
+        BlackMIDIPreset_Click()
+    End Sub
+
+    Private Sub AdvancedApply_Click(sender As Object, e As EventArgs) Handles AdvancedApply.Click
+        Apply_Click()
+    End Sub
+
+    Private Sub RealTimeSet2_CheckedChanged(sender As Object, e As EventArgs) Handles RealTimeSet2.CheckedChanged
+        If RealTimeSet2.Checked = True Then
+            Try
+                Dim UserString As String
+                UserString = "Software\Keppy's Driver"
+                Dim keppykey = My.Computer.Registry.CurrentUser.OpenSubKey(UserString + "\Settings", True)
+                keppykey.SetValue("realtimeset", "1", RegistryValueKind.DWord)
+                RealTimeSetText2.Visible = True
+                RealTimeSet.Checked = True
+                SincInter.Text = "* Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the audio with Black MIDIs.)"
+                BufferText.Text = "* Set a buffer length for the driver, from 1 to 100:"
+                SysResetIgnore.Text = "* Ignore system reset events when the system mode is unchanged."
+                Label4.Text = "* && ** Set the channels the driver is allowed to use (Different values from 16 will set the drums channel to melodic):"
+                Label5.Text = "* Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:"
+            Catch ex As Exception
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.WriteLine(Format(Now, "[HH:mm:ss]") + " " + "Error while disabling the real-time settings!!!")
+                MsgBox(ex.Message.ToString, MsgBoxStyle.Critical, "Error")
+                Console.ForegroundColor = ConsoleColor.Green
+            End Try
+        ElseIf RealTimeSet2.Checked = False Then
+            Try
+                Dim UserString As String
+                UserString = "Software\Keppy's Driver"
+                Dim keppykey = My.Computer.Registry.CurrentUser.OpenSubKey(UserString + "\Settings", True)
+                keppykey.SetValue("realtimeset", "0", RegistryValueKind.DWord)
+                RealTimeSetText2.Visible = False
+                RealTimeSet.Checked = False
+                SincInter.Text = "Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the audio with Black MIDIs.)"
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100:"
+                SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged."
                 Label4.Text = "** Set the channels the driver is allowed to use (Different values from 16 will set the drums channel to melodic):"
                 Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:"
             Catch ex As Exception
@@ -2275,12 +2323,12 @@ Public Class MainWindow
         PortABox.BackColor = Color.Gold
         MsgBox("This is the list of the port 1, where you place all your sound banks/soundfonts!" & vbCrLf & "Be sure to use valid files!" & vbCrLf & vbCrLf & "(There's no need to see Port 2, it's the same)", 64, "Message")
         PortABox.BackColor = Color.White
-        Tabs1.SelectedTab = TabPage3
+        Tabs1.SelectedTab = BlacklistSys
         MsgBox("This is the blacklist system, where you can blacklist some annoying programs, like Google Chrome, that are constantly locking the driver.", 64, "Message")
         SystemList.BackColor = Color.Red
         MsgBox("With this button, you'll be able to edit the system blacklist, be careful.", 48, "Warning")
         SystemList.BackColor = Color.Transparent
-        Tabs1.SelectedTab = TabPage4
+        Tabs1.SelectedTab = Settings
         MsgBox("Here is the vital part of the driver, where all the required values are stored. You can edit them with by your own, but it's better if you leave it as is.", 64, "Message")
         Tabs1.SelectedTab = Port1
         MsgBox("I (KaleidonKep99) hope you like it!" & vbCrLf & "And if you find any bug, just press the ''Report a bug'' item in the following ''?'' stripmenu!", 64, "Goodbye")
@@ -2425,13 +2473,18 @@ Public Class MainWindow
 
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles NoDX8FX.CheckedChanged
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs)
         If NoDX8FX.Checked = True Then
             GroupBox3.Enabled = False
         Else
             GroupBox3.Enabled = True
         End If
     End Sub
+
+    Private Sub bufsize_ValueChanged(sender As Object, e As EventArgs) Handles bufsize.ValueChanged
+
+    End Sub
+
 End Class
 
 Public Class Win32

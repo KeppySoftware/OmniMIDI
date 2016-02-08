@@ -33,12 +33,13 @@ Partial Class MainWindow
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Frequency = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.bufsize = New System.Windows.Forms.NumericUpDown()
-        Me.BufferText = New System.Windows.Forms.Label()
-        Me.TracksLimit = New System.Windows.Forms.NumericUpDown()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.RealTimeSet = New System.Windows.Forms.CheckBox()
         Me.NoDX8FX = New System.Windows.Forms.CheckBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.TracksLimit = New System.Windows.Forms.NumericUpDown()
+        Me.BufferText = New System.Windows.Forms.Label()
+        Me.bufsize = New System.Windows.Forms.NumericUpDown()
+        Me.RealTimeSet2 = New System.Windows.Forms.CheckBox()
         Me.MainMenu = New System.Windows.Forms.MenuStrip()
         Me.AppToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -64,36 +65,15 @@ Partial Class MainWindow
         Me.PortDOpenDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ExtListPortCDialog = New System.Windows.Forms.OpenFileDialog()
         Me.ExtListPortDDialog = New System.Windows.Forms.OpenFileDialog()
-        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.Settings = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.EchoFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.EchoFX = New System.Windows.Forms.CheckBox()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.SittingFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.DistortionFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.GargleFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.SittingFX = New System.Windows.Forms.CheckBox()
-        Me.DistortionFX = New System.Windows.Forms.CheckBox()
-        Me.CompressorFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.FlangerFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.ChorusFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.ReverbFXNum = New System.Windows.Forms.NumericUpDown()
-        Me.CompressorFX = New System.Windows.Forms.CheckBox()
-        Me.FlangerFX = New System.Windows.Forms.CheckBox()
-        Me.ChorusFX = New System.Windows.Forms.CheckBox()
-        Me.GargleFX = New System.Windows.Forms.CheckBox()
-        Me.ReverbFX = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.CurrentVolumeHUE2 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.VolumeBar = New System.Windows.Forms.TrackBar()
         Me.CurrentVolumeHUE = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.BufferWarning = New System.Windows.Forms.PictureBox()
         Me.VoiceWarning = New System.Windows.Forms.PictureBox()
-        Me.SysResetIgnore = New System.Windows.Forms.CheckBox()
-        Me.SincInter = New System.Windows.Forms.CheckBox()
         Me.DisableFX = New System.Windows.Forms.CheckBox()
         Me.Preload = New System.Windows.Forms.CheckBox()
         Me.NoteOff = New System.Windows.Forms.CheckBox()
@@ -103,12 +83,11 @@ Partial Class MainWindow
         Me.LatestVersionDriver = New System.Windows.Forms.Label()
         Me.UpdateDownload = New System.Windows.Forms.Button()
         Me.ThisVersionDriver = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.BlackMIDIPreset = New System.Windows.Forms.Button()
         Me.RealTimeSetText = New System.Windows.Forms.Label()
-        Me.AdvancedApply = New System.Windows.Forms.Button()
-        Me.AdvancedReset = New System.Windows.Forms.Button()
-        Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.Apply = New System.Windows.Forms.Button()
+        Me.Reset = New System.Windows.Forms.Button()
+        Me.BlacklistSys = New System.Windows.Forms.TabPage()
         Me.ClearBlacklist = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.ManualBlackListLabel = New System.Windows.Forms.Label()
@@ -164,12 +143,56 @@ Partial Class MainWindow
         Me.ImportSFPortA = New System.Windows.Forms.Button()
         Me.PortABox = New System.Windows.Forms.ListBox()
         Me.Tabs1 = New System.Windows.Forms.TabControl()
+        Me.AdvSettings = New System.Windows.Forms.TabPage()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.BlackMIDIPreset2 = New System.Windows.Forms.Button()
+        Me.RealTimeSetText2 = New System.Windows.Forms.Label()
+        Me.AdvancedApply = New System.Windows.Forms.Button()
+        Me.AdvancedReset = New System.Windows.Forms.Button()
+        Me.AdvPanel = New System.Windows.Forms.Panel()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.SincInter = New System.Windows.Forms.CheckBox()
+        Me.BufferWarning = New System.Windows.Forms.PictureBox()
+        Me.SysResetIgnore = New System.Windows.Forms.CheckBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.EchoFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.EchoFX = New System.Windows.Forms.CheckBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.SittingFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.DistortionFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.GargleFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.SittingFX = New System.Windows.Forms.CheckBox()
+        Me.DistortionFX = New System.Windows.Forms.CheckBox()
+        Me.CompressorFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.FlangerFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.ChorusFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.ReverbFXNum = New System.Windows.Forms.NumericUpDown()
+        Me.CompressorFX = New System.Windows.Forms.CheckBox()
+        Me.FlangerFX = New System.Windows.Forms.CheckBox()
+        Me.ChorusFX = New System.Windows.Forms.CheckBox()
+        Me.GargleFX = New System.Windows.Forms.CheckBox()
+        Me.ReverbFX = New System.Windows.Forms.CheckBox()
         CType(Me.PolyphonyLimit, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.bufsize, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TracksLimit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.bufsize, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MainMenu.SuspendLayout()
-        Me.TabPage4.SuspendLayout()
+        Me.Settings.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        CType(Me.VolumeBar, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox2.SuspendLayout()
+        CType(Me.VoiceWarning, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox4.SuspendLayout()
+        Me.BlacklistSys.SuspendLayout()
+        Me.Port4.SuspendLayout()
+        Me.Port3.SuspendLayout()
+        Me.Port2.SuspendLayout()
+        Me.Port1.SuspendLayout()
+        Me.Tabs1.SuspendLayout()
+        Me.AdvSettings.SuspendLayout()
+        Me.AdvPanel.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
+        CType(Me.BufferWarning, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
         CType(Me.EchoFXNum, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SittingFXNum, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -179,18 +202,6 @@ Partial Class MainWindow
         CType(Me.FlangerFXNum, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ChorusFXNum, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ReverbFXNum, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox1.SuspendLayout()
-        CType(Me.VolumeBar, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox2.SuspendLayout()
-        CType(Me.BufferWarning, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.VoiceWarning, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox4.SuspendLayout()
-        Me.TabPage3.SuspendLayout()
-        Me.Port4.SuspendLayout()
-        Me.Port3.SuspendLayout()
-        Me.Port2.SuspendLayout()
-        Me.Port1.SuspendLayout()
-        Me.Tabs1.SuspendLayout()
         Me.SuspendLayout()
         '
         'PortAOpenDialog1
@@ -253,35 +264,6 @@ Partial Class MainWindow
         Me.Label6.Name = "Label6"
         Me.Information.SetToolTip(Me.Label6, resources.GetString("Label6.ToolTip"))
         '
-        'bufsize
-        '
-        resources.ApplyResources(Me.bufsize, "bufsize")
-        Me.bufsize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.bufsize.Name = "bufsize"
-        Me.Information.SetToolTip(Me.bufsize, resources.GetString("bufsize.ToolTip"))
-        Me.bufsize.Value = New Decimal(New Integer() {100, 0, 0, 0})
-        '
-        'BufferText
-        '
-        resources.ApplyResources(Me.BufferText, "BufferText")
-        Me.BufferText.Name = "BufferText"
-        Me.Information.SetToolTip(Me.BufferText, resources.GetString("BufferText.ToolTip"))
-        '
-        'TracksLimit
-        '
-        resources.ApplyResources(Me.TracksLimit, "TracksLimit")
-        Me.TracksLimit.Maximum = New Decimal(New Integer() {128, 0, 0, 0})
-        Me.TracksLimit.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.TracksLimit.Name = "TracksLimit"
-        Me.Information.SetToolTip(Me.TracksLimit, resources.GetString("TracksLimit.ToolTip"))
-        Me.TracksLimit.Value = New Decimal(New Integer() {10, 0, 0, 0})
-        '
-        'Label4
-        '
-        resources.ApplyResources(Me.Label4, "Label4")
-        Me.Label4.Name = "Label4"
-        Me.Information.SetToolTip(Me.Label4, resources.GetString("Label4.ToolTip"))
-        '
         'RealTimeSet
         '
         resources.ApplyResources(Me.RealTimeSet, "RealTimeSet")
@@ -295,6 +277,42 @@ Partial Class MainWindow
         Me.NoDX8FX.Name = "NoDX8FX"
         Me.Information.SetToolTip(Me.NoDX8FX, resources.GetString("NoDX8FX.ToolTip"))
         Me.NoDX8FX.UseVisualStyleBackColor = True
+        '
+        'Label4
+        '
+        resources.ApplyResources(Me.Label4, "Label4")
+        Me.Label4.Name = "Label4"
+        Me.Information.SetToolTip(Me.Label4, resources.GetString("Label4.ToolTip"))
+        '
+        'TracksLimit
+        '
+        resources.ApplyResources(Me.TracksLimit, "TracksLimit")
+        Me.TracksLimit.Maximum = New Decimal(New Integer() {128, 0, 0, 0})
+        Me.TracksLimit.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.TracksLimit.Name = "TracksLimit"
+        Me.Information.SetToolTip(Me.TracksLimit, resources.GetString("TracksLimit.ToolTip"))
+        Me.TracksLimit.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'BufferText
+        '
+        resources.ApplyResources(Me.BufferText, "BufferText")
+        Me.BufferText.Name = "BufferText"
+        Me.Information.SetToolTip(Me.BufferText, resources.GetString("BufferText.ToolTip"))
+        '
+        'bufsize
+        '
+        resources.ApplyResources(Me.bufsize, "bufsize")
+        Me.bufsize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.bufsize.Name = "bufsize"
+        Me.Information.SetToolTip(Me.bufsize, resources.GetString("bufsize.ToolTip"))
+        Me.bufsize.Value = New Decimal(New Integer() {100, 0, 0, 0})
+        '
+        'RealTimeSet2
+        '
+        resources.ApplyResources(Me.RealTimeSet2, "RealTimeSet2")
+        Me.RealTimeSet2.Name = "RealTimeSet2"
+        Me.Information.SetToolTip(Me.RealTimeSet2, resources.GetString("RealTimeSet2.ToolTip"))
+        Me.RealTimeSet2.UseVisualStyleBackColor = True
         '
         'MainMenu
         '
@@ -428,160 +446,26 @@ Partial Class MainWindow
         Me.ExtListPortDDialog.Multiselect = True
         Me.ExtListPortDDialog.RestoreDirectory = True
         '
-        'TabPage4
+        'Settings
         '
-        Me.TabPage4.BackColor = System.Drawing.SystemColors.Control
-        Me.TabPage4.Controls.Add(Me.RealTimeSet)
-        Me.TabPage4.Controls.Add(Me.Panel2)
-        Me.TabPage4.Controls.Add(Me.Label14)
-        Me.TabPage4.Controls.Add(Me.BlackMIDIPreset)
-        Me.TabPage4.Controls.Add(Me.RealTimeSetText)
-        Me.TabPage4.Controls.Add(Me.AdvancedApply)
-        Me.TabPage4.Controls.Add(Me.AdvancedReset)
-        resources.ApplyResources(Me.TabPage4, "TabPage4")
-        Me.TabPage4.Name = "TabPage4"
+        Me.Settings.BackColor = System.Drawing.SystemColors.Control
+        Me.Settings.Controls.Add(Me.RealTimeSet)
+        Me.Settings.Controls.Add(Me.Panel2)
+        Me.Settings.Controls.Add(Me.BlackMIDIPreset)
+        Me.Settings.Controls.Add(Me.RealTimeSetText)
+        Me.Settings.Controls.Add(Me.Apply)
+        Me.Settings.Controls.Add(Me.Reset)
+        resources.ApplyResources(Me.Settings, "Settings")
+        Me.Settings.Name = "Settings"
         '
         'Panel2
         '
         resources.ApplyResources(Me.Panel2, "Panel2")
         Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.Panel2.Controls.Add(Me.GroupBox3)
         Me.Panel2.Controls.Add(Me.GroupBox1)
         Me.Panel2.Controls.Add(Me.GroupBox2)
         Me.Panel2.Controls.Add(Me.GroupBox4)
         Me.Panel2.Name = "Panel2"
-        '
-        'GroupBox3
-        '
-        Me.GroupBox3.Controls.Add(Me.EchoFXNum)
-        Me.GroupBox3.Controls.Add(Me.EchoFX)
-        Me.GroupBox3.Controls.Add(Me.Label12)
-        Me.GroupBox3.Controls.Add(Me.SittingFXNum)
-        Me.GroupBox3.Controls.Add(Me.DistortionFXNum)
-        Me.GroupBox3.Controls.Add(Me.GargleFXNum)
-        Me.GroupBox3.Controls.Add(Me.SittingFX)
-        Me.GroupBox3.Controls.Add(Me.DistortionFX)
-        Me.GroupBox3.Controls.Add(Me.CompressorFXNum)
-        Me.GroupBox3.Controls.Add(Me.FlangerFXNum)
-        Me.GroupBox3.Controls.Add(Me.ChorusFXNum)
-        Me.GroupBox3.Controls.Add(Me.ReverbFXNum)
-        Me.GroupBox3.Controls.Add(Me.CompressorFX)
-        Me.GroupBox3.Controls.Add(Me.FlangerFX)
-        Me.GroupBox3.Controls.Add(Me.ChorusFX)
-        Me.GroupBox3.Controls.Add(Me.GargleFX)
-        Me.GroupBox3.Controls.Add(Me.ReverbFX)
-        resources.ApplyResources(Me.GroupBox3, "GroupBox3")
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.TabStop = False
-        '
-        'EchoFXNum
-        '
-        resources.ApplyResources(Me.EchoFXNum, "EchoFXNum")
-        Me.EchoFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.EchoFXNum.Name = "EchoFXNum"
-        Me.EchoFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'EchoFX
-        '
-        resources.ApplyResources(Me.EchoFX, "EchoFX")
-        Me.EchoFX.Name = "EchoFX"
-        Me.EchoFX.UseVisualStyleBackColor = True
-        '
-        'Label12
-        '
-        resources.ApplyResources(Me.Label12, "Label12")
-        Me.Label12.Name = "Label12"
-        '
-        'SittingFXNum
-        '
-        resources.ApplyResources(Me.SittingFXNum, "SittingFXNum")
-        Me.SittingFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.SittingFXNum.Name = "SittingFXNum"
-        Me.SittingFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'DistortionFXNum
-        '
-        resources.ApplyResources(Me.DistortionFXNum, "DistortionFXNum")
-        Me.DistortionFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.DistortionFXNum.Name = "DistortionFXNum"
-        Me.DistortionFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'GargleFXNum
-        '
-        resources.ApplyResources(Me.GargleFXNum, "GargleFXNum")
-        Me.GargleFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.GargleFXNum.Name = "GargleFXNum"
-        Me.GargleFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'SittingFX
-        '
-        resources.ApplyResources(Me.SittingFX, "SittingFX")
-        Me.SittingFX.Name = "SittingFX"
-        Me.SittingFX.UseVisualStyleBackColor = True
-        '
-        'DistortionFX
-        '
-        resources.ApplyResources(Me.DistortionFX, "DistortionFX")
-        Me.DistortionFX.Name = "DistortionFX"
-        Me.DistortionFX.UseVisualStyleBackColor = True
-        '
-        'CompressorFXNum
-        '
-        resources.ApplyResources(Me.CompressorFXNum, "CompressorFXNum")
-        Me.CompressorFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.CompressorFXNum.Name = "CompressorFXNum"
-        Me.CompressorFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'FlangerFXNum
-        '
-        resources.ApplyResources(Me.FlangerFXNum, "FlangerFXNum")
-        Me.FlangerFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.FlangerFXNum.Name = "FlangerFXNum"
-        Me.FlangerFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'ChorusFXNum
-        '
-        resources.ApplyResources(Me.ChorusFXNum, "ChorusFXNum")
-        Me.ChorusFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.ChorusFXNum.Name = "ChorusFXNum"
-        Me.ChorusFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'ReverbFXNum
-        '
-        resources.ApplyResources(Me.ReverbFXNum, "ReverbFXNum")
-        Me.ReverbFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
-        Me.ReverbFXNum.Name = "ReverbFXNum"
-        Me.ReverbFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'CompressorFX
-        '
-        resources.ApplyResources(Me.CompressorFX, "CompressorFX")
-        Me.CompressorFX.Name = "CompressorFX"
-        Me.CompressorFX.UseVisualStyleBackColor = True
-        '
-        'FlangerFX
-        '
-        resources.ApplyResources(Me.FlangerFX, "FlangerFX")
-        Me.FlangerFX.Name = "FlangerFX"
-        Me.FlangerFX.UseVisualStyleBackColor = True
-        '
-        'ChorusFX
-        '
-        resources.ApplyResources(Me.ChorusFX, "ChorusFX")
-        Me.ChorusFX.Name = "ChorusFX"
-        Me.ChorusFX.UseVisualStyleBackColor = True
-        '
-        'GargleFX
-        '
-        resources.ApplyResources(Me.GargleFX, "GargleFX")
-        Me.GargleFX.Name = "GargleFX"
-        Me.GargleFX.UseVisualStyleBackColor = True
-        '
-        'ReverbFX
-        '
-        resources.ApplyResources(Me.ReverbFX, "ReverbFX")
-        Me.ReverbFX.Name = "ReverbFX"
-        Me.ReverbFX.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
@@ -622,15 +506,7 @@ Partial Class MainWindow
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.NoDX8FX)
-        Me.GroupBox2.Controls.Add(Me.BufferWarning)
         Me.GroupBox2.Controls.Add(Me.VoiceWarning)
-        Me.GroupBox2.Controls.Add(Me.SysResetIgnore)
-        Me.GroupBox2.Controls.Add(Me.Label4)
-        Me.GroupBox2.Controls.Add(Me.TracksLimit)
-        Me.GroupBox2.Controls.Add(Me.SincInter)
-        Me.GroupBox2.Controls.Add(Me.BufferText)
-        Me.GroupBox2.Controls.Add(Me.bufsize)
         Me.GroupBox2.Controls.Add(Me.Label6)
         Me.GroupBox2.Controls.Add(Me.Frequency)
         Me.GroupBox2.Controls.Add(Me.Label5)
@@ -644,14 +520,6 @@ Partial Class MainWindow
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.TabStop = False
         '
-        'BufferWarning
-        '
-        Me.BufferWarning.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.BufferWarning.Image = Global.keppydrvcfg.My.Resources.Resources.Warning_Box_Yellow
-        resources.ApplyResources(Me.BufferWarning, "BufferWarning")
-        Me.BufferWarning.Name = "BufferWarning"
-        Me.BufferWarning.TabStop = False
-        '
         'VoiceWarning
         '
         Me.VoiceWarning.Cursor = System.Windows.Forms.Cursors.Hand
@@ -659,18 +527,6 @@ Partial Class MainWindow
         resources.ApplyResources(Me.VoiceWarning, "VoiceWarning")
         Me.VoiceWarning.Name = "VoiceWarning"
         Me.VoiceWarning.TabStop = False
-        '
-        'SysResetIgnore
-        '
-        resources.ApplyResources(Me.SysResetIgnore, "SysResetIgnore")
-        Me.SysResetIgnore.Name = "SysResetIgnore"
-        Me.SysResetIgnore.UseVisualStyleBackColor = True
-        '
-        'SincInter
-        '
-        resources.ApplyResources(Me.SincInter, "SincInter")
-        Me.SincInter.Name = "SincInter"
-        Me.SincInter.UseVisualStyleBackColor = True
         '
         'DisableFX
         '
@@ -728,11 +584,6 @@ Partial Class MainWindow
         resources.ApplyResources(Me.ThisVersionDriver, "ThisVersionDriver")
         Me.ThisVersionDriver.Name = "ThisVersionDriver"
         '
-        'Label14
-        '
-        resources.ApplyResources(Me.Label14, "Label14")
-        Me.Label14.Name = "Label14"
-        '
         'BlackMIDIPreset
         '
         resources.ApplyResources(Me.BlackMIDIPreset, "BlackMIDIPreset")
@@ -744,33 +595,33 @@ Partial Class MainWindow
         resources.ApplyResources(Me.RealTimeSetText, "RealTimeSetText")
         Me.RealTimeSetText.Name = "RealTimeSetText"
         '
-        'AdvancedApply
+        'Apply
         '
-        resources.ApplyResources(Me.AdvancedApply, "AdvancedApply")
-        Me.AdvancedApply.Name = "AdvancedApply"
-        Me.AdvancedApply.UseVisualStyleBackColor = True
+        resources.ApplyResources(Me.Apply, "Apply")
+        Me.Apply.Name = "Apply"
+        Me.Apply.UseVisualStyleBackColor = True
         '
-        'AdvancedReset
+        'Reset
         '
-        resources.ApplyResources(Me.AdvancedReset, "AdvancedReset")
-        Me.AdvancedReset.Name = "AdvancedReset"
-        Me.AdvancedReset.UseVisualStyleBackColor = True
+        resources.ApplyResources(Me.Reset, "Reset")
+        Me.Reset.Name = "Reset"
+        Me.Reset.UseVisualStyleBackColor = True
         '
-        'TabPage3
+        'BlacklistSys
         '
-        Me.TabPage3.BackColor = System.Drawing.SystemColors.Control
-        Me.TabPage3.Controls.Add(Me.ClearBlacklist)
-        Me.TabPage3.Controls.Add(Me.Label13)
-        Me.TabPage3.Controls.Add(Me.ManualBlackListLabel)
-        Me.TabPage3.Controls.Add(Me.ManualBlackList)
-        Me.TabPage3.Controls.Add(Me.BlackListDef)
-        Me.TabPage3.Controls.Add(Me.BlackListAdvancedMode)
-        Me.TabPage3.Controls.Add(Me.SystemList)
-        Me.TabPage3.Controls.Add(Me.RemoveBlackList)
-        Me.TabPage3.Controls.Add(Me.AddBlackList)
-        Me.TabPage3.Controls.Add(Me.UserProgramsBlackList)
-        resources.ApplyResources(Me.TabPage3, "TabPage3")
-        Me.TabPage3.Name = "TabPage3"
+        Me.BlacklistSys.BackColor = System.Drawing.SystemColors.Control
+        Me.BlacklistSys.Controls.Add(Me.ClearBlacklist)
+        Me.BlacklistSys.Controls.Add(Me.Label13)
+        Me.BlacklistSys.Controls.Add(Me.ManualBlackListLabel)
+        Me.BlacklistSys.Controls.Add(Me.ManualBlackList)
+        Me.BlacklistSys.Controls.Add(Me.BlackListDef)
+        Me.BlacklistSys.Controls.Add(Me.BlackListAdvancedMode)
+        Me.BlacklistSys.Controls.Add(Me.SystemList)
+        Me.BlacklistSys.Controls.Add(Me.RemoveBlackList)
+        Me.BlacklistSys.Controls.Add(Me.AddBlackList)
+        Me.BlacklistSys.Controls.Add(Me.UserProgramsBlackList)
+        resources.ApplyResources(Me.BlacklistSys, "BlacklistSys")
+        Me.BlacklistSys.Name = "BlacklistSys"
         '
         'ClearBlacklist
         '
@@ -1141,11 +992,227 @@ Partial Class MainWindow
         Me.Tabs1.Controls.Add(Me.Port2)
         Me.Tabs1.Controls.Add(Me.Port3)
         Me.Tabs1.Controls.Add(Me.Port4)
-        Me.Tabs1.Controls.Add(Me.TabPage3)
-        Me.Tabs1.Controls.Add(Me.TabPage4)
+        Me.Tabs1.Controls.Add(Me.BlacklistSys)
+        Me.Tabs1.Controls.Add(Me.Settings)
+        Me.Tabs1.Controls.Add(Me.AdvSettings)
         Me.Tabs1.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.Tabs1.Name = "Tabs1"
         Me.Tabs1.SelectedIndex = 0
+        '
+        'AdvSettings
+        '
+        Me.AdvSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.AdvSettings.Controls.Add(Me.RealTimeSet2)
+        Me.AdvSettings.Controls.Add(Me.Label7)
+        Me.AdvSettings.Controls.Add(Me.BlackMIDIPreset2)
+        Me.AdvSettings.Controls.Add(Me.RealTimeSetText2)
+        Me.AdvSettings.Controls.Add(Me.AdvancedApply)
+        Me.AdvSettings.Controls.Add(Me.AdvancedReset)
+        Me.AdvSettings.Controls.Add(Me.AdvPanel)
+        resources.ApplyResources(Me.AdvSettings, "AdvSettings")
+        Me.AdvSettings.Name = "AdvSettings"
+        '
+        'Label7
+        '
+        resources.ApplyResources(Me.Label7, "Label7")
+        Me.Label7.Name = "Label7"
+        '
+        'BlackMIDIPreset2
+        '
+        resources.ApplyResources(Me.BlackMIDIPreset2, "BlackMIDIPreset2")
+        Me.BlackMIDIPreset2.Name = "BlackMIDIPreset2"
+        Me.BlackMIDIPreset2.UseVisualStyleBackColor = True
+        '
+        'RealTimeSetText2
+        '
+        resources.ApplyResources(Me.RealTimeSetText2, "RealTimeSetText2")
+        Me.RealTimeSetText2.Name = "RealTimeSetText2"
+        '
+        'AdvancedApply
+        '
+        resources.ApplyResources(Me.AdvancedApply, "AdvancedApply")
+        Me.AdvancedApply.Name = "AdvancedApply"
+        Me.AdvancedApply.UseVisualStyleBackColor = True
+        '
+        'AdvancedReset
+        '
+        resources.ApplyResources(Me.AdvancedReset, "AdvancedReset")
+        Me.AdvancedReset.Name = "AdvancedReset"
+        Me.AdvancedReset.UseVisualStyleBackColor = True
+        '
+        'AdvPanel
+        '
+        Me.AdvPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.AdvPanel.Controls.Add(Me.GroupBox5)
+        Me.AdvPanel.Controls.Add(Me.GroupBox3)
+        resources.ApplyResources(Me.AdvPanel, "AdvPanel")
+        Me.AdvPanel.Name = "AdvPanel"
+        '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.SincInter)
+        Me.GroupBox5.Controls.Add(Me.TracksLimit)
+        Me.GroupBox5.Controls.Add(Me.NoDX8FX)
+        Me.GroupBox5.Controls.Add(Me.Label4)
+        Me.GroupBox5.Controls.Add(Me.BufferText)
+        Me.GroupBox5.Controls.Add(Me.BufferWarning)
+        Me.GroupBox5.Controls.Add(Me.SysResetIgnore)
+        Me.GroupBox5.Controls.Add(Me.bufsize)
+        resources.ApplyResources(Me.GroupBox5, "GroupBox5")
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.TabStop = False
+        '
+        'SincInter
+        '
+        resources.ApplyResources(Me.SincInter, "SincInter")
+        Me.SincInter.Name = "SincInter"
+        Me.SincInter.UseVisualStyleBackColor = True
+        '
+        'BufferWarning
+        '
+        Me.BufferWarning.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.BufferWarning.Image = Global.keppydrvcfg.My.Resources.Resources.Warning_Box_Yellow
+        resources.ApplyResources(Me.BufferWarning, "BufferWarning")
+        Me.BufferWarning.Name = "BufferWarning"
+        Me.BufferWarning.TabStop = False
+        '
+        'SysResetIgnore
+        '
+        resources.ApplyResources(Me.SysResetIgnore, "SysResetIgnore")
+        Me.SysResetIgnore.Name = "SysResetIgnore"
+        Me.SysResetIgnore.UseVisualStyleBackColor = True
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.EchoFXNum)
+        Me.GroupBox3.Controls.Add(Me.EchoFX)
+        Me.GroupBox3.Controls.Add(Me.Label12)
+        Me.GroupBox3.Controls.Add(Me.SittingFXNum)
+        Me.GroupBox3.Controls.Add(Me.DistortionFXNum)
+        Me.GroupBox3.Controls.Add(Me.GargleFXNum)
+        Me.GroupBox3.Controls.Add(Me.SittingFX)
+        Me.GroupBox3.Controls.Add(Me.DistortionFX)
+        Me.GroupBox3.Controls.Add(Me.CompressorFXNum)
+        Me.GroupBox3.Controls.Add(Me.FlangerFXNum)
+        Me.GroupBox3.Controls.Add(Me.ChorusFXNum)
+        Me.GroupBox3.Controls.Add(Me.ReverbFXNum)
+        Me.GroupBox3.Controls.Add(Me.CompressorFX)
+        Me.GroupBox3.Controls.Add(Me.FlangerFX)
+        Me.GroupBox3.Controls.Add(Me.ChorusFX)
+        Me.GroupBox3.Controls.Add(Me.GargleFX)
+        Me.GroupBox3.Controls.Add(Me.ReverbFX)
+        resources.ApplyResources(Me.GroupBox3, "GroupBox3")
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.TabStop = False
+        '
+        'EchoFXNum
+        '
+        resources.ApplyResources(Me.EchoFXNum, "EchoFXNum")
+        Me.EchoFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.EchoFXNum.Name = "EchoFXNum"
+        Me.EchoFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'EchoFX
+        '
+        resources.ApplyResources(Me.EchoFX, "EchoFX")
+        Me.EchoFX.Name = "EchoFX"
+        Me.EchoFX.UseVisualStyleBackColor = True
+        '
+        'Label12
+        '
+        resources.ApplyResources(Me.Label12, "Label12")
+        Me.Label12.Name = "Label12"
+        '
+        'SittingFXNum
+        '
+        resources.ApplyResources(Me.SittingFXNum, "SittingFXNum")
+        Me.SittingFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.SittingFXNum.Name = "SittingFXNum"
+        Me.SittingFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'DistortionFXNum
+        '
+        resources.ApplyResources(Me.DistortionFXNum, "DistortionFXNum")
+        Me.DistortionFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.DistortionFXNum.Name = "DistortionFXNum"
+        Me.DistortionFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'GargleFXNum
+        '
+        resources.ApplyResources(Me.GargleFXNum, "GargleFXNum")
+        Me.GargleFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.GargleFXNum.Name = "GargleFXNum"
+        Me.GargleFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'SittingFX
+        '
+        resources.ApplyResources(Me.SittingFX, "SittingFX")
+        Me.SittingFX.Name = "SittingFX"
+        Me.SittingFX.UseVisualStyleBackColor = True
+        '
+        'DistortionFX
+        '
+        resources.ApplyResources(Me.DistortionFX, "DistortionFX")
+        Me.DistortionFX.Name = "DistortionFX"
+        Me.DistortionFX.UseVisualStyleBackColor = True
+        '
+        'CompressorFXNum
+        '
+        resources.ApplyResources(Me.CompressorFXNum, "CompressorFXNum")
+        Me.CompressorFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.CompressorFXNum.Name = "CompressorFXNum"
+        Me.CompressorFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'FlangerFXNum
+        '
+        resources.ApplyResources(Me.FlangerFXNum, "FlangerFXNum")
+        Me.FlangerFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.FlangerFXNum.Name = "FlangerFXNum"
+        Me.FlangerFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'ChorusFXNum
+        '
+        resources.ApplyResources(Me.ChorusFXNum, "ChorusFXNum")
+        Me.ChorusFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.ChorusFXNum.Name = "ChorusFXNum"
+        Me.ChorusFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'ReverbFXNum
+        '
+        resources.ApplyResources(Me.ReverbFXNum, "ReverbFXNum")
+        Me.ReverbFXNum.Maximum = New Decimal(New Integer() {8, 0, 0, 0})
+        Me.ReverbFXNum.Name = "ReverbFXNum"
+        Me.ReverbFXNum.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'CompressorFX
+        '
+        resources.ApplyResources(Me.CompressorFX, "CompressorFX")
+        Me.CompressorFX.Name = "CompressorFX"
+        Me.CompressorFX.UseVisualStyleBackColor = True
+        '
+        'FlangerFX
+        '
+        resources.ApplyResources(Me.FlangerFX, "FlangerFX")
+        Me.FlangerFX.Name = "FlangerFX"
+        Me.FlangerFX.UseVisualStyleBackColor = True
+        '
+        'ChorusFX
+        '
+        resources.ApplyResources(Me.ChorusFX, "ChorusFX")
+        Me.ChorusFX.Name = "ChorusFX"
+        Me.ChorusFX.UseVisualStyleBackColor = True
+        '
+        'GargleFX
+        '
+        resources.ApplyResources(Me.GargleFX, "GargleFX")
+        Me.GargleFX.Name = "GargleFX"
+        Me.GargleFX.UseVisualStyleBackColor = True
+        '
+        'ReverbFX
+        '
+        resources.ApplyResources(Me.ReverbFX, "ReverbFX")
+        Me.ReverbFX.Name = "ReverbFX"
+        Me.ReverbFX.UseVisualStyleBackColor = True
         '
         'MainWindow
         '
@@ -1159,13 +1226,38 @@ Partial Class MainWindow
         Me.MaximizeBox = False
         Me.Name = "MainWindow"
         CType(Me.PolyphonyLimit, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.bufsize, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TracksLimit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.bufsize, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MainMenu.ResumeLayout(False)
         Me.MainMenu.PerformLayout()
-        Me.TabPage4.ResumeLayout(False)
-        Me.TabPage4.PerformLayout()
+        Me.Settings.ResumeLayout(False)
+        Me.Settings.PerformLayout()
         Me.Panel2.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
+        CType(Me.VolumeBar, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        CType(Me.VoiceWarning, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
+        Me.BlacklistSys.ResumeLayout(False)
+        Me.BlacklistSys.PerformLayout()
+        Me.Port4.ResumeLayout(False)
+        Me.Port4.PerformLayout()
+        Me.Port3.ResumeLayout(False)
+        Me.Port3.PerformLayout()
+        Me.Port2.ResumeLayout(False)
+        Me.Port2.PerformLayout()
+        Me.Port1.ResumeLayout(False)
+        Me.Port1.PerformLayout()
+        Me.Tabs1.ResumeLayout(False)
+        Me.AdvSettings.ResumeLayout(False)
+        Me.AdvSettings.PerformLayout()
+        Me.AdvPanel.ResumeLayout(False)
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
+        CType(Me.BufferWarning, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         CType(Me.EchoFXNum, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1176,26 +1268,6 @@ Partial Class MainWindow
         CType(Me.FlangerFXNum, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ChorusFXNum, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ReverbFXNum, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
-        CType(Me.VolumeBar, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox2.PerformLayout()
-        CType(Me.BufferWarning, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.VoiceWarning, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox4.ResumeLayout(False)
-        Me.GroupBox4.PerformLayout()
-        Me.TabPage3.ResumeLayout(False)
-        Me.TabPage3.PerformLayout()
-        Me.Port4.ResumeLayout(False)
-        Me.Port4.PerformLayout()
-        Me.Port3.ResumeLayout(False)
-        Me.Port3.PerformLayout()
-        Me.Port2.ResumeLayout(False)
-        Me.Port2.PerformLayout()
-        Me.Port1.ResumeLayout(False)
-        Me.Port1.PerformLayout()
-        Me.Tabs1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1227,40 +1299,15 @@ Partial Class MainWindow
     Friend WithEvents PortDOpenDialog1 As System.Windows.Forms.OpenFileDialog
     Friend WithEvents ExtListPortCDialog As System.Windows.Forms.OpenFileDialog
     Friend WithEvents ExtListPortDDialog As System.Windows.Forms.OpenFileDialog
-    Friend WithEvents TabPage4 As System.Windows.Forms.TabPage
+    Friend WithEvents Settings As System.Windows.Forms.TabPage
     Friend WithEvents RealTimeSet As System.Windows.Forms.CheckBox
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
-    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
-    Friend WithEvents EchoFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents EchoFX As System.Windows.Forms.CheckBox
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents SittingFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents DistortionFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents GargleFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents SittingFX As System.Windows.Forms.CheckBox
-    Friend WithEvents DistortionFX As System.Windows.Forms.CheckBox
-    Friend WithEvents CompressorFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents FlangerFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents ChorusFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents ReverbFXNum As System.Windows.Forms.NumericUpDown
-    Friend WithEvents CompressorFX As System.Windows.Forms.CheckBox
-    Friend WithEvents FlangerFX As System.Windows.Forms.CheckBox
-    Friend WithEvents ChorusFX As System.Windows.Forms.CheckBox
-    Friend WithEvents GargleFX As System.Windows.Forms.CheckBox
-    Friend WithEvents ReverbFX As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents VolumeBar As System.Windows.Forms.TrackBar
     Friend WithEvents CurrentVolumeHUE As System.Windows.Forms.Label
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
-    Friend WithEvents BufferWarning As System.Windows.Forms.PictureBox
     Friend WithEvents VoiceWarning As System.Windows.Forms.PictureBox
-    Friend WithEvents SysResetIgnore As System.Windows.Forms.CheckBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents TracksLimit As System.Windows.Forms.NumericUpDown
-    Friend WithEvents SincInter As System.Windows.Forms.CheckBox
-    Friend WithEvents BufferText As System.Windows.Forms.Label
-    Friend WithEvents bufsize As System.Windows.Forms.NumericUpDown
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents Frequency As System.Windows.Forms.ComboBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
@@ -1276,12 +1323,11 @@ Partial Class MainWindow
     Friend WithEvents LatestVersionDriver As System.Windows.Forms.Label
     Friend WithEvents UpdateDownload As System.Windows.Forms.Button
     Friend WithEvents ThisVersionDriver As System.Windows.Forms.Label
-    Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents BlackMIDIPreset As System.Windows.Forms.Button
     Friend WithEvents RealTimeSetText As System.Windows.Forms.Label
-    Friend WithEvents AdvancedApply As System.Windows.Forms.Button
-    Friend WithEvents AdvancedReset As System.Windows.Forms.Button
-    Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
+    Friend WithEvents Apply As System.Windows.Forms.Button
+    Friend WithEvents Reset As System.Windows.Forms.Button
+    Friend WithEvents BlacklistSys As System.Windows.Forms.TabPage
     Friend WithEvents ClearBlacklist As System.Windows.Forms.Button
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents ManualBlackListLabel As System.Windows.Forms.Label
@@ -1339,6 +1385,40 @@ Partial Class MainWindow
     Friend WithEvents SFZ3 As System.Windows.Forms.Button
     Friend WithEvents SFZ2 As System.Windows.Forms.Button
     Friend WithEvents SFZ1 As System.Windows.Forms.Button
+    Friend WithEvents AdvSettings As System.Windows.Forms.TabPage
+    Friend WithEvents RealTimeSet2 As System.Windows.Forms.CheckBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents BlackMIDIPreset2 As System.Windows.Forms.Button
+    Friend WithEvents RealTimeSetText2 As System.Windows.Forms.Label
+    Friend WithEvents AdvancedApply As System.Windows.Forms.Button
+    Friend WithEvents AdvancedReset As System.Windows.Forms.Button
+    Friend WithEvents AdvPanel As System.Windows.Forms.Panel
+    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+    Friend WithEvents EchoFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents EchoFX As System.Windows.Forms.CheckBox
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents SittingFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents DistortionFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents GargleFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents SittingFX As System.Windows.Forms.CheckBox
+    Friend WithEvents DistortionFX As System.Windows.Forms.CheckBox
+    Friend WithEvents CompressorFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents FlangerFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents ChorusFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents ReverbFXNum As System.Windows.Forms.NumericUpDown
+    Friend WithEvents CompressorFX As System.Windows.Forms.CheckBox
+    Friend WithEvents FlangerFX As System.Windows.Forms.CheckBox
+    Friend WithEvents ChorusFX As System.Windows.Forms.CheckBox
+    Friend WithEvents GargleFX As System.Windows.Forms.CheckBox
+    Friend WithEvents ReverbFX As System.Windows.Forms.CheckBox
     Friend WithEvents NoDX8FX As System.Windows.Forms.CheckBox
+    Friend WithEvents SincInter As System.Windows.Forms.CheckBox
+    Friend WithEvents BufferWarning As System.Windows.Forms.PictureBox
+    Friend WithEvents bufsize As System.Windows.Forms.NumericUpDown
+    Friend WithEvents SysResetIgnore As System.Windows.Forms.CheckBox
+    Friend WithEvents BufferText As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents TracksLimit As System.Windows.Forms.NumericUpDown
+    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
 
 End Class
