@@ -25,9 +25,7 @@ To use the driver, you need at least:
 - [DirectX 9.0c with XAudio 2.x] (http://www.microsoft.com/en-us/download/details.aspx?id=35) (Integrated in the installer)
 - Windows 7 SP1 or greater
 
-INFO: Windows 10 will NOT be supported until Microsoft doesn't fix the problem with the MIDI-Mapper.
-There's already a patch for Windows 8 and 8.1, so I'll give support for them.
-
+## Minimum system requirements for driver compiling
 To compile (and test) the driver, you need:
 - Microsoft Visual Studio 2013
 - Inno Setup 5.5.6 (It's recommended to install Inno Setup Studio and the Inno Setup Pack)
@@ -39,3 +37,10 @@ To compile (and test) the driver, you need:
 Absolutely no, Kode54's driver is better than mine tho. (His code is more cleaner, and way more stable)
 
 You can download it from there here: https://github.com/kode54/BASSMIDI-Driver
+
+## About the Windows 10 support
+INFO: Windows 10 will NOT be supported until Microsoft doesn't fix the problem with the MIDI-Mapper.
+There's already a patch for Windows 8 and 8.1, so I'll give support for them.
+
+And for support, I mean bug fixes and other things like that.
+The driver itself works on Windows 10, but it's really glitchy.
