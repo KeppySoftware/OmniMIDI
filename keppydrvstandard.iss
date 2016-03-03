@@ -35,12 +35,12 @@ UninstallDisplaySize=5
 UninstallFilesDir={sys}
 VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
-VersionInfoDescription=User-mode MIDI driver for Windows XP and newer
+VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver 3.0
-VersionInfoProductTextVersion=3.0.0.4
+VersionInfoProductTextVersion=3.0.0.5
 VersionInfoProductVersion=3.0
-VersionInfoTextVersion=User-mode MIDI driver for Windows XP and newer
-VersionInfoVersion=3.0.0.4
+VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
+VersionInfoVersion=3.0.0.5
 
 [Files]
 ; 64-bit OS

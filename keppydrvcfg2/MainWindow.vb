@@ -1736,7 +1736,7 @@ Public Class MainWindow
             PolyphonyLimit.Value = 1000
             TracksLimit.Value = 16
             MaxCPU.Text = "75"
-            Frequency.Text = "44100"
+            Frequency.Text = "48000"
             Preload.Checked = True
             NoDX8FX.Checked = True
             SincInter.Checked = False
@@ -1755,7 +1755,7 @@ Public Class MainWindow
             keppykey.SetValue("sysresetignore", "1", RegistryValueKind.DWord)
             keppykey.SetValue("preload", "1", RegistryValueKind.DWord)
             keppykey.SetValue("buflen", "12", RegistryValueKind.DWord)
-            keppykey.SetValue("frequency", "44100", RegistryValueKind.DWord)
+            keppykey.SetValue("frequency", "48000", RegistryValueKind.DWord)
             keppykey.SetValue("tracks", "16", RegistryValueKind.DWord)
             keppykey.SetValue("sinc", "0", RegistryValueKind.DWord)
             keppykey.SetValue("mono", "0", RegistryValueKind.DWord)
@@ -1783,7 +1783,7 @@ Public Class MainWindow
             PolyphonyLimit.Value = 512
             TracksLimit.Value = 16
             MaxCPU.Text = "65"
-            Frequency.Text = "44100"
+            Frequency.Text = "48000"
             Preload.Checked = True
             SincInter.Checked = False
             DisableFX.Checked = False
@@ -1807,7 +1807,7 @@ Public Class MainWindow
             keppykey.SetValue("sysresetignore", "0", RegistryValueKind.DWord)
             keppykey.SetValue("preload", "1", RegistryValueKind.DWord)
             keppykey.SetValue("buflen", "30", RegistryValueKind.DWord)
-            keppykey.SetValue("frequency", "44100", RegistryValueKind.DWord)
+            keppykey.SetValue("frequency", "48000", RegistryValueKind.DWord)
             keppykey.SetValue("tracks", "16", RegistryValueKind.DWord)
             keppykey.SetValue("sinc", "0", RegistryValueKind.DWord)
             keppykey.SetValue("volume", "10000", RegistryValueKind.DWord)
