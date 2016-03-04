@@ -2,6 +2,7 @@
 *.suo
 *.suo
 *.tmp
+keppydrvcfg2/
 /*.dll
 /*.exe
 /*.opensdf
@@ -30,9 +31,6 @@
 /keppydrv/out
 /keppydrv/output
 /keppydrv/x64
-/keppydrvcfg2/bin
-/keppydrvcfg2/obj
-/keppydrvcfg2/output
 /keppydrvconfig
 /KeppyDriverConfigurator/KeppyDriverConfigurator/bin
 /KeppyDriverConfigurator/KeppyDriverConfigurator/obj

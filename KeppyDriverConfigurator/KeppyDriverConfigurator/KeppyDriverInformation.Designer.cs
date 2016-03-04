@@ -33,7 +33,6 @@
             this.PictureBox1 = new System.Windows.Forms.PictureBox();
             this.Label8 = new System.Windows.Forms.Label();
             this.RichTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -78,19 +77,9 @@
             this.RichTextBox1.Location = new System.Drawing.Point(279, 67);
             this.RichTextBox1.Name = "RichTextBox1";
             this.RichTextBox1.ReadOnly = true;
-            this.RichTextBox1.Size = new System.Drawing.Size(344, 175);
+            this.RichTextBox1.Size = new System.Drawing.Size(344, 189);
             this.RichTextBox1.TabIndex = 22;
             this.RichTextBox1.Text = resources.GetString("RichTextBox1.Text");
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.Gray;
-            this.label1.Location = new System.Drawing.Point(386, 251);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 13);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Now the configurator uses C#!";
             // 
             // KeppyDriverInformation
             // 
@@ -98,7 +87,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(635, 281);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.Button1);
             this.Controls.Add(this.PictureBox1);
             this.Controls.Add(this.Label8);
@@ -116,7 +104,6 @@
             this.Load += new System.EventHandler(this.KeppyDriverInformation_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -126,6 +113,5 @@
         internal System.Windows.Forms.PictureBox PictureBox1;
         internal System.Windows.Forms.Label Label8;
         internal System.Windows.Forms.RichTextBox RichTextBox1;
-        private System.Windows.Forms.Label label1;
     }
 }

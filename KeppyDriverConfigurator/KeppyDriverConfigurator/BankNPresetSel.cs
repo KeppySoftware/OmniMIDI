@@ -12,15 +12,17 @@ namespace KeppyDriverConfigurator
     {
         public string BankValueReturn { get; set; }
         public string PresetValueReturn { get; set; }
+        public string SelectedSF { get; set; }
 
-        public BankNPresetSel()
+        public BankNPresetSel(String Target)
         {
             InitializeComponent();
-
+            SelectedSF = Target;
         }
 
         private void PresetSel_Load(object sender, EventArgs e)
         {
+            SelectedSFLabel.Text = "Selected soundfont:\n" + SelectedSF;
             BankVal.Value = 0;
             PresetVal.Value = 0;
         }

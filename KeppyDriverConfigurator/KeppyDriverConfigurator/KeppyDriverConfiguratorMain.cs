@@ -55,7 +55,27 @@ namespace KeppyDriverConfigurator
                     string line;
                     while ((line = r.ReadLine()) != null)
                     {
-                        DestinationList.Items.Add(line); // Read the external list and add the items to the selected list
+                        if (Path.GetExtension(line) == ".sf2" | Path.GetExtension(line) == ".SF2" | Path.GetExtension(line) == ".sfpack" | Path.GetExtension(line) == ".SFPACK")
+                        {
+                            DestinationList.Items.Add(line); // Read the external list and add the items to the selected list
+                        }
+                        else if (Path.GetExtension(line) == ".sfz" | Path.GetExtension(line) == ".SFZ")
+                        {
+                            using (var form = new BankNPresetSel(Path.GetFileName(line)))
+                            {
+                                var result = form.ShowDialog();
+                                if (result == DialogResult.OK)
+                                {
+                                    string bank = form.BankValueReturn;
+                                    string preset = form.PresetValueReturn;
+                                    DestinationList.Items.Add("p" + bank + "," + preset + "=0,0|" + line);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(Path.GetFileName(line) + " is not a valid soundfont!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
@@ -313,7 +333,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel())
+                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -326,7 +346,7 @@ namespace KeppyDriverConfigurator
                         }
                         else
                         {
-                            MessageBox.Show("This is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     SaveList(List1Path, Lis1);
@@ -353,7 +373,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel())
+                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -366,7 +386,7 @@ namespace KeppyDriverConfigurator
                         }
                         else
                         {
-                            MessageBox.Show("This is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     SaveList(List2Path, Lis2);
@@ -393,7 +413,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel())
+                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -406,7 +426,7 @@ namespace KeppyDriverConfigurator
                         }
                         else
                         {
-                            MessageBox.Show("This is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     SaveList(List3Path, Lis3);
@@ -433,7 +453,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel())
+                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -446,7 +466,7 @@ namespace KeppyDriverConfigurator
                         }
                         else
                         {
-                            MessageBox.Show("This is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     SaveList(List4Path, Lis4);
@@ -840,6 +860,12 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverMIDIOutSelectorWin frm = new KeppyDriverMIDIOutSelectorWin();
+            frm.ShowDialog();
+        }
+
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/KaleidonKep99/Keppy-s-Driver/releases");
@@ -854,7 +880,7 @@ namespace KeppyDriverConfigurator
             }
             else if (dialogResult == DialogResult.No)
             {
-                //do something else
+                
             }
         }
 
@@ -871,6 +897,24 @@ namespace KeppyDriverConfigurator
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        // Guide part
+        private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To change the current soundfont list, press and hold CTRL, then click a number from 1 to 4.\n\n" +
+                "CTRL+1: Load soundfont list 1\nCTRL+2: Load soundfont list 2\nCTRL+3: Load soundfont list 3\nCTRL+4: Load soundfont list 4\n\n" +
+                "You can also reload lists that are already loaded.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void howCanIResetTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To reset the driver, press INS.\nThis will stop all the samples that are currently playing, and it'll also send a \"System Reset\" to all the MIDI channels.", "How can I reset the driver?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("For Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor USB DACs, it's 30-35.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
     }
 }

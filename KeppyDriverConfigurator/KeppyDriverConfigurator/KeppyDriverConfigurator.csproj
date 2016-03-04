@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\</OutputPath>
@@ -91,6 +91,17 @@
     <Compile Include="KeppyDriverInformation.Designer.cs">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeppyDriverMIDIOutSelectorWin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverMIDIOutSelectorWin.Designer.cs">
+      <DependentUpon>KeppyDriverMIDIOutSelectorWin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MIDI\Interop\Constants.cs" />
+    <Compile Include="MIDI\Interop\Functions.cs" />
+    <Compile Include="MIDI\Interop\Structures.cs" />
+    <Compile Include="MIDI\NET\Devices\Collections.cs" />
+    <Compile Include="MIDI\NET\Devices\Output.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="KeppyDriverBlacklistSystem.resx">
@@ -107,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverInformation.resx">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppyDriverMIDIOutSelectorWin.resx">
+      <DependentUpon>KeppyDriverMIDIOutSelectorWin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

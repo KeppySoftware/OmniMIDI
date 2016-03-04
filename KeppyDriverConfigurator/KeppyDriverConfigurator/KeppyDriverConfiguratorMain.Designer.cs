@@ -41,6 +41,7 @@
             this.AddSF1 = new System.Windows.Forms.Button();
             this.Lis1 = new System.Windows.Forms.ListBox();
             this.List2 = new System.Windows.Forms.TabPage();
+            this.List2Override = new System.Windows.Forms.Label();
             this.IELPan2 = new System.Windows.Forms.Panel();
             this.IEL2 = new System.Windows.Forms.Button();
             this.CLi2 = new System.Windows.Forms.Button();
@@ -50,6 +51,7 @@
             this.AddSF2 = new System.Windows.Forms.Button();
             this.Lis2 = new System.Windows.Forms.ListBox();
             this.List3 = new System.Windows.Forms.TabPage();
+            this.List3Override = new System.Windows.Forms.Label();
             this.IELPan3 = new System.Windows.Forms.Panel();
             this.IEL3 = new System.Windows.Forms.Button();
             this.CLi3 = new System.Windows.Forms.Button();
@@ -59,6 +61,7 @@
             this.AddSF3 = new System.Windows.Forms.Button();
             this.Lis3 = new System.Windows.Forms.ListBox();
             this.List4 = new System.Windows.Forms.TabPage();
+            this.List4Override = new System.Windows.Forms.Label();
             this.IELPan4 = new System.Windows.Forms.Panel();
             this.IEL4 = new System.Windows.Forms.Button();
             this.CLi4 = new System.Windows.Forms.Button();
@@ -96,20 +99,23 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.reportABugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visitKeppyStudiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
-            this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.List2Override = new System.Windows.Forms.Label();
-            this.List3Override = new System.Windows.Forms.Label();
-            this.List4Override = new System.Windows.Forms.Label();
+            this.guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howCanIChangeTheSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howCanIResetTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -269,6 +275,16 @@
             this.List2.Text = "List II";
             this.List2.UseVisualStyleBackColor = true;
             // 
+            // List2Override
+            // 
+            this.List2Override.AutoSize = true;
+            this.List2Override.Enabled = false;
+            this.List2Override.Location = new System.Drawing.Point(8, 381);
+            this.List2Override.Name = "List2Override";
+            this.List2Override.Size = new System.Drawing.Size(250, 13);
+            this.List2Override.TabIndex = 16;
+            this.List2Override.Text = "The last soundfont will override the previous ones.";
+            // 
             // IELPan2
             // 
             this.IELPan2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -366,6 +382,16 @@
             this.List3.Text = "List III";
             this.List3.UseVisualStyleBackColor = true;
             // 
+            // List3Override
+            // 
+            this.List3Override.AutoSize = true;
+            this.List3Override.Enabled = false;
+            this.List3Override.Location = new System.Drawing.Point(8, 381);
+            this.List3Override.Name = "List3Override";
+            this.List3Override.Size = new System.Drawing.Size(250, 13);
+            this.List3Override.TabIndex = 23;
+            this.List3Override.Text = "The last soundfont will override the previous ones.";
+            // 
             // IELPan3
             // 
             this.IELPan3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -462,6 +488,16 @@
             this.List4.TabIndex = 3;
             this.List4.Text = "List IV";
             this.List4.UseVisualStyleBackColor = true;
+            // 
+            // List4Override
+            // 
+            this.List4Override.AutoSize = true;
+            this.List4Override.Enabled = false;
+            this.List4Override.Location = new System.Drawing.Point(8, 381);
+            this.List4Override.Name = "List4Override";
+            this.List4Override.Size = new System.Drawing.Size(250, 13);
+            this.List4Override.TabIndex = 30;
+            this.List4Override.Text = "The last soundfont will override the previous ones.";
             // 
             // IELPan4
             // 
@@ -982,6 +1018,7 @@
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.guideToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
@@ -995,6 +1032,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openDebugWindowToolStripMenuItem,
             this.openTheBlacklistManagerToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -1004,26 +1043,38 @@
             // openDebugWindowToolStripMenuItem
             // 
             this.openDebugWindowToolStripMenuItem.Name = "openDebugWindowToolStripMenuItem";
-            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
             // 
             // openTheBlacklistManagerToolStripMenuItem
             // 
             this.openTheBlacklistManagerToolStripMenuItem.Name = "openTheBlacklistManagerToolStripMenuItem";
-            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.openTheBlacklistManagerToolStripMenuItem.Text = "Open the blacklist manager";
             this.openTheBlacklistManagerToolStripMenuItem.Click += new System.EventHandler(this.openTheBlacklistManagerToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
+            // 
+            // changeDefaultMIDIOutDeviceToolStripMenuItem
+            // 
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(238, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1046,6 +1097,13 @@
             this.informationAboutTheDriverToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.informationAboutTheDriverToolStripMenuItem.Text = "Information about the driver";
             this.informationAboutTheDriverToolStripMenuItem.Click += new System.EventHandler(this.informationAboutTheDriverToolStripMenuItem_Click);
+            // 
+            // openUpdaterToolStripMenuItem
+            // 
+            this.openUpdaterToolStripMenuItem.Name = "openUpdaterToolStripMenuItem";
+            this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.openUpdaterToolStripMenuItem.Text = "Check for updates";
+            this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -1088,42 +1146,36 @@
             this.ExternalListImport.FileName = "openFileDialog1";
             this.ExternalListImport.Filter = "Soundfont lists|*.txt;*.sflist;";
             // 
-            // openUpdaterToolStripMenuItem
+            // guideToolStripMenuItem
             // 
-            this.openUpdaterToolStripMenuItem.Name = "openUpdaterToolStripMenuItem";
-            this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.openUpdaterToolStripMenuItem.Text = "Check for updates";
-            this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            this.guideToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.howCanIChangeTheSoundfontListToolStripMenuItem,
+            this.howCanIResetTheDriverToolStripMenuItem,
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
+            this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
+            this.guideToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.guideToolStripMenuItem.Text = "Guide";
             // 
-            // List2Override
+            // howCanIChangeTheSoundfontListToolStripMenuItem
             // 
-            this.List2Override.AutoSize = true;
-            this.List2Override.Enabled = false;
-            this.List2Override.Location = new System.Drawing.Point(8, 381);
-            this.List2Override.Name = "List2Override";
-            this.List2Override.Size = new System.Drawing.Size(250, 13);
-            this.List2Override.TabIndex = 16;
-            this.List2Override.Text = "The last soundfont will override the previous ones.";
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
             // 
-            // List3Override
+            // howCanIResetTheDriverToolStripMenuItem
             // 
-            this.List3Override.AutoSize = true;
-            this.List3Override.Enabled = false;
-            this.List3Override.Location = new System.Drawing.Point(8, 381);
-            this.List3Override.Name = "List3Override";
-            this.List3Override.Size = new System.Drawing.Size(250, 13);
-            this.List3Override.TabIndex = 23;
-            this.List3Override.Text = "The last soundfont will override the previous ones.";
+            this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
+            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
+            this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
             // 
-            // List4Override
+            // whatsTheBestSettingsForTheBufferToolStripMenuItem
             // 
-            this.List4Override.AutoSize = true;
-            this.List4Override.Enabled = false;
-            this.List4Override.Location = new System.Drawing.Point(8, 381);
-            this.List4Override.Name = "List4Override";
-            this.List4Override.Size = new System.Drawing.Size(250, 13);
-            this.List4Override.TabIndex = 30;
-            this.List4Override.Text = "The last soundfont will override the previous ones.";
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1255,6 +1307,12 @@
         private System.Windows.Forms.Label List2Override;
         private System.Windows.Forms.Label List3Override;
         private System.Windows.Forms.Label List4Override;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem guideToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem howCanIChangeTheSoundfontListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem howCanIResetTheDriverToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem whatsTheBestSettingsForTheBufferToolStripMenuItem;
     }
 }
 

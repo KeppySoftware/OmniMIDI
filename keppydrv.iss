@@ -10,7 +10,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.0
+AppVersion=3.1
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -30,17 +30,17 @@ ShowUndisplayableLanguages=True
 SolidCompression=yes
 TimeStampsInUTC=True
 UninstallDisplayIcon={sys}\keppydrv\keppydrvcfg.exe
-UninstallDisplayName=Keppy's Driver 3.0
+UninstallDisplayName=Keppy's Driver 3.1
 UninstallDisplaySize=5
 UninstallFilesDir={sys}
 VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
-VersionInfoProductName=Keppy's Driver 3.0
-VersionInfoProductTextVersion=3.1.0.0
+VersionInfoProductName=Keppy's Driver 3.1
+VersionInfoProductTextVersion=3.1.0.1
 VersionInfoProductVersion=3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.0.0
+VersionInfoVersion=3.1.0.1
 
 [Files]
 ; 64-bit OS
@@ -58,7 +58,6 @@ Source: "output\bassmidi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassmi
 Source: "output\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
-Source: "output\keppydrvcfg.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrvcfg.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
@@ -70,7 +69,6 @@ Source: "output\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dl
 Source: "output\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\keppydrvcfg.exe"; DestDir: "{sys}\keppydrv"; DestName: "keppydrvcfg.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{sys}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
@@ -89,11 +87,9 @@ Name: "{sys}\keppydrv"; Attribs: system; Check: not Is64BitInstallMode
 [Icons]
 ; 64-bit OS
 Name: "{group}\Configure Keppy's Driver"; Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
-Name: "{group}\Use the old configurator (VB.NET)"; Filename: "{syswow64}\keppydrv\keppydrvcfg.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{syswow64}\keppydrv\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 ; 32-bit OS
 Name: "{group}\Configure Keppy's Driver"; Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
-Name: "{group}\Use the old configurator (VB.NET)"; Filename: "{sys}\keppydrv\keppydrvcfg.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\keppydrv\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode   
 ; Generic for all the OSes
 Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"
@@ -152,6 +148,8 @@ Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
@@ -161,6 +159,7 @@ Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: not Is64BitInstallMode
@@ -170,6 +169,7 @@ Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 
 [UninstallDelete]
@@ -179,7 +179,8 @@ Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
@@ -189,6 +190,7 @@ Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: not Is64BitInstallMode
@@ -198,14 +200,13 @@ Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 
 [Run]
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DirectX installer"; StatusMsg: "Installing DirectX runtime (XAudio2)..."
-Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the NEW configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
-Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the NEW configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
-Filename: "{syswow64}\keppydrv\keppydrvcfg.exe"; Flags: postinstall runascurrentuser nowait unchecked; Description: "Run the old configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
-Filename: "{sys}\keppydrv\keppydrvcfg.exe"; Flags: postinstall runascurrentuser nowait unchecked; Description: "Run the old configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
+Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
+Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
 
 [Messages]
 SetupAppTitle=Keppy's Driver Installer

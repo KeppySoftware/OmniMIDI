@@ -34,6 +34,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.BankVal = new System.Windows.Forms.NumericUpDown();
             this.PresetVal = new System.Windows.Forms.NumericUpDown();
+            this.SelectedSFLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.BankVal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PresetVal)).BeginInit();
             this.SuspendLayout();
@@ -41,7 +42,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 16);
+            this.label1.Location = new System.Drawing.Point(9, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(342, 52);
             this.label1.TabIndex = 0;
@@ -51,7 +52,7 @@
             // 
             // ConfirmBut
             // 
-            this.ConfirmBut.Location = new System.Drawing.Point(286, 142);
+            this.ConfirmBut.Location = new System.Drawing.Point(277, 106);
             this.ConfirmBut.Name = "ConfirmBut";
             this.ConfirmBut.Size = new System.Drawing.Size(75, 23);
             this.ConfirmBut.TabIndex = 1;
@@ -62,7 +63,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 94);
+            this.label2.Location = new System.Drawing.Point(11, 78);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 2;
@@ -71,7 +72,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(194, 94);
+            this.label3.Location = new System.Drawing.Point(186, 78);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
             this.label3.TabIndex = 3;
@@ -79,7 +80,7 @@
             // 
             // BankVal
             // 
-            this.BankVal.Location = new System.Drawing.Point(53, 91);
+            this.BankVal.Location = new System.Drawing.Point(45, 75);
             this.BankVal.Maximum = new decimal(new int[] {
             127,
             0,
@@ -92,7 +93,7 @@
             // 
             // PresetVal
             // 
-            this.PresetVal.Location = new System.Drawing.Point(233, 91);
+            this.PresetVal.Location = new System.Drawing.Point(225, 75);
             this.PresetVal.Maximum = new decimal(new int[] {
             127,
             0,
@@ -103,11 +104,23 @@
             this.PresetVal.TabIndex = 5;
             this.PresetVal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // SelectedSFLabel
+            // 
+            this.SelectedSFLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SelectedSFLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.SelectedSFLabel.Location = new System.Drawing.Point(0, 137);
+            this.SelectedSFLabel.Name = "SelectedSFLabel";
+            this.SelectedSFLabel.Size = new System.Drawing.Size(360, 40);
+            this.SelectedSFLabel.TabIndex = 6;
+            this.SelectedSFLabel.Text = "Selected soundfont:\r\nPotato.sf2";
+            this.SelectedSFLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // BankNPresetSel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(373, 177);
+            this.ClientSize = new System.Drawing.Size(360, 177);
+            this.Controls.Add(this.SelectedSFLabel);
             this.Controls.Add(this.PresetVal);
             this.Controls.Add(this.BankVal);
             this.Controls.Add(this.label3);
@@ -138,5 +151,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown BankVal;
         private System.Windows.Forms.NumericUpDown PresetVal;
+        private System.Windows.Forms.Label SelectedSFLabel;
     }
 }
