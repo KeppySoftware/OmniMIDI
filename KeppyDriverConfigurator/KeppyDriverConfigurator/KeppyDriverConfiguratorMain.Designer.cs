@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppyDriverConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List1 = new System.Windows.Forms.TabPage();
+            this.SFZComp1 = new System.Windows.Forms.PictureBox();
             this.List1Override = new System.Windows.Forms.Label();
             this.IELPan1 = new System.Windows.Forms.Panel();
             this.IEL1 = new System.Windows.Forms.Button();
@@ -41,6 +42,7 @@
             this.AddSF1 = new System.Windows.Forms.Button();
             this.Lis1 = new System.Windows.Forms.ListBox();
             this.List2 = new System.Windows.Forms.TabPage();
+            this.SFZComp2 = new System.Windows.Forms.PictureBox();
             this.List2Override = new System.Windows.Forms.Label();
             this.IELPan2 = new System.Windows.Forms.Panel();
             this.IEL2 = new System.Windows.Forms.Button();
@@ -51,6 +53,7 @@
             this.AddSF2 = new System.Windows.Forms.Button();
             this.Lis2 = new System.Windows.Forms.ListBox();
             this.List3 = new System.Windows.Forms.TabPage();
+            this.SFZComp3 = new System.Windows.Forms.PictureBox();
             this.List3Override = new System.Windows.Forms.Label();
             this.IELPan3 = new System.Windows.Forms.Panel();
             this.IEL3 = new System.Windows.Forms.Button();
@@ -61,6 +64,7 @@
             this.AddSF3 = new System.Windows.Forms.Button();
             this.Lis3 = new System.Windows.Forms.ListBox();
             this.List4 = new System.Windows.Forms.TabPage();
+            this.SFZComp4 = new System.Windows.Forms.PictureBox();
             this.List4Override = new System.Windows.Forms.Label();
             this.IELPan4 = new System.Windows.Forms.Panel();
             this.IEL4 = new System.Windows.Forms.Button();
@@ -103,6 +107,10 @@
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howCanIChangeTheSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howCanIResetTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,18 +120,18 @@
             this.visitKeppyStudiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
-            this.guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.howCanIChangeTheSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.howCanIResetTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
             this.IELPan1.SuspendLayout();
             this.List2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp2)).BeginInit();
             this.IELPan2.SuspendLayout();
             this.List3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp3)).BeginInit();
             this.IELPan3.SuspendLayout();
             this.List4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).BeginInit();
             this.IELPan4.SuspendLayout();
             this.Settings.SuspendLayout();
             this.GroupBox5.SuspendLayout();
@@ -151,6 +159,8 @@
             // 
             // List1
             // 
+            this.List1.BackColor = System.Drawing.Color.White;
+            this.List1.Controls.Add(this.SFZComp1);
             this.List1.Controls.Add(this.List1Override);
             this.List1.Controls.Add(this.IELPan1);
             this.List1.Controls.Add(this.CLi1);
@@ -165,7 +175,17 @@
             this.List1.Size = new System.Drawing.Size(677, 399);
             this.List1.TabIndex = 0;
             this.List1.Text = "List I";
-            this.List1.UseVisualStyleBackColor = true;
+            // 
+            // SFZComp1
+            // 
+            this.SFZComp1.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
+            this.SFZComp1.Location = new System.Drawing.Point(581, 209);
+            this.SFZComp1.Name = "SFZComp1";
+            this.SFZComp1.Size = new System.Drawing.Size(89, 96);
+            this.SFZComp1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.SFZComp1.TabIndex = 10;
+            this.SFZComp1.TabStop = false;
+            this.SFZComp1.Click += new System.EventHandler(this.SFZComp1_Click);
             // 
             // List1Override
             // 
@@ -192,7 +212,7 @@
             this.IEL1.Location = new System.Drawing.Point(0, 0);
             this.IEL1.Name = "IEL1";
             this.IEL1.Size = new System.Drawing.Size(85, 59);
-            this.IEL1.TabIndex = 0;
+            this.IEL1.TabIndex = 6;
             this.IEL1.Text = "Import\r\nexternal list";
             this.IEL1.UseVisualStyleBackColor = true;
             this.IEL1.Click += new System.EventHandler(this.IEL1_Click);
@@ -202,7 +222,7 @@
             this.CLi1.Location = new System.Drawing.Point(581, 180);
             this.CLi1.Name = "CLi1";
             this.CLi1.Size = new System.Drawing.Size(89, 23);
-            this.CLi1.TabIndex = 7;
+            this.CLi1.TabIndex = 5;
             this.CLi1.Text = "Clear list";
             this.CLi1.UseVisualStyleBackColor = true;
             this.CLi1.Click += new System.EventHandler(this.CLi1_Click);
@@ -212,7 +232,7 @@
             this.MvD1.Location = new System.Drawing.Point(581, 122);
             this.MvD1.Name = "MvD1";
             this.MvD1.Size = new System.Drawing.Size(89, 23);
-            this.MvD1.TabIndex = 5;
+            this.MvD1.TabIndex = 4;
             this.MvD1.Text = "Move Dwn ▼";
             this.MvD1.UseVisualStyleBackColor = true;
             this.MvD1.Click += new System.EventHandler(this.MvD1_Click);
@@ -222,7 +242,7 @@
             this.MvU1.Location = new System.Drawing.Point(581, 93);
             this.MvU1.Name = "MvU1";
             this.MvU1.Size = new System.Drawing.Size(89, 23);
-            this.MvU1.TabIndex = 4;
+            this.MvU1.TabIndex = 3;
             this.MvU1.Text = "Move Up ▲";
             this.MvU1.UseVisualStyleBackColor = true;
             this.MvU1.Click += new System.EventHandler(this.MvU1_Click);
@@ -259,6 +279,8 @@
             // 
             // List2
             // 
+            this.List2.BackColor = System.Drawing.Color.White;
+            this.List2.Controls.Add(this.SFZComp2);
             this.List2.Controls.Add(this.List2Override);
             this.List2.Controls.Add(this.IELPan2);
             this.List2.Controls.Add(this.CLi2);
@@ -273,7 +295,17 @@
             this.List2.Size = new System.Drawing.Size(677, 399);
             this.List2.TabIndex = 1;
             this.List2.Text = "List II";
-            this.List2.UseVisualStyleBackColor = true;
+            // 
+            // SFZComp2
+            // 
+            this.SFZComp2.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
+            this.SFZComp2.Location = new System.Drawing.Point(581, 209);
+            this.SFZComp2.Name = "SFZComp2";
+            this.SFZComp2.Size = new System.Drawing.Size(89, 96);
+            this.SFZComp2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.SFZComp2.TabIndex = 17;
+            this.SFZComp2.TabStop = false;
+            this.SFZComp2.Click += new System.EventHandler(this.SFZComp2_Click);
             // 
             // List2Override
             // 
@@ -300,7 +332,7 @@
             this.IEL2.Location = new System.Drawing.Point(0, 0);
             this.IEL2.Name = "IEL2";
             this.IEL2.Size = new System.Drawing.Size(85, 59);
-            this.IEL2.TabIndex = 0;
+            this.IEL2.TabIndex = 6;
             this.IEL2.Text = "Import\r\nexternal list";
             this.IEL2.UseVisualStyleBackColor = true;
             this.IEL2.Click += new System.EventHandler(this.IEL2_Click);
@@ -310,7 +342,7 @@
             this.CLi2.Location = new System.Drawing.Point(581, 180);
             this.CLi2.Name = "CLi2";
             this.CLi2.Size = new System.Drawing.Size(89, 23);
-            this.CLi2.TabIndex = 14;
+            this.CLi2.TabIndex = 5;
             this.CLi2.Text = "Clear list";
             this.CLi2.UseVisualStyleBackColor = true;
             this.CLi2.Click += new System.EventHandler(this.CLi2_Click);
@@ -320,7 +352,7 @@
             this.MvD2.Location = new System.Drawing.Point(581, 122);
             this.MvD2.Name = "MvD2";
             this.MvD2.Size = new System.Drawing.Size(89, 23);
-            this.MvD2.TabIndex = 13;
+            this.MvD2.TabIndex = 4;
             this.MvD2.Text = "Move Dwn ▼";
             this.MvD2.UseVisualStyleBackColor = true;
             this.MvD2.Click += new System.EventHandler(this.MvD2_Click);
@@ -330,7 +362,7 @@
             this.MvU2.Location = new System.Drawing.Point(581, 93);
             this.MvU2.Name = "MvU2";
             this.MvU2.Size = new System.Drawing.Size(89, 23);
-            this.MvU2.TabIndex = 12;
+            this.MvU2.TabIndex = 3;
             this.MvU2.Text = "Move Up ▲";
             this.MvU2.UseVisualStyleBackColor = true;
             this.MvU2.Click += new System.EventHandler(this.MvU2_Click);
@@ -340,7 +372,7 @@
             this.RmvSF2.Location = new System.Drawing.Point(581, 35);
             this.RmvSF2.Name = "RmvSF2";
             this.RmvSF2.Size = new System.Drawing.Size(89, 23);
-            this.RmvSF2.TabIndex = 11;
+            this.RmvSF2.TabIndex = 2;
             this.RmvSF2.Text = "Remove -";
             this.RmvSF2.UseVisualStyleBackColor = true;
             this.RmvSF2.Click += new System.EventHandler(this.RmvSF2_Click);
@@ -350,7 +382,7 @@
             this.AddSF2.Location = new System.Drawing.Point(581, 6);
             this.AddSF2.Name = "AddSF2";
             this.AddSF2.Size = new System.Drawing.Size(89, 23);
-            this.AddSF2.TabIndex = 10;
+            this.AddSF2.TabIndex = 1;
             this.AddSF2.Text = "Add +";
             this.AddSF2.UseVisualStyleBackColor = true;
             this.AddSF2.Click += new System.EventHandler(this.AddSF2_Click);
@@ -363,10 +395,12 @@
             this.Lis2.Name = "Lis2";
             this.Lis2.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.Lis2.Size = new System.Drawing.Size(568, 368);
-            this.Lis2.TabIndex = 9;
+            this.Lis2.TabIndex = 0;
             // 
             // List3
             // 
+            this.List3.BackColor = System.Drawing.Color.White;
+            this.List3.Controls.Add(this.SFZComp3);
             this.List3.Controls.Add(this.List3Override);
             this.List3.Controls.Add(this.IELPan3);
             this.List3.Controls.Add(this.CLi3);
@@ -380,7 +414,17 @@
             this.List3.Size = new System.Drawing.Size(677, 399);
             this.List3.TabIndex = 2;
             this.List3.Text = "List III";
-            this.List3.UseVisualStyleBackColor = true;
+            // 
+            // SFZComp3
+            // 
+            this.SFZComp3.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
+            this.SFZComp3.Location = new System.Drawing.Point(581, 209);
+            this.SFZComp3.Name = "SFZComp3";
+            this.SFZComp3.Size = new System.Drawing.Size(89, 96);
+            this.SFZComp3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.SFZComp3.TabIndex = 24;
+            this.SFZComp3.TabStop = false;
+            this.SFZComp3.Click += new System.EventHandler(this.SFZComp3_Click);
             // 
             // List3Override
             // 
@@ -407,7 +451,7 @@
             this.IEL3.Location = new System.Drawing.Point(0, 0);
             this.IEL3.Name = "IEL3";
             this.IEL3.Size = new System.Drawing.Size(85, 59);
-            this.IEL3.TabIndex = 0;
+            this.IEL3.TabIndex = 6;
             this.IEL3.Text = "Import\r\nexternal list";
             this.IEL3.UseVisualStyleBackColor = true;
             this.IEL3.Click += new System.EventHandler(this.IEL3_Click);
@@ -417,7 +461,7 @@
             this.CLi3.Location = new System.Drawing.Point(581, 180);
             this.CLi3.Name = "CLi3";
             this.CLi3.Size = new System.Drawing.Size(89, 23);
-            this.CLi3.TabIndex = 21;
+            this.CLi3.TabIndex = 5;
             this.CLi3.Text = "Clear list";
             this.CLi3.UseVisualStyleBackColor = true;
             this.CLi3.Click += new System.EventHandler(this.CLi3_Click);
@@ -427,7 +471,7 @@
             this.MvD3.Location = new System.Drawing.Point(581, 122);
             this.MvD3.Name = "MvD3";
             this.MvD3.Size = new System.Drawing.Size(89, 23);
-            this.MvD3.TabIndex = 20;
+            this.MvD3.TabIndex = 4;
             this.MvD3.Text = "Move Dwn ▼";
             this.MvD3.UseVisualStyleBackColor = true;
             this.MvD3.Click += new System.EventHandler(this.MvD3_Click);
@@ -437,7 +481,7 @@
             this.MvU3.Location = new System.Drawing.Point(581, 93);
             this.MvU3.Name = "MvU3";
             this.MvU3.Size = new System.Drawing.Size(89, 23);
-            this.MvU3.TabIndex = 19;
+            this.MvU3.TabIndex = 3;
             this.MvU3.Text = "Move Up ▲";
             this.MvU3.UseVisualStyleBackColor = true;
             this.MvU3.Click += new System.EventHandler(this.MvU3_Click);
@@ -447,7 +491,7 @@
             this.RmvSF3.Location = new System.Drawing.Point(581, 35);
             this.RmvSF3.Name = "RmvSF3";
             this.RmvSF3.Size = new System.Drawing.Size(89, 23);
-            this.RmvSF3.TabIndex = 18;
+            this.RmvSF3.TabIndex = 2;
             this.RmvSF3.Text = "Remove -";
             this.RmvSF3.UseVisualStyleBackColor = true;
             this.RmvSF3.Click += new System.EventHandler(this.RmvSF3_Click);
@@ -457,7 +501,7 @@
             this.AddSF3.Location = new System.Drawing.Point(581, 6);
             this.AddSF3.Name = "AddSF3";
             this.AddSF3.Size = new System.Drawing.Size(89, 23);
-            this.AddSF3.TabIndex = 17;
+            this.AddSF3.TabIndex = 1;
             this.AddSF3.Text = "Add +";
             this.AddSF3.UseVisualStyleBackColor = true;
             this.AddSF3.Click += new System.EventHandler(this.AddSF3_Click);
@@ -470,10 +514,12 @@
             this.Lis3.Name = "Lis3";
             this.Lis3.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.Lis3.Size = new System.Drawing.Size(568, 368);
-            this.Lis3.TabIndex = 16;
+            this.Lis3.TabIndex = 0;
             // 
             // List4
             // 
+            this.List4.BackColor = System.Drawing.Color.White;
+            this.List4.Controls.Add(this.SFZComp4);
             this.List4.Controls.Add(this.List4Override);
             this.List4.Controls.Add(this.IELPan4);
             this.List4.Controls.Add(this.CLi4);
@@ -487,7 +533,17 @@
             this.List4.Size = new System.Drawing.Size(677, 399);
             this.List4.TabIndex = 3;
             this.List4.Text = "List IV";
-            this.List4.UseVisualStyleBackColor = true;
+            // 
+            // SFZComp4
+            // 
+            this.SFZComp4.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
+            this.SFZComp4.Location = new System.Drawing.Point(581, 209);
+            this.SFZComp4.Name = "SFZComp4";
+            this.SFZComp4.Size = new System.Drawing.Size(89, 96);
+            this.SFZComp4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.SFZComp4.TabIndex = 31;
+            this.SFZComp4.TabStop = false;
+            this.SFZComp4.Click += new System.EventHandler(this.SFZComp4_Click);
             // 
             // List4Override
             // 
@@ -514,7 +570,7 @@
             this.IEL4.Location = new System.Drawing.Point(0, 0);
             this.IEL4.Name = "IEL4";
             this.IEL4.Size = new System.Drawing.Size(85, 59);
-            this.IEL4.TabIndex = 0;
+            this.IEL4.TabIndex = 6;
             this.IEL4.Text = "Import\r\nexternal list";
             this.IEL4.UseVisualStyleBackColor = true;
             this.IEL4.Click += new System.EventHandler(this.IEL4_Click);
@@ -524,7 +580,7 @@
             this.CLi4.Location = new System.Drawing.Point(581, 180);
             this.CLi4.Name = "CLi4";
             this.CLi4.Size = new System.Drawing.Size(89, 23);
-            this.CLi4.TabIndex = 28;
+            this.CLi4.TabIndex = 5;
             this.CLi4.Text = "Clear list";
             this.CLi4.UseVisualStyleBackColor = true;
             this.CLi4.Click += new System.EventHandler(this.CLi4_Click);
@@ -534,7 +590,7 @@
             this.MvD4.Location = new System.Drawing.Point(581, 122);
             this.MvD4.Name = "MvD4";
             this.MvD4.Size = new System.Drawing.Size(89, 23);
-            this.MvD4.TabIndex = 27;
+            this.MvD4.TabIndex = 4;
             this.MvD4.Text = "Move Dwn ▼";
             this.MvD4.UseVisualStyleBackColor = true;
             this.MvD4.Click += new System.EventHandler(this.MvD4_Click);
@@ -544,7 +600,7 @@
             this.MvU4.Location = new System.Drawing.Point(581, 93);
             this.MvU4.Name = "MvU4";
             this.MvU4.Size = new System.Drawing.Size(89, 23);
-            this.MvU4.TabIndex = 26;
+            this.MvU4.TabIndex = 3;
             this.MvU4.Text = "Move Up ▲";
             this.MvU4.UseVisualStyleBackColor = true;
             this.MvU4.Click += new System.EventHandler(this.MvU4_Click);
@@ -554,7 +610,7 @@
             this.RmvSF4.Location = new System.Drawing.Point(581, 35);
             this.RmvSF4.Name = "RmvSF4";
             this.RmvSF4.Size = new System.Drawing.Size(89, 23);
-            this.RmvSF4.TabIndex = 25;
+            this.RmvSF4.TabIndex = 2;
             this.RmvSF4.Text = "Remove -";
             this.RmvSF4.UseVisualStyleBackColor = true;
             this.RmvSF4.Click += new System.EventHandler(this.RmvSF4_Click);
@@ -564,7 +620,7 @@
             this.AddSF4.Location = new System.Drawing.Point(581, 6);
             this.AddSF4.Name = "AddSF4";
             this.AddSF4.Size = new System.Drawing.Size(89, 23);
-            this.AddSF4.TabIndex = 24;
+            this.AddSF4.TabIndex = 1;
             this.AddSF4.Text = "Add +";
             this.AddSF4.UseVisualStyleBackColor = true;
             this.AddSF4.Click += new System.EventHandler(this.AddSF4_Click);
@@ -577,10 +633,11 @@
             this.Lis4.Name = "Lis4";
             this.Lis4.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.Lis4.Size = new System.Drawing.Size(568, 368);
-            this.Lis4.TabIndex = 23;
+            this.Lis4.TabIndex = 0;
             // 
             // Settings
             // 
+            this.Settings.BackColor = System.Drawing.Color.White;
             this.Settings.Controls.Add(this.BlackMIDIPres);
             this.Settings.Controls.Add(this.ResetSettings);
             this.Settings.Controls.Add(this.ApplySettings);
@@ -595,7 +652,6 @@
             this.Settings.Size = new System.Drawing.Size(677, 399);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
-            this.Settings.UseVisualStyleBackColor = true;
             // 
             // BlackMIDIPres
             // 
@@ -649,7 +705,7 @@
             this.SincInter.Location = new System.Drawing.Point(7, 16);
             this.SincInter.Name = "SincInter";
             this.SincInter.Size = new System.Drawing.Size(526, 17);
-            this.SincInter.TabIndex = 24;
+            this.SincInter.TabIndex = 8;
             this.SincInter.Text = "Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the" +
     " audio with Black MIDIs.)";
             this.SincInter.UseVisualStyleBackColor = true;
@@ -669,7 +725,7 @@
             0});
             this.TracksLimit.Name = "TracksLimit";
             this.TracksLimit.Size = new System.Drawing.Size(64, 21);
-            this.TracksLimit.TabIndex = 25;
+            this.TracksLimit.TabIndex = 11;
             this.TracksLimit.Value = new decimal(new int[] {
             10,
             0,
@@ -702,7 +758,7 @@
             this.SysResetIgnore.Location = new System.Drawing.Point(7, 34);
             this.SysResetIgnore.Name = "SysResetIgnore";
             this.SysResetIgnore.Size = new System.Drawing.Size(343, 17);
-            this.SysResetIgnore.TabIndex = 27;
+            this.SysResetIgnore.TabIndex = 9;
             this.SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged.";
             this.SysResetIgnore.UseVisualStyleBackColor = true;
             // 
@@ -716,7 +772,7 @@
             0});
             this.bufsize.Name = "bufsize";
             this.bufsize.Size = new System.Drawing.Size(64, 21);
-            this.bufsize.TabIndex = 21;
+            this.bufsize.TabIndex = 10;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.bufsize.Value = new decimal(new int[] {
             100,
@@ -778,7 +834,7 @@
             this.Frequency.Location = new System.Drawing.Point(588, 127);
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
-            this.Frequency.TabIndex = 23;
+            this.Frequency.TabIndex = 7;
             this.Frequency.Text = "192000";
             // 
             // Label5
@@ -899,7 +955,7 @@
             this.MaxCPU.Location = new System.Drawing.Point(588, 103);
             this.MaxCPU.Name = "MaxCPU";
             this.MaxCPU.Size = new System.Drawing.Size(64, 21);
-            this.MaxCPU.TabIndex = 21;
+            this.MaxCPU.TabIndex = 6;
             // 
             // Label3
             // 
@@ -908,13 +964,13 @@
             this.Label3.Name = "Label3";
             this.Label3.Size = new System.Drawing.Size(561, 13);
             this.Label3.TabIndex = 20;
-            this.Label3.Text = "Set the voice limit for the driver, from 1 to 100000:";
+            this.Label3.Text = "Set the voice limit for the driver, from 1 to 9999:";
             // 
             // PolyphonyLimit
             // 
             this.PolyphonyLimit.Location = new System.Drawing.Point(588, 80);
             this.PolyphonyLimit.Maximum = new decimal(new int[] {
-            100000,
+            9999,
             0,
             0,
             0});
@@ -925,7 +981,7 @@
             0});
             this.PolyphonyLimit.Name = "PolyphonyLimit";
             this.PolyphonyLimit.Size = new System.Drawing.Size(64, 21);
-            this.PolyphonyLimit.TabIndex = 19;
+            this.PolyphonyLimit.TabIndex = 5;
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PolyphonyLimit.Value = new decimal(new int[] {
             1,
@@ -940,7 +996,7 @@
             this.DisableSFX.Location = new System.Drawing.Point(8, 37);
             this.DisableSFX.Name = "DisableSFX";
             this.DisableSFX.Size = new System.Drawing.Size(585, 17);
-            this.DisableSFX.TabIndex = 5;
+            this.DisableSFX.TabIndex = 3;
             this.DisableSFX.Text = "Disable sound effects. (Disable the sound effects, such as reverb and chorus. Als" +
     "o, this can reduce the CPU usage.)";
             this.DisableSFX.UseVisualStyleBackColor = true;
@@ -953,7 +1009,7 @@
             this.Preload.Location = new System.Drawing.Point(8, 17);
             this.Preload.Name = "Preload";
             this.Preload.Size = new System.Drawing.Size(633, 17);
-            this.Preload.TabIndex = 4;
+            this.Preload.TabIndex = 2;
             this.Preload.Text = "Enable soundfont preload. (Turn on or off the preloading soundfont system, useful" +
     " with systems that have limited RAM resources.)";
             this.Preload.UseVisualStyleBackColor = true;
@@ -965,7 +1021,7 @@
             this.NoteOffCheck.Location = new System.Drawing.Point(8, 57);
             this.NoteOffCheck.Name = "NoteOffCheck";
             this.NoteOffCheck.Size = new System.Drawing.Size(534, 17);
-            this.NoteOffCheck.TabIndex = 3;
+            this.NoteOffCheck.TabIndex = 4;
             this.NoteOffCheck.Text = "Only release the oldest instance upon a note off event when there are overlapping" +
     " instances of the note.";
             this.NoteOffCheck.UseVisualStyleBackColor = true;
@@ -982,22 +1038,22 @@
             // 
             // VolSimView
             // 
-            this.VolSimView.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolSimView.ForeColor = System.Drawing.Color.DimGray;
-            this.VolSimView.Location = new System.Drawing.Point(600, 6);
+            this.VolSimView.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.ForeColor = System.Drawing.Color.Teal;
+            this.VolSimView.Location = new System.Drawing.Point(573, 9);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(69, 44);
+            this.VolSimView.Size = new System.Drawing.Size(96, 31);
             this.VolSimView.TabIndex = 2;
-            this.VolSimView.Text = "100";
+            this.VolSimView.Text = "100%";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.VolSimView.UseCompatibleTextRendering = true;
             // 
             // VolStaticLab
             // 
-            this.VolStaticLab.AutoSize = true;
-            this.VolStaticLab.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolStaticLab.Location = new System.Drawing.Point(480, 6);
+            this.VolStaticLab.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolStaticLab.Location = new System.Drawing.Point(449, 9);
             this.VolStaticLab.Name = "VolStaticLab";
-            this.VolStaticLab.Size = new System.Drawing.Size(131, 46);
+            this.VolStaticLab.Size = new System.Drawing.Size(134, 31);
             this.VolStaticLab.TabIndex = 1;
             this.VolStaticLab.Text = "Volume:";
             this.VolStaticLab.UseCompatibleTextRendering = true;
@@ -1078,6 +1134,37 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // guideToolStripMenuItem
+            // 
+            this.guideToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.howCanIChangeTheSoundfontListToolStripMenuItem,
+            this.howCanIResetTheDriverToolStripMenuItem,
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
+            this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
+            this.guideToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.guideToolStripMenuItem.Text = "Guide";
+            // 
+            // howCanIChangeTheSoundfontListToolStripMenuItem
+            // 
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
+            // 
+            // howCanIResetTheDriverToolStripMenuItem
+            // 
+            this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
+            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
+            this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
+            // 
+            // whatsTheBestSettingsForTheBufferToolStripMenuItem
+            // 
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1146,37 +1233,6 @@
             this.ExternalListImport.FileName = "openFileDialog1";
             this.ExternalListImport.Filter = "Soundfont lists|*.txt;*.sflist;";
             // 
-            // guideToolStripMenuItem
-            // 
-            this.guideToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.howCanIChangeTheSoundfontListToolStripMenuItem,
-            this.howCanIResetTheDriverToolStripMenuItem,
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
-            this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
-            this.guideToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.guideToolStripMenuItem.Text = "Guide";
-            // 
-            // howCanIChangeTheSoundfontListToolStripMenuItem
-            // 
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
-            // 
-            // howCanIResetTheDriverToolStripMenuItem
-            // 
-            this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
-            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
-            this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
-            this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
-            // 
-            // whatsTheBestSettingsForTheBufferToolStripMenuItem
-            // 
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
-            // 
             // KeppyDriverConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1197,15 +1253,19 @@
             this.TabsForTheControls.ResumeLayout(false);
             this.List1.ResumeLayout(false);
             this.List1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).EndInit();
             this.IELPan1.ResumeLayout(false);
             this.List2.ResumeLayout(false);
             this.List2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp2)).EndInit();
             this.IELPan2.ResumeLayout(false);
             this.List3.ResumeLayout(false);
             this.List3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp3)).EndInit();
             this.IELPan3.ResumeLayout(false);
             this.List4.ResumeLayout(false);
             this.List4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).EndInit();
             this.IELPan4.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
@@ -1313,6 +1373,10 @@
         private System.Windows.Forms.ToolStripMenuItem howCanIChangeTheSoundfontListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem howCanIResetTheDriverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem whatsTheBestSettingsForTheBufferToolStripMenuItem;
+        private System.Windows.Forms.PictureBox SFZComp1;
+        private System.Windows.Forms.PictureBox SFZComp2;
+        private System.Windows.Forms.PictureBox SFZComp3;
+        private System.Windows.Forms.PictureBox SFZComp4;
     }
 }
 

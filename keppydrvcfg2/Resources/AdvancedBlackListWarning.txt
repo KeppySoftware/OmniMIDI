@@ -1,4 +1,0 @@
-Messing up with the default list can potentially hang/block your PC,
-since the driver is loaded by some system processes. (Especially on Windows XP)
-
-Use this function carefully.

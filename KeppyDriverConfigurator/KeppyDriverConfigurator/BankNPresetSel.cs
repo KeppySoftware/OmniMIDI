@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.IO;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace KeppyDriverConfigurator
@@ -34,5 +36,19 @@ namespace KeppyDriverConfigurator
             DialogResult = DialogResult.OK;
             Close();
         }
+
+        private void CancelBtn_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void WikipediaLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var helpFile = Path.Combine(Path.GetTempPath(), "help.txt");
+            File.WriteAllText(helpFile, KeppyDriverConfigurator.Properties.Resources.gmlist);
+            Process.Start(helpFile);
+        }
+
+
     }
 }

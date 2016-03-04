@@ -35,6 +35,8 @@
             this.BankVal = new System.Windows.Forms.NumericUpDown();
             this.PresetVal = new System.Windows.Forms.NumericUpDown();
             this.SelectedSFLabel = new System.Windows.Forms.Label();
+            this.CancelBtn = new System.Windows.Forms.Button();
+            this.WikipediaLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.BankVal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PresetVal)).BeginInit();
             this.SuspendLayout();
@@ -115,11 +117,34 @@
             this.SelectedSFLabel.Text = "Selected soundfont:\r\nPotato.sf2";
             this.SelectedSFLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // CancelBtn
+            // 
+            this.CancelBtn.Location = new System.Drawing.Point(196, 106);
+            this.CancelBtn.Name = "CancelBtn";
+            this.CancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.CancelBtn.TabIndex = 7;
+            this.CancelBtn.Text = "Cancel";
+            this.CancelBtn.UseVisualStyleBackColor = true;
+            this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
+            // 
+            // WikipediaLink
+            // 
+            this.WikipediaLink.AutoSize = true;
+            this.WikipediaLink.Location = new System.Drawing.Point(12, 111);
+            this.WikipediaLink.Name = "WikipediaLink";
+            this.WikipediaLink.Size = new System.Drawing.Size(92, 13);
+            this.WikipediaLink.TabIndex = 8;
+            this.WikipediaLink.TabStop = true;
+            this.WikipediaLink.Text = "Banks/Presets list";
+            this.WikipediaLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WikipediaLink_LinkClicked);
+            // 
             // BankNPresetSel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 177);
+            this.Controls.Add(this.WikipediaLink);
+            this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.SelectedSFLabel);
             this.Controls.Add(this.PresetVal);
             this.Controls.Add(this.BankVal);
@@ -152,5 +177,7 @@
         private System.Windows.Forms.NumericUpDown BankVal;
         private System.Windows.Forms.NumericUpDown PresetVal;
         private System.Windows.Forms.Label SelectedSFLabel;
+        private System.Windows.Forms.Button CancelBtn;
+        private System.Windows.Forms.LinkLabel WikipediaLink;
     }
 }

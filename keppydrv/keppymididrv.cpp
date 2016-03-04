@@ -47,7 +47,7 @@ void _endthreadex(unsigned retval);
 #define MAX_DRIVERS 4
 #define MAX_CLIENTS 8 // Per driver
 
-#define SPFSTD 128
+#define SPFSTD 108
 
 #ifndef _LOADRESTRICTIONS_OFF
 #define _LOADRESTRICTIONS_ON
@@ -101,14 +101,12 @@ static int chorus = 0; //Chorus FX
 static int transpose = 0; //Transpose FX
 static int frequency = 0; //Audio frequency
 static int sinc = 0; //Sinc
-static int THREEDEE = 0; //Enable 3D functions (beta)
 static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
 static int tracks = 0; //Tracks limit
 static int volume = 0; //Volume limit
 static int nofloat = 1; //Enable or disable the float engine
 static int nofx = 0; //Enable or disable FXs
-static int nodx8 = 0; //Enable or disable DX8 effects
 static int noteoff1 = 0; //Note cut INT
 
 static int decoded;
@@ -117,25 +115,6 @@ static int decoded3;
 static int decoded4;
 
 static sound_out * sound_driver = NULL;
-
-// 3D Effects (START)
-static int reverbfx = 0;
-static int reverbfxnum = 0;
-static int chorusfx = 0;
-static int chorusfxnum = 0;
-static int echofx = 0;
-static int echofxnum = 0;
-static int flangerfx = 0;
-static int flangerfxnum = 0;
-static int compressorfx = 0;
-static int compressorfxnum = 0;
-static int garglefx = 0;
-static int garglefxnum = 0;
-static int distortionfx = 0;
-static int distortionfxnum = 0;
-static int sittingfx = 0;
-static int sittingfxnum = 0;
-// 3D Effects (END)
 
 static HINSTANCE bass = 0;			// bass handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
@@ -704,32 +683,6 @@ int bmsyn_play_some_data(void){
 	return played;
 }
 
-void load_fx()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Effects", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"reverbfx", NULL, &dwType, (LPBYTE)&reverbfx, &dwSize);
-	RegQueryValueEx(hKey, L"reverbfxnum", NULL, &dwType, (LPBYTE)&reverbfxnum, &dwSize);
-	RegQueryValueEx(hKey, L"chorusfx", NULL, &dwType, (LPBYTE)&chorusfx, &dwSize);
-	RegQueryValueEx(hKey, L"chorusfxnum", NULL, &dwType, (LPBYTE)&chorusfxnum, &dwSize);
-	RegQueryValueEx(hKey, L"flangerfx", NULL, &dwType, (LPBYTE)&flangerfx, &dwSize);
-	RegQueryValueEx(hKey, L"flangerfxnum", NULL, &dwType, (LPBYTE)&flangerfxnum, &dwSize);
-	RegQueryValueEx(hKey, L"echofx", NULL, &dwType, (LPBYTE)&echofx, &dwSize);
-	RegQueryValueEx(hKey, L"echofxnum", NULL, &dwType, (LPBYTE)&echofxnum, &dwSize);
-	RegQueryValueEx(hKey, L"compressorfx", NULL, &dwType, (LPBYTE)&compressorfx, &dwSize);
-	RegQueryValueEx(hKey, L"compressorfxnum", NULL, &dwType, (LPBYTE)&compressorfxnum, &dwSize);
-	RegQueryValueEx(hKey, L"garglefx", NULL, &dwType, (LPBYTE)&garglefx, &dwSize);
-	RegQueryValueEx(hKey, L"garglefxnum", NULL, &dwType, (LPBYTE)&garglefxnum, &dwSize);
-	RegQueryValueEx(hKey, L"distortionfx", NULL, &dwType, (LPBYTE)&distortionfx, &dwSize);
-	RegQueryValueEx(hKey, L"distortionfxnum", NULL, &dwType, (LPBYTE)&distortionfxnum, &dwSize);
-	RegQueryValueEx(hKey, L"sittingfx", NULL, &dwType, (LPBYTE)&sittingfx, &dwSize);
-	RegQueryValueEx(hKey, L"sittingfxnum", NULL, &dwType, (LPBYTE)&sittingfxnum, &dwSize);
-	RegCloseKey(hKey);
-}
-
 void load_settings()
 {
 	HKEY hKey;
@@ -868,18 +821,6 @@ int IgnoreSystemReset()
 	return sysresetignore;
 }
 
-int Rendering3D()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"3d", NULL, &dwType, (LPBYTE)&THREEDEE, &dwSize);
-	RegCloseKey(hKey);
-	return THREEDEE;
-}
-
 int check_sinc()
 {
 	HKEY hKey;
@@ -927,7 +868,6 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
-	RegQueryValueEx(hKey, L"nodx8", NULL, &dwType, (LPBYTE)&nodx8, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
@@ -1160,7 +1100,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			com_initialized = TRUE;
 		}
 		load_settings();
-		load_fx();
 		if (sound_driver == NULL) {
 				sound_driver = create_sound_out_xaudio2();
 				sound_out_float = IsVistaOrNewer();

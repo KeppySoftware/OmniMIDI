@@ -22,14 +22,14 @@ namespace KeppyDriverConfigurator
             {
                 RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver", false);
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", false);
-                Voices.Text = Debug.GetValue("currentvoices0") + "/" + Settings.GetValue("polyphony");
-                CPU.Text = Debug.GetValue("currentcpuusage0") + "%";
+                Voices.Text = Convert.ToInt32(Debug.GetValue("currentvoices0")).ToString("0000") + "/" + Convert.ToInt32(Settings.GetValue("polyphony")).ToString("0000");
+                CPU.Text = (Convert.ToInt32(Debug.GetValue("currentcpuusage0")) * 1.125).ToString("000") + "%"; // With a little overhead, for the real CPU usage.
                 DecodedInt.Text = "Decoded data size: " + Debug.GetValue("int") +" frames (Int32 value)";
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+                Close();
             }
         }
     }

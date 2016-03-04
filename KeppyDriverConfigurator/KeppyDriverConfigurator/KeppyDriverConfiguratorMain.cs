@@ -121,10 +121,10 @@ namespace KeppyDriverConfigurator
                 int VolumeValue = 0;
                 double x = VolTrackBar.Value / 100;
                 VolumeValue = Convert.ToInt32(x);
-                VolSimView.Text = VolumeValue.ToString("000");
-                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString();
+                VolSimView.Text = VolumeValue.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
                 Settings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
-
+                
                 // Checkbox stuff yay
                 if (Preload.Checked == true)
                 {
@@ -328,8 +328,8 @@ namespace KeppyDriverConfigurator
             // And finally, the volume!
             int VolumeValue = Convert.ToInt32(Settings.GetValue("volume"));
             double x = VolumeValue / 100;
-            VolSimView.Text = x.ToString("000");
-            VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString();
+            VolSimView.Text = x.ToString("000\\%");
+            VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
             VolTrackBar.Value = VolumeValue;
             }
             catch (Exception ex)
@@ -346,8 +346,8 @@ namespace KeppyDriverConfigurator
                 int VolumeValue = 0;
                 double x = VolTrackBar.Value / 100;
                 VolumeValue = Convert.ToInt32(x);
-                VolSimView.Text = VolumeValue.ToString("000");
-                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString();
+                VolSimView.Text = VolumeValue.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
                 Settings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch
@@ -952,7 +952,29 @@ namespace KeppyDriverConfigurator
 
         private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("For Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor USB DACs, it's 30-35.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+            MessageBox.Show("For Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 30-35.\nFor all the AC'97 audio cards, it's 40.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
+
+        // SFZ compliant part
+        private void SFZComp1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SFZComp2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SFZComp3_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SFZComp4_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
     }
 }
