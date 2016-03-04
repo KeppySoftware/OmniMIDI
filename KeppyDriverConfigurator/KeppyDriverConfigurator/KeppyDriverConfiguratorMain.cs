@@ -186,55 +186,88 @@ namespace KeppyDriverConfigurator
             // ======= Read soundfont lists
             try
             {
-                // == List 1
-                using (StreamReader r = new StreamReader(List1Path))
+                if ((!System.IO.Directory.Exists(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\")))
                 {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        Lis1.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
-                    }
+                    System.IO.Directory.CreateDirectory(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\");
+                    File.Create(List1Path).Dispose();
+                    File.Create(List2Path).Dispose();
+                    File.Create(List3Path).Dispose();
+                    File.Create(List4Path).Dispose();
                 }
-                // == List 2
-                using (StreamReader r = new StreamReader(List2Path))
+                else
                 {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
+                    try
                     {
-                        Lis2.Items.Add(line); // The program is copying the entire text file to the List II's listbox.
+                    // == List 1
+                    using (StreamReader r = new StreamReader(List1Path))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis1.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                        }
                     }
-                }
-                // == List 3
-                using (StreamReader r = new StreamReader(List3Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
+                    // == List 2
+                    using (StreamReader r = new StreamReader(List2Path))
                     {
-                        Lis3.Items.Add(line); // The program is copying the entire text file to the List III's listbox.
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis2.Items.Add(line); // The program is copying the entire text file to the List II's listbox.
+                        }
                     }
-                }
-                // == List 4
-                using (StreamReader r = new StreamReader(List4Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
+                    // == List 3
+                    using (StreamReader r = new StreamReader(List3Path))
                     {
-                        Lis4.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis3.Items.Add(line); // The program is copying the entire text file to the List III's listbox.
+                        }
+                    }
+                    // == List 4
+                    using (StreamReader r = new StreamReader(List4Path))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis4.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                        }
+                    }
+                    }
+                    catch
+                    {
+                        // If the program fails at reading the lists, it'll create them for you
+                        if (File.Exists(List1Path) == false)
+                        {
+                            File.Create(List1Path).Dispose();
+                        }
+                        if (File.Exists(List2Path) == false)
+                        {
+                            File.Create(List2Path).Dispose();
+                        }
+                        if (File.Exists(List3Path) == false)
+                        {
+                            File.Create(List3Path).Dispose();
+                        }
+                        if (File.Exists(List4Path) == false)
+                        {
+                            File.Create(List4Path).Dispose();
+                        }
+                        MessageBox.Show("One of the soundfont lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
-            // If the program fails at reading the lists, it'll create them for you
-            catch
+            catch (Exception ex)
             {
-                File.Create(List1Path);
-                File.Create(List2Path);
-                File.Create(List3Path);
-                File.Create(List4Path);
+                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
+
 
             // ======= Load settings from the registry
-
-            // First, the most important settings
+            try
+            {
+                            // First, the most important settings
             RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
             VolTrackBar.Value = Convert.ToInt32(Settings.GetValue("volume"));
             PolyphonyLimit.Value = Convert.ToInt32(Settings.GetValue("polyphony"));
@@ -298,6 +331,11 @@ namespace KeppyDriverConfigurator
             VolSimView.Text = x.ToString("000");
             VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString();
             VolTrackBar.Value = VolumeValue;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Can not read settings from the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
         }
 
         private void VolTrackBar_Scroll(object sender, EventArgs e)

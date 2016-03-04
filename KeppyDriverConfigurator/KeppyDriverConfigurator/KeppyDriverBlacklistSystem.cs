@@ -45,13 +45,28 @@ namespace KeppyDriverConfigurator
             BlacklistPath = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist";
             DefBlacklistPath = Environment.GetEnvironmentVariable("windir") + "\\keppymididrv.defaultblacklist";
 
-            // Import the blacklist file
-            using (StreamReader r = new StreamReader(BlacklistPath))
+            if ((!System.IO.Directory.Exists(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\blacklist\\")))
             {
-                string line;
-                while ((line = r.ReadLine()) != null)
+                System.IO.Directory.CreateDirectory(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\blacklist\\");
+                File.Create(BlacklistPath).Dispose();
+            }
+            else
+            {
+                try
                 {
-                    ProgramsBlackList.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                    // Import the blacklist file
+                    using (StreamReader r = new StreamReader(BlacklistPath))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            ProgramsBlackList.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    File.Create(BlacklistPath).Dispose();
                 }
             }
         }
