@@ -4,7 +4,7 @@ AllowNoIcons=True
 AppContact=kaleidonkep99@outlook.com
 AppCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
-AppName=Keppy's Driver 3.0
+AppName=Keppy's Driver 3.1
 AppPublisher=Keppy Studios
 AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
@@ -37,10 +37,10 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver 3.0
-VersionInfoProductTextVersion=3.0.0.5
-VersionInfoProductVersion=3.0
+VersionInfoProductTextVersion=3.1.0.0
+VersionInfoProductVersion=3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.0.0.5
+VersionInfoVersion=3.1.0.0
 
 [Files]
 ; 64-bit OS
@@ -59,6 +59,7 @@ Source: "output\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassop
 Source: "output\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\keppydrvcfg.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrvcfg.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
+Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 ; 32-bit OS
@@ -70,6 +71,7 @@ Source: "output\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dl
 Source: "output\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\keppydrvcfg.exe"; DestDir: "{sys}\keppydrv"; DestName: "keppydrvcfg.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{sys}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 ; Generic for all the OSes
@@ -86,10 +88,12 @@ Name: "{sys}\keppydrv"; Attribs: system; Check: not Is64BitInstallMode
 
 [Icons]
 ; 64-bit OS
-Name: "{group}\Configure Keppy's Driver"; Filename: "{syswow64}\keppydrv\keppydrvcfg.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
+Name: "{group}\Configure Keppy's Driver"; Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
+Name: "{group}\Use the old configurator (VB.NET)"; Filename: "{syswow64}\keppydrv\keppydrvcfg.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{syswow64}\keppydrv\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 ; 32-bit OS
-Name: "{group}\Configure Keppy's Driver"; Filename: "{sys}\keppydrv\keppydrvcfg.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
+Name: "{group}\Configure Keppy's Driver"; Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
+Name: "{group}\Use the old configurator (VB.NET)"; Filename: "{sys}\keppydrv\keppydrvcfg.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\keppydrv\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode   
 ; Generic for all the OSes
 Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"
@@ -116,25 +120,25 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "firstrun"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "3d"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 ;3D effects
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfxnum"; ValueData: "2"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "compressorfx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "compressorfxnum"; ValueData: "4"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "distortionfx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "distortionfxnum"; ValueData: "6"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "echofx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "echofxnum"; ValueData: "7"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "flangerfx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "flangerfxnum"; ValueData: "3"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "garglefx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "garglefxnum"; ValueData: "5"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbfx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbfxnum"; ValueData: "1"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "sittingfx"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "sittingfxnum"; ValueData: "8"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbglobalvalue"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusglobalvalue"; ValueData: "0"; Flags: uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "transpose"; ValueData: "100"; Flags: uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfxnum"; ValueData: "2"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "compressorfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "compressorfxnum"; ValueData: "4"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "distortionfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "distortionfxnum"; ValueData: "6"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "echofx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "echofxnum"; ValueData: "7"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "flangerfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "flangerfxnum"; ValueData: "3"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "garglefx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "garglefxnum"; ValueData: "5"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbfxnum"; ValueData: "1"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "sittingfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "sittingfxnum"; ValueData: "8"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbglobalvalue"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusglobalvalue"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "transpose"; ValueData: "100"; Flags: uninsdeletekey deletekey dontcreatekey
 ; 64-bit OS
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
 Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
@@ -198,8 +202,10 @@ Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 
 [Run]
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DirectX installer"; StatusMsg: "Installing DirectX runtime (XAudio2)..."
-Filename: "{syswow64}\keppydrv\keppydrvcfg.exe"; Parameters: "-firstrun"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
-Filename: "{sys}\keppydrv\keppydrvcfg.exe"; Parameters: "-firstrun"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
+Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the NEW configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
+Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the NEW configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
+Filename: "{syswow64}\keppydrv\keppydrvcfg.exe"; Flags: postinstall runascurrentuser nowait unchecked; Description: "Run the old configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
+Filename: "{sys}\keppydrv\keppydrvcfg.exe"; Flags: postinstall runascurrentuser nowait unchecked; Description: "Run the old configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
 
 [Messages]
 SetupAppTitle=Keppy's Driver Installer

@@ -34,6 +34,8 @@
 /keppydrvcfg2/obj
 /keppydrvcfg2/output
 /keppydrvconfig
+/KeppyDriverConfigurator/KeppyDriverConfigurator/bin
+/KeppyDriverConfigurator/KeppyDriverConfigurator/obj
 /output/*.config
 /output/*.dll
 /output/*.exe

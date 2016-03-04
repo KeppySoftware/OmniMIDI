@@ -921,60 +921,50 @@ void realtime_load_settings()
 	DWORD dwSize = sizeof(DWORD);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);;
-	if (realtimeset == 1) {
-		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
-		RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
-		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
-		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-		RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
-		RegQueryValueEx(hKey, L"nodx8", NULL, &dwType, (LPBYTE)&nodx8, &dwSize);
-		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-		RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
-		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
-		RegCloseKey(hKey);
-		//cake
-		sound_out_volume_float = (float)volume / 10000.0f;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-		//another cake
-		int maxmidivoices = static_cast <int> (midivoices);
-		float trackslimit = static_cast <int> (tracks);
-		BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_CHANS, trackslimit);
-		BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
-		BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_CPU, maxcpu);
-		if (noteoff1) {
-			BASS_ChannelFlags(hStream[0], BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
-		}
-		else {
-			BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_NOTEOFF1);
-		}
-
-		if (nofx) {
-			BASS_ChannelFlags(hStream[0], BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		}
-		else {
-			BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_NOFX);
-		}
-		if (sysresetignore) {
-			BASS_ChannelFlags(hStream[0], BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
-		}
-		else {
-			BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_NOSYSRESET);
-		}
-		if (sinc) {
-			BASS_ChannelFlags(hStream[0], BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
-		}
-		else {
-			BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_SINCINTER);
-		}
+	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
+	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
+	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
+	RegQueryValueEx(hKey, L"nodx8", NULL, &dwType, (LPBYTE)&nodx8, &dwSize);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
+	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
+	RegCloseKey(hKey);
+	//cake
+	sound_out_volume_float = (float)volume / 10000.0f;
+	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	//another cake
+	int maxmidivoices = static_cast <int> (midivoices);
+	float trackslimit = static_cast <int> (tracks);
+	BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_CHANS, trackslimit);
+	BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
+	BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_CPU, maxcpu);
+	if (noteoff1) {
+		BASS_ChannelFlags(hStream[0], BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
 	}
 	else {
-		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
-		RegCloseKey(hKey);
-		//cake
-		sound_out_volume_float = (float)volume / 10000.0f;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-		//another cake
+		BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_NOTEOFF1);
+	}
+
+	if (nofx) {
+		BASS_ChannelFlags(hStream[0], BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+	}
+	else {
+		BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_NOFX);
+	}
+	if (sysresetignore) {
+		BASS_ChannelFlags(hStream[0], BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
+	}
+	else {
+		BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_NOSYSRESET);
+	}
+	if (sinc) {
+		BASS_ChannelFlags(hStream[0], BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
+	}
+	else {
+		BASS_ChannelFlags(hStream[0], 0, BASS_MIDI_SINCINTER);
 	}
 }
 
@@ -1184,48 +1174,13 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		OutputDebugString(L"Initializing the stream...");
 		if (BASS_Init(0, frequencyvalue + 100, 0, NULL, NULL)) {
 			consent = 1;
-			if (nodx8 == 1) {
-				hStream[0] = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
-			}
-			else {
-				hStream[0] = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | BASS_SAMPLE_FX | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
-			}
+			hStream[0] = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 			if (!hStream[0]) {
 				BASS_StreamFree(hStream[0]);
 				hStream[0] = 0;
 				continue;
 			}
-			// 3D Functions
-			if (nodx8 == 1) {
-				// NULL
-			}
-			else {
-				if (reverbfx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_REVERB, reverbfxnum);
-				}
-				if (chorusfx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_CHORUS, chorusfxnum);
-				}
-				if (compressorfx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_COMPRESSOR, compressorfxnum);
-				}
-				if (distortionfx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_DISTORTION, distortionfxnum);
-				}
-				if (flangerfx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_FLANGER, flangerfxnum);
-				}
-				if (echofx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_ECHO, echofxnum);
-				}
-				if (sittingfx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_I3DL2REVERB, sittingfxnum);
-				}
-				if (garglefx) {
-					BASS_ChannelSetFX(hStream[0], BASS_FX_DX8_GARGLE, garglefxnum);
-				}
-			}
-			// Also, cake.
+			// Cake.
 			BASS_MIDI_StreamEvent(hStream[0], 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 			BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_MIDI_CHANS, trackslimit);
 			BASS_ChannelSetAttribute(hStream[0], BASS_ATTRIB_CPU, maxcpu);

@@ -1,0 +1,19 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeppyDriverConfigurator", "KeppyDriverConfigurator\KeppyDriverConfigurator.csproj", "{7BEA59AC-45B7-4CC8-A4C0-254C6297BEF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Final|Universal = Final|Universal
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BEA59AC-45B7-4CC8-A4C0-254C6297BEF8}.Final|Universal.ActiveCfg = Release|Any CPU
+		{7BEA59AC-45B7-4CC8-A4C0-254C6297BEF8}.Final|Universal.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
