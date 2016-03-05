@@ -882,8 +882,7 @@ namespace KeppyDriverConfigurator
 
         private void openDebugWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppyDriverDebugWindow frm = new KeppyDriverDebugWindow();
-            frm.Show();
+            KeppyDriverDebugWindow.GetForm.Show();
         }
 
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)

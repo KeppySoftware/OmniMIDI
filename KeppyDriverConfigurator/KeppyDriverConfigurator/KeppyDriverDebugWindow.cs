@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -11,6 +12,24 @@ namespace KeppyDriverConfigurator
 {
     public partial class KeppyDriverDebugWindow : Form
     {
+        private static KeppyDriverDebugWindow inst;
+        public static KeppyDriverDebugWindow GetForm
+        {
+            get
+            {
+                if (inst == null || inst.IsDisposed)
+                {
+                    inst = new KeppyDriverDebugWindow();
+                }
+                else
+                {
+                    System.Media.SystemSounds.Asterisk.Play();
+                    Application.OpenForms["KeppyDriverDebugWindow"].BringToFront();
+                }
+                return inst;
+            }
+        }
+
         public KeppyDriverDebugWindow()
         {
             InitializeComponent();
@@ -32,5 +51,6 @@ namespace KeppyDriverConfigurator
                 Close();
             }
         }
+
     }
 }
