@@ -957,8 +957,8 @@ namespace KeppyDriverConfigurator
         // Guide part
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To change the current soundfont list, press and hold CTRL, then click a number from 1 to 4.\n\n" +
-                "CTRL+1: Load soundfont list 1\nCTRL+2: Load soundfont list 2\nCTRL+3: Load soundfont list 3\nCTRL+4: Load soundfont list 4\n\n" +
+            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 4.\n\n" +
+                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\n\n" +
                 "You can also reload lists that are already loaded.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 

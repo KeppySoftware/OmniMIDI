@@ -1124,7 +1124,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				continue;
 			}
 			// Encoder code
-			if (hStream[0]) {
+			if (encmode == 1) {
 				typedef std::basic_string<TCHAR> tstring;
 				TCHAR encpath[MAX_PATH];
 				TCHAR buffer[MAX_PATH] = { 0 };
