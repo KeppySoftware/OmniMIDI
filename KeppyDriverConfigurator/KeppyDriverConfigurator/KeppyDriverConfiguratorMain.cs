@@ -166,6 +166,14 @@ namespace KeppyDriverConfigurator
                 {
                     Settings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
                 }
+                if (OutputWAV.Checked == true)
+                {
+                    Settings.SetValue("encmode", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    Settings.SetValue("encmode", "0", RegistryValueKind.DWord);
+                }
             }
             catch
             {
@@ -323,6 +331,14 @@ namespace KeppyDriverConfigurator
             else
             {
                 SysResetIgnore.Checked = false;
+            }
+            if (Convert.ToInt32(Settings.GetValue("encmode")) == 1)
+            {
+                OutputWAV.Checked = true;
+            }
+            else
+            {
+                OutputWAV.Checked = false;
             }
 
             // And finally, the volume!
@@ -848,6 +864,7 @@ namespace KeppyDriverConfigurator
             SincInter.Checked = false;
             DisableSFX.Checked = false;
             SysResetIgnore.Checked = false;
+            OutputWAV.Checked = false;
 
             // And then...
             SaveSettings();
@@ -870,6 +887,7 @@ namespace KeppyDriverConfigurator
             SincInter.Checked = false;
             DisableSFX.Checked = true;
             SysResetIgnore.Checked = true;
+            OutputWAV.Checked = false;
 
             // And then...
             SaveSettings();
@@ -975,5 +993,13 @@ namespace KeppyDriverConfigurator
             MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        // Brand new output mode
+        private void WhatIsOutput_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"keppydriveroutput.wav\".\n\n" + 
+                "You can NOT change the default output directory, I'm sorry.\n" + 
+                "But hey, now you can record your real-time performances (Like from Synthesia) directly to an audio file, without using external programs such as Audacity!\n" + 
+                "Isn't that great?", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }

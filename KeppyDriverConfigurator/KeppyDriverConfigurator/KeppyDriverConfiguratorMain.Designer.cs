@@ -75,6 +75,8 @@
             this.AddSF4 = new System.Windows.Forms.Button();
             this.Lis4 = new System.Windows.Forms.ListBox();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.WhatIsOutput = new System.Windows.Forms.PictureBox();
+            this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.BlackMIDIPres = new System.Windows.Forms.Button();
             this.ResetSettings = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
@@ -134,6 +136,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).BeginInit();
             this.IELPan4.SuspendLayout();
             this.Settings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
             this.GroupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TracksLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).BeginInit();
@@ -638,6 +641,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.WhatIsOutput);
+            this.Settings.Controls.Add(this.OutputWAV);
             this.Settings.Controls.Add(this.BlackMIDIPres);
             this.Settings.Controls.Add(this.ResetSettings);
             this.Settings.Controls.Add(this.ApplySettings);
@@ -652,6 +657,30 @@
             this.Settings.Size = new System.Drawing.Size(677, 399);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
+            // 
+            // WhatIsOutput
+            // 
+            this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
+            this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.WhatIsOutput.ErrorImage = global::KeppyDriverConfigurator.Properties.Resources.what;
+            this.WhatIsOutput.Image = global::KeppyDriverConfigurator.Properties.Resources.what;
+            this.WhatIsOutput.Location = new System.Drawing.Point(233, 9);
+            this.WhatIsOutput.Name = "WhatIsOutput";
+            this.WhatIsOutput.Size = new System.Drawing.Size(21, 17);
+            this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.WhatIsOutput.TabIndex = 35;
+            this.WhatIsOutput.TabStop = false;
+            this.WhatIsOutput.Click += new System.EventHandler(this.WhatIsOutput_Click);
+            // 
+            // OutputWAV
+            // 
+            this.OutputWAV.AutoSize = true;
+            this.OutputWAV.Location = new System.Drawing.Point(15, 9);
+            this.OutputWAV.Name = "OutputWAV";
+            this.OutputWAV.Size = new System.Drawing.Size(223, 17);
+            this.OutputWAV.TabIndex = 27;
+            this.OutputWAV.Text = "Enable the \"Output to WAV\" mode (Beta)";
+            this.OutputWAV.UseVisualStyleBackColor = true;
             // 
             // BlackMIDIPres
             // 
@@ -1269,6 +1298,7 @@
             this.IELPan4.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).EndInit();
             this.GroupBox5.ResumeLayout(false);
             this.GroupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TracksLimit)).EndInit();
@@ -1377,6 +1407,8 @@
         private System.Windows.Forms.PictureBox SFZComp2;
         private System.Windows.Forms.PictureBox SFZComp3;
         private System.Windows.Forms.PictureBox SFZComp4;
+        private System.Windows.Forms.CheckBox OutputWAV;
+        private System.Windows.Forms.PictureBox WhatIsOutput;
     }
 }
 

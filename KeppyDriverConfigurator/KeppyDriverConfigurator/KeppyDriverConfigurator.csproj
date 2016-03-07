@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\gear.ico" />
+    <None Include="Resources\what.png" />
     <None Include="Resources\sfzcomp.png" />
     <None Include="Resources\gmlist.txt" />
     <None Include="Resources\updatebk.png" />
