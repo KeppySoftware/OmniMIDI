@@ -37,10 +37,10 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver 3.1
-VersionInfoProductTextVersion=3.1.0.6
+VersionInfoProductTextVersion=3.1.0.7
 VersionInfoProductVersion=3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.0.6
+VersionInfoVersion=3.1.0.7
 
 [Files]
 ; 64-bit OS

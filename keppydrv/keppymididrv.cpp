@@ -1141,13 +1141,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				_bstr_t b(encpath);
 				const char* c = b;
-				const int result = MessageBox(NULL, L"You enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to prevent the driver from outputting the audio to a WAV file.\n\n(The WAV file will be automatically saved to the desktop)", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+				const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to prevent the driver from outputting the audio to a WAV file.\n\n(The WAV file will be automatically saved to the desktop)", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
 				switch (result)
 				{
 				case IDYES:
 					BASS_Encode_Start(hStream[0], c, BASS_ENCODE_PCM, NULL, 0);
-					MessageBox(NULL, out, L"", MB_ICONINFORMATION);
-					MessageBox(NULL, encpath, L"", MB_ICONINFORMATION);
 					break;
 				case IDNO:
 					break;
