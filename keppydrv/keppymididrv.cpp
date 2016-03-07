@@ -926,6 +926,7 @@ void realtime_load_settings()
 }
 
 BOOL ProcessBlackList(){
+	// Blacklist system init
 	TCHAR defaultstring[MAX_PATH];
 	TCHAR userstring[MAX_PATH];
 	TCHAR defaultblacklistdirectory[MAX_PATH];
@@ -936,9 +937,17 @@ BOOL ProcessBlackList(){
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
 	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 	GetVersionEx(&osvi);
+	// VirtualMIDISynth ban init
+	TCHAR vmidisynthpath[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthpath);
+	PathAppend(vmidisynthpath, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	try {
 		if (osvi.dwMajorVersion == 5) {
 			MessageBox(NULL, L"Windows XP is not supported by the driver.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
+			return 0x0;
+		}
+		else if (PathFileExists(vmidisynthpath)) {
+			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nWhy this? Well, VirtualMIDISynth 1.x causes a DLL Hell while loading the BASS libraries, that's why you need to uninstall it before using my driver.\n\nYou can still use VirtualMIDISynth 2.x, since it doesn't load the DLLs directly into the MIDI application.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
 			return 0x0;
 		}
 		else {
@@ -1029,7 +1038,7 @@ BOOL IsVistaOrNewer(){
 void ReloadSFList(DWORD whichsflist){
 	if (consent == 1) {
 		std::wstringstream ss;
-		ss << "Do you want to (re)load list " << whichsflist << "?";
+		ss << "Do you want to (re)load list n°" << whichsflist << "?";
 		std::wstring s = ss.str();
 		const int result = MessageBox(NULL, s.c_str(), L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
 		switch (result)
@@ -1071,6 +1080,18 @@ void keybindings()
 	}
 }
 
+std::wstring s2ws(const std::string& s)
+{
+	int len;
+	int slength = (int)s.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
+	return r;
+}
+
 unsigned __stdcall threadfunc(LPVOID lpV){
 	unsigned i;
 	int pot;
@@ -1104,10 +1125,19 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			}
 			// Encoder code
 			if (hStream[0]) {
+				typedef std::basic_string<TCHAR> tstring;
 				TCHAR encpath[MAX_PATH];
+				TCHAR buffer[MAX_PATH] = { 0 };
+				TCHAR * out;
+				DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
+				if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) { }
+				out = PathFindFileName(buffer);
+				std::wstring stemp = tstring(out) + L" - Keppy's Driver Output File.wav";
+				LPCWSTR result2 = stemp.c_str();
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
 				{
-					PathAppend(encpath, L"\\keppydriveroutput.wav");
+					PathAppend(encpath, result2);
+					
 				}
 				_bstr_t b(encpath);
 				const char* c = b;
@@ -1116,6 +1146,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				{
 				case IDYES:
 					BASS_Encode_Start(hStream[0], c, BASS_ENCODE_PCM, NULL, 0);
+					MessageBox(NULL, out, L"", MB_ICONINFORMATION);
+					MessageBox(NULL, encpath, L"", MB_ICONINFORMATION);
 					break;
 				case IDNO:
 					break;

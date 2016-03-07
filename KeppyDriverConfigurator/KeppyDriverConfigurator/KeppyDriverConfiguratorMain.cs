@@ -996,7 +996,7 @@ namespace KeppyDriverConfigurator
         // Brand new output mode
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"keppydriveroutput.wav\".\n\n" + 
+            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Driver Output File.wav\".\n\n" + 
                 "You can NOT change the default output directory, I'm sorry.\n" + 
                 "But hey, now you can record your real-time performances (Like from Synthesia) directly to an audio file, without using external programs such as Audacity!\n" + 
                 "Isn't that great?", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -2,8 +2,14 @@ AERTSr64.exe
 AMBSpiE.exe
 AfterFX.exe
 CCC.exe
+CONSENT.Exe
+CONSENT.EXE
+CONSENT.exe
 CTAudSvc.exe
 CamtasiaStudio.exe
+Consent.Exe
+Consent.EXE
+Consent.exe
 Dreamweaver.exe
 EXPLORER.EXE
 Explorer.EXE
@@ -45,6 +51,8 @@ WUDFHost.exe
 alg.exe
 ccc.exe
 chrome.exe
+consent.Exe
+consent.EXE
 consent.exe
 csrss.exe
 ctfmon.exe
@@ -62,6 +70,7 @@ notepad++.exe
 puush.exe
 sihost.exe
 spoolsv.exe
+stdrt.exe
 steamwebhelper.exe
 svchost.exe
 taskhost.exe
