@@ -37,10 +37,10 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver 3.1
-VersionInfoProductTextVersion=3.1.0.9
+VersionInfoProductTextVersion=3.1.1.0
 VersionInfoProductVersion=3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.0.9
+VersionInfoVersion=3.1.1.0
 
 [Files]
 ; 64-bit OS
@@ -49,6 +49,7 @@ Source: "output\64\bass_mpc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_mpc
 Source: "output\64\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "output\64\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
@@ -57,6 +58,7 @@ Source: "output\bass_mpc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass_m
 Source: "output\bassflac.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\bassmidi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\bassenc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "output\basswasapi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
@@ -69,6 +71,7 @@ Source: "output\bass_mpc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_mpc.dl
 Source: "output\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "output\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
@@ -149,16 +152,18 @@ Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; 
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\basswasapi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
+Type: files; Name: "{syswow64}\keppydrv\basswasapi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
@@ -170,6 +175,7 @@ Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\basswasapi.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: not Is64BitInstallMode
@@ -183,16 +189,18 @@ Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\basswasapi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
+Type: files; Name: "{syswow64}\keppydrv\basswasapi.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
@@ -204,6 +212,7 @@ Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\basswasapi.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: not Is64BitInstallMode

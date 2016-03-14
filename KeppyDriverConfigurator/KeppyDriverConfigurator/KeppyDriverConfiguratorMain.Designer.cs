@@ -664,7 +664,7 @@
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Hand;
             this.WhatIsOutput.ErrorImage = global::KeppyDriverConfigurator.Properties.Resources.what;
             this.WhatIsOutput.Image = global::KeppyDriverConfigurator.Properties.Resources.what;
-            this.WhatIsOutput.Location = new System.Drawing.Point(233, 9);
+            this.WhatIsOutput.Location = new System.Drawing.Point(205, 9);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(21, 17);
             this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -677,9 +677,9 @@
             this.OutputWAV.AutoSize = true;
             this.OutputWAV.Location = new System.Drawing.Point(15, 9);
             this.OutputWAV.Name = "OutputWAV";
-            this.OutputWAV.Size = new System.Drawing.Size(223, 17);
+            this.OutputWAV.Size = new System.Drawing.Size(194, 17);
             this.OutputWAV.TabIndex = 27;
-            this.OutputWAV.Text = "Enable the \"Output to WAV\" mode (Beta)";
+            this.OutputWAV.Text = "Enable the \"Output to WAV\" mode.";
             this.OutputWAV.UseVisualStyleBackColor = true;
             // 
             // BlackMIDIPres

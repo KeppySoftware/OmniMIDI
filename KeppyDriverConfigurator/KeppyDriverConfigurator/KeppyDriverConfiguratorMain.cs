@@ -382,11 +382,33 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        // Frozen's soundfont ban
+                        var FrozenInput = str;
+                        var FrozenTerm = "Frozen";
+                        var FrozenPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(FrozenTerm) + @"\b";
+                        var FrozenResult = System.Text.RegularExpressions.Regex.IsMatch(FrozenInput, FrozenPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        // sDetrimental's soundfont ban
+                        var sDetrimentalInput = str;
+                        var sDetrimentalTerm = "sDetrimental";
+                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
+                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (FrozenResult == true && sDetrimentalResult == false)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == true && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
                             Lis1.Items.Add(str);
                         }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
                             using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
@@ -422,11 +444,33 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        // Frozen's soundfont ban
+                        var FrozenInput = str;
+                        var FrozenTerm = "Frozen";
+                        var FrozenPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(FrozenTerm) + @"\b";
+                        var FrozenResult = System.Text.RegularExpressions.Regex.IsMatch(FrozenInput, FrozenPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        // sDetrimental's soundfont ban
+                        var sDetrimentalInput = str;
+                        var sDetrimentalTerm = "sDetrimental";
+                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
+                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (FrozenResult == true && sDetrimentalResult == false)
                         {
-                            Lis2.Items.Add(str);
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (FrozenResult == false && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == true && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        {
+                            Lis1.Items.Add(str);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
                             using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
@@ -462,11 +506,33 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        // Frozen's soundfont ban
+                        var FrozenInput = str;
+                        var FrozenTerm = "Frozen";
+                        var FrozenPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(FrozenTerm) + @"\b";
+                        var FrozenResult = System.Text.RegularExpressions.Regex.IsMatch(FrozenInput, FrozenPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        // sDetrimental's soundfont ban
+                        var sDetrimentalInput = str;
+                        var sDetrimentalTerm = "sDetrimental";
+                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
+                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (FrozenResult == true && sDetrimentalResult == false)
                         {
-                            Lis3.Items.Add(str);
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (FrozenResult == false && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == true && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        {
+                            Lis1.Items.Add(str);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
                             using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {
@@ -502,11 +568,33 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        // Frozen's soundfont ban
+                        var FrozenInput = str;
+                        var FrozenTerm = "frozen";
+                        var FrozenPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(FrozenTerm) + @"\b";
+                        var FrozenResult = System.Text.RegularExpressions.Regex.IsMatch(FrozenInput, FrozenPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        // sDetrimental's soundfont ban
+                        var sDetrimentalInput = str;
+                        var sDetrimentalTerm = "sdetrimental";
+                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
+                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (FrozenResult == true && sDetrimentalResult == false)
                         {
-                            Lis4.Items.Add(str);
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (FrozenResult == false && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == true && sDetrimentalResult == true)
+                        {
+                            MessageBox.Show("The soundfont is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        {
+                            Lis1.Items.Add(str);
+                        }
+                        else if (FrozenResult == false && sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
                             using (var form = new BankNPresetSel(Path.GetFileName(str)))
                             {

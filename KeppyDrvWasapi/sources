@@ -1,0 +1,55 @@
+TARGETNAME=bassmididrv
+
+TARGETTYPE=DYNLINK
+
+
+USE_LIBCMT=1
+USE_STL = 1
+STL_VER = 70
+USE_NATIVE_EH = 1 
+USE_IOSTREAM = 1
+
+TARGETLIBS= \
+    $(DDK_LIB_PATH)\shlwapi.lib          \
+    $(DDK_LIB_PATH)\kernel32.lib          \
+	$(DDK_LIB_PATH)\user32.lib 	\
+	$(DDK_LIB_PATH)\advapi32.lib 	\
+	$(DDK_LIB_PATH)\ole32.lib  \
+	$(DDK_LIB_PATH)\uuid.lib  \
+	$(DDK_LIB_PATH)\winmm.lib
+
+!if defined(IA64) 
+!message This sample is not to be built for IA64 targets
+!else
+!if defined(AMD64)
+TARGETLIBS= $(TARGETLIBS) \
+	..\external_packages\lib64\bass.lib \
+	..\external_packages\lib64\bassmidi.lib
+!else
+	..\external_packages\lib\bass.lib \
+	..\external_packages\lib\bassmidi.lib
+!endif
+!endif
+	
+	
+INCLUDES=$(DDK_INC_PATH);E:\programacio\bass\c;E:\programacio\mudlord-BASSMIDI-Driver-56ecfc5\external_packages
+
+MSC_WARNING_LEVEL=-W3 -WX
+
+C_DEFINES= $(C_DEFINES) -D_WIN32 -DUNICODE -D_UNICODE -DUNDER_NT
+
+#
+# Different levels of debug printage.  First is nothing but
+# catastrophic errors, last is everything under the sun.
+#
+#C_DEFINES= $(C_DEFINES) -DDEBUG_LEVEL=DEBUGLVL_ERROR
+#C_DEFINES= $(C_DEFINES) -DDEBUG_LEVEL=DEBUGLVL_TERSE
+C_DEFINES= $(C_DEFINES) -DDEBUG_LEVEL=DEBUGLVL_VERBOSE
+#C_DEFINES= $(C_DEFINES) -DDEBUG_LEVEL=DEBUGLVL_BLAB
+
+SOURCES=            \
+	bassmididrv.cpp  \
+	dsound.cpp        \
+	sound_out_dsound.cpp  \
+	sound_out_xaudio2.cpp  
+

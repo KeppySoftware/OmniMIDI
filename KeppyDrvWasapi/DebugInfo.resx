@@ -112,23 +112,9 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RichTextBox1.Text" xml:space="preserve">
-    <value>Compiled in: March 9, 2016 (7:24:18 PM, GMT +1)
-Target OS: Microsoft Windows 7 Home Premium (64-bit)
-Compiler used: Microsoft Visual Studio 2013 (Update 5)
-
-Credits:
-Ian Luck - BASS\BASSMIDI libraries
-Frozen Snow - New Keppy's Driver logo (It looks awesome!)
-Dave Meadowcroft - For the MIDI out selector
-Chris Moeller - Pratically everything. This driver is a direct fork of his one.
-Black MIDI Team (Especially Gingeas) - "Official" testers of the driver
-
-And many thanks to other people who gave me feedback about the quality of the driver!</value>
-  </data>
 </root>
