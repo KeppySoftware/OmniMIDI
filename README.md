@@ -39,7 +39,7 @@ Absolutely no, Kode54's driver is better than mine tho. (His code is more cleane
 You can download it from there here: https://github.com/kode54/BASSMIDI-Driver
 
 ## About the Windows 10 support
-INFO: Windows 10 will NOT be supported until Microsoft doesn't fix the problem with the MIDI-Mapper.
+INFO: Windows 10 will NOT be supported until Microsoft fixes the problem with the MIDI-Mapper.
 There's already a patch for Windows 8 and 8.1, so I'll give support for them.
 
 And for support, I mean bug fixes and other things like that.
