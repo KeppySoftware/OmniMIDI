@@ -34,7 +34,7 @@ To compile (and test) the driver, you need:
 - Windows 7 SP1 or greater (Otherwise, no VS2013 for you)
 
 ## Are you trying to overshadow the original project?
-Absolutely no, Kode54's driver is better than mine. (His code is cleaner, and way more stable)
+Absolutely not, Kode54's driver is better than mine. (His code is cleaner, and way more stable)
 
 You can download it from there here: https://github.com/kode54/BASSMIDI-Driver
 
