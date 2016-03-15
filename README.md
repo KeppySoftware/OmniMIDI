@@ -34,13 +34,13 @@ To compile (and test) the driver, you need:
 - Windows 7 SP1 or greater (Otherwise, no VS2013 for you)
 
 ## Are you trying to overshadow the original project?
-Absolutely no, Kode54's driver is better than mine tho. (His code is more cleaner, and way more stable)
+Absolutely not, Kode54's driver is better than mine. (His code is cleaner, and way more stable)
 
 You can download it from there here: https://github.com/kode54/BASSMIDI-Driver
 
-## About the Windows 10 support
-INFO: Windows 10 will NOT be supported until Microsoft doesn't fix the problem with the MIDI-Mapper.
+## About Windows 10 support
+Windows 10 will NOT be supported until Microsoft fixes the problem with MIDI-Mapper.
 There's already a patch for Windows 8 and 8.1, so I'll give support for them.
 
-And for support, I mean bug fixes and other things like that.
+And by "support", I mean bug fixes and other things like that.
 The driver itself works on Windows 10, but it's really glitchy.
