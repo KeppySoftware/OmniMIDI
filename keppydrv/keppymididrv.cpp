@@ -516,16 +516,16 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	MIDIOUTCAPS2A * myCaps2A;
 	MIDIOUTCAPS2W * myCaps2W;
 	
-	CHAR synthName[] = "Keppy's Driver";
-	WCHAR synthNameW[] = L"Keppy's Driver";
+	CHAR synthName[] = "Keppy's Driver\0";
+	WCHAR synthNameW[] = L"Keppy's Driver\0";
 
 	switch (capsSize) {
 	case (sizeof(MIDIOUTCAPSA)) :
 		myCapsA = (MIDIOUTCAPSA *)capsPtr;
 		myCapsA->wMid = 0xffff;
 		myCapsA->wPid = 0xffff;
-		memcpy(myCapsA->szPname, synthName, strlen(synthName));
-		myCapsA->wTechnology = MOD_SYNTH;
+		memcpy(myCapsA->szPname, synthName, sizeof(synthName));
+		myCapsA->wTechnology = MOD_SWSYNTH;
 		myCapsA->vDriverVersion = 0x0090;
 		myCapsA->wVoices = 100000;
 		myCapsA->wNotes = 0;
@@ -537,10 +537,10 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW = (MIDIOUTCAPSW *)capsPtr;
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
-		memcpy(myCapsW->szPname, synthNameW, wcslen(synthNameW) * sizeof(wchar_t));
-		myCapsW->wTechnology = MOD_SYNTH;
+		memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW));
+		myCapsW->wTechnology = MOD_SWSYNTH;
 		myCapsW->vDriverVersion = 0x0090;
-		myCapsW->wVoices = 100000;
+		myCapsW->wVoices = 0;
 		myCapsW->wNotes = 0;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
@@ -550,10 +550,10 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
 		myCaps2A->wMid = 0xffff;
 		myCaps2A->wPid = 0xffff;
-		memcpy(myCaps2A->szPname, synthName, strlen(synthName));
-		myCaps2A->wTechnology = MOD_SYNTH;
+		memcpy(myCaps2A->szPname, synthName, sizeof(synthName));
+		myCaps2A->wTechnology = MOD_SWSYNTH;
 		myCaps2A->vDriverVersion = 0x0090;
-		myCaps2A->wVoices = 100000;
+		myCaps2A->wVoices = 0;
 		myCaps2A->wNotes = 0;
 		myCaps2A->wChannelMask = 0xffff;
 		myCaps2A->dwSupport = MIDICAPS_VOLUME;
@@ -563,10 +563,10 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
-		memcpy(myCaps2W->szPname, synthNameW, wcslen(synthNameW) * sizeof(wchar_t));
-		myCaps2W->wTechnology = MOD_SYNTH;
+		memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW));
+		myCaps2W->wTechnology = MOD_SWSYNTH;
 		myCaps2W->vDriverVersion = 0x0090;
-		myCaps2W->wVoices = 100000;
+		myCaps2W->wVoices = 0;
 		myCaps2W->wNotes = 0;
 		myCaps2W->wChannelMask = 0xffff;
 		myCaps2W->dwSupport = MIDICAPS_VOLUME;
