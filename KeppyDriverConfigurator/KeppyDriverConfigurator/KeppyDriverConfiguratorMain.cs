@@ -442,7 +442,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
-                            Lis1.Items.Add(str);
+                            Lis2.Items.Add(str);
                         }
                         else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
@@ -491,7 +491,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
-                            Lis1.Items.Add(str);
+                            Lis3.Items.Add(str);
                         }
                         else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
@@ -540,7 +540,7 @@ namespace KeppyDriverConfigurator
                         }
                         else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
-                            Lis1.Items.Add(str);
+                            Lis4.Items.Add(str);
                         }
                         else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
