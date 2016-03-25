@@ -1173,7 +1173,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
 			}
-			continue;
 		}
 		realtime_load_settings();
 		keybindings();
