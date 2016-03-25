@@ -175,6 +175,14 @@ namespace KeppyDriverConfigurator
                 {
                     Settings.SetValue("encmode", "0", RegistryValueKind.DWord);
                 }
+                if (XAudioDisable.Checked == true)
+                {
+                    Settings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    Settings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
+                }
             }
             catch
             {
@@ -340,6 +348,22 @@ namespace KeppyDriverConfigurator
             else
             {
                 OutputWAV.Checked = false;
+            }
+            if (Environment.OSVersion.Version.Major == 5)
+            {
+                XAudioDisable.Checked = true;
+                XAudioDisable.Enabled = false;
+            }
+            else
+            {
+                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+                {
+                    XAudioDisable.Checked = true;
+                }
+                else
+                {
+                    XAudioDisable.Checked = false;
+                }
             }
 
             // And finally, the volume!
@@ -902,6 +926,7 @@ namespace KeppyDriverConfigurator
             DisableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
 
             // And then...
             SaveSettings();
@@ -925,6 +950,7 @@ namespace KeppyDriverConfigurator
             DisableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
 
             // And then...
             SaveSettings();
@@ -1038,5 +1064,25 @@ namespace KeppyDriverConfigurator
                 "But hey, now you can record your real-time performances (Like from Synthesia) directly to an audio file, without using external programs such as Audacity!\n" + 
                 "Isn't that great?", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        // Brand new XAudio disabler
+        private void WhatIsXAudio_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Check this, if you don't want static noises or the XAudio interface doesn't work properly.\n\n(Notice: Disabling XAudio also increases the latency, and disables the \"Output to WAV\" mode.)", "\"Disable the XAudio engine\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void XAudioDisable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (XAudioDisable.Checked == true)
+            {
+                OutputWAV.Enabled = false;
+                OutputWAV.Checked = false;
+            }
+            else if (XAudioDisable.Checked == false)
+            {
+                OutputWAV.Enabled = true;
+            }
+        }
+
     }
 }

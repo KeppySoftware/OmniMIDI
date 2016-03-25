@@ -100,6 +100,7 @@ static int midivoices = 0; //Max voices INT
 static int maxcpu = 0; //CPU usage INT
 static int softwaremode = 1; //Software rendering
 static int preload = 0; //Soundfont preloading
+static int xaudiodisabled = 0; //Override the default engine
 static int availableports = 4; //How many ports are available
 static int reverb = 0; //Reverb FX
 static int chorus = 0; //Chorus FX
@@ -680,6 +681,7 @@ void load_settings()
 	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
 	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+	RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 	RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
@@ -687,8 +689,6 @@ void load_settings()
 	RegQueryValueEx(hKey, L"debug", NULL, &dwType, (LPBYTE)&debug, &dwSize);
 	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
 	RegCloseKey(hKey);
-
-
 
 	sound_out_volume_float = (float)volume / 10000.0f;
 	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
@@ -734,7 +734,10 @@ BOOL load_bassfuncs()
 	LOADBASSFUNCTION(BASS_Init);
 	LOADBASSFUNCTION(BASS_Free);
 	LOADBASSFUNCTION(BASS_GetInfo);
+	LOADBASSFUNCTION(BASS_ChannelUpdate);
+	LOADBASSFUNCTION(BASS_ChannelPlay);
 	LOADBASSFUNCTION(BASS_StreamFree);
+	LOADBASSFUNCTION(BASS_SetVolume);
 	LOADBASSFUNCTION(BASS_PluginLoad);
 	LOADBASSFUNCTION(BASS_SetVolume);
 	LOADBASSFUNCTION(BASS_ChannelSetFX);
@@ -769,6 +772,12 @@ BOOL load_bassfuncs()
 		FindClose(fh);
 	}
 	return TRUE;
+}
+
+BOOL IsRunningXP(){
+	if (xaudiodisabled == 1)
+		return TRUE;
+	return FALSE;
 }
 
 int IsFloatingPointEnabled(){
@@ -868,8 +877,13 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegCloseKey(hKey);
 	//cake
-	sound_out_volume_float = (float)volume / 10000.0f;
-	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	if (IsRunningXP() == TRUE) {
+		BASS_SetVolume((float)volume / 10000.0f);
+	}
+	else {
+		sound_out_volume_float = (float)volume / 10000.0f;
+		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	}
 	//another cake
 	int maxmidivoices = static_cast <int> (midivoices);
 	float trackslimit = static_cast <int> (tracks);
@@ -910,21 +924,12 @@ BOOL ProcessBlackList(){
 	TCHAR defaultblacklistdirectory[MAX_PATH];
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
-	OSVERSIONINFO osvi;
-	BOOL bIsWindowsXPorLater;
-	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	GetVersionEx(&osvi);
 	// VirtualMIDISynth ban init
 	TCHAR vmidisynthpath[MAX_PATH];
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthpath);
 	PathAppend(vmidisynthpath, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	try {
-		if (osvi.dwMajorVersion == 5) {
-			MessageBox(NULL, L"Windows XP is not supported by the driver.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
-			return 0x0;
-		}
-		else if (PathFileExists(vmidisynthpath)) {
+		if (PathFileExists(vmidisynthpath)) {
 			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nWhy this? Well, VirtualMIDISynth 1.x causes a DLL Hell while loading the BASS libraries, that's why you need to uninstall it before using my driver.\n\nYou can still use VirtualMIDISynth 2.x, since it doesn't load the DLLs directly into the MIDI application.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
 			return 0x0;
 		}
@@ -1000,19 +1005,6 @@ void ResetSynth(){
 	BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 }
 
-BOOL IsVistaOrNewer(){
-	OSVERSIONINFOEX osvi;
-	BOOL bOsVersionInfoEx;
-	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-	bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*)&osvi);
-	if (bOsVersionInfoEx == FALSE) return FALSE;
-	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId &&
-		osvi.dwMajorVersion > 5)
-		return TRUE;
-	return FALSE;
-}
-
 void ReloadSFList(DWORD whichsflist){
 	if (consent == 1) {
 		std::wstringstream ss;
@@ -1073,6 +1065,7 @@ std::wstring s2ws(const std::string& s)
 unsigned __stdcall threadfunc(LPVOID lpV){
 	unsigned i;
 	int pot;
+	int bassoutputfinal = 0;
 	int opend = 0;
 	BASS_MIDI_FONT * mf;
 	while (opend == 0 && stop_thread == 0) {
@@ -1081,11 +1074,17 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			com_initialized = TRUE;
 		}
 		load_settings();
-		if (sound_driver == NULL) {
+		if (IsRunningXP() == TRUE) {
+			bassoutputfinal = -1;
+			// Do nothing, since XP has problems with XAudio2
+		}
+		else {
+			if (sound_driver == NULL) {
 				sound_driver = create_sound_out_xaudio2();
-				sound_out_float = IsVistaOrNewer();
+				sound_out_float = TRUE;
 				sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, (IsFloatingPointEnabled() ? sound_out_float : nofloat), SPFSTD, frames);
 				/* Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency. */
+			}
 		}
 		load_bassfuncs();
 		float trackslimit = static_cast <int> (tracks);
@@ -1093,9 +1092,18 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		int frequencyvalue = static_cast <int> (frequency);
 		BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 9999);
 		OutputDebugString(L"Initializing the stream...");
-		if (BASS_Init(0, frequencyvalue, 0, NULL, NULL)) {
+		if (BASS_Init(bassoutputfinal, frequencyvalue, BASS_DEVICE_LATENCY, NULL, NULL)) {
 			consent = 1;
-			hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+			if (bassoutputfinal == -1) {
+				BASS_INFO info;
+				BASS_GetInfo(&info);
+				BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
+				hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+				BASS_ChannelPlay(hStream, false);
+			}
+			else {
+				hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+			}
 			if (!hStream) {
 				BASS_StreamFree(hStream);
 				hStream = 0;
@@ -1148,18 +1156,24 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			BASS_MIDI_StreamLoadSamples(hStream);
 		}
 		bmsyn_play_some_data();
-		float sndbf[SPFSTD];
-		decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + SPFSTD * sizeof(float));
-		if (decoded < 0) {
-
+		if (bassoutputfinal == -1) {
+			BASS_ChannelUpdate(hStream, 0);
 		}
 		else {
-			for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-				float sample = sndbf[i];
-				sample *= sound_out_volume_float;
-				sndbf[i] = sample;
+			float sndbf[SPFSTD];
+			decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + SPFSTD * sizeof(float));
+			if (decoded < 0) {
+
 			}
-			sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+			else {
+				for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+					float sample = sndbf[i];
+					sample *= sound_out_volume_float;
+					sndbf[i] = sample;
+				}
+				sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+			}
+			continue;
 		}
 		realtime_load_settings();
 		keybindings();

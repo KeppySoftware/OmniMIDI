@@ -75,6 +75,8 @@
             this.AddSF4 = new System.Windows.Forms.Button();
             this.Lis4 = new System.Windows.Forms.ListBox();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
+            this.XAudioDisable = new System.Windows.Forms.CheckBox();
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
             this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.BlackMIDIPres = new System.Windows.Forms.Button();
@@ -136,6 +138,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).BeginInit();
             this.IELPan4.SuspendLayout();
             this.Settings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
             this.GroupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TracksLimit)).BeginInit();
@@ -641,6 +644,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.WhatIsXAudio);
+            this.Settings.Controls.Add(this.XAudioDisable);
             this.Settings.Controls.Add(this.WhatIsOutput);
             this.Settings.Controls.Add(this.OutputWAV);
             this.Settings.Controls.Add(this.BlackMIDIPres);
@@ -657,6 +662,31 @@
             this.Settings.Size = new System.Drawing.Size(677, 399);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
+            // 
+            // WhatIsXAudio
+            // 
+            this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
+            this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.WhatIsXAudio.ErrorImage = global::KeppyDriverConfigurator.Properties.Resources.what;
+            this.WhatIsXAudio.Image = global::KeppyDriverConfigurator.Properties.Resources.what;
+            this.WhatIsXAudio.Location = new System.Drawing.Point(393, 9);
+            this.WhatIsXAudio.Name = "WhatIsXAudio";
+            this.WhatIsXAudio.Size = new System.Drawing.Size(21, 17);
+            this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.WhatIsXAudio.TabIndex = 37;
+            this.WhatIsXAudio.TabStop = false;
+            this.WhatIsXAudio.Click += new System.EventHandler(this.WhatIsXAudio_Click);
+            // 
+            // XAudioDisable
+            // 
+            this.XAudioDisable.AutoSize = true;
+            this.XAudioDisable.Location = new System.Drawing.Point(242, 9);
+            this.XAudioDisable.Name = "XAudioDisable";
+            this.XAudioDisable.Size = new System.Drawing.Size(154, 17);
+            this.XAudioDisable.TabIndex = 36;
+            this.XAudioDisable.Text = "Disable the XAudio engine.";
+            this.XAudioDisable.UseVisualStyleBackColor = true;
+            this.XAudioDisable.CheckedChanged += new System.EventHandler(this.XAudioDisable_CheckedChanged);
             // 
             // WhatIsOutput
             // 
@@ -1298,6 +1328,7 @@
             this.IELPan4.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).EndInit();
             this.GroupBox5.ResumeLayout(false);
             this.GroupBox5.PerformLayout();
@@ -1409,6 +1440,8 @@
         private System.Windows.Forms.PictureBox SFZComp4;
         private System.Windows.Forms.CheckBox OutputWAV;
         private System.Windows.Forms.PictureBox WhatIsOutput;
+        private System.Windows.Forms.CheckBox XAudioDisable;
+        private System.Windows.Forms.PictureBox WhatIsXAudio;
     }
 }
 

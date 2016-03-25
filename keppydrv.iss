@@ -20,7 +20,7 @@ DefaultGroupName=Keppy's Driver
 ExtraDiskSpaceRequired=6
 InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
-MinVersion=0,6.0.6000
+MinVersion=0,5.01.2600sp2
 OutputBaseFilename=KeppysDriverSetup
 OutputDir="C:\Users\KaleidonKep99\Desktop"
 SetupIconFile=midiicon.ico
@@ -37,10 +37,10 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver 3.1
-VersionInfoProductTextVersion=3.1.1.4
+VersionInfoProductTextVersion=3.1.1.5
 VersionInfoProductVersion=3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.1.4
+VersionInfoVersion=3.1.1.5
 
 [Files]
 ; 64-bit OS
@@ -120,6 +120,7 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "encmode"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "polyphony"; ValueData: "512"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "frequency"; ValueData: "44100"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "xaudiodisabled"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "firstrun"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "3d"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 ;3D effects
