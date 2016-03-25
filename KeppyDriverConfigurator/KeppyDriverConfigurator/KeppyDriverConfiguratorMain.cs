@@ -1070,7 +1070,7 @@ namespace KeppyDriverConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Check this, if you don't want static noises or the XAudio interface doesn't work properly.\n\n(Notice: Disabling XAudio also increases the latency, and disables the \"Output to WAV\" mode.)", "\"Disable the XAudio engine\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Check this, if you don't want static noises or the XAudio interface doesn't work properly and/or it's buggy.\n\n(Notice: Disabling XAudio also increases the latency by a bit, and disables the \"Output to WAV\" mode.)", "\"Disable the XAudio engine\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void XAudioDisable_CheckedChanged(object sender, EventArgs e)

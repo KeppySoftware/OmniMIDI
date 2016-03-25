@@ -1068,6 +1068,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 	int bassoutputfinal = 0;
 	int opend = 0;
 	BASS_MIDI_FONT * mf;
+	BASS_INFO info;
 	while (opend == 0 && stop_thread == 0) {
 		if (!com_initialized) {
 			if (FAILED(CoInitialize(NULL))) continue;
@@ -1095,8 +1096,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		if (BASS_Init(bassoutputfinal, frequencyvalue, BASS_DEVICE_LATENCY, NULL, NULL)) {
 			consent = 1;
 			if (bassoutputfinal == -1) {
-				BASS_INFO info;
 				BASS_GetInfo(&info);
+				BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 4);
 				BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 				hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 				BASS_ChannelPlay(hStream, false);
@@ -1157,7 +1158,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		}
 		bmsyn_play_some_data();
 		if (bassoutputfinal == -1) {
-			BASS_ChannelUpdate(hStream, 0);
+			BASS_ChannelUpdate(hStream, frames);
 		}
 		else {
 			float sndbf[SPFSTD];

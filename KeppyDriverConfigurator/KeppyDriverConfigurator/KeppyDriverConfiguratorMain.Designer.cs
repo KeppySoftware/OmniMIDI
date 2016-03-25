@@ -1283,7 +1283,6 @@
             this.SoundfontImport.Filter = "Soundfont files|*.sf2;*.sfz;*.sfpack;";
             this.SoundfontImport.Multiselect = true;
             this.SoundfontImport.RestoreDirectory = true;
-            this.SoundfontImport.ShowReadOnly = true;
             this.SoundfontImport.SupportMultiDottedExtensions = true;
             this.SoundfontImport.Title = "Add soundfonts to the list...";
             // 
