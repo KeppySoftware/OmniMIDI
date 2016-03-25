@@ -878,7 +878,7 @@ void realtime_load_settings()
 	RegCloseKey(hKey);
 	//cake
 	if (IsRunningXP() == TRUE) {
-		BASS_SetVolume((float)volume / 10000.0f);
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
 	}
 	else {
 		sound_out_volume_float = (float)volume / 10000.0f;
