@@ -297,7 +297,6 @@ namespace KeppyDriverConfigurator
                 MaxCPU.Text = Settings.GetValue("cpu").ToString();
             }
             Frequency.Text = Settings.GetValue("frequency").ToString();
-            bufsize.Value = Convert.ToInt32(Settings.GetValue("buflen"));
             TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
 
             // Then the filthy checkboxes
@@ -365,6 +364,9 @@ namespace KeppyDriverConfigurator
                     XAudioDisable.Checked = false;
                 }
             }
+
+            // LEL
+            bufsize.Value = Convert.ToInt32(Settings.GetValue("buflen"));
 
             // And finally, the volume!
             int VolumeValue = Convert.ToInt32(Settings.GetValue("volume"));
@@ -1077,10 +1079,16 @@ namespace KeppyDriverConfigurator
             {
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
+                BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                bufsize.Minimum = 0;
+                bufsize.Maximum = 1000;
             }
             else if (XAudioDisable.Checked == false)
             {
                 OutputWAV.Enabled = true;
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
+                bufsize.Minimum = 1;
+                bufsize.Maximum = 100;
             }
         }
 
