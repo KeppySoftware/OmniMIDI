@@ -1026,26 +1026,71 @@ void ReloadSFList(DWORD whichsflist){
 	}
 }
 
+BOOL Is64BitOS()
+{
+	BOOL bIs64BitOS = FALSE;
+
+	// We check if the OS is 64 Bit
+	typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+
+	LPFN_ISWOW64PROCESS
+		fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(
+		GetModuleHandle(L"kernel32"), "IsWow64Process");
+
+	if (NULL != fnIsWow64Process)
+	{
+		if (!fnIsWow64Process(GetCurrentProcess(), &bIs64BitOS))
+		{
+			//error
+		}
+	}
+	return bIs64BitOS;
+}
+
 void keybindings()
 {
 	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
 		ReloadSFList(1);
+		return;
 	}
 	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
 		ReloadSFList(2);
+		return;
 	}
 	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
 		ReloadSFList(3);
+		return;
 	}
 	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
 		ReloadSFList(4);
+		return;
+	}
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+		TCHAR configuratorapp[MAX_PATH];
+		if (Is64BitOS() == TRUE) {
+			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+			{
+				PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+				ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
+				return;
+			}
+		}
+		else {
+			{
+				PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+				ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
+				return;
+			}
+		}
 	}
 	if (GetAsyncKeyState(VK_INSERT) & 1) {
 		if (consent == 1) {
 			ResetSynth();
+			return;
 		}
 		else {
-			//NULL 
+			//NULL
+			return;
 		}
 	}
 }

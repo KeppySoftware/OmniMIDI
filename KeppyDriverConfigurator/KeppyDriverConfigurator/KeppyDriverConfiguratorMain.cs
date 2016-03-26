@@ -1020,6 +1020,12 @@ namespace KeppyDriverConfigurator
         }
 
         // Guide part
+        private void isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+5.", 
+                "Is there any shortcut for to open the configurator?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 4.\n\n" +
@@ -1034,7 +1040,7 @@ namespace KeppyDriverConfigurator
 
         private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("For Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 30-35.\nFor all the AC'97 audio cards, it's 40.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+            MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 30-35.\nFor all the AC'97 audio cards, it's 40.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
         // SFZ compliant part
@@ -1091,6 +1097,7 @@ namespace KeppyDriverConfigurator
                 bufsize.Maximum = 100;
             }
         }
+
 
     }
 }

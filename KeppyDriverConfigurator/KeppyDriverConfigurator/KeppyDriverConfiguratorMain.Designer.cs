@@ -124,6 +124,7 @@
             this.visitKeppyStudiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -1196,6 +1197,7 @@
             // guideToolStripMenuItem
             // 
             this.guideToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem,
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.howCanIResetTheDriverToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
@@ -1206,21 +1208,21 @@
             // howCanIChangeTheSoundfontListToolStripMenuItem
             // 
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
             // 
             // howCanIResetTheDriverToolStripMenuItem
             // 
             this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
-            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
             this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
             // 
             // whatsTheBestSettingsForTheBufferToolStripMenuItem
             // 
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
             // 
@@ -1290,6 +1292,13 @@
             // 
             this.ExternalListImport.FileName = "openFileDialog1";
             this.ExternalListImport.Filter = "Soundfont lists|*.txt;*.sflist;";
+            // 
+            // isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem
+            // 
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Name = "isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem";
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Text = "Is there any shortcut for to open the configurator?";
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Click += new System.EventHandler(this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1441,6 +1450,7 @@
         private System.Windows.Forms.PictureBox WhatIsOutput;
         private System.Windows.Forms.CheckBox XAudioDisable;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
+        private System.Windows.Forms.ToolStripMenuItem isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem;
     }
 }
 

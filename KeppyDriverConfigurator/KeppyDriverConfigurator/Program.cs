@@ -17,7 +17,6 @@ namespace KeppyDriverConfigurator
             Mutex m = new Mutex(true, "KeppyDriverConfigurator", out ok);
             if (!ok)
             {
-                System.Media.SystemSounds.Hand.Play();
                 return;
             }
             Application.EnableVisualStyles();
