@@ -1067,20 +1067,11 @@ void keybindings()
 	}
 	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
 		TCHAR configuratorapp[MAX_PATH];
-		if (Is64BitOS() == TRUE) {
-			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
-			{
-				PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-				ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
-				return;
-			}
-		}
-		else {
-			{
-				PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-				ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
-				return;
-			}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+		{
+			PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+			ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
+			return;
 		}
 	}
 	if (GetAsyncKeyState(VK_INSERT) & 1) {
