@@ -11,8 +11,8 @@ I optimized this fork by doing these things:
 
 ## Minimum system requirements for standard MIDIs playback
 To use the driver, you need at least:
-- A CPU running at 900MHz (With SSE2 and CMPXCHG16b instructions support)
-- 512MB of RAM
+- A *true* dual-core CPU (No Hyper-Threading) running at 1.8GHz (With SSE2 and CMPXCHG16b instructions support)
+- 1024MB of RAM
 - [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) & .NET Framework 2.0
 - [DirectX 9.0c with XAudio 2.x] (http://www.microsoft.com/en-us/download/details.aspx?id=35) (Integrated in the installer)
 - Windows Vista SP2 or greater
