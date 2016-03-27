@@ -37,10 +37,10 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver 3.1
-VersionInfoProductTextVersion=3.1.2.0
+VersionInfoProductTextVersion=3.1.2.1
 VersionInfoProductVersion=3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.2.0
+VersionInfoVersion=3.1.2.1
 
 [Files]
 ; 64-bit OS
@@ -122,7 +122,7 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "frequency"; ValueData: "44100"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "xaudiodisabled"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "firstrun"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "3d"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "vmsemu"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 ;3D effects
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfxnum"; ValueData: "2"; Flags: uninsdeletekey deletekey dontcreatekey

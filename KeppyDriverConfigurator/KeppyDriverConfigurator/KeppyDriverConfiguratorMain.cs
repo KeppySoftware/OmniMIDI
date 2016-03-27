@@ -143,6 +143,14 @@ namespace KeppyDriverConfigurator
                 {
                     Settings.SetValue("nofx", "0", RegistryValueKind.DWord);
                 }
+                if (VMSEmu.Checked == true)
+                {
+                    Settings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    Settings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
+                }
                 if (NoteOffCheck.Checked == true)
                 {
                     Settings.SetValue("noteoff", "1", RegistryValueKind.DWord);
@@ -315,6 +323,14 @@ namespace KeppyDriverConfigurator
             else
             {
                 DisableSFX.Checked = false;
+            }
+            if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
+            {
+                VMSEmu.Checked = true;
+            }
+            else
+            {
+                VMSEmu.Checked = false;
             }
             if (Convert.ToInt32(Settings.GetValue("noteoff")) == 1)
             {
@@ -929,6 +945,7 @@ namespace KeppyDriverConfigurator
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
 
             // And then...
             SaveSettings();
@@ -953,6 +970,7 @@ namespace KeppyDriverConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
 
             // And then...
             SaveSettings();
@@ -1098,6 +1116,17 @@ namespace KeppyDriverConfigurator
             }
         }
 
-
+        private void OutputWAV_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OutputWAV.Checked == true)
+            {
+                XAudioDisable.Enabled = false;
+                XAudioDisable.Checked = false;
+            }
+            else if (OutputWAV.Checked == false)
+            {
+                XAudioDisable.Enabled = true;
+            }
+        }
     }
 }

@@ -112,6 +112,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.howCanIChangeTheSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.howCanIResetTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,7 +125,7 @@
             this.visitKeppyStudiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.VMSEmu = new System.Windows.Forms.CheckBox();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -712,6 +713,7 @@
             this.OutputWAV.TabIndex = 27;
             this.OutputWAV.Text = "Enable the \"Output to WAV\" mode.";
             this.OutputWAV.UseVisualStyleBackColor = true;
+            this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
             // 
             // BlackMIDIPres
             // 
@@ -745,6 +747,7 @@
             // 
             // GroupBox5
             // 
+            this.GroupBox5.Controls.Add(this.VMSEmu);
             this.GroupBox5.Controls.Add(this.SincInter);
             this.GroupBox5.Controls.Add(this.TracksLimit);
             this.GroupBox5.Controls.Add(this.Label4);
@@ -1124,7 +1127,7 @@
             this.VolTrackBar.Location = new System.Drawing.Point(8, 47);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.Size = new System.Drawing.Size(661, 45);
+            this.VolTrackBar.Size = new System.Drawing.Size(661, 42);
             this.VolTrackBar.TabIndex = 0;
             this.VolTrackBar.TickFrequency = 0;
             this.VolTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -1153,44 +1156,44 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openDebugWindowToolStripMenuItem
             // 
             this.openDebugWindowToolStripMenuItem.Name = "openDebugWindowToolStripMenuItem";
-            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
             // 
             // openTheBlacklistManagerToolStripMenuItem
             // 
             this.openTheBlacklistManagerToolStripMenuItem.Name = "openTheBlacklistManagerToolStripMenuItem";
-            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.openTheBlacklistManagerToolStripMenuItem.Text = "Open the blacklist manager";
             this.openTheBlacklistManagerToolStripMenuItem.Click += new System.EventHandler(this.openTheBlacklistManagerToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(224, 6);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(238, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(224, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1202,27 +1205,34 @@
             this.howCanIResetTheDriverToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
             this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
-            this.guideToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.guideToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.guideToolStripMenuItem.Text = "Guide";
+            // 
+            // isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem
+            // 
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Name = "isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem";
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Text = "Is there any shortcut for to open the configurator?";
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Click += new System.EventHandler(this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click);
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
             // 
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
             // 
             // howCanIResetTheDriverToolStripMenuItem
             // 
             this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
-            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
             this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
             // 
             // whatsTheBestSettingsForTheBufferToolStripMenuItem
             // 
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
             // 
@@ -1236,46 +1246,46 @@
             this.downloadTheSourceCodeToolStripMenuItem,
             this.visitKeppyStudiosToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
             this.informationAboutTheDriverToolStripMenuItem.Name = "informationAboutTheDriverToolStripMenuItem";
-            this.informationAboutTheDriverToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.informationAboutTheDriverToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.informationAboutTheDriverToolStripMenuItem.Text = "Information about the driver";
             this.informationAboutTheDriverToolStripMenuItem.Click += new System.EventHandler(this.informationAboutTheDriverToolStripMenuItem_Click);
             // 
             // openUpdaterToolStripMenuItem
             // 
             this.openUpdaterToolStripMenuItem.Name = "openUpdaterToolStripMenuItem";
-            this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(208, 6);
             // 
             // reportABugToolStripMenuItem
             // 
             this.reportABugToolStripMenuItem.Name = "reportABugToolStripMenuItem";
-            this.reportABugToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.reportABugToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.reportABugToolStripMenuItem.Text = "Report a bug";
             this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
             this.downloadTheSourceCodeToolStripMenuItem.Name = "downloadTheSourceCodeToolStripMenuItem";
-            this.downloadTheSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.downloadTheSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
             // visitKeppyStudiosToolStripMenuItem
             // 
             this.visitKeppyStudiosToolStripMenuItem.Name = "visitKeppyStudiosToolStripMenuItem";
-            this.visitKeppyStudiosToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.visitKeppyStudiosToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
             this.visitKeppyStudiosToolStripMenuItem.Text = "Visit Keppy Studios";
             this.visitKeppyStudiosToolStripMenuItem.Click += new System.EventHandler(this.visitKeppyStudiosToolStripMenuItem_Click);
             // 
@@ -1293,12 +1303,16 @@
             this.ExternalListImport.FileName = "openFileDialog1";
             this.ExternalListImport.Filter = "Soundfont lists|*.txt;*.sflist;";
             // 
-            // isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem
+            // VMSEmu
             // 
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Name = "isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem";
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Text = "Is there any shortcut for to open the configurator?";
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Click += new System.EventHandler(this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click);
+            this.VMSEmu.AutoSize = true;
+            this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.VMSEmu.Location = new System.Drawing.Point(457, 55);
+            this.VMSEmu.Name = "VMSEmu";
+            this.VMSEmu.Size = new System.Drawing.Size(128, 17);
+            this.VMSEmu.TabIndex = 27;
+            this.VMSEmu.Text = "VMS buffer emulation";
+            this.VMSEmu.UseVisualStyleBackColor = true;
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1451,6 +1465,7 @@
         private System.Windows.Forms.CheckBox XAudioDisable;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
         private System.Windows.Forms.ToolStripMenuItem isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem;
+        private System.Windows.Forms.CheckBox VMSEmu;
     }
 }
 

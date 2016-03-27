@@ -112,6 +112,7 @@ static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
 static int tracks = 0; //Tracks limit
 static int volume = 0; //Volume limit
+static int vmsemu = 0; //VirtualMIDISynth buffer emulation
 static int nofloat = 1; //Enable or disable the float engine
 static int nofx = 0; //Enable or disable FXs
 static int noteoff1 = 0; //Note cut INT
@@ -681,6 +682,7 @@ void load_settings()
 	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
 	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+	RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
 	RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
@@ -864,10 +866,12 @@ void realtime_load_settings()
 	long lResult;
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
+	BASS_INFO info;
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);;
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
+	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
 	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
@@ -876,6 +880,7 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegCloseKey(hKey);
+	BASS_GetInfo(&info);
 	//cake
 	if (IsRunningXP() == TRUE) {
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
@@ -890,13 +895,19 @@ void realtime_load_settings()
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+	BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames);
 	if (noteoff1) {
 		BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
 	}
 	else {
 		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOTEOFF1);
 	}
-
+	if (vmsemu == 1) {
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
+	}
+	else {
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100);
+	}
 	if (nofx) {
 		BASS_ChannelFlags(hStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
 	}
@@ -1026,27 +1037,6 @@ void ReloadSFList(DWORD whichsflist){
 	}
 }
 
-BOOL Is64BitOS()
-{
-	BOOL bIs64BitOS = FALSE;
-
-	// We check if the OS is 64 Bit
-	typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-
-	LPFN_ISWOW64PROCESS
-		fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(
-		GetModuleHandle(L"kernel32"), "IsWow64Process");
-
-	if (NULL != fnIsWow64Process)
-	{
-		if (!fnIsWow64Process(GetCurrentProcess(), &bIs64BitOS))
-		{
-			//error
-		}
-	}
-	return bIs64BitOS;
-}
-
 void keybindings()
 {
 	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
@@ -1133,6 +1123,12 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			consent = 1;
 			if (bassoutputfinal == -1) {
 				BASS_GetInfo(&info);
+				if (vmsemu == 1) {
+					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
+				}
+				else {
+					// Nothing
+				}
 				BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 4);
 				BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 				hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
