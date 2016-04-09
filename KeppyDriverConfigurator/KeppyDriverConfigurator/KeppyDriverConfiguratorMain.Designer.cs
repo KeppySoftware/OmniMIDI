@@ -34,6 +34,7 @@
             this.SFZComp1 = new System.Windows.Forms.PictureBox();
             this.List1Override = new System.Windows.Forms.Label();
             this.IELPan1 = new System.Windows.Forms.Panel();
+            this.EL1 = new System.Windows.Forms.Button();
             this.IEL1 = new System.Windows.Forms.Button();
             this.CLi1 = new System.Windows.Forms.Button();
             this.MvD1 = new System.Windows.Forms.Button();
@@ -42,10 +43,11 @@
             this.AddSF1 = new System.Windows.Forms.Button();
             this.Lis1 = new System.Windows.Forms.ListBox();
             this.List2 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.EL2 = new System.Windows.Forms.Button();
+            this.IEL2 = new System.Windows.Forms.Button();
             this.SFZComp2 = new System.Windows.Forms.PictureBox();
             this.List2Override = new System.Windows.Forms.Label();
-            this.IELPan2 = new System.Windows.Forms.Panel();
-            this.IEL2 = new System.Windows.Forms.Button();
             this.CLi2 = new System.Windows.Forms.Button();
             this.MvD2 = new System.Windows.Forms.Button();
             this.MvU2 = new System.Windows.Forms.Button();
@@ -53,10 +55,11 @@
             this.AddSF2 = new System.Windows.Forms.Button();
             this.Lis2 = new System.Windows.Forms.ListBox();
             this.List3 = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.EL3 = new System.Windows.Forms.Button();
+            this.IEL3 = new System.Windows.Forms.Button();
             this.SFZComp3 = new System.Windows.Forms.PictureBox();
             this.List3Override = new System.Windows.Forms.Label();
-            this.IELPan3 = new System.Windows.Forms.Panel();
-            this.IEL3 = new System.Windows.Forms.Button();
             this.CLi3 = new System.Windows.Forms.Button();
             this.MvD3 = new System.Windows.Forms.Button();
             this.MvU3 = new System.Windows.Forms.Button();
@@ -64,10 +67,11 @@
             this.AddSF3 = new System.Windows.Forms.Button();
             this.Lis3 = new System.Windows.Forms.ListBox();
             this.List4 = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.EL4 = new System.Windows.Forms.Button();
+            this.IEL4 = new System.Windows.Forms.Button();
             this.SFZComp4 = new System.Windows.Forms.PictureBox();
             this.List4Override = new System.Windows.Forms.Label();
-            this.IELPan4 = new System.Windows.Forms.Panel();
-            this.IEL4 = new System.Windows.Forms.Button();
             this.CLi4 = new System.Windows.Forms.Button();
             this.MvD4 = new System.Windows.Forms.Button();
             this.MvU4 = new System.Windows.Forms.Button();
@@ -83,6 +87,7 @@
             this.ResetSettings = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
+            this.VMSEmu = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
             this.TracksLimit = new System.Windows.Forms.NumericUpDown();
             this.Label4 = new System.Windows.Forms.Label();
@@ -125,20 +130,20 @@
             this.visitKeppyStudiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
-            this.VMSEmu = new System.Windows.Forms.CheckBox();
+            this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
             this.IELPan1.SuspendLayout();
             this.List2.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp2)).BeginInit();
-            this.IELPan2.SuspendLayout();
             this.List3.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp3)).BeginInit();
-            this.IELPan3.SuspendLayout();
             this.List4.SuspendLayout();
+            this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).BeginInit();
-            this.IELPan4.SuspendLayout();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -208,20 +213,32 @@
             // IELPan1
             // 
             this.IELPan1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.IELPan1.Controls.Add(this.EL1);
             this.IELPan1.Controls.Add(this.IEL1);
             this.IELPan1.Location = new System.Drawing.Point(581, 311);
             this.IELPan1.Name = "IELPan1";
             this.IELPan1.Size = new System.Drawing.Size(89, 63);
             this.IELPan1.TabIndex = 8;
             // 
+            // EL1
+            // 
+            this.EL1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL1.Location = new System.Drawing.Point(0, 29);
+            this.EL1.Name = "EL1";
+            this.EL1.Size = new System.Drawing.Size(85, 30);
+            this.EL1.TabIndex = 7;
+            this.EL1.Text = "Export list";
+            this.EL1.UseVisualStyleBackColor = true;
+            this.EL1.Click += new System.EventHandler(this.EL1_Click);
+            // 
             // IEL1
             // 
-            this.IEL1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IEL1.Dock = System.Windows.Forms.DockStyle.Top;
             this.IEL1.Location = new System.Drawing.Point(0, 0);
             this.IEL1.Name = "IEL1";
-            this.IEL1.Size = new System.Drawing.Size(85, 59);
+            this.IEL1.Size = new System.Drawing.Size(85, 30);
             this.IEL1.TabIndex = 6;
-            this.IEL1.Text = "Import\r\nexternal list";
+            this.IEL1.Text = "Import list";
             this.IEL1.UseVisualStyleBackColor = true;
             this.IEL1.Click += new System.EventHandler(this.IEL1_Click);
             // 
@@ -288,9 +305,9 @@
             // List2
             // 
             this.List2.BackColor = System.Drawing.Color.White;
+            this.List2.Controls.Add(this.panel1);
             this.List2.Controls.Add(this.SFZComp2);
             this.List2.Controls.Add(this.List2Override);
-            this.List2.Controls.Add(this.IELPan2);
             this.List2.Controls.Add(this.CLi2);
             this.List2.Controls.Add(this.MvD2);
             this.List2.Controls.Add(this.MvU2);
@@ -303,6 +320,38 @@
             this.List2.Size = new System.Drawing.Size(677, 399);
             this.List2.TabIndex = 1;
             this.List2.Text = "List II";
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.EL2);
+            this.panel1.Controls.Add(this.IEL2);
+            this.panel1.Location = new System.Drawing.Point(581, 311);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(89, 63);
+            this.panel1.TabIndex = 18;
+            // 
+            // EL2
+            // 
+            this.EL2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL2.Location = new System.Drawing.Point(0, 29);
+            this.EL2.Name = "EL2";
+            this.EL2.Size = new System.Drawing.Size(85, 30);
+            this.EL2.TabIndex = 7;
+            this.EL2.Text = "Export list";
+            this.EL2.UseVisualStyleBackColor = true;
+            this.EL2.Click += new System.EventHandler(this.EL2_Click);
+            // 
+            // IEL2
+            // 
+            this.IEL2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL2.Location = new System.Drawing.Point(0, 0);
+            this.IEL2.Name = "IEL2";
+            this.IEL2.Size = new System.Drawing.Size(85, 30);
+            this.IEL2.TabIndex = 6;
+            this.IEL2.Text = "Import list";
+            this.IEL2.UseVisualStyleBackColor = true;
+            this.IEL2.Click += new System.EventHandler(this.IEL2_Click);
             // 
             // SFZComp2
             // 
@@ -324,26 +373,6 @@
             this.List2Override.Size = new System.Drawing.Size(250, 13);
             this.List2Override.TabIndex = 16;
             this.List2Override.Text = "The last soundfont will override the previous ones.";
-            // 
-            // IELPan2
-            // 
-            this.IELPan2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.IELPan2.Controls.Add(this.IEL2);
-            this.IELPan2.Location = new System.Drawing.Point(581, 311);
-            this.IELPan2.Name = "IELPan2";
-            this.IELPan2.Size = new System.Drawing.Size(89, 63);
-            this.IELPan2.TabIndex = 15;
-            // 
-            // IEL2
-            // 
-            this.IEL2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IEL2.Location = new System.Drawing.Point(0, 0);
-            this.IEL2.Name = "IEL2";
-            this.IEL2.Size = new System.Drawing.Size(85, 59);
-            this.IEL2.TabIndex = 6;
-            this.IEL2.Text = "Import\r\nexternal list";
-            this.IEL2.UseVisualStyleBackColor = true;
-            this.IEL2.Click += new System.EventHandler(this.IEL2_Click);
             // 
             // CLi2
             // 
@@ -408,9 +437,9 @@
             // List3
             // 
             this.List3.BackColor = System.Drawing.Color.White;
+            this.List3.Controls.Add(this.panel2);
             this.List3.Controls.Add(this.SFZComp3);
             this.List3.Controls.Add(this.List3Override);
-            this.List3.Controls.Add(this.IELPan3);
             this.List3.Controls.Add(this.CLi3);
             this.List3.Controls.Add(this.MvD3);
             this.List3.Controls.Add(this.MvU3);
@@ -422,6 +451,38 @@
             this.List3.Size = new System.Drawing.Size(677, 399);
             this.List3.TabIndex = 2;
             this.List3.Text = "List III";
+            // 
+            // panel2
+            // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.EL3);
+            this.panel2.Controls.Add(this.IEL3);
+            this.panel2.Location = new System.Drawing.Point(581, 311);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(89, 63);
+            this.panel2.TabIndex = 25;
+            // 
+            // EL3
+            // 
+            this.EL3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL3.Location = new System.Drawing.Point(0, 29);
+            this.EL3.Name = "EL3";
+            this.EL3.Size = new System.Drawing.Size(85, 30);
+            this.EL3.TabIndex = 7;
+            this.EL3.Text = "Export list";
+            this.EL3.UseVisualStyleBackColor = true;
+            this.EL3.Click += new System.EventHandler(this.EL3_Click);
+            // 
+            // IEL3
+            // 
+            this.IEL3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL3.Location = new System.Drawing.Point(0, 0);
+            this.IEL3.Name = "IEL3";
+            this.IEL3.Size = new System.Drawing.Size(85, 30);
+            this.IEL3.TabIndex = 6;
+            this.IEL3.Text = "Import list";
+            this.IEL3.UseVisualStyleBackColor = true;
+            this.IEL3.Click += new System.EventHandler(this.IEL3_Click);
             // 
             // SFZComp3
             // 
@@ -443,26 +504,6 @@
             this.List3Override.Size = new System.Drawing.Size(250, 13);
             this.List3Override.TabIndex = 23;
             this.List3Override.Text = "The last soundfont will override the previous ones.";
-            // 
-            // IELPan3
-            // 
-            this.IELPan3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.IELPan3.Controls.Add(this.IEL3);
-            this.IELPan3.Location = new System.Drawing.Point(581, 311);
-            this.IELPan3.Name = "IELPan3";
-            this.IELPan3.Size = new System.Drawing.Size(89, 63);
-            this.IELPan3.TabIndex = 22;
-            // 
-            // IEL3
-            // 
-            this.IEL3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IEL3.Location = new System.Drawing.Point(0, 0);
-            this.IEL3.Name = "IEL3";
-            this.IEL3.Size = new System.Drawing.Size(85, 59);
-            this.IEL3.TabIndex = 6;
-            this.IEL3.Text = "Import\r\nexternal list";
-            this.IEL3.UseVisualStyleBackColor = true;
-            this.IEL3.Click += new System.EventHandler(this.IEL3_Click);
             // 
             // CLi3
             // 
@@ -527,9 +568,9 @@
             // List4
             // 
             this.List4.BackColor = System.Drawing.Color.White;
+            this.List4.Controls.Add(this.panel3);
             this.List4.Controls.Add(this.SFZComp4);
             this.List4.Controls.Add(this.List4Override);
-            this.List4.Controls.Add(this.IELPan4);
             this.List4.Controls.Add(this.CLi4);
             this.List4.Controls.Add(this.MvD4);
             this.List4.Controls.Add(this.MvU4);
@@ -541,6 +582,38 @@
             this.List4.Size = new System.Drawing.Size(677, 399);
             this.List4.TabIndex = 3;
             this.List4.Text = "List IV";
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3.Controls.Add(this.EL4);
+            this.panel3.Controls.Add(this.IEL4);
+            this.panel3.Location = new System.Drawing.Point(581, 311);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(89, 63);
+            this.panel3.TabIndex = 32;
+            // 
+            // EL4
+            // 
+            this.EL4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL4.Location = new System.Drawing.Point(0, 29);
+            this.EL4.Name = "EL4";
+            this.EL4.Size = new System.Drawing.Size(85, 30);
+            this.EL4.TabIndex = 7;
+            this.EL4.Text = "Export list";
+            this.EL4.UseVisualStyleBackColor = true;
+            this.EL4.Click += new System.EventHandler(this.EL4_Click);
+            // 
+            // IEL4
+            // 
+            this.IEL4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL4.Location = new System.Drawing.Point(0, 0);
+            this.IEL4.Name = "IEL4";
+            this.IEL4.Size = new System.Drawing.Size(85, 30);
+            this.IEL4.TabIndex = 6;
+            this.IEL4.Text = "Import list";
+            this.IEL4.UseVisualStyleBackColor = true;
+            this.IEL4.Click += new System.EventHandler(this.IEL4_Click);
             // 
             // SFZComp4
             // 
@@ -562,26 +635,6 @@
             this.List4Override.Size = new System.Drawing.Size(250, 13);
             this.List4Override.TabIndex = 30;
             this.List4Override.Text = "The last soundfont will override the previous ones.";
-            // 
-            // IELPan4
-            // 
-            this.IELPan4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.IELPan4.Controls.Add(this.IEL4);
-            this.IELPan4.Location = new System.Drawing.Point(581, 311);
-            this.IELPan4.Name = "IELPan4";
-            this.IELPan4.Size = new System.Drawing.Size(89, 63);
-            this.IELPan4.TabIndex = 29;
-            // 
-            // IEL4
-            // 
-            this.IEL4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IEL4.Location = new System.Drawing.Point(0, 0);
-            this.IEL4.Name = "IEL4";
-            this.IEL4.Size = new System.Drawing.Size(85, 59);
-            this.IEL4.TabIndex = 6;
-            this.IEL4.Text = "Import\r\nexternal list";
-            this.IEL4.UseVisualStyleBackColor = true;
-            this.IEL4.Click += new System.EventHandler(this.IEL4_Click);
             // 
             // CLi4
             // 
@@ -760,6 +813,18 @@
             this.GroupBox5.TabIndex = 31;
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Advanced BASSMIDI settings";
+            // 
+            // VMSEmu
+            // 
+            this.VMSEmu.AutoSize = true;
+            this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.VMSEmu.Location = new System.Drawing.Point(457, 55);
+            this.VMSEmu.Name = "VMSEmu";
+            this.VMSEmu.Size = new System.Drawing.Size(128, 17);
+            this.VMSEmu.TabIndex = 27;
+            this.VMSEmu.Text = "VMS buffer emulation";
+            this.VMSEmu.UseVisualStyleBackColor = true;
+            this.VMSEmu.Visible = false;
             // 
             // SincInter
             // 
@@ -1127,7 +1192,7 @@
             this.VolTrackBar.Location = new System.Drawing.Point(8, 47);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.Size = new System.Drawing.Size(661, 42);
+            this.VolTrackBar.Size = new System.Drawing.Size(661, 45);
             this.VolTrackBar.TabIndex = 0;
             this.VolTrackBar.TickFrequency = 0;
             this.VolTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -1156,44 +1221,44 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openDebugWindowToolStripMenuItem
             // 
             this.openDebugWindowToolStripMenuItem.Name = "openDebugWindowToolStripMenuItem";
-            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
             // 
             // openTheBlacklistManagerToolStripMenuItem
             // 
             this.openTheBlacklistManagerToolStripMenuItem.Name = "openTheBlacklistManagerToolStripMenuItem";
-            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.openTheBlacklistManagerToolStripMenuItem.Text = "Open the blacklist manager";
             this.openTheBlacklistManagerToolStripMenuItem.Click += new System.EventHandler(this.openTheBlacklistManagerToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(224, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(224, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(238, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1205,34 +1270,34 @@
             this.howCanIResetTheDriverToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
             this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
-            this.guideToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.guideToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.guideToolStripMenuItem.Text = "Guide";
             // 
             // isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem
             // 
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Name = "isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem";
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Text = "Is there any shortcut for to open the configurator?";
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Click += new System.EventHandler(this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click);
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
             // 
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
             // 
             // howCanIResetTheDriverToolStripMenuItem
             // 
             this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
-            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
             this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
             // 
             // whatsTheBestSettingsForTheBufferToolStripMenuItem
             // 
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
             // 
@@ -1246,46 +1311,46 @@
             this.downloadTheSourceCodeToolStripMenuItem,
             this.visitKeppyStudiosToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
             this.informationAboutTheDriverToolStripMenuItem.Name = "informationAboutTheDriverToolStripMenuItem";
-            this.informationAboutTheDriverToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.informationAboutTheDriverToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.informationAboutTheDriverToolStripMenuItem.Text = "Information about the driver";
             this.informationAboutTheDriverToolStripMenuItem.Click += new System.EventHandler(this.informationAboutTheDriverToolStripMenuItem_Click);
             // 
             // openUpdaterToolStripMenuItem
             // 
             this.openUpdaterToolStripMenuItem.Name = "openUpdaterToolStripMenuItem";
-            this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(208, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
             // 
             // reportABugToolStripMenuItem
             // 
             this.reportABugToolStripMenuItem.Name = "reportABugToolStripMenuItem";
-            this.reportABugToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.reportABugToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.reportABugToolStripMenuItem.Text = "Report a bug";
             this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
             this.downloadTheSourceCodeToolStripMenuItem.Name = "downloadTheSourceCodeToolStripMenuItem";
-            this.downloadTheSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.downloadTheSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
             // visitKeppyStudiosToolStripMenuItem
             // 
             this.visitKeppyStudiosToolStripMenuItem.Name = "visitKeppyStudiosToolStripMenuItem";
-            this.visitKeppyStudiosToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.visitKeppyStudiosToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.visitKeppyStudiosToolStripMenuItem.Text = "Visit Keppy Studios";
             this.visitKeppyStudiosToolStripMenuItem.Click += new System.EventHandler(this.visitKeppyStudiosToolStripMenuItem_Click);
             // 
@@ -1300,19 +1365,11 @@
             // 
             // ExternalListImport
             // 
-            this.ExternalListImport.FileName = "openFileDialog1";
             this.ExternalListImport.Filter = "Soundfont lists|*.txt;*.sflist;";
             // 
-            // VMSEmu
+            // ExportList
             // 
-            this.VMSEmu.AutoSize = true;
-            this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.VMSEmu.Location = new System.Drawing.Point(457, 55);
-            this.VMSEmu.Name = "VMSEmu";
-            this.VMSEmu.Size = new System.Drawing.Size(128, 17);
-            this.VMSEmu.TabIndex = 27;
-            this.VMSEmu.Text = "VMS buffer emulation";
-            this.VMSEmu.UseVisualStyleBackColor = true;
+            this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1338,16 +1395,16 @@
             this.IELPan1.ResumeLayout(false);
             this.List2.ResumeLayout(false);
             this.List2.PerformLayout();
+            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp2)).EndInit();
-            this.IELPan2.ResumeLayout(false);
             this.List3.ResumeLayout(false);
             this.List3.PerformLayout();
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp3)).EndInit();
-            this.IELPan3.ResumeLayout(false);
             this.List4.ResumeLayout(false);
             this.List4.PerformLayout();
+            this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).EndInit();
-            this.IELPan4.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
@@ -1386,24 +1443,18 @@
         private System.Windows.Forms.Button RmvSF1;
         private System.Windows.Forms.Button AddSF1;
         private System.Windows.Forms.ListBox Lis1;
-        private System.Windows.Forms.Panel IELPan2;
-        private System.Windows.Forms.Button IEL2;
         private System.Windows.Forms.Button CLi2;
         private System.Windows.Forms.Button MvD2;
         private System.Windows.Forms.Button MvU2;
         private System.Windows.Forms.Button RmvSF2;
         private System.Windows.Forms.Button AddSF2;
         private System.Windows.Forms.ListBox Lis2;
-        private System.Windows.Forms.Panel IELPan3;
-        private System.Windows.Forms.Button IEL3;
         private System.Windows.Forms.Button CLi3;
         private System.Windows.Forms.Button MvD3;
         private System.Windows.Forms.Button MvU3;
         private System.Windows.Forms.Button RmvSF3;
         private System.Windows.Forms.Button AddSF3;
         private System.Windows.Forms.ListBox Lis3;
-        private System.Windows.Forms.Panel IELPan4;
-        private System.Windows.Forms.Button IEL4;
         private System.Windows.Forms.Button CLi4;
         private System.Windows.Forms.Button MvD4;
         private System.Windows.Forms.Button MvU4;
@@ -1466,6 +1517,17 @@
         private System.Windows.Forms.PictureBox WhatIsXAudio;
         private System.Windows.Forms.ToolStripMenuItem isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem;
         private System.Windows.Forms.CheckBox VMSEmu;
+        private System.Windows.Forms.Button EL1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button EL2;
+        private System.Windows.Forms.Button IEL2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button EL3;
+        private System.Windows.Forms.Button IEL3;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Button EL4;
+        private System.Windows.Forms.Button IEL4;
+        private System.Windows.Forms.SaveFileDialog ExportList;
     }
 }
 

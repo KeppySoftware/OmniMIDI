@@ -1,16 +1,17 @@
+
 [Setup]
 AllowCancelDuringInstall=False
 AllowNoIcons=True
 AppContact=kaleidonkep99@outlook.com
 AppCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
-AppName=Keppy's Driver 3.1
+AppName=Keppy's Driver
 AppPublisher=Keppy Studios
 AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.1
+AppVersion=3.1.2.2
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -36,11 +37,10 @@ UninstallFilesDir={sys}
 VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
-VersionInfoProductName=Keppy's Driver 3.1
-VersionInfoProductTextVersion=3.1.2.1
-VersionInfoProductVersion=3.1
+VersionInfoProductName=Keppy's Driver
+VersionInfoProductTextVersion=3.1.2.2
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.2.1
+VersionInfoVersion=3.1.2.2
 
 [Files]
 ; 64-bit OS
@@ -240,3 +240,9 @@ FinishedLabelNoIcons=The driver has been succesfully installed.
 WelcomeLabel1=Keppy's Driver Installation Wizard
 WelcomeLabel2=The setup will install the driver on your computer.%n%nIt is recommended that you close all other applications before continuing.
 ConfirmUninstall=Before uninstalling, be sure to set your MIDI programs to the default synth (Microsoft GS Wavetable Synth), to avoid crashes.%n%nPress Yes to continue, or no to abort the uninstallation.
+ApplicationsFound=The driver's files are locked by some programs or by Windows itself.%n%nIt is recommended to close the following programs and/or restart Windows to solve the issue.
+CannotContinue=The setup cannot continue. Click Cancel to exit.
+CloseApplications=Close them immediately!
+ConfirmUninstall=Are you sure you want to uninstall the driver? Be sure to select another MIDI device on your programs, before uninstalling.
+ApplicationsFound2=The driver's files are locked by some programs or by Windows itself.%n%nIt is recommended to close the following programs and/or restart Windows to solve the issue.
+DontCloseApplications=Nah, leave them opened. (I'll restart later to finish the installation)

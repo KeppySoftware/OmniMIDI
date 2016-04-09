@@ -895,7 +895,6 @@ void realtime_load_settings()
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-	BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames);
 	if (noteoff1) {
 		BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
 	}

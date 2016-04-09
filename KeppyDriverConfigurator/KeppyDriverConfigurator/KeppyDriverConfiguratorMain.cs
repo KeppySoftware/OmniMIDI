@@ -56,34 +56,25 @@ namespace KeppyDriverConfigurator
                     string line;
                     while ((line = r.ReadLine()) != null)
                     {
-                        if (Path.GetExtension(line) == ".sf2" | Path.GetExtension(line) == ".SF2" | Path.GetExtension(line) == ".sfpack" | Path.GetExtension(line) == ".SFPACK")
-                        {
-                            DestinationList.Items.Add(line); // Read the external list and add the items to the selected list
-                        }
-                        else if (Path.GetExtension(line) == ".sfz" | Path.GetExtension(line) == ".SFZ")
-                        {
-                            using (var form = new BankNPresetSel(Path.GetFileName(line)))
-                            {
-                                var result = form.ShowDialog();
-                                if (result == DialogResult.OK)
-                                {
-                                    string bank = form.BankValueReturn;
-                                    string preset = form.PresetValueReturn;
-                                    DestinationList.Items.Add("p" + bank + "," + preset + "=0,0|" + line);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(Path.GetFileName(line) + " is not a valid soundfont!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        DestinationList.Items.Add(line); // Read the external list and add the items to the selected list
                     }
                 }
             }
             catch
             {
-                MessageBox.Show("This is not a valid soundfont list file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Error during the import process of the list!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
+        }
+
+        private void ExportListToFile(String FinalPathList, ListBox SelectedList)
+        {
+            System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(FinalPathList);
+            foreach (var item in SelectedList.Items)
+            {
+                SaveFile.WriteLine(item.ToString());
+            }
+            SaveFile.Close();
+            MessageBox.Show("Soundfont list exported succesfully to \"" + Path.GetDirectoryName(FinalPathList) + "\\\"", "Soundfont list exported!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void SaveList(String SelectedList, ListBox OriginalList)
@@ -324,14 +315,6 @@ namespace KeppyDriverConfigurator
             {
                 DisableSFX.Checked = false;
             }
-            if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
-            {
-                VMSEmu.Checked = true;
-            }
-            else
-            {
-                VMSEmu.Checked = false;
-            }
             if (Convert.ToInt32(Settings.GetValue("noteoff")) == 1)
             {
                 NoteOffCheck.Checked = true;
@@ -374,10 +357,20 @@ namespace KeppyDriverConfigurator
                 if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
                 {
                     XAudioDisable.Checked = true;
+                    VMSEmu.Visible = true;
+                    if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
+                    {
+                        VMSEmu.Checked = true;
+                    }
+                    else
+                    {
+                        VMSEmu.Checked = false;
+                    }
                 }
                 else
                 {
                     XAudioDisable.Checked = false;
+                    VMSEmu.Visible = false;
                 }
             }
 
@@ -679,11 +672,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis1.SelectedIndex > 0)
+                object selected = Lis1.SelectedItem;
+                int indx = Lis1.Items.IndexOf(selected);
+                int totl = Lis1.Items.Count;
+                if (indx == 0)
                 {
-                    Lis1.Items.Insert(Lis1.SelectedIndex - 1, Lis1.Items[Lis1.SelectedIndex]);
-                    Lis1.Items.RemoveAt(Lis1.SelectedIndex + 1);
-                    Lis1.SelectedIndex = Lis1.SelectedIndex - 1;
+                    Lis1.Items.Remove(selected);
+                    Lis1.Items.Insert(totl - 1, selected);
+                    Lis1.SetSelected(totl - 1, true);
+                }
+                else
+                {
+                    Lis1.Items.Remove(selected);
+                    Lis1.Items.Insert(indx - 1, selected);
+                    Lis1.SetSelected(indx - 1, true);
                 }
                 SaveList(List1Path, Lis1);
             }
@@ -697,11 +699,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis2.SelectedIndex > 0)
+                object selected = Lis2.SelectedItem;
+                int indx = Lis2.Items.IndexOf(selected);
+                int totl = Lis2.Items.Count;
+                if (indx == 0)
                 {
-                    Lis1.Items.Insert(Lis2.SelectedIndex - 1, Lis1.Items[Lis2.SelectedIndex]);
-                    Lis1.Items.RemoveAt(Lis2.SelectedIndex + 1);
-                    Lis1.SelectedIndex = Lis2.SelectedIndex - 1;
+                    Lis2.Items.Remove(selected);
+                    Lis2.Items.Insert(totl - 1, selected);
+                    Lis2.SetSelected(totl - 1, true);
+                }
+                else
+                {
+                    Lis2.Items.Remove(selected);
+                    Lis2.Items.Insert(indx - 1, selected);
+                    Lis2.SetSelected(indx - 1, true);
                 }
                 SaveList(List2Path, Lis2);
             }
@@ -715,11 +726,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis3.SelectedIndex > 0)
+                object selected = Lis3.SelectedItem;
+                int indx = Lis3.Items.IndexOf(selected);
+                int totl = Lis3.Items.Count;
+                if (indx == 0)
                 {
-                    Lis3.Items.Insert(Lis3.SelectedIndex - 1, Lis1.Items[Lis3.SelectedIndex]);
-                    Lis3.Items.RemoveAt(Lis3.SelectedIndex + 1);
-                    Lis3.SelectedIndex = Lis3.SelectedIndex - 1;
+                    Lis3.Items.Remove(selected);
+                    Lis3.Items.Insert(totl - 1, selected);
+                    Lis3.SetSelected(totl - 1, true);
+                }
+                else
+                {
+                    Lis3.Items.Remove(selected);
+                    Lis3.Items.Insert(indx - 1, selected);
+                    Lis3.SetSelected(indx - 1, true);
                 }
                 SaveList(List3Path, Lis3);
             }
@@ -733,11 +753,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis4.SelectedIndex > 0)
+                object selected = Lis4.SelectedItem;
+                int indx = Lis4.Items.IndexOf(selected);
+                int totl = Lis4.Items.Count;
+                if (indx == 0)
                 {
-                    Lis4.Items.Insert(Lis4.SelectedIndex - 1, Lis4.Items[Lis4.SelectedIndex]);
-                    Lis4.Items.RemoveAt(Lis4.SelectedIndex + 1);
-                    Lis4.SelectedIndex = Lis4.SelectedIndex - 1;
+                    Lis4.Items.Remove(selected);
+                    Lis4.Items.Insert(totl - 1, selected);
+                    Lis4.SetSelected(totl - 1, true);
+                }
+                else
+                {
+                    Lis4.Items.Remove(selected);
+                    Lis4.Items.Insert(indx - 1, selected);
+                    Lis4.SetSelected(indx - 1, true);
                 }
                 SaveList(List4Path, Lis4);
             }
@@ -751,11 +780,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis1.SelectedIndex < Lis1.Items.Count - 1 & Lis1.SelectedIndex != -1)
+                object selected = Lis1.SelectedItem;
+                int indx = Lis1.Items.IndexOf(selected);
+                int totl = Lis1.Items.Count;
+                if (indx == totl - 1)
                 {
-                    Lis1.Items.Insert(Lis1.SelectedIndex + 2, Lis1.Items[Lis1.SelectedIndex]);
-                    Lis1.Items.RemoveAt(Lis1.SelectedIndex);
-                    Lis1.SelectedIndex = Lis1.SelectedIndex + 1;
+                    Lis1.Items.Remove(selected);
+                    Lis1.Items.Insert(0, selected);
+                    Lis1.SetSelected(0, true);
+                }
+                else
+                {
+                    Lis1.Items.Remove(selected);
+                    Lis1.Items.Insert(indx + 1, selected);
+                    Lis1.SetSelected(indx + 1, true);
                 }
                 SaveList(List1Path, Lis1);
             }
@@ -769,11 +807,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis2.SelectedIndex < Lis2.Items.Count - 1 & Lis2.SelectedIndex != -1)
+                object selected = Lis2.SelectedItem;
+                int indx = Lis2.Items.IndexOf(selected);
+                int totl = Lis2.Items.Count;
+                if (indx == totl - 1)
                 {
-                    Lis2.Items.Insert(Lis2.SelectedIndex + 2, Lis2.Items[Lis2.SelectedIndex]);
-                    Lis2.Items.RemoveAt(Lis2.SelectedIndex);
-                    Lis2.SelectedIndex = Lis2.SelectedIndex + 1;
+                    Lis2.Items.Remove(selected);
+                    Lis2.Items.Insert(0, selected);
+                    Lis2.SetSelected(0, true);
+                }
+                else
+                {
+                    Lis2.Items.Remove(selected);
+                    Lis2.Items.Insert(indx + 1, selected);
+                    Lis2.SetSelected(indx + 1, true);
                 }
                 SaveList(List2Path, Lis2);
             }
@@ -787,11 +834,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis3.SelectedIndex < Lis3.Items.Count - 1 & Lis3.SelectedIndex != -1)
+                object selected = Lis3.SelectedItem;
+                int indx = Lis3.Items.IndexOf(selected);
+                int totl = Lis3.Items.Count;
+                if (indx == totl - 1)
                 {
-                    Lis3.Items.Insert(Lis3.SelectedIndex + 2, Lis3.Items[Lis3.SelectedIndex]);
-                    Lis3.Items.RemoveAt(Lis3.SelectedIndex);
-                    Lis3.SelectedIndex = Lis3.SelectedIndex + 1;
+                    Lis3.Items.Remove(selected);
+                    Lis3.Items.Insert(0, selected);
+                    Lis3.SetSelected(0, true);
+                }
+                else
+                {
+                    Lis3.Items.Remove(selected);
+                    Lis3.Items.Insert(indx + 1, selected);
+                    Lis3.SetSelected(indx + 1, true);
                 }
                 SaveList(List3Path, Lis3);
             }
@@ -805,11 +861,20 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                if (Lis4.SelectedIndex < Lis4.Items.Count - 1 & Lis4.SelectedIndex != -1)
+                object selected = Lis4.SelectedItem;
+                int indx = Lis4.Items.IndexOf(selected);
+                int totl = Lis4.Items.Count;
+                if (indx == totl - 1)
                 {
-                    Lis4.Items.Insert(Lis4.SelectedIndex + 2, Lis4.Items[Lis4.SelectedIndex]);
-                    Lis4.Items.RemoveAt(Lis4.SelectedIndex);
-                    Lis4.SelectedIndex = Lis4.SelectedIndex + 1;
+                    Lis4.Items.Remove(selected);
+                    Lis4.Items.Insert(0, selected);
+                    Lis4.SetSelected(0, true);
+                }
+                else
+                {
+                    Lis4.Items.Remove(selected);
+                    Lis4.Items.Insert(indx + 1, selected);
+                    Lis4.SetSelected(indx + 1, true);
                 }
                 SaveList(List4Path, Lis4);
             }
@@ -917,6 +982,42 @@ namespace KeppyDriverConfigurator
             {
                 ImportExternalList(ExternalListImport.FileName, Lis4);
                 SaveList(List4Path, Lis4);
+            }
+        }
+
+        private void EL1_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis1);
+            }
+        }
+
+        private void EL2_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis2);
+            }
+        }
+
+        private void EL3_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis3);
+            }
+        }
+
+        private void EL4_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis4);
             }
         }
 
@@ -1103,6 +1204,7 @@ namespace KeppyDriverConfigurator
             {
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
+                VMSEmu.Visible = true;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
@@ -1110,6 +1212,7 @@ namespace KeppyDriverConfigurator
             else if (XAudioDisable.Checked == false)
             {
                 OutputWAV.Enabled = true;
+                VMSEmu.Visible = false;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
