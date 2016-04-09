@@ -52,7 +52,7 @@ void _endthreadex(unsigned retval);
 #define MAX_DRIVERS 4
 #define MAX_CLIENTS 8 // Per driver
 
-#define SPFSTD 137
+#define SPFSTD 100
 
 #ifndef _LOADRESTRICTIONS_OFF
 #define _LOADRESTRICTIONS_ON
@@ -1163,7 +1163,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				switch (result)
 				{
 				case IDYES:
-					BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM, NULL, 0);
+					BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 					break;
 				case IDNO:
 					break;
@@ -1194,16 +1194,21 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		else {
 			float sndbf[SPFSTD];
 			decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + SPFSTD * sizeof(float));
-			if (decoded < 0) {
-
+			if (encmode == 1) {
+			
 			}
 			else {
-				for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-					float sample = sndbf[i];
-					sample *= sound_out_volume_float;
-					sndbf[i] = sample;
+				if (decoded < 0) {
+
 				}
-				sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+				else {
+					for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+						float sample = sndbf[i];
+						sample *= sound_out_volume_float;
+						sndbf[i] = sample;
+					}
+					sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+				}
 			}
 		}
 		realtime_load_settings();
@@ -1481,10 +1486,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	}
 	case MODM_PAUSE: {
 		reset_synth = 1;
+		ResetSynth();
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_STOP: {
 		reset_synth = 1;
+		ResetSynth();
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_RESET:

@@ -11,7 +11,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.1.2.2
+AppVersion=3.1.2.3
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -31,16 +31,16 @@ ShowUndisplayableLanguages=True
 SolidCompression=yes
 TimeStampsInUTC=True
 UninstallDisplayIcon={sys}\keppydrv\keppydrvcfg.exe
-UninstallDisplayName=Keppy's Driver 3.1
+UninstallDisplayName=Keppy's Driver (Uninstall only)
 UninstallDisplaySize=5
 UninstallFilesDir={sys}
 VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.1.2.2
+VersionInfoProductTextVersion=3.1.2.3
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.2.2
+VersionInfoVersion=3.1.2.3
 
 [Files]
 ; 64-bit OS

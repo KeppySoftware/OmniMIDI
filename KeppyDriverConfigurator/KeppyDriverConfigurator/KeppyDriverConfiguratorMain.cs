@@ -193,6 +193,15 @@ namespace KeppyDriverConfigurator
         // Here we go!
         private void KeppyDriverConfiguratorMain_Load(object sender, EventArgs e)
         {
+            // MIDI out selector disabler
+            Version win8version = new Version(6, 2, 9200, 0);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT &&
+                Environment.OSVersion.Version >= win8version)
+            {
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                toolStripSeparator1.Visible = false;
+            }
+
             // Initialize the four list paths
             List1Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidi.sflist";
             List2Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidib.sflist";
@@ -1189,7 +1198,8 @@ namespace KeppyDriverConfigurator
             MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Driver Output File.wav\".\n\n" + 
                 "You can NOT change the default output directory, I'm sorry.\n" + 
                 "But hey, now you can record your real-time performances (Like from Synthesia) directly to an audio file, without using external programs such as Audacity!\n" + 
-                "Isn't that great?", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "Isn't that great?\n\n" + 
+                "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Brand new XAudio disabler
