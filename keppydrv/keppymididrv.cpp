@@ -1063,6 +1063,15 @@ void keybindings()
 			return;
 		}
 	}
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+		TCHAR configuratorapp[MAX_PATH];
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+		{
+			PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+			ShellExecute(NULL, L"open", configuratorapp, L"-advancedtab", NULL, SW_SHOWNORMAL);
+			return;
+		}
+	}
 	if (GetAsyncKeyState(VK_INSERT) & 1) {
 		if (consent == 1) {
 			ResetSynth();
@@ -1159,14 +1168,21 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				_bstr_t b(encpath);
 				const char* c = b;
-				const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to prevent the driver from outputting the audio to a WAV file.\n\n(The WAV file will be automatically saved to the desktop)", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+				const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
 				switch (result)
 				{
 				case IDYES:
 					BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 					break;
 				case IDNO:
-					break;
+					TCHAR configuratorapp[MAX_PATH];
+					if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+					{
+						PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+						ShellExecute(NULL, L"open", configuratorapp, L"-advancedtab", NULL, SW_SHOWNORMAL);
+						exit(0);
+						break;
+					}
 				}
 			}
 			// Cake.
@@ -1197,7 +1213,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			if (encmode == 1) {
 			
 			}
-			else {
+			else if (encmode == 0) {
 				if (decoded < 0) {
 
 				}

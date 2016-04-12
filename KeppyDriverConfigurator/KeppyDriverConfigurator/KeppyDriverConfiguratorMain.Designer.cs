@@ -188,6 +188,7 @@
             this.List1.Size = new System.Drawing.Size(677, 399);
             this.List1.TabIndex = 0;
             this.List1.Text = "List I";
+            this.List1.UseVisualStyleBackColor = true;
             // 
             // SFZComp1
             // 
@@ -320,6 +321,7 @@
             this.List2.Size = new System.Drawing.Size(677, 399);
             this.List2.TabIndex = 1;
             this.List2.Text = "List II";
+            this.List2.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -451,6 +453,7 @@
             this.List3.Size = new System.Drawing.Size(677, 399);
             this.List3.TabIndex = 2;
             this.List3.Text = "List III";
+            this.List3.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
@@ -582,6 +585,7 @@
             this.List4.Size = new System.Drawing.Size(677, 399);
             this.List4.TabIndex = 3;
             this.List4.Text = "List IV";
+            this.List4.UseVisualStyleBackColor = true;
             // 
             // panel3
             // 
@@ -717,6 +721,7 @@
             this.Settings.Size = new System.Drawing.Size(677, 399);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
+            this.Settings.UseVisualStyleBackColor = true;
             // 
             // WhatIsXAudio
             // 
@@ -1373,18 +1378,19 @@
             // 
             // KeppyDriverConfiguratorMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(685, 449);
             this.Controls.Add(this.TabsForTheControls);
             this.Controls.Add(this.MainMenu);
+            this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MainMenu;
             this.MaximizeBox = false;
             this.Name = "KeppyDriverConfiguratorMain";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keppy\'s Driver ~ Configurator";
             this.Load += new System.EventHandler(this.KeppyDriverConfiguratorMain_Load);

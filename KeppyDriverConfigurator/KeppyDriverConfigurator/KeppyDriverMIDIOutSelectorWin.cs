@@ -19,7 +19,6 @@ namespace KeppyDriverConfigurator
         public KeppyDriverMIDIOutSelectorWin()
         {
             InitializeComponent();
-            Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             Load += new EventHandler(CheckDevices);
             backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
             backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);

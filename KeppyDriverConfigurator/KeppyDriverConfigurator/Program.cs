@@ -11,7 +11,7 @@ namespace KeppyDriverConfigurator
         /// Punto di ingresso principale dell'applicazione.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(String[] args)
         {
             bool ok;
             Mutex m = new Mutex(true, "KeppyDriverConfigurator", out ok);
@@ -21,7 +21,7 @@ namespace KeppyDriverConfigurator
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new KeppyDriverConfiguratorMain());
+            Application.Run(new KeppyDriverConfiguratorMain(args));
             GC.KeepAlive(m);
         }
     }

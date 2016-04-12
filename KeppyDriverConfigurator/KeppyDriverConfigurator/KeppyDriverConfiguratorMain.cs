@@ -18,10 +18,16 @@ namespace KeppyDriverConfigurator
         public string List3Path { get; set; }
         public string List4Path { get; set; }
 
-        public KeppyDriverConfiguratorMain()
+        public KeppyDriverConfiguratorMain(String[] args)
         {
             InitializeComponent();
-            Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
+            foreach (String s in args)
+            {
+                if (s == "-advancedtab")
+                {
+                    TabsForTheControls.SelectedIndex = 4;
+                }
+            }
         }
 
         // Just stuff to reduce code's length
@@ -1150,7 +1156,7 @@ namespace KeppyDriverConfigurator
         // Guide part
         private void isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+5.", 
+            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+5.\nYou could also press ALT+6 to directly open the \"Settings\" tab.", 
                 "Is there any shortcut for to open the configurator?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
@@ -1235,10 +1241,26 @@ namespace KeppyDriverConfigurator
             {
                 XAudioDisable.Enabled = false;
                 XAudioDisable.Checked = false;
+                Label5.Enabled = false;
+                bufsize.Enabled = false;
+                MaxCPU.Enabled = false;
+                BufferText.Enabled = false;
+                bufsize.Enabled = false;
+                bufsize.Minimum = 0;
+                bufsize.Value = 0;
+                MaxCPU.Text = "Disabled";
             }
             else if (OutputWAV.Checked == false)
             {
                 XAudioDisable.Enabled = true;
+                Label5.Enabled = true;
+                bufsize.Enabled = true;
+                MaxCPU.Enabled = true;
+                BufferText.Enabled = true;
+                bufsize.Enabled = true;
+                bufsize.Minimum = 1;
+                bufsize.Value = 15;
+                MaxCPU.Text = "75";
             }
         }
     }

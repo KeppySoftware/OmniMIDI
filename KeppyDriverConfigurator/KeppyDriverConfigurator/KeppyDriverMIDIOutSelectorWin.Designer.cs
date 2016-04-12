@@ -83,6 +83,7 @@
             this.btnSetAsDefault.TabIndex = 6;
             this.btnSetAsDefault.Text = "&Set Selected Device As Default";
             this.btnSetAsDefault.UseVisualStyleBackColor = true;
+            this.btnSetAsDefault.Click += new System.EventHandler(this.btnSetAsDefault_Click);
             // 
             // lblStatus
             // 
