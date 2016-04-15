@@ -696,6 +696,40 @@ void load_settings()
 	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 }
 
+void AudioRender(int bassoutput) {
+	if (bassoutput == -1) {
+		BASS_ChannelUpdate(hStream, frames);
+	}
+	else {
+		float sndbf[SPFSTD];
+		decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + SPFSTD * sizeof(float));
+		if (encmode == 1) {
+
+		}
+		else if (encmode == 0) {
+			if (decoded < 0) {
+
+			}
+			else {
+				for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+					float sample = sndbf[i];
+					sample *= sound_out_volume_float;
+					sndbf[i] = sample;
+				}
+				sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+			}
+		}
+	}
+}
+
+void DLLLoadError(LPCWSTR dll) {
+	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
+	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
+	lstrcat(errormessage, dll);
+	lstrcat(errormessage, clickokmsg);
+	MessageBox(NULL, errormessage, L"Keppy's Driver - DLL load error", MB_ICONERROR);
+}
+
 BOOL load_bassfuncs()
 {
 	TCHAR installpath[MAX_PATH] = { 0 };
@@ -713,20 +747,20 @@ BOOL load_bassfuncs()
 	lstrcat(basspath, installpath);
 	lstrcat(basspath, L"\\bass.dll");
 	if (!(bass = LoadLibrary(basspath))) {
-		OutputDebugString(L"Failed to load BASS DLL!");
-		return FALSE;
+		DLLLoadError(basspath);
+		exit(0);
 	}
 	lstrcat(bassmidipath, installpath);
 	lstrcat(bassmidipath, L"\\bassmidi.dll");
 	if (!(bassmidi = LoadLibrary(bassmidipath))) {
-		OutputDebugString(L"Failed to load BASSMIDI DLL!");
-		return FALSE;
+		DLLLoadError(bassmidipath);
+		exit(0);
 	}
 	lstrcat(bassencpath, installpath);
 	lstrcat(bassencpath, L"\\bassenc.dll");
 	if (!(bassenc = LoadLibrary(bassencpath))) {
-		OutputDebugString(L"Failed to load BASSENC DLL!");
-		return FALSE;
+		DLLLoadError(bassencpath);
+		exit(0);
 	}
 	/* "load" all the BASS functions that are to be used */
 	OutputDebugString(L"Loading BASS functions....");
@@ -1204,29 +1238,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			BASS_MIDI_StreamLoadSamples(hStream);
 		}
 		bmsyn_play_some_data();
-		if (bassoutputfinal == -1) {
-			BASS_ChannelUpdate(hStream, frames);
-		}
-		else {
-			float sndbf[SPFSTD];
-			decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + SPFSTD * sizeof(float));
-			if (encmode == 1) {
-			
-			}
-			else if (encmode == 0) {
-				if (decoded < 0) {
-
-				}
-				else {
-					for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-						float sample = sndbf[i];
-						sample *= sound_out_volume_float;
-						sndbf[i] = sample;
-					}
-					sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
-				}
-			}
-		}
+		AudioRender(bassoutputfinal);
 		realtime_load_settings();
 		keybindings();
 		debug_info();
