@@ -448,9 +448,9 @@
             this.List3.Controls.Add(this.RmvSF3);
             this.List3.Controls.Add(this.AddSF3);
             this.List3.Controls.Add(this.Lis3);
-            this.List3.Location = new System.Drawing.Point(4, 22);
+            this.List3.Location = new System.Drawing.Point(4, 24);
             this.List3.Name = "List3";
-            this.List3.Size = new System.Drawing.Size(677, 399);
+            this.List3.Size = new System.Drawing.Size(677, 397);
             this.List3.TabIndex = 2;
             this.List3.Text = "List III";
             this.List3.UseVisualStyleBackColor = true;
@@ -580,9 +580,9 @@
             this.List4.Controls.Add(this.RmvSF4);
             this.List4.Controls.Add(this.AddSF4);
             this.List4.Controls.Add(this.Lis4);
-            this.List4.Location = new System.Drawing.Point(4, 22);
+            this.List4.Location = new System.Drawing.Point(4, 24);
             this.List4.Name = "List4";
-            this.List4.Size = new System.Drawing.Size(677, 399);
+            this.List4.Size = new System.Drawing.Size(677, 397);
             this.List4.TabIndex = 3;
             this.List4.Text = "List IV";
             this.List4.UseVisualStyleBackColor = true;
@@ -934,7 +934,7 @@
             // Label6
             // 
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label6.Location = new System.Drawing.Point(5, 131);
+            this.Label6.Location = new System.Drawing.Point(6, 131);
             this.Label6.Name = "Label6";
             this.Label6.Size = new System.Drawing.Size(580, 13);
             this.Label6.TabIndex = 24;
@@ -1171,11 +1171,11 @@
             // 
             // VolSimView
             // 
-            this.VolSimView.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.Teal;
-            this.VolSimView.Location = new System.Drawing.Point(573, 9);
+            this.VolSimView.Location = new System.Drawing.Point(576, 2);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(96, 31);
+            this.VolSimView.Size = new System.Drawing.Size(93, 38);
             this.VolSimView.TabIndex = 2;
             this.VolSimView.Text = "100%";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1183,10 +1183,10 @@
             // 
             // VolStaticLab
             // 
-            this.VolStaticLab.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolStaticLab.Location = new System.Drawing.Point(449, 9);
+            this.VolStaticLab.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolStaticLab.Location = new System.Drawing.Point(455, 2);
             this.VolStaticLab.Name = "VolStaticLab";
-            this.VolStaticLab.Size = new System.Drawing.Size(134, 31);
+            this.VolStaticLab.Size = new System.Drawing.Size(134, 38);
             this.VolStaticLab.TabIndex = 1;
             this.VolStaticLab.Text = "Volume:";
             this.VolStaticLab.UseCompatibleTextRendering = true;
