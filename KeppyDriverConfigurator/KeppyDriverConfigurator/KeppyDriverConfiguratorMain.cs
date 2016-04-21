@@ -1127,7 +1127,7 @@ namespace KeppyDriverConfigurator
 
         private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Do you want to report a bug", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Driver?\n\nWARNING: Only use this function to report serious bugs, like memory leaks and security flaws.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
                 Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
