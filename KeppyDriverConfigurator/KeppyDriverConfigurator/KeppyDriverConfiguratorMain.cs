@@ -432,22 +432,13 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        // sDetrimental's soundfont ban
-                        var sDetrimentalInput = str;
-                        var sDetrimentalTerm = "sdetrimental";
-                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
-                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                        if (sDetrimentalResult == true)
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
                             Lis1.Items.Add(str);
                         }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -481,22 +472,13 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        // sDetrimental's soundfont ban
-                        var sDetrimentalInput = str;
-                        var sDetrimentalTerm = "sdetrimental";
-                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
-                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                        if (sDetrimentalResult == true)
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
                             Lis2.Items.Add(str);
                         }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -530,22 +512,13 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        // sDetrimental's soundfont ban
-                        var sDetrimentalInput = str;
-                        var sDetrimentalTerm = "sdetrimental";
-                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
-                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                        if (sDetrimentalResult == true)
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
                             Lis3.Items.Add(str);
                         }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -579,22 +552,13 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        // sDetrimental's soundfont ban
-                        var sDetrimentalInput = str;
-                        var sDetrimentalTerm = "sdetrimental";
-                        var sDetrimentalPattern = @"\b" + System.Text.RegularExpressions.Regex.Escape(sDetrimentalTerm) + @"\b";
-                        var sDetrimentalResult = System.Text.RegularExpressions.Regex.IsMatch(sDetrimentalInput, sDetrimentalPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                        if (sDetrimentalResult == true)
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is banned.", "Banned soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
                             Lis4.Items.Add(str);
                         }
-                        else if (sDetrimentalResult == false && Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str)))
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
@@ -681,6 +645,190 @@ namespace KeppyDriverConfigurator
             {
                 ReinitializeList(ex, Lis4, List4Path);
             }
+        }
+
+        private void Lis1_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int i;
+            for (i = 0; i < s.Length; i++)
+            {
+                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
+                {
+                    Lis1.Items.Add(s[i]);
+                }
+                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
+                {
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            string bank = form.BankValueReturn;
+                            string preset = form.PresetValueReturn;
+                            Lis1.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                        }
+                    }
+                }
+                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Lis1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void Lis2_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int i;
+            for (i = 0; i < s.Length; i++)
+            {
+                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
+                {
+                    Lis2.Items.Add(s[i]);
+                }
+                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
+                {
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            string bank = form.BankValueReturn;
+                            string preset = form.PresetValueReturn;
+                            Lis2.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                        }
+                    }
+                }
+                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Lis2_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void Lis3_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int i;
+            for (i = 0; i < s.Length; i++)
+            {
+                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
+                {
+                    Lis3.Items.Add(s[i]);
+                }
+                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
+                {
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            string bank = form.BankValueReturn;
+                            string preset = form.PresetValueReturn;
+                            Lis3.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                        }
+                    }
+                }
+                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Lis3_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void Lis4_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int i;
+            for (i = 0; i < s.Length; i++)
+            {
+                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
+                {
+                    Lis4.Items.Add(s[i]);
+                }
+                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
+                {
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            string bank = form.BankValueReturn;
+                            string preset = form.PresetValueReturn;
+                            Lis4.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                        }
+                    }
+                }
+                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Lis4_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
         }
 
         private void MvU1_Click(object sender, EventArgs e)
@@ -1148,6 +1296,12 @@ namespace KeppyDriverConfigurator
             Process.Start("http://keppystudios.com");
         }
 
+        private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverOutputWAVDir frm = new KeppyDriverOutputWAVDir();
+            frm.ShowDialog();
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -1202,9 +1356,7 @@ namespace KeppyDriverConfigurator
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
             MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Driver Output File.wav\".\n\n" + 
-                "You can NOT change the default output directory, I'm sorry.\n" + 
-                "But hey, now you can record your real-time performances (Like from Synthesia) directly to an audio file, without using external programs such as Audacity!\n" + 
-                "Isn't that great?\n\n" + 
+                "You can change the output directory by clicking \"Settings > Change directory of the \"Output to WAV\" mode\".\n\n" + 
                 "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

@@ -10,7 +10,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.1.2.7
+AppVersion=3.1.2.8
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -22,7 +22,7 @@ InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
 MinVersion=0,6.0.6000
 OutputBaseFilename=KeppysDriverSetup
-OutputDir="C:\Users\KaleidonKep99\Desktop"
+OutputDir="C:\Users\Riccardo\Desktop"
 SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
 ShowTasksTreeLines=True
@@ -37,9 +37,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.1.2.7
+VersionInfoProductTextVersion=3.1.2.8
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.2.7
+VersionInfoVersion=3.1.2.8
 
 [Files]
 ; 64-bit OS

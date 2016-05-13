@@ -28,30 +28,29 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\output\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>none</ErrorReport>
-    <WarningLevel>1</WarningLevel>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\gear.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+    <WarningLevel>1</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>none</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -97,6 +96,12 @@
     <Compile Include="KeppyDriverMIDIOutSelectorWin.Designer.cs">
       <DependentUpon>KeppyDriverMIDIOutSelectorWin.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeppyDriverOutputWAVDir.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverOutputWAVDir.Designer.cs">
+      <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>
+    </Compile>
     <Compile Include="MIDI\Interop\Constants.cs" />
     <Compile Include="MIDI\Interop\Functions.cs" />
     <Compile Include="MIDI\Interop\Structures.cs" />
@@ -121,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverMIDIOutSelectorWin.resx">
       <DependentUpon>KeppyDriverMIDIOutSelectorWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppyDriverOutputWAVDir.resx">
+      <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

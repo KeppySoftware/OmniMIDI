@@ -10,10 +10,11 @@ unsigned long _beginthreadex(void *security, unsigned stack_size,
 	unsigned initflag, unsigned *thrdaddr);
 void _endthreadex(unsigned retval);
 #endif
-
 #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <assert.h>
+#include <atlbase.h>
+#include <atlstr.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -902,7 +903,7 @@ void realtime_load_settings()
 	DWORD dwSize = sizeof(DWORD);
 	BASS_INFO info;
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);;
+	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
 	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
@@ -1188,6 +1189,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			if (encmode == 1) {
 				typedef std::basic_string<TCHAR> tstring;
 				TCHAR encpath[MAX_PATH];
+				TCHAR poop[MAX_PATH];
 				TCHAR buffer[MAX_PATH] = { 0 };
 				TCHAR * out;
 				DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
@@ -1195,10 +1197,19 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				out = PathFindFileName(buffer);
 				std::wstring stemp = tstring(out) + L" - Keppy's Driver Output File.wav";
 				LPCWSTR result2 = stemp.c_str();
-				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
-				{
+				HKEY hKey = 0;
+				DWORD cbValueLength = sizeof(poop);
+				DWORD dwType = REG_SZ;
+				RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+				if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&poop), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+					if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
+					{
+						PathAppend(encpath, result2);
+					}
+				}
+				else {
+					PathAppend(encpath, CString(poop));
 					PathAppend(encpath, result2);
-					
 				}
 				_bstr_t b(encpath);
 				const char* c = b;

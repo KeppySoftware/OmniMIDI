@@ -64,7 +64,7 @@ namespace KeppyDriverConfigurator
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     File.Create(BlacklistPath).Dispose();
                 }

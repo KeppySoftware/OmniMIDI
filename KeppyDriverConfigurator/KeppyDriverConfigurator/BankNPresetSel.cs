@@ -15,11 +15,20 @@ namespace KeppyDriverConfigurator
         public string BankValueReturn { get; set; }
         public string PresetValueReturn { get; set; }
         public string SelectedSF { get; set; }
+        public int WindowView { get; set; }
 
-        public BankNPresetSel(String Target)
+        public BankNPresetSel(String Target, int WindowMode)
         {
             InitializeComponent();
             SelectedSF = Target;
+            if (WindowMode == 1)
+            {
+                this.StartPosition = FormStartPosition.CenterScreen;
+            }
+            else
+            {
+                this.StartPosition = FormStartPosition.CenterParent;
+            }
         }
 
         private void PresetSel_Load(object sender, EventArgs e)
