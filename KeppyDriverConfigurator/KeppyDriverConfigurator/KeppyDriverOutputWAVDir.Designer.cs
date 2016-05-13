@@ -74,6 +74,7 @@
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Location = new System.Drawing.Point(398, 107);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -84,6 +85,7 @@
             // BrowseButton
             // 
             this.BrowseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BrowseButton.Location = new System.Drawing.Point(317, 107);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(75, 23);
@@ -106,6 +108,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.button1;
             this.ClientSize = new System.Drawing.Size(485, 142);
             this.Controls.Add(this.BrowseButton);
@@ -114,7 +117,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.DefaultDir);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "KeppyDriverOutputWAVDir";

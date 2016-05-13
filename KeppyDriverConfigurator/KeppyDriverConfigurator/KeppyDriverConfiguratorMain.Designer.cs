@@ -1287,8 +1287,8 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
+            this.settingsToolStripMenuItem.Text = "Advanced settings";
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 

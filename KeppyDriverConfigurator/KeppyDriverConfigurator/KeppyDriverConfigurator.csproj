@@ -154,6 +154,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\bk.jpg" />
     <Content Include="Resources\gear.ico" />
     <None Include="Resources\what.png" />
     <None Include="Resources\sfzcomp.png" />

@@ -10,7 +10,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.1.2.8
+AppVersion=3.1.2.9
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -37,42 +37,42 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.1.2.8
+VersionInfoProductTextVersion=3.1.2.9
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.2.8
+VersionInfoVersion=3.1.2.9
 
 [Files]
 ; 64-bit OS
-Source: "output\64\bass.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
-Source: "output\64\bass_mpc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\64\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\64\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\64\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\64\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\64\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\64\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bass.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bass_mpc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
-Source: "output\bass.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
-Source: "output\bass_mpc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\bassflac.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\bassmidi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\bassenc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\basswasapi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bass.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
+Source: "external_packages\lib\bass_mpc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassflac.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassmidi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassenc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\basswasapi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 ; 32-bit OS
-Source: "output\bass.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\bass_mpc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
-Source: "output\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bass.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bass_mpc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
