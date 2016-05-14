@@ -10,7 +10,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.1.3.0
+AppVersion=3.1.3.1
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -37,9 +37,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.1.3.0
+VersionInfoProductTextVersion=3.1.3.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.3.0
+VersionInfoVersion=3.1.3.1
 
 [Files]
 ; 64-bit OS
@@ -61,6 +61,8 @@ Source: "external_packages\lib\basswasapi.dll"; DestDir: "{syswow64}\keppydrv"; 
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
+Source: "output\midioutsetter32.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
+Source: "output\midioutsetter64.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "midioutsetter64.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: Is64BitInstallMode
@@ -74,6 +76,7 @@ Source: "external_packages\lib\basswasapi.dll"; DestDir: "{sys}\keppydrv"; DestN
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
+Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppydrv"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{sys}\keppydrv"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Check: not Is64BitInstallMode

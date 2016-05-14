@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KeppyDriverConfigurator</RootNamespace>
     <AssemblyName>KeppyDriverConfigurator</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -90,17 +90,17 @@
     <Compile Include="KeppyDriverInformation.Designer.cs">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppyDriverMIDIOutSelectorWin.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="KeppyDriverMIDIOutSelectorWin.Designer.cs">
-      <DependentUpon>KeppyDriverMIDIOutSelectorWin.cs</DependentUpon>
-    </Compile>
     <Compile Include="KeppyDriverOutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="KeppyDriverOutputWAVDir.Designer.cs">
       <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppyDriverUpdater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverUpdater.Designer.cs">
+      <DependentUpon>KeppyDriverUpdater.cs</DependentUpon>
     </Compile>
     <Compile Include="MIDI\Interop\Constants.cs" />
     <Compile Include="MIDI\Interop\Functions.cs" />
@@ -124,11 +124,11 @@
     <EmbeddedResource Include="KeppyDriverInformation.resx">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppyDriverMIDIOutSelectorWin.resx">
-      <DependentUpon>KeppyDriverMIDIOutSelectorWin.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverOutputWAVDir.resx">
       <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppyDriverUpdater.resx">
+      <DependentUpon>KeppyDriverUpdater.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

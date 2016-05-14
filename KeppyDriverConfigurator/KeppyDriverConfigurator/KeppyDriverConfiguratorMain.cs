@@ -31,6 +31,11 @@ namespace KeppyDriverConfigurator
         }
 
         // Just stuff to reduce code's length
+        private void SFZCompliant()
+        {
+            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void ReinitializeList(Exception ex, ListBox selectedlist, String selectedlistpath)
         {
             try
@@ -91,6 +96,178 @@ namespace KeppyDriverConfigurator
                 {
                     sw.WriteLine(item.ToString());
                 }
+            }
+        }
+
+        private void AddSoundfont(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                SoundfontImport.FileName = "";
+                if (SoundfontImport.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string str in SoundfontImport.FileNames)
+                    {
+                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        {
+                            OriginalList.Items.Add(str);
+                        }
+                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        {
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
+                            {
+                                var result = form.ShowDialog();
+                                if (result == DialogResult.OK)
+                                {
+                                    string bank = form.BankValueReturn;
+                                    string preset = form.PresetValueReturn;
+                                    OriginalList.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    SaveList(SelectedList, OriginalList);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
+            }
+        }
+
+        private void AddSoundfontDragNDrop(String SelectedList, ListBox OriginalList, DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int i;
+            for (i = 0; i < s.Length; i++)
+            {
+                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
+                {
+                    OriginalList.Items.Add(s[i]);
+                }
+                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
+                {
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            string bank = form.BankValueReturn;
+                            string preset = form.PresetValueReturn;
+                            Lis1.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                            SaveList(SelectedList, OriginalList);
+                        }
+                    }
+                }
+                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        public void AddSoundfontDragNDropTriv(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void RemoveSoundfont(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                for (int i = OriginalList.SelectedIndices.Count - 1; i >= 0; i--)
+                {
+                    OriginalList.Items.RemoveAt(OriginalList.SelectedIndices[i]);
+                }
+                SaveList(SelectedList, OriginalList);
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
+            }
+        }
+
+        private void MoveUpSoundfont(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                object selected = OriginalList.SelectedItem;
+                int indx = OriginalList.Items.IndexOf(selected);
+                int totl = OriginalList.Items.Count;
+                if (indx == 0)
+                {
+                    OriginalList.Items.Remove(selected);
+                    OriginalList.Items.Insert(totl - 1, selected);
+                    OriginalList.SetSelected(totl - 1, true);
+                }
+                else
+                {
+                    OriginalList.Items.Remove(selected);
+                    OriginalList.Items.Insert(indx - 1, selected);
+                    OriginalList.SetSelected(indx - 1, true);
+                }
+                SaveList(SelectedList, OriginalList);
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
+            }
+        }
+
+        private void MoveDownSoundfont(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                object selected = OriginalList.SelectedItem;
+                int indx = OriginalList.Items.IndexOf(selected);
+                int totl = OriginalList.Items.Count;
+                if (indx == totl - 1)
+                {
+                    OriginalList.Items.Remove(selected);
+                    OriginalList.Items.Insert(0, selected);
+                    OriginalList.SetSelected(0, true);
+                }
+                else
+                {
+                    OriginalList.Items.Remove(selected);
+                    OriginalList.Items.Insert(indx + 1, selected);
+                    OriginalList.SetSelected(indx + 1, true);
+                }
+                SaveList(SelectedList, OriginalList);
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
+            }
+        }
+
+        private void CleanList(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                OriginalList.Items.Clear();
+                File.Delete(SelectedList);
+                var TempFile = File.Create(SelectedList);
+                TempFile.Close();
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
             }
         }
 
@@ -200,12 +377,29 @@ namespace KeppyDriverConfigurator
         private void KeppyDriverConfiguratorMain_Load(object sender, EventArgs e)
         {
             // MIDI out selector disabler
-            Version win8version = new Version(6, 2, 9200, 0);
+            Version win10version = new Version(10, 0, 0, 0);
             if (Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                Environment.OSVersion.Version >= win8version)
+                Environment.OSVersion.Version >= win10version)
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
                 toolStripSeparator1.Visible = false;
+            }
+            else
+            {
+                if (Environment.Is64BitOperatingSystem == false)
+                {
+                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
+                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                }
+                else if (Environment.Is64BitOperatingSystem == true)
+                {
+                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
+                }
             }
 
             // Initialize the four list paths
@@ -294,110 +488,109 @@ namespace KeppyDriverConfigurator
                 MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
 
-
             // ======= Load settings from the registry
             try
             {
-                            // First, the most important settings
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            VolTrackBar.Value = Convert.ToInt32(Settings.GetValue("volume"));
-            PolyphonyLimit.Value = Convert.ToInt32(Settings.GetValue("polyphony"));
-            if (Settings.GetValue("cpu").ToString() == "0")
-            {
-                MaxCPU.Text = "Disabled";
-            }
-            else
-            {
-                MaxCPU.Text = Settings.GetValue("cpu").ToString();
-            }
-            Frequency.Text = Settings.GetValue("frequency").ToString();
-            TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
-
-            // Then the filthy checkboxes
-            if (Convert.ToInt32(Settings.GetValue("preload")) == 1)
-            {
-                Preload.Checked = true;
-            }
-            else
-            {
-                Preload.Checked = false;
-            }
-            if (Convert.ToInt32(Settings.GetValue("nofx")) == 1)
-            {
-                DisableSFX.Checked = true;
-            }
-            else
-            {
-                DisableSFX.Checked = false;
-            }
-            if (Convert.ToInt32(Settings.GetValue("noteoff")) == 1)
-            {
-                NoteOffCheck.Checked = true;
-            }
-            else
-            {
-                NoteOffCheck.Checked = false;
-            }
-            if (Convert.ToInt32(Settings.GetValue("sinc")) == 1)
-            {
-                SincInter.Checked = true;
-            }
-            else
-            {
-                SincInter.Checked = false;
-            }
-            if (Convert.ToInt32(Settings.GetValue("sysresetignore")) == 1)
-            {
-                SysResetIgnore.Checked = true;
-            }
-            else
-            {
-                SysResetIgnore.Checked = false;
-            }
-            if (Convert.ToInt32(Settings.GetValue("encmode")) == 1)
-            {
-                OutputWAV.Checked = true;
-            }
-            else
-            {
-                OutputWAV.Checked = false;
-            }
-            if (Environment.OSVersion.Version.Major == 5)
-            {
-                XAudioDisable.Checked = true;
-                XAudioDisable.Enabled = false;
-            }
-            else
-            {
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+                // First, the most important settings
+                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+                VolTrackBar.Value = Convert.ToInt32(Settings.GetValue("volume"));
+                PolyphonyLimit.Value = Convert.ToInt32(Settings.GetValue("polyphony"));
+                if (Settings.GetValue("cpu").ToString() == "0")
                 {
-                    XAudioDisable.Checked = true;
-                    VMSEmu.Visible = true;
-                    if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
-                    {
-                        VMSEmu.Checked = true;
-                    }
-                    else
-                    {
-                        VMSEmu.Checked = false;
-                    }
+                    MaxCPU.Text = "Disabled";
                 }
                 else
                 {
-                    XAudioDisable.Checked = false;
-                    VMSEmu.Visible = false;
+                    MaxCPU.Text = Settings.GetValue("cpu").ToString();
                 }
-            }
+                Frequency.Text = Settings.GetValue("frequency").ToString();
+                TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
 
-            // LEL
-            bufsize.Value = Convert.ToInt32(Settings.GetValue("buflen"));
+                // Then the filthy checkboxes
+                if (Convert.ToInt32(Settings.GetValue("preload")) == 1)
+                {
+                    Preload.Checked = true;
+                }
+                else
+                {
+                    Preload.Checked = false;
+                }
+                if (Convert.ToInt32(Settings.GetValue("nofx")) == 1)
+                {
+                    DisableSFX.Checked = true;
+                }
+                else
+                {
+                    DisableSFX.Checked = false;
+                }
+                if (Convert.ToInt32(Settings.GetValue("noteoff")) == 1)
+                {
+                    NoteOffCheck.Checked = true;
+                }
+                else
+                {
+                    NoteOffCheck.Checked = false;
+                }
+                if (Convert.ToInt32(Settings.GetValue("sinc")) == 1)
+                {
+                    SincInter.Checked = true;
+                }
+                else
+                {
+                    SincInter.Checked = false;
+                }
+                if (Convert.ToInt32(Settings.GetValue("sysresetignore")) == 1)
+                {
+                    SysResetIgnore.Checked = true;
+                }
+                else
+                {
+                    SysResetIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(Settings.GetValue("encmode")) == 1)
+                {
+                    OutputWAV.Checked = true;
+                }
+                else
+                {
+                    OutputWAV.Checked = false;
+                }
+                if (Environment.OSVersion.Version.Major == 5)
+                {
+                    XAudioDisable.Checked = true;
+                    XAudioDisable.Enabled = false;
+                }
+                else
+                {
+                    if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+                    {
+                        XAudioDisable.Checked = true;
+                        VMSEmu.Visible = true;
+                        if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
+                        {
+                            VMSEmu.Checked = true;
+                        }
+                        else
+                        {
+                            VMSEmu.Checked = false;
+                        }
+                    }
+                    else
+                    {
+                        XAudioDisable.Checked = false;
+                        VMSEmu.Visible = false;
+                    }
+                }
 
-            // And finally, the volume!
-            int VolumeValue = Convert.ToInt32(Settings.GetValue("volume"));
-            double x = VolumeValue / 100;
-            VolSimView.Text = x.ToString("000\\%");
-            VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
-            VolTrackBar.Value = VolumeValue;
+                // LEL
+                bufsize.Value = Convert.ToInt32(Settings.GetValue("buflen"));
+
+                // And finally, the volume!
+                int VolumeValue = Convert.ToInt32(Settings.GetValue("volume"));
+                double x = VolumeValue / 100;
+                VolSimView.Text = x.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
+                VolTrackBar.Value = VolumeValue;
             }
             catch (Exception ex)
             {
@@ -423,692 +616,147 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        // -------------------------
+        // Soundfont lists functions
+
         private void AddSF1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SoundfontImport.FileName = "";
-                if (SoundfontImport.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (string str in SoundfontImport.FileNames)
-                    {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
-                        {
-                            Lis1.Items.Add(str);
-                        }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
-                        {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
-                            {
-                                var result = form.ShowDialog();
-                                if (result == DialogResult.OK)
-                                {
-                                    string bank = form.BankValueReturn;
-                                    string preset = form.PresetValueReturn;
-                                    Lis1.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    SaveList(List1Path, Lis1);
-                }
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis1, List1Path);
-            }
+            AddSoundfont(List1Path, Lis1);
         }
 
         private void AddSF2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SoundfontImport.FileName = "";
-                if (SoundfontImport.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (string str in SoundfontImport.FileNames)
-                    {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
-                        {
-                            Lis2.Items.Add(str);
-                        }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
-                        {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
-                            {
-                                var result = form.ShowDialog();
-                                if (result == DialogResult.OK)
-                                {
-                                    string bank = form.BankValueReturn;
-                                    string preset = form.PresetValueReturn;
-                                    Lis2.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    SaveList(List2Path, Lis2);
-                }
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis2, List2Path);
-            }
+            AddSoundfont(List2Path, Lis2);
         }
 
         private void AddSF3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SoundfontImport.FileName = "";
-                if (SoundfontImport.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (string str in SoundfontImport.FileNames)
-                    {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
-                        {
-                            Lis3.Items.Add(str);
-                        }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
-                        {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
-                            {
-                                var result = form.ShowDialog();
-                                if (result == DialogResult.OK)
-                                {
-                                    string bank = form.BankValueReturn;
-                                    string preset = form.PresetValueReturn;
-                                    Lis3.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    SaveList(List3Path, Lis3);
-                }
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis3, List3Path);
-            }
+            AddSoundfont(List3Path, Lis3);
         }
 
         private void AddSF4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SoundfontImport.FileName = "";
-                if (SoundfontImport.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (string str in SoundfontImport.FileNames)
-                    {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
-                        {
-                            Lis4.Items.Add(str);
-                        }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
-                        {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
-                            {
-                                var result = form.ShowDialog();
-                                if (result == DialogResult.OK)
-                                {
-                                    string bank = form.BankValueReturn;
-                                    string preset = form.PresetValueReturn;
-                                    Lis4.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    SaveList(List4Path, Lis4);
-                }
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis4, List4Path);
-            }
+            AddSoundfont(List4Path, Lis4);
         }
 
         private void RmvSF1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                for (int i = Lis1.SelectedIndices.Count - 1; i >= 0; i--)
-                {
-                    Lis1.Items.RemoveAt(Lis1.SelectedIndices[i]);
-                }
-                SaveList(List1Path, Lis1);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis1, List1Path);
-            }
+            RemoveSoundfont(List1Path, Lis1);
         }
 
         private void RmvSF2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                for (int i = Lis2.SelectedIndices.Count - 1; i >= 0; i--)
-                {
-                    Lis2.Items.RemoveAt(Lis2.SelectedIndices[i]);
-                }
-                SaveList(List2Path, Lis2);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis2, List2Path);
-            }
+            RemoveSoundfont(List2Path, Lis2);
         }
 
         private void RmvSF3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                for (int i = Lis3.SelectedIndices.Count - 1; i >= 0; i--)
-                {
-                    Lis3.Items.RemoveAt(Lis3.SelectedIndices[i]);
-                }
-                SaveList(List3Path, Lis3);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis3, List3Path);
-            }
+            RemoveSoundfont(List3Path, Lis3);
         }
 
         private void RmvSF4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                for (int i = Lis4.SelectedIndices.Count - 1; i >= 0; i--)
-                {
-                    Lis4.Items.RemoveAt(Lis4.SelectedIndices[i]);
-                }
-                SaveList(List4Path, Lis4);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis4, List4Path);
-            }
+            RemoveSoundfont(List4Path, Lis4);
         }
 
-        private void Lis1_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis1_DragDrop(object sender, DragEventArgs e)
         {
-            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            int i;
-            for (i = 0; i < s.Length; i++)
-            {
-                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
-                {
-                    Lis1.Items.Add(s[i]);
-                }
-                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
-                {
-                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            string bank = form.BankValueReturn;
-                            string preset = form.PresetValueReturn;
-                            Lis1.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
-                            SaveList(List1Path, Lis1);
-                        }
-                    }
-                }
-                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
-                {
-                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
-                {
-                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            AddSoundfontDragNDrop(List1Path, Lis1, e);
         }
 
-        private void Lis1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.All;
-            else
-                e.Effect = DragDropEffects.None;
+            AddSoundfontDragNDropTriv(e);
         }
 
-        private void Lis2_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis2_DragDrop(object sender, DragEventArgs e)
         {
-            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            int i;
-            for (i = 0; i < s.Length; i++)
-            {
-                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
-                {
-                    Lis2.Items.Add(s[i]);
-                }
-                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
-                {
-                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            string bank = form.BankValueReturn;
-                            string preset = form.PresetValueReturn;
-                            Lis2.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
-                            SaveList(List2Path, Lis2);
-                        }
-                    }
-                }
-                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
-                {
-                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
-                {
-                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            AddSoundfontDragNDrop(List2Path, Lis2, e);
         }
 
-        private void Lis2_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis2_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.All;
-            else
-                e.Effect = DragDropEffects.None;
+            AddSoundfontDragNDropTriv(e);
         }
 
-        private void Lis3_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis3_DragDrop(object sender, DragEventArgs e)
         {
-            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            int i;
-            for (i = 0; i < s.Length; i++)
-            {
-                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
-                {
-                    Lis3.Items.Add(s[i]);
-                }
-                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
-                {
-                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            string bank = form.BankValueReturn;
-                            string preset = form.PresetValueReturn;
-                            Lis3.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
-                            SaveList(List3Path, Lis3);
-                        }
-                    }
-                }
-                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
-                {
-                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
-                {
-                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            AddSoundfontDragNDrop(List3Path, Lis3, e);
         }
 
-        private void Lis3_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis3_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.All;
-            else
-                e.Effect = DragDropEffects.None;
+            AddSoundfontDragNDropTriv(e);
         }
 
-        private void Lis4_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis4_DragDrop(object sender, DragEventArgs e)
         {
-            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            int i;
-            for (i = 0; i < s.Length; i++)
-            {
-                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
-                {
-                    Lis4.Items.Add(s[i]);
-                }
-                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
-                {
-                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            string bank = form.BankValueReturn;
-                            string preset = form.PresetValueReturn;
-                            Lis4.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
-                            SaveList(List4Path, Lis4);
-                        }
-                    }
-                }
-                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
-                {
-                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
-                {
-                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            AddSoundfontDragNDrop(List4Path, Lis4, e);
         }
 
-        private void Lis4_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        private void Lis4_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.All;
-            else
-                e.Effect = DragDropEffects.None;
+            AddSoundfontDragNDropTriv(e);
         }
 
         private void MvU1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis1.SelectedItem;
-                int indx = Lis1.Items.IndexOf(selected);
-                int totl = Lis1.Items.Count;
-                if (indx == 0)
-                {
-                    Lis1.Items.Remove(selected);
-                    Lis1.Items.Insert(totl - 1, selected);
-                    Lis1.SetSelected(totl - 1, true);
-                }
-                else
-                {
-                    Lis1.Items.Remove(selected);
-                    Lis1.Items.Insert(indx - 1, selected);
-                    Lis1.SetSelected(indx - 1, true);
-                }
-                SaveList(List1Path, Lis1);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis1, List1Path);
-            }
+            MoveUpSoundfont(List1Path, Lis1);
         }
 
         private void MvU2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis2.SelectedItem;
-                int indx = Lis2.Items.IndexOf(selected);
-                int totl = Lis2.Items.Count;
-                if (indx == 0)
-                {
-                    Lis2.Items.Remove(selected);
-                    Lis2.Items.Insert(totl - 1, selected);
-                    Lis2.SetSelected(totl - 1, true);
-                }
-                else
-                {
-                    Lis2.Items.Remove(selected);
-                    Lis2.Items.Insert(indx - 1, selected);
-                    Lis2.SetSelected(indx - 1, true);
-                }
-                SaveList(List2Path, Lis2);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis2, List2Path);
-            }
+            MoveUpSoundfont(List2Path, Lis2);
         }
 
         private void MvU3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis3.SelectedItem;
-                int indx = Lis3.Items.IndexOf(selected);
-                int totl = Lis3.Items.Count;
-                if (indx == 0)
-                {
-                    Lis3.Items.Remove(selected);
-                    Lis3.Items.Insert(totl - 1, selected);
-                    Lis3.SetSelected(totl - 1, true);
-                }
-                else
-                {
-                    Lis3.Items.Remove(selected);
-                    Lis3.Items.Insert(indx - 1, selected);
-                    Lis3.SetSelected(indx - 1, true);
-                }
-                SaveList(List3Path, Lis3);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis3, List3Path);
-            }
+            MoveUpSoundfont(List3Path, Lis3);
         }
 
         private void MvU4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis4.SelectedItem;
-                int indx = Lis4.Items.IndexOf(selected);
-                int totl = Lis4.Items.Count;
-                if (indx == 0)
-                {
-                    Lis4.Items.Remove(selected);
-                    Lis4.Items.Insert(totl - 1, selected);
-                    Lis4.SetSelected(totl - 1, true);
-                }
-                else
-                {
-                    Lis4.Items.Remove(selected);
-                    Lis4.Items.Insert(indx - 1, selected);
-                    Lis4.SetSelected(indx - 1, true);
-                }
-                SaveList(List4Path, Lis4);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis4, List4Path);
-            }
+            MoveUpSoundfont(List4Path, Lis4);
         }
 
         private void MvD1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis1.SelectedItem;
-                int indx = Lis1.Items.IndexOf(selected);
-                int totl = Lis1.Items.Count;
-                if (indx == totl - 1)
-                {
-                    Lis1.Items.Remove(selected);
-                    Lis1.Items.Insert(0, selected);
-                    Lis1.SetSelected(0, true);
-                }
-                else
-                {
-                    Lis1.Items.Remove(selected);
-                    Lis1.Items.Insert(indx + 1, selected);
-                    Lis1.SetSelected(indx + 1, true);
-                }
-                SaveList(List1Path, Lis1);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis1, List1Path);
-            }
+            MoveDownSoundfont(List1Path, Lis1);
         }
 
         private void MvD2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis2.SelectedItem;
-                int indx = Lis2.Items.IndexOf(selected);
-                int totl = Lis2.Items.Count;
-                if (indx == totl - 1)
-                {
-                    Lis2.Items.Remove(selected);
-                    Lis2.Items.Insert(0, selected);
-                    Lis2.SetSelected(0, true);
-                }
-                else
-                {
-                    Lis2.Items.Remove(selected);
-                    Lis2.Items.Insert(indx + 1, selected);
-                    Lis2.SetSelected(indx + 1, true);
-                }
-                SaveList(List2Path, Lis2);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis2, List2Path);
-            }
+            MoveDownSoundfont(List2Path, Lis2);
         }
 
         private void MvD3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis3.SelectedItem;
-                int indx = Lis3.Items.IndexOf(selected);
-                int totl = Lis3.Items.Count;
-                if (indx == totl - 1)
-                {
-                    Lis3.Items.Remove(selected);
-                    Lis3.Items.Insert(0, selected);
-                    Lis3.SetSelected(0, true);
-                }
-                else
-                {
-                    Lis3.Items.Remove(selected);
-                    Lis3.Items.Insert(indx + 1, selected);
-                    Lis3.SetSelected(indx + 1, true);
-                }
-                SaveList(List3Path, Lis3);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis3, List3Path);
-            }
+            MoveDownSoundfont(List3Path, Lis3);
         }
 
         private void MvD4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                object selected = Lis4.SelectedItem;
-                int indx = Lis4.Items.IndexOf(selected);
-                int totl = Lis4.Items.Count;
-                if (indx == totl - 1)
-                {
-                    Lis4.Items.Remove(selected);
-                    Lis4.Items.Insert(0, selected);
-                    Lis4.SetSelected(0, true);
-                }
-                else
-                {
-                    Lis4.Items.Remove(selected);
-                    Lis4.Items.Insert(indx + 1, selected);
-                    Lis4.SetSelected(indx + 1, true);
-                }
-                SaveList(List4Path, Lis4);
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis4, List4Path);
-            }
+            MoveDownSoundfont(List4Path, Lis4);
         }
 
         private void CLi1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Lis1.Items.Clear();
-                File.Delete(List1Path);
-                var TempFile = File.Create(List1Path);
-                TempFile.Close();
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis1, List1Path);
-            }
+            CleanList(List1Path, Lis1);
         }
 
         private void CLi2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Lis2.Items.Clear();
-                File.Delete(List2Path);
-                var TempFile = File.Create(List2Path);
-                TempFile.Close();
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis2, List2Path);
-            }
+            CleanList(List2Path, Lis2);
         }
 
         private void CLi3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Lis3.Items.Clear();
-                File.Delete(List3Path);
-                var TempFile = File.Create(List3Path);
-                TempFile.Close();
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis3, List3Path);
-            }
+            CleanList(List3Path, Lis3);
         }
 
         private void CLi4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Lis4.Items.Clear();
-                File.Delete(List4Path);
-                var TempFile = File.Create(List4Path);
-                TempFile.Close();
-            }
-            catch (Exception ex)
-            {
-                ReinitializeList(ex, Lis4, List4Path);
-            }
+            CleanList(List4Path, Lis4);
         }
 
 
@@ -1188,6 +836,9 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        // End of the soundfont lists functions
+        // ------------------------------------
+
         private void ApplySettings_Click(object sender, EventArgs e)
         {
             // Just save the settings
@@ -1266,15 +917,25 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
-        private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            KeppyDriverMIDIOutSelectorWin frm = new KeppyDriverMIDIOutSelectorWin();
-            frm.ShowDialog();
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppydrv\\midioutsetter32.exe");
+        }
+
+        private void changeDefault32bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppydrv\\midioutsetter32.exe");
+        }
+
+        private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppydrv\\midioutsetter64.exe");
         }
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KaleidonKep99/Keppy-s-Driver/releases");
+            KeppyDriverUpdater frm = new KeppyDriverUpdater();
+            frm.ShowDialog();
         }
 
         private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1338,22 +999,22 @@ namespace KeppyDriverConfigurator
         // SFZ compliant part
         private void SFZComp1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SFZCompliant();
         }
 
         private void SFZComp2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SFZCompliant();
         }
 
         private void SFZComp3_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SFZCompliant();
         }
 
         private void SFZComp4_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SFZCompliant();
         }
 
         // Brand new output mode

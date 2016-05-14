@@ -114,6 +114,7 @@
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,6 +135,7 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -1237,7 +1239,9 @@
             this.openDebugWindowToolStripMenuItem,
             this.openTheBlacklistManagerToolStripMenuItem,
             this.toolStripSeparator3,
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -1247,38 +1251,45 @@
             // openDebugWindowToolStripMenuItem
             // 
             this.openDebugWindowToolStripMenuItem.Name = "openDebugWindowToolStripMenuItem";
-            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
             // 
             // openTheBlacklistManagerToolStripMenuItem
             // 
             this.openTheBlacklistManagerToolStripMenuItem.Name = "openTheBlacklistManagerToolStripMenuItem";
-            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
             this.openTheBlacklistManagerToolStripMenuItem.Text = "Open the blacklist manager";
             this.openTheBlacklistManagerToolStripMenuItem.Click += new System.EventHandler(this.openTheBlacklistManagerToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(272, 6);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault32bitMIDIOutDeviceToolStripMenuItem_Click);
+            // 
+            // changeDefault64bitMIDIOutDeviceToolStripMenuItem
+            // 
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Name = "changeDefault64bitMIDIOutDeviceToolStripMenuItem";
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(238, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(272, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1412,6 +1423,13 @@
             // ExportList
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
+            // 
+            // changeDefaultMIDIOutDeviceToolStripMenuItem1
+            // 
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem1";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Size = new System.Drawing.Size(275, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1574,6 +1592,8 @@
         private System.Windows.Forms.ToolStripMenuItem howCanIResetTheDriverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem whatsTheBestSettingsForTheBufferToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
     }
 }
 

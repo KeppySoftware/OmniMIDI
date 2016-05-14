@@ -41,10 +41,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 25);
+            this.label1.Size = new System.Drawing.Size(67, 31);
             this.label1.TabIndex = 0;
             this.label1.Text = "Voices:";
             this.label1.UseCompatibleTextRendering = true;
@@ -52,12 +52,12 @@
             // Voices
             // 
             this.Voices.AutoSize = true;
-            this.Voices.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Voices.Location = new System.Drawing.Point(76, 9);
+            this.Voices.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Voices.Location = new System.Drawing.Point(81, 9);
             this.Voices.Name = "Voices";
-            this.Voices.Size = new System.Drawing.Size(30, 25);
+            this.Voices.Size = new System.Drawing.Size(99, 31);
             this.Voices.TabIndex = 1;
-            this.Voices.Text = "1/1";
+            this.Voices.Text = "0000/0000";
             this.Voices.UseCompatibleTextRendering = true;
             // 
             // DebugRefresh
@@ -69,10 +69,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 34);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 25);
+            this.label2.Size = new System.Drawing.Size(112, 31);
             this.label2.TabIndex = 2;
             this.label2.Text = "CPU usage*:";
             this.label2.UseCompatibleTextRendering = true;
@@ -80,12 +80,12 @@
             // CPU
             // 
             this.CPU.AutoSize = true;
-            this.CPU.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CPU.Location = new System.Drawing.Point(117, 34);
+            this.CPU.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CPU.Location = new System.Drawing.Point(125, 34);
             this.CPU.Name = "CPU";
-            this.CPU.Size = new System.Drawing.Size(30, 25);
+            this.CPU.Size = new System.Drawing.Size(54, 31);
             this.CPU.TabIndex = 3;
-            this.CPU.Text = "1/1";
+            this.CPU.Text = "000%";
             this.CPU.UseCompatibleTextRendering = true;
             // 
             // DecodedInt

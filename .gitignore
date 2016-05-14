@@ -2,7 +2,6 @@
 *.suo
 *.suo
 *.tmp
-keppydrvcfg2/
 /*.dll
 /*.exe
 /*.opensdf
@@ -11,8 +10,8 @@ keppydrvcfg2/
 /*.user
 /*.vcxproj.user
 /Debug
-/Release
-/ipch
+/KeppyDriverConfigurator/KeppyDriverConfigurator/bin
+/KeppyDriverConfigurator/KeppyDriverConfigurator/obj
 /KeppyDrv/*.dll
 /KeppyDrv/*.exe
 /KeppyDrv/*.exp
@@ -49,12 +48,11 @@ keppydrvcfg2/
 /KeppyDrvWasapi/out
 /KeppyDrvWasapi/output
 /KeppyDrvWasapi/x64
+/Release
+/ipch
 /keppydrvconfig
-/KeppyDriverConfigurator/KeppyDriverConfigurator/bin
-/KeppyDriverConfigurator/KeppyDriverConfigurator/obj
 /output/*.config
 /output/*.dll
-/output/*.exe
 /output/*.manifest
 /output/*.pdb
 /output/*.xml
@@ -74,3 +72,6 @@ git_ver.h
 keppydrv.exe
 keppydrvcfg2.v12.suo
 keppydrvcfg2.v12.suo
+keppydrvcfg2/
+output/KeppyDriverConfigurator.exe
+output/KeppyDriverConfigurator.vshost.exe
