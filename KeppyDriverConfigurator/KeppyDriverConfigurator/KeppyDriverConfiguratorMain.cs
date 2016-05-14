@@ -667,6 +667,7 @@ namespace KeppyDriverConfigurator
                             string bank = form.BankValueReturn;
                             string preset = form.PresetValueReturn;
                             Lis1.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                            SaveList(List1Path, Lis1);
                         }
                     }
                 }
@@ -713,6 +714,7 @@ namespace KeppyDriverConfigurator
                             string bank = form.BankValueReturn;
                             string preset = form.PresetValueReturn;
                             Lis2.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                            SaveList(List2Path, Lis2);
                         }
                     }
                 }
@@ -759,6 +761,7 @@ namespace KeppyDriverConfigurator
                             string bank = form.BankValueReturn;
                             string preset = form.PresetValueReturn;
                             Lis3.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                            SaveList(List3Path, Lis3);
                         }
                     }
                 }
@@ -805,6 +808,7 @@ namespace KeppyDriverConfigurator
                             string bank = form.BankValueReturn;
                             string preset = form.PresetValueReturn;
                             Lis4.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                            SaveList(List4Path, Lis4);
                         }
                     }
                 }

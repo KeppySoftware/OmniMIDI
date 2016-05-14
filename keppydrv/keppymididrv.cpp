@@ -50,8 +50,8 @@ void _endthreadex(unsigned retval);
 
 #include "sound_out.h"
 
-#define MAX_DRIVERS 4
-#define MAX_CLIENTS 8 // Per driver
+#define MAX_DRIVERS 255
+#define MAX_CLIENTS 255 // Per driver
 
 #define SPFSTD 100
 
