@@ -30,6 +30,13 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        static bool IsWindows10()
+        {
+            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            string productName = (string)reg.GetValue("ProductName");
+            return productName.StartsWith("Windows 10");
+        }
+
         // Just stuff to reduce code's length
         private void SFZCompliant()
         {
@@ -377,9 +384,7 @@ namespace KeppyDriverConfigurator
         private void KeppyDriverConfiguratorMain_Load(object sender, EventArgs e)
         {
             // MIDI out selector disabler
-            Version win10version = new Version(10, 0, 0, 0);
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                Environment.OSVersion.Version >= win10version)
+            if (IsWindows10() == true)
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
@@ -896,6 +901,32 @@ namespace KeppyDriverConfigurator
 
             // Messagebox here
             MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        private void LowLatPres_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 500;
+            MaxCPU.Text = "80";
+            Frequency.Text = "44100";
+            bufsize.Value = 10;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = true;
+            SincInter.Checked = true;
+            DisableSFX.Checked = false;
+            SysResetIgnore.Checked = true;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
+
+            // And then...
+            SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Now, menustrip functions here

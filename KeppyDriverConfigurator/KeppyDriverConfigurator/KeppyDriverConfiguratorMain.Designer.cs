@@ -113,6 +113,7 @@
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -135,7 +136,7 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.LowLatPres = new System.Windows.Forms.Button();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -720,6 +721,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.LowLatPres);
             this.Settings.Controls.Add(this.WhatIsXAudio);
             this.Settings.Controls.Add(this.XAudioDisable);
             this.Settings.Controls.Add(this.WhatIsOutput);
@@ -840,11 +842,12 @@
             // 
             this.VMSEmu.AutoSize = true;
             this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.VMSEmu.Location = new System.Drawing.Point(457, 55);
+            this.VMSEmu.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.VMSEmu.Location = new System.Drawing.Point(435, 55);
             this.VMSEmu.Name = "VMSEmu";
-            this.VMSEmu.Size = new System.Drawing.Size(128, 17);
+            this.VMSEmu.Size = new System.Drawing.Size(149, 17);
             this.VMSEmu.TabIndex = 27;
-            this.VMSEmu.Text = "VMS buffer emulation";
+            this.VMSEmu.Text = "Alternative buffer system";
             this.VMSEmu.UseVisualStyleBackColor = true;
             this.VMSEmu.Visible = false;
             // 
@@ -1267,6 +1270,13 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(272, 6);
             // 
+            // changeDefaultMIDIOutDeviceToolStripMenuItem1
+            // 
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem1";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Size = new System.Drawing.Size(275, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
+            // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem";
@@ -1424,12 +1434,15 @@
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
             // 
-            // changeDefaultMIDIOutDeviceToolStripMenuItem1
+            // LowLatPres
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem1";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Size = new System.Drawing.Size(275, 22);
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
+            this.LowLatPres.Location = new System.Drawing.Point(127, 370);
+            this.LowLatPres.Name = "LowLatPres";
+            this.LowLatPres.Size = new System.Drawing.Size(113, 23);
+            this.LowLatPres.TabIndex = 38;
+            this.LowLatPres.Text = "Low latency preset";
+            this.LowLatPres.UseVisualStyleBackColor = true;
+            this.LowLatPres.Click += new System.EventHandler(this.LowLatPres_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1594,6 +1607,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
+        private System.Windows.Forms.Button LowLatPres;
     }
 }
 
