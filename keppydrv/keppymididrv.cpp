@@ -589,7 +589,7 @@ struct evbuf_t{
 	unsigned char *sysexbuffer;
 };
 
-#define EVBUFF_SIZE 524280
+#define EVBUFF_SIZE 0x1000000
 static struct evbuf_t evbuf[EVBUFF_SIZE];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
