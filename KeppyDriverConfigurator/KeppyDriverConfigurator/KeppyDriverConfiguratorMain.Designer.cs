@@ -79,6 +79,7 @@
             this.AddSF4 = new System.Windows.Forms.Button();
             this.Lis4 = new System.Windows.Forms.ListBox();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.LowLatPres = new System.Windows.Forms.Button();
             this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
             this.XAudioDisable = new System.Windows.Forms.CheckBox();
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
@@ -136,7 +137,7 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
-            this.LowLatPres = new System.Windows.Forms.Button();
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -742,6 +743,16 @@
             this.Settings.Text = "Settings";
             this.Settings.UseVisualStyleBackColor = true;
             // 
+            // LowLatPres
+            // 
+            this.LowLatPres.Location = new System.Drawing.Point(127, 370);
+            this.LowLatPres.Name = "LowLatPres";
+            this.LowLatPres.Size = new System.Drawing.Size(113, 23);
+            this.LowLatPres.TabIndex = 38;
+            this.LowLatPres.Text = "Low latency preset";
+            this.LowLatPres.UseVisualStyleBackColor = true;
+            this.LowLatPres.Click += new System.EventHandler(this.LowLatPres_Click);
+            // 
             // WhatIsXAudio
             // 
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
@@ -1306,7 +1317,8 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem});
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
@@ -1434,15 +1446,12 @@
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
             // 
-            // LowLatPres
+            // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.LowLatPres.Location = new System.Drawing.Point(127, 370);
-            this.LowLatPres.Name = "LowLatPres";
-            this.LowLatPres.Size = new System.Drawing.Size(113, 23);
-            this.LowLatPres.TabIndex = 38;
-            this.LowLatPres.Text = "Low latency preset";
-            this.LowLatPres.UseVisualStyleBackColor = true;
-            this.LowLatPres.Click += new System.EventHandler(this.LowLatPres_Click);
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Name = "changeTheMaximumSamplesPerFrameToolStripMenuItem";
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1608,6 +1617,7 @@
         private System.Windows.Forms.ToolStripMenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
         private System.Windows.Forms.Button LowLatPres;
+        private System.Windows.Forms.ToolStripMenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
     }
 }
 

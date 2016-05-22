@@ -53,8 +53,6 @@ void _endthreadex(unsigned retval);
 #define MAX_DRIVERS 255
 #define MAX_CLIENTS 255 // Per driver
 
-#define SPFSTD 100
-
 #ifndef _LOADRESTRICTIONS_OFF
 #define _LOADRESTRICTIONS_ON
 #endif
@@ -111,6 +109,8 @@ static int frequency = 0; //Audio frequency
 static int sinc = 0; //Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
+static int newsndbfvalue; // DO NOT TOUCH
+static float *sndbf;
 static int tracks = 0; //Tracks limit
 static int volume = 0; //Volume limit
 static int vmsemu = 0; //VirtualMIDISynth buffer emulation
@@ -691,19 +691,85 @@ void load_settings()
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 	RegQueryValueEx(hKey, L"debug", NULL, &dwType, (LPBYTE)&debug, &dwSize);
 	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
+	RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
 	RegCloseKey(hKey);
+
+	sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
 
 	sound_out_volume_float = (float)volume / 10000.0f;
 	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 }
 
+void realtime_load_settings()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	BASS_INFO info;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
+	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
+	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
+	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
+	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
+	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
+	RegCloseKey(hKey);
+	BASS_GetInfo(&info);
+	//cake
+	sound_out_volume_float = (float)volume / 10000.0f;
+	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	//another cake
+	int maxmidivoices = static_cast <int> (midivoices);
+	float trackslimit = static_cast <int> (tracks);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+	if (noteoff1) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOTEOFF1);
+	}
+	if (vmsemu == 1) {
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
+	}
+	else {
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100);
+	}
+	if (nofx) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOFX);
+	}
+	if (sysresetignore) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOSYSRESET);
+	}
+	if (sinc) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
+	}
+}
+
 void AudioRender(int bassoutput) {
+
+
 	if (bassoutput == -1) {
 		BASS_ChannelUpdate(hStream, frames);
 	}
 	else {
-		float sndbf[SPFSTD];
-		decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + SPFSTD * sizeof(float));
+		decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 		if (encmode == 1) {
 
 		}
@@ -893,73 +959,6 @@ void debug_info() {
 	// OTHER THINGS
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&decoded, sizeof(decoded));
 	RegCloseKey(hKey);
-}
-
-void realtime_load_settings()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	BASS_INFO info;
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
-	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
-	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
-	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
-	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
-	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
-	RegCloseKey(hKey);
-	BASS_GetInfo(&info);
-	//cake
-	if (IsRunningXP() == TRUE) {
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
-	}
-	else {
-		sound_out_volume_float = (float)volume / 10000.0f;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-	}
-	//another cake
-	int maxmidivoices = static_cast <int> (midivoices);
-	float trackslimit = static_cast <int> (tracks);
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-	if (noteoff1) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOTEOFF1);
-	}
-	if (vmsemu == 1) {
-		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
-	}
-	else {
-		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100);
-	}
-	if (nofx) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOFX);
-	}
-	if (sysresetignore) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOSYSRESET);
-	}
-	if (sinc) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
-	}
 }
 
 BOOL ProcessBlackList(){
@@ -1152,7 +1151,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			if (sound_driver == NULL) {
 				sound_driver = create_sound_out_xaudio2();
 				sound_out_float = TRUE;
-				sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, (IsFloatingPointEnabled() ? sound_out_float : nofloat), SPFSTD, frames);
+				sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, (IsFloatingPointEnabled() ? sound_out_float : nofloat), newsndbfvalue, frames);
 				/* Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency. */
 			}
 		}

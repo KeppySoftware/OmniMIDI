@@ -96,6 +96,12 @@
     <Compile Include="KeppyDriverOutputWAVDir.Designer.cs">
       <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeppyDriverSamplePerFrameSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverSamplePerFrameSetting.Designer.cs">
+      <DependentUpon>KeppyDriverSamplePerFrameSetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeppyDriverUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverOutputWAVDir.resx">
       <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppyDriverSamplePerFrameSetting.resx">
+      <DependentUpon>KeppyDriverSamplePerFrameSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverUpdater.resx">
       <DependentUpon>KeppyDriverUpdater.cs</DependentUpon>

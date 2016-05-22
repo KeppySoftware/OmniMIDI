@@ -998,6 +998,12 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void changeTheMaximumSamplesPerFrameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverSamplePerFrameSetting frm = new KeppyDriverSamplePerFrameSetting();
+            frm.ShowDialog();
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();

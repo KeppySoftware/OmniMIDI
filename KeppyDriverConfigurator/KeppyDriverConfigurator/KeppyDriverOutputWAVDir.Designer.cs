@@ -84,7 +84,6 @@
             // 
             // BrowseButton
             // 
-            this.BrowseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.BrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BrowseButton.Location = new System.Drawing.Point(317, 107);
             this.BrowseButton.Name = "BrowseButton";
