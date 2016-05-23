@@ -88,6 +88,7 @@
             this.ResetSettings = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
+            this.SPFSecondaryBut = new System.Windows.Forms.LinkLabel();
             this.VMSEmu = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
             this.TracksLimit = new System.Windows.Forms.NumericUpDown();
@@ -121,6 +122,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -137,7 +139,6 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -835,6 +836,7 @@
             // 
             // GroupBox5
             // 
+            this.GroupBox5.Controls.Add(this.SPFSecondaryBut);
             this.GroupBox5.Controls.Add(this.VMSEmu);
             this.GroupBox5.Controls.Add(this.SincInter);
             this.GroupBox5.Controls.Add(this.TracksLimit);
@@ -849,6 +851,19 @@
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Advanced BASSMIDI settings";
             // 
+            // SPFSecondaryBut
+            // 
+            this.SPFSecondaryBut.AutoSize = true;
+            this.SPFSecondaryBut.BackColor = System.Drawing.Color.Transparent;
+            this.SPFSecondaryBut.Location = new System.Drawing.Point(243, 56);
+            this.SPFSecondaryBut.Name = "SPFSecondaryBut";
+            this.SPFSecondaryBut.Size = new System.Drawing.Size(39, 18);
+            this.SPFSecondaryBut.TabIndex = 28;
+            this.SPFSecondaryBut.TabStop = true;
+            this.SPFSecondaryBut.Text = "More...";
+            this.SPFSecondaryBut.UseCompatibleTextRendering = true;
+            this.SPFSecondaryBut.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SPFSecondaryBut_LinkClicked);
+            // 
             // VMSEmu
             // 
             this.VMSEmu.AutoSize = true;
@@ -861,6 +876,7 @@
             this.VMSEmu.Text = "Alternative buffer system";
             this.VMSEmu.UseVisualStyleBackColor = true;
             this.VMSEmu.Visible = false;
+            this.VMSEmu.CheckedChanged += new System.EventHandler(this.VMSEmu_CheckedChanged);
             // 
             // SincInter
             // 
@@ -913,7 +929,7 @@
             this.BufferText.Name = "BufferText";
             this.BufferText.Size = new System.Drawing.Size(561, 13);
             this.BufferText.TabIndex = 23;
-            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
+            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
             // 
             // SysResetIgnore
             // 
@@ -935,6 +951,7 @@
             0,
             0});
             this.bufsize.Name = "bufsize";
+            this.bufsize.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.bufsize.Size = new System.Drawing.Size(64, 21);
             this.bufsize.TabIndex = 10;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1330,6 +1347,13 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
+            // changeTheMaximumSamplesPerFrameToolStripMenuItem
+            // 
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Name = "changeTheMaximumSamplesPerFrameToolStripMenuItem";
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1445,13 +1469,6 @@
             // ExportList
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
-            // 
-            // changeTheMaximumSamplesPerFrameToolStripMenuItem
-            // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Name = "changeTheMaximumSamplesPerFrameToolStripMenuItem";
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Size = new System.Drawing.Size(327, 22);
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1618,6 +1635,7 @@
         private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
         private System.Windows.Forms.Button LowLatPres;
         private System.Windows.Forms.ToolStripMenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel SPFSecondaryBut;
     }
 }
 

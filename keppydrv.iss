@@ -10,7 +10,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.1.3.4
+AppVersion=3.1.3.5
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -37,9 +37,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.1.3.4
+VersionInfoProductTextVersion=3.1.3.5
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.1.3.4
+VersionInfoVersion=3.1.3.5
 
 [Files]
 ; 64-bit OS
@@ -127,7 +127,7 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "xaudiodisabled"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "firstrun"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "vmsemu"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sndbfvalue"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sndbfvalue"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 ;3D effects
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfxnum"; ValueData: "2"; Flags: uninsdeletekey deletekey dontcreatekey

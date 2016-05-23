@@ -571,19 +571,25 @@ namespace KeppyDriverConfigurator
                     {
                         XAudioDisable.Checked = true;
                         VMSEmu.Visible = true;
+                        SPFSecondaryBut.Visible = false;
                         if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
                         {
                             VMSEmu.Checked = true;
+                            bufsize.Enabled = true;
                         }
                         else
                         {
                             VMSEmu.Checked = false;
+                            bufsize.Enabled = false;
+                            bufsize.Value = 0;
                         }
                     }
                     else
                     {
                         XAudioDisable.Checked = false;
                         VMSEmu.Visible = false;
+                        SPFSecondaryBut.Visible = true;
+                        bufsize.Enabled = true;
                     }
                 }
 
@@ -1004,6 +1010,12 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void SPFSecondaryBut_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            KeppyDriverSamplePerFrameSetting frm = new KeppyDriverSamplePerFrameSetting();
+            frm.ShowDialog();
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -1075,17 +1087,31 @@ namespace KeppyDriverConfigurator
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
                 VMSEmu.Visible = true;
+                SPFSecondaryBut.Visible = false;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
+                bufsize.Enabled = false;
+                if (VMSEmu.Checked == true)
+                {
+                    bufsize.Enabled = true;
+                }
+                else
+                {
+                    bufsize.Enabled = false;
+                    bufsize.Value = 0;
+                }
             }
             else if (XAudioDisable.Checked == false)
             {
                 OutputWAV.Enabled = true;
                 VMSEmu.Visible = false;
-                BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
+                SPFSecondaryBut.Visible = true;
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
+                bufsize.Enabled = true;
+                bufsize.Value = 15;
             }
         }
 
@@ -1116,6 +1142,18 @@ namespace KeppyDriverConfigurator
                 bufsize.Value = 15;
                 MaxCPU.Text = "75";
             }
+        }
+
+        private void VMSEmu_CheckedChanged(object sender, EventArgs e)
+        {
+            if (VMSEmu.Checked == true)
+            {
+                bufsize.Enabled = true;
+            }
+            else
+            {
+                bufsize.Enabled = false;
+            } 
         }
     }
 }

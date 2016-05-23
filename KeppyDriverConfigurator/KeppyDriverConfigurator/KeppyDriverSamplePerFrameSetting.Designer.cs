@@ -34,6 +34,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.LeSetting = new System.Windows.Forms.NumericUpDown();
             this.DefVal = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.LeSetting)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +73,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(147, 79);
+            this.label3.Location = new System.Drawing.Point(147, 77);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(146, 13);
             this.label3.TabIndex = 3;
@@ -80,7 +81,7 @@
             // 
             // LeSetting
             // 
-            this.LeSetting.Location = new System.Drawing.Point(294, 77);
+            this.LeSetting.Location = new System.Drawing.Point(294, 75);
             this.LeSetting.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -111,12 +112,23 @@
             this.DefVal.UseVisualStyleBackColor = true;
             this.DefVal.Click += new System.EventHandler(this.DefVal_Click);
             // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(107, 104);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(285, 29);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "The smaller the value, the less latency you have.\r\n(You\'ll probably be forced to " +
+    "increase the buffer size)";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // KeppyDriverSamplePerFrameSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(485, 142);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.DefVal);
             this.Controls.Add(this.LeSetting);
             this.Controls.Add(this.label3);
@@ -147,5 +159,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown LeSetting;
         private System.Windows.Forms.Button DefVal;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -528,9 +528,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wMid = 0xffff;
 		myCapsA->wPid = 0xffff;
 		memcpy(myCapsA->szPname, synthName, sizeof(synthName));
-		myCapsA->wTechnology = MOD_SWSYNTH;
+		myCapsA->wTechnology = MOD_WAVETABLE;
 		myCapsA->vDriverVersion = 0x0090;
-		myCapsA->wVoices = 100000;
+		myCapsA->wVoices = 9999;
 		myCapsA->wNotes = 0;
 		myCapsA->wChannelMask = 0xffff;
 		myCapsA->dwSupport = MIDICAPS_VOLUME;
@@ -541,9 +541,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
 		memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW));
-		myCapsW->wTechnology = MOD_SWSYNTH;
+		myCapsW->wTechnology = MOD_WAVETABLE;
 		myCapsW->vDriverVersion = 0x0090;
-		myCapsW->wVoices = 0;
+		myCapsW->wVoices = 9999;
 		myCapsW->wNotes = 0;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
@@ -554,9 +554,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wMid = 0xffff;
 		myCaps2A->wPid = 0xffff;
 		memcpy(myCaps2A->szPname, synthName, sizeof(synthName));
-		myCaps2A->wTechnology = MOD_SWSYNTH;
+		myCaps2A->wTechnology = MOD_WAVETABLE;
 		myCaps2A->vDriverVersion = 0x0090;
-		myCaps2A->wVoices = 0;
+		myCaps2A->wVoices = 9999;
 		myCaps2A->wNotes = 0;
 		myCaps2A->wChannelMask = 0xffff;
 		myCaps2A->dwSupport = MIDICAPS_VOLUME;
@@ -567,9 +567,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
 		memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW));
-		myCaps2W->wTechnology = MOD_SWSYNTH;
+		myCaps2W->wTechnology = MOD_WAVETABLE;
 		myCaps2W->vDriverVersion = 0x0090;
-		myCaps2W->wVoices = 0;
+		myCaps2W->wVoices = 9999;
 		myCaps2W->wNotes = 0;
 		myCaps2W->wChannelMask = 0xffff;
 		myCaps2W->dwSupport = MIDICAPS_VOLUME;
@@ -763,10 +763,13 @@ void realtime_load_settings()
 }
 
 void AudioRender(int bassoutput) {
-
-
 	if (bassoutput == -1) {
-		BASS_ChannelUpdate(hStream, frames);
+		if (vmsemu == 0) {
+			BASS_ChannelUpdate(hStream, frames);
+		}
+		else {
+		
+		}
 	}
 	else {
 		decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
@@ -1118,18 +1121,6 @@ void keybindings()
 	}
 }
 
-std::wstring s2ws(const std::string& s)
-{
-	int len;
-	int slength = (int)s.length() + 1;
-	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
-	wchar_t* buf = new wchar_t[len];
-	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
-	std::wstring r(buf);
-	delete[] buf;
-	return r;
-}
-
 unsigned __stdcall threadfunc(LPVOID lpV){
 	unsigned i;
 	int pot;
@@ -1145,14 +1136,14 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		load_settings();
 		if (IsRunningXP() == TRUE) {
 			bassoutputfinal = -1;
-			// Do nothing, since XP has problems with XAudio2
+			// Do nothing, since now the driver is going to use DirectSound.
 		}
 		else {
 			if (sound_driver == NULL) {
 				sound_driver = create_sound_out_xaudio2();
 				sound_out_float = TRUE;
 				sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, (IsFloatingPointEnabled() ? sound_out_float : nofloat), newsndbfvalue, frames);
-				/* Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency. */
+				// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
 			}
 		}
 		load_bassfuncs();
@@ -1166,13 +1157,13 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			if (bassoutputfinal == -1) {
 				BASS_GetInfo(&info);
 				if (vmsemu == 1) {
-					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
+					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 10);
+					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 4);
+					BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 				}
 				else {
-					// Nothing
+					BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf); // default buffer size = 'minbuf' + additional buffer size
 				}
-				BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 4);
-				BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 				hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareModeEnabled() ? BASS_SAMPLE_SOFTWARE : softwaremode) | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 				BASS_ChannelPlay(hStream, false);
 			}
