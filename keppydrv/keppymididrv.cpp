@@ -722,8 +722,13 @@ void realtime_load_settings()
 	RegCloseKey(hKey);
 	BASS_GetInfo(&info);
 	//cake
-	sound_out_volume_float = (float)volume / 10000.0f;
-	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	if (xaudiodisabled == 1) {
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
+	}
+	else {
+		sound_out_volume_float = (float)volume / 10000.0f;
+		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	}
 	//another cake
 	int maxmidivoices = static_cast <int> (midivoices);
 	float trackslimit = static_cast <int> (tracks);
@@ -1134,7 +1139,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			com_initialized = TRUE;
 		}
 		load_settings();
-		if (IsRunningXP() == TRUE) {
+		if (xaudiodisabled == 1) {
 			bassoutputfinal = -1;
 			// Do nothing, since now the driver is going to use DirectSound.
 		}
