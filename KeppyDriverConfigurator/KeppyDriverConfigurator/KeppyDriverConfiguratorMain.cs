@@ -850,16 +850,7 @@ namespace KeppyDriverConfigurator
         // End of the soundfont lists functions
         // ------------------------------------
 
-        private void ApplySettings_Click(object sender, EventArgs e)
-        {
-            // Just save the settings
-            SaveSettings();
-
-            // Messagebox here
-            MessageBox.Show("Settings saved to the registry!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void ResetSettings_Click(object sender, EventArgs e)
+        private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
             VolTrackBar.Value = 10000;
@@ -884,7 +875,16 @@ namespace KeppyDriverConfigurator
             MessageBox.Show("Settings restored to the default values!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void BlackMIDIPres_Click(object sender, EventArgs e)
+        private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Just save the settings
+            SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("Settings saved to the registry!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
             VolTrackBar.Value = 10000;
@@ -909,8 +909,7 @@ namespace KeppyDriverConfigurator
             MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-
-        private void LowLatPres_Click(object sender, EventArgs e)
+        private void lowLatencyPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
             VolTrackBar.Value = 10000;

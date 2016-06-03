@@ -79,14 +79,10 @@
             this.AddSF4 = new System.Windows.Forms.Button();
             this.Lis4 = new System.Windows.Forms.ListBox();
             this.Settings = new System.Windows.Forms.TabPage();
-            this.LowLatPres = new System.Windows.Forms.Button();
             this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
             this.XAudioDisable = new System.Windows.Forms.CheckBox();
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
             this.OutputWAV = new System.Windows.Forms.CheckBox();
-            this.BlackMIDIPres = new System.Windows.Forms.Button();
-            this.ResetSettings = new System.Windows.Forms.Button();
-            this.ApplySettings = new System.Windows.Forms.Button();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
             this.SPFSecondaryBut = new System.Windows.Forms.LinkLabel();
             this.VMSEmu = new System.Windows.Forms.CheckBox();
@@ -139,6 +135,12 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
+            this.applySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
@@ -162,6 +164,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
             this.MainMenu.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabsForTheControls
@@ -723,36 +726,23 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
-            this.Settings.Controls.Add(this.LowLatPres);
             this.Settings.Controls.Add(this.WhatIsXAudio);
             this.Settings.Controls.Add(this.XAudioDisable);
             this.Settings.Controls.Add(this.WhatIsOutput);
             this.Settings.Controls.Add(this.OutputWAV);
-            this.Settings.Controls.Add(this.BlackMIDIPres);
-            this.Settings.Controls.Add(this.ResetSettings);
-            this.Settings.Controls.Add(this.ApplySettings);
             this.Settings.Controls.Add(this.GroupBox5);
             this.Settings.Controls.Add(this.groupBox1);
             this.Settings.Controls.Add(this.VolIntView);
             this.Settings.Controls.Add(this.VolSimView);
             this.Settings.Controls.Add(this.VolStaticLab);
             this.Settings.Controls.Add(this.VolTrackBar);
+            this.Settings.Controls.Add(this.menuStrip1);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(677, 399);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             this.Settings.UseVisualStyleBackColor = true;
-            // 
-            // LowLatPres
-            // 
-            this.LowLatPres.Location = new System.Drawing.Point(127, 370);
-            this.LowLatPres.Name = "LowLatPres";
-            this.LowLatPres.Size = new System.Drawing.Size(113, 23);
-            this.LowLatPres.TabIndex = 38;
-            this.LowLatPres.Text = "Low latency preset";
-            this.LowLatPres.UseVisualStyleBackColor = true;
-            this.LowLatPres.Click += new System.EventHandler(this.LowLatPres_Click);
             // 
             // WhatIsXAudio
             // 
@@ -803,36 +793,6 @@
             this.OutputWAV.Text = "Enable the \"Output to WAV\" mode.";
             this.OutputWAV.UseVisualStyleBackColor = true;
             this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
-            // 
-            // BlackMIDIPres
-            // 
-            this.BlackMIDIPres.Location = new System.Drawing.Point(8, 370);
-            this.BlackMIDIPres.Name = "BlackMIDIPres";
-            this.BlackMIDIPres.Size = new System.Drawing.Size(113, 23);
-            this.BlackMIDIPres.TabIndex = 34;
-            this.BlackMIDIPres.Text = "Black MIDIs preset";
-            this.BlackMIDIPres.UseVisualStyleBackColor = true;
-            this.BlackMIDIPres.Click += new System.EventHandler(this.BlackMIDIPres_Click);
-            // 
-            // ResetSettings
-            // 
-            this.ResetSettings.Location = new System.Drawing.Point(477, 370);
-            this.ResetSettings.Name = "ResetSettings";
-            this.ResetSettings.Size = new System.Drawing.Size(93, 23);
-            this.ResetSettings.TabIndex = 33;
-            this.ResetSettings.Text = "Reset settings";
-            this.ResetSettings.UseVisualStyleBackColor = true;
-            this.ResetSettings.Click += new System.EventHandler(this.ResetSettings_Click);
-            // 
-            // ApplySettings
-            // 
-            this.ApplySettings.Location = new System.Drawing.Point(576, 370);
-            this.ApplySettings.Name = "ApplySettings";
-            this.ApplySettings.Size = new System.Drawing.Size(93, 23);
-            this.ApplySettings.TabIndex = 32;
-            this.ApplySettings.Text = "Apply settings";
-            this.ApplySettings.UseVisualStyleBackColor = true;
-            this.ApplySettings.Click += new System.EventHandler(this.ApplySettings_Click);
             // 
             // GroupBox5
             // 
@@ -982,7 +942,7 @@
             // Label6
             // 
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label6.Location = new System.Drawing.Point(6, 131);
+            this.Label6.Location = new System.Drawing.Point(6, 133);
             this.Label6.Name = "Label6";
             this.Label6.Size = new System.Drawing.Size(580, 13);
             this.Label6.TabIndex = 24;
@@ -1012,7 +972,7 @@
             "11025",
             "8000",
             "4000"});
-            this.Frequency.Location = new System.Drawing.Point(588, 127);
+            this.Frequency.Location = new System.Drawing.Point(588, 128);
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 7;
@@ -1021,7 +981,7 @@
             // Label5
             // 
             this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label5.Location = new System.Drawing.Point(6, 107);
+            this.Label5.Location = new System.Drawing.Point(6, 108);
             this.Label5.Name = "Label5";
             this.Label5.Size = new System.Drawing.Size(579, 13);
             this.Label5.TabIndex = 22;
@@ -1133,7 +1093,7 @@
             "3",
             "2",
             "1"});
-            this.MaxCPU.Location = new System.Drawing.Point(588, 103);
+            this.MaxCPU.Location = new System.Drawing.Point(588, 104);
             this.MaxCPU.Name = "MaxCPU";
             this.MaxCPU.Size = new System.Drawing.Size(64, 21);
             this.MaxCPU.TabIndex = 6;
@@ -1213,9 +1173,9 @@
             this.VolIntView.Enabled = false;
             this.VolIntView.Location = new System.Drawing.Point(14, 27);
             this.VolIntView.Name = "VolIntView";
-            this.VolIntView.Size = new System.Drawing.Size(133, 13);
+            this.VolIntView.Size = new System.Drawing.Size(70, 13);
             this.VolIntView.TabIndex = 3;
-            this.VolIntView.Text = "Volume in 32-bit integer: X";
+            this.VolIntView.Text = "Real value: X";
             // 
             // VolSimView
             // 
@@ -1470,6 +1430,61 @@
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
             // 
+            // applySettingsToolStripMenuItem
+            // 
+            this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
+            this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(87, 27);
+            this.applySettingsToolStripMenuItem.Text = "Apply settings";
+            this.applySettingsToolStripMenuItem.Click += new System.EventHandler(this.applySettingsToolStripMenuItem_Click);
+            // 
+            // resetToDefaultToolStripMenuItem
+            // 
+            this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
+            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
+            this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
+            this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
+            // 
+            // settingsPresetsToolStripMenuItem
+            // 
+            this.settingsPresetsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lowLatencyPresetToolStripMenuItem,
+            this.blackMIDIsPresetToolStripMenuItem});
+            this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
+            this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
+            this.settingsPresetsToolStripMenuItem.Text = "Settings presets";
+            // 
+            // lowLatencyPresetToolStripMenuItem
+            // 
+            this.lowLatencyPresetToolStripMenuItem.Name = "lowLatencyPresetToolStripMenuItem";
+            this.lowLatencyPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.lowLatencyPresetToolStripMenuItem.Text = "Low Latency Preset";
+            this.lowLatencyPresetToolStripMenuItem.Click += new System.EventHandler(this.lowLatencyPresetToolStripMenuItem_Click);
+            // 
+            // blackMIDIsPresetToolStripMenuItem
+            // 
+            this.blackMIDIsPresetToolStripMenuItem.Name = "blackMIDIsPresetToolStripMenuItem";
+            this.blackMIDIsPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
+            this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.AutoSize = false;
+            this.menuStrip1.BackColor = System.Drawing.Color.Transparent;
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.menuStrip1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.applySettingsToolStripMenuItem,
+            this.resetToDefaultToolStripMenuItem,
+            this.settingsPresetsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 368);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.menuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.menuStrip1.Size = new System.Drawing.Size(677, 31);
+            this.menuStrip1.TabIndex = 40;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
             // KeppyDriverConfiguratorMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1519,6 +1534,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1582,10 +1599,7 @@
         internal System.Windows.Forms.CheckBox DisableSFX;
         internal System.Windows.Forms.CheckBox Preload;
         internal System.Windows.Forms.CheckBox NoteOffCheck;
-        private System.Windows.Forms.Button ApplySettings;
         private System.Windows.Forms.OpenFileDialog SoundfontImport;
-        private System.Windows.Forms.Button ResetSettings;
-        private System.Windows.Forms.Button BlackMIDIPres;
         private System.Windows.Forms.ToolStripMenuItem openDebugWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -1633,9 +1647,14 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
-        private System.Windows.Forms.Button LowLatPres;
         private System.Windows.Forms.ToolStripMenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
         private System.Windows.Forms.LinkLabel SPFSecondaryBut;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem applySettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetToDefaultToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsPresetsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lowLatencyPresetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem blackMIDIsPresetToolStripMenuItem;
     }
 }
 

@@ -770,7 +770,7 @@ void realtime_load_settings()
 void AudioRender(int bassoutput) {
 	if (bassoutput == -1) {
 		if (vmsemu == 0) {
-			BASS_ChannelUpdate(hStream, frames);
+			BASS_ChannelUpdate(hStream, 0);
 		}
 		else {
 		
