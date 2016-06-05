@@ -802,7 +802,7 @@ void DLLLoadError(LPCWSTR dll) {
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
-	MessageBox(NULL, errormessage, L"Keppy's Driver - DLL load error", MB_ICONERROR);
+	MessageBox(NULL, errormessage, L"Keppy's Driver - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
 }
 
 BOOL load_bassfuncs()
@@ -982,7 +982,7 @@ BOOL ProcessBlackList(){
 	PathAppend(vmidisynthpath, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	try {
 		if (PathFileExists(vmidisynthpath)) {
-			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nWhy this? Well, VirtualMIDISynth 1.x causes a DLL Hell while loading the BASS libraries, that's why you need to uninstall it before using my driver.\n\nYou can still use VirtualMIDISynth 2.x, since it doesn't load the DLLs directly into the MIDI application.", L"Keppy's Driver", MB_OK | MB_ICONERROR);
+			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nWhy this? Well, VirtualMIDISynth 1.x causes a DLL Hell while loading the BASS libraries, that's why you need to uninstall it before using my driver.\n\nYou can still use VirtualMIDISynth 2.x, since it doesn't load the DLLs directly into the MIDI application.", L"Keppy's Driver", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 			return 0x0;
 		}
 		else {
@@ -1002,7 +1002,7 @@ BOOL ProcessBlackList(){
 					}
 				}
 				else {
-					MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR);
+					MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 					exit(0);
 				}
 			}
@@ -1016,7 +1016,7 @@ BOOL ProcessBlackList(){
 						std::wstring modulenamelpcwstr(modulename);
 						std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
 						LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-						MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION);
+						MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 						return 0x0;
 					}
 				}
@@ -1076,7 +1076,7 @@ void ReloadSFList(DWORD whichsflist){
 		std::wstring s = ss.str();
 		ResetSynth();
 		Sleep(100);
-		const int result = MessageBox(NULL, s.c_str(), L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+		const int result = MessageBox(NULL, s.c_str(), L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
 		switch (result)
 		{
 		case IDYES:
@@ -1237,7 +1237,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				_bstr_t b(encpath);
 				const char* c = b;
-				const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
+				const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
 				switch (result)
 				{
 				case IDYES:
