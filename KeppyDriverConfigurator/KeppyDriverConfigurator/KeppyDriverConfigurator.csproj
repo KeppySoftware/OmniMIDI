@@ -84,6 +84,12 @@
     <Compile Include="KeppyDriverDebugWindow.Designer.cs">
       <DependentUpon>KeppyDriverDebugWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeppyDriverDefaultSFList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverDefaultSFList.Designer.cs">
+      <DependentUpon>KeppyDriverDefaultSFList.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeppyDriverInformation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverDebugWindow.resx">
       <DependentUpon>KeppyDriverDebugWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppyDriverDefaultSFList.resx">
+      <DependentUpon>KeppyDriverDefaultSFList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverInformation.resx">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>

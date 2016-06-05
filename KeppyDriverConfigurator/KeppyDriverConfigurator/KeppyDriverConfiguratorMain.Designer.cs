@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppyDriverConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List1 = new System.Windows.Forms.TabPage();
-            this.SFZComp1 = new System.Windows.Forms.PictureBox();
             this.List1Override = new System.Windows.Forms.Label();
             this.IELPan1 = new System.Windows.Forms.Panel();
             this.EL1 = new System.Windows.Forms.Button();
@@ -46,7 +45,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.EL2 = new System.Windows.Forms.Button();
             this.IEL2 = new System.Windows.Forms.Button();
-            this.SFZComp2 = new System.Windows.Forms.PictureBox();
             this.List2Override = new System.Windows.Forms.Label();
             this.CLi2 = new System.Windows.Forms.Button();
             this.MvD2 = new System.Windows.Forms.Button();
@@ -58,7 +56,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.EL3 = new System.Windows.Forms.Button();
             this.IEL3 = new System.Windows.Forms.Button();
-            this.SFZComp3 = new System.Windows.Forms.PictureBox();
             this.List3Override = new System.Windows.Forms.Label();
             this.CLi3 = new System.Windows.Forms.Button();
             this.MvD3 = new System.Windows.Forms.Button();
@@ -70,7 +67,6 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.EL4 = new System.Windows.Forms.Button();
             this.IEL4 = new System.Windows.Forms.Button();
-            this.SFZComp4 = new System.Windows.Forms.PictureBox();
             this.List4Override = new System.Windows.Forms.Label();
             this.CLi4 = new System.Windows.Forms.Button();
             this.MvD4 = new System.Windows.Forms.Button();
@@ -78,6 +74,50 @@
             this.RmvSF4 = new System.Windows.Forms.Button();
             this.AddSF4 = new System.Windows.Forms.Button();
             this.Lis4 = new System.Windows.Forms.ListBox();
+            this.List5 = new System.Windows.Forms.TabPage();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.EL5 = new System.Windows.Forms.Button();
+            this.IEL5 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.CLi5 = new System.Windows.Forms.Button();
+            this.MvD5 = new System.Windows.Forms.Button();
+            this.MvU5 = new System.Windows.Forms.Button();
+            this.RmvSF5 = new System.Windows.Forms.Button();
+            this.AddSF5 = new System.Windows.Forms.Button();
+            this.Lis5 = new System.Windows.Forms.ListBox();
+            this.List6 = new System.Windows.Forms.TabPage();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.EL6 = new System.Windows.Forms.Button();
+            this.IEL6 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.CLi6 = new System.Windows.Forms.Button();
+            this.MvD6 = new System.Windows.Forms.Button();
+            this.MvU6 = new System.Windows.Forms.Button();
+            this.RmvSF6 = new System.Windows.Forms.Button();
+            this.AddSF6 = new System.Windows.Forms.Button();
+            this.Lis6 = new System.Windows.Forms.ListBox();
+            this.List7 = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.EL7 = new System.Windows.Forms.Button();
+            this.IEL7 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.CLi7 = new System.Windows.Forms.Button();
+            this.MvD7 = new System.Windows.Forms.Button();
+            this.MvU7 = new System.Windows.Forms.Button();
+            this.RmvSF7 = new System.Windows.Forms.Button();
+            this.AddSF7 = new System.Windows.Forms.Button();
+            this.Lis7 = new System.Windows.Forms.ListBox();
+            this.List8 = new System.Windows.Forms.TabPage();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.EL8 = new System.Windows.Forms.Button();
+            this.IEL8 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.CLi8 = new System.Windows.Forms.Button();
+            this.MvD8 = new System.Windows.Forms.Button();
+            this.MvU8 = new System.Windows.Forms.Button();
+            this.RmvSF8 = new System.Windows.Forms.Button();
+            this.AddSF8 = new System.Windows.Forms.Button();
+            this.Lis8 = new System.Windows.Forms.ListBox();
             this.Settings = new System.Windows.Forms.TabPage();
             this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
             this.XAudioDisable = new System.Windows.Forms.CheckBox();
@@ -106,6 +146,12 @@
             this.VolSimView = new System.Windows.Forms.Label();
             this.VolStaticLab = new System.Windows.Forms.Label();
             this.VolTrackBar = new System.Windows.Forms.TrackBar();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.applySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,25 +181,25 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
-            this.applySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).BeginInit();
             this.IELPan1.SuspendLayout();
             this.List2.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp2)).BeginInit();
             this.List3.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp3)).BeginInit();
             this.List4.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).BeginInit();
+            this.List5.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.List6.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.List7.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.List8.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -163,8 +209,8 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
-            this.MainMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabsForTheControls
@@ -173,6 +219,10 @@
             this.TabsForTheControls.Controls.Add(this.List2);
             this.TabsForTheControls.Controls.Add(this.List3);
             this.TabsForTheControls.Controls.Add(this.List4);
+            this.TabsForTheControls.Controls.Add(this.List5);
+            this.TabsForTheControls.Controls.Add(this.List6);
+            this.TabsForTheControls.Controls.Add(this.List7);
+            this.TabsForTheControls.Controls.Add(this.List8);
             this.TabsForTheControls.Controls.Add(this.Settings);
             this.TabsForTheControls.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 24);
@@ -184,7 +234,6 @@
             // List1
             // 
             this.List1.BackColor = System.Drawing.Color.White;
-            this.List1.Controls.Add(this.SFZComp1);
             this.List1.Controls.Add(this.List1Override);
             this.List1.Controls.Add(this.IELPan1);
             this.List1.Controls.Add(this.CLi1);
@@ -198,19 +247,8 @@
             this.List1.Padding = new System.Windows.Forms.Padding(3);
             this.List1.Size = new System.Drawing.Size(677, 399);
             this.List1.TabIndex = 0;
-            this.List1.Text = "List I";
+            this.List1.Text = "List 1";
             this.List1.UseVisualStyleBackColor = true;
-            // 
-            // SFZComp1
-            // 
-            this.SFZComp1.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
-            this.SFZComp1.Location = new System.Drawing.Point(581, 209);
-            this.SFZComp1.Name = "SFZComp1";
-            this.SFZComp1.Size = new System.Drawing.Size(89, 96);
-            this.SFZComp1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.SFZComp1.TabIndex = 10;
-            this.SFZComp1.TabStop = false;
-            this.SFZComp1.Click += new System.EventHandler(this.SFZComp1_Click);
             // 
             // List1Override
             // 
@@ -321,7 +359,6 @@
             // 
             this.List2.BackColor = System.Drawing.Color.White;
             this.List2.Controls.Add(this.panel1);
-            this.List2.Controls.Add(this.SFZComp2);
             this.List2.Controls.Add(this.List2Override);
             this.List2.Controls.Add(this.CLi2);
             this.List2.Controls.Add(this.MvD2);
@@ -334,7 +371,7 @@
             this.List2.Padding = new System.Windows.Forms.Padding(3);
             this.List2.Size = new System.Drawing.Size(677, 399);
             this.List2.TabIndex = 1;
-            this.List2.Text = "List II";
+            this.List2.Text = "List 2";
             this.List2.UseVisualStyleBackColor = true;
             // 
             // panel1
@@ -368,17 +405,6 @@
             this.IEL2.Text = "Import list";
             this.IEL2.UseVisualStyleBackColor = true;
             this.IEL2.Click += new System.EventHandler(this.IEL2_Click);
-            // 
-            // SFZComp2
-            // 
-            this.SFZComp2.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
-            this.SFZComp2.Location = new System.Drawing.Point(581, 209);
-            this.SFZComp2.Name = "SFZComp2";
-            this.SFZComp2.Size = new System.Drawing.Size(89, 96);
-            this.SFZComp2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.SFZComp2.TabIndex = 17;
-            this.SFZComp2.TabStop = false;
-            this.SFZComp2.Click += new System.EventHandler(this.SFZComp2_Click);
             // 
             // List2Override
             // 
@@ -457,7 +483,6 @@
             // 
             this.List3.BackColor = System.Drawing.Color.White;
             this.List3.Controls.Add(this.panel2);
-            this.List3.Controls.Add(this.SFZComp3);
             this.List3.Controls.Add(this.List3Override);
             this.List3.Controls.Add(this.CLi3);
             this.List3.Controls.Add(this.MvD3);
@@ -469,7 +494,7 @@
             this.List3.Name = "List3";
             this.List3.Size = new System.Drawing.Size(677, 399);
             this.List3.TabIndex = 2;
-            this.List3.Text = "List III";
+            this.List3.Text = "List 3";
             this.List3.UseVisualStyleBackColor = true;
             // 
             // panel2
@@ -503,17 +528,6 @@
             this.IEL3.Text = "Import list";
             this.IEL3.UseVisualStyleBackColor = true;
             this.IEL3.Click += new System.EventHandler(this.IEL3_Click);
-            // 
-            // SFZComp3
-            // 
-            this.SFZComp3.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
-            this.SFZComp3.Location = new System.Drawing.Point(581, 209);
-            this.SFZComp3.Name = "SFZComp3";
-            this.SFZComp3.Size = new System.Drawing.Size(89, 96);
-            this.SFZComp3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.SFZComp3.TabIndex = 24;
-            this.SFZComp3.TabStop = false;
-            this.SFZComp3.Click += new System.EventHandler(this.SFZComp3_Click);
             // 
             // List3Override
             // 
@@ -592,7 +606,6 @@
             // 
             this.List4.BackColor = System.Drawing.Color.White;
             this.List4.Controls.Add(this.panel3);
-            this.List4.Controls.Add(this.SFZComp4);
             this.List4.Controls.Add(this.List4Override);
             this.List4.Controls.Add(this.CLi4);
             this.List4.Controls.Add(this.MvD4);
@@ -604,7 +617,7 @@
             this.List4.Name = "List4";
             this.List4.Size = new System.Drawing.Size(677, 399);
             this.List4.TabIndex = 3;
-            this.List4.Text = "List IV";
+            this.List4.Text = "List 4";
             this.List4.UseVisualStyleBackColor = true;
             // 
             // panel3
@@ -638,17 +651,6 @@
             this.IEL4.Text = "Import list";
             this.IEL4.UseVisualStyleBackColor = true;
             this.IEL4.Click += new System.EventHandler(this.IEL4_Click);
-            // 
-            // SFZComp4
-            // 
-            this.SFZComp4.Image = global::KeppyDriverConfigurator.Properties.Resources.sfzcomp;
-            this.SFZComp4.Location = new System.Drawing.Point(581, 209);
-            this.SFZComp4.Name = "SFZComp4";
-            this.SFZComp4.Size = new System.Drawing.Size(89, 96);
-            this.SFZComp4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.SFZComp4.TabIndex = 31;
-            this.SFZComp4.TabStop = false;
-            this.SFZComp4.Click += new System.EventHandler(this.SFZComp4_Click);
             // 
             // List4Override
             // 
@@ -722,6 +724,498 @@
             this.Lis4.TabIndex = 0;
             this.Lis4.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis4_DragDrop);
             this.Lis4.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis4_DragEnter);
+            // 
+            // List5
+            // 
+            this.List5.Controls.Add(this.panel4);
+            this.List5.Controls.Add(this.label1);
+            this.List5.Controls.Add(this.CLi5);
+            this.List5.Controls.Add(this.MvD5);
+            this.List5.Controls.Add(this.MvU5);
+            this.List5.Controls.Add(this.RmvSF5);
+            this.List5.Controls.Add(this.AddSF5);
+            this.List5.Controls.Add(this.Lis5);
+            this.List5.Location = new System.Drawing.Point(4, 22);
+            this.List5.Name = "List5";
+            this.List5.Padding = new System.Windows.Forms.Padding(3);
+            this.List5.Size = new System.Drawing.Size(677, 399);
+            this.List5.TabIndex = 5;
+            this.List5.Text = "List 5";
+            this.List5.UseVisualStyleBackColor = true;
+            // 
+            // panel4
+            // 
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel4.Controls.Add(this.EL5);
+            this.panel4.Controls.Add(this.IEL5);
+            this.panel4.Location = new System.Drawing.Point(581, 311);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(89, 63);
+            this.panel4.TabIndex = 41;
+            // 
+            // EL5
+            // 
+            this.EL5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL5.Location = new System.Drawing.Point(0, 29);
+            this.EL5.Name = "EL5";
+            this.EL5.Size = new System.Drawing.Size(85, 30);
+            this.EL5.TabIndex = 7;
+            this.EL5.Text = "Export list";
+            this.EL5.UseVisualStyleBackColor = true;
+            this.EL5.Click += new System.EventHandler(this.EL5_Click);
+            // 
+            // IEL5
+            // 
+            this.IEL5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL5.Location = new System.Drawing.Point(0, 0);
+            this.IEL5.Name = "IEL5";
+            this.IEL5.Size = new System.Drawing.Size(85, 30);
+            this.IEL5.TabIndex = 6;
+            this.IEL5.Text = "Import list";
+            this.IEL5.UseVisualStyleBackColor = true;
+            this.IEL5.Click += new System.EventHandler(this.IEL5_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Enabled = false;
+            this.label1.Location = new System.Drawing.Point(8, 381);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(250, 13);
+            this.label1.TabIndex = 39;
+            this.label1.Text = "The last soundfont will override the previous ones.";
+            // 
+            // CLi5
+            // 
+            this.CLi5.Location = new System.Drawing.Point(581, 180);
+            this.CLi5.Name = "CLi5";
+            this.CLi5.Size = new System.Drawing.Size(89, 23);
+            this.CLi5.TabIndex = 38;
+            this.CLi5.Text = "Clear list";
+            this.CLi5.UseVisualStyleBackColor = true;
+            this.CLi5.Click += new System.EventHandler(this.CLi5_Click);
+            // 
+            // MvD5
+            // 
+            this.MvD5.Location = new System.Drawing.Point(581, 122);
+            this.MvD5.Name = "MvD5";
+            this.MvD5.Size = new System.Drawing.Size(89, 23);
+            this.MvD5.TabIndex = 37;
+            this.MvD5.Text = "Move Dwn ▼";
+            this.MvD5.UseVisualStyleBackColor = true;
+            this.MvD5.Click += new System.EventHandler(this.MvD5_Click);
+            // 
+            // MvU5
+            // 
+            this.MvU5.Location = new System.Drawing.Point(581, 93);
+            this.MvU5.Name = "MvU5";
+            this.MvU5.Size = new System.Drawing.Size(89, 23);
+            this.MvU5.TabIndex = 36;
+            this.MvU5.Text = "Move Up ▲";
+            this.MvU5.UseVisualStyleBackColor = true;
+            this.MvU5.Click += new System.EventHandler(this.MvU5_Click);
+            // 
+            // RmvSF5
+            // 
+            this.RmvSF5.Location = new System.Drawing.Point(581, 35);
+            this.RmvSF5.Name = "RmvSF5";
+            this.RmvSF5.Size = new System.Drawing.Size(89, 23);
+            this.RmvSF5.TabIndex = 35;
+            this.RmvSF5.Text = "Remove -";
+            this.RmvSF5.UseVisualStyleBackColor = true;
+            this.RmvSF5.Click += new System.EventHandler(this.RmvSF5_Click);
+            // 
+            // AddSF5
+            // 
+            this.AddSF5.Location = new System.Drawing.Point(581, 6);
+            this.AddSF5.Name = "AddSF5";
+            this.AddSF5.Size = new System.Drawing.Size(89, 23);
+            this.AddSF5.TabIndex = 34;
+            this.AddSF5.Text = "Add +";
+            this.AddSF5.UseVisualStyleBackColor = true;
+            this.AddSF5.Click += new System.EventHandler(this.AddSF5_Click);
+            // 
+            // Lis5
+            // 
+            this.Lis5.AllowDrop = true;
+            this.Lis5.FormattingEnabled = true;
+            this.Lis5.HorizontalScrollbar = true;
+            this.Lis5.Location = new System.Drawing.Point(6, 6);
+            this.Lis5.Name = "Lis5";
+            this.Lis5.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.Lis5.Size = new System.Drawing.Size(568, 368);
+            this.Lis5.TabIndex = 33;
+            this.Lis5.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis5_DragDrop);
+            this.Lis5.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis5_DragEnter);
+            // 
+            // List6
+            // 
+            this.List6.Controls.Add(this.panel5);
+            this.List6.Controls.Add(this.label2);
+            this.List6.Controls.Add(this.CLi6);
+            this.List6.Controls.Add(this.MvD6);
+            this.List6.Controls.Add(this.MvU6);
+            this.List6.Controls.Add(this.RmvSF6);
+            this.List6.Controls.Add(this.AddSF6);
+            this.List6.Controls.Add(this.Lis6);
+            this.List6.Location = new System.Drawing.Point(4, 22);
+            this.List6.Name = "List6";
+            this.List6.Padding = new System.Windows.Forms.Padding(3);
+            this.List6.Size = new System.Drawing.Size(677, 399);
+            this.List6.TabIndex = 6;
+            this.List6.Text = "List 6";
+            this.List6.UseVisualStyleBackColor = true;
+            // 
+            // panel5
+            // 
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.EL6);
+            this.panel5.Controls.Add(this.IEL6);
+            this.panel5.Location = new System.Drawing.Point(581, 311);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(89, 63);
+            this.panel5.TabIndex = 41;
+            // 
+            // EL6
+            // 
+            this.EL6.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL6.Location = new System.Drawing.Point(0, 29);
+            this.EL6.Name = "EL6";
+            this.EL6.Size = new System.Drawing.Size(85, 30);
+            this.EL6.TabIndex = 7;
+            this.EL6.Text = "Export list";
+            this.EL6.UseVisualStyleBackColor = true;
+            this.EL6.Click += new System.EventHandler(this.EL6_Click);
+            // 
+            // IEL6
+            // 
+            this.IEL6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL6.Location = new System.Drawing.Point(0, 0);
+            this.IEL6.Name = "IEL6";
+            this.IEL6.Size = new System.Drawing.Size(85, 30);
+            this.IEL6.TabIndex = 6;
+            this.IEL6.Text = "Import list";
+            this.IEL6.UseVisualStyleBackColor = true;
+            this.IEL6.Click += new System.EventHandler(this.IEL6_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Enabled = false;
+            this.label2.Location = new System.Drawing.Point(8, 381);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(250, 13);
+            this.label2.TabIndex = 39;
+            this.label2.Text = "The last soundfont will override the previous ones.";
+            // 
+            // CLi6
+            // 
+            this.CLi6.Location = new System.Drawing.Point(581, 180);
+            this.CLi6.Name = "CLi6";
+            this.CLi6.Size = new System.Drawing.Size(89, 23);
+            this.CLi6.TabIndex = 38;
+            this.CLi6.Text = "Clear list";
+            this.CLi6.UseVisualStyleBackColor = true;
+            this.CLi6.Click += new System.EventHandler(this.CLi6_Click);
+            // 
+            // MvD6
+            // 
+            this.MvD6.Location = new System.Drawing.Point(581, 122);
+            this.MvD6.Name = "MvD6";
+            this.MvD6.Size = new System.Drawing.Size(89, 23);
+            this.MvD6.TabIndex = 37;
+            this.MvD6.Text = "Move Dwn ▼";
+            this.MvD6.UseVisualStyleBackColor = true;
+            this.MvD6.Click += new System.EventHandler(this.MvD6_Click);
+            // 
+            // MvU6
+            // 
+            this.MvU6.Location = new System.Drawing.Point(581, 93);
+            this.MvU6.Name = "MvU6";
+            this.MvU6.Size = new System.Drawing.Size(89, 23);
+            this.MvU6.TabIndex = 36;
+            this.MvU6.Text = "Move Up ▲";
+            this.MvU6.UseVisualStyleBackColor = true;
+            this.MvU6.Click += new System.EventHandler(this.MvU6_Click);
+            // 
+            // RmvSF6
+            // 
+            this.RmvSF6.Location = new System.Drawing.Point(581, 35);
+            this.RmvSF6.Name = "RmvSF6";
+            this.RmvSF6.Size = new System.Drawing.Size(89, 23);
+            this.RmvSF6.TabIndex = 35;
+            this.RmvSF6.Text = "Remove -";
+            this.RmvSF6.UseVisualStyleBackColor = true;
+            this.RmvSF6.Click += new System.EventHandler(this.RmvSF6_Click);
+            // 
+            // AddSF6
+            // 
+            this.AddSF6.Location = new System.Drawing.Point(581, 6);
+            this.AddSF6.Name = "AddSF6";
+            this.AddSF6.Size = new System.Drawing.Size(89, 23);
+            this.AddSF6.TabIndex = 34;
+            this.AddSF6.Text = "Add +";
+            this.AddSF6.UseVisualStyleBackColor = true;
+            this.AddSF6.Click += new System.EventHandler(this.AddSF6_Click);
+            // 
+            // Lis6
+            // 
+            this.Lis6.AllowDrop = true;
+            this.Lis6.FormattingEnabled = true;
+            this.Lis6.HorizontalScrollbar = true;
+            this.Lis6.Location = new System.Drawing.Point(6, 6);
+            this.Lis6.Name = "Lis6";
+            this.Lis6.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.Lis6.Size = new System.Drawing.Size(568, 368);
+            this.Lis6.TabIndex = 33;
+            this.Lis6.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis6_DragDrop);
+            this.Lis6.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis6_DragEnter);
+            // 
+            // List7
+            // 
+            this.List7.Controls.Add(this.panel6);
+            this.List7.Controls.Add(this.label7);
+            this.List7.Controls.Add(this.CLi7);
+            this.List7.Controls.Add(this.MvD7);
+            this.List7.Controls.Add(this.MvU7);
+            this.List7.Controls.Add(this.RmvSF7);
+            this.List7.Controls.Add(this.AddSF7);
+            this.List7.Controls.Add(this.Lis7);
+            this.List7.Location = new System.Drawing.Point(4, 22);
+            this.List7.Name = "List7";
+            this.List7.Padding = new System.Windows.Forms.Padding(3);
+            this.List7.Size = new System.Drawing.Size(677, 399);
+            this.List7.TabIndex = 7;
+            this.List7.Text = "List 7";
+            this.List7.UseVisualStyleBackColor = true;
+            // 
+            // panel6
+            // 
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel6.Controls.Add(this.EL7);
+            this.panel6.Controls.Add(this.IEL7);
+            this.panel6.Location = new System.Drawing.Point(581, 311);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(89, 63);
+            this.panel6.TabIndex = 41;
+            // 
+            // EL7
+            // 
+            this.EL7.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL7.Location = new System.Drawing.Point(0, 29);
+            this.EL7.Name = "EL7";
+            this.EL7.Size = new System.Drawing.Size(85, 30);
+            this.EL7.TabIndex = 7;
+            this.EL7.Text = "Export list";
+            this.EL7.UseVisualStyleBackColor = true;
+            this.EL7.Click += new System.EventHandler(this.EL7_Click);
+            // 
+            // IEL7
+            // 
+            this.IEL7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL7.Location = new System.Drawing.Point(0, 0);
+            this.IEL7.Name = "IEL7";
+            this.IEL7.Size = new System.Drawing.Size(85, 30);
+            this.IEL7.TabIndex = 6;
+            this.IEL7.Text = "Import list";
+            this.IEL7.UseVisualStyleBackColor = true;
+            this.IEL7.Click += new System.EventHandler(this.IEL7_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Enabled = false;
+            this.label7.Location = new System.Drawing.Point(8, 381);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(250, 13);
+            this.label7.TabIndex = 39;
+            this.label7.Text = "The last soundfont will override the previous ones.";
+            // 
+            // CLi7
+            // 
+            this.CLi7.Location = new System.Drawing.Point(581, 180);
+            this.CLi7.Name = "CLi7";
+            this.CLi7.Size = new System.Drawing.Size(89, 23);
+            this.CLi7.TabIndex = 38;
+            this.CLi7.Text = "Clear list";
+            this.CLi7.UseVisualStyleBackColor = true;
+            this.CLi7.Click += new System.EventHandler(this.CLi7_Click);
+            // 
+            // MvD7
+            // 
+            this.MvD7.Location = new System.Drawing.Point(581, 122);
+            this.MvD7.Name = "MvD7";
+            this.MvD7.Size = new System.Drawing.Size(89, 23);
+            this.MvD7.TabIndex = 37;
+            this.MvD7.Text = "Move Dwn ▼";
+            this.MvD7.UseVisualStyleBackColor = true;
+            this.MvD7.Click += new System.EventHandler(this.MvD7_Click);
+            // 
+            // MvU7
+            // 
+            this.MvU7.Location = new System.Drawing.Point(581, 93);
+            this.MvU7.Name = "MvU7";
+            this.MvU7.Size = new System.Drawing.Size(89, 23);
+            this.MvU7.TabIndex = 36;
+            this.MvU7.Text = "Move Up ▲";
+            this.MvU7.UseVisualStyleBackColor = true;
+            this.MvU7.Click += new System.EventHandler(this.MvU7_Click);
+            // 
+            // RmvSF7
+            // 
+            this.RmvSF7.Location = new System.Drawing.Point(581, 35);
+            this.RmvSF7.Name = "RmvSF7";
+            this.RmvSF7.Size = new System.Drawing.Size(89, 23);
+            this.RmvSF7.TabIndex = 35;
+            this.RmvSF7.Text = "Remove -";
+            this.RmvSF7.UseVisualStyleBackColor = true;
+            this.RmvSF7.Click += new System.EventHandler(this.RmvSF7_Click);
+            // 
+            // AddSF7
+            // 
+            this.AddSF7.Location = new System.Drawing.Point(581, 6);
+            this.AddSF7.Name = "AddSF7";
+            this.AddSF7.Size = new System.Drawing.Size(89, 23);
+            this.AddSF7.TabIndex = 34;
+            this.AddSF7.Text = "Add +";
+            this.AddSF7.UseVisualStyleBackColor = true;
+            this.AddSF7.Click += new System.EventHandler(this.AddSF7_Click);
+            // 
+            // Lis7
+            // 
+            this.Lis7.AllowDrop = true;
+            this.Lis7.FormattingEnabled = true;
+            this.Lis7.HorizontalScrollbar = true;
+            this.Lis7.Location = new System.Drawing.Point(6, 6);
+            this.Lis7.Name = "Lis7";
+            this.Lis7.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.Lis7.Size = new System.Drawing.Size(568, 368);
+            this.Lis7.TabIndex = 33;
+            this.Lis7.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis7_DragDrop);
+            this.Lis7.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis7_DragEnter);
+            // 
+            // List8
+            // 
+            this.List8.Controls.Add(this.panel7);
+            this.List8.Controls.Add(this.label8);
+            this.List8.Controls.Add(this.CLi8);
+            this.List8.Controls.Add(this.MvD8);
+            this.List8.Controls.Add(this.MvU8);
+            this.List8.Controls.Add(this.RmvSF8);
+            this.List8.Controls.Add(this.AddSF8);
+            this.List8.Controls.Add(this.Lis8);
+            this.List8.Location = new System.Drawing.Point(4, 22);
+            this.List8.Name = "List8";
+            this.List8.Padding = new System.Windows.Forms.Padding(3);
+            this.List8.Size = new System.Drawing.Size(677, 399);
+            this.List8.TabIndex = 8;
+            this.List8.Text = "List 8";
+            this.List8.UseVisualStyleBackColor = true;
+            // 
+            // panel7
+            // 
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel7.Controls.Add(this.EL8);
+            this.panel7.Controls.Add(this.IEL8);
+            this.panel7.Location = new System.Drawing.Point(581, 311);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(89, 63);
+            this.panel7.TabIndex = 41;
+            // 
+            // EL8
+            // 
+            this.EL8.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL8.Location = new System.Drawing.Point(0, 29);
+            this.EL8.Name = "EL8";
+            this.EL8.Size = new System.Drawing.Size(85, 30);
+            this.EL8.TabIndex = 7;
+            this.EL8.Text = "Export list";
+            this.EL8.UseVisualStyleBackColor = true;
+            this.EL8.Click += new System.EventHandler(this.EL8_Click);
+            // 
+            // IEL8
+            // 
+            this.IEL8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL8.Location = new System.Drawing.Point(0, 0);
+            this.IEL8.Name = "IEL8";
+            this.IEL8.Size = new System.Drawing.Size(85, 30);
+            this.IEL8.TabIndex = 6;
+            this.IEL8.Text = "Import list";
+            this.IEL8.UseVisualStyleBackColor = true;
+            this.IEL8.Click += new System.EventHandler(this.IEL8_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Enabled = false;
+            this.label8.Location = new System.Drawing.Point(8, 381);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(250, 13);
+            this.label8.TabIndex = 39;
+            this.label8.Text = "The last soundfont will override the previous ones.";
+            // 
+            // CLi8
+            // 
+            this.CLi8.Location = new System.Drawing.Point(581, 180);
+            this.CLi8.Name = "CLi8";
+            this.CLi8.Size = new System.Drawing.Size(89, 23);
+            this.CLi8.TabIndex = 38;
+            this.CLi8.Text = "Clear list";
+            this.CLi8.UseVisualStyleBackColor = true;
+            this.CLi8.Click += new System.EventHandler(this.CLi8_Click);
+            // 
+            // MvD8
+            // 
+            this.MvD8.Location = new System.Drawing.Point(581, 122);
+            this.MvD8.Name = "MvD8";
+            this.MvD8.Size = new System.Drawing.Size(89, 23);
+            this.MvD8.TabIndex = 37;
+            this.MvD8.Text = "Move Dwn ▼";
+            this.MvD8.UseVisualStyleBackColor = true;
+            this.MvD8.Click += new System.EventHandler(this.MvD8_Click);
+            // 
+            // MvU8
+            // 
+            this.MvU8.Location = new System.Drawing.Point(581, 93);
+            this.MvU8.Name = "MvU8";
+            this.MvU8.Size = new System.Drawing.Size(89, 23);
+            this.MvU8.TabIndex = 36;
+            this.MvU8.Text = "Move Up ▲";
+            this.MvU8.UseVisualStyleBackColor = true;
+            this.MvU8.Click += new System.EventHandler(this.MvU8_Click);
+            // 
+            // RmvSF8
+            // 
+            this.RmvSF8.Location = new System.Drawing.Point(581, 35);
+            this.RmvSF8.Name = "RmvSF8";
+            this.RmvSF8.Size = new System.Drawing.Size(89, 23);
+            this.RmvSF8.TabIndex = 35;
+            this.RmvSF8.Text = "Remove -";
+            this.RmvSF8.UseVisualStyleBackColor = true;
+            this.RmvSF8.Click += new System.EventHandler(this.RmvSF8_Click);
+            // 
+            // AddSF8
+            // 
+            this.AddSF8.Location = new System.Drawing.Point(581, 6);
+            this.AddSF8.Name = "AddSF8";
+            this.AddSF8.Size = new System.Drawing.Size(89, 23);
+            this.AddSF8.TabIndex = 34;
+            this.AddSF8.Text = "Add +";
+            this.AddSF8.UseVisualStyleBackColor = true;
+            this.AddSF8.Click += new System.EventHandler(this.AddSF8_Click);
+            // 
+            // Lis8
+            // 
+            this.Lis8.AllowDrop = true;
+            this.Lis8.FormattingEnabled = true;
+            this.Lis8.HorizontalScrollbar = true;
+            this.Lis8.Location = new System.Drawing.Point(6, 6);
+            this.Lis8.Name = "Lis8";
+            this.Lis8.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.Lis8.Size = new System.Drawing.Size(568, 368);
+            this.Lis8.TabIndex = 33;
+            this.Lis8.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis8_DragDrop);
+            this.Lis8.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis8_DragEnter);
             // 
             // Settings
             // 
@@ -1211,6 +1705,62 @@
             this.VolTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.VolTrackBar.Scroll += new System.EventHandler(this.VolTrackBar_Scroll);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.AutoSize = false;
+            this.menuStrip1.BackColor = System.Drawing.Color.Transparent;
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.menuStrip1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.applySettingsToolStripMenuItem,
+            this.resetToDefaultToolStripMenuItem,
+            this.settingsPresetsToolStripMenuItem,
+            this.changeDefaultSoundfontListToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 368);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.menuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.menuStrip1.Size = new System.Drawing.Size(677, 31);
+            this.menuStrip1.TabIndex = 40;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // applySettingsToolStripMenuItem
+            // 
+            this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
+            this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(87, 27);
+            this.applySettingsToolStripMenuItem.Text = "Apply settings";
+            this.applySettingsToolStripMenuItem.Click += new System.EventHandler(this.applySettingsToolStripMenuItem_Click);
+            // 
+            // resetToDefaultToolStripMenuItem
+            // 
+            this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
+            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
+            this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
+            this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
+            // 
+            // settingsPresetsToolStripMenuItem
+            // 
+            this.settingsPresetsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lowLatencyPresetToolStripMenuItem,
+            this.blackMIDIsPresetToolStripMenuItem});
+            this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
+            this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
+            this.settingsPresetsToolStripMenuItem.Text = "Settings presets";
+            // 
+            // lowLatencyPresetToolStripMenuItem
+            // 
+            this.lowLatencyPresetToolStripMenuItem.Name = "lowLatencyPresetToolStripMenuItem";
+            this.lowLatencyPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.lowLatencyPresetToolStripMenuItem.Text = "Low Latency Preset";
+            this.lowLatencyPresetToolStripMenuItem.Click += new System.EventHandler(this.lowLatencyPresetToolStripMenuItem_Click);
+            // 
+            // blackMIDIsPresetToolStripMenuItem
+            // 
+            this.blackMIDIsPresetToolStripMenuItem.Name = "blackMIDIsPresetToolStripMenuItem";
+            this.blackMIDIsPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
+            this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
+            // 
             // MainMenu
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1295,7 +1845,8 @@
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem});
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
+            this.changeDefaultSoundfontListToolStripMenuItem1});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
@@ -1430,60 +1981,19 @@
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
             // 
-            // applySettingsToolStripMenuItem
+            // changeDefaultSoundfontListToolStripMenuItem
             // 
-            this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
-            this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(87, 27);
-            this.applySettingsToolStripMenuItem.Text = "Apply settings";
-            this.applySettingsToolStripMenuItem.Click += new System.EventHandler(this.applySettingsToolStripMenuItem_Click);
+            this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
+            this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(161, 27);
+            this.changeDefaultSoundfontListToolStripMenuItem.Text = "Change default soundfont list";
+            this.changeDefaultSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
-            // resetToDefaultToolStripMenuItem
+            // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
-            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
-            this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
-            this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
-            // 
-            // settingsPresetsToolStripMenuItem
-            // 
-            this.settingsPresetsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lowLatencyPresetToolStripMenuItem,
-            this.blackMIDIsPresetToolStripMenuItem});
-            this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
-            this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
-            this.settingsPresetsToolStripMenuItem.Text = "Settings presets";
-            // 
-            // lowLatencyPresetToolStripMenuItem
-            // 
-            this.lowLatencyPresetToolStripMenuItem.Name = "lowLatencyPresetToolStripMenuItem";
-            this.lowLatencyPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.lowLatencyPresetToolStripMenuItem.Text = "Low Latency Preset";
-            this.lowLatencyPresetToolStripMenuItem.Click += new System.EventHandler(this.lowLatencyPresetToolStripMenuItem_Click);
-            // 
-            // blackMIDIsPresetToolStripMenuItem
-            // 
-            this.blackMIDIsPresetToolStripMenuItem.Name = "blackMIDIsPresetToolStripMenuItem";
-            this.blackMIDIsPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
-            this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.AutoSize = false;
-            this.menuStrip1.BackColor = System.Drawing.Color.Transparent;
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.menuStrip1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.applySettingsToolStripMenuItem,
-            this.resetToDefaultToolStripMenuItem,
-            this.settingsPresetsToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 368);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.menuStrip1.Size = new System.Drawing.Size(677, 31);
-            this.menuStrip1.TabIndex = 40;
-            this.menuStrip1.Text = "menuStrip1";
+            this.changeDefaultSoundfontListToolStripMenuItem1.Name = "changeDefaultSoundfontListToolStripMenuItem1";
+            this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(327, 22);
+            this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
+            this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1506,20 +2016,28 @@
             this.TabsForTheControls.ResumeLayout(false);
             this.List1.ResumeLayout(false);
             this.List1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp1)).EndInit();
             this.IELPan1.ResumeLayout(false);
             this.List2.ResumeLayout(false);
             this.List2.PerformLayout();
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp2)).EndInit();
             this.List3.ResumeLayout(false);
             this.List3.PerformLayout();
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp3)).EndInit();
             this.List4.ResumeLayout(false);
             this.List4.PerformLayout();
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.SFZComp4)).EndInit();
+            this.List5.ResumeLayout(false);
+            this.List5.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.List6.ResumeLayout(false);
+            this.List6.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.List7.ResumeLayout(false);
+            this.List7.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.List8.ResumeLayout(false);
+            this.List8.PerformLayout();
+            this.panel7.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
@@ -1532,10 +2050,10 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
-            this.MainMenu.ResumeLayout(false);
-            this.MainMenu.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.MainMenu.ResumeLayout(false);
+            this.MainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1617,10 +2135,6 @@
         private System.Windows.Forms.Label List4Override;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
-        private System.Windows.Forms.PictureBox SFZComp1;
-        private System.Windows.Forms.PictureBox SFZComp2;
-        private System.Windows.Forms.PictureBox SFZComp3;
-        private System.Windows.Forms.PictureBox SFZComp4;
         private System.Windows.Forms.CheckBox OutputWAV;
         private System.Windows.Forms.PictureBox WhatIsOutput;
         private System.Windows.Forms.CheckBox XAudioDisable;
@@ -1655,6 +2169,52 @@
         private System.Windows.Forms.ToolStripMenuItem settingsPresetsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lowLatencyPresetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blackMIDIsPresetToolStripMenuItem;
+        private System.Windows.Forms.TabPage List5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button EL5;
+        private System.Windows.Forms.Button IEL5;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button CLi5;
+        private System.Windows.Forms.Button MvD5;
+        private System.Windows.Forms.Button MvU5;
+        private System.Windows.Forms.Button RmvSF5;
+        private System.Windows.Forms.Button AddSF5;
+        private System.Windows.Forms.ListBox Lis5;
+        private System.Windows.Forms.TabPage List6;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button EL6;
+        private System.Windows.Forms.Button IEL6;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button CLi6;
+        private System.Windows.Forms.Button MvD6;
+        private System.Windows.Forms.Button MvU6;
+        private System.Windows.Forms.Button RmvSF6;
+        private System.Windows.Forms.Button AddSF6;
+        private System.Windows.Forms.ListBox Lis6;
+        private System.Windows.Forms.TabPage List7;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Button EL7;
+        private System.Windows.Forms.Button IEL7;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button CLi7;
+        private System.Windows.Forms.Button MvD7;
+        private System.Windows.Forms.Button MvU7;
+        private System.Windows.Forms.Button RmvSF7;
+        private System.Windows.Forms.Button AddSF7;
+        private System.Windows.Forms.ListBox Lis7;
+        private System.Windows.Forms.TabPage List8;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Button EL8;
+        private System.Windows.Forms.Button IEL8;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button CLi8;
+        private System.Windows.Forms.Button MvD8;
+        private System.Windows.Forms.Button MvU8;
+        private System.Windows.Forms.Button RmvSF8;
+        private System.Windows.Forms.Button AddSF8;
+        private System.Windows.Forms.ListBox Lis8;
+        private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem1;
     }
 }
 

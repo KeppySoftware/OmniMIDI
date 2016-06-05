@@ -84,8 +84,8 @@ static HANDLE hCalcThread = NULL;
 static DWORD processPriority;
 static HANDLE load_sfevent = NULL;
 
-static unsigned int font_count[4] = { 0, 0, 0, 0 };
-static HSOUNDFONT * hFonts[4] = { NULL, NULL, NULL, NULL };
+static unsigned int font_count[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+static HSOUNDFONT * hFonts[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 static HSTREAM hStream = 0;
 
 static BOOL com_initialized = FALSE;
@@ -106,6 +106,7 @@ static int chorus = 0; //Chorus FX
 static int encmode = 0; //Reverb FX
 static int transpose = 0; //Transpose FX
 static int frequency = 0; //Audio frequency
+static int defaultsflist = 1; //Default soundfont list
 static int sinc = 0; //Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
@@ -178,8 +179,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 	return TRUE;
 }
 
-std::vector<HSOUNDFONT> _soundFonts[4];
-std::vector<BASS_MIDI_FONTEX> presetList[4];
+std::vector<HSOUNDFONT> _soundFonts[8];
+std::vector<BASS_MIDI_FONTEX> presetList[8];
 
 static void FreeFonts(UINT uDeviceID)
 {
@@ -692,6 +693,7 @@ void load_settings()
 	RegQueryValueEx(hKey, L"debug", NULL, &dwType, (LPBYTE)&debug, &dwSize);
 	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
 	RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
+	RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
 	RegCloseKey(hKey);
 
 	sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
@@ -706,7 +708,6 @@ void realtime_load_settings()
 	long lResult;
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
-	BASS_INFO info;
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"realtimeset", NULL, &dwType, (LPBYTE)&realtimeset, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
@@ -720,7 +721,6 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegCloseKey(hKey);
-	BASS_GetInfo(&info);
 	//cake
 	if (xaudiodisabled == 1) {
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
@@ -1048,6 +1048,18 @@ void LoadSoundfont(DWORD whichsf){
 		else if (whichsf == 4) {
 			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidid.sflist"));
 		}
+		else if (whichsf == 5) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidie.sflist"));
+		}
+		else if (whichsf == 6) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidif.sflist"));
+		}
+		else if (whichsf == 7) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidig.sflist"));
+		}
+		else if (whichsf == 8) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
+		}
 	}
 	LoadFonts(0, config);
 	BASS_MIDI_StreamLoadSamples(hStream);
@@ -1062,11 +1074,12 @@ void ReloadSFList(DWORD whichsflist){
 		std::wstringstream ss;
 		ss << "Do you want to (re)load list n°" << whichsflist << "?";
 		std::wstring s = ss.str();
+		ResetSynth();
+		Sleep(100);
 		const int result = MessageBox(NULL, s.c_str(), L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO);
 		switch (result)
 		{
 		case IDYES:
-			ResetSynth();
 			LoadSoundfont(whichsflist);
 			break;
 		case IDNO:
@@ -1097,6 +1110,22 @@ void keybindings()
 		return;
 	}
 	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+		ReloadSFList(5);
+		return;
+	}
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+		ReloadSFList(6);
+		return;
+	}
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+		ReloadSFList(7);
+		return;
+	}
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+		ReloadSFList(8);
+		return;
+	}
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
 		TCHAR configuratorapp[MAX_PATH];
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 		{
@@ -1105,7 +1134,7 @@ void keybindings()
 			return;
 		}
 	}
-	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+	else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x30) & 0x8000) {
 		TCHAR configuratorapp[MAX_PATH];
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 		{
@@ -1162,7 +1191,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			if (bassoutputfinal == -1) {
 				BASS_GetInfo(&info);
 				if (vmsemu == 1) {
-					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 10);
+					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 5);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 4);
 					BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 				}
@@ -1230,7 +1259,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-			LoadSoundfont(1);
+			LoadSoundfont(defaultsflist);
 			SetEvent(load_sfevent);
 			opend = 1;
 			reset_synth = 0;

@@ -17,6 +17,10 @@ namespace KeppyDriverConfigurator
         public string List2Path { get; set; }
         public string List3Path { get; set; }
         public string List4Path { get; set; }
+        public string List5Path { get; set; }
+        public string List6Path { get; set; }
+        public string List7Path { get; set; }
+        public string List8Path { get; set; }
 
         public KeppyDriverConfiguratorMain(String[] args)
         {
@@ -25,7 +29,7 @@ namespace KeppyDriverConfigurator
             {
                 if (s == "-advancedtab")
                 {
-                    TabsForTheControls.SelectedIndex = 4;
+                    TabsForTheControls.SelectedIndex = 8;
                 }
             }
         }
@@ -49,7 +53,7 @@ namespace KeppyDriverConfigurator
             {
                 MessageBox.Show("There was an error while trying to save the soundfont list!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 selectedlist.Items.Clear();
-                using (StreamReader r = new StreamReader(List1Path))
+                using (StreamReader r = new StreamReader(selectedlistpath))
                 {
                     string line;
                     while ((line = r.ReadLine()) != null)
@@ -412,6 +416,10 @@ namespace KeppyDriverConfigurator
             List2Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidib.sflist";
             List3Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidic.sflist";
             List4Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidid.sflist";
+            List5Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidie.sflist";
+            List6Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidif.sflist";
+            List7Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidig.sflist";
+            List8Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidih.sflist";
 
             // ======= Read soundfont lists
             try
@@ -423,6 +431,10 @@ namespace KeppyDriverConfigurator
                     File.Create(List2Path).Dispose();
                     File.Create(List3Path).Dispose();
                     File.Create(List4Path).Dispose();
+                    File.Create(List5Path).Dispose();
+                    File.Create(List6Path).Dispose();
+                    File.Create(List7Path).Dispose();
+                    File.Create(List8Path).Dispose();
                 }
                 else
                 {
@@ -464,6 +476,42 @@ namespace KeppyDriverConfigurator
                             Lis4.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
                         }
                     }
+                    // == List 5
+                    using (StreamReader r = new StreamReader(List5Path))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis5.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                        }
+                    }
+                    // == List 6
+                    using (StreamReader r = new StreamReader(List6Path))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis6.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                        }
+                    }
+                    // == List 7
+                    using (StreamReader r = new StreamReader(List7Path))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis7.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                        }
+                    }
+                    // == List 8
+                    using (StreamReader r = new StreamReader(List8Path))
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis8.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                        }
+                    }
                     }
                     catch
                     {
@@ -483,6 +531,22 @@ namespace KeppyDriverConfigurator
                         if (File.Exists(List4Path) == false)
                         {
                             File.Create(List4Path).Dispose();
+                        }
+                        if (File.Exists(List5Path) == false)
+                        {
+                            File.Create(List5Path).Dispose();
+                        }
+                        if (File.Exists(List6Path) == false)
+                        {
+                            File.Create(List6Path).Dispose();
+                        }
+                        if (File.Exists(List7Path) == false)
+                        {
+                            File.Create(List7Path).Dispose();
+                        }
+                        if (File.Exists(List8Path) == false)
+                        {
+                            File.Create(List8Path).Dispose();
                         }
                         MessageBox.Show("One of the soundfont lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -650,6 +714,26 @@ namespace KeppyDriverConfigurator
             AddSoundfont(List4Path, Lis4);
         }
 
+        private void AddSF5_Click(object sender, EventArgs e)
+        {
+            AddSoundfont(List5Path, Lis5);
+        }
+
+        private void AddSF6_Click(object sender, EventArgs e)
+        {
+            AddSoundfont(List6Path, Lis6);
+        }
+
+        private void AddSF7_Click(object sender, EventArgs e)
+        {
+            AddSoundfont(List7Path, Lis7);
+        }
+
+        private void AddSF8_Click(object sender, EventArgs e)
+        {
+            AddSoundfont(List8Path, Lis8);
+        }
+
         private void RmvSF1_Click(object sender, EventArgs e)
         {
             RemoveSoundfont(List1Path, Lis1);
@@ -668,6 +752,26 @@ namespace KeppyDriverConfigurator
         private void RmvSF4_Click(object sender, EventArgs e)
         {
             RemoveSoundfont(List4Path, Lis4);
+        }
+
+        private void RmvSF5_Click(object sender, EventArgs e)
+        {
+            RemoveSoundfont(List5Path, Lis5);
+        }
+
+        private void RmvSF6_Click(object sender, EventArgs e)
+        {
+            RemoveSoundfont(List6Path, Lis6);
+        }
+
+        private void RmvSF7_Click(object sender, EventArgs e)
+        {
+            RemoveSoundfont(List7Path, Lis7);
+        }
+
+        private void RmvSF8_Click(object sender, EventArgs e)
+        {
+            RemoveSoundfont(List8Path, Lis8);
         }
 
         private void Lis1_DragDrop(object sender, DragEventArgs e)
@@ -710,6 +814,46 @@ namespace KeppyDriverConfigurator
             AddSoundfontDragNDropTriv(e);
         }
 
+        private void Lis5_DragDrop(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDrop(List5Path, Lis5, e);
+        }
+
+        private void Lis5_DragEnter(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDropTriv(e);
+        }
+
+        private void Lis6_DragDrop(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDrop(List6Path, Lis6, e);
+        }
+
+        private void Lis6_DragEnter(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDropTriv(e);
+        }
+
+        private void Lis7_DragDrop(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDrop(List7Path, Lis7, e);
+        }
+
+        private void Lis7_DragEnter(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDropTriv(e);
+        }
+
+        private void Lis8_DragDrop(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDrop(List8Path, Lis8, e);
+        }
+
+        private void Lis8_DragEnter(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDropTriv(e);
+        }
+
         private void MvU1_Click(object sender, EventArgs e)
         {
             MoveUpSoundfont(List1Path, Lis1);
@@ -728,6 +872,26 @@ namespace KeppyDriverConfigurator
         private void MvU4_Click(object sender, EventArgs e)
         {
             MoveUpSoundfont(List4Path, Lis4);
+        }
+
+        private void MvU5_Click(object sender, EventArgs e)
+        {
+            MoveDownSoundfont(List5Path, Lis5);
+        }
+
+        private void MvU6_Click(object sender, EventArgs e)
+        {
+            MoveDownSoundfont(List6Path, Lis6);
+        }
+
+        private void MvU7_Click(object sender, EventArgs e)
+        {
+            MoveDownSoundfont(List7Path, Lis7);
+        }
+
+        private void MvU8_Click(object sender, EventArgs e)
+        {
+            MoveDownSoundfont(List8Path, Lis8);
         }
 
         private void MvD1_Click(object sender, EventArgs e)
@@ -750,6 +914,26 @@ namespace KeppyDriverConfigurator
             MoveDownSoundfont(List4Path, Lis4);
         }
 
+        private void MvD5_Click(object sender, EventArgs e)
+        {
+            MoveUpSoundfont(List5Path, Lis5);
+        }
+
+        private void MvD6_Click(object sender, EventArgs e)
+        {
+            MoveUpSoundfont(List6Path, Lis6);
+        }
+
+        private void MvD7_Click(object sender, EventArgs e)
+        {
+            MoveUpSoundfont(List7Path, Lis7);
+        }
+
+        private void MvD8_Click(object sender, EventArgs e)
+        {
+            MoveUpSoundfont(List8Path, Lis8);
+        }
+
         private void CLi1_Click(object sender, EventArgs e)
         {
             CleanList(List1Path, Lis1);
@@ -770,6 +954,25 @@ namespace KeppyDriverConfigurator
             CleanList(List4Path, Lis4);
         }
 
+        private void CLi5_Click(object sender, EventArgs e)
+        {
+            CleanList(List5Path, Lis5);
+        }
+
+        private void CLi6_Click(object sender, EventArgs e)
+        {
+            CleanList(List6Path, Lis6);
+        }
+
+        private void CLi7_Click(object sender, EventArgs e)
+        {
+            CleanList(List7Path, Lis7);
+        }
+
+        private void CLi8_Click(object sender, EventArgs e)
+        {
+            CleanList(List8Path, Lis8);
+        }
 
         private void IEL1_Click(object sender, EventArgs e)
         {
@@ -811,6 +1014,46 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        private void IEL6_Click(object sender, EventArgs e)
+        {
+            ExternalListImport.FileName = "";
+            if (ExternalListImport.ShowDialog() == DialogResult.OK)
+            {
+                ImportExternalList(ExternalListImport.FileName, Lis6);
+                SaveList(List4Path, Lis6);
+            }
+        }
+
+        private void IEL7_Click(object sender, EventArgs e)
+        {
+            ExternalListImport.FileName = "";
+            if (ExternalListImport.ShowDialog() == DialogResult.OK)
+            {
+                ImportExternalList(ExternalListImport.FileName, Lis7);
+                SaveList(List4Path, Lis7);
+            }
+        }
+
+        private void IEL8_Click(object sender, EventArgs e)
+        {
+            ExternalListImport.FileName = "";
+            if (ExternalListImport.ShowDialog() == DialogResult.OK)
+            {
+                ImportExternalList(ExternalListImport.FileName, Lis8);
+                SaveList(List4Path, Lis8);
+            }
+        }
+
+        private void IEL5_Click(object sender, EventArgs e)
+        {
+            ExternalListImport.FileName = "";
+            if (ExternalListImport.ShowDialog() == DialogResult.OK)
+            {
+                ImportExternalList(ExternalListImport.FileName, Lis5);
+                SaveList(List4Path, Lis5);
+            }
+        }
+
         private void EL1_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
@@ -844,6 +1087,42 @@ namespace KeppyDriverConfigurator
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis4);
+            }
+        }
+
+        private void EL5_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis5);
+            }
+        }
+
+        private void EL6_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis6);
+            }
+        }
+
+        private void EL7_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis7);
+            }
+        }
+
+        private void EL8_Click(object sender, EventArgs e)
+        {
+            ExportList.FileName = "";
+            if (ExportList.ShowDialog() == DialogResult.OK)
+            {
+                ExportListToFile(ExportList.FileName, Lis8);
             }
         }
 
@@ -1003,6 +1282,18 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverDefaultSFList frm = new KeppyDriverDefaultSFList();
+            frm.ShowDialog();
+        }
+
+        private void changeDefaultSoundfontListToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            KeppyDriverDefaultSFList frm = new KeppyDriverDefaultSFList();
+            frm.ShowDialog();
+        }
+
         private void changeTheMaximumSamplesPerFrameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppyDriverSamplePerFrameSetting frm = new KeppyDriverSamplePerFrameSetting();
@@ -1042,27 +1333,6 @@ namespace KeppyDriverConfigurator
         private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 30-35.\nFor all the AC'97 audio cards, it's 40.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
-        }
-
-        // SFZ compliant part
-        private void SFZComp1_Click(object sender, EventArgs e)
-        {
-            SFZCompliant();
-        }
-
-        private void SFZComp2_Click(object sender, EventArgs e)
-        {
-            SFZCompliant();
-        }
-
-        private void SFZComp3_Click(object sender, EventArgs e)
-        {
-            SFZCompliant();
-        }
-
-        private void SFZComp4_Click(object sender, EventArgs e)
-        {
-            SFZCompliant();
         }
 
         // Brand new output mode
