@@ -1314,14 +1314,14 @@ namespace KeppyDriverConfigurator
         // Guide part
         private void isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+5.\nYou could also press ALT+6 to directly open the \"Settings\" tab.", 
+            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+9.\nYou could also press ALT+0 to directly open the \"Settings\" tab.", 
                 "Is there any shortcut for to open the configurator?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 4.\n\n" +
-                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\n\n" +
+                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\n\n" +
                 "You can also reload lists that are already loaded.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
