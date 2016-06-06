@@ -585,7 +585,7 @@ struct evbuf_t{
 	unsigned char *sysexbuffer;
 };
 
-#define EVBUFF_SIZE 0x1000000
+#define EVBUFF_SIZE 0x3FFFC
 static struct evbuf_t evbuf[EVBUFF_SIZE];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
@@ -884,14 +884,6 @@ BOOL IsRunningXP(){
 	return FALSE;
 }
 
-int IsFloatingPointEnabled(){
-	return 1;
-}
-
-BOOL IsFloatingPointEnabledBool(){
-	return TRUE;
-}
-
 int AreEffectsDisabled(){
 	long lResult;
 	HKEY hKey;
@@ -910,11 +902,6 @@ int IsNoteOff1TurnedOn(){
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	return noteoff1;
-}
-
-int IsSoftwareModeEnabled()
-{
-	return 1;
 }
 
 int IgnoreSystemReset()
@@ -1081,6 +1068,9 @@ void ReloadSFList(DWORD whichsflist){
 
 void keybindings()
 {
+	BOOL bCtrl = ::GetKeyState(VK_CONTROL) & 0x8000;
+	BOOL bShift = ::GetKeyState(VK_SHIFT) & 0x8000;
+	BOOL bAlt = ::GetKeyState(VK_MENU) & 0x8000;
 	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
 		ReloadSFList(1);
 		return;
@@ -1167,7 +1157,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				if (sound_driver == NULL) {
 					sound_driver = create_sound_out_xaudio2();
 					sound_out_float = TRUE;
-					sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, (IsFloatingPointEnabled() ? sound_out_float : nofloat), newsndbfvalue, frames);
+					sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
 					// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
 				}
 			}
@@ -1188,11 +1178,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					else {
 						BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf); // default buffer size = 'minbuf' + additional buffer size
 					}
-					hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+					hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 					BASS_ChannelPlay(hStream, false);
 				}
 				else {
-					hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | (IsFloatingPointEnabled() ? BASS_SAMPLE_FLOAT : nofloat) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+					hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 				}
 				if (!hStream) {
 					BASS_StreamFree(hStream);
