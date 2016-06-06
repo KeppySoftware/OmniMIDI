@@ -48,16 +48,10 @@ namespace KeppyDriverConfigurator
                     MessageBox.Show("New update found, press OK to open the release page.", "New update found!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Process.Start("https://github.com/KaleidonKep99/Keppy-s-Driver/releases");
                 }
-                else if (x < y)
-                {
-                    UpdateCheck.Enabled = true;
-                    LatestVersion.Text = "Seems that the version on GitHub (" + newestversion.ToString() + ") is older than the version you're currently using.\nReally strange huh?";
-                    MessageBox.Show("Is this a joke? You have a newer version than the one currently released on GitHub...\n\nYou dirty hacker.", "Wowie.", MessageBoxButtons.OK, MessageBoxIcon.Question);
-                }
                 else
                 {
                     UpdateCheck.Enabled = true;
-                    LatestVersion.Text = "There are no updates available right now. Try checking later.";
+                    LatestVersion.Text = "There are no updates available right now. Try checking later.\nLatest version available online: " + x.ToString();
                     MessageBox.Show("This release is already updated.", "No updates found.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
