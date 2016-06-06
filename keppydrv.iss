@@ -1,6 +1,5 @@
 [Setup]
 AllowCancelDuringInstall=False
-AlwaysShowGroupOnReadyPage=True
 AppContact=kaleidonkep99@outlook.com
 AppCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
@@ -25,14 +24,12 @@ OutputBaseFilename=KeppysDriverSetup
 OutputDir=..\Keppy-s-Driver
 SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
-ShowTasksTreeLines=True
 SolidCompression=yes
 TimeStampsInUTC=True
 UninstallDisplayIcon={sys}\keppydrv\keppydrvcfg.exe
 UninstallDisplayName=Keppy's Driver (Uninstall only)
 UninstallDisplaySize=5
 UninstallFilesDir={sys}\keppydrv\
-UsePreviousLanguage=False
 VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
@@ -40,6 +37,10 @@ VersionInfoProductName=Keppy's Driver
 VersionInfoProductTextVersion=3.2.0.3
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
 VersionInfoVersion=3.2.0.3
+UsePreviousSetupType=False
+FlatComponentsList=False
+AlwaysShowGroupOnReadyPage=True
+AlwaysShowDirOnReadyPage=True
 
 [Files]
 ; 64-bit OS
@@ -50,8 +51,6 @@ Source: "external_packages\lib64\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestN
 Source: "external_packages\lib64\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib64\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib64\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib64\msvcp120.dll"; DestDir: "{sys}"; DestName: "msvcp120.dll"; Flags: onlyifdoesntexist uninsneveruninstall; Check: Is64BitInstallMode
-Source: "external_packages\lib64\msvcr120.dll"; DestDir: "{sys}"; DestName: "msvcr120.dll"; Flags: onlyifdoesntexist uninsneveruninstall; Check: Is64BitInstallMode
 Source: "external_packages\lib\bass.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bass_mpc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bassenc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -59,8 +58,6 @@ Source: "external_packages\lib\bassflac.dll"; DestDir: "{syswow64}\keppydrv"; De
 Source: "external_packages\lib\bassmidi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib\msvcp120.dll"; DestDir: "{syswow64}"; DestName: "msvcp120.dll"; Flags: onlyifdoesntexist uninsneveruninstall; Check: Is64BitInstallMode
-Source: "external_packages\lib\msvcr120.dll"; DestDir: "{syswow64}"; DestName: "msvcr120.dll"; Flags: onlyifdoesntexist uninsneveruninstall; Check: Is64BitInstallMode
 Source: "output\64\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -76,8 +73,6 @@ Source: "external_packages\lib\bassflac.dll"; DestDir: "{sys}\keppydrv"; DestNam
 Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "external_packages\lib\msvcp120.dll"; DestDir: "{sys}"; DestName: "msvcp120.dll"; Flags: onlyifdoesntexist uninsneveruninstall; Check: Is64BitInstallMode
-Source: "external_packages\lib\msvcr120.dll"; DestDir: "{sys}"; DestName: "msvcr120.dll"; Flags: onlyifdoesntexist uninsneveruninstall; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppydrv"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -228,17 +223,11 @@ Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 [Run]
 Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
 Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
-Filename: "http://keppystudios.com/keppy-s-steinway-piano.html"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Download Keppy Steinway Piano"; StatusMsg: "Download Keppy Steinway Piano"; Check: Is64BitInstallMode
-Filename: "http://keppystudios.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Keppy Studios"; StatusMsg: "Visit Keppy Studios"; Check: Is64BitInstallMode
-Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"; Check: Is64BitInstallMode
+Filename: "http://keppystudios.com/keppy-s-steinway-piano.html"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Download Keppy Steinway Piano"; StatusMsg: "Download Keppy Steinway Piano";
+Filename: "http://keppystudios.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Keppy Studios"; StatusMsg: "Visit Keppy Studios";
+Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions";
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
-Filename: "{sys}\regsvr32.exe"; Parameters: "/s {sys}\msvcr120.dll"; Flags: waituntilterminated; Description: "VS2013LIB"; StatusMsg: "Registering MSVCR120.DLL..."; Check: not Is64BitInstallMode
-Filename: "{sys}\regsvr32.exe"; Parameters: "/s {sys}\msvcp120.dll"; Flags: waituntilterminated; Description: "VS2013LIB"; StatusMsg: "Registering MSVCP120.DLL..."; Check: not Is64BitInstallMode
-Filename: "{sys}\regsvr32.exe"; Parameters: "/s {sys}\msvcr120.dll"; Flags: waituntilterminated; Description: "VS2013LIB"; StatusMsg: "Registering MSVCR120.DLL..."; Check: Is64BitInstallMode
-Filename: "{sys}\regsvr32.exe"; Parameters: "/s {sys}\msvcp120.dll"; Flags: waituntilterminated; Description: "VS2013LIB"; StatusMsg: "Registering MSVCP120.DLL..."; Check: Is64BitInstallMode
-Filename: "{syswow64}\regsvr32.exe"; Parameters: "/s {syswow64}\msvcr120.dll"; Flags: waituntilterminated; Description: "VS2013LIB"; StatusMsg: "Registering MSVCR120.DLL..."; Check: Is64BitInstallMode
-Filename: "{syswow64}\regsvr32.exe"; Parameters: "/s {syswow64}\msvcp120.dll"; Flags: waituntilterminated; Description: "VS2013LIB"; StatusMsg: "Registering MSVCP120.DLL..."; Check: Is64BitInstallMode
-
+                                                                                                                                  
 [Messages]
 AboutSetupTitle=About the driver
 ApplicationsFound2=The driver's files are locked by some programs or by Windows itself.%n%nIt is recommended to close the following programs and/or restart Windows to solve the issue.
