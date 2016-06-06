@@ -26,5 +26,10 @@ namespace KeppyDriverConfigurator
         {
             Close();
         }
+
+        private void u4sforum_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://www.un4seen.com/forum/?board=1.0");
+        }
     }
 }
