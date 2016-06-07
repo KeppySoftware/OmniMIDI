@@ -1,83 +1,77 @@
-AERTSr64.exe
-AMBSpiE.exe
-Adobe Audition CC.exe
-Adobe Premiere Pro.exe
-AfterFX.exe
-CCC.exe
-CTAudSvc.exe
-CamtasiaStudio.exe
-Console 1 On-Screen Display (x64).exe
-Console 1 On-Screen Display.exe
-Discord.exe
-Dreamweaver.exe
-EXPLORER.EXE
-Explorer.EXE
-Explorer.exe
-GamePanel.exe
-Gitter.exe
-GoogleUpdate.exe
-GoogleUpdate.exe
-IpOverUsbSvc.exe
-KHALMNPR.EXE
-KakaoTalk.exe
-Lightshot.exe
-MSCamS64.exe
-MSCamSvc.exe
-Photoshop.exe
-Procaster.exe
-RAVBg64.exe
-RAVCpl64.exe
-RTHDCPL.EXE
-SetPoint.exe
-ShellExperienceHost.exe
-SkyDrive.exe
-Skype.exe
-SndRec.exe
-SndRec32.exe
-SndVol.exe
-SndVol32.exe
-Softube Plug-Ins Control (x64).exe
-Softube Plug-Ins Control.exe
-Steam.exe
-SteamService.exe
-SxgTkBar.exe
-System
-System Idle Process
-TeamViewer.exe
-TeamViewer_Desktop.exe
-TeamViewer_Service.exe
-Telegram.exe
-TrustedInstaller.exe
-VirtualMIDISynth.exe
-WUDFHost.exe
+adobe audition cc.exe
+adobe premiere pro.exe
+aertsr64.exe
+afterfx.exe
 alg.exe
+ambspie.exe
+camtasiastudio.exe
 ccc.exe
 chrome.exe
+console 1 on-screen display (x64).exe
+console 1 on-screen display.exe
 csrss.exe
+ctaudsvc.exe
 ctfmon.exe
 devenv.exe
 devenv_2.exe
-explorer.EXE
+discord.exe
+dreamweaver.exe
+explorer.exe
 explorer.exe
 firefox.exe
-loopMIDI.exe
+gamepanel.exe
+gitter.exe
+googleupdate.exe
+ipoverusbsvc.exe
+kakaotalk.exe
+khalmnpr.exe
+lightshot.exe
+loopmidi.exe
 lsass.exe
 lsm.exe
+mscams64.exe
+mscamsvc.exe
 msiexec.exe
 mspdbsrv.exe
 notepad++.exe
+photoshop.exe
+procaster.exe
 puush.exe
+ravbg64.exe
+ravcpl64.exe
+rthdcpl.exe
+setpoint.exe
+shellexperiencehost.exe
 sihost.exe
+skydrive.exe
+skype.exe
+sndrec.exe
+sndrec32.exe
+sndvol.exe
+sndvol32.exe
+softube plug-ins control (x64).exe
+softube plug-ins control.exe
 spoolsv.exe
 stdrt.exe
+steam.exe
+steamservice.exe
 steamwebhelper.exe
 svchost.exe
+sxgtkbar.exe
+system
+system idle process
 taskhost.exe
 taskhostex.exe
 taskhostw.exe
+teamviewer.exe
+teamviewer_desktop.exe
+teamviewer_service.exe
+telegram.exe
+trustedinstaller.exe
 tv_w32.exe
 tv_w64.exe
 vcpkgsrv.exe
+virtualmidisynth.exe
 vmplayer.exe
 vmware-hostd.exe
 vmware.exe
@@ -87,3 +81,4 @@ vsc32cnf.exe
 vscvol.exe
 wininit.exe
 winlogon.exe
+wudfhost.exe

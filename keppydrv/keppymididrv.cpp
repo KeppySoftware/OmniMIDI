@@ -976,7 +976,7 @@ BOOL ProcessBlackList(){
 					OutputDebugString(defaultblacklistdirectory);
 					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 					{
-						if (_tcscmp(modulename, defaultstring) == 0) {
+						if (_tcsicmp(modulename, defaultstring) == 0) {
 							return 0x0;
 						}
 					}
@@ -992,7 +992,7 @@ BOOL ProcessBlackList(){
 				OutputDebugString(userblacklistdirectory);
 				while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 				{
-					if (_tcscmp(modulename, userstring) == 0) {
+					if (_tcsicmp(modulename, userstring) == 0) {
 						std::wstring modulenamelpcwstr(modulename);
 						std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
 						LPCWSTR messageboxtitle = concatted_stdstr.c_str();
@@ -1126,15 +1126,29 @@ void keybindings()
 	}
 }
 
-unsigned __stdcall threadfunc(LPVOID lpV){
+BOOL BannedSystemProcess() {
 	TCHAR modulename[MAX_PATH];
 	TCHAR bannedconsent[MAX_PATH];
+	TCHAR bannedexplorer[MAX_PATH];
+	TCHAR bannedcsrss[MAX_PATH];
 	_tcscpy_s(bannedconsent, _countof(bannedconsent), _T("consent.exe"));
+	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
+	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
-	if (_tcscmp(modulename, bannedconsent) == 0) {
+	if (!_tcsicmp(modulename, bannedconsent) | !_tcsicmp(modulename, bannedexplorer) | !_tcsicmp(modulename, bannedcsrss) == 0) {
+		return TRUE;
+		// It's a blacklisted process, so it can NOT create a BASS audio stream.
+	}
+	else {
+		return FALSE;
+		// It's not a blacklisted process, so it can create a BASS audio stream.
+	}
+}
+
+unsigned __stdcall threadfunc(LPVOID lpV){
+	if (BannedSystemProcess() == TRUE) {
 		return 0;
-		// This disallows consent.exe from creating a BASS audio stream.
 	}
 	else {
 		unsigned i;
@@ -1336,7 +1350,7 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
-	if (_tcscmp(modulename, bannedconsent) == 0) {
+	if (BannedSystemProcess() == TRUE) {
 		// This disallows consent.exe from resetting the MIDI channels (which are not initialized), thus preventing a crash.
 	}
 	else {
