@@ -56,11 +56,11 @@
             // 
             this.Label13.AutoSize = true;
             this.Label13.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label13.Location = new System.Drawing.Point(406, 374);
+            this.Label13.Location = new System.Drawing.Point(381, 374);
             this.Label13.Name = "Label13";
-            this.Label13.Size = new System.Drawing.Size(286, 13);
+            this.Label13.Size = new System.Drawing.Size(312, 13);
             this.Label13.TabIndex = 29;
-            this.Label13.Text = "Tip: Names are case sensitive, and spaces are recognized.";
+            this.Label13.Text = "Tip: Names are NOT case sensitive, and spaces are recognized.";
             // 
             // ManualBlackListLabel
             // 
