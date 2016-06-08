@@ -1341,21 +1341,10 @@ void DoStopClient() {
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
 	int One = 0;
-	TCHAR modulename[MAX_PATH];
-	TCHAR bannedconsent[MAX_PATH];
-	_tcscpy_s(bannedconsent, _countof(bannedconsent), _T("consent.exe"));
-	GetModuleFileName(NULL, modulename, MAX_PATH);
-	PathStripPath(modulename);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
-	if (BannedSystemProcess() == TRUE) {
-		// This disallows consent.exe from resetting the MIDI channels (which are not initialized), thus preventing a crash.
-	}
-	else {
-		ResetSynth();
-	}
 	RegCloseKey(hKey);
 	if (modm_closed == 0){
 		stop_thread = 1;
