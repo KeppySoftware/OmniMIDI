@@ -1136,7 +1136,7 @@ BOOL BannedSystemProcess() {
 	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
-	if (!_tcsicmp(modulename, bannedconsent) | !_tcsicmp(modulename, bannedexplorer) | !_tcsicmp(modulename, bannedcsrss) == 0) {
+	if (!_tcsicmp(modulename, bannedconsent) | !_tcsicmp(modulename, bannedexplorer) | !_tcsicmp(modulename, bannedcsrss)) {
 		return TRUE;
 		// It's a blacklisted process, so it can NOT create a BASS audio stream.
 	}
