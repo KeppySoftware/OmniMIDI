@@ -103,6 +103,7 @@ static int encmode = 0; //Encoder mode
 static int frequency = 0; //Audio frequency
 static int defaultsflist = 1; //Default soundfont list
 static int sinc = 0; //Sinc
+static int sfdisableconf = 0; //Disable that annoying confirmation popup that asks you if you want to change the sf list lel
 static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
 static int newsndbfvalue; // DO NOT TOUCH
@@ -687,6 +688,7 @@ void load_settings()
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 	RegQueryValueEx(hKey, L"debug", NULL, &dwType, (LPBYTE)&debug, &dwSize);
 	RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
+	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 	RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
 	RegCloseKey(hKey);
 
@@ -711,6 +713,7 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegCloseKey(hKey);
@@ -1055,22 +1058,24 @@ void ReloadSFList(DWORD whichsflist){
 	std::wstring s = ss.str();
 	ResetSynth();
 	Sleep(100);
-	const int result = MessageBox(NULL, s.c_str(), L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
-	switch (result)
-	{
-	case IDYES:
+	if (sfdisableconf == 1) {
 		LoadSoundfont(whichsflist);
-		break;
-	case IDNO:
-		break;
+	}
+	else {
+		const int result = MessageBox(NULL, s.c_str(), L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
+		switch (result)
+		{
+		case IDYES:
+			LoadSoundfont(whichsflist);
+			break;
+		case IDNO:
+			break;
+		}
 	}
 }
 
 void keybindings()
 {
-	BOOL bCtrl = ::GetKeyState(VK_CONTROL) & 0x8000;
-	BOOL bShift = ::GetKeyState(VK_SHIFT) & 0x8000;
-	BOOL bAlt = ::GetKeyState(VK_MENU) & 0x8000;
 	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
 		ReloadSFList(1);
 		return;

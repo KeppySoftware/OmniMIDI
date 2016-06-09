@@ -152,6 +152,7 @@
             this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -165,6 +166,10 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -181,8 +186,6 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
-            this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -1761,6 +1764,13 @@
             this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
             this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
             // 
+            // changeDefaultSoundfontListToolStripMenuItem
+            // 
+            this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
+            this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(161, 27);
+            this.changeDefaultSoundfontListToolStripMenuItem.Text = "Change default soundfont list";
+            this.changeDefaultSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
+            // 
             // MainMenu
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1846,7 +1856,8 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
-            this.changeDefaultSoundfontListToolStripMenuItem1});
+            this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
@@ -1864,6 +1875,36 @@
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Size = new System.Drawing.Size(327, 22);
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
+            // 
+            // changeDefaultSoundfontListToolStripMenuItem1
+            // 
+            this.changeDefaultSoundfontListToolStripMenuItem1.Name = "changeDefaultSoundfontListToolStripMenuItem1";
+            this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(327, 22);
+            this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
+            this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
+            // 
+            // soundfontListChangeConfirmationDialogToolStripMenuItem
+            // 
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enabledToolStripMenuItem,
+            this.disabledToolStripMenuItem});
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem.Name = "soundfontListChangeConfirmationDialogToolStripMenuItem";
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem.Text = "Soundfont list change confirmation dialog";
+            // 
+            // enabledToolStripMenuItem
+            // 
+            this.enabledToolStripMenuItem.Name = "enabledToolStripMenuItem";
+            this.enabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.enabledToolStripMenuItem.Text = "Enabled";
+            this.enabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationenabledToolStripMenuItem_Click);
+            // 
+            // disabledToolStripMenuItem
+            // 
+            this.disabledToolStripMenuItem.Name = "disabledToolStripMenuItem";
+            this.disabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.disabledToolStripMenuItem.Text = "Disabled";
+            this.disabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationdisabledToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1980,20 +2021,6 @@
             // ExportList
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
-            // 
-            // changeDefaultSoundfontListToolStripMenuItem
-            // 
-            this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
-            this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(161, 27);
-            this.changeDefaultSoundfontListToolStripMenuItem.Text = "Change default soundfont list";
-            this.changeDefaultSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
-            // 
-            // changeDefaultSoundfontListToolStripMenuItem1
-            // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Name = "changeDefaultSoundfontListToolStripMenuItem1";
-            this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(327, 22);
-            this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
-            this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2215,6 +2242,9 @@
         private System.Windows.Forms.ListBox Lis8;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem soundfontListChangeConfirmationDialogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem;
     }
 }
 

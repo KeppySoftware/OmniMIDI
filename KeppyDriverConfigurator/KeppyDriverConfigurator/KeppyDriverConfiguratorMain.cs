@@ -297,7 +297,15 @@ namespace KeppyDriverConfigurator
                 {
                     Settings.SetValue("cpu", MaxCPU.Text, RegistryValueKind.DWord);
                 }
-                Settings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                if (string.IsNullOrWhiteSpace(Frequency.Text))
+                {
+                    Frequency.Text = "48000";
+                    Settings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                }
+                else
+                {
+                    Settings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                }
 
                 // Advanced settings
                 Settings.SetValue("buflen", bufsize.Value.ToString(), RegistryValueKind.DWord);
@@ -571,6 +579,14 @@ namespace KeppyDriverConfigurator
                 else
                 {
                     MaxCPU.Text = Settings.GetValue("cpu").ToString();
+                }
+                if (Settings.GetValue("sfdisableconf").ToString() == "0")
+                {
+                    enabledToolStripMenuItem.Checked = true;
+                }
+                else
+                {
+                    disabledToolStripMenuItem.Checked = true;
                 }
                 Frequency.Text = Settings.GetValue("frequency").ToString();
                 TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
@@ -1304,6 +1320,24 @@ namespace KeppyDriverConfigurator
         {
             KeppyDriverSamplePerFrameSetting frm = new KeppyDriverSamplePerFrameSetting();
             frm.ShowDialog();
+        }
+
+        private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            Settings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
+            Settings.Close();
+            enabledToolStripMenuItem.Checked = true;
+            disabledToolStripMenuItem.Checked = false;
+        }
+
+        private void SFListConfirmationdisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            Settings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
+            Settings.Close();
+            enabledToolStripMenuItem.Checked = false;
+            disabledToolStripMenuItem.Checked = true;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
