@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppyDriverConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List1 = new System.Windows.Forms.TabPage();
@@ -186,6 +187,11 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
+            this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
+            this.volumeHotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enabledToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.disabledToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -1857,7 +1863,8 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
-            this.soundfontListChangeConfirmationDialogToolStripMenuItem});
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem,
+            this.volumeHotkeysToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
@@ -1944,6 +1951,7 @@
             // 
             this.guidesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem,
+            this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem,
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.howCanIResetTheDriverToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem});
@@ -1954,28 +1962,28 @@
             // isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem
             // 
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Name = "isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem";
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
-            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Text = "Is there any shortcut for to open the configurator?";
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(323, 22);
+            this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Text = "What are the hotkeys to open the configurator?";
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem.Click += new System.EventHandler(this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click);
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
             // 
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Name = "howCanIChangeTheSoundfontListToolStripMenuItem";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.howCanIChangeTheSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(323, 22);
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
             this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
             // 
             // howCanIResetTheDriverToolStripMenuItem
             // 
             this.howCanIResetTheDriverToolStripMenuItem.Name = "howCanIResetTheDriverToolStripMenuItem";
-            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.howCanIResetTheDriverToolStripMenuItem.Size = new System.Drawing.Size(323, 22);
             this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
             this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
             // 
             // whatsTheBestSettingsForTheBufferToolStripMenuItem
             // 
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Name = "whatsTheBestSettingsForTheBufferToolStripMenuItem";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(337, 22);
+            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Size = new System.Drawing.Size(323, 22);
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What\'s the best settings for the buffer?";
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
             // 
@@ -2021,6 +2029,41 @@
             // ExportList
             // 
             this.ExportList.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
+            // 
+            // VolumeHotkeysCheck
+            // 
+            this.VolumeHotkeysCheck.Interval = 1;
+            this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
+            // 
+            // volumeHotkeysToolStripMenuItem
+            // 
+            this.volumeHotkeysToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enabledToolStripMenuItem1,
+            this.disabledToolStripMenuItem1});
+            this.volumeHotkeysToolStripMenuItem.Name = "volumeHotkeysToolStripMenuItem";
+            this.volumeHotkeysToolStripMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.volumeHotkeysToolStripMenuItem.Text = "Volume hotkeys";
+            // 
+            // enabledToolStripMenuItem1
+            // 
+            this.enabledToolStripMenuItem1.Name = "enabledToolStripMenuItem1";
+            this.enabledToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.enabledToolStripMenuItem1.Text = "Enabled";
+            this.enabledToolStripMenuItem1.Click += new System.EventHandler(this.enabledToolStripMenuItem1_Click);
+            // 
+            // disabledToolStripMenuItem1
+            // 
+            this.disabledToolStripMenuItem1.Name = "disabledToolStripMenuItem1";
+            this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.disabledToolStripMenuItem1.Text = "Disabled";
+            this.disabledToolStripMenuItem1.Click += new System.EventHandler(this.disabledToolStripMenuItem1_Click);
+            // 
+            // whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem
+            // 
+            this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem.Name = "whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem";
+            this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem.Size = new System.Drawing.Size(323, 22);
+            this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem.Text = "What are the hotkeys to change the volume?";
+            this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem.Click += new System.EventHandler(this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2245,6 +2288,11 @@
         private System.Windows.Forms.ToolStripMenuItem soundfontListChangeConfirmationDialogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem;
+        private System.Windows.Forms.Timer VolumeHotkeysCheck;
+        private System.Windows.Forms.ToolStripMenuItem volumeHotkeysToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem;
     }
 }
 

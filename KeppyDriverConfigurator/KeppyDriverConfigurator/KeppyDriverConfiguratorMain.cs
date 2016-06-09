@@ -580,13 +580,23 @@ namespace KeppyDriverConfigurator
                 {
                     MaxCPU.Text = Settings.GetValue("cpu").ToString();
                 }
-                if (Settings.GetValue("sfdisableconf").ToString() == "0")
+                if (Convert.ToInt32(Settings.GetValue("sfdisableconf")) == 0)
                 {
                     enabledToolStripMenuItem.Checked = true;
                 }
                 else
                 {
                     disabledToolStripMenuItem.Checked = true;
+                }
+                if (Convert.ToInt32(Settings.GetValue("volumehotkeys")) == 1)
+                {
+                    VolumeHotkeysCheck.Enabled = true;
+                    enabledToolStripMenuItem1.Checked = true;
+                }
+                else
+                {
+                    VolumeHotkeysCheck.Enabled = false;
+                    disabledToolStripMenuItem1.Checked = true;
                 }
                 Frequency.Text = Settings.GetValue("frequency").ToString();
                 TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
@@ -1229,6 +1239,23 @@ namespace KeppyDriverConfigurator
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void VolumeHotkeysCheck_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+                VolTrackBar.Value = Convert.ToInt32(Settings.GetValue("volume"));
+                double x = VolTrackBar.Value / 100;
+                int VolumeValue = Convert.ToInt32(x);
+                VolSimView.Text = VolumeValue.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+            }
+            catch
+            {
+
+            }
+        }
+
         // Now, menustrip functions here
 
         private void openDebugWindowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1340,6 +1367,26 @@ namespace KeppyDriverConfigurator
             disabledToolStripMenuItem.Checked = true;
         }
 
+        private void enabledToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            Settings.SetValue("volumehotkeys", "1", RegistryValueKind.DWord);
+            Settings.Close();
+            VolumeHotkeysCheck.Enabled = true;
+            enabledToolStripMenuItem1.Checked = true;
+            disabledToolStripMenuItem1.Checked = false;
+        }
+
+        private void disabledToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            Settings.SetValue("volumehotkeys", "0", RegistryValueKind.DWord);
+            Settings.Close();
+            VolumeHotkeysCheck.Enabled = false;
+            enabledToolStripMenuItem1.Checked = false;
+            disabledToolStripMenuItem1.Checked = true;
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -1348,8 +1395,14 @@ namespace KeppyDriverConfigurator
         // Guide part
         private void isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+9.\nYou could also press ALT+0 to directly open the \"Settings\" tab.", 
-                "Is there any shortcut for to open the configurator?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+9.\nYou could also press ALT+0 to directly open the \"Settings\" tab.",
+                "What are the hotkeys to open the configurator?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To change the volume, simply press \"Add\" or \"Subtract\" buttons of the numeric keypad.\n\nYou can disable the hotkeys through \"Advanced settings > Volume hotkeys\".",
+                "What are the hotkeys to change the volume?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)

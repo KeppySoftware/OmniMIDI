@@ -104,6 +104,7 @@ static int frequency = 0; //Audio frequency
 static int defaultsflist = 1; //Default soundfont list
 static int sinc = 0; //Sinc
 static int sfdisableconf = 0; //Disable that annoying confirmation popup that asks you if you want to change the sf list lel
+static int volumehotkeys = 1; //Disable volume hotkeys
 static int sysresetignore = 0; //Ignore sysex messages
 static int debug = 0; //Debug mode
 static int newsndbfvalue; // DO NOT TOUCH
@@ -668,101 +669,6 @@ int bmsyn_play_some_data(void){
 	return played;
 }
 
-void load_settings()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
-	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
-	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
-	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
-	RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
-	RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
-	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
-	RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
-	RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
-	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-	RegQueryValueEx(hKey, L"debug", NULL, &dwType, (LPBYTE)&debug, &dwSize);
-	RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
-	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
-	RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
-	RegCloseKey(hKey);
-
-	sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
-
-	sound_out_volume_float = (float)volume / 10000.0f;
-	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-}
-
-void realtime_load_settings()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
-	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
-	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
-	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
-	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
-	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
-	RegCloseKey(hKey);
-	//cake
-	if (xaudiodisabled == 1) {
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
-	}
-	else {
-		sound_out_volume_float = (float)volume / 10000.0f;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-	}
-	//another cake
-	int maxmidivoices = static_cast <int> (midivoices);
-	float trackslimit = static_cast <int> (tracks);
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-	if (noteoff1) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOTEOFF1);
-	}
-	if (vmsemu == 1) {
-		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
-	}
-	else {
-		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100);
-	}
-	if (nofx) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOFX);
-	}
-	if (sysresetignore) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOSYSRESET);
-	}
-	if (sinc) {
-		BASS_ChannelFlags(hStream, BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
-	}
-	else {
-		BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
-	}
-}
-
 void AudioRender(int bassoutput) {
 	if (bassoutput == -1) {
 		if (vmsemu == 0) {
@@ -881,6 +787,104 @@ BOOL load_bassfuncs()
 	return TRUE;
 }
 
+
+void load_settings()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
+	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
+	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
+	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
+	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+	RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
+	RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
+	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
+	RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
+	RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
+	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+	RegQueryValueEx(hKey, L"debug", NULL, &dwType, (LPBYTE)&debug, &dwSize);
+	RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
+	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
+	RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
+	RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
+	RegCloseKey(hKey);
+
+	sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
+
+	sound_out_volume_float = (float)volume / 10000.0f;
+	sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+}
+
+void realtime_load_settings()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
+	RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
+	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
+	RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
+	RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
+	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
+	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
+	RegCloseKey(hKey);
+	//cake
+	if (xaudiodisabled == 1) {
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
+	}
+	else {
+		sound_out_volume_float = (float)volume / 10000.0f;
+		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+	}
+	//another cake
+	int maxmidivoices = static_cast <int> (midivoices);
+	float trackslimit = static_cast <int> (tracks);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+	if (noteoff1) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOTEOFF1);
+	}
+	if (vmsemu == 1) {
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, frames);
+	}
+	else {
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 100);
+	}
+	if (nofx) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOFX);
+	}
+	if (sysresetignore) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOSYSRESET);
+	}
+	if (sinc) {
+		BASS_ChannelFlags(hStream, BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
+	}
+	else {
+		BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
+	}
+}
+
 BOOL IsRunningXP(){
 	if (xaudiodisabled == 1)
 		return TRUE;
@@ -950,6 +954,50 @@ void debug_info() {
 	// OTHER THINGS
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&decoded, sizeof(decoded));
 	RegCloseKey(hKey);
+}
+
+void Volume(char* UpOrDown) {
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	if (UpOrDown == "UP") {
+		int tempvolume = volume + 100;
+		if (tempvolume < 0) {
+			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
+			volume = 0;
+			tempvolume = 0;
+			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
+		}
+		else if (tempvolume > 10000) {
+			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
+			volume = 10000;
+			tempvolume = 10000;
+			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
+		}
+		else {
+			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
+		}
+	}
+	else if (UpOrDown == "DOWN") {
+		int tempvolume = volume - 100;
+		if (tempvolume < 0) {
+			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
+			volume = 0;
+			tempvolume = 0;
+			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
+		}
+		else if (tempvolume > 10000) {
+			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
+			volume = 10000;
+			tempvolume = 10000;
+			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
+		}
+		else {
+			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
+		}
+	}
 }
 
 BOOL ProcessBlackList(){
@@ -1128,6 +1176,17 @@ void keybindings()
 	}
 	if (GetAsyncKeyState(VK_INSERT) & 1) {
 		ResetSynth();
+	}
+	if (volumehotkeys == 1) {
+		if (GetAsyncKeyState(VK_SUBTRACT) & 1) {
+			Volume("DOWN");
+		}
+		else if (GetAsyncKeyState(VK_ADD) & 1) {
+			Volume("UP");
+		}
+	}
+	else {
+		// Nothing lel
 	}
 }
 
