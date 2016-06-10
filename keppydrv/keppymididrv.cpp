@@ -965,13 +965,11 @@ void Volume(char* UpOrDown) {
 	if (UpOrDown == "UP") {
 		int tempvolume = volume + 100;
 		if (tempvolume < 0) {
-			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
 			volume = 0;
 			tempvolume = 0;
 			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
 		}
 		else if (tempvolume > 10000) {
-			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
 			volume = 10000;
 			tempvolume = 10000;
 			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
@@ -983,13 +981,11 @@ void Volume(char* UpOrDown) {
 	else if (UpOrDown == "DOWN") {
 		int tempvolume = volume - 100;
 		if (tempvolume < 0) {
-			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
 			volume = 0;
 			tempvolume = 0;
 			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
 		}
 		else if (tempvolume > 10000) {
-			PlaySoundW(TEXT("SystemExclamation"), NULL, SND_ALIAS);
 			volume = 10000;
 			tempvolume = 10000;
 			RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
@@ -1191,16 +1187,19 @@ void keybindings()
 }
 
 BOOL BannedSystemProcess() {
+	// These processes are PERMANENTLY banned because of some internal bugs inside them.
 	TCHAR modulename[MAX_PATH];
 	TCHAR bannedconsent[MAX_PATH];
 	TCHAR bannedexplorer[MAX_PATH];
 	TCHAR bannedcsrss[MAX_PATH];
+	TCHAR bannedscratch[MAX_PATH];
 	_tcscpy_s(bannedconsent, _countof(bannedconsent), _T("consent.exe"));
 	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
 	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
+	_tcscpy_s(bannedcsrss, _countof(bannedscratch), _T("scratch.exe"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
-	if (!_tcsicmp(modulename, bannedconsent) | !_tcsicmp(modulename, bannedexplorer) | !_tcsicmp(modulename, bannedcsrss)) {
+	if (!_tcsicmp(modulename, bannedconsent) | !_tcsicmp(modulename, bannedexplorer) | !_tcsicmp(modulename, bannedcsrss) | !_tcsicmp(modulename, bannedscratch)) {
 		return TRUE;
 		// It's a blacklisted process, so it can NOT create a BASS audio stream.
 	}
@@ -1212,6 +1211,7 @@ BOOL BannedSystemProcess() {
 
 unsigned __stdcall threadfunc(LPVOID lpV){
 	if (BannedSystemProcess() == TRUE) {
+		_endthreadex(0);
 		return 0;
 	}
 	else {
