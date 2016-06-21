@@ -1254,7 +1254,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 					}
 					else {
-						BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf); // default buffer size = 'minbuf' + additional buffer size
+						BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10); // default buffer size
 					}
 					hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 					BASS_ChannelPlay(hStream, false);
