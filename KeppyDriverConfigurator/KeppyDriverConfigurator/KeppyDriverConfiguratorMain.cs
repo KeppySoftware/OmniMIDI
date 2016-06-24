@@ -178,6 +178,10 @@ namespace KeppyDriverConfigurator
                 {
                     MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else if (Path.GetExtension(s[i]) == ".ecw" | Path.GetExtension(s[i]) == ".ECW")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the Ensoniq waveset (ECW) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
                 {
                     MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1301,7 +1305,7 @@ namespace KeppyDriverConfigurator
             DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Driver?\n\nWARNING: Only use this function to report serious bugs, like memory leaks and security flaws.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
-                Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
+                Process.Start("http://github.com/KaleidonKep99/Keppy-s-Driver/issues");
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -1311,7 +1315,7 @@ namespace KeppyDriverConfigurator
 
         private void downloadTheSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
+            Process.Start("http://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
         }
 
         private void visitKeppyStudiosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1407,7 +1411,7 @@ namespace KeppyDriverConfigurator
 
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 4.\n\n" +
+            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 8.\n\n" +
                 "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\n\n" +
                 "You can also reload lists that are already loaded.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
