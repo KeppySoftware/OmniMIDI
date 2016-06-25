@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.2.1.0
+AppVersion=3.3.0.0
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -19,7 +19,7 @@ DefaultGroupName=Keppy's Driver
 ExtraDiskSpaceRequired=6
 InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
-MinVersion=0,6.0.6000
+MinVersion=0,5.01.2600sp3
 OutputBaseFilename=KeppysDriverSetup
 OutputDir=..\Keppy-s-Driver
 SetupIconFile=midiicon.ico
@@ -34,9 +34,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.2.1.0
+VersionInfoProductTextVersion=3.3.0.0
 VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.2.1.0
+VersionInfoVersion=3.3.0.0
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -225,11 +225,13 @@ Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 [Run]
 Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
 Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
-Filename: "http://keppystudios.com/keppy-s-steinway-piano.html"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Download Keppy Steinway Piano"; StatusMsg: "Download Keppy Steinway Piano";
-Filename: "http://keppystudios.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Keppy Studios"; StatusMsg: "Visit Keppy Studios";
-Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions";
+Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Parameters: "/AS"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
+Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Parameters: "/AS"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
+Filename: "http://keppystudios.com/keppy-s-steinway-piano.html"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Download Keppy Steinway Piano"; StatusMsg: "Download Keppy Steinway Piano"
+Filename: "http://keppystudios.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Keppy Studios"; StatusMsg: "Visit Keppy Studios"
+Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
-                                                                                                                                  
+
 [Messages]
 AboutSetupTitle=About the driver
 ApplicationsFound2=The driver's files are locked by some programs or by Windows itself.%n%nIt is recommended to close the following programs and/or restart Windows to solve the issue.

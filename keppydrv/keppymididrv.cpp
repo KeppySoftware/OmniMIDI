@@ -1061,7 +1061,7 @@ void LoadSoundfont(DWORD whichsf){
 	TCHAR config[MAX_PATH];
 	BASS_MIDI_FONT * mf;
 	FreeFonts(0);
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, config)))
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
 	{
 		if (whichsf == 1) {
 			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidi.sflist"));
@@ -1166,7 +1166,7 @@ void keybindings()
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 		{
 			PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-			ShellExecute(NULL, L"open", configuratorapp, L"-advancedtab", NULL, SW_SHOWNORMAL);
+			ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
 			return;
 		}
 	}

@@ -15,6 +15,8 @@ namespace KeppyDriverConfigurator
     {
         public string BlacklistPath { get; set; }
         public string DefBlacklistPath { get; set; }
+        public string blacklistnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+        public string blacklistoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
 
         public KeppyDriverBlacklistSystem()
         {
@@ -41,13 +43,21 @@ namespace KeppyDriverConfigurator
 
         private void KeppyDriverBlacklistSystem_Load(object sender, EventArgs e)
         {
-            // Initialize blacklist
-            BlacklistPath = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist";
-            DefBlacklistPath = Environment.GetEnvironmentVariable("windir") + "\\keppymididrv.defaultblacklist";
-
-            if ((!System.IO.Directory.Exists(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\blacklist\\")))
+            if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\"))
             {
-                System.IO.Directory.CreateDirectory(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\blacklist\\");
+                Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
+                File.Move(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist", blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+                File.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+                Directory.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\");
+            }
+
+            // Initialize blacklist
+            BlacklistPath = 
+            DefBlacklistPath = blacklistnewlocation + "\\keppymididrv.defaultblacklist";
+
+            if (!System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\"))
+            {
+                System.IO.Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
                 File.Create(BlacklistPath).Dispose();
             }
             else

@@ -13,6 +13,14 @@ namespace KeppyDriverConfigurator
 {
     public partial class KeppyDriverConfiguratorMain : Form
     {
+        public string List1PathOld { get; set; }
+        public string List2PathOld { get; set; }
+        public string List3PathOld { get; set; }
+        public string List4PathOld { get; set; }
+        public string List5PathOld { get; set; }
+        public string List6PathOld { get; set; }
+        public string List7PathOld { get; set; }
+        public string List8PathOld { get; set; }
         public string List1Path { get; set; }
         public string List2Path { get; set; }
         public string List3Path { get; set; }
@@ -21,17 +29,30 @@ namespace KeppyDriverConfigurator
         public string List6Path { get; set; }
         public string List7Path { get; set; }
         public string List8Path { get; set; }
+        public int openadvanced { get; set; }
+        public string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+        public string soundfontoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
 
         public KeppyDriverConfiguratorMain(String[] args)
         {
-            InitializeComponent();
             foreach (String s in args)
             {
-                if (s == "-advancedtab")
+                switch (s.Substring(0, 3).ToUpper())
                 {
-                    TabsForTheControls.SelectedIndex = 8;
+                    case "/AS":
+                        InitializeLists(1);
+                        InitializeBlackListComp();
+                        Environment.Exit(0);
+                        break;
+                    case "/AT":
+                        openadvanced = 1;
+                        break;
+                    default:
+                        // do other stuff...
+                        break;
                 }
             }
+            InitializeComponent();
         }
 
         static bool IsWindows10()
@@ -282,6 +303,224 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        private void InitializeLists(int silent)
+        {
+            // Initialize the eight list paths
+            List1PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
+            List2PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
+            List3PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
+            List4PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
+            List5PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
+            List6PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
+            List7PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
+            List8PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
+            List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
+            List2Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
+            List3Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
+            List4Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
+            List5Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
+            List6Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
+            List7Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
+            List8Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
+
+            // ======= Read soundfont lists
+            try
+            {
+                if (System.IO.Directory.Exists(soundfontoldlocation + "\\Keppy's Driver\\lists\\"))
+                {
+                    Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Driver\\lists\\");
+                    File.Move(List1PathOld, List1Path);
+                    File.Move(List2PathOld, List2Path);
+                    File.Move(List3PathOld, List3Path);
+                    File.Move(List4PathOld, List4Path);
+                    File.Move(List5PathOld, List5Path);
+                    File.Move(List6PathOld, List6Path);
+                    File.Move(List7PathOld, List7Path);
+                    File.Move(List8PathOld, List8Path);
+                    File.Delete(List1PathOld);
+                    File.Delete(List2PathOld);
+                    File.Delete(List3PathOld);
+                    File.Delete(List4PathOld);
+                    File.Delete(List5PathOld);
+                    File.Delete(List6PathOld);
+                    File.Delete(List7PathOld);
+                    File.Delete(List8PathOld);
+                    Directory.Delete(soundfontoldlocation + "\\Keppy's Driver\\lists\\");
+                }
+                else if (!System.IO.Directory.Exists(soundfontoldlocation + "\\Keppy's Driver\\lists\\") & !System.IO.Directory.Exists(soundfontnewlocation + "\\Keppy's Driver\\lists\\"))
+                {
+                    System.IO.Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Driver\\lists\\");
+                    File.Create(List1Path).Dispose();
+                    File.Create(List2Path).Dispose();
+                    File.Create(List3Path).Dispose();
+                    File.Create(List4Path).Dispose();
+                    File.Create(List5Path).Dispose();
+                    File.Create(List6Path).Dispose();
+                    File.Create(List7Path).Dispose();
+                    File.Create(List8Path).Dispose();
+                }
+                else
+                {
+                    try
+                    {
+                        // == List 1
+                        using (StreamReader r = new StreamReader(List1Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis1.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                            }
+                        }
+                        // == List 2
+                        using (StreamReader r = new StreamReader(List2Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis2.Items.Add(line); // The program is copying the entire text file to the List II's listbox.
+                            }
+                        }
+                        // == List 3
+                        using (StreamReader r = new StreamReader(List3Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis3.Items.Add(line); // The program is copying the entire text file to the List III's listbox.
+                            }
+                        }
+                        // == List 4
+                        using (StreamReader r = new StreamReader(List4Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis4.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                            }
+                        }
+                        // == List 5
+                        using (StreamReader r = new StreamReader(List5Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis5.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                            }
+                        }
+                        // == List 6
+                        using (StreamReader r = new StreamReader(List6Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis6.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                            }
+                        }
+                        // == List 7
+                        using (StreamReader r = new StreamReader(List7Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis7.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                            }
+                        }
+                        // == List 8
+                        using (StreamReader r = new StreamReader(List8Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis8.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // If the program fails at reading the lists, it'll create them for you
+                        if (File.Exists(List1Path) == false)
+                        {
+                            File.Create(List1Path).Dispose();
+                        }
+                        if (File.Exists(List2Path) == false)
+                        {
+                            File.Create(List2Path).Dispose();
+                        }
+                        if (File.Exists(List3Path) == false)
+                        {
+                            File.Create(List3Path).Dispose();
+                        }
+                        if (File.Exists(List4Path) == false)
+                        {
+                            File.Create(List4Path).Dispose();
+                        }
+                        if (File.Exists(List5Path) == false)
+                        {
+                            File.Create(List5Path).Dispose();
+                        }
+                        if (File.Exists(List6Path) == false)
+                        {
+                            File.Create(List6Path).Dispose();
+                        }
+                        if (File.Exists(List7Path) == false)
+                        {
+                            File.Create(List7Path).Dispose();
+                        }
+                        if (File.Exists(List8Path) == false)
+                        {
+                            File.Create(List8Path).Dispose();
+                        }
+                        if (silent == 1)
+                        {
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("One of the soundfont lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (silent == 1)
+                {
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                }
+            }
+        }
+
+        public void InitializeBlackListComp()
+        {
+            try
+            {
+                string blacklistnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+                string blacklistoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
+
+                if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\"))
+                {
+                    Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
+                    File.Move(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist", blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+                    File.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+                    Directory.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\");
+                }
+                else if (!System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\") & !System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\"))
+                {
+                    Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
+                    File.Create(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist").Dispose();
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
         private void SaveSettings()
         {
             try
@@ -419,151 +658,7 @@ namespace KeppyDriverConfigurator
                 }
             }
 
-            // Initialize the four list paths
-            List1Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidi.sflist";
-            List2Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidib.sflist";
-            List3Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidic.sflist";
-            List4Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidid.sflist";
-            List5Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidie.sflist";
-            List6Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidif.sflist";
-            List7Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidig.sflist";
-            List8Path = Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\keppymidih.sflist";
-
-            // ======= Read soundfont lists
-            try
-            {
-                if ((!System.IO.Directory.Exists(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\")))
-                {
-                    System.IO.Directory.CreateDirectory(Environment.GetEnvironmentVariable("LocalAppData") + "\\Keppy's Driver\\lists\\");
-                    File.Create(List1Path).Dispose();
-                    File.Create(List2Path).Dispose();
-                    File.Create(List3Path).Dispose();
-                    File.Create(List4Path).Dispose();
-                    File.Create(List5Path).Dispose();
-                    File.Create(List6Path).Dispose();
-                    File.Create(List7Path).Dispose();
-                    File.Create(List8Path).Dispose();
-                }
-                else
-                {
-                    try
-                    {
-                    // == List 1
-                    using (StreamReader r = new StreamReader(List1Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis1.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
-                        }
-                    }
-                    // == List 2
-                    using (StreamReader r = new StreamReader(List2Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis2.Items.Add(line); // The program is copying the entire text file to the List II's listbox.
-                        }
-                    }
-                    // == List 3
-                    using (StreamReader r = new StreamReader(List3Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis3.Items.Add(line); // The program is copying the entire text file to the List III's listbox.
-                        }
-                    }
-                    // == List 4
-                    using (StreamReader r = new StreamReader(List4Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis4.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
-                        }
-                    }
-                    // == List 5
-                    using (StreamReader r = new StreamReader(List5Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis5.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
-                        }
-                    }
-                    // == List 6
-                    using (StreamReader r = new StreamReader(List6Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis6.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
-                        }
-                    }
-                    // == List 7
-                    using (StreamReader r = new StreamReader(List7Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis7.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
-                        }
-                    }
-                    // == List 8
-                    using (StreamReader r = new StreamReader(List8Path))
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis8.Items.Add(line); // The program is copying the entire text file to the List IV's listbox.
-                        }
-                    }
-                    }
-                    catch
-                    {
-                        // If the program fails at reading the lists, it'll create them for you
-                        if (File.Exists(List1Path) == false)
-                        {
-                            File.Create(List1Path).Dispose();
-                        }
-                        if (File.Exists(List2Path) == false)
-                        {
-                            File.Create(List2Path).Dispose();
-                        }
-                        if (File.Exists(List3Path) == false)
-                        {
-                            File.Create(List3Path).Dispose();
-                        }
-                        if (File.Exists(List4Path) == false)
-                        {
-                            File.Create(List4Path).Dispose();
-                        }
-                        if (File.Exists(List5Path) == false)
-                        {
-                            File.Create(List5Path).Dispose();
-                        }
-                        if (File.Exists(List6Path) == false)
-                        {
-                            File.Create(List6Path).Dispose();
-                        }
-                        if (File.Exists(List7Path) == false)
-                        {
-                            File.Create(List7Path).Dispose();
-                        }
-                        if (File.Exists(List8Path) == false)
-                        {
-                            File.Create(List8Path).Dispose();
-                        }
-                        MessageBox.Show("One of the soundfont lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
+            InitializeLists(0);
 
             // ======= Load settings from the registry
             try
@@ -650,37 +745,29 @@ namespace KeppyDriverConfigurator
                 {
                     OutputWAV.Checked = false;
                 }
-                if (Environment.OSVersion.Version.Major == 5)
+                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
                 {
                     XAudioDisable.Checked = true;
-                    XAudioDisable.Enabled = false;
-                }
-                else
-                {
-                    if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+                    VMSEmu.Visible = true;
+                    SPFSecondaryBut.Visible = false;
+                    if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
                     {
-                        XAudioDisable.Checked = true;
-                        VMSEmu.Visible = true;
-                        SPFSecondaryBut.Visible = false;
-                        if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
-                        {
-                            VMSEmu.Checked = true;
-                            bufsize.Enabled = true;
-                        }
-                        else
-                        {
-                            VMSEmu.Checked = false;
-                            bufsize.Enabled = false;
-                            bufsize.Value = 0;
-                        }
+                        VMSEmu.Checked = true;
+                        bufsize.Enabled = true;
                     }
                     else
                     {
-                        XAudioDisable.Checked = false;
-                        VMSEmu.Visible = false;
-                        SPFSecondaryBut.Visible = true;
-                        bufsize.Enabled = true;
+                        VMSEmu.Checked = false;
+                        bufsize.Enabled = false;
+                        bufsize.Value = 0;
                     }
+                }
+                else
+                {
+                    XAudioDisable.Checked = false;
+                    VMSEmu.Visible = false;
+                    SPFSecondaryBut.Visible = true;
+                    bufsize.Enabled = true;
                 }
 
                 // LEL
@@ -692,6 +779,12 @@ namespace KeppyDriverConfigurator
                 VolSimView.Text = x.ToString("000\\%");
                 VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
                 VolTrackBar.Value = VolumeValue;
+
+                // Jakuberino
+                if (openadvanced == 1)
+                {
+                    TabsForTheControls.SelectedIndex = 8;
+                }
             }
             catch (Exception ex)
             {

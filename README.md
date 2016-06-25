@@ -9,20 +9,23 @@ I optimized this fork by doing these things:
 - Note off event and sound effects disabler settings
 - Better UI for the configurator
 
+## Required software
+You need this software installed before attempting to run the setup:
+- [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) (Install the 64-bit version too if you're using a 64-bit O.S.)
+- [Microsoft .NET Framework 4.0] (https://www.microsoft.com/en-US/download/details.aspx?id=17718)
+- [XP: Windows Imaging Component] (https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
+The DirectX Web Installer is already included with the driver setup, so there's no need to install it separately.
+
 ## Minimum system requirements for standard MIDIs playback
 To use the driver, you need at least:
 - A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support)
 - 256MB of RAM
-- [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) & .NET Framework 4.0
-- [DirectX 9.0c with XAudio 2.x] (http://www.microsoft.com/en-us/download/details.aspx?id=35) (Integrated in the installer)
-- Windows Vista SP2 or greater (Server versions are supported too)
+- Windows XP SP3 [SP2 for 64-bit] or greater (Server versions are supported too)
 
 ## Recommended system requirements for smooth Black MIDIs playback
 To use the driver, you need at least:
 - A quad-core CPU running at 2.4GHz (x86_64 compliant)
 - 4096MB of RAM
-- [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) & .NET Framework 4.0
-- [DirectX 9.0c with XAudio 2.x] (http://www.microsoft.com/en-us/download/details.aspx?id=35) (Integrated in the installer)
 - Windows 7 SP1 or greater (Server versions are supported too)
 
 ## Minimum system requirements for driver compiling
