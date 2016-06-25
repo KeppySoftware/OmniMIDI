@@ -30,8 +30,6 @@ namespace KeppyDriverConfigurator
         public string List7Path { get; set; }
         public string List8Path { get; set; }
         public int openadvanced { get; set; }
-        public string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-        public string soundfontoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
 
         public KeppyDriverConfiguratorMain(String[] args)
         {
@@ -60,6 +58,13 @@ namespace KeppyDriverConfigurator
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             string productName = (string)reg.GetValue("ProductName");
             return productName.StartsWith("Windows 10");
+        }
+
+        static bool IsWindowsXP()
+        {
+            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            string productName = (string)reg.GetValue("ProductName");
+            return productName.StartsWith("Windows XP");
         }
 
         // Just stuff to reduce code's length
@@ -305,27 +310,18 @@ namespace KeppyDriverConfigurator
 
         private void InitializeLists(int silent)
         {
-            // Initialize the eight list paths
-            List1PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
-            List2PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
-            List3PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
-            List4PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
-            List5PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
-            List6PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
-            List7PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
-            List8PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
-            List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
-            List2Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
-            List3Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
-            List4Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
-            List5Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
-            List6Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
-            List7Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
-            List8Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
-
-            // ======= Read soundfont lists
-            try
+            string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+            if (IsWindowsXP() == false)
             {
+                string soundfontoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
+                List1PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
+                List2PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
+                List3PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
+                List4PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
+                List5PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
+                List6PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
+                List7PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
+                List8PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
                 if (System.IO.Directory.Exists(soundfontoldlocation + "\\Keppy's Driver\\lists\\"))
                 {
                     Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Driver\\lists\\");
@@ -347,7 +343,22 @@ namespace KeppyDriverConfigurator
                     File.Delete(List8PathOld);
                     Directory.Delete(soundfontoldlocation + "\\Keppy's Driver\\lists\\");
                 }
-                else if (!System.IO.Directory.Exists(soundfontoldlocation + "\\Keppy's Driver\\lists\\") & !System.IO.Directory.Exists(soundfontnewlocation + "\\Keppy's Driver\\lists\\"))
+            }
+
+            // Initialize the eight list paths
+            List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
+            List2Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
+            List3Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
+            List4Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
+            List5Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
+            List6Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
+            List7Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
+            List8Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
+
+            // ======= Read soundfont lists
+            try
+            {
+                if (!System.IO.Directory.Exists(soundfontnewlocation + "\\Keppy's Driver\\lists\\"))
                 {
                     System.IO.Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Driver\\lists\\");
                     File.Create(List1Path).Dispose();
@@ -500,16 +511,18 @@ namespace KeppyDriverConfigurator
             try
             {
                 string blacklistnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-                string blacklistoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
-
-                if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\"))
+                if (IsWindowsXP() == false)
                 {
-                    Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
-                    File.Move(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist", blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
-                    File.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
-                    Directory.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\");
+                    string blacklistoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
+                    if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\"))
+                    {
+                        Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
+                        File.Move(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist", blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+                        File.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+                        Directory.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\");
+                    }
                 }
-                else if (!System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\") & !System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\"))
+                if (!System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\"))
                 {
                     Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
                     File.Create(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist").Dispose();
@@ -640,6 +653,7 @@ namespace KeppyDriverConfigurator
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 toolStripSeparator1.Visible = false;
             }
             else
@@ -1410,6 +1424,11 @@ namespace KeppyDriverConfigurator
         private void visitKeppyStudiosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("http://keppystudios.com");
+        }
+
+        private void getTheMIDIMapperForWindows10ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://plus.google.com/+RichardForhenson/posts/bkrqUfbV3xz");
         }
 
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
