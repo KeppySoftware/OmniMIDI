@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.RightChannel = new System.Windows.Forms.ProgressBar();
             this.CH1VOL = new System.Windows.Forms.TrackBar();
             this.CH2VOL = new System.Windows.Forms.TrackBar();
@@ -49,7 +48,7 @@
             this.LeftChannel = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
+            this.VolumeCheck = new System.Windows.Forms.Timer();
             this.CH1 = new System.Windows.Forms.Label();
             this.CH2 = new System.Windows.Forms.Label();
             this.CH3 = new System.Windows.Forms.Label();
@@ -66,14 +65,14 @@
             this.CH14 = new System.Windows.Forms.Label();
             this.CH15 = new System.Windows.Forms.Label();
             this.CH16 = new System.Windows.Forms.Label();
-            this.ChannelVolume = new System.Windows.Forms.Timer(this.components);
+            this.ChannelVolume = new System.Windows.Forms.Timer();
             this.label3 = new System.Windows.Forms.Label();
             this.VolumeMonitor = new System.Windows.Forms.CheckBox();
             this.Main = new System.Windows.Forms.MenuStrip();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
+            this.VolumeTip = new System.Windows.Forms.ToolTip();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -600,7 +599,6 @@
             this.MaximizeBox = false;
             this.Name = "KeppyDriverMixerWindow";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keppy\'s Driver Mixer";
             this.Load += new System.EventHandler(this.KeppyDriverMixerWindow_Load);
