@@ -7,12 +7,14 @@ using System.Drawing;
 using System.Text;
 using System.Runtime.InteropServices; 
 using System.Windows.Forms;
+using System.Management;
 using Microsoft.Win32;
 
 namespace KeppyDriverConfigurator
 {
     public partial class KeppyDriverMixerWindow : Form
     {
+        uint CurrentClock, MaxStockClock;
         private static KeppyDriverMixerWindow inst;
         public static KeppyDriverMixerWindow GetForm
         {
@@ -35,6 +37,15 @@ namespace KeppyDriverConfigurator
         {
             this.Controls.Add(LeftChannel);
             InitializeComponent();
+        }
+
+        public void CPUSpeed()
+        {
+            using (ManagementObject Mo = new ManagementObject("Win32_Processor.DeviceID='CPU0'"))
+            {
+                CurrentClock = (uint)(Mo["CurrentClockSpeed"]);
+                MaxStockClock = (uint)(Mo["MaxClockSpeed"]);
+            }
         }
 
         private void LeftChannelText(string text)
@@ -240,8 +251,19 @@ namespace KeppyDriverConfigurator
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
                 if (VolumeMonitor.Checked == true)
                 {
-                    Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
-                    VolumeCheck.Enabled = true;
+                    CPUSpeed();
+                    if (CurrentClock < 2400)
+                    {
+                        MessageBox.Show("A CPU running at 2.4GHz or more is required for the volume meters to work.", "Minimum requirements", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        VolumeMonitor.Checked = false;
+                    }
+                    else if (CurrentClock >= 2400)
+                    {
+                        Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                        VolumeCheck.Enabled = true;
+                        LeftChannel.Value = 0;
+                        RightChannel.Value = 0;   
+                    }
                 }
                 else
                 {
