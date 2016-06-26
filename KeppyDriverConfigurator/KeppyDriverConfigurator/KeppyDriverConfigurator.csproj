@@ -96,6 +96,12 @@
     <Compile Include="KeppyDriverInformation.Designer.cs">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeppyDriverMixerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverMixerWindow.Designer.cs">
+      <DependentUpon>KeppyDriverMixerWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeppyDriverOutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +144,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverInformation.resx">
       <DependentUpon>KeppyDriverInformation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppyDriverMixerWindow.resx">
+      <DependentUpon>KeppyDriverMixerWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverOutputWAVDir.resx">
       <DependentUpon>KeppyDriverOutputWAVDir.cs</DependentUpon>

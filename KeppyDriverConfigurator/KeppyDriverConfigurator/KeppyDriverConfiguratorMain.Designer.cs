@@ -157,6 +157,7 @@
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openTheMixerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -168,6 +169,11 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hotkeysAndListSwitchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hLSEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hLSDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.soundfontListChangeConfirmationDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -177,6 +183,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.guidesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -192,7 +199,6 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -318,7 +324,7 @@
             this.MvD1.Name = "MvD1";
             this.MvD1.Size = new System.Drawing.Size(89, 23);
             this.MvD1.TabIndex = 4;
-            this.MvD1.Text = "Move Dwn ▼";
+            this.MvD1.Text = "Move ▼";
             this.MvD1.UseVisualStyleBackColor = true;
             this.MvD1.Click += new System.EventHandler(this.MvD1_Click);
             // 
@@ -328,7 +334,7 @@
             this.MvU1.Name = "MvU1";
             this.MvU1.Size = new System.Drawing.Size(89, 23);
             this.MvU1.TabIndex = 3;
-            this.MvU1.Text = "Move Up ▲";
+            this.MvU1.Text = "Move ▲";
             this.MvU1.UseVisualStyleBackColor = true;
             this.MvU1.Click += new System.EventHandler(this.MvU1_Click);
             // 
@@ -442,7 +448,7 @@
             this.MvD2.Name = "MvD2";
             this.MvD2.Size = new System.Drawing.Size(89, 23);
             this.MvD2.TabIndex = 4;
-            this.MvD2.Text = "Move Dwn ▼";
+            this.MvD2.Text = "Move ▼";
             this.MvD2.UseVisualStyleBackColor = true;
             this.MvD2.Click += new System.EventHandler(this.MvD2_Click);
             // 
@@ -452,7 +458,7 @@
             this.MvU2.Name = "MvU2";
             this.MvU2.Size = new System.Drawing.Size(89, 23);
             this.MvU2.TabIndex = 3;
-            this.MvU2.Text = "Move Up ▲";
+            this.MvU2.Text = "Move ▲";
             this.MvU2.UseVisualStyleBackColor = true;
             this.MvU2.Click += new System.EventHandler(this.MvU2_Click);
             // 
@@ -565,7 +571,7 @@
             this.MvD3.Name = "MvD3";
             this.MvD3.Size = new System.Drawing.Size(89, 23);
             this.MvD3.TabIndex = 4;
-            this.MvD3.Text = "Move Dwn ▼";
+            this.MvD3.Text = "Move ▼";
             this.MvD3.UseVisualStyleBackColor = true;
             this.MvD3.Click += new System.EventHandler(this.MvD3_Click);
             // 
@@ -575,7 +581,7 @@
             this.MvU3.Name = "MvU3";
             this.MvU3.Size = new System.Drawing.Size(89, 23);
             this.MvU3.TabIndex = 3;
-            this.MvU3.Text = "Move Up ▲";
+            this.MvU3.Text = "Move ▲";
             this.MvU3.UseVisualStyleBackColor = true;
             this.MvU3.Click += new System.EventHandler(this.MvU3_Click);
             // 
@@ -688,7 +694,7 @@
             this.MvD4.Name = "MvD4";
             this.MvD4.Size = new System.Drawing.Size(89, 23);
             this.MvD4.TabIndex = 4;
-            this.MvD4.Text = "Move Dwn ▼";
+            this.MvD4.Text = "Move ▼";
             this.MvD4.UseVisualStyleBackColor = true;
             this.MvD4.Click += new System.EventHandler(this.MvD4_Click);
             // 
@@ -698,7 +704,7 @@
             this.MvU4.Name = "MvU4";
             this.MvU4.Size = new System.Drawing.Size(89, 23);
             this.MvU4.TabIndex = 3;
-            this.MvU4.Text = "Move Up ▲";
+            this.MvU4.Text = "Move ▲";
             this.MvU4.UseVisualStyleBackColor = true;
             this.MvU4.Click += new System.EventHandler(this.MvU4_Click);
             // 
@@ -811,7 +817,7 @@
             this.MvD5.Name = "MvD5";
             this.MvD5.Size = new System.Drawing.Size(89, 23);
             this.MvD5.TabIndex = 37;
-            this.MvD5.Text = "Move Dwn ▼";
+            this.MvD5.Text = "Move ▼";
             this.MvD5.UseVisualStyleBackColor = true;
             this.MvD5.Click += new System.EventHandler(this.MvD5_Click);
             // 
@@ -821,7 +827,7 @@
             this.MvU5.Name = "MvU5";
             this.MvU5.Size = new System.Drawing.Size(89, 23);
             this.MvU5.TabIndex = 36;
-            this.MvU5.Text = "Move Up ▲";
+            this.MvU5.Text = "Move ▲";
             this.MvU5.UseVisualStyleBackColor = true;
             this.MvU5.Click += new System.EventHandler(this.MvU5_Click);
             // 
@@ -934,7 +940,7 @@
             this.MvD6.Name = "MvD6";
             this.MvD6.Size = new System.Drawing.Size(89, 23);
             this.MvD6.TabIndex = 37;
-            this.MvD6.Text = "Move Dwn ▼";
+            this.MvD6.Text = "Move ▼";
             this.MvD6.UseVisualStyleBackColor = true;
             this.MvD6.Click += new System.EventHandler(this.MvD6_Click);
             // 
@@ -944,7 +950,7 @@
             this.MvU6.Name = "MvU6";
             this.MvU6.Size = new System.Drawing.Size(89, 23);
             this.MvU6.TabIndex = 36;
-            this.MvU6.Text = "Move Up ▲";
+            this.MvU6.Text = "Move ▲";
             this.MvU6.UseVisualStyleBackColor = true;
             this.MvU6.Click += new System.EventHandler(this.MvU6_Click);
             // 
@@ -1057,7 +1063,7 @@
             this.MvD7.Name = "MvD7";
             this.MvD7.Size = new System.Drawing.Size(89, 23);
             this.MvD7.TabIndex = 37;
-            this.MvD7.Text = "Move Dwn ▼";
+            this.MvD7.Text = "Move ▼";
             this.MvD7.UseVisualStyleBackColor = true;
             this.MvD7.Click += new System.EventHandler(this.MvD7_Click);
             // 
@@ -1067,7 +1073,7 @@
             this.MvU7.Name = "MvU7";
             this.MvU7.Size = new System.Drawing.Size(89, 23);
             this.MvU7.TabIndex = 36;
-            this.MvU7.Text = "Move Up ▲";
+            this.MvU7.Text = "Move ▲";
             this.MvU7.UseVisualStyleBackColor = true;
             this.MvU7.Click += new System.EventHandler(this.MvU7_Click);
             // 
@@ -1180,7 +1186,7 @@
             this.MvD8.Name = "MvD8";
             this.MvD8.Size = new System.Drawing.Size(89, 23);
             this.MvD8.TabIndex = 37;
-            this.MvD8.Text = "Move Dwn ▼";
+            this.MvD8.Text = "Move ▼";
             this.MvD8.UseVisualStyleBackColor = true;
             this.MvD8.Click += new System.EventHandler(this.MvD8_Click);
             // 
@@ -1190,7 +1196,7 @@
             this.MvU8.Name = "MvU8";
             this.MvU8.Size = new System.Drawing.Size(89, 23);
             this.MvU8.TabIndex = 36;
-            this.MvU8.Text = "Move Up ▲";
+            this.MvU8.Text = "Move ▲";
             this.MvU8.UseVisualStyleBackColor = true;
             this.MvU8.Click += new System.EventHandler(this.MvU8_Click);
             // 
@@ -1313,7 +1319,7 @@
             this.GroupBox5.Size = new System.Drawing.Size(661, 107);
             this.GroupBox5.TabIndex = 31;
             this.GroupBox5.TabStop = false;
-            this.GroupBox5.Text = "Advanced BASSMIDI settings";
+            this.GroupBox5.Text = "Advanced audio settings";
             // 
             // SPFSecondaryBut
             // 
@@ -1441,7 +1447,7 @@
             this.groupBox1.Size = new System.Drawing.Size(661, 159);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "BASSMIDI settings";
+            this.groupBox1.Text = "Audio settings";
             // 
             // Label6
             // 
@@ -1795,6 +1801,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openDebugWindowToolStripMenuItem,
+            this.openTheMixerToolStripMenuItem,
             this.openTheBlacklistManagerToolStripMenuItem,
             this.toolStripSeparator3,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
@@ -1812,6 +1819,13 @@
             this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
+            // 
+            // openTheMixerToolStripMenuItem
+            // 
+            this.openTheMixerToolStripMenuItem.Name = "openTheMixerToolStripMenuItem";
+            this.openTheMixerToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.openTheMixerToolStripMenuItem.Text = "Open the mixer";
+            this.openTheMixerToolStripMenuItem.Click += new System.EventHandler(this.openTheMixerToolStripMenuItem_Click);
             // 
             // openTheBlacklistManagerToolStripMenuItem
             // 
@@ -1864,8 +1878,7 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
-            this.soundfontListChangeConfirmationDialogToolStripMenuItem,
-            this.volumeHotkeysToolStripMenuItem});
+            this.hotkeysToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
@@ -1891,13 +1904,52 @@
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
+            // hotkeysToolStripMenuItem
+            // 
+            this.hotkeysToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hotkeysAndListSwitchingToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem,
+            this.volumeHotkeysToolStripMenuItem});
+            this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.hotkeysToolStripMenuItem.Text = "Hotkeys";
+            // 
+            // hotkeysAndListSwitchingToolStripMenuItem
+            // 
+            this.hotkeysAndListSwitchingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hLSEnabledToolStripMenuItem,
+            this.hLSDisabledToolStripMenuItem});
+            this.hotkeysAndListSwitchingToolStripMenuItem.Name = "hotkeysAndListSwitchingToolStripMenuItem";
+            this.hotkeysAndListSwitchingToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
+            this.hotkeysAndListSwitchingToolStripMenuItem.Text = "Hotkeys and list switching";
+            // 
+            // hLSEnabledToolStripMenuItem
+            // 
+            this.hLSEnabledToolStripMenuItem.Name = "hLSEnabledToolStripMenuItem";
+            this.hLSEnabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.hLSEnabledToolStripMenuItem.Text = "Enabled";
+            this.hLSEnabledToolStripMenuItem.Click += new System.EventHandler(this.hLSEnabledToolStripMenuItem_Click);
+            // 
+            // hLSDisabledToolStripMenuItem
+            // 
+            this.hLSDisabledToolStripMenuItem.Name = "hLSDisabledToolStripMenuItem";
+            this.hLSDisabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.hLSDisabledToolStripMenuItem.Text = "Disabled";
+            this.hLSDisabledToolStripMenuItem.Click += new System.EventHandler(this.hLSDisabledToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(295, 6);
+            // 
             // soundfontListChangeConfirmationDialogToolStripMenuItem
             // 
             this.soundfontListChangeConfirmationDialogToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.enabledToolStripMenuItem,
             this.disabledToolStripMenuItem});
             this.soundfontListChangeConfirmationDialogToolStripMenuItem.Name = "soundfontListChangeConfirmationDialogToolStripMenuItem";
-            this.soundfontListChangeConfirmationDialogToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.soundfontListChangeConfirmationDialogToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
             this.soundfontListChangeConfirmationDialogToolStripMenuItem.Text = "Soundfont list change confirmation dialog";
             // 
             // enabledToolStripMenuItem
@@ -1905,14 +1957,12 @@
             this.enabledToolStripMenuItem.Name = "enabledToolStripMenuItem";
             this.enabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.enabledToolStripMenuItem.Text = "Enabled";
-            this.enabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationenabledToolStripMenuItem_Click);
             // 
             // disabledToolStripMenuItem
             // 
             this.disabledToolStripMenuItem.Name = "disabledToolStripMenuItem";
             this.disabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.disabledToolStripMenuItem.Text = "Disabled";
-            this.disabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationdisabledToolStripMenuItem_Click);
             // 
             // volumeHotkeysToolStripMenuItem
             // 
@@ -1920,7 +1970,7 @@
             this.enabledToolStripMenuItem1,
             this.disabledToolStripMenuItem1});
             this.volumeHotkeysToolStripMenuItem.Name = "volumeHotkeysToolStripMenuItem";
-            this.volumeHotkeysToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.volumeHotkeysToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
             this.volumeHotkeysToolStripMenuItem.Text = "Volume hotkeys";
             // 
             // enabledToolStripMenuItem1
@@ -1928,14 +1978,12 @@
             this.enabledToolStripMenuItem1.Name = "enabledToolStripMenuItem1";
             this.enabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
             this.enabledToolStripMenuItem1.Text = "Enabled";
-            this.enabledToolStripMenuItem1.Click += new System.EventHandler(this.enabledToolStripMenuItem1_Click);
             // 
             // disabledToolStripMenuItem1
             // 
             this.disabledToolStripMenuItem1.Name = "disabledToolStripMenuItem1";
             this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
             this.disabledToolStripMenuItem1.Text = "Disabled";
-            this.disabledToolStripMenuItem1.Click += new System.EventHandler(this.disabledToolStripMenuItem1_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1966,6 +2014,14 @@
             this.openUpdaterToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            // 
+            // getTheMIDIMapperForWindows10ToolStripMenuItem
+            // 
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Name = "getTheMIDIMapperForWindows10ToolStripMenuItem";
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -2066,14 +2122,6 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
-            // 
-            // getTheMIDIMapperForWindows10ToolStripMenuItem
-            // 
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Name = "getTheMIDIMapperForWindows10ToolStripMenuItem";
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2295,15 +2343,21 @@
         private System.Windows.Forms.ListBox Lis8;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem1;
+        private System.Windows.Forms.Timer VolumeHotkeysCheck;
+        private System.Windows.Forms.ToolStripMenuItem whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getTheMIDIMapperForWindows10ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hotkeysToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hotkeysAndListSwitchingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hLSEnabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hLSDisabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem soundfontListChangeConfirmationDialogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem;
-        private System.Windows.Forms.Timer VolumeHotkeysCheck;
         private System.Windows.Forms.ToolStripMenuItem volumeHotkeysToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem getTheMIDIMapperForWindows10ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openTheMixerToolStripMenuItem;
     }
 }
 

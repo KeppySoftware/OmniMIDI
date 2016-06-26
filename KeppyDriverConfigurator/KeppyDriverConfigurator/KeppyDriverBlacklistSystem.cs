@@ -52,8 +52,8 @@ namespace KeppyDriverConfigurator
             }
 
             // Initialize blacklist
-            BlacklistPath = 
-            DefBlacklistPath = blacklistnewlocation + "\\keppymididrv.defaultblacklist";
+            BlacklistPath = blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist";
+            DefBlacklistPath = System.Environment.GetEnvironmentVariable("WINDIR") + "\\keppymididrv.defaultblacklist";
 
             if (!System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\"))
             {

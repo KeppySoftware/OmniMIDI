@@ -707,6 +707,24 @@ namespace KeppyDriverConfigurator
                     VolumeHotkeysCheck.Enabled = false;
                     disabledToolStripMenuItem1.Checked = true;
                 }
+                if (Convert.ToInt32(Settings.GetValue("allhotkeys")) == 1)
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
+                    volumeHotkeysToolStripMenuItem.Enabled = true;
+                    hLSEnabledToolStripMenuItem.Checked = true;
+                    hLSDisabledToolStripMenuItem.Checked = false;
+                    hLSEnabledToolStripMenuItem.Enabled = false;
+                    hLSDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
+                    volumeHotkeysToolStripMenuItem.Enabled = false;
+                    hLSEnabledToolStripMenuItem.Checked = false;
+                    hLSDisabledToolStripMenuItem.Checked = true;
+                    hLSEnabledToolStripMenuItem.Enabled = true;
+                    hLSDisabledToolStripMenuItem.Enabled = false;
+                }
                 Frequency.Text = Settings.GetValue("frequency").ToString();
                 TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
 
@@ -1370,6 +1388,12 @@ namespace KeppyDriverConfigurator
             KeppyDriverDebugWindow.GetForm.Show();
         }
 
+
+        private void openTheMixerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverMixerWindow.GetForm.Show();
+        }
+
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppyDriverBlacklistSystem frm = new KeppyDriverBlacklistSystem();
@@ -1497,6 +1521,33 @@ namespace KeppyDriverConfigurator
             VolumeHotkeysCheck.Enabled = false;
             enabledToolStripMenuItem1.Checked = false;
             disabledToolStripMenuItem1.Checked = true;
+        }
+
+
+        private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            Settings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+            Settings.Close();
+            soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
+            volumeHotkeysToolStripMenuItem.Enabled = true;
+            hLSEnabledToolStripMenuItem.Checked = true;
+            hLSDisabledToolStripMenuItem.Checked = false;
+            hLSEnabledToolStripMenuItem.Enabled = false;
+            hLSDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            Settings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+            Settings.Close();
+            soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
+            volumeHotkeysToolStripMenuItem.Enabled = false;
+            hLSEnabledToolStripMenuItem.Checked = false;
+            hLSDisabledToolStripMenuItem.Checked = true;
+            hLSEnabledToolStripMenuItem.Enabled = true;
+            hLSDisabledToolStripMenuItem.Enabled = false;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

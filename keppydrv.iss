@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.3.0.1
+AppVersion=3.3.1.0
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -32,11 +32,11 @@ UninstallDisplaySize=5
 UninstallFilesDir={sys}\keppydrv\
 VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
-VersionInfoDescription=User-mode MIDI driver for Windows Vista and newer
+VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.3.0.1
-VersionInfoTextVersion=User-mode MIDI driver for Windows Vista and newer
-VersionInfoVersion=3.3.0.1
+VersionInfoProductTextVersion=3.3.1.0
+VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
+VersionInfoVersion=3.3.1.0
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -128,29 +128,29 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volume"; ValueData: "10000"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volumehotkeys"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "xaudiodisabled"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
-;3D effects
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusfxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "chorusglobalvalue"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "compressorfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "compressorfxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "distortionfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "distortionfxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "echofx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "echofxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "flangerfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "flangerfxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "garglefx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "garglefxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbfxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "reverbglobalvalue"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "sittingfx"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "sittingfxnum"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Effects"; ValueType: dword; ValueName: "transpose"; ValueData: "0"; Flags: uninsdeletekey deletekey dontcreatekey
+
+;Channels volume
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch1"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch2"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch3"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch4"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch5"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch6"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch7"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch8"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch9"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch10"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch11"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch12"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch13"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch14"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch15"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch16"; ValueData: "127"; Flags: createvalueifdoesntexist uninsdeletekey
+
 ; 64-bit OS
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
 Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
+
 ; 32-bit OS
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: not Is64BitInstallMode
 
