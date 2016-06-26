@@ -72,9 +72,9 @@
             this.Main = new System.Windows.Forms.MenuStrip();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
-            this.fullVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -543,6 +543,13 @@
             this.muteToolStripMenuItem.Text = "Mute";
             this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
             // 
+            // fullVolumeToolStripMenuItem
+            // 
+            this.fullVolumeToolStripMenuItem.Name = "fullVolumeToolStripMenuItem";
+            this.fullVolumeToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.fullVolumeToolStripMenuItem.Text = "Full volume";
+            this.fullVolumeToolStripMenuItem.Click += new System.EventHandler(this.fullVolumeToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
@@ -553,13 +560,6 @@
             // VolumeTip
             // 
             this.VolumeTip.AutomaticDelay = 0;
-            // 
-            // fullVolumeToolStripMenuItem
-            // 
-            this.fullVolumeToolStripMenuItem.Name = "fullVolumeToolStripMenuItem";
-            this.fullVolumeToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
-            this.fullVolumeToolStripMenuItem.Text = "Full volume";
-            this.fullVolumeToolStripMenuItem.Click += new System.EventHandler(this.fullVolumeToolStripMenuItem_Click);
             // 
             // KeppyDriverMixerWindow
             // 
@@ -607,6 +607,7 @@
             this.Controls.Add(this.RightChannel);
             this.Controls.Add(this.Main);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.Main;
             this.MaximizeBox = false;
             this.Name = "KeppyDriverMixerWindow";

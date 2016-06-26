@@ -764,35 +764,35 @@ BOOL load_bassfuncs()
 	}
 	/* "load" all the BASS functions that are to be used */
 	OutputDebugString(L"Loading BASS functions....");
-	LOADBASSFUNCTION(BASS_ErrorGetCode);
-	LOADBASSFUNCTION(BASS_SetConfig);
-	LOADBASSFUNCTION(BASS_ChannelFlags);
-	LOADBASSFUNCTION(BASS_Init);
-	LOADBASSFUNCTION(BASS_Free);
-	LOADBASSFUNCTION(BASS_GetInfo);
-	LOADBASSFUNCTION(BASS_ChannelUpdate);
-	LOADBASSFUNCTION(BASS_ChannelPlay);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 	LOADBASSFUNCTION(BASS_StreamFree);
 	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_PluginLoad);
 	LOADBASSFUNCTION(BASS_SetVolume);
+	LOADBASSFUNCTION(BASS_SetConfig);
+	LOADBASSFUNCTION(BASS_PluginLoad);
+	LOADBASSFUNCTION(BASS_Init);
+	LOADBASSFUNCTION(BASS_GetInfo);
+	LOADBASSFUNCTION(BASS_Free);
+	LOADBASSFUNCTION(BASS_ErrorGetCode);
+	LOADBASSFUNCTION(BASS_ChannelUpdate);
 	LOADBASSFUNCTION(BASS_ChannelSetFX);
-	LOADBASSFUNCTION(BASS_ChannelGetData);
-	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
 	LOADBASSFUNCTION(BASS_ChannelSetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
+	LOADBASSFUNCTION(BASS_ChannelPlay);
 	LOADBASSFUNCTION(BASS_ChannelGetLevel);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
-	LOADBASSENCFUNCTION(BASS_Encode_Start);
+	LOADBASSFUNCTION(BASS_ChannelGetData);
+	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+	LOADBASSFUNCTION(BASS_ChannelFlags);
 	LOADBASSENCFUNCTION(BASS_Encode_Stop);
+	LOADBASSENCFUNCTION(BASS_Encode_Start);
 	OutputDebugString(L"Done.");
 
 	installpathlength = lstrlen(installpath) + 1;
@@ -973,18 +973,21 @@ void debug_info() {
 	int tempo;
 	BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 	BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_CPU, &currentcpuusage0);
-	if (xaudiodisabled == 1 && volumemon == 1) {
-		level = BASS_ChannelGetLevel(hStream);
+	if (xaudiodisabled == 1) {
+		if (volumemon == 1) {
+			level = BASS_ChannelGetLevel(hStream);
+			left = LOWORD(level); // the left level
+			right = HIWORD(level); // the right level
+			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
+			RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+		}
 	}
-	left = LOWORD(level); // the left level
-	right = HIWORD(level); // the right level
 	int currentvoicesint0 = int(currentvoices0);
 	int currentcpuusageint0 = int(currentcpuusage0);
 	// Things
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
-	RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
-	RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+
 	// OTHER THINGS
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&decoded, sizeof(decoded));
 	RegCloseKey(hKey);
