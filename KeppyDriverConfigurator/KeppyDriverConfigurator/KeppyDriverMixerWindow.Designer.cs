@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.RightChannel = new System.Windows.Forms.ProgressBar();
             this.CH1VOL = new System.Windows.Forms.TrackBar();
             this.CH2VOL = new System.Windows.Forms.TrackBar();
@@ -48,7 +49,7 @@
             this.LeftChannel = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.VolumeCheck = new System.Windows.Forms.Timer();
+            this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.CH1 = new System.Windows.Forms.Label();
             this.CH2 = new System.Windows.Forms.Label();
             this.CH3 = new System.Windows.Forms.Label();
@@ -65,14 +66,15 @@
             this.CH14 = new System.Windows.Forms.Label();
             this.CH15 = new System.Windows.Forms.Label();
             this.CH16 = new System.Windows.Forms.Label();
-            this.ChannelVolume = new System.Windows.Forms.Timer();
+            this.ChannelVolume = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.VolumeMonitor = new System.Windows.Forms.CheckBox();
             this.Main = new System.Windows.Forms.MenuStrip();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.VolumeTip = new System.Windows.Forms.ToolTip();
+            this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
+            this.fullVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -518,9 +520,11 @@
             this.Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetToDefaultToolStripMenuItem,
             this.muteToolStripMenuItem,
+            this.fullVolumeToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
+            this.Main.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.Main.Size = new System.Drawing.Size(748, 24);
             this.Main.TabIndex = 26;
             this.Main.Text = "menuStrip1";
@@ -550,10 +554,18 @@
             // 
             this.VolumeTip.AutomaticDelay = 0;
             // 
+            // fullVolumeToolStripMenuItem
+            // 
+            this.fullVolumeToolStripMenuItem.Name = "fullVolumeToolStripMenuItem";
+            this.fullVolumeToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.fullVolumeToolStripMenuItem.Text = "Full volume";
+            this.fullVolumeToolStripMenuItem.Click += new System.EventHandler(this.fullVolumeToolStripMenuItem_Click);
+            // 
             // KeppyDriverMixerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(748, 181);
             this.Controls.Add(this.VolumeMonitor);
             this.Controls.Add(this.label3);
@@ -672,5 +684,6 @@
         private System.Windows.Forms.ToolStripMenuItem muteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolTip VolumeTip;
+        private System.Windows.Forms.ToolStripMenuItem fullVolumeToolStripMenuItem;
     }
 }

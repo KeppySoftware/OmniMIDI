@@ -38,8 +38,7 @@ namespace KeppyDriverConfigurator
                 switch (s.Substring(0, 3).ToUpper())
                 {
                     case "/AS":
-                        InitializeLists(1);
-                        InitializeBlackListComp();
+                        UserProfileMigration();
                         Environment.Exit(0);
                         break;
                     case "/AT":
@@ -308,42 +307,26 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void InitializeLists(int silent)
+        private void UserProfileMigration()
         {
-            string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-            if (IsWindowsXP() == false)
+            try
             {
-                string soundfontoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
-                List1PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
-                List2PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
-                List3PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
-                List4PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
-                List5PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
-                List6PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
-                List7PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
-                List8PathOld = soundfontoldlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
-                if (System.IO.Directory.Exists(soundfontoldlocation + "\\Keppy's Driver\\lists\\"))
+                string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Driver\\";
+                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Driver\\";
+                if (IsWindowsXP() == false)
                 {
-                    Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Driver\\lists\\");
-                    File.Move(List1PathOld, List1Path);
-                    File.Move(List2PathOld, List2Path);
-                    File.Move(List3PathOld, List3Path);
-                    File.Move(List4PathOld, List4Path);
-                    File.Move(List5PathOld, List5Path);
-                    File.Move(List6PathOld, List6Path);
-                    File.Move(List7PathOld, List7Path);
-                    File.Move(List8PathOld, List8Path);
-                    File.Delete(List1PathOld);
-                    File.Delete(List2PathOld);
-                    File.Delete(List3PathOld);
-                    File.Delete(List4PathOld);
-                    File.Delete(List5PathOld);
-                    File.Delete(List6PathOld);
-                    File.Delete(List7PathOld);
-                    File.Delete(List8PathOld);
-                    Directory.Delete(soundfontoldlocation + "\\Keppy's Driver\\lists\\");
+                    Directory.Move(oldlocation, newlocation);
                 }
             }
+            catch
+            {
+
+            }
+        }
+
+        private void InitializeLists()
+        {
+            string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
 
             // Initialize the eight list paths
             List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
@@ -482,55 +465,13 @@ namespace KeppyDriverConfigurator
                         {
                             File.Create(List8Path).Dispose();
                         }
-                        if (silent == 1)
-                        {
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("One of the soundfont lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
+                        MessageBox.Show("One of the soundfont lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                if (silent == 1)
-                {
-                    
-                }
-                else
-                {
-                    MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                }
-            }
-        }
-
-        public void InitializeBlackListComp()
-        {
-            try
-            {
-                string blacklistnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-                if (IsWindowsXP() == false)
-                {
-                    string blacklistoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
-                    if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\"))
-                    {
-                        Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
-                        File.Move(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist", blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
-                        File.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
-                        Directory.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\");
-                    }
-                }
-                if (!System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\"))
-                {
-                    Directory.CreateDirectory(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\");
-                    File.Create(blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist").Dispose();
-                }
-            }
-            catch
-            {
-
+                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 
@@ -672,7 +613,7 @@ namespace KeppyDriverConfigurator
                 }
             }
 
-            InitializeLists(0);
+            InitializeLists();
 
             // ======= Load settings from the registry
             try
@@ -1570,7 +1511,7 @@ namespace KeppyDriverConfigurator
 
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 4.\n\n" +
+            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 8.\n\n" +
                 "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\n\n" +
                 "You can also reload lists that are already loaded.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }

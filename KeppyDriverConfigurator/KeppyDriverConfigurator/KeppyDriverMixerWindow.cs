@@ -65,7 +65,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        private void fullVolumeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CH1VOL.Value = 127;
             CH2VOL.Value = 127;
@@ -83,6 +83,26 @@ namespace KeppyDriverConfigurator
             CH14VOL.Value = 127;
             CH15VOL.Value = 127;
             CH16VOL.Value = 127;
+        }
+
+        private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CH1VOL.Value = 100;
+            CH2VOL.Value = 100;
+            CH3VOL.Value = 100;
+            CH4VOL.Value = 100;
+            CH5VOL.Value = 100;
+            CH6VOL.Value = 100;
+            CH7VOL.Value = 100;
+            CH8VOL.Value = 100;
+            CH9VOL.Value = 100;
+            CH10VOL.Value = 100;
+            CH11VOL.Value = 100;
+            CH12VOL.Value = 100;
+            CH13VOL.Value = 100;
+            CH14VOL.Value = 100;
+            CH15VOL.Value = 100;
+            CH16VOL.Value = 100;
         }
 
         private void muteToolStripMenuItem_Click(object sender, EventArgs e)
