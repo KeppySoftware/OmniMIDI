@@ -633,20 +633,32 @@ namespace KeppyDriverConfigurator
                 if (Convert.ToInt32(Settings.GetValue("sfdisableconf")) == 0)
                 {
                     enabledToolStripMenuItem.Checked = true;
+                    enabledToolStripMenuItem.Enabled = false;
+                    disabledToolStripMenuItem.Checked = false;
+                    disabledToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
+                    enabledToolStripMenuItem.Checked = false;
+                    enabledToolStripMenuItem.Enabled = true;
                     disabledToolStripMenuItem.Checked = true;
+                    disabledToolStripMenuItem.Enabled = false;
                 }
                 if (Convert.ToInt32(Settings.GetValue("volumehotkeys")) == 1)
                 {
                     VolumeHotkeysCheck.Enabled = true;
                     enabledToolStripMenuItem1.Checked = true;
+                    enabledToolStripMenuItem1.Enabled = false;
+                    disabledToolStripMenuItem1.Checked = false;
+                    disabledToolStripMenuItem1.Enabled = true;
                 }
                 else
                 {
                     VolumeHotkeysCheck.Enabled = false;
+                    enabledToolStripMenuItem1.Checked = false;
+                    enabledToolStripMenuItem1.Enabled = true;
                     disabledToolStripMenuItem1.Checked = true;
+                    disabledToolStripMenuItem1.Enabled = false;
                 }
                 if (Convert.ToInt32(Settings.GetValue("allhotkeys")) == 1)
                 {
@@ -1432,7 +1444,9 @@ namespace KeppyDriverConfigurator
             Settings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
             Settings.Close();
             enabledToolStripMenuItem.Checked = true;
+            enabledToolStripMenuItem.Enabled = false;
             disabledToolStripMenuItem.Checked = false;
+            disabledToolStripMenuItem.Enabled = true;
         }
 
         private void SFListConfirmationdisabledToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1441,7 +1455,9 @@ namespace KeppyDriverConfigurator
             Settings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
             Settings.Close();
             enabledToolStripMenuItem.Checked = false;
+            enabledToolStripMenuItem.Enabled = true;
             disabledToolStripMenuItem.Checked = true;
+            disabledToolStripMenuItem.Enabled = false;
         }
 
         private void enabledToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1451,7 +1467,9 @@ namespace KeppyDriverConfigurator
             Settings.Close();
             VolumeHotkeysCheck.Enabled = true;
             enabledToolStripMenuItem1.Checked = true;
+            enabledToolStripMenuItem1.Enabled = false;
             disabledToolStripMenuItem1.Checked = false;
+            disabledToolStripMenuItem1.Enabled = true;
         }
 
         private void disabledToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1461,7 +1479,9 @@ namespace KeppyDriverConfigurator
             Settings.Close();
             VolumeHotkeysCheck.Enabled = false;
             enabledToolStripMenuItem1.Checked = false;
+            enabledToolStripMenuItem1.Enabled = true;
             disabledToolStripMenuItem1.Checked = true;
+            disabledToolStripMenuItem1.Enabled = false;
         }
 
 

@@ -1955,14 +1955,16 @@
             // enabledToolStripMenuItem
             // 
             this.enabledToolStripMenuItem.Name = "enabledToolStripMenuItem";
-            this.enabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.enabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.enabledToolStripMenuItem.Text = "Enabled";
+            this.enabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationenabledToolStripMenuItem_Click);
             // 
             // disabledToolStripMenuItem
             // 
             this.disabledToolStripMenuItem.Name = "disabledToolStripMenuItem";
-            this.disabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.disabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.disabledToolStripMenuItem.Text = "Disabled";
+            this.disabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationdisabledToolStripMenuItem_Click);
             // 
             // volumeHotkeysToolStripMenuItem
             // 
@@ -1976,14 +1978,16 @@
             // enabledToolStripMenuItem1
             // 
             this.enabledToolStripMenuItem1.Name = "enabledToolStripMenuItem1";
-            this.enabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.enabledToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.enabledToolStripMenuItem1.Text = "Enabled";
+            this.enabledToolStripMenuItem1.Click += new System.EventHandler(this.enabledToolStripMenuItem1_Click);
             // 
             // disabledToolStripMenuItem1
             // 
             this.disabledToolStripMenuItem1.Name = "disabledToolStripMenuItem1";
-            this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.disabledToolStripMenuItem1.Text = "Disabled";
+            this.disabledToolStripMenuItem1.Click += new System.EventHandler(this.disabledToolStripMenuItem1_Click);
             // 
             // helpToolStripMenuItem
             // 

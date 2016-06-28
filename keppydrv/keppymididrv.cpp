@@ -549,7 +549,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wMid = 0xffff;
 		myCapsA->wPid = 0xffff;
 		memcpy(myCapsA->szPname, synthName, sizeof(synthName));
-		myCapsA->wTechnology = MOD_WAVETABLE;
+		myCapsA->wTechnology = MOD_SWSYNTH;
 		myCapsA->vDriverVersion = 0x0090;
 		myCapsA->wVoices = 9999;
 		myCapsA->wNotes = 0;
@@ -562,7 +562,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
 		memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW));
-		myCapsW->wTechnology = MOD_WAVETABLE;
+		myCapsW->wTechnology = MOD_SWSYNTH;
 		myCapsW->vDriverVersion = 0x0090;
 		myCapsW->wVoices = 9999;
 		myCapsW->wNotes = 0;
@@ -575,7 +575,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wMid = 0xffff;
 		myCaps2A->wPid = 0xffff;
 		memcpy(myCaps2A->szPname, synthName, sizeof(synthName));
-		myCaps2A->wTechnology = MOD_WAVETABLE;
+		myCaps2A->wTechnology = MOD_SWSYNTH;
 		myCaps2A->vDriverVersion = 0x0090;
 		myCaps2A->wVoices = 9999;
 		myCaps2A->wNotes = 0;
@@ -588,7 +588,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
 		memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW));
-		myCaps2W->wTechnology = MOD_WAVETABLE;
+		myCaps2W->wTechnology = MOD_SWSYNTH;
 		myCaps2W->vDriverVersion = 0x0090;
 		myCaps2W->wVoices = 9999;
 		myCaps2W->wNotes = 0;

@@ -7,19 +7,24 @@ ambspie.exe
 camtasiastudio.exe
 ccc.exe
 chrome.exe
+conhost.exe
 console 1 on-screen display (x64).exe
 console 1 on-screen display.exe
 csrss.exe
+ctaudsvc.exe
 ctaudsvc.exe
 ctfmon.exe
 devenv.exe
 devenv_2.exe
 discord.exe
+dllost.exe
 dreamweaver.exe
 explorer.exe
 explorer.exe
 firefox.exe
+fontdrvhost.exe
 gamepanel.exe
+gfexperienceservice.exe
 gitter.exe
 googleupdate.exe
 ipoverusbsvc.exe
@@ -34,6 +39,17 @@ mscamsvc.exe
 msiexec.exe
 mspdbsrv.exe
 notepad++.exe
+nvbackend.exe
+nvnetworkservice.exe
+nvosc.exe
+nvscpapisvr.exe
+nvspcaps64.exe
+nvsphelper64.exe
+nvstreamnetworkservice.exe
+nvstreamservice.exe
+nvstreamuseragent.exe
+nvvsvc.exe
+nvxdsync.exe
 photoshop.exe
 procaster.exe
 puush.exe
@@ -60,7 +76,6 @@ steamwebhelper.exe
 svchost.exe
 sxgtkbar.exe
 system
-system idle process
 taskhost.exe
 taskhostex.exe
 taskhostw.exe
