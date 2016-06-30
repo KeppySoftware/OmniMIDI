@@ -32,7 +32,8 @@ namespace KeppyDriverWatchdog
         {
             if (e.Button == MouseButtons.Left)
             {
-                Process.Start("KeppyDriverConfigurator", null);
+                string currentpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                Process.Start(currentpath + "\\KeppyDriverConfigurator.exe", null);
             }
         }
     }

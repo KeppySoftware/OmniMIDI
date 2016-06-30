@@ -73,7 +73,8 @@ namespace KeppyDriverWatchdog
 
         void OpenConf_Click(object sender, EventArgs e)
         {
-            Process.Start("KeppyDriverConfigurator", null);
+            string currentpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Process.Start(currentpath + "\\KeppyDriverConfigurator.exe", null);
         }
 
         void SoundfontReload1(object sender, EventArgs e)
