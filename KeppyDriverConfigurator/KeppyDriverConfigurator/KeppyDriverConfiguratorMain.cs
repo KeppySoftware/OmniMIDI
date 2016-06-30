@@ -307,6 +307,68 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        private void EnableSoundfont(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                if (OriginalList.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    string result = OriginalList.SelectedItem.ToString().Substring(0, 1);
+                    if (result == "@")
+                    {
+                        string newvalue = OriginalList.SelectedItem.ToString().Remove(0, 1);
+                        int index = OriginalList.Items.IndexOf(OriginalList.SelectedItem);
+                        OriginalList.Items.RemoveAt(index);
+                        OriginalList.Items.Insert(index, newvalue);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    SaveList(SelectedList, OriginalList);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
+            }
+        }
+
+        private void DisableSoundfont(String SelectedList, ListBox OriginalList)
+        {
+            try
+            {
+                if (OriginalList.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    string result = OriginalList.SelectedItem.ToString().Substring(0, 1);
+                    if (result != "@")
+                    {
+                        string newvalue = "@" + OriginalList.SelectedItem.ToString();
+                        int index = OriginalList.Items.IndexOf(OriginalList.SelectedItem);
+                        OriginalList.Items.RemoveAt(index);
+                        OriginalList.Items.Insert(index, newvalue);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    SaveList(SelectedList, OriginalList);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, OriginalList, SelectedList);
+            }
+        }
+
         private void UserProfileMigration()
         {
             try
@@ -1228,6 +1290,86 @@ namespace KeppyDriverConfigurator
             {
                 ExportListToFile(ExportList.FileName, Lis8);
             }
+        }
+
+        private void DisableSF1_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List1Path, Lis1);
+        }
+
+        private void EnableSF1_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List1Path, Lis1);
+        }
+
+        private void DisableSF2_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List2Path, Lis2);
+        }
+
+        private void EnableSF2_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List2Path, Lis2);
+        }
+
+        private void DisableSF3_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List3Path, Lis3);
+        }
+
+        private void EnableSF3_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List4Path, Lis4);
+        }
+
+        private void DisableSF4_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List4Path, Lis4);
+        }
+
+        private void EnableSF4_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List1Path, Lis1);
+        }
+
+        private void DisableSF5_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List5Path, Lis5);
+        }
+
+        private void EnableSF5_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List5Path, Lis5);
+        }
+
+        private void DisableSF6_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List6Path, Lis6);
+        }
+
+        private void EnableSF6_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List6Path, Lis6);
+        }
+
+        private void DisableSF7_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List7Path, Lis7);
+        }
+
+        private void EnableSF7_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List7Path, Lis7);
+        }
+
+        private void DisableSF8_Click(object sender, EventArgs e)
+        {
+            DisableSoundfont(List8Path, Lis8);
+        }
+
+        private void EnableSF8_Click(object sender, EventArgs e)
+        {
+            EnableSoundfont(List8Path, Lis8);
         }
 
         // End of the soundfont lists functions

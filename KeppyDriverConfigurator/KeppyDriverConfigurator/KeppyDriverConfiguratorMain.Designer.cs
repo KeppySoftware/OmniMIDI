@@ -199,6 +199,22 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
+            this.EnableSF1 = new System.Windows.Forms.Button();
+            this.DisableSF1 = new System.Windows.Forms.Button();
+            this.DisableSF2 = new System.Windows.Forms.Button();
+            this.EnableSF2 = new System.Windows.Forms.Button();
+            this.DisableSF3 = new System.Windows.Forms.Button();
+            this.EnableSF3 = new System.Windows.Forms.Button();
+            this.DisableSF4 = new System.Windows.Forms.Button();
+            this.EnableSF4 = new System.Windows.Forms.Button();
+            this.DisableSF5 = new System.Windows.Forms.Button();
+            this.EnableSF5 = new System.Windows.Forms.Button();
+            this.DisableSF6 = new System.Windows.Forms.Button();
+            this.EnableSF6 = new System.Windows.Forms.Button();
+            this.DisableSF7 = new System.Windows.Forms.Button();
+            this.EnableSF7 = new System.Windows.Forms.Button();
+            this.DisableSF8 = new System.Windows.Forms.Button();
+            this.EnableSF8 = new System.Windows.Forms.Button();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -250,6 +266,8 @@
             // List1
             // 
             this.List1.BackColor = System.Drawing.Color.White;
+            this.List1.Controls.Add(this.DisableSF1);
+            this.List1.Controls.Add(this.EnableSF1);
             this.List1.Controls.Add(this.List1Override);
             this.List1.Controls.Add(this.IELPan1);
             this.List1.Controls.Add(this.CLi1);
@@ -374,6 +392,8 @@
             // List2
             // 
             this.List2.BackColor = System.Drawing.Color.White;
+            this.List2.Controls.Add(this.DisableSF2);
+            this.List2.Controls.Add(this.EnableSF2);
             this.List2.Controls.Add(this.panel1);
             this.List2.Controls.Add(this.List2Override);
             this.List2.Controls.Add(this.CLi2);
@@ -498,6 +518,8 @@
             // List3
             // 
             this.List3.BackColor = System.Drawing.Color.White;
+            this.List3.Controls.Add(this.DisableSF3);
+            this.List3.Controls.Add(this.EnableSF3);
             this.List3.Controls.Add(this.panel2);
             this.List3.Controls.Add(this.List3Override);
             this.List3.Controls.Add(this.CLi3);
@@ -621,6 +643,8 @@
             // List4
             // 
             this.List4.BackColor = System.Drawing.Color.White;
+            this.List4.Controls.Add(this.DisableSF4);
+            this.List4.Controls.Add(this.EnableSF4);
             this.List4.Controls.Add(this.panel3);
             this.List4.Controls.Add(this.List4Override);
             this.List4.Controls.Add(this.CLi4);
@@ -743,6 +767,8 @@
             // 
             // List5
             // 
+            this.List5.Controls.Add(this.DisableSF5);
+            this.List5.Controls.Add(this.EnableSF5);
             this.List5.Controls.Add(this.panel4);
             this.List5.Controls.Add(this.label1);
             this.List5.Controls.Add(this.CLi5);
@@ -866,6 +892,8 @@
             // 
             // List6
             // 
+            this.List6.Controls.Add(this.DisableSF6);
+            this.List6.Controls.Add(this.EnableSF6);
             this.List6.Controls.Add(this.panel5);
             this.List6.Controls.Add(this.label2);
             this.List6.Controls.Add(this.CLi6);
@@ -989,6 +1017,8 @@
             // 
             // List7
             // 
+            this.List7.Controls.Add(this.DisableSF7);
+            this.List7.Controls.Add(this.EnableSF7);
             this.List7.Controls.Add(this.panel6);
             this.List7.Controls.Add(this.label7);
             this.List7.Controls.Add(this.CLi7);
@@ -1112,6 +1142,8 @@
             // 
             // List8
             // 
+            this.List8.Controls.Add(this.DisableSF8);
+            this.List8.Controls.Add(this.EnableSF8);
             this.List8.Controls.Add(this.panel7);
             this.List8.Controls.Add(this.label8);
             this.List8.Controls.Add(this.CLi8);
@@ -1955,14 +1987,14 @@
             // enabledToolStripMenuItem
             // 
             this.enabledToolStripMenuItem.Name = "enabledToolStripMenuItem";
-            this.enabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.enabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.enabledToolStripMenuItem.Text = "Enabled";
             this.enabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationenabledToolStripMenuItem_Click);
             // 
             // disabledToolStripMenuItem
             // 
             this.disabledToolStripMenuItem.Name = "disabledToolStripMenuItem";
-            this.disabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.disabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.disabledToolStripMenuItem.Text = "Disabled";
             this.disabledToolStripMenuItem.Click += new System.EventHandler(this.SFListConfirmationdisabledToolStripMenuItem_Click);
             // 
@@ -1978,14 +2010,14 @@
             // enabledToolStripMenuItem1
             // 
             this.enabledToolStripMenuItem1.Name = "enabledToolStripMenuItem1";
-            this.enabledToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.enabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
             this.enabledToolStripMenuItem1.Text = "Enabled";
             this.enabledToolStripMenuItem1.Click += new System.EventHandler(this.enabledToolStripMenuItem1_Click);
             // 
             // disabledToolStripMenuItem1
             // 
             this.disabledToolStripMenuItem1.Name = "disabledToolStripMenuItem1";
-            this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
             this.disabledToolStripMenuItem1.Text = "Disabled";
             this.disabledToolStripMenuItem1.Click += new System.EventHandler(this.disabledToolStripMenuItem1_Click);
             // 
@@ -2126,6 +2158,166 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
+            // 
+            // EnableSF1
+            // 
+            this.EnableSF1.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF1.Name = "EnableSF1";
+            this.EnableSF1.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF1.TabIndex = 10;
+            this.EnableSF1.Text = "Enable SF";
+            this.EnableSF1.UseVisualStyleBackColor = true;
+            this.EnableSF1.Click += new System.EventHandler(this.EnableSF1_Click);
+            // 
+            // DisableSF1
+            // 
+            this.DisableSF1.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF1.Name = "DisableSF1";
+            this.DisableSF1.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF1.TabIndex = 11;
+            this.DisableSF1.Text = "Disable SF";
+            this.DisableSF1.UseVisualStyleBackColor = true;
+            this.DisableSF1.Click += new System.EventHandler(this.DisableSF1_Click);
+            // 
+            // DisableSF2
+            // 
+            this.DisableSF2.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF2.Name = "DisableSF2";
+            this.DisableSF2.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF2.TabIndex = 20;
+            this.DisableSF2.Text = "Disable SF";
+            this.DisableSF2.UseVisualStyleBackColor = true;
+            this.DisableSF2.Click += new System.EventHandler(this.DisableSF2_Click);
+            // 
+            // EnableSF2
+            // 
+            this.EnableSF2.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF2.Name = "EnableSF2";
+            this.EnableSF2.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF2.TabIndex = 19;
+            this.EnableSF2.Text = "Enable SF";
+            this.EnableSF2.UseVisualStyleBackColor = true;
+            this.EnableSF2.Click += new System.EventHandler(this.EnableSF2_Click);
+            // 
+            // DisableSF3
+            // 
+            this.DisableSF3.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF3.Name = "DisableSF3";
+            this.DisableSF3.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF3.TabIndex = 27;
+            this.DisableSF3.Text = "Disable SF";
+            this.DisableSF3.UseVisualStyleBackColor = true;
+            this.DisableSF3.Click += new System.EventHandler(this.DisableSF3_Click);
+            // 
+            // EnableSF3
+            // 
+            this.EnableSF3.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF3.Name = "EnableSF3";
+            this.EnableSF3.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF3.TabIndex = 26;
+            this.EnableSF3.Text = "Enable SF";
+            this.EnableSF3.UseVisualStyleBackColor = true;
+            this.EnableSF3.Click += new System.EventHandler(this.EnableSF3_Click);
+            // 
+            // DisableSF4
+            // 
+            this.DisableSF4.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF4.Name = "DisableSF4";
+            this.DisableSF4.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF4.TabIndex = 34;
+            this.DisableSF4.Text = "Disable SF";
+            this.DisableSF4.UseVisualStyleBackColor = true;
+            this.DisableSF4.Click += new System.EventHandler(this.DisableSF4_Click);
+            // 
+            // EnableSF4
+            // 
+            this.EnableSF4.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF4.Name = "EnableSF4";
+            this.EnableSF4.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF4.TabIndex = 33;
+            this.EnableSF4.Text = "Enable SF";
+            this.EnableSF4.UseVisualStyleBackColor = true;
+            this.EnableSF4.Click += new System.EventHandler(this.EnableSF4_Click);
+            // 
+            // DisableSF5
+            // 
+            this.DisableSF5.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF5.Name = "DisableSF5";
+            this.DisableSF5.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF5.TabIndex = 43;
+            this.DisableSF5.Text = "Disable SF";
+            this.DisableSF5.UseVisualStyleBackColor = true;
+            this.DisableSF5.Click += new System.EventHandler(this.DisableSF5_Click);
+            // 
+            // EnableSF5
+            // 
+            this.EnableSF5.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF5.Name = "EnableSF5";
+            this.EnableSF5.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF5.TabIndex = 42;
+            this.EnableSF5.Text = "Enable SF";
+            this.EnableSF5.UseVisualStyleBackColor = true;
+            this.EnableSF5.Click += new System.EventHandler(this.EnableSF5_Click);
+            // 
+            // DisableSF6
+            // 
+            this.DisableSF6.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF6.Name = "DisableSF6";
+            this.DisableSF6.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF6.TabIndex = 43;
+            this.DisableSF6.Text = "Disable SF";
+            this.DisableSF6.UseVisualStyleBackColor = true;
+            this.DisableSF6.Click += new System.EventHandler(this.DisableSF6_Click);
+            // 
+            // EnableSF6
+            // 
+            this.EnableSF6.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF6.Name = "EnableSF6";
+            this.EnableSF6.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF6.TabIndex = 42;
+            this.EnableSF6.Text = "Enable SF";
+            this.EnableSF6.UseVisualStyleBackColor = true;
+            this.EnableSF6.Click += new System.EventHandler(this.EnableSF6_Click);
+            // 
+            // DisableSF7
+            // 
+            this.DisableSF7.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF7.Name = "DisableSF7";
+            this.DisableSF7.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF7.TabIndex = 43;
+            this.DisableSF7.Text = "Disable SF";
+            this.DisableSF7.UseVisualStyleBackColor = true;
+            this.DisableSF7.Click += new System.EventHandler(this.DisableSF7_Click);
+            // 
+            // EnableSF7
+            // 
+            this.EnableSF7.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF7.Name = "EnableSF7";
+            this.EnableSF7.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF7.TabIndex = 42;
+            this.EnableSF7.Text = "Enable SF";
+            this.EnableSF7.UseVisualStyleBackColor = true;
+            this.EnableSF7.Click += new System.EventHandler(this.EnableSF7_Click);
+            // 
+            // DisableSF8
+            // 
+            this.DisableSF8.Location = new System.Drawing.Point(581, 257);
+            this.DisableSF8.Name = "DisableSF8";
+            this.DisableSF8.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF8.TabIndex = 43;
+            this.DisableSF8.Text = "Disable SF";
+            this.DisableSF8.UseVisualStyleBackColor = true;
+            this.DisableSF8.Click += new System.EventHandler(this.DisableSF8_Click);
+            // 
+            // EnableSF8
+            // 
+            this.EnableSF8.Location = new System.Drawing.Point(581, 228);
+            this.EnableSF8.Name = "EnableSF8";
+            this.EnableSF8.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF8.TabIndex = 42;
+            this.EnableSF8.Text = "Enable SF";
+            this.EnableSF8.UseVisualStyleBackColor = true;
+            this.EnableSF8.Click += new System.EventHandler(this.EnableSF8_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2362,6 +2554,22 @@
         private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openTheMixerToolStripMenuItem;
+        private System.Windows.Forms.Button DisableSF1;
+        private System.Windows.Forms.Button EnableSF1;
+        private System.Windows.Forms.Button DisableSF2;
+        private System.Windows.Forms.Button EnableSF2;
+        private System.Windows.Forms.Button DisableSF3;
+        private System.Windows.Forms.Button EnableSF3;
+        private System.Windows.Forms.Button DisableSF4;
+        private System.Windows.Forms.Button EnableSF4;
+        private System.Windows.Forms.Button DisableSF5;
+        private System.Windows.Forms.Button EnableSF5;
+        private System.Windows.Forms.Button DisableSF6;
+        private System.Windows.Forms.Button EnableSF6;
+        private System.Windows.Forms.Button DisableSF7;
+        private System.Windows.Forms.Button EnableSF7;
+        private System.Windows.Forms.Button DisableSF8;
+        private System.Windows.Forms.Button EnableSF8;
     }
 }
 
