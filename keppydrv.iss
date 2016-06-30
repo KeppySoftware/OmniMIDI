@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.3.1.5
+AppVersion=3.3.1.6
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.3.1.5
+VersionInfoProductTextVersion=3.3.1.6
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=3.3.1.5
+VersionInfoVersion=3.3.1.6
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -60,6 +60,7 @@ Source: "external_packages\lib\bassopus.dll"; DestDir: "{syswow64}\keppydrv"; De
 Source: "external_packages\lib\basswv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "output\KeppyDriverWatchdog.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter64.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "midioutsetter64.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -74,6 +75,7 @@ Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestNam
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppydrv"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "output\KeppyDriverWatchdog.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppydrv"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppydrv"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -148,6 +150,16 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch15"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch16"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 
+;Watchdog
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel1"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel2"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel3"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel4"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel5"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel6"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel7"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel8"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+
 ; 64-bit OS
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
 Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
@@ -157,6 +169,7 @@ Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; 
 
 [InstallDelete]
 Type: files; Name: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{syswow64}\keppydrv\KeppyDriverWatchdog.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
@@ -167,8 +180,8 @@ Type: files; Name: "{syswow64}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverWatchdog.exe"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
@@ -191,6 +204,7 @@ Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
 
 [UninstallDelete]
 Type: files; Name: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{syswow64}\keppydrv\KeppyDriverWatchdog.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
@@ -201,8 +215,8 @@ Type: files; Name: "{syswow64}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
 Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: not Is64BitInstallMode
+Type: files; Name: "{sys}\keppydrv\KeppyDriverWatchdog.exe"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
 Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode

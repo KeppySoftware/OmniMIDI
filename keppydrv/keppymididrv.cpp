@@ -36,6 +36,10 @@ void _endthreadex(unsigned retval);
 #include <fstream>
 #include <iostream>
 #include <cctype>
+#include <process.h>
+#include <Tlhelp32.h>
+#include <winbase.h>
+#include <string.h>
 #include <comdef.h>
 
 #define BASSDEF(f) (WINAPI *f)	// define the BASS/BASSMIDI functions as pointers
@@ -136,6 +140,16 @@ static int ch13 = 16383;
 static int ch14 = 16383;
 static int ch15 = 16383;
 static int ch16 = 16383;
+
+// Watchdog
+static int rel1 = 0;
+static int rel2 = 0;
+static int rel3 = 0;
+static int rel4 = 0;
+static int rel5 = 0;
+static int rel6 = 0;
+static int rel7 = 0;
+static int rel8 = 0;
 
 // Other stuff
 static int decoded;
@@ -390,6 +404,17 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 	return false;
 }
 
+void KillWatchdog()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	DWORD one = 1;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+	RegSetValueEx(hKey, L"closewatchdog", 0, dwType, (LPBYTE)&one, sizeof(one));
+}
+
 void LoadFonts(UINT uDeviceID, const TCHAR * name)
 {
 	FreeFonts(uDeviceID);
@@ -429,8 +454,13 @@ LRESULT DoDriverLoad() {
 	//Notifies the driver that it has been loaded. The driver should make sure that any hardware and supporting drivers it needs to function properly are present.
 	memset(drivers, 0, sizeof(drivers));
 	driverCount = 0;
-	return DRV_OK;
-
+	TCHAR watchdog[MAX_PATH];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, watchdog)))
+	{
+		PathAppend(watchdog, _T("\\keppydrv\\KeppyDriverWatchdog.exe"));
+		ShellExecute(NULL, L"open", watchdog, NULL, NULL, SW_SHOWNORMAL);
+		return DRV_OK;
+	}
 }
 
 LRESULT DoDriverOpen(HDRVR hdrvr, LPCWSTR driverName, LONG lParam) {
@@ -855,7 +885,6 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
@@ -909,6 +938,93 @@ void realtime_load_settings()
 	else {
 		BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
 	}
+}
+
+
+void LoadSoundfont(DWORD whichsf){
+	TCHAR config[MAX_PATH];
+	BASS_MIDI_FONT * mf;
+	FreeFonts(0);
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
+	{
+		if (whichsf == 1) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidi.sflist"));
+		}
+		else if (whichsf == 2) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidib.sflist"));
+		}
+		else if (whichsf == 3) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidic.sflist"));
+		}
+		else if (whichsf == 4) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidid.sflist"));
+		}
+		else if (whichsf == 5) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidie.sflist"));
+		}
+		else if (whichsf == 6) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidif.sflist"));
+		}
+		else if (whichsf == 7) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidig.sflist"));
+		}
+		else if (whichsf == 8) {
+			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
+		}
+	}
+	LoadFonts(0, config);
+	BASS_MIDI_StreamLoadSamples(hStream);
+}
+
+void WatchdogCheck() 
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	DWORD zero = 0;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"rel1", NULL, &dwType, (LPBYTE)&rel1, &dwSize);
+	RegQueryValueEx(hKey, L"rel2", NULL, &dwType, (LPBYTE)&rel2, &dwSize);
+	RegQueryValueEx(hKey, L"rel3", NULL, &dwType, (LPBYTE)&rel3, &dwSize);
+	RegQueryValueEx(hKey, L"rel4", NULL, &dwType, (LPBYTE)&rel4, &dwSize);
+	RegQueryValueEx(hKey, L"rel5", NULL, &dwType, (LPBYTE)&rel5, &dwSize);
+	RegQueryValueEx(hKey, L"rel6", NULL, &dwType, (LPBYTE)&rel6, &dwSize);
+	RegQueryValueEx(hKey, L"rel7", NULL, &dwType, (LPBYTE)&rel7, &dwSize);
+	RegQueryValueEx(hKey, L"rel8", NULL, &dwType, (LPBYTE)&rel8, &dwSize);
+	if (rel1 == 1) {
+		LoadSoundfont(1);
+		RegSetValueEx(hKey, L"rel1", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel2 == 1) {
+		LoadSoundfont(2);
+		RegSetValueEx(hKey, L"rel2", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel3 == 1) {
+		LoadSoundfont(3);
+		RegSetValueEx(hKey, L"rel3", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel4 == 1) {
+		LoadSoundfont(4);
+		RegSetValueEx(hKey, L"rel4", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel5 == 1) {
+		LoadSoundfont(5);
+		RegSetValueEx(hKey, L"rel5", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel6 == 1) {
+		LoadSoundfont(6);
+		RegSetValueEx(hKey, L"rel6", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel7 == 1) {
+		LoadSoundfont(7);
+		RegSetValueEx(hKey, L"rel7", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	if (rel8 == 1) {
+		LoadSoundfont(8);
+		RegSetValueEx(hKey, L"rel8", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	}
+	RegCloseKey(hKey);
 }
 
 BOOL IsRunningXP(){
@@ -1132,41 +1248,6 @@ BOOL ProcessBlackList(){
 		OutputDebugStringA(e.what());
 		exit;
 	}
-}
-
-void LoadSoundfont(DWORD whichsf){
-	TCHAR config[MAX_PATH];
-	BASS_MIDI_FONT * mf;
-	FreeFonts(0);
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
-	{
-		if (whichsf == 1) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidi.sflist"));
-		}
-		else if (whichsf == 2) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidib.sflist"));
-		}
-		else if (whichsf == 3) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidic.sflist"));
-		}
-		else if (whichsf == 4) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidid.sflist"));
-		}
-		else if (whichsf == 5) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidie.sflist"));
-		}
-		else if (whichsf == 6) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidif.sflist"));
-		}
-		else if (whichsf == 7) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidig.sflist"));
-		}
-		else if (whichsf == 8) {
-			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
-		}
-	}
-	LoadFonts(0, config);
-	BASS_MIDI_StreamLoadSamples(hStream);
 }
 
 void ResetSynth(){
@@ -1414,6 +1495,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			realtime_load_settings();
 			keybindings();
 			debug_info();
+			WatchdogCheck();
 			mixervoid();
 		}
 		stop_thread = 0;
@@ -1563,6 +1645,8 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 	After the driver closes the device instance it should send a MOM_CLOSE callback message to
 	the client.
 	*/
+
+	KillWatchdog();
 
 	if (!driver->clients[dwUser].allocated) {
 		return MMSYSERR_INVALPARAM;

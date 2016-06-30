@@ -48,6 +48,9 @@
 /KeppyDrvWasapi/out
 /KeppyDrvWasapi/output
 /KeppyDrvWasapi/x64
+/KeppyDriverWatchdog/KeppyDriverWatchdog/bin/
+/KeppyDriverWatchdog/KeppyDriverWatchdog/obj/
+/KeppyDriverWatchdog/output/
 /Release
 /ipch
 /keppydrvconfig
@@ -75,3 +78,5 @@ keppydrvcfg2.v12.suo
 keppydrvcfg2/
 output/KeppyDriverConfigurator.exe
 output/KeppyDriverConfigurator.vshost.exe
+output/KeppyDriverWatchdog.exe
+output/KeppyDriverWatchdog.vshost.exe
