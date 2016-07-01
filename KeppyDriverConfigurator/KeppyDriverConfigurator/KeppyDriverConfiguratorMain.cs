@@ -740,6 +740,23 @@ namespace KeppyDriverConfigurator
                     hLSEnabledToolStripMenuItem.Enabled = true;
                     hLSDisabledToolStripMenuItem.Enabled = false;
                 }
+                if (Convert.ToInt32(Settings.GetValue("watchdog")) == 1)
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
+                    volumeHotkeysToolStripMenuItem.Enabled = true;
+                    watchdogEnabledToolStripMenuItem.Checked = true;
+                    watchdogDisabledToolStripMenuItem.Checked = false;
+                    watchdogEnabledToolStripMenuItem.Enabled = false;
+                    watchdogDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
+                    watchdogEnabledToolStripMenuItem.Checked = false;
+                    watchdogDisabledToolStripMenuItem.Checked = true;
+                    watchdogEnabledToolStripMenuItem.Enabled = true;
+                    watchdogDisabledToolStripMenuItem.Enabled = false;
+                }
                 Frequency.Text = Settings.GetValue("frequency").ToString();
                 TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
 
@@ -1651,6 +1668,29 @@ namespace KeppyDriverConfigurator
             hLSDisabledToolStripMenuItem.Checked = true;
             hLSEnabledToolStripMenuItem.Enabled = true;
             hLSDisabledToolStripMenuItem.Enabled = false;
+        }
+
+
+        private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
+            Settings.SetValue("watchdog", "1", RegistryValueKind.DWord);
+            Settings.Close();
+            watchdogEnabledToolStripMenuItem.Checked = true;
+            watchdogDisabledToolStripMenuItem.Checked = false;
+            watchdogEnabledToolStripMenuItem.Enabled = false;
+            watchdogDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
+            Settings.SetValue("watchdog", "0", RegistryValueKind.DWord);
+            Settings.Close();
+            watchdogEnabledToolStripMenuItem.Checked = false;
+            watchdogDisabledToolStripMenuItem.Checked = true;
+            watchdogEnabledToolStripMenuItem.Enabled = true;
+            watchdogDisabledToolStripMenuItem.Enabled = false;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

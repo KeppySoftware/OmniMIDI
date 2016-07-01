@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Per modificare le informazioni associate a un assembly
 // occorre quindi modificare i valori di questi attributi.
-[assembly: AssemblyTitle("KeppyDriverWatchdog")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Keppy's Driver Watchdog")]
+[assembly: AssemblyDescription("Keppy's Driver New Configurator (C#)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("KeppyDriverWatchdog")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("Keppy Studios Ltd.")]
+[assembly: AssemblyProduct("Keppy's Driver")]
+[assembly: AssemblyCopyright("Copyright © Keppy Studios 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
