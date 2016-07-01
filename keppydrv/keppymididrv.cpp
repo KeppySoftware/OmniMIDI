@@ -464,7 +464,6 @@ LRESULT DoDriverLoad() {
 	//Notifies the driver that it has been loaded. The driver should make sure that any hardware and supporting drivers it needs to function properly are present.
 	memset(drivers, 0, sizeof(drivers));
 	driverCount = 0;
-	RunWatchdog();
 	return DRV_OK;
 }
 
@@ -507,7 +506,6 @@ LRESULT DoDriverOpen(HDRVR hdrvr, LPCWSTR driverName, LONG lParam) {
 	drivers[driverNum].clientCount = 0;
 	drivers[driverNum].hdrvr = hdrvr;
 	driverCount++;
-	RunWatchdog();
 	return driverNum;
 }
 
@@ -1543,7 +1541,6 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 }
 
 void DoStartClient() {
-	RunWatchdog();
 	if (modm_closed == 1) {
 		DWORD result;
 		unsigned int thrdaddr;
@@ -1597,7 +1594,6 @@ void DoResetClient(UINT uDeviceID) {
 	clear the MHDR_INQUEUE flag in each buffer's MIDIHDR structure, and then send the client a
 	MOM_DONE callback message for each buffer.
 	*/
-	RunWatchdog();
 	ResetSynth();
 	reset_synth = 1;
 }
@@ -1611,8 +1607,6 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	CALLBACK_TASK Indicates dwCallback member of MIDIOPENDESC is a task handle.
 	CALLBACK_WINDOW Indicates dwCallback member of MIDIOPENDESC is a window handle.
 	*/
-	RunWatchdog();
-
 	int clientNum;
 	if (driver->clientCount == 0) {
 		//TODO: Part of this might be done in DoDriverOpen instead.
@@ -1645,6 +1639,9 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	//TODO: desc and flags
 
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
+
+	RunWatchdog();
+
 	return MMSYSERR_NOERROR;
 }
 
