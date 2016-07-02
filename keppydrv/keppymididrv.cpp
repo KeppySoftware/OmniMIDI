@@ -406,7 +406,14 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 
 void RunWatchdog()
 {
+	HKEY hKey;
+	long lResult;
 	TCHAR watchdog[MAX_PATH];
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	DWORD one = 1;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+	RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&one, sizeof(one));
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, watchdog)))
 	{
 		PathAppend(watchdog, _T("\\keppydrv\\KeppyDriverWatchdog.exe"));
@@ -421,8 +428,10 @@ void KillWatchdog()
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
 	DWORD one = 1;
+	DWORD zero = 0;
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"closewatchdog", 0, dwType, (LPBYTE)&one, sizeof(one));
+	RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&zero, sizeof(zero));
 }
 
 void LoadFonts(UINT uDeviceID, const TCHAR * name)

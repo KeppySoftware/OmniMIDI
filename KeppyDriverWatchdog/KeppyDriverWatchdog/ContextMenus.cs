@@ -120,7 +120,7 @@ namespace KeppyDriverWatchdog
         private static void CheckPop(object source, EventArgs e)
         {
             RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
-            if (Convert.ToInt32(Watchdog.GetValue("closewatchdog")) == 1)
+            if (Convert.ToInt32(Watchdog.GetValue("closewatchdog")) == 1 | Convert.ToInt32(Watchdog.GetValue("wdrun")) == 0)
             {
                 Watchdog.SetValue("closewatchdog", "0", RegistryValueKind.DWord);
                 Application.Exit();

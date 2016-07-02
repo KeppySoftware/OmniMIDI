@@ -17,24 +17,33 @@ namespace KeppyDriverWatchdog
         {
             if (Convert.ToInt32(Watchdog.GetValue("watchdog")) == 1)
             {
-                bool ok;
-                Mutex m = new Mutex(true, "KeppyDriverWatchdog", out ok);
-                if (!ok)
+                if (Convert.ToInt32(Watchdog.GetValue("wdrun")) == 1)
                 {
-                    return;
-                }
-                NotifyIcon ni;
-                ni = new NotifyIcon();
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
+                    bool ok;
+                    Mutex m = new Mutex(true, "KeppyDriverWatchdog", out ok);
+                    if (!ok)
+                    {
+                        return;
+                    }
+                    NotifyIcon ni;
+                    ni = new NotifyIcon();
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
 
-                using (ProcessIcon pi = new ProcessIcon())
+                    using (ProcessIcon pi = new ProcessIcon())
+                    {
+                        pi.Display();
+                        Application.Run();
+                    }
+
+                    GC.KeepAlive(m);
+                }
+                else
                 {
-                    pi.Display();
-                    Application.Run();
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Exit();
                 }
-
-                GC.KeepAlive(m);
             }
             else
             {

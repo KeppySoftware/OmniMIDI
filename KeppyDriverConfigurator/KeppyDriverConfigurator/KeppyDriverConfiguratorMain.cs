@@ -653,26 +653,22 @@ namespace KeppyDriverConfigurator
             // MIDI out selector disabler
             if (IsWindows10() == true)
             {
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+            }
+
+            if (Environment.Is64BitOperatingSystem == false)
+            {
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
-                toolStripSeparator1.Visible = false;
             }
-            else
+            else if (Environment.Is64BitOperatingSystem == true)
             {
-                if (Environment.Is64BitOperatingSystem == false)
-                {
-                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
-                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                }
-                else if (Environment.Is64BitOperatingSystem == true)
-                {
-                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
-                }
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
             }
 
             InitializeLists();
