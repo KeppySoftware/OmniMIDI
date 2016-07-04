@@ -351,21 +351,20 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 						}
 						break;
 
+						case '@':
+						{
+						}
+						break;
+
 						case ';':
 							// separates preset items
 							break;
 
 						default:
 							// invalid command character
-							valid = false;
+							valid = true;
 							break;
 						}
-					}
-					if (!valid)
-					{
-						presets.clear();
-						BASS_MIDI_FONTEX fex = { 0, -1, -1, -1, 0, 0 };
-						presets.push_back(fex);
 					}
 				}
 				else
@@ -382,20 +381,20 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 				{
 					_tcscat(temp, nameptr);
 				}
-				HSOUNDFONT font = BASS_MIDI_FontInit(temp, bass_flags);
-				if (!font)
-				{
-					fclose(fl);
-					return false;
+				if (name[0] != '@') {
+					HSOUNDFONT font = BASS_MIDI_FontInit(temp, bass_flags);
+					for (auto it = presets.begin(); it != presets.end(); ++it)
+					{
+						if (preload)
+							BASS_MIDI_FontLoad(font, it->spreset, it->sbank);
+						it->font = font;
+						presetList[uDeviceID].push_back(*it);
+					}
+					_soundFonts[uDeviceID].push_back(font);
 				}
-				for (auto it = presets.begin(); it != presets.end(); ++it)
-				{
-					if (preload)
-						BASS_MIDI_FontLoad(font, it->spreset, it->sbank);
-					it->font = font;
-					presetList[uDeviceID].push_back(*it);
+				else {
+					continue;
 				}
-				_soundFonts[uDeviceID].push_back(font);
 			}
 			fclose(fl);
 			return true;

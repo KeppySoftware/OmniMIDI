@@ -1055,22 +1055,22 @@ namespace KeppyDriverConfigurator
 
         private void MvU5_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List5Path, Lis5);
+            MoveUpSoundfont(List5Path, Lis5);
         }
 
         private void MvU6_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List6Path, Lis6);
+            MoveUpSoundfont(List6Path, Lis6);
         }
 
         private void MvU7_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List7Path, Lis7);
+            MoveUpSoundfont(List7Path, Lis7);
         }
 
         private void MvU8_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List8Path, Lis8);
+            MoveUpSoundfont(List8Path, Lis8);
         }
 
         private void MvD1_Click(object sender, EventArgs e)
@@ -1095,22 +1095,22 @@ namespace KeppyDriverConfigurator
 
         private void MvD5_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List5Path, Lis5);
+            MoveDownSoundfont(List5Path, Lis5);
         }
 
         private void MvD6_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List6Path, Lis6);
+            MoveDownSoundfont(List6Path, Lis6);
         }
 
         private void MvD7_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List7Path, Lis7);
+            MoveDownSoundfont(List7Path, Lis7);
         }
 
         private void MvD8_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List8Path, Lis8);
+            MoveDownSoundfont(List8Path, Lis8);
         }
 
         private void CLi1_Click(object sender, EventArgs e)
