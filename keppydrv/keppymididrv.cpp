@@ -423,32 +423,68 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 
 void RunWatchdog()
 {
-	HKEY hKey;
-	long lResult;
-	TCHAR watchdog[MAX_PATH];
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	DWORD one = 1;
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-	RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&one, sizeof(one));
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, watchdog)))
+	try
 	{
-		PathAppend(watchdog, _T("\\keppydrv\\KeppyDriverWatchdog.exe"));
-		ShellExecute(NULL, L"open", watchdog, NULL, NULL, SW_SHOWNORMAL);
+		HKEY hKey;
+		long lResult;
+		TCHAR watchdog[MAX_PATH];
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		DWORD one = 1;
+		DWORD zero = 0;
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		RegSetValueEx(hKey, L"closewatchdog", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+		RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&one, sizeof(one));
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, watchdog)))
+		{
+			PathAppend(watchdog, _T("\\keppydrv\\KeppyDriverWatchdog.exe"));
+			ShellExecute(NULL, L"open", watchdog, NULL, NULL, SW_SHOWNORMAL);
+		}
+	}
+	catch (int e) 
+	{
+
 	}
 }
 
 void KillWatchdog()
 {
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	DWORD one = 1;
-	DWORD zero = 0;
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-	RegSetValueEx(hKey, L"closewatchdog", 0, dwType, (LPBYTE)&one, sizeof(one));
-	RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+	try
+	{
+		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+		PROCESSENTRY32W pEntry;
+		pEntry.dwSize = sizeof(pEntry);
+		BOOL hRes = Process32First(hSnapShot, &pEntry);
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		DWORD one = 1;
+		DWORD zero = 0;
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		RegSetValueEx(hKey, L"closewatchdog", 0, dwType, (LPBYTE)&one, sizeof(one));
+		RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+
+		while (hRes)
+		{
+			if (wcscmp(pEntry.szExeFile, L"KeppyDriverWatchdog.exe") == 0)
+			{
+				HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0,
+					(DWORD)pEntry.th32ProcessID);
+				if (hProcess != NULL)
+				{
+					TerminateProcess(hProcess, 9);
+					CloseHandle(hProcess);
+				}
+			}
+			hRes = Process32Next(hSnapShot, &pEntry);
+		}
+		CloseHandle(hSnapShot);
+	}
+	catch (int e)
+	{
+
+	}
 }
 
 void LoadFonts(UINT uDeviceID, const TCHAR * name)
@@ -662,25 +698,23 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 }
 
 struct evbuf_t{
-	UINT uDeviceID;
-	UINT   uMsg;
-	DWORD_PTR	dwParam1;
-	DWORD_PTR	dwParam2;
+	UINT uMsg;
+	DWORD	dwParam1;
+	DWORD	dwParam2;
 	int exlen;
-	unsigned char *sysexbuffer;
+	char *sysexbuffer;
 };
 
-#define EVBUFF_SIZE 0x3FFFC
+#define EVBUFF_SIZE 0x80000
 static struct evbuf_t evbuf[EVBUFF_SIZE];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
-static volatile LONG evbcount = 0;
 static UINT evbsysexpoint;
 
 int bmsyn_buf_check(void){
 	int retval;
 	EnterCriticalSection(&mim_section);
-	retval = evbcount;
+	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
 	LeaveCriticalSection(&mim_section);
 	return retval;
 }
@@ -705,7 +739,7 @@ int bmsyn_play_some_data(void){
 
 	UINT evbpoint;
 	int exlen;
-	unsigned char *sysexbuffer;
+	char *sysexbuffer;
 	int played;
 
 	played = 0;
@@ -719,7 +753,6 @@ int bmsyn_play_some_data(void){
 		if (++evbrpoint >= EVBUFF_SIZE)
 			evbrpoint -= EVBUFF_SIZE;
 
-		uDeviceID = evbuf[evbpoint].uDeviceID;
 		uMsg = evbuf[evbpoint].uMsg;
 		dwParam1 = evbuf[evbpoint].dwParam1;
 		dwParam2 = evbuf[evbpoint].dwParam2;
@@ -736,11 +769,11 @@ int bmsyn_play_some_data(void){
 		case MODM_LONGDATA:
 #ifdef DEBUG
 			FILE * logfile;
-			logfile = fopen("c:\\dbglog2.log", "at");
-			if (logfile != NULL) {
-				for (int i = 0; i < exlen; i++)
-					fprintf(logfile, "%x ", sysexbuffer[i]);
-				fprintf(logfile, "\n");
+			logfile = fopen("c:\\dbglog2.log","at");
+			if(logfile!=NULL) {
+				for(int i = 0 ; i < exlen ; i++)
+					fprintf(logfile,"%x ", sysexbuffer[i]);
+				fprintf(logfile,"\n");
 			}
 			fclose(logfile);
 #endif
@@ -748,7 +781,7 @@ int bmsyn_play_some_data(void){
 			free(sysexbuffer);
 			break;
 		}
-	} while (InterlockedDecrement(&evbcount));
+	} while (bmsyn_buf_check());
 	return played;
 }
 
@@ -1638,6 +1671,7 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 
 void DoStartClient() {
 	if (modm_closed == 1) {
+		RunWatchdog();
 		DWORD result;
 		unsigned int thrdaddr;
 		InitializeCriticalSection(&mim_section);
@@ -1672,7 +1706,6 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
 	RegCloseKey(hKey);
-	KillWatchdog();
 	if (modm_closed == 0){
 		stop_thread = 1;
 		WaitForSingleObject(hCalcThread, INFINITE);
@@ -1771,7 +1804,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	UINT evbpoint;
 	struct Driver *driver = &drivers[uDeviceID];
 	int exlen = 0;
-	unsigned char *sysexbuffer = NULL;
+	char *sysexbuffer = NULL;
 	DWORD result = 0;
 	switch (uMsg) {
 	case MODM_OPEN:
@@ -1792,7 +1825,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags &= ~MHDR_DONE;
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 		exlen = (int)IIMidiHdr->dwBufferLength;
-		if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char)))){
+		if (NULL == (sysexbuffer = (char *)malloc(exlen * sizeof(char)))){
 			return MMSYSERR_NOMEM;
 		}
 		else{
@@ -1825,20 +1858,14 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		evbpoint = evbwpoint;
 		if (++evbwpoint >= EVBUFF_SIZE)
 			evbwpoint -= EVBUFF_SIZE;
-		evbuf[evbpoint].uDeviceID = uDeviceID;
 		evbuf[evbpoint].uMsg = uMsg;
 		evbuf[evbpoint].dwParam1 = dwParam1;
 		evbuf[evbpoint].dwParam2 = dwParam2;
 		evbuf[evbpoint].exlen = exlen;
 		evbuf[evbpoint].sysexbuffer = sysexbuffer;
 		LeaveCriticalSection(&mim_section);
-		if (InterlockedIncrement(&evbcount) >= EVBUFF_SIZE) {
-			do
-			{
-
-			} while (evbcount >= EVBUFF_SIZE);
-		}
 		return MMSYSERR_NOERROR;
+		break;
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
