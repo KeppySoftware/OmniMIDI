@@ -236,6 +236,14 @@ namespace KeppyDriverConfigurator
                     VolumeMonitor.Checked = false;
                     VolumeCheck.Enabled = false;
                 }
+                if (Convert.ToInt32(Settings.GetValue("midivolumeoverride")) == 1)
+                {
+                    MIDIVolumeOverride.Checked = true;
+                }
+                else
+                {
+                    MIDIVolumeOverride.Checked = false;
+                }
                 ChannelVolume.Enabled = true;
             }
             catch (Exception ex)
@@ -271,6 +279,26 @@ namespace KeppyDriverConfigurator
                     VolumeCheck.Enabled = false;
                     LeftChannel.Value = 0;
                     RightChannel.Value = 0;     
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+        private void MIDIVolumeOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+                if (MIDIVolumeOverride.Checked == true)
+                {
+                    Settings.SetValue("midivolumeoverride", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    Settings.SetValue("midivolumeoverride", "1", RegistryValueKind.DWord);
                 }
             }
             catch (Exception ex)

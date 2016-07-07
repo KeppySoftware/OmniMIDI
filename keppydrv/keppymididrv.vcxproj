@@ -129,7 +129,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <EnableParallelCodeGeneration>
       </EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
     </ClCompile>
@@ -190,7 +190,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>CompileAsCpp</CompileAs>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -203,7 +203,7 @@
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <EnableParallelCodeGeneration>
       </EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <OpenMPSupport>true</OpenMPSupport>

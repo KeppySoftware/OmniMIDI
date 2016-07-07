@@ -119,6 +119,7 @@ static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
 static int vmsemu = 0; // VirtualMIDISynth buffer emulation
 static int volume = 0; // Volume limit
+static int midivolumeoverride = 0; // MIDI track volume override
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
 static int volumemon = 1; // Volume monitoring
 static int xaudiodisabled = 0; // Override the default engine
@@ -140,6 +141,22 @@ static int ch13 = 16383;
 static int ch14 = 16383;
 static int ch15 = 16383;
 static int ch16 = 16383;
+static int tch1 = 16383;
+static int tch2 = 16383;
+static int tch3 = 16383;
+static int tch4 = 16383;
+static int tch5 = 16383;
+static int tch6 = 16383;
+static int tch7 = 16383;
+static int tch8 = 16383;
+static int tch9 = 16383;
+static int tch10 = 16383;
+static int tch11 = 16383;
+static int tch12 = 16383;
+static int tch13 = 16383;
+static int tch14 = 16383;
+static int tch15 = 16383;
+static int tch16 = 16383;
 
 // Watchdog
 static int rel1 = 0;
@@ -351,20 +368,21 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 						}
 						break;
 
-						case '@':
-						{
-						}
-						break;
-
 						case ';':
 							// separates preset items
 							break;
 
 						default:
 							// invalid command character
-							valid = true;
+							valid = false;
 							break;
 						}
+					}
+					if (!valid)
+					{
+						presets.clear();
+						BASS_MIDI_FONTEX fex = { 0, -1, -1, -1, 0, 0 };
+						presets.push_back(fex);
 					}
 				}
 				else
@@ -867,6 +885,7 @@ void load_settings()
 	RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
 	RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 	RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
+	RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
@@ -895,6 +914,7 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
+	RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
@@ -1143,22 +1163,90 @@ void mixervoid() {
 	RegQueryValueEx(hKey, L"ch14", NULL, &dwType, (LPBYTE)&ch14, &dwSize);
 	RegQueryValueEx(hKey, L"ch15", NULL, &dwType, (LPBYTE)&ch15, &dwSize);
 	RegQueryValueEx(hKey, L"ch16", NULL, &dwType, (LPBYTE)&ch16, &dwSize);
-	BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_VOLUME, ch1);
-	BASS_MIDI_StreamEvent(hStream, 1, MIDI_EVENT_VOLUME, ch2);
-	BASS_MIDI_StreamEvent(hStream, 2, MIDI_EVENT_VOLUME, ch3);
-	BASS_MIDI_StreamEvent(hStream, 3, MIDI_EVENT_VOLUME, ch4);
-	BASS_MIDI_StreamEvent(hStream, 4, MIDI_EVENT_VOLUME, ch5);
-	BASS_MIDI_StreamEvent(hStream, 5, MIDI_EVENT_VOLUME, ch6);
-	BASS_MIDI_StreamEvent(hStream, 6, MIDI_EVENT_VOLUME, ch7);
-	BASS_MIDI_StreamEvent(hStream, 7, MIDI_EVENT_VOLUME, ch8);
-	BASS_MIDI_StreamEvent(hStream, 8, MIDI_EVENT_VOLUME, ch9);
-	BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_VOLUME, ch10);
-	BASS_MIDI_StreamEvent(hStream, 10, MIDI_EVENT_VOLUME, ch11);
-	BASS_MIDI_StreamEvent(hStream, 11, MIDI_EVENT_VOLUME, ch12);
-	BASS_MIDI_StreamEvent(hStream, 12, MIDI_EVENT_VOLUME, ch13);
-	BASS_MIDI_StreamEvent(hStream, 13, MIDI_EVENT_VOLUME, ch14);
-	BASS_MIDI_StreamEvent(hStream, 14, MIDI_EVENT_VOLUME, ch15);
-	BASS_MIDI_StreamEvent(hStream, 15, MIDI_EVENT_VOLUME, ch16);
+	if (midivolumeoverride == 1) {
+		BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_VOLUME, ch1);
+		BASS_MIDI_StreamEvent(hStream, 1, MIDI_EVENT_VOLUME, ch2);
+		BASS_MIDI_StreamEvent(hStream, 2, MIDI_EVENT_VOLUME, ch3);
+		BASS_MIDI_StreamEvent(hStream, 3, MIDI_EVENT_VOLUME, ch4);
+		BASS_MIDI_StreamEvent(hStream, 4, MIDI_EVENT_VOLUME, ch5);
+		BASS_MIDI_StreamEvent(hStream, 5, MIDI_EVENT_VOLUME, ch6);
+		BASS_MIDI_StreamEvent(hStream, 6, MIDI_EVENT_VOLUME, ch7);
+		BASS_MIDI_StreamEvent(hStream, 7, MIDI_EVENT_VOLUME, ch8);
+		BASS_MIDI_StreamEvent(hStream, 8, MIDI_EVENT_VOLUME, ch9);
+		BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_VOLUME, ch10);
+		BASS_MIDI_StreamEvent(hStream, 10, MIDI_EVENT_VOLUME, ch11);
+		BASS_MIDI_StreamEvent(hStream, 11, MIDI_EVENT_VOLUME, ch12);
+		BASS_MIDI_StreamEvent(hStream, 12, MIDI_EVENT_VOLUME, ch13);
+		BASS_MIDI_StreamEvent(hStream, 13, MIDI_EVENT_VOLUME, ch14);
+		BASS_MIDI_StreamEvent(hStream, 14, MIDI_EVENT_VOLUME, ch15);
+		BASS_MIDI_StreamEvent(hStream, 15, MIDI_EVENT_VOLUME, ch16);
+	}
+	else {
+		if (ch1 != tch1) {
+			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_VOLUME, ch1);
+			tch1 = ch1;
+		}
+		if (ch2 != tch2) {
+			BASS_MIDI_StreamEvent(hStream, 1, MIDI_EVENT_VOLUME, ch2);
+			tch2 = ch2;
+		}
+		if (ch3 != tch3) {
+			BASS_MIDI_StreamEvent(hStream, 2, MIDI_EVENT_VOLUME, ch3);
+			tch3 = ch3;
+		}
+		if (ch4 != tch4) {
+			BASS_MIDI_StreamEvent(hStream, 3, MIDI_EVENT_VOLUME, ch4);
+			tch4 = ch4;
+		}
+		if (ch5 != tch5) {
+			BASS_MIDI_StreamEvent(hStream, 4, MIDI_EVENT_VOLUME, ch5);
+			tch5 = ch5;
+		}
+		if (ch6 != tch6) {
+			BASS_MIDI_StreamEvent(hStream, 5, MIDI_EVENT_VOLUME, ch6);
+			tch6 = ch6;
+		}
+		if (ch7 != tch7) {
+			BASS_MIDI_StreamEvent(hStream, 6, MIDI_EVENT_VOLUME, ch7);
+			tch7 = ch7;
+		}
+		if (ch8 != tch8) {
+			BASS_MIDI_StreamEvent(hStream, 7, MIDI_EVENT_VOLUME, ch8);
+			tch8 = ch8;
+		}
+		if (ch9 != tch9) {
+			BASS_MIDI_StreamEvent(hStream, 8, MIDI_EVENT_VOLUME, ch9);
+			tch9 = ch9;
+		}
+		if (ch10 != tch10) {
+			BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_VOLUME, ch10);
+			tch10 = ch10;
+		}
+		if (ch11 != tch11) {
+			BASS_MIDI_StreamEvent(hStream, 10, MIDI_EVENT_VOLUME, ch11);
+			tch11 = ch11;
+		}
+		if (ch12 != tch12) {
+			BASS_MIDI_StreamEvent(hStream, 11, MIDI_EVENT_VOLUME, ch12);
+			tch12 = ch12;
+		}
+		if (ch13 != tch13) {
+			BASS_MIDI_StreamEvent(hStream, 12, MIDI_EVENT_VOLUME, ch13);
+			tch13 = ch13;
+		}
+		if (ch14 != tch14) {
+			BASS_MIDI_StreamEvent(hStream, 13, MIDI_EVENT_VOLUME, ch14);
+			tch14 = ch14;
+		}
+		if (ch15 != tch15) {
+			BASS_MIDI_StreamEvent(hStream, 14, MIDI_EVENT_VOLUME, ch15);
+			tch15 = ch15;
+		}
+		if (ch16 != tch16) {
+			BASS_MIDI_StreamEvent(hStream, 15, MIDI_EVENT_VOLUME, ch16);
+			tch16 = ch16;
+		}
+	}
 }
 
 void Volume(char* UpOrDown) {

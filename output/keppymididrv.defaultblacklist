@@ -40,7 +40,10 @@ msiexec.exe
 mspdbsrv.exe
 notepad++.exe
 nvbackend.exe
+nvcontainer.exe
+nvidia share.exe
 nvnetworkservice.exe
+nvoawrappercache.exe
 nvosc.exe
 nvscpapisvr.exe
 nvspcaps64.exe
@@ -49,6 +52,8 @@ nvstreamnetworkservice.exe
 nvstreamservice.exe
 nvstreamuseragent.exe
 nvvsvc.exe
+nvwirelesscontroller.exe
+nvxdsync.exe
 nvxdsync.exe
 photoshop.exe
 procaster.exe

@@ -78,11 +78,11 @@ DEFINE_IID(IXAudio2, 8bcf1f58, 9fe7, 4583, 8a, c6, e2, ad, c4, 65, c8, bb);
 
 // Numeric boundary values
 #define XAUDIO2_MAX_BUFFER_BYTES        0x80000000    // Maximum bytes allowed in a source buffer
-#define XAUDIO2_MAX_QUEUED_BUFFERS      256           // Maximum buffers allowed in a voice queue
-#define XAUDIO2_MAX_BUFFERS_SYSTEM      8             // Maximum buffers allowed for system threads (Xbox 360 only)
+#define XAUDIO2_MAX_QUEUED_BUFFERS      64            // Maximum buffers allowed in a voice queue
+#define XAUDIO2_MAX_BUFFERS_SYSTEM      2             // Maximum buffers allowed for system threads (Xbox 360 only)
 #define XAUDIO2_MAX_AUDIO_CHANNELS      64            // Maximum channels in an audio stream
 #define XAUDIO2_MIN_SAMPLE_RATE         1000          // Minimum audio sample rate supported
-#define XAUDIO2_MAX_SAMPLE_RATE         200000000     // Maximum audio sample rate supported
+#define XAUDIO2_MAX_SAMPLE_RATE         200000        // Maximum audio sample rate supported
 #define XAUDIO2_MAX_VOLUME_LEVEL        16777216.0f   // Maximum acceptable volume level (2^24)
 #define XAUDIO2_MIN_FREQ_RATIO          (1/1024.0f)   // Minimum SetFrequencyRatio argument
 #define XAUDIO2_MAX_FREQ_RATIO          1024.0f       // Maximum MaxFrequencyRatio argument

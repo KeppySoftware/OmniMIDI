@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.3.2.0
+AppVersion=3.3.2.1
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.3.2.0
+VersionInfoProductTextVersion=3.3.2.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=3.3.2.0
+VersionInfoVersion=3.3.2.1
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -114,22 +114,23 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "encmode"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "firstrun"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "frequency"; ValueData: "44100"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "midivolumeoverride"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "nodx8"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "nofloat"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "nofx"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "noteoff"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "polyphony"; ValueData: "500"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "preload"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sinc"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sfdisableconf"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sinc"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sndbfvalue"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "softwaremode"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "sysresetignore"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "tracks"; ValueData: "16"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "vmsemu"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volume"; ValueData: "10000"; Flags: createvalueifdoesntexist uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volumemon"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volumehotkeys"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volumemon"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "watchdog"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "xaudiodisabled"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 

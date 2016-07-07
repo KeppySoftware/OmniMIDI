@@ -75,6 +75,7 @@
             this.fullVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
+            this.MIDIVolumeOverride = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -498,7 +499,7 @@
             // 
             this.label3.Location = new System.Drawing.Point(556, 37);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(181, 51);
+            this.label3.Size = new System.Drawing.Size(181, 29);
             this.label3.TabIndex = 24;
             this.label3.Text = "The volume meter only works when the XAudio interface is disabled.";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -561,12 +562,25 @@
             // 
             this.VolumeTip.AutomaticDelay = 0;
             // 
+            // MIDIVolumeOverride
+            // 
+            this.MIDIVolumeOverride.AutoSize = true;
+            this.MIDIVolumeOverride.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.MIDIVolumeOverride.Location = new System.Drawing.Point(542, 76);
+            this.MIDIVolumeOverride.Name = "MIDIVolumeOverride";
+            this.MIDIVolumeOverride.Size = new System.Drawing.Size(195, 17);
+            this.MIDIVolumeOverride.TabIndex = 27;
+            this.MIDIVolumeOverride.Text = "Enable MIDI volume event override";
+            this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
+            this.MIDIVolumeOverride.CheckedChanged += new System.EventHandler(this.MIDIVolumeOverride_CheckedChanged);
+            // 
             // KeppyDriverMixerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(748, 181);
+            this.Controls.Add(this.MIDIVolumeOverride);
             this.Controls.Add(this.VolumeMonitor);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.CH16);
@@ -686,5 +700,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolTip VolumeTip;
         private System.Windows.Forms.ToolStripMenuItem fullVolumeToolStripMenuItem;
+        private System.Windows.Forms.CheckBox MIDIVolumeOverride;
     }
 }
