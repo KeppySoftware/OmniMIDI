@@ -298,7 +298,7 @@ namespace KeppyDriverConfigurator
                 }
                 else
                 {
-                    Settings.SetValue("midivolumeoverride", "1", RegistryValueKind.DWord);
+                    Settings.SetValue("midivolumeoverride", "0", RegistryValueKind.DWord);
                 }
             }
             catch (Exception ex)

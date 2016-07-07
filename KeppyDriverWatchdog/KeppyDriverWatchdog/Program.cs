@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Diagnostics;
 using Microsoft.Win32;
 
 namespace KeppyDriverWatchdog
@@ -50,6 +51,49 @@ namespace KeppyDriverWatchdog
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Exit();
+            }
+        }
+    }
+
+    public class ProcessIcon : IDisposable
+    {
+        NotifyIcon ni;
+
+        public ProcessIcon()
+        {
+            ni = new NotifyIcon();
+        }
+
+        public void Display()
+        {
+            ni.MouseClick += new MouseEventHandler(ni_MouseClick);
+            ni.Text = "Keppy's Driver Watchdog";
+            ni.Icon = KeppyDriverWatchdog.Properties.Resources.gear;
+            ni.Visible = true;
+
+            ni.ContextMenuStrip = new ContextMenus().Create();
+        }
+
+        public void Dispose()
+        {
+            ni.Icon = null;
+            ni.Dispose();
+            System.Windows.Forms.Application.DoEvents();
+        }
+
+        void Exit(object sender, EventArgs e)
+        {
+            ni.Visible = false;
+
+            Application.Exit();
+        }
+
+        void ni_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                string currentpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                Process.Start(currentpath + "\\KeppyDriverConfigurator.exe", null);
             }
         }
     }
