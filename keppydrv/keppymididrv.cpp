@@ -473,7 +473,6 @@ void KillWatchdog()
 					(DWORD)pEntry.th32ProcessID);
 				if (hProcess != NULL)
 				{
-					TerminateProcess(hProcess, 9);
 					CloseHandle(hProcess);
 				}
 			}

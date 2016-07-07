@@ -81,7 +81,7 @@ namespace KeppyDriverWatchdog
             System.Windows.Forms.Application.DoEvents();
         }
 
-        void Exit(object sender, EventArgs e)
+        public void Exit(object sender, EventArgs e)
         {
             ni.Visible = false;
 
