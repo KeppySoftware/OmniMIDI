@@ -23,6 +23,7 @@
     <ClInclude Include="..\external_packages\XAudio2.h" />
     <ClInclude Include="..\external_packages\xma2defs.h" />
     <ClInclude Include="..\external_packages\mmddk.h" />
+    <ClInclude Include="bufsystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sound_out.h" />
   </ItemGroup>
@@ -135,7 +136,8 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
+      <Culture>0x0809</Culture>
+      <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
@@ -210,7 +212,8 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
+      <Culture>0x0809</Culture>
+      <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>dxguid.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>

@@ -1575,6 +1575,12 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void changeDefaultBufferSystemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverBufferSystem frm = new KeppyDriverBufferSystem();
+            frm.ShowDialog();
+        }
+
         private void changeDefaultSoundfontListToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             KeppyDriverDefaultSFList frm = new KeppyDriverDefaultSFList();

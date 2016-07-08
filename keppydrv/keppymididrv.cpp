@@ -29,6 +29,7 @@ void _endthreadex(unsigned retval);
 #include "stdafx.h"
 #include <vector>
 #include <signal.h>
+#include "bufsystem.h"
 #include <list>
 #include <sstream>
 #include <string>
@@ -106,8 +107,10 @@ static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
 static int frames = 0; // Default
 static int frequency = 0; // Audio frequency
+static int legacybuf = 0; // Enable or disable the legacy buffer system from BASSMIDI Driver 1.x
 static int maxcpu = 0; // CPU usage INT
 static int midivoices = 0; // Max voices INT
+static int midivolumeoverride = 0; // MIDI track volume override
 static int newsndbfvalue; // DO NOT TOUCH
 static int nofloat = 1; // Enable or disable the float engine
 static int nofx = 0; // Enable or disable FXs
@@ -119,7 +122,6 @@ static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
 static int vmsemu = 0; // VirtualMIDISynth buffer emulation
 static int volume = 0; // Volume limit
-static int midivolumeoverride = 0; // MIDI track volume override
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
 static int volumemon = 1; // Volume monitoring
 static int xaudiodisabled = 0; // Override the default engine
@@ -696,94 +698,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	}
 }
 
-struct evbuf_t{
-	UINT uMsg;
-	DWORD	dwParam1;
-	DWORD	dwParam2;
-	int exlen;
-	char *sysexbuffer;
-};
-
-#define EVBUFF_SIZE 0x80000
-static struct evbuf_t evbuf[EVBUFF_SIZE];
-static UINT  evbwpoint = 0;
-static UINT  evbrpoint = 0;
-static UINT evbsysexpoint;
-
-int bmsyn_buf_check(void){
-	int retval;
-	EnterCriticalSection(&mim_section);
-	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
-	LeaveCriticalSection(&mim_section);
-	return retval;
-}
-
-bool compare_nocase(const std::string& first, const std::string& second)
-{
-	unsigned int i = 0;
-	while ((i<first.length()) && (i<second.length()))
-	{
-		if (tolower(first[i])<tolower(second[i])) return true;
-		else if (tolower(first[i])>tolower(second[i])) return false;
-		++i;
-	}
-	return (first.length() < second.length());
-}
-
-int bmsyn_play_some_data(void){
-	UINT uDeviceID;
-	UINT uMsg;
-	DWORD_PTR	dwParam1;
-	DWORD_PTR   dwParam2;
-
-	UINT evbpoint;
-	int exlen;
-	char *sysexbuffer;
-	int played;
-
-	played = 0;
-	if (!bmsyn_buf_check()){
-		played = ~0;
-		return played;
-	}
-	do{
-		EnterCriticalSection(&mim_section);
-		evbpoint = evbrpoint;
-		if (++evbrpoint >= EVBUFF_SIZE)
-			evbrpoint -= EVBUFF_SIZE;
-
-		uMsg = evbuf[evbpoint].uMsg;
-		dwParam1 = evbuf[evbpoint].dwParam1;
-		dwParam2 = evbuf[evbpoint].dwParam2;
-		exlen = evbuf[evbpoint].exlen;
-		sysexbuffer = evbuf[evbpoint].sysexbuffer;
-
-		LeaveCriticalSection(&mim_section);
-		switch (uMsg) {
-		case MODM_DATA:
-			dwParam2 = dwParam1 & 0xF0;
-			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
-			break;
-		case MODM_LONGDATA:
-#ifdef DEBUG
-			FILE * logfile;
-			logfile = fopen("c:\\dbglog2.log","at");
-			if(logfile!=NULL) {
-				for(int i = 0 ; i < exlen ; i++)
-					fprintf(logfile,"%x ", sysexbuffer[i]);
-				fprintf(logfile,"\n");
-			}
-			fclose(logfile);
-#endif
-			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
-			free(sysexbuffer);
-			break;
-		}
-	} while (bmsyn_buf_check());
-	return played;
-}
-
 void AudioRender(int bassoutput) {
 	if (bassoutput == -1) {
 		if (vmsemu == 0) {
@@ -856,35 +770,35 @@ BOOL load_bassfuncs()
 	}
 	/* "load" all the BASS functions that are to be used */
 	OutputDebugString(L"Loading BASS functions....");
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
-	LOADBASSFUNCTION(BASS_StreamFree);
-	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_SetConfig);
-	LOADBASSFUNCTION(BASS_PluginLoad);
-	LOADBASSFUNCTION(BASS_Init);
-	LOADBASSFUNCTION(BASS_GetInfo);
-	LOADBASSFUNCTION(BASS_Free);
-	LOADBASSFUNCTION(BASS_ErrorGetCode);
-	LOADBASSFUNCTION(BASS_ChannelUpdate);
-	LOADBASSFUNCTION(BASS_ChannelSetFX);
-	LOADBASSFUNCTION(BASS_ChannelSetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
-	LOADBASSFUNCTION(BASS_ChannelPlay);
-	LOADBASSFUNCTION(BASS_ChannelGetLevel);
-	LOADBASSFUNCTION(BASS_ChannelGetData);
-	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelFlags);
-	LOADBASSENCFUNCTION(BASS_Encode_Stop);
 	LOADBASSENCFUNCTION(BASS_Encode_Start);
+	LOADBASSENCFUNCTION(BASS_Encode_Stop);
+	LOADBASSFUNCTION(BASS_ChannelFlags);
+	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+	LOADBASSFUNCTION(BASS_ChannelGetData);
+	LOADBASSFUNCTION(BASS_ChannelGetLevel);
+	LOADBASSFUNCTION(BASS_ChannelPlay);
+	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
+	LOADBASSFUNCTION(BASS_ChannelSetAttribute);
+	LOADBASSFUNCTION(BASS_ChannelSetFX);
+	LOADBASSFUNCTION(BASS_ChannelUpdate);
+	LOADBASSFUNCTION(BASS_ErrorGetCode);
+	LOADBASSFUNCTION(BASS_Free);
+	LOADBASSFUNCTION(BASS_GetInfo);
+	LOADBASSFUNCTION(BASS_Init);
+	LOADBASSFUNCTION(BASS_PluginLoad);
+	LOADBASSFUNCTION(BASS_SetConfig);
+	LOADBASSFUNCTION(BASS_SetVolume);
+	LOADBASSFUNCTION(BASS_SetVolume);
+	LOADBASSFUNCTION(BASS_StreamFree);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
+	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 	OutputDebugString(L"Done.");
 
 	installpathlength = lstrlen(installpath) + 1;
@@ -903,6 +817,17 @@ BOOL load_bassfuncs()
 	return TRUE;
 }
 
+bool compare_nocase(const std::string& first, const std::string& second)
+{
+	unsigned int i = 0;
+	while ((i<first.length()) && (i<second.length()))
+	{
+		if (tolower(first[i])<tolower(second[i])) return true;
+		else if (tolower(first[i])>tolower(second[i])) return false;
+		++i;
+	}
+	return (first.length() < second.length());
+}
 
 void load_settings()
 {
@@ -917,6 +842,7 @@ void load_settings()
 	RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
 	RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 	RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
+	RegQueryValueEx(hKey, L"legacybuf", NULL, &dwType, (LPBYTE)&legacybuf, &dwSize);
 	RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
@@ -1622,7 +1548,12 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				BASS_MIDI_StreamLoadSamples(hStream);
 			}
-			bmsyn_play_some_data();
+			if (legacybuf == 0) {
+				bmsyn_play_some_data(hStream, mim_section);
+			}
+			else {
+				bmsyn_play_some_data_old(hStream, mim_section);
+			}
 			AudioRender(bassoutputfinal);
 			realtime_load_settings();
 			keybindings();
@@ -1800,7 +1731,6 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 /* Audio Device Messages for MIDI http://msdn.microsoft.com/en-us/library/ff536194%28v=vs.85%29 */
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR *IIMidiHdr;
-	UINT evbpoint;
 	struct Driver *driver = &drivers[uDeviceID];
 	int exlen = 0;
 	char *sysexbuffer = NULL;
@@ -1853,16 +1783,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 		//fallthrough
 	case MODM_DATA:
-		EnterCriticalSection(&mim_section);
-		evbpoint = evbwpoint;
-		if (++evbwpoint >= EVBUFF_SIZE)
-			evbwpoint -= EVBUFF_SIZE;
-		evbuf[evbpoint].uMsg = uMsg;
-		evbuf[evbpoint].dwParam1 = dwParam1;
-		evbuf[evbpoint].dwParam2 = dwParam2;
-		evbuf[evbpoint].exlen = exlen;
-		evbuf[evbpoint].sysexbuffer = sysexbuffer;
-		LeaveCriticalSection(&mim_section);
+		if (legacybuf == 0) {
+			moddatafunction(uDeviceID, uMsg, mim_section, dwParam1, dwParam2);
+		}
+		else {
+			oldmoddatafunction(uMsg, mim_section, dwParam1, dwParam2);
+		}	
 		return MMSYSERR_NOERROR;
 		break;
 	case MODM_GETVOLUME: {

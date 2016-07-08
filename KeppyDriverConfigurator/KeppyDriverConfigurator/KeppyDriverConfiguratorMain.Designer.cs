@@ -182,6 +182,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeDefaultBufferSystemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,6 +197,9 @@
             this.volumeHotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enabledToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.disabledToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.watchdogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.watchdogEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.watchdogDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -215,9 +219,6 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.watchdogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.watchdogEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.watchdogDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -2070,6 +2071,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeDefaultBufferSystemToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
@@ -2078,6 +2080,13 @@
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
+            // 
+            // changeDefaultBufferSystemToolStripMenuItem
+            // 
+            this.changeDefaultBufferSystemToolStripMenuItem.Name = "changeDefaultBufferSystemToolStripMenuItem";
+            this.changeDefaultBufferSystemToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.changeDefaultBufferSystemToolStripMenuItem.Text = "Change default buffer system";
+            this.changeDefaultBufferSystemToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultBufferSystemToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
@@ -2123,14 +2132,14 @@
             // hLSEnabledToolStripMenuItem
             // 
             this.hLSEnabledToolStripMenuItem.Name = "hLSEnabledToolStripMenuItem";
-            this.hLSEnabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hLSEnabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.hLSEnabledToolStripMenuItem.Text = "Enabled";
             this.hLSEnabledToolStripMenuItem.Click += new System.EventHandler(this.hLSEnabledToolStripMenuItem_Click);
             // 
             // hLSDisabledToolStripMenuItem
             // 
             this.hLSDisabledToolStripMenuItem.Name = "hLSDisabledToolStripMenuItem";
-            this.hLSDisabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hLSDisabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.hLSDisabledToolStripMenuItem.Text = "Disabled";
             this.hLSDisabledToolStripMenuItem.Click += new System.EventHandler(this.hLSDisabledToolStripMenuItem_Click);
             // 
@@ -2184,6 +2193,29 @@
             this.disabledToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
             this.disabledToolStripMenuItem1.Text = "Disabled";
             this.disabledToolStripMenuItem1.Click += new System.EventHandler(this.disabledToolStripMenuItem1_Click);
+            // 
+            // watchdogToolStripMenuItem
+            // 
+            this.watchdogToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.watchdogEnabledToolStripMenuItem,
+            this.watchdogDisabledToolStripMenuItem});
+            this.watchdogToolStripMenuItem.Name = "watchdogToolStripMenuItem";
+            this.watchdogToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.watchdogToolStripMenuItem.Text = "Watchdog";
+            // 
+            // watchdogEnabledToolStripMenuItem
+            // 
+            this.watchdogEnabledToolStripMenuItem.Name = "watchdogEnabledToolStripMenuItem";
+            this.watchdogEnabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.watchdogEnabledToolStripMenuItem.Text = "Enabled";
+            this.watchdogEnabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogEnabledToolStripMenuItem_Click);
+            // 
+            // watchdogDisabledToolStripMenuItem
+            // 
+            this.watchdogDisabledToolStripMenuItem.Name = "watchdogDisabledToolStripMenuItem";
+            this.watchdogDisabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.watchdogDisabledToolStripMenuItem.Text = "Disabled";
+            this.watchdogDisabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogDisabledToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -2322,29 +2354,6 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
-            // 
-            // watchdogToolStripMenuItem
-            // 
-            this.watchdogToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.watchdogEnabledToolStripMenuItem,
-            this.watchdogDisabledToolStripMenuItem});
-            this.watchdogToolStripMenuItem.Name = "watchdogToolStripMenuItem";
-            this.watchdogToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
-            this.watchdogToolStripMenuItem.Text = "Watchdog";
-            // 
-            // watchdogEnabledToolStripMenuItem
-            // 
-            this.watchdogEnabledToolStripMenuItem.Name = "watchdogEnabledToolStripMenuItem";
-            this.watchdogEnabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.watchdogEnabledToolStripMenuItem.Text = "Enabled";
-            this.watchdogEnabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogEnabledToolStripMenuItem_Click);
-            // 
-            // watchdogDisabledToolStripMenuItem
-            // 
-            this.watchdogDisabledToolStripMenuItem.Name = "watchdogDisabledToolStripMenuItem";
-            this.watchdogDisabledToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.watchdogDisabledToolStripMenuItem.Text = "Disabled";
-            this.watchdogDisabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogDisabledToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2600,6 +2609,7 @@
         private System.Windows.Forms.ToolStripMenuItem watchdogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem watchdogEnabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem watchdogDisabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeDefaultBufferSystemToolStripMenuItem;
     }
 }
 
