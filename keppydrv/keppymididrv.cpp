@@ -872,6 +872,7 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 	RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
 	RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
+	RegQueryValueEx(hKey, L"legacybuf", NULL, &dwType, (LPBYTE)&legacybuf, &dwSize);
 	RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
@@ -1548,11 +1549,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				BASS_MIDI_StreamLoadSamples(hStream);
 			}
-			if (legacybuf == 0) {
-				bmsyn_play_some_data(hStream, mim_section);
+			if (legacybuf == 1) {
+				bmsyn_play_some_data_old(hStream, mim_section);
 			}
 			else {
-				bmsyn_play_some_data_old(hStream, mim_section);
+				bmsyn_play_some_data(hStream, mim_section);
 			}
 			AudioRender(bassoutputfinal);
 			realtime_load_settings();
@@ -1783,13 +1784,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 		//fallthrough
 	case MODM_DATA:
-		if (legacybuf == 0) {
-			moddatafunction(uDeviceID, uMsg, mim_section, dwParam1, dwParam2);
+		if (legacybuf == 1) {
+			oldmoddatafunction(uMsg, mim_section, dwParam1, dwParam2);
 		}
 		else {
-			oldmoddatafunction(uMsg, mim_section, dwParam1, dwParam2);
+			moddatafunction(uDeviceID, uMsg, mim_section, dwParam1, dwParam2);
 		}	
-		return MMSYSERR_NOERROR;
 		break;
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);

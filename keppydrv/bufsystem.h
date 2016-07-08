@@ -63,56 +63,64 @@ struct evbuf_t{
 	unsigned char *sysexbuffer;
 };
 
-#define EVBUFF_SIZE_OLD 0x80000
+#define EVBUFF_SIZE_OLD 32768
 static struct evbuf_t_old evbuf_old[EVBUFF_SIZE_OLD];
 static UINT evbwpoint_old = 0;
 static UINT evbrpoint_old = 0;
 static UINT evbsysexpoint_old;
 
-#define EVBUFF_SIZE 0x3FFFC
+#define EVBUFF_SIZE 32768
 static struct evbuf_t evbuf[EVBUFF_SIZE];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
 static volatile LONG evbcount = 0;
 static UINT evbsysexpoint;
 
-// Old buffer system from BASSMIDI Driver 1.x
-int bmsyn_buf_check_old(CRITICAL_SECTION mim2){
+int bmsyn_buf_check_old(CRITICAL_SECTION mim){
+	int retval;
+	EnterCriticalSection(&mim);
+	retval = (evbrpoint_old != evbwpoint_old) ? ~0 : 0;
+	LeaveCriticalSection(&mim);
+	return retval;
+}
+
+int bmsyn_buf_check(CRITICAL_SECTION mim2){
 	int retval;
 	EnterCriticalSection(&mim2);
-	retval = (evbrpoint_old != evbwpoint_old) ? ~0 : 0;
+	retval = evbcount;
 	LeaveCriticalSection(&mim2);
 	return retval;
 }
 
-int bmsyn_play_some_data_old(HSTREAM stream, CRITICAL_SECTION mim){
+int bmsyn_play_some_data_old(HSTREAM stream, CRITICAL_SECTION mim3){
 	UINT uMsg;
 	DWORD_PTR	dwParam1;
 	DWORD_PTR   dwParam2;
 
-	UINT evbpoint;
+	UINT evbpoint_old;
 	int exlen;
 	char *sysexbuffer;
 	int played;
 
 	played = 0;
-	if (!bmsyn_buf_check_old(mim)){
+	if (!bmsyn_buf_check_old(mim3)){
 		played = ~0;
 		return played;
 	}
 	do{
-		EnterCriticalSection(&mim);
-		evbpoint = evbrpoint_old;
+		EnterCriticalSection(&mim3);
+
+		evbpoint_old = evbrpoint_old;
 		if (++evbrpoint_old >= EVBUFF_SIZE_OLD)
 			evbrpoint_old -= EVBUFF_SIZE_OLD;
 
-		uMsg = evbuf_old[evbpoint].uMsg;
-		dwParam1 = evbuf_old[evbpoint].dwParam1;
-		dwParam2 = evbuf_old[evbpoint].dwParam2;
-		exlen = evbuf_old[evbpoint].exlen;
-		sysexbuffer = evbuf_old[evbpoint].sysexbuffer;
+		uMsg = evbuf_old[evbpoint_old].uMsg;
+		dwParam1 = evbuf_old[evbpoint_old].dwParam1;
+		dwParam2 = evbuf_old[evbpoint_old].dwParam2;
+		exlen = evbuf_old[evbpoint_old].exlen;
+		sysexbuffer = evbuf_old[evbpoint_old].sysexbuffer;
 
-		LeaveCriticalSection(&mim);
+		LeaveCriticalSection(&mim3);
 		switch (uMsg) {
 		case MODM_DATA:
 			dwParam2 = dwParam1 & 0xF0;
@@ -124,37 +132,11 @@ int bmsyn_play_some_data_old(HSTREAM stream, CRITICAL_SECTION mim){
 			free(sysexbuffer);
 			break;
 		}
-	} while (bmsyn_buf_check_old(mim));
+	} while (bmsyn_buf_check_old(mim3));
 	return played;
 }
 
-void oldmoddatafunction(UINT uMsg, CRITICAL_SECTION mim3, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	UINT evbpoint;
-	int exlen;
-	char *sysexbuffer;
-	EnterCriticalSection(&mim3);
-	evbpoint = evbwpoint_old;
-	if (++evbwpoint_old >= EVBUFF_SIZE_OLD)
-		evbwpoint_old -= EVBUFF_SIZE_OLD;
-	evbuf_old[evbpoint].uMsg = uMsg;
-	evbuf_old[evbpoint].dwParam1 = dwParam1;
-	evbuf_old[evbpoint].dwParam2 = dwParam2;
-	evbuf_old[evbpoint].exlen = exlen;
-	evbuf_old[evbpoint].sysexbuffer = sysexbuffer;
-	LeaveCriticalSection(&mim3);
-}
-
-// New buffer system from BASSMIDI Driver 4.x
-
-int bmsyn_buf_check(CRITICAL_SECTION mim2){
-	int retval;
-	EnterCriticalSection(&mim2);
-	retval = evbcount;
-	LeaveCriticalSection(&mim2);
-	return retval;
-}
-
-int bmsyn_play_some_data(HSTREAM stream, CRITICAL_SECTION mim){
+int bmsyn_play_some_data(HSTREAM stream, CRITICAL_SECTION mim4){
 	UINT uDeviceID;
 	UINT uMsg;
 	DWORD_PTR	dwParam1;
@@ -166,12 +148,12 @@ int bmsyn_play_some_data(HSTREAM stream, CRITICAL_SECTION mim){
 	int played;
 
 	played = 0;
-	if (!bmsyn_buf_check(mim)){
+	if (!bmsyn_buf_check(mim4)){
 		played = ~0;
 		return played;
 	}
 	do{
-		EnterCriticalSection(&mim);
+		EnterCriticalSection(&mim4);
 		evbpoint = evbrpoint;
 		if (++evbrpoint >= EVBUFF_SIZE)
 			evbrpoint -= EVBUFF_SIZE;
@@ -183,7 +165,7 @@ int bmsyn_play_some_data(HSTREAM stream, CRITICAL_SECTION mim){
 		exlen = evbuf[evbpoint].exlen;
 		sysexbuffer = evbuf[evbpoint].sysexbuffer;
 
-		LeaveCriticalSection(&mim);
+		LeaveCriticalSection(&mim4);
 		switch (uMsg) {
 		case MODM_DATA:
 			dwParam2 = dwParam1 & 0xF0;
@@ -199,11 +181,28 @@ int bmsyn_play_some_data(HSTREAM stream, CRITICAL_SECTION mim){
 	return played;
 }
 
-void moddatafunction(UINT uDeviceID, UINT uMsg, CRITICAL_SECTION mim3, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+bool oldmoddatafunction(UINT uMsg, CRITICAL_SECTION mim5, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	UINT evbpoint_old;
+	int exlen;
+	char *sysexbuffer;
+	EnterCriticalSection(&mim5);
+	evbpoint_old = evbwpoint_old;
+	if (++evbwpoint_old >= EVBUFF_SIZE_OLD)
+		evbwpoint_old -= EVBUFF_SIZE_OLD;
+	evbuf_old[evbpoint_old].uMsg = uMsg;
+	evbuf_old[evbpoint_old].dwParam1 = dwParam1;
+	evbuf_old[evbpoint_old].dwParam2 = dwParam2;
+	evbuf_old[evbpoint_old].exlen = exlen;
+	evbuf_old[evbpoint_old].sysexbuffer = sysexbuffer;
+	LeaveCriticalSection(&mim5);
+	return MMSYSERR_NOERROR;
+}
+
+bool moddatafunction(UINT uDeviceID, UINT uMsg, CRITICAL_SECTION mim6, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	UINT evbpoint;
 	int exlen;
 	unsigned char *sysexbuffer;
-	EnterCriticalSection(&mim3);
+	EnterCriticalSection(&mim6);
 	evbpoint = evbwpoint;
 	if (++evbwpoint >= EVBUFF_SIZE)
 		evbwpoint -= EVBUFF_SIZE;
@@ -213,11 +212,12 @@ void moddatafunction(UINT uDeviceID, UINT uMsg, CRITICAL_SECTION mim3, DWORD_PTR
 	evbuf[evbpoint].dwParam2 = dwParam2;
 	evbuf[evbpoint].exlen = exlen;
 	evbuf[evbpoint].sysexbuffer = sysexbuffer;
-	LeaveCriticalSection(&mim3);
+	LeaveCriticalSection(&mim6);
 	if (InterlockedIncrement(&evbcount) >= EVBUFF_SIZE) {
 		do
 		{
 
 		} while (evbcount >= EVBUFF_SIZE);
 	}
+	return MMSYSERR_NOERROR;
 }

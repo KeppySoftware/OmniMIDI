@@ -219,6 +219,7 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
+            this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -2222,6 +2223,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
+            this.donateToSupportUsToolStripMenuItem,
             this.getTheMIDIMapperForWindows10ToolStripMenuItem,
             this.toolStripSeparator2,
             this.guidesToolStripMenuItem,
@@ -2354,6 +2356,13 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
+            // 
+            // donateToSupportUsToolStripMenuItem
+            // 
+            this.donateToSupportUsToolStripMenuItem.Name = "donateToSupportUsToolStripMenuItem";
+            this.donateToSupportUsToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.donateToSupportUsToolStripMenuItem.Text = "Donate to support us";
+            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2610,6 +2619,7 @@
         private System.Windows.Forms.ToolStripMenuItem watchdogEnabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem watchdogDisabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultBufferSystemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem donateToSupportUsToolStripMenuItem;
     }
 }
 

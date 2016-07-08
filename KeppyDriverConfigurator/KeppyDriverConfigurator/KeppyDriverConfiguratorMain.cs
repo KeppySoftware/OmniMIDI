@@ -1563,6 +1563,12 @@ namespace KeppyDriverConfigurator
             Process.Start("https://plus.google.com/+RichardForhenson/posts/bkrqUfbV3xz");
         }
 
+
+        private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q2V5AUKED5R8S");
+        }
+
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppyDriverOutputWAVDir frm = new KeppyDriverOutputWAVDir();
