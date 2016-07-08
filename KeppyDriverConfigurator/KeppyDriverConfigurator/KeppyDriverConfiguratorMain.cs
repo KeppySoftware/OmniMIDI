@@ -203,6 +203,10 @@ namespace KeppyDriverConfigurator
                 {
                     MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else if (Path.GetExtension(s[i]) == ".ecw" | Path.GetExtension(s[i]) == ".ECW")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the Ensoniq waveset (ECW) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
                 {
                     MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1540,7 +1544,7 @@ namespace KeppyDriverConfigurator
             DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Driver?\n\nWARNING: Only use this function to report serious bugs, like memory leaks and security flaws.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
-                Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
+                Process.Start("http://github.com/KaleidonKep99/Keppy-s-Driver/issues");
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -1550,7 +1554,7 @@ namespace KeppyDriverConfigurator
 
         private void downloadTheSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
+            Process.Start("http://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
         }
 
         private void visitKeppyStudiosToolStripMenuItem_Click(object sender, EventArgs e)
