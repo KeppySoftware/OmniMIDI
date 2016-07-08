@@ -260,12 +260,12 @@ namespace KeppyDriverConfigurator
                 if (VolumeMonitor.Checked == true)
                 {
                     CPUSpeed();
-                    if (CurrentClock < 2400)
+                    if (CurrentClock < 2000)
                     {
-                        MessageBox.Show("A CPU running at 2.4GHz or more is required for the volume meters to work.", "Minimum requirements", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("A CPU running at 2GHz or more is required for the volume meters to work.", "Minimum requirements", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         VolumeMonitor.Checked = false;
                     }
-                    else if (CurrentClock >= 2400)
+                    else if (CurrentClock >= 2000)
                     {
                         Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
                         VolumeCheck.Enabled = true;

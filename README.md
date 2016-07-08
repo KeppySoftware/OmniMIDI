@@ -31,11 +31,11 @@ To use the driver, you need at least:
 
 ## Minimum system requirements for driver compiling
 To compile (and test) the driver, you need:
-- Microsoft Visual Studio 2013
-- Inno Setup 5.5.6 (It's recommended to install Inno Setup Studio and the Inno Setup Pack)
-- A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support, for Microsoft Visual Studio 2013)
-- 768MB of RAM (for both soundfonts and Microsoft Visual Studio 2013)
-- Windows 7 SP1 or greater (Otherwise, no VS2013 for you)
+- Microsoft Visual Studio 2013 (or newer)
+- Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
+- A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support, for Visual Studio)
+- 768MB of RAM (for both soundfonts and Visual Studio)
+- Windows 7 SP1 or greater (Otherwise, no VS for you)
 
 ## Does it support Windows 10?
 Yes it does. I'm constantly optimizing the driver for it... I had to upgrade from W7 to W10 to do this.
