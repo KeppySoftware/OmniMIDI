@@ -30,6 +30,8 @@ namespace KeppyDriverConfigurator
         public string List7Path { get; set; }
         public string List8Path { get; set; }
         public int openadvanced { get; set; }
+        public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+        public RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
 
         public KeppyDriverConfiguratorMain(String[] args)
         {
@@ -94,7 +96,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void ImportExternalList(String SelectedExternalList, ListBox DestinationList)
+        private void ImportExternalList(String SelectedExternalList, ListBox DestinationList, int whichone)
         {
             try
             {
@@ -104,6 +106,10 @@ namespace KeppyDriverConfigurator
                     while ((line = r.ReadLine()) != null)
                     {
                         DestinationList.Items.Add(line); // Read the external list and add the items to the selected list
+                    }
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
                     }
                 }
             }
@@ -135,7 +141,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void AddSoundfont(String SelectedList, ListBox OriginalList)
+        private void AddSoundfont(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -167,6 +173,10 @@ namespace KeppyDriverConfigurator
                         }
                     }
                     SaveList(SelectedList, OriginalList);
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
                 }
             }
             catch (Exception ex)
@@ -175,7 +185,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void AddSoundfontDragNDrop(String SelectedList, ListBox OriginalList, DragEventArgs e)
+        private void AddSoundfontDragNDrop(String SelectedList, ListBox OriginalList, int whichone, DragEventArgs e)
         {
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             int i;
@@ -184,6 +194,8 @@ namespace KeppyDriverConfigurator
                 if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
                 {
                     OriginalList.Items.Add(s[i]);
+                    SaveList(SelectedList, OriginalList);
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
                 }
                 else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
                 {
@@ -196,6 +208,10 @@ namespace KeppyDriverConfigurator
                             string preset = form.PresetValueReturn;
                             Lis1.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
                             SaveList(SelectedList, OriginalList);
+                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                            {
+                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                            }
                         }
                     }
                 }
@@ -222,7 +238,7 @@ namespace KeppyDriverConfigurator
                 e.Effect = DragDropEffects.None;
         }
 
-        private void RemoveSoundfont(String SelectedList, ListBox OriginalList)
+        private void RemoveSoundfont(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -231,6 +247,10 @@ namespace KeppyDriverConfigurator
                     OriginalList.Items.RemoveAt(OriginalList.SelectedIndices[i]);
                 }
                 SaveList(SelectedList, OriginalList);
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
             }
             catch (Exception ex)
             {
@@ -238,7 +258,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void MoveUpSoundfont(String SelectedList, ListBox OriginalList)
+        private void MoveUpSoundfont(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -258,6 +278,10 @@ namespace KeppyDriverConfigurator
                     OriginalList.SetSelected(indx - 1, true);
                 }
                 SaveList(SelectedList, OriginalList);
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
             }
             catch (Exception ex)
             {
@@ -265,7 +289,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void MoveDownSoundfont(String SelectedList, ListBox OriginalList)
+        private void MoveDownSoundfont(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -285,6 +309,10 @@ namespace KeppyDriverConfigurator
                     OriginalList.SetSelected(indx + 1, true);
                 }
                 SaveList(SelectedList, OriginalList);
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
             }
             catch (Exception ex)
             {
@@ -292,7 +320,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void CleanList(String SelectedList, ListBox OriginalList)
+        private void CleanList(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -300,6 +328,10 @@ namespace KeppyDriverConfigurator
                 File.Delete(SelectedList);
                 var TempFile = File.Create(SelectedList);
                 TempFile.Close();
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
             }
             catch (Exception ex)
             {
@@ -307,7 +339,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void EnableSoundfont(String SelectedList, ListBox OriginalList)
+        private void EnableSoundfont(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -330,6 +362,10 @@ namespace KeppyDriverConfigurator
                         MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     SaveList(SelectedList, OriginalList);
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
                 }
             }
             catch (Exception ex)
@@ -338,7 +374,7 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void DisableSoundfont(String SelectedList, ListBox OriginalList)
+        private void DisableSoundfont(String SelectedList, ListBox OriginalList, int whichone)
         {
             try
             {
@@ -361,6 +397,10 @@ namespace KeppyDriverConfigurator
                         MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     SaveList(SelectedList, OriginalList);
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
                 }
             }
             catch (Exception ex)
@@ -541,30 +581,29 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
                 // Normal settings
-                Settings.SetValue("polyphony", PolyphonyLimit.Value.ToString(), RegistryValueKind.DWord);
+                SynthSettings.SetValue("polyphony", PolyphonyLimit.Value.ToString(), RegistryValueKind.DWord);
                 if (MaxCPU.Text == "Disabled")
                 {
-                    Settings.SetValue("cpu", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("cpu", "0", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("cpu", MaxCPU.Text, RegistryValueKind.DWord);
+                    SynthSettings.SetValue("cpu", MaxCPU.Text, RegistryValueKind.DWord);
                 }
                 if (string.IsNullOrWhiteSpace(Frequency.Text))
                 {
                     Frequency.Text = "48000";
-                    Settings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                    SynthSettings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                    SynthSettings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
                 }
 
-                // Advanced settings
-                Settings.SetValue("buflen", bufsize.Value.ToString(), RegistryValueKind.DWord);
-                Settings.SetValue("tracks", TracksLimit.Value.ToString(), RegistryValueKind.DWord);
+                // Advanced SynthSettings
+                SynthSettings.SetValue("buflen", bufsize.Value.ToString(), RegistryValueKind.DWord);
+                SynthSettings.SetValue("tracks", TracksLimit.Value.ToString(), RegistryValueKind.DWord);
 
                 // Let's not forget about the volume!
                 int VolumeValue = 0;
@@ -572,72 +611,72 @@ namespace KeppyDriverConfigurator
                 VolumeValue = Convert.ToInt32(x);
                 VolSimView.Text = VolumeValue.ToString("000\\%");
                 VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
-                Settings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+                SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
                 
                 // Checkbox stuff yay
                 if (Preload.Checked == true)
                 {
-                    Settings.SetValue("preload", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("preload", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("preload", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("preload", "0", RegistryValueKind.DWord);
                 }
                 if (DisableSFX.Checked == true)
                 {
-                    Settings.SetValue("nofx", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("nofx", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
                 }
                 if (VMSEmu.Checked == true)
                 {
-                    Settings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
                 }
                 if (NoteOffCheck.Checked == true)
                 {
-                    Settings.SetValue("noteoff", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("noteoff", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("noteoff", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("noteoff", "0", RegistryValueKind.DWord);
                 }
                 if (SincInter.Checked == true)
                 {
-                    Settings.SetValue("sinc", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("sinc", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                 }
                 if (SysResetIgnore.Checked == true)
                 {
-                    Settings.SetValue("sysresetignore", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("sysresetignore", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
                 }
                 if (OutputWAV.Checked == true)
                 {
-                    Settings.SetValue("encmode", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("encmode", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("encmode", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
                 }
                 if (XAudioDisable.Checked == true)
                 {
-                    Settings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    Settings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
+                    SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
                 }
             }
             catch
@@ -677,18 +716,17 @@ namespace KeppyDriverConfigurator
             try
             {
                 // First, the most important settings
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-                VolTrackBar.Value = Convert.ToInt32(Settings.GetValue("volume"));
-                PolyphonyLimit.Value = Convert.ToInt32(Settings.GetValue("polyphony"));
-                if (Settings.GetValue("cpu").ToString() == "0")
+                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
+                PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony"));
+                if (SynthSettings.GetValue("cpu").ToString() == "0")
                 {
                     MaxCPU.Text = "Disabled";
                 }
                 else
                 {
-                    MaxCPU.Text = Settings.GetValue("cpu").ToString();
+                    MaxCPU.Text = SynthSettings.GetValue("cpu").ToString();
                 }
-                if (Convert.ToInt32(Settings.GetValue("sfdisableconf")) == 0)
+                if (Convert.ToInt32(SynthSettings.GetValue("sfdisableconf")) == 0)
                 {
                     enabledToolStripMenuItem.Checked = true;
                     enabledToolStripMenuItem.Enabled = false;
@@ -702,7 +740,7 @@ namespace KeppyDriverConfigurator
                     disabledToolStripMenuItem.Checked = true;
                     disabledToolStripMenuItem.Enabled = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("volumehotkeys")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("volumehotkeys")) == 1)
                 {
                     VolumeHotkeysCheck.Enabled = true;
                     enabledToolStripMenuItem1.Checked = true;
@@ -718,7 +756,7 @@ namespace KeppyDriverConfigurator
                     disabledToolStripMenuItem1.Checked = true;
                     disabledToolStripMenuItem1.Enabled = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("allhotkeys")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys")) == 1)
                 {
                     soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
                     volumeHotkeysToolStripMenuItem.Enabled = true;
@@ -736,7 +774,7 @@ namespace KeppyDriverConfigurator
                     hLSEnabledToolStripMenuItem.Enabled = true;
                     hLSDisabledToolStripMenuItem.Enabled = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("watchdog")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("watchdog")) == 1)
                 {
                     soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
                     volumeHotkeysToolStripMenuItem.Enabled = true;
@@ -753,11 +791,11 @@ namespace KeppyDriverConfigurator
                     watchdogEnabledToolStripMenuItem.Enabled = true;
                     watchdogDisabledToolStripMenuItem.Enabled = false;
                 }
-                Frequency.Text = Settings.GetValue("frequency").ToString();
-                TracksLimit.Value = Convert.ToInt32(Settings.GetValue("tracks"));
+                Frequency.Text = SynthSettings.GetValue("frequency").ToString();
+                TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks"));
 
                 // Then the filthy checkboxes
-                if (Convert.ToInt32(Settings.GetValue("preload")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("preload")) == 1)
                 {
                     Preload.Checked = true;
                 }
@@ -765,7 +803,7 @@ namespace KeppyDriverConfigurator
                 {
                     Preload.Checked = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("nofx")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("nofx")) == 1)
                 {
                     DisableSFX.Checked = true;
                 }
@@ -773,7 +811,7 @@ namespace KeppyDriverConfigurator
                 {
                     DisableSFX.Checked = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("noteoff")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("noteoff")) == 1)
                 {
                     NoteOffCheck.Checked = true;
                 }
@@ -781,7 +819,7 @@ namespace KeppyDriverConfigurator
                 {
                     NoteOffCheck.Checked = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("sinc")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("sinc")) == 1)
                 {
                     SincInter.Checked = true;
                 }
@@ -789,7 +827,7 @@ namespace KeppyDriverConfigurator
                 {
                     SincInter.Checked = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("sysresetignore")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("sysresetignore")) == 1)
                 {
                     SysResetIgnore.Checked = true;
                 }
@@ -797,7 +835,7 @@ namespace KeppyDriverConfigurator
                 {
                     SysResetIgnore.Checked = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("encmode")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("encmode")) == 1)
                 {
                     OutputWAV.Checked = true;
                 }
@@ -805,12 +843,12 @@ namespace KeppyDriverConfigurator
                 {
                     OutputWAV.Checked = false;
                 }
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("xaudiodisabled")) == 1)
                 {
                     XAudioDisable.Checked = true;
                     VMSEmu.Visible = true;
                     SPFSecondaryBut.Visible = false;
-                    if (Convert.ToInt32(Settings.GetValue("vmsemu")) == 1)
+                    if (Convert.ToInt32(SynthSettings.GetValue("vmsemu")) == 1)
                     {
                         VMSEmu.Checked = true;
                         bufsize.Enabled = true;
@@ -831,10 +869,10 @@ namespace KeppyDriverConfigurator
                 }
 
                 // LEL
-                bufsize.Value = Convert.ToInt32(Settings.GetValue("buflen"));
+                bufsize.Value = Convert.ToInt32(SynthSettings.GetValue("buflen"));
 
                 // And finally, the volume!
-                int VolumeValue = Convert.ToInt32(Settings.GetValue("volume"));
+                int VolumeValue = Convert.ToInt32(SynthSettings.GetValue("volume"));
                 double x = VolumeValue / 100;
                 VolSimView.Text = x.ToString("000\\%");
                 VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
@@ -856,13 +894,12 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
                 int VolumeValue = 0;
                 double x = VolTrackBar.Value / 100;
                 VolumeValue = Convert.ToInt32(x);
                 VolSimView.Text = VolumeValue.ToString("000\\%");
                 VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
-                Settings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+                SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch
             {
@@ -875,87 +912,87 @@ namespace KeppyDriverConfigurator
 
         private void AddSF1_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List1Path, Lis1);
+            AddSoundfont(List1Path, Lis1, 1);
         }
 
         private void AddSF2_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List2Path, Lis2);
+            AddSoundfont(List2Path, Lis2, 2);
         }
 
         private void AddSF3_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List3Path, Lis3);
+            AddSoundfont(List3Path, Lis3, 3);
         }
 
         private void AddSF4_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List4Path, Lis4);
+            AddSoundfont(List4Path, Lis4, 4);
         }
 
         private void AddSF5_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List5Path, Lis5);
+            AddSoundfont(List5Path, Lis5, 5);
         }
 
         private void AddSF6_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List6Path, Lis6);
+            AddSoundfont(List6Path, Lis6, 6);
         }
 
         private void AddSF7_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List7Path, Lis7);
+            AddSoundfont(List7Path, Lis7, 7);
         }
 
         private void AddSF8_Click(object sender, EventArgs e)
         {
-            AddSoundfont(List8Path, Lis8);
+            AddSoundfont(List8Path, Lis8, 8);
         }
 
         private void RmvSF1_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List1Path, Lis1);
+            RemoveSoundfont(List1Path, Lis1, 1);
         }
 
         private void RmvSF2_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List2Path, Lis2);
+            RemoveSoundfont(List2Path, Lis2, 2);
         }
 
         private void RmvSF3_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List3Path, Lis3);
+            RemoveSoundfont(List3Path, Lis3, 3);
         }
 
         private void RmvSF4_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List4Path, Lis4);
+            RemoveSoundfont(List4Path, Lis4, 4);
         }
 
         private void RmvSF5_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List5Path, Lis5);
+            RemoveSoundfont(List5Path, Lis5, 5);
         }
 
         private void RmvSF6_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List6Path, Lis6);
+            RemoveSoundfont(List6Path, Lis6, 6);
         }
 
         private void RmvSF7_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List7Path, Lis7);
+            RemoveSoundfont(List7Path, Lis7, 7);
         }
 
         private void RmvSF8_Click(object sender, EventArgs e)
         {
-            RemoveSoundfont(List8Path, Lis8);
+            RemoveSoundfont(List8Path, Lis8, 8);
         }
 
         private void Lis1_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List1Path, Lis1, e);
+            AddSoundfontDragNDrop(List1Path, Lis1, 1, e);
         }
 
         private void Lis1_DragEnter(object sender, DragEventArgs e)
@@ -965,7 +1002,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis2_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List2Path, Lis2, e);
+            AddSoundfontDragNDrop(List2Path, Lis2, 2, e);
         }
 
         private void Lis2_DragEnter(object sender, DragEventArgs e)
@@ -975,7 +1012,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis3_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List3Path, Lis3, e);
+            AddSoundfontDragNDrop(List3Path, Lis3, 3, e);
         }
 
         private void Lis3_DragEnter(object sender, DragEventArgs e)
@@ -985,7 +1022,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis4_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List4Path, Lis4, e);
+            AddSoundfontDragNDrop(List4Path, Lis4, 4, e);
         }
 
         private void Lis4_DragEnter(object sender, DragEventArgs e)
@@ -995,7 +1032,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis5_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List5Path, Lis5, e);
+            AddSoundfontDragNDrop(List5Path, Lis5, 5, e);
         }
 
         private void Lis5_DragEnter(object sender, DragEventArgs e)
@@ -1005,7 +1042,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis6_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List6Path, Lis6, e);
+            AddSoundfontDragNDrop(List6Path, Lis6, 6, e);
         }
 
         private void Lis6_DragEnter(object sender, DragEventArgs e)
@@ -1015,7 +1052,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis7_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List7Path, Lis7, e);
+            AddSoundfontDragNDrop(List7Path, Lis7, 7, e);
         }
 
         private void Lis7_DragEnter(object sender, DragEventArgs e)
@@ -1025,7 +1062,7 @@ namespace KeppyDriverConfigurator
 
         private void Lis8_DragDrop(object sender, DragEventArgs e)
         {
-            AddSoundfontDragNDrop(List8Path, Lis8, e);
+            AddSoundfontDragNDrop(List8Path, Lis8, 8, e);
         }
 
         private void Lis8_DragEnter(object sender, DragEventArgs e)
@@ -1035,122 +1072,122 @@ namespace KeppyDriverConfigurator
 
         private void MvU1_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List1Path, Lis1);
+            MoveUpSoundfont(List1Path, Lis1, 1);
         }
 
         private void MvU2_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List2Path, Lis2);
+            MoveUpSoundfont(List2Path, Lis2, 2);
         }
 
         private void MvU3_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List3Path, Lis3);
+            MoveUpSoundfont(List3Path, Lis3, 3);
         }
 
         private void MvU4_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List4Path, Lis4);
+            MoveUpSoundfont(List4Path, Lis4, 4);
         }
 
         private void MvU5_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List5Path, Lis5);
+            MoveUpSoundfont(List5Path, Lis5, 5);
         }
 
         private void MvU6_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List6Path, Lis6);
+            MoveUpSoundfont(List6Path, Lis6, 6);
         }
 
         private void MvU7_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List7Path, Lis7);
+            MoveUpSoundfont(List7Path, Lis7, 7);
         }
 
         private void MvU8_Click(object sender, EventArgs e)
         {
-            MoveUpSoundfont(List8Path, Lis8);
+            MoveUpSoundfont(List8Path, Lis8, 8);
         }
 
         private void MvD1_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List1Path, Lis1);
+            MoveDownSoundfont(List1Path, Lis1, 1);
         }
 
         private void MvD2_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List2Path, Lis2);
+            MoveDownSoundfont(List2Path, Lis2, 2);
         }
 
         private void MvD3_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List3Path, Lis3);
+            MoveDownSoundfont(List3Path, Lis3, 3);
         }
 
         private void MvD4_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List4Path, Lis4);
+            MoveDownSoundfont(List4Path, Lis4, 4);
         }
 
         private void MvD5_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List5Path, Lis5);
+            MoveDownSoundfont(List5Path, Lis5, 5);
         }
 
         private void MvD6_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List6Path, Lis6);
+            MoveDownSoundfont(List6Path, Lis6, 6);
         }
 
         private void MvD7_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List7Path, Lis7);
+            MoveDownSoundfont(List7Path, Lis7, 7);
         }
 
         private void MvD8_Click(object sender, EventArgs e)
         {
-            MoveDownSoundfont(List8Path, Lis8);
+            MoveDownSoundfont(List8Path, Lis8, 8);
         }
 
         private void CLi1_Click(object sender, EventArgs e)
         {
-            CleanList(List1Path, Lis1);
+            CleanList(List1Path, Lis1, 1);
         }
 
         private void CLi2_Click(object sender, EventArgs e)
         {
-            CleanList(List2Path, Lis2);
+            CleanList(List2Path, Lis2, 2);
         }
 
         private void CLi3_Click(object sender, EventArgs e)
         {
-            CleanList(List3Path, Lis3);
+            CleanList(List3Path, Lis3, 3);
         }
 
         private void CLi4_Click(object sender, EventArgs e)
         {
-            CleanList(List4Path, Lis4);
+            CleanList(List4Path, Lis4, 4);
         }
 
         private void CLi5_Click(object sender, EventArgs e)
         {
-            CleanList(List5Path, Lis5);
+            CleanList(List5Path, Lis5, 5);
         }
 
         private void CLi6_Click(object sender, EventArgs e)
         {
-            CleanList(List6Path, Lis6);
+            CleanList(List6Path, Lis6, 6);
         }
 
         private void CLi7_Click(object sender, EventArgs e)
         {
-            CleanList(List7Path, Lis7);
+            CleanList(List7Path, Lis7, 7);
         }
 
         private void CLi8_Click(object sender, EventArgs e)
         {
-            CleanList(List8Path, Lis8);
+            CleanList(List8Path, Lis8, 8);
         }
 
         private void IEL1_Click(object sender, EventArgs e)
@@ -1158,7 +1195,7 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis1);
+                ImportExternalList(ExternalListImport.FileName, Lis1, 1);
                 SaveList(List1Path, Lis1);
             }  
         }
@@ -1168,7 +1205,7 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis2);
+                ImportExternalList(ExternalListImport.FileName, Lis2, 2);
                 SaveList(List2Path, Lis2);
             }
         }
@@ -1178,7 +1215,7 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis3);
+                ImportExternalList(ExternalListImport.FileName, Lis3, 3);
                 SaveList(List3Path, Lis3);
             }
         }
@@ -1188,8 +1225,18 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis4);
+                ImportExternalList(ExternalListImport.FileName, Lis4, 4);
                 SaveList(List4Path, Lis4);
+            }
+        }
+
+        private void IEL5_Click(object sender, EventArgs e)
+        {
+            ExternalListImport.FileName = "";
+            if (ExternalListImport.ShowDialog() == DialogResult.OK)
+            {
+                ImportExternalList(ExternalListImport.FileName, Lis5, 5);
+                SaveList(List4Path, Lis5);
             }
         }
 
@@ -1198,7 +1245,7 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis6);
+                ImportExternalList(ExternalListImport.FileName, Lis6, 6);
                 SaveList(List4Path, Lis6);
             }
         }
@@ -1208,7 +1255,7 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis7);
+                ImportExternalList(ExternalListImport.FileName, Lis7, 7);
                 SaveList(List4Path, Lis7);
             }
         }
@@ -1218,20 +1265,11 @@ namespace KeppyDriverConfigurator
             ExternalListImport.FileName = "";
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
-                ImportExternalList(ExternalListImport.FileName, Lis8);
+                ImportExternalList(ExternalListImport.FileName, Lis8, 8);
                 SaveList(List4Path, Lis8);
             }
         }
 
-        private void IEL5_Click(object sender, EventArgs e)
-        {
-            ExternalListImport.FileName = "";
-            if (ExternalListImport.ShowDialog() == DialogResult.OK)
-            {
-                ImportExternalList(ExternalListImport.FileName, Lis5);
-                SaveList(List4Path, Lis5);
-            }
-        }
 
         private void EL1_Click(object sender, EventArgs e)
         {
@@ -1307,82 +1345,82 @@ namespace KeppyDriverConfigurator
 
         private void DisableSF1_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List1Path, Lis1);
+            DisableSoundfont(List1Path, Lis1, 1);
         }
 
         private void EnableSF1_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List1Path, Lis1);
+            EnableSoundfont(List1Path, Lis1, 1);
         }
 
         private void DisableSF2_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List2Path, Lis2);
+            DisableSoundfont(List2Path, Lis2, 2);
         }
 
         private void EnableSF2_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List2Path, Lis2);
+            EnableSoundfont(List2Path, Lis2, 2);
         }
 
         private void DisableSF3_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List3Path, Lis3);
+            DisableSoundfont(List3Path, Lis3, 3);
         }
 
         private void EnableSF3_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List4Path, Lis4);
+            EnableSoundfont(List4Path, Lis4, 3);
         }
 
         private void DisableSF4_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List4Path, Lis4);
+            DisableSoundfont(List4Path, Lis4, 4);
         }
 
         private void EnableSF4_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List1Path, Lis1);
+            EnableSoundfont(List1Path, Lis1, 4);
         }
 
         private void DisableSF5_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List5Path, Lis5);
+            DisableSoundfont(List5Path, Lis5, 5);
         }
 
         private void EnableSF5_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List5Path, Lis5);
+            EnableSoundfont(List5Path, Lis5, 5);
         }
 
         private void DisableSF6_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List6Path, Lis6);
+            DisableSoundfont(List6Path, Lis6, 6);
         }
 
         private void EnableSF6_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List6Path, Lis6);
+            EnableSoundfont(List6Path, Lis6, 6);
         }
 
         private void DisableSF7_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List7Path, Lis7);
+            DisableSoundfont(List7Path, Lis7, 7);
         }
 
         private void EnableSF7_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List7Path, Lis7);
+            EnableSoundfont(List7Path, Lis7, 7);
         }
 
         private void DisableSF8_Click(object sender, EventArgs e)
         {
-            DisableSoundfont(List8Path, Lis8);
+            DisableSoundfont(List8Path, Lis8, 8);
         }
 
         private void EnableSF8_Click(object sender, EventArgs e)
         {
-            EnableSoundfont(List8Path, Lis8);
+            EnableSoundfont(List8Path, Lis8, 8);
         }
 
         // End of the soundfont lists functions
@@ -1415,7 +1453,7 @@ namespace KeppyDriverConfigurator
 
         private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Just save the settings
+            // Just save the Settings
             SaveSettings();
 
             // Messagebox here
@@ -1476,8 +1514,7 @@ namespace KeppyDriverConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-                VolTrackBar.Value = Convert.ToInt32(Settings.GetValue("volume"));
+                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
                 double x = VolTrackBar.Value / 100;
                 int VolumeValue = Convert.ToInt32(x);
                 VolSimView.Text = VolumeValue.ToString("000\\%");
@@ -1607,9 +1644,8 @@ namespace KeppyDriverConfigurator
 
         private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            Settings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
+            SynthSettings.Close();
             enabledToolStripMenuItem.Checked = true;
             enabledToolStripMenuItem.Enabled = false;
             disabledToolStripMenuItem.Checked = false;
@@ -1618,9 +1654,8 @@ namespace KeppyDriverConfigurator
 
         private void SFListConfirmationdisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            Settings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
+            SynthSettings.Close();
             enabledToolStripMenuItem.Checked = false;
             enabledToolStripMenuItem.Enabled = true;
             disabledToolStripMenuItem.Checked = true;
@@ -1629,9 +1664,8 @@ namespace KeppyDriverConfigurator
 
         private void enabledToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            Settings.SetValue("volumehotkeys", "1", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("volumehotkeys", "1", RegistryValueKind.DWord);
+            SynthSettings.Close();
             VolumeHotkeysCheck.Enabled = true;
             enabledToolStripMenuItem1.Checked = true;
             enabledToolStripMenuItem1.Enabled = false;
@@ -1641,9 +1675,8 @@ namespace KeppyDriverConfigurator
 
         private void disabledToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            Settings.SetValue("volumehotkeys", "0", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("volumehotkeys", "0", RegistryValueKind.DWord);
+            SynthSettings.Close();
             VolumeHotkeysCheck.Enabled = false;
             enabledToolStripMenuItem1.Checked = false;
             enabledToolStripMenuItem1.Enabled = true;
@@ -1654,9 +1687,8 @@ namespace KeppyDriverConfigurator
 
         private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            Settings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+            SynthSettings.Close();
             soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
             volumeHotkeysToolStripMenuItem.Enabled = true;
             hLSEnabledToolStripMenuItem.Checked = true;
@@ -1667,9 +1699,8 @@ namespace KeppyDriverConfigurator
 
         private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
-            Settings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+            SynthSettings.Close();
             soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
             volumeHotkeysToolStripMenuItem.Enabled = false;
             hLSEnabledToolStripMenuItem.Checked = false;
@@ -1681,9 +1712,8 @@ namespace KeppyDriverConfigurator
 
         private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
-            Settings.SetValue("watchdog", "1", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("watchdog", "1", RegistryValueKind.DWord);
+            SynthSettings.Close();
             watchdogEnabledToolStripMenuItem.Checked = true;
             watchdogDisabledToolStripMenuItem.Checked = false;
             watchdogEnabledToolStripMenuItem.Enabled = false;
@@ -1692,9 +1722,8 @@ namespace KeppyDriverConfigurator
 
         private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
-            Settings.SetValue("watchdog", "0", RegistryValueKind.DWord);
-            Settings.Close();
+            SynthSettings.SetValue("watchdog", "0", RegistryValueKind.DWord);
+            SynthSettings.Close();
             watchdogEnabledToolStripMenuItem.Checked = false;
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;

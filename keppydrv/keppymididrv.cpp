@@ -935,6 +935,12 @@ void realtime_load_settings()
 void LoadSoundfont(DWORD whichsf){
 	TCHAR config[MAX_PATH];
 	BASS_MIDI_FONT * mf;
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	int number = whichsf;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 	FreeFonts(0);
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
 	{
@@ -962,6 +968,8 @@ void LoadSoundfont(DWORD whichsf){
 		else if (whichsf == 8) {
 			PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
 		}
+		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&number, sizeof(number));
+		RegCloseKey(hKey);
 	}
 	LoadFonts(0, config);
 	BASS_MIDI_StreamLoadSamples(hStream);
