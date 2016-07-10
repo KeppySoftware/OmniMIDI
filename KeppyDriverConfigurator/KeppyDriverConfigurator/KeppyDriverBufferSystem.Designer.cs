@@ -33,12 +33,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.NewBuf = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.OldBuf = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Default
             // 
+            this.Default.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Default.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Default.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Default.Location = new System.Drawing.Point(294, 107);
@@ -63,9 +66,9 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(25, 24);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(186, 61);
+            this.label1.Size = new System.Drawing.Size(224, 121);
             this.label1.TabIndex = 7;
             this.label1.Text = "Switch between the old and new buffer systems. Useful if you get better performan" +
     "ces with the old one.";
@@ -75,7 +78,7 @@
             // 
             this.NewBuf.AutoSize = true;
             this.NewBuf.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.NewBuf.Location = new System.Drawing.Point(80, 10);
+            this.NewBuf.Location = new System.Drawing.Point(81, 10);
             this.NewBuf.Name = "NewBuf";
             this.NewBuf.Size = new System.Drawing.Size(132, 17);
             this.NewBuf.TabIndex = 12;
@@ -85,18 +88,31 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.OldBuf);
             this.panel1.Controls.Add(this.NewBuf);
-            this.panel1.Location = new System.Drawing.Point(242, 24);
+            this.panel1.Location = new System.Drawing.Point(257, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(231, 61);
+            this.panel1.Size = new System.Drawing.Size(216, 61);
             this.panel1.TabIndex = 13;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox1.Image = global::KeppyDriverConfigurator.Properties.Resources.wi;
+            this.pictureBox1.Location = new System.Drawing.Point(71, 33);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(17, 17);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 14;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.OldBufferWarning_Click);
             // 
             // OldBuf
             // 
             this.OldBuf.AutoSize = true;
             this.OldBuf.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.OldBuf.Location = new System.Drawing.Point(86, 33);
+            this.OldBuf.Location = new System.Drawing.Point(87, 33);
             this.OldBuf.Name = "OldBuf";
             this.OldBuf.Size = new System.Drawing.Size(126, 17);
             this.OldBuf.TabIndex = 13;
@@ -122,6 +138,7 @@
             this.Load += new System.EventHandler(this.KeppyDriverBufferSystem_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -134,6 +151,7 @@
         private System.Windows.Forms.RadioButton NewBuf;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton OldBuf;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
     }
 }

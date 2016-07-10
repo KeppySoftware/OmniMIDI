@@ -13,35 +13,34 @@ void _endthreadex(unsigned retval);
 
 #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 #define _CRT_SECURE_NO_WARNINGS 1
+#include "stdafx.h"
+#include <Shlwapi.h>
+#include <Tlhelp32.h>
 #include <assert.h>
 #include <atlbase.h>
 #include <atlstr.h>
+#include <cctype>
+#include <comdef.h>
+#include <fstream>
+#include <iostream>
+#include <limits>
+#include <list>
+#include <mmddk.h>
+#include <mmsystem.h>
+#include <process.h>
+#include <process.h>
+#include <shlobj.h>
+#include <signal.h>
+#include <sstream>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
-#include <process.h>
-#include <Shlwapi.h>
-#include <mmddk.h>
-#include <mmsystem.h>
-#include <tchar.h>
-#include <limits>
-#include "stdafx.h"
-#include <vector>
-#include <signal.h>
-#include "bufsystem.h"
-#include <list>
-#include <sstream>
-#include <string>
-#include <shlobj.h>
-#include <fstream>
-#include <iostream>
-#include <cctype>
-#include <process.h>
-#include <Tlhelp32.h>
-#include <winbase.h>
 #include <string.h>
-#include <comdef.h>
+#include <string>
+#include <tchar.h>
+#include <vector>
+#include <winbase.h>
+#include <windows.h>
 
 #define BASSDEF(f) (WINAPI *f)	// define the BASS/BASSMIDI functions as pointers
 #define BASSMIDIDEF(f) (WINAPI *f)	
@@ -877,6 +876,7 @@ void realtime_load_settings()
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 	RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
+	RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 	RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
@@ -931,6 +931,150 @@ void realtime_load_settings()
 	}
 }
 
+struct evbuf_t_old{
+	UINT uMsg;
+	DWORD	dwParam1;
+	DWORD	dwParam2;
+	int exlen;
+	char *sysexbuffer;
+};
+
+struct evbuf_t{
+	UINT uDeviceID;
+	UINT   uMsg;
+	DWORD_PTR	dwParam1;
+	DWORD_PTR	dwParam2;
+	int exlen;
+	unsigned char *sysexbuffer;
+};
+
+#define EVBUFF_SIZE_OLD 32768
+static struct evbuf_t_old evbuf_old[EVBUFF_SIZE_OLD];
+static UINT evbwpoint_old = 0;
+static UINT evbrpoint_old = 0;
+static UINT evbsysexpoint_old;
+
+#define EVBUFF_SIZE 32768
+static struct evbuf_t evbuf[EVBUFF_SIZE];
+static UINT  evbwpoint = 0;
+static UINT  evbrpoint = 0;
+static volatile LONG evbcount = 0;
+static UINT evbsysexpoint;
+
+int bmsyn_buf_check_old(void){
+	int retval;
+	EnterCriticalSection(&mim_section);
+	retval = (evbrpoint_old != evbwpoint_old) ? ~0 : 0;
+	LeaveCriticalSection(&mim_section);
+	return retval;
+}
+
+int bmsyn_buf_check(void){
+	int retval;
+	EnterCriticalSection(&mim_section);
+	retval = evbcount;
+	LeaveCriticalSection(&mim_section);
+	return retval;
+}
+
+int bmsyn_play_some_data_old(void){
+	UINT uMsg;
+	DWORD_PTR	dwParam1;
+	DWORD_PTR   dwParam2;
+
+	UINT evbpoint_old;
+	int exlen;
+	char *sysexbuffer;
+	int played;
+
+	played = 0;
+	if (!bmsyn_buf_check_old()){
+		played = ~0;
+		return played;
+	}
+	do{
+		EnterCriticalSection(&mim_section);
+
+		evbpoint_old = evbrpoint_old;
+		if (++evbrpoint_old >= EVBUFF_SIZE_OLD)
+			evbrpoint_old -= EVBUFF_SIZE_OLD;
+
+		uMsg = evbuf_old[evbpoint_old].uMsg;
+		dwParam1 = evbuf_old[evbpoint_old].dwParam1;
+		dwParam2 = evbuf_old[evbpoint_old].dwParam2;
+		exlen = evbuf_old[evbpoint_old].exlen;
+		sysexbuffer = evbuf_old[evbpoint_old].sysexbuffer;
+
+		LeaveCriticalSection(&mim_section);
+		switch (uMsg) {
+		case MODM_DATA:
+			dwParam2 = dwParam1 & 0xF0;
+			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
+			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+			free(sysexbuffer);
+			break;
+		}
+	} while (bmsyn_buf_check_old());
+	return played;
+}
+
+int bmsyn_play_some_data(void){
+	UINT uDeviceID;
+	UINT uMsg;
+	DWORD_PTR	dwParam1;
+	DWORD_PTR   dwParam2;
+
+	UINT evbpoint;
+	int exlen;
+	unsigned char *sysexbuffer;
+	int played;
+
+	played = 0;
+	if (!bmsyn_buf_check()){
+		played = ~0;
+		return played;
+	}
+	do{
+		EnterCriticalSection(&mim_section);
+		evbpoint = evbrpoint;
+		if (++evbrpoint >= EVBUFF_SIZE)
+			evbrpoint -= EVBUFF_SIZE;
+
+		uDeviceID = evbuf[evbpoint].uDeviceID;
+		uMsg = evbuf[evbpoint].uMsg;
+		dwParam1 = evbuf[evbpoint].dwParam1;
+		dwParam2 = evbuf[evbpoint].dwParam2;
+		exlen = evbuf[evbpoint].exlen;
+		sysexbuffer = evbuf[evbpoint].sysexbuffer;
+
+		LeaveCriticalSection(&mim_section);
+		switch (uMsg) {
+		case MODM_DATA:
+			dwParam2 = dwParam1 & 0xF0;
+			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
+			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+			break;
+		case MODM_LONGDATA:
+#ifdef DEBUG
+			FILE * logfile;
+			logfile = fopen("c:\\dbglog2.log", "at");
+			if (logfile != NULL) {
+				for (int i = 0; i < exlen; i++)
+					fprintf(logfile, "%x ", sysexbuffer[i]);
+				fprintf(logfile, "\n");
+			}
+			fclose(logfile);
+#endif
+			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+			free(sysexbuffer);
+			break;
+		}
+	} while (InterlockedDecrement(&evbcount));
+	return played;
+}
 
 void LoadSoundfont(DWORD whichsf){
 	TCHAR config[MAX_PATH];
@@ -1558,10 +1702,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				BASS_MIDI_StreamLoadSamples(hStream);
 			}
 			if (legacybuf == 1) {
-				bmsyn_play_some_data_old(hStream, mim_section);
+				bmsyn_play_some_data_old();
 			}
 			else {
-				bmsyn_play_some_data(hStream, mim_section);
+				bmsyn_play_some_data();
 			}
 			AudioRender(bassoutputfinal);
 			realtime_load_settings();
@@ -1739,10 +1883,12 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 }
 /* Audio Device Messages for MIDI http://msdn.microsoft.com/en-us/library/ff536194%28v=vs.85%29 */
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
+	UINT evbpoint;
 	MIDIHDR *IIMidiHdr;
 	struct Driver *driver = &drivers[uDeviceID];
 	int exlen = 0;
-	char *sysexbuffer = NULL;
+	char *sysexbufferold = NULL;
+	unsigned char *sysexbuffer = NULL;
 	DWORD result = 0;
 	switch (uMsg) {
 	case MODM_OPEN:
@@ -1763,22 +1909,21 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags &= ~MHDR_DONE;
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 		exlen = (int)IIMidiHdr->dwBufferLength;
-		if (NULL == (sysexbuffer = (char *)malloc(exlen * sizeof(char)))){
-			return MMSYSERR_NOMEM;
-		}
-		else{
-			memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-#ifdef DEBUG
-			FILE * logfile;
-			logfile = fopen("c:\\dbglog.log", "at");
-			if (logfile != NULL) {
-				fprintf(logfile, "sysex %d byete\n", exlen);
-				for (int i = 0; i < exlen; i++)
-					fprintf(logfile, "%x ", sysexbuffer[i]);
-				fprintf(logfile, "\n");
+		if (legacybuf != 1) {
+			if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(unsigned char)))){
+				return MMSYSERR_NOMEM;
 			}
-			fclose(logfile);
-#endif
+			else{
+				memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
+			}
+		}
+		else {
+			if (NULL == (sysexbufferold = (char *)malloc(exlen * sizeof(char)))){
+				return MMSYSERR_NOMEM;
+			}
+			else{
+				memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
+			}
 		}
 		/*
 		TODO: 	When the buffer contents have been sent, the driver should set the MHDR_DONE flag, clear the
@@ -1789,15 +1934,44 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		*/
 		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 		IIMidiHdr->dwFlags |= MHDR_DONE;
-		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
+		if (legacybuf != 1) {
+			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
+		}
+		
 		//fallthrough
 	case MODM_DATA:
 		if (legacybuf == 1) {
-			oldmoddatafunction(uMsg, mim_section, dwParam1, dwParam2);
+			EnterCriticalSection(&mim_section);
+			evbpoint = evbwpoint_old;
+			if (++evbwpoint_old >= EVBUFF_SIZE_OLD)
+				evbwpoint_old -= EVBUFF_SIZE_OLD;
+			evbuf_old[evbpoint].uMsg = uMsg;
+			evbuf_old[evbpoint].dwParam1 = dwParam1;
+			evbuf_old[evbpoint].dwParam2 = dwParam2;
+			evbuf_old[evbpoint].exlen = exlen;
+			evbuf_old[evbpoint].sysexbuffer = sysexbufferold;
+			LeaveCriticalSection(&mim_section);
 		}
 		else {
-			moddatafunction(uDeviceID, uMsg, mim_section, dwParam1, dwParam2);
+			EnterCriticalSection(&mim_section);
+			evbpoint = evbwpoint;
+			if (++evbwpoint >= EVBUFF_SIZE)
+				evbwpoint -= EVBUFF_SIZE;
+			evbuf[evbpoint].uDeviceID = uDeviceID;
+			evbuf[evbpoint].uMsg = uMsg;
+			evbuf[evbpoint].dwParam1 = dwParam1;
+			evbuf[evbpoint].dwParam2 = dwParam2;
+			evbuf[evbpoint].exlen = exlen;
+			evbuf[evbpoint].sysexbuffer = sysexbuffer;
+			LeaveCriticalSection(&mim_section);
+			if (InterlockedIncrement(&evbcount) >= EVBUFF_SIZE) {
+				do
+				{
+
+				} while (evbcount >= EVBUFF_SIZE);
+			}
 		}	
+		return MMSYSERR_NOERROR;
 		break;
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);

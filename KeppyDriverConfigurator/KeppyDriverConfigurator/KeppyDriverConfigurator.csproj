@@ -191,6 +191,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\wi.png" />
     <None Include="Resources\logo_bass.gif" />
     <None Include="Resources\bk.jpg" />
     <Content Include="Resources\gear.ico" />

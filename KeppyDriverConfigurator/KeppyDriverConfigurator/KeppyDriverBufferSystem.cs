@@ -71,5 +71,10 @@ namespace KeppyDriverConfigurator
                 MessageBox.Show(ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void OldBufferWarning_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Some apps might be incompatible with this buffer, and might crash or not work at all!\n(Ex. ZDoom/Zandronum and other games based on the Doom engine)\n\nBe careful while using it.", "About the old buffer system", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
     }
 }
