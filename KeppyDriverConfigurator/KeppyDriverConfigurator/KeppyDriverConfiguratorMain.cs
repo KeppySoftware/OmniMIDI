@@ -54,6 +54,12 @@ namespace KeppyDriverConfigurator
             InitializeComponent();
         }
 
+        private void KeppyDriverConfiguratorMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SynthSettings.Close();
+            Watchdog.Close();
+        }
+
         static bool IsWindows10()
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
@@ -1645,7 +1651,6 @@ namespace KeppyDriverConfigurator
         private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
-            SynthSettings.Close();
             enabledToolStripMenuItem.Checked = true;
             enabledToolStripMenuItem.Enabled = false;
             disabledToolStripMenuItem.Checked = false;
@@ -1655,7 +1660,6 @@ namespace KeppyDriverConfigurator
         private void SFListConfirmationdisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
-            SynthSettings.Close();
             enabledToolStripMenuItem.Checked = false;
             enabledToolStripMenuItem.Enabled = true;
             disabledToolStripMenuItem.Checked = true;
@@ -1665,7 +1669,6 @@ namespace KeppyDriverConfigurator
         private void enabledToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("volumehotkeys", "1", RegistryValueKind.DWord);
-            SynthSettings.Close();
             VolumeHotkeysCheck.Enabled = true;
             enabledToolStripMenuItem1.Checked = true;
             enabledToolStripMenuItem1.Enabled = false;
@@ -1676,7 +1679,6 @@ namespace KeppyDriverConfigurator
         private void disabledToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("volumehotkeys", "0", RegistryValueKind.DWord);
-            SynthSettings.Close();
             VolumeHotkeysCheck.Enabled = false;
             enabledToolStripMenuItem1.Checked = false;
             enabledToolStripMenuItem1.Enabled = true;
@@ -1688,7 +1690,6 @@ namespace KeppyDriverConfigurator
         private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
-            SynthSettings.Close();
             soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
             volumeHotkeysToolStripMenuItem.Enabled = true;
             hLSEnabledToolStripMenuItem.Checked = true;
@@ -1700,7 +1701,6 @@ namespace KeppyDriverConfigurator
         private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
-            SynthSettings.Close();
             soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
             volumeHotkeysToolStripMenuItem.Enabled = false;
             hLSEnabledToolStripMenuItem.Checked = false;
@@ -1713,7 +1713,6 @@ namespace KeppyDriverConfigurator
         private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("watchdog", "1", RegistryValueKind.DWord);
-            SynthSettings.Close();
             watchdogEnabledToolStripMenuItem.Checked = true;
             watchdogDisabledToolStripMenuItem.Checked = false;
             watchdogEnabledToolStripMenuItem.Enabled = false;
@@ -1723,7 +1722,6 @@ namespace KeppyDriverConfigurator
         private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("watchdog", "0", RegistryValueKind.DWord);
-            SynthSettings.Close();
             watchdogEnabledToolStripMenuItem.Checked = false;
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;
