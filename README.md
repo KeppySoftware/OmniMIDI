@@ -1,4 +1,6 @@
 # Keppy's Driver
+
+[![Join the chat at https://gitter.im/KaleidonKep99/Keppy-s-Driver](https://badges.gitter.im/KaleidonKep99/Keppy-s-Driver.svg)](https://gitter.im/KaleidonKep99/Keppy-s-Driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A fork of the original [BASSMIDI Driver by Kode54] (https://github.com/kode54/BASSMIDI-Driver), with new functions.
 
 ## What's the difference between the original driver and your fork?
