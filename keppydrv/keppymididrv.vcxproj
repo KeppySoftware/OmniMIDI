@@ -23,8 +23,13 @@
     <ClInclude Include="..\external_packages\XAudio2.h" />
     <ClInclude Include="..\external_packages\xma2defs.h" />
     <ClInclude Include="..\external_packages\mmddk.h" />
+    <ClInclude Include="bansystem.h" />
+    <ClInclude Include="bufsystem.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="sfsystem.h" />
     <ClInclude Include="sound_out.h" />
+    <ClInclude Include="watchdog.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

@@ -203,6 +203,7 @@ namespace KeppyDriverConfigurator
         {
             try
             {
+                CPUSpeed();
                 RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Channels", true);
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", false);
                 if (Channels == null)
@@ -259,13 +260,23 @@ namespace KeppyDriverConfigurator
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
                 if (VolumeMonitor.Checked == true)
                 {
-                    CPUSpeed();
-                    if (CurrentClock < 2000)
+
+                    if (CurrentClock < 1100)
                     {
-                        MessageBox.Show("A CPU running at 2GHz or more is required for the volume meters to work.", "Minimum requirements", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        VolumeMonitor.Checked = false;
+                        DialogResult dialogResult = MessageBox.Show("Enabling a mixer on a computer with poor specs could make the driver stutter.\n\nAre you sure you want to enable it?", "Weak processor detected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                            VolumeCheck.Enabled = true;
+                            LeftChannel.Value = 0;
+                            RightChannel.Value = 0;   
+                        }
+                        else if (dialogResult == DialogResult.No)
+                        {
+                            VolumeMonitor.Checked = false;
+                        }
                     }
-                    else if (CurrentClock >= 2000)
+                    else if (CurrentClock >= 1100)
                     {
                         Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
                         VolumeCheck.Enabled = true;

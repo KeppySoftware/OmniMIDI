@@ -30,6 +30,7 @@ namespace KeppyDriverConfigurator
         public string List7Path { get; set; }
         public string List8Path { get; set; }
         public int openadvanced { get; set; }
+        public int istheconfiguratorready { get; set; }
         public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
         public RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
 
@@ -695,6 +696,8 @@ namespace KeppyDriverConfigurator
         // Here we go!
         private void KeppyDriverConfiguratorMain_Load(object sender, EventArgs e)
         {
+            // Just some stuff lel
+            istheconfiguratorready = 0;
             // MIDI out selector disabler
             if (IsWindows10() == true)
             {
@@ -889,6 +892,8 @@ namespace KeppyDriverConfigurator
                 {
                     TabsForTheControls.SelectedIndex = 8;
                 }
+
+                istheconfiguratorready = 1;
             }
             catch (Exception ex)
             {
@@ -1781,22 +1786,53 @@ namespace KeppyDriverConfigurator
         {
             if (XAudioDisable.Checked == true)
             {
-                OutputWAV.Enabled = false;
-                OutputWAV.Checked = false;
-                VMSEmu.Visible = true;
-                SPFSecondaryBut.Visible = false;
-                BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
-                bufsize.Minimum = 0;
-                bufsize.Maximum = 1000;
-                bufsize.Enabled = false;
-                if (VMSEmu.Checked == true)
+                if (istheconfiguratorready == 1)
                 {
-                    bufsize.Enabled = true;
+                    DialogResult dialogResult = MessageBox.Show("Are you sure you would like to enable DirectSound? Enabling this could reduce the battery life if you are on a laptop.", "DirectSound engine: Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        OutputWAV.Enabled = false;
+                        OutputWAV.Checked = false;
+                        VMSEmu.Visible = true;
+                        SPFSecondaryBut.Visible = false;
+                        BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                        bufsize.Minimum = 0;
+                        bufsize.Maximum = 1000;
+                        bufsize.Enabled = false;
+                        if (VMSEmu.Checked == true)
+                        {
+                            bufsize.Enabled = true;
+                        }
+                        else
+                        {
+                            bufsize.Enabled = false;
+                            bufsize.Value = 0;
+                        }
+                    }
+                    else if (dialogResult == DialogResult.No)
+                    {
+                        XAudioDisable.Checked = false;
+                    }
                 }
                 else
                 {
+                    OutputWAV.Enabled = false;
+                    OutputWAV.Checked = false;
+                    VMSEmu.Visible = true;
+                    SPFSecondaryBut.Visible = false;
+                    BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                    bufsize.Minimum = 0;
+                    bufsize.Maximum = 1000;
                     bufsize.Enabled = false;
-                    bufsize.Value = 0;
+                    if (VMSEmu.Checked == true)
+                    {
+                        bufsize.Enabled = true;
+                    }
+                    else
+                    {
+                        bufsize.Enabled = false;
+                        bufsize.Value = 0;
+                    }
                 }
             }
             else if (XAudioDisable.Checked == false)
