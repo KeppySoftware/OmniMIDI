@@ -98,6 +98,9 @@ static BOOL sound_out_float = FALSE;
 static float sound_out_volume_float = 1.0;
 static int sound_out_volume_int = 0x1000;
 
+static BYTE gs_part_to_ch[16];
+static BYTE drum_channels[16];
+
 // Variables
 static float *sndbf;
 static int allhotkeys = 1; // Enable/Disable all the hotkeys
@@ -863,41 +866,13 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
-		IIMidiHdr = (MIDIHDR *)dwParam1;
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-		IIMidiHdr->dwFlags &= ~MHDR_DONE;
-		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-		exlen = (int)IIMidiHdr->dwBufferLength;
-		if (legacybuf != 1) {
-			if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(unsigned char)))){
-				return MMSYSERR_NOMEM;
-			}
-			else{
-				memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-			}
+		if (legacybuf == 1) {
+			longmodmdata_old(IIMidiHdr, dwParam1, dwParam2, exlen, sysexbufferold);
 		}
 		else {
-			if (NULL == (sysexbufferold = (char *)malloc(exlen * sizeof(char)))){
-				return MMSYSERR_NOMEM;
-			}
-			else{
-				memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-			}
+			longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 		}
-		/*
-		TODO: 	When the buffer contents have been sent, the driver should set the MHDR_DONE flag, clear the
-		MHDR_INQUEUE flag, and send the client a MOM_DONE callback message.
-
-
-		In other words, these three lines should be done when the evbuf[evbpoint] is sent.
-		*/
-		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-		IIMidiHdr->dwFlags |= MHDR_DONE;
-		if (legacybuf != 1) {
-			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
-		}
-		
-		//fallthrough
+		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 	case MODM_DATA:
 		if (legacybuf == 1) {
 			modmdata_old(evbpoint, uMsg, dwParam1, dwParam2, exlen, sysexbufferold);
@@ -905,7 +880,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		else {
 			modmdata(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 		}	
-		return MMSYSERR_NOERROR;
 		break;
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
