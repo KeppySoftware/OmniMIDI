@@ -108,15 +108,6 @@ int bmsyn_play_some_data_old(void){
 			dwParam2 = dwParam1 & 0xF0;
 			exlen = (dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3;
 			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
-			if (dwParam2 == 0xB0 && (dwParam1 & 0xFF00) == 0)
-			{
-				if ((dwParam1 & 0xFF0000) == 0x7F0000) drum_channels[dwParam1 & 0x0F] = 1;
-				else if ((dwParam1 & 0xFF0000) == 0x790000) drum_channels[dwParam1 & 0x0F] = 0;
-			}
-			else if (dwParam2 == 0xC0)
-			{
-				BASS_MIDI_StreamEvent(hStream, dwParam1 & 0x0F, MIDI_EVENT_DRUMS, drum_channels[dwParam1 & 0x0F]);
-			}
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);

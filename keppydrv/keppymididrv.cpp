@@ -200,7 +200,7 @@ class message_window
 
 public:
 	message_window() {
-		static const TCHAR * class_name = _T("keppymididrv message window");
+		static const TCHAR * class_name = _T("keppydrv message window");
 		WNDCLASSEX cls = { 0 };
 		cls.cbSize = sizeof(cls);
 		cls.lpfnWndProc = DefWindowProc;
@@ -208,7 +208,7 @@ public:
 		cls.lpszClassName = class_name;
 		class_atom = RegisterClassEx(&cls);
 		if (class_atom) {
-			m_hWnd = CreateWindowEx(0, (LPCTSTR)class_atom, _T("keppymididrv"), 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hinst, NULL);
+			m_hWnd = CreateWindowEx(0, (LPCTSTR)class_atom, _T("keppydrv"), 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hinst, NULL);
 		}
 		else {
 			m_hWnd = NULL;
@@ -240,8 +240,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 	}
 	return TRUE;
 }
-
-
 
 LRESULT DoDriverLoad() {
 	//The DRV_LOAD message is always the first message that a device driver receives. 
@@ -419,95 +417,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	}
 }
 
-void DLLLoadError(LPCWSTR dll) {
-	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
-	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
-	lstrcat(errormessage, dll);
-	lstrcat(errormessage, clickokmsg);
-	MessageBox(NULL, errormessage, L"Keppy's Driver - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
-}
-
-BOOL load_bassfuncs()
-{
-	TCHAR installpath[MAX_PATH] = { 0 };
-	TCHAR basspath[MAX_PATH] = { 0 };
-	TCHAR bassmidipath[MAX_PATH] = { 0 };
-	TCHAR bassencpath[MAX_PATH] = { 0 };
-	TCHAR pluginpath[MAX_PATH] = { 0 };
-	WIN32_FIND_DATA fd;
-	HANDLE fh;
-	int installpathlength;
-
-	GetModuleFileName(hinst, installpath, MAX_PATH);
-	PathRemoveFileSpec(installpath);
-
-	lstrcat(basspath, installpath);
-	lstrcat(basspath, L"\\bass.dll");
-	if (!(bass = LoadLibrary(basspath))) {
-		DLLLoadError(basspath);
-		exit(0);
-	}
-	lstrcat(bassmidipath, installpath);
-	lstrcat(bassmidipath, L"\\bassmidi.dll");
-	if (!(bassmidi = LoadLibrary(bassmidipath))) {
-		DLLLoadError(bassmidipath);
-		exit(0);
-	}
-	lstrcat(bassencpath, installpath);
-	lstrcat(bassencpath, L"\\bassenc.dll");
-	if (!(bassenc = LoadLibrary(bassencpath))) {
-		DLLLoadError(bassencpath);
-		exit(0);
-	}
-	/* "load" all the BASS functions that are to be used */
-	OutputDebugString(L"Loading BASS functions....");
-	LOADBASSENCFUNCTION(BASS_Encode_Start);
-	LOADBASSENCFUNCTION(BASS_Encode_Stop);
-	LOADBASSFUNCTION(BASS_ChannelFlags);
-	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelGetData);
-	LOADBASSFUNCTION(BASS_ChannelGetLevel);
-	LOADBASSFUNCTION(BASS_ChannelPlay);
-	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
-	LOADBASSFUNCTION(BASS_ChannelSetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelSetFX);
-	LOADBASSFUNCTION(BASS_ChannelUpdate);
-	LOADBASSFUNCTION(BASS_ErrorGetCode);
-	LOADBASSFUNCTION(BASS_Free);
-	LOADBASSFUNCTION(BASS_GetInfo);
-	LOADBASSFUNCTION(BASS_Init);
-	LOADBASSFUNCTION(BASS_PluginLoad);
-	LOADBASSFUNCTION(BASS_SetConfig);
-	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_StreamFree);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-	OutputDebugString(L"Done.");
-
-	installpathlength = lstrlen(installpath) + 1;
-	lstrcat(pluginpath, installpath);
-	lstrcat(pluginpath, L"\\bass*.dll");
-	fh = FindFirstFile(pluginpath, &fd);
-	if (fh != INVALID_HANDLE_VALUE) {
-		do {
-			HPLUGIN plug;
-			pluginpath[installpathlength] = 0;
-			lstrcat(pluginpath, fd.cFileName);
-			plug = BASS_PluginLoad((char*)pluginpath, BASS_UNICODE);
-		} while (FindNextFile(fh, &fd));
-		FindClose(fh);
-	}
-	return TRUE;
-}
-
 bool compare_nocase(const std::string& first, const std::string& second)
 {
 	unsigned int i = 0;
@@ -521,191 +430,201 @@ bool compare_nocase(const std::string& first, const std::string& second)
 }
 
 void AudioRender(int bassoutput) {
-	if (bassoutput == -1) {
-		BASS_ChannelUpdate(hStream, 0);
-	}
-	else {
-		decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
-		if (encmode == 1) {
-
+	try {
+		if (bassoutput == -1) {
+			BASS_ChannelUpdate(hStream, 0);
 		}
-		else if (encmode == 0) {
-			if (decoded < 0) {
+		else {
+			decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
+			if (encmode == 1) {
 
 			}
-			else {
-				for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-					float sample = sndbf[i];
-					sample *= sound_out_volume_float;
-					sndbf[i] = sample;
+			else if (encmode == 0) {
+				if (decoded < 0) {
+
 				}
-				sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+				else {
+					for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+						float sample = sndbf[i];
+						sample *= sound_out_volume_float;
+						sndbf[i] = sample;
+					}
+					sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+				}
 			}
 		}
+	}
+	catch (int e) {
+		crashhandler(e);
 	}
 }
 
 unsigned __stdcall threadfunc(LPVOID lpV){
-	if (BannedSystemProcess() == TRUE) {
-		_endthreadex(0);
-		return 0;
-	}
-	else {
-		unsigned i;
-		int bassoutputfinal = 0;
-		int opend = 0;
-		BASS_MIDI_FONT * mf;
-		BASS_INFO info;
-		while (opend == 0 && stop_thread == 0) {
-			if (!com_initialized) {
-				if (FAILED(CoInitialize(NULL))) continue;
-				com_initialized = TRUE;
-			}
-			load_settings();
-			if (xaudiodisabled == 1) {
-				bassoutputfinal = -1;
-				// Do nothing, since now the driver is going to use DirectSound.
-			}
-			else {
-				if (sound_driver == NULL) {
-					sound_driver = create_sound_out_xaudio2();
-					sound_out_float = TRUE;
-					sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
-					// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
+	try {
+		if (BannedSystemProcess() == TRUE) {
+			_endthreadex(0);
+			return 0;
+		}
+		else {
+			unsigned i;
+			int bassoutputfinal = 0;
+			int opend = 0;
+			BASS_MIDI_FONT * mf;
+			BASS_INFO info;
+			while (opend == 0 && stop_thread == 0) {
+				if (!com_initialized) {
+					if (FAILED(CoInitialize(NULL))) continue;
+					com_initialized = TRUE;
 				}
-			}
-			load_bassfuncs();
-			BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 9999);
-			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-			OutputDebugString(L"Initializing the stream...");
-			if (BASS_Init(bassoutputfinal, frequency, BASS_DEVICE_LATENCY, NULL, NULL)) {
-				if (bassoutputfinal == -1) {
-					BASS_GetInfo(&info);
-					if (vmsemu == 1) {
-						BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10 + frames); // default buffer size = 'minbuf' + additional buffer size
-					}
-					else {
-						BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10 + 1); // default buffer size
-					}
-					hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
-					BASS_ChannelPlay(hStream, false);
+				load_settings();
+				if (xaudiodisabled == 1) {
+					bassoutputfinal = -1;
+					// Do nothing, since now the driver is going to use DirectSound.
 				}
 				else {
-					hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+					if (sound_driver == NULL) {
+						sound_driver = create_sound_out_xaudio2();
+						sound_out_float = TRUE;
+						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
+						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
+					}
 				}
-				if (!hStream) {
-					BASS_StreamFree(hStream);
-					hStream = 0;
-					continue;
-				}
-				// Encoder code
-				if (encmode == 1) {
-					typedef std::basic_string<TCHAR> tstring;
-					TCHAR encpath[MAX_PATH];
-					TCHAR poop[MAX_PATH];
-					TCHAR buffer[MAX_PATH] = { 0 };
-					TCHAR * out;
-					DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
-					if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
-					out = PathFindFileName(buffer);
-					std::wstring stemp = tstring(out) + L" - Keppy's Driver Output File.wav";
-					LPCWSTR result2 = stemp.c_str();
-					HKEY hKey = 0;
-					DWORD cbValueLength = sizeof(poop);
-					DWORD dwType = REG_SZ;
-					RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-					if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&poop), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
-						if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
-						{
-							PathAppend(encpath, result2);
+				load_bassfuncs();
+				BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 9999);
+				BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+				BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+				OutputDebugString(L"Initializing the stream...");
+				if (BASS_Init(bassoutputfinal, frequency, BASS_DEVICE_LATENCY, NULL, NULL)) {
+					if (bassoutputfinal == -1) {
+						BASS_GetInfo(&info);
+						if (vmsemu == 1) {
+							BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10 + frames); // default buffer size = 'minbuf' + additional buffer size
 						}
+						else {
+							BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10 + 1); // default buffer size
+						}
+						hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
+						BASS_ChannelPlay(hStream, false);
 					}
 					else {
-						PathAppend(encpath, CString(poop));
-						PathAppend(encpath, result2);
+						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 					}
-					_bstr_t b(encpath);
-					const char* c = b;
-					const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
-					switch (result)
-					{
-					case IDYES:
-						BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
-						break;
-					case IDNO:
-						TCHAR configuratorapp[MAX_PATH];
-						if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+					if (!hStream) {
+						BASS_StreamFree(hStream);
+						hStream = 0;
+						continue;
+					}
+					// Encoder code
+					if (encmode == 1) {
+						typedef std::basic_string<TCHAR> tstring;
+						TCHAR encpath[MAX_PATH];
+						TCHAR poop[MAX_PATH];
+						TCHAR buffer[MAX_PATH] = { 0 };
+						TCHAR * out;
+						DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
+						if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
+						out = PathFindFileName(buffer);
+						std::wstring stemp = tstring(out) + L" - Keppy's Driver Output File.wav";
+						LPCWSTR result2 = stemp.c_str();
+						HKEY hKey = 0;
+						DWORD cbValueLength = sizeof(poop);
+						DWORD dwType = REG_SZ;
+						RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+						if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&poop), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+							if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
+							{
+								PathAppend(encpath, result2);
+							}
+						}
+						else {
+							PathAppend(encpath, CString(poop));
+							PathAppend(encpath, result2);
+						}
+						_bstr_t b(encpath);
+						const char* c = b;
+						const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
+						switch (result)
 						{
-							PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-							ShellExecute(NULL, L"open", configuratorapp, L"-advancedtab", NULL, SW_SHOWNORMAL);
-							exit(0);
+						case IDYES:
+							BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 							break;
+						case IDNO:
+							TCHAR configuratorapp[MAX_PATH];
+							if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+							{
+								PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+								ShellExecute(NULL, L"open", configuratorapp, L"-advancedtab", NULL, SW_SHOWNORMAL);
+								exit(0);
+								break;
+							}
 						}
 					}
+					// Cake.
+					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
+					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
+					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+					LoadSoundfont(defaultsflist);
+					SetEvent(load_sfevent);
+					opend = 1;
+					reset_synth = 0;
 				}
-				// Cake.
-				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
-				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
-				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-				LoadSoundfont(defaultsflist);
-				SetEvent(load_sfevent);
-				opend = 1;
-				reset_synth = 0;
 			}
-		}
-		while (stop_thread == 0){
-			if (reset_synth != 0){
-				reset_synth = 0;
-				load_settings();
-				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				BASS_MIDI_StreamLoadSamples(hStream);
+			while (stop_thread == 0){
+				if (reset_synth != 0){
+					reset_synth = 0;
+					load_settings();
+					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+					BASS_MIDI_StreamLoadSamples(hStream);
+				}
+				if (legacybuf == 1) {
+					bmsyn_play_some_data_old();
+				}
+				else {
+					bmsyn_play_some_data();
+				}
+				AudioRender(bassoutputfinal);
+				realtime_load_settings();
+				keybindings();
+				debug_info();
+				WatchdogCheck();
+				mixervoid();
 			}
-			if (legacybuf == 1) {
-				bmsyn_play_some_data_old();
+			stop_thread = 0;
+			if (hStream)
+			{
+				ResetSynth();
+				BASS_StreamFree(hStream);
+				hStream = 0;
 			}
-			else {
-				bmsyn_play_some_data();
+			if (bassmidi) {
+				ResetSynth();
+				FreeFonts(0);
+				FreeLibrary(bassmidi);
+				bassmidi = 0;
 			}
-			AudioRender(bassoutputfinal);
-			realtime_load_settings();
-			keybindings();
-			debug_info();
-			WatchdogCheck();
-			mixervoid();
+			if (bass) {
+				ResetSynth();
+				BASS_Free();
+				FreeLibrary(bass);
+				bass = 0;
+			}
+			if (sound_driver) {
+				ResetSynth();
+				delete sound_driver;
+				sound_driver = NULL;
+			}
+			if (com_initialized) {
+				CoUninitialize();
+				com_initialized = FALSE;
+			}
+			_endthreadex(0);
+			return 0;
 		}
-		stop_thread = 0;
-		if (hStream)
-		{
-			ResetSynth();
-			BASS_StreamFree(hStream);
-			hStream = 0;
-		}
-		if (bassmidi) {
-			ResetSynth();
-			FreeFonts(0);
-			FreeLibrary(bassmidi);
-			bassmidi = 0;
-		}
-		if (bass) {
-			ResetSynth();
-			BASS_Free();
-			FreeLibrary(bass);
-			bass = 0;
-		}
-		if (sound_driver) {
-			ResetSynth();
-			delete sound_driver;
-			sound_driver = NULL;
-		}
-		if (com_initialized) {
-			CoUninitialize();
-			com_initialized = FALSE;
-		}
-		_endthreadex(0);
-		return 0;
+	}
+	catch (int e) {
+		crashhandler(e);
 	}
 }
 
@@ -866,21 +785,31 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
-		if (legacybuf == 1) {
-			longmodmdata_old(IIMidiHdr, dwParam1, dwParam2, exlen, sysexbufferold);
+		try {
+			if (legacybuf == 1) {
+				longmodmdata_old(IIMidiHdr, dwParam1, dwParam2, exlen, sysexbufferold);
+			}
+			else {
+				longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			}
+			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 		}
-		else {
-			longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+		catch (int e) {
+			crashhandler(e);
 		}
-		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 	case MODM_DATA:
-		if (legacybuf == 1) {
-			modmdata_old(evbpoint, uMsg, dwParam1, dwParam2, exlen, sysexbufferold);
+		try {
+			if (legacybuf == 1) {
+				modmdata_old(evbpoint, uMsg, dwParam1, dwParam2, exlen, sysexbufferold);
+			}
+			else {
+				modmdata(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			}
+			break;
 		}
-		else {
-			modmdata(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-		}	
-		break;
+		catch (int e) {
+			crashhandler(e);
+		}
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
