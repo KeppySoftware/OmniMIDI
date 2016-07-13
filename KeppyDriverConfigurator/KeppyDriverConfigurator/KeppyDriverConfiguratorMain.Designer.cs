@@ -182,7 +182,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeDefaultBufferSystemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -203,6 +202,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getTheMIDIMapperForWindows10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.guidesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -219,7 +219,6 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -2072,7 +2071,6 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.changeDefaultBufferSystemToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
@@ -2081,13 +2079,6 @@
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
-            // 
-            // changeDefaultBufferSystemToolStripMenuItem
-            // 
-            this.changeDefaultBufferSystemToolStripMenuItem.Name = "changeDefaultBufferSystemToolStripMenuItem";
-            this.changeDefaultBufferSystemToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
-            this.changeDefaultBufferSystemToolStripMenuItem.Text = "Change default buffer system";
-            this.changeDefaultBufferSystemToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultBufferSystemToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
@@ -2249,6 +2240,13 @@
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
             // 
+            // donateToSupportUsToolStripMenuItem
+            // 
+            this.donateToSupportUsToolStripMenuItem.Name = "donateToSupportUsToolStripMenuItem";
+            this.donateToSupportUsToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.donateToSupportUsToolStripMenuItem.Text = "Donate to support us";
+            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
+            // 
             // getTheMIDIMapperForWindows10ToolStripMenuItem
             // 
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Name = "getTheMIDIMapperForWindows10ToolStripMenuItem";
@@ -2356,13 +2354,6 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
-            // 
-            // donateToSupportUsToolStripMenuItem
-            // 
-            this.donateToSupportUsToolStripMenuItem.Name = "donateToSupportUsToolStripMenuItem";
-            this.donateToSupportUsToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
-            this.donateToSupportUsToolStripMenuItem.Text = "Donate to support us";
-            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2618,7 +2609,6 @@
         private System.Windows.Forms.ToolStripMenuItem watchdogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem watchdogEnabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem watchdogDisabledToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem changeDefaultBufferSystemToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToSupportUsToolStripMenuItem;
     }
 }

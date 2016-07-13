@@ -897,7 +897,7 @@ namespace KeppyDriverConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can not read settings from the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Can not read settings from the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 
@@ -1626,12 +1626,6 @@ namespace KeppyDriverConfigurator
         private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppyDriverDefaultSFList frm = new KeppyDriverDefaultSFList();
-            frm.ShowDialog();
-        }
-
-        private void changeDefaultBufferSystemToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            KeppyDriverBufferSystem frm = new KeppyDriverBufferSystem();
             frm.ShowDialog();
         }
 

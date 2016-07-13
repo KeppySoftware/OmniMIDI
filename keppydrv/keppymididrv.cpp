@@ -69,7 +69,6 @@ struct Driver_Client {
 	DWORD_PTR callback;
 };
 
-//Note: drivers[0] is not used (See OnDriverOpen).
 struct Driver {
 	int open;
 	int clientCount;
@@ -109,7 +108,6 @@ static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
 static int frames = 0; // Default
 static int frequency = 0; // Audio frequency
-static int legacybuf = 0; // Enable or disable the legacy buffer system from BASSMIDI Driver 1.x
 static int maxcpu = 0; // CPU usage INT
 static int midivoices = 0; // Max voices INT
 static int midivolumeoverride = 0; // MIDI track volume override
@@ -181,7 +179,6 @@ static HINSTANCE bass = 0;			// bass handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassenc = 0;			// bassmidi handle
 
-//TODO: Can be done with: HMODULE GetDriverModuleHandle(HDRVR hdrvr);  (once DRV_OPEN has been called)
 static HINSTANCE hinst = NULL;             //main DLL handle
 
 // Keppy's Driver vital parts
@@ -242,34 +239,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 }
 
 LRESULT DoDriverLoad() {
-	//The DRV_LOAD message is always the first message that a device driver receives. 
-	//Notifies the driver that it has been loaded. The driver should make sure that any hardware and supporting drivers it needs to function properly are present.
 	memset(drivers, 0, sizeof(drivers));
 	driverCount = 0;
 	return DRV_OK;
 }
 
 LRESULT DoDriverOpen(HDRVR hdrvr, LPCWSTR driverName, LONG lParam) {
-
-	/*
-	Remarks
-
-	If the driver returns a nonzero value, the system uses that value as the driver identifier (the dwDriverId parameter)
-	in messages it subsequently sends to the driver instance. The driver can return any type of value as the identifier.
-	For example, some drivers return memory addresses that point to instance-specific information. Using this method of
-	specifying identifiers for a driver instance gives the drivers ready access to the information while they are processing messages.
-	*/
-
-	/*
-	When the driver's DriverProc function receives a
-	DRV_OPEN message, it should:
-	1. Allocate memory space for a structure instance.
-	2. Add the structure instance to the linked list.
-	3. Store instance data in the new list entry.
-	4. Specify the entry's number or address as the return value for the DriverProc function.
-	Subsequent calls to DriverProc will include the list entry's identifier as its dwDriverID
-	argument
-	*/
 	int driverNum;
 	if (driverCount == MAX_DRIVERS) {
 		return 0;
@@ -307,39 +282,16 @@ LRESULT DoDriverConfigure(DWORD_PTR dwDriverId, HDRVR hdrvr, HWND parent, DRVCON
 	return DRV_CANCEL;
 }
 
-/* INFO Installable Driver Reference: http://msdn.microsoft.com/en-us/library/ms709328%28v=vs.85%29.aspx */
-/* The original header is LONG DriverProc(DWORD dwDriverId, HDRVR hdrvr, UINT msg, LONG lParam1, LONG lParam2);
-but that does not support 64bit. See declaration of DefDriverProc to see where the values come from.
-*/
 STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
 	switch (uMsg) {
-		/* Seems this is only for kernel mode drivers
-		case DRV_INSTALL:
-		return DoDriverInstall(dwDriverId, hdrvr, static_cast<DRVCONFIGINFO*>(lParam2));
-		case DRV_REMOVE:
-		DoDriverRemove(dwDriverId, hdrvr);
-		return DRV_OK;
-		*/
 	case DRV_QUERYCONFIGURE:
-		//TODO: Until it doesn't have a configuration window, it should return 0.
 		return DRV_CANCEL;
 	case DRV_CONFIGURE:
 		return DoDriverConfigure(dwDriverId, hdrvr, reinterpret_cast<HWND>(lParam1), reinterpret_cast<DRVCONFIGINFO*>(lParam2));
-
-		/* TODO: Study this. It has implications:
-		Calling OpenDriver, described in the Win32 SDK. This function calls SendDriverMessage to
-		send DRV_LOAD and DRV_ENABLE messages only if the driver has not been previously loaded,
-		and then to send DRV_OPEN.
-		� Calling CloseDriver, described in the Win32 SDK. This function calls SendDriverMessage to
-		send DRV_CLOSE and, if there are no other open instances of the driver, to also send
-		DRV_DISABLE and DRV_FREE.
-		*/
 	case DRV_LOAD:
 		return DoDriverLoad();
 	case DRV_FREE:
-		//The DRV_FREE message is always the last message that a device driver receives. 
-		//Notifies the driver that it is being removed from memory. The driver should free any memory and other system resources that it has allocated.
 		return DRV_OK;
 	case DRV_OPEN:
 		return DoDriverOpen(hdrvr, reinterpret_cast<LPCWSTR>(lParam1), static_cast<LONG>(lParam2));
@@ -578,12 +530,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 					BASS_MIDI_StreamLoadSamples(hStream);
 				}
-				if (legacybuf == 1) {
-					bmsyn_play_some_data_old();
-				}
-				else {
-					bmsyn_play_some_data();
-				}
+				bmsyn_play_some_data();
 				AudioRender(bassoutputfinal);
 				realtime_load_settings();
 				keybindings();
@@ -641,12 +588,7 @@ void DoStartClient() {
 		InitializeCriticalSection(&mim_section);
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-		load_sfevent = CreateEvent(
-			NULL,               // default security attributes
-			TRUE,               // manual-reset event
-			FALSE,              // initial state is nonsignaled
-			TEXT("SoundFontEvent")  // object name
-			);
+		load_sfevent = CreateEvent(NULL, TRUE, FALSE, TEXT("SoundFontEvent"));
 		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr);
 		SetPriorityClass(hCalcThread, REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(hCalcThread, THREAD_PRIORITY_TIME_CRITICAL);
@@ -681,28 +623,13 @@ void DoStopClient() {
 }
 
 void DoResetClient(UINT uDeviceID) {
-	/*
-	TODO : If the driver's output queue contains any output buffers (see MODM_LONGDATA) whose contents
-	have not been sent to the kernel-mode driver, the driver should set the MHDR_DONE flag and
-	clear the MHDR_INQUEUE flag in each buffer's MIDIHDR structure, and then send the client a
-	MOM_DONE callback message for each buffer.
-	*/
 	ResetSynth();
 	reset_synth = 1;
 }
 
 LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPENDESC * desc, DWORD flags) {
-	/*	For the MODM_OPEN message, dwUser is an output parameter.
-	The driver creates the instance identifier and returns it in the address specified as
-	the argument. The argument is the instance identifier.
-	CALLBACK_EVENT Indicates dwCallback member of MIDIOPENDESC is an event handle.
-	CALLBACK_FUNCTION Indicates dwCallback member of MIDIOPENDESC is the address of a callback function.
-	CALLBACK_TASK Indicates dwCallback member of MIDIOPENDESC is a task handle.
-	CALLBACK_WINDOW Indicates dwCallback member of MIDIOPENDESC is a window handle.
-	*/
 	int clientNum;
 	if (driver->clientCount == 0) {
-		//TODO: Part of this might be done in DoDriverOpen instead.
 		DoStartClient();
 		DoResetClient(uDeviceID);
 		clientNum = 0;
@@ -729,8 +656,6 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	*dwUser = clientNum;
 	driver->clientCount++;
 	SetPriorityClass(GetCurrentProcess(), processPriority);
-	//TODO: desc and flags
-
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 
 	RunWatchdog();
@@ -739,14 +664,6 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 }
 
 LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
-	/*
-	If the client has passed data buffers to the user-mode driver by means of MODM_LONGDATA
-	messages, and if the user-mode driver hasn't finished sending the data to the kernel-mode driver,
-	the user-mode driver should return MIDIERR_STILLPLAYING in response to MODM_CLOSE.
-	After the driver closes the device instance it should send a MOM_CLOSE callback message to
-	the client.
-	*/
-
 	KillWatchdog();
 
 	if (!driver->clients[dwUser].allocated) {
@@ -762,21 +679,18 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 	DoCallback(uDeviceID, dwUser, MOM_CLOSE, 0, 0);
 	return MMSYSERR_NOERROR;
 }
-/* Audio Device Messages for MIDI http://msdn.microsoft.com/en-us/library/ff536194%28v=vs.85%29 */
+
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	UINT evbpoint;
 	MIDIHDR *IIMidiHdr;
 	struct Driver *driver = &drivers[uDeviceID];
 	int exlen = 0;
-	char *sysexbufferold = NULL;
 	unsigned char *sysexbuffer = NULL;
 	DWORD result = 0;
 	switch (uMsg) {
 	case MODM_OPEN:
 		return DoOpenClient(driver, uDeviceID, reinterpret_cast<LONG*>(dwUser), reinterpret_cast<MIDIOPENDESC*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_PREPARE:
-		/*If the driver returns MMSYSERR_NOTSUPPORTED, winmm.dll prepares the buffer for use. For
-		most drivers, this behavior is sufficient.*/
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_UNPREPARE:
 		return MMSYSERR_NOTSUPPORTED;
@@ -786,12 +700,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
 		try {
-			if (legacybuf == 1) {
-				longmodmdata_old(IIMidiHdr, dwParam1, dwParam2, exlen, sysexbufferold);
-			}
-			else {
-				longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-			}
+			longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 		}
 		catch (int e) {
@@ -799,12 +708,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 	case MODM_DATA:
 		try {
-			if (legacybuf == 1) {
-				modmdata_old(evbpoint, uMsg, dwParam1, dwParam2, exlen, sysexbufferold);
-			}
-			else {
-				modmdata(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-			}
+			modmdata(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			break;
 		}
 		catch (int e) {
@@ -832,28 +736,9 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_RESET:
 		DoResetClient(uDeviceID);
 		return MMSYSERR_NOERROR;
-		/*
-		MODM_GETPOS
-		MODM_PAUSE
-		//The driver must halt MIDI playback in the current position. The driver must then turn off all notes that are currently on.
-		MODM_RESTART
-		//The MIDI output device driver must restart MIDI playback at the current position.
-		// playback will start on the first MODM_RESTART message that is received regardless of the number of MODM_PAUSE that messages were received.
-		//Likewise, MODM_RESTART messages that are received while the driver is already in play mode must be ignored. MMSYSERR_NOERROR must be returned in either case
-		MODM_STOP
-		//Like reset, without resetting.
-		MODM_PROPERTIES
-		MODM_STRMDATA
-		*/
 	case MODM_CLOSE:
 		return DoCloseClient(driver, uDeviceID, static_cast<LONG>(dwUser));
 		break;
-
-		/*
-		MODM_CACHEDRUMPATCHES
-		MODM_CACHEPATCHES
-		*/
-
 	default:
 		return MMSYSERR_NOERROR;
 		break;

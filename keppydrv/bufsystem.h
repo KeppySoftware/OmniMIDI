@@ -2,16 +2,6 @@
 Keppy's Driver buffer system
 */
 
-
-
-struct evbuf_t_old{
-	UINT uMsg;
-	DWORD	dwParam1;
-	DWORD	dwParam2;
-	int exlen;
-	char *sysexbuffer;
-};
-
 struct evbuf_t{
 	UINT uDeviceID;
 	UINT   uMsg;
@@ -20,12 +10,6 @@ struct evbuf_t{
 	int exlen;
 	unsigned char *sysexbuffer;
 };
-
-#define EVBUFF_SIZE_OLD 32768
-static struct evbuf_t_old evbuf_old[EVBUFF_SIZE_OLD];
-static UINT evbwpoint_old = 0;
-static UINT evbrpoint_old = 0;
-static UINT evbsysexpoint_old;
 
 #define EVBUFF_SIZE 32768
 static struct evbuf_t evbuf[EVBUFF_SIZE];
@@ -58,89 +42,12 @@ static void ResetDrumChannels()
 	}
 }
 
-int bmsyn_buf_check_old(void){
-	int retval;
-	EnterCriticalSection(&mim_section);
-	retval = (evbrpoint_old != evbwpoint_old) ? ~0 : 0;
-	LeaveCriticalSection(&mim_section);
-	return retval;
-}
-
 int bmsyn_buf_check(void){
 	int retval;
 	EnterCriticalSection(&mim_section);
-	retval = evbcount;
+	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
 	LeaveCriticalSection(&mim_section);
 	return retval;
-}
-
-int bmsyn_play_some_data_old(void){
-	UINT uMsg;
-	DWORD_PTR	dwParam1;
-	DWORD_PTR   dwParam2;
-
-	UINT evbpoint_old;
-	int exlen;
-	char *sysexbuffer;
-	int played;
-
-	played = 0;
-	if (!bmsyn_buf_check_old()){
-		played = ~0;
-		return played;
-	}
-	do{
-		EnterCriticalSection(&mim_section);
-
-		evbpoint_old = evbrpoint_old;
-		if (++evbrpoint_old >= EVBUFF_SIZE_OLD)
-			evbrpoint_old -= EVBUFF_SIZE_OLD;
-
-		uMsg = evbuf_old[evbpoint_old].uMsg;
-		dwParam1 = evbuf_old[evbpoint_old].dwParam1;
-		dwParam2 = evbuf_old[evbpoint_old].dwParam2;
-		exlen = evbuf_old[evbpoint_old].exlen;
-		sysexbuffer = evbuf_old[evbpoint_old].sysexbuffer;
-
-		LeaveCriticalSection(&mim_section);
-		switch (uMsg) {
-		case MODM_DATA:
-			dwParam2 = dwParam1 & 0xF0;
-			exlen = (dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3;
-			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
-			if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
-				(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
-				(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
-				ResetDrumChannels();
-			}
-			else if (exlen == 11 &&
-				sysexbuffer[0] == (char)0xF0 && sysexbuffer[1] == 0x41 && sysexbuffer[3] == 0x42 &&
-				sysexbuffer[4] == 0x12 && sysexbuffer[5] == 0x40 && (sysexbuffer[6] & 0xF0) == 0x10 &&
-				sysexbuffer[10] == (char)0xF7)
-			{
-				if (sysexbuffer[7] == 2)
-				{
-					// GS MIDI channel to part assign
-					gs_part_to_ch[sysexbuffer[6] & 15] = sysexbuffer[8];
-				}
-				else if (sysexbuffer[7] == 0x15)
-				{
-					// GS part to rhythm allocation
-					unsigned int drum_channel = gs_part_to_ch[sysexbuffer[6] & 15];
-					if (drum_channel < 16)
-					{
-						drum_channels[drum_channel] = sysexbuffer[8];
-					}
-				}
-			}
-			free(sysexbuffer);
-			break;
-		}
-	} while (bmsyn_buf_check_old());
-	return played;
 }
 
 int bmsyn_play_some_data(void){
@@ -181,25 +88,36 @@ int bmsyn_play_some_data(void){
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+			if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
+				(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
+				(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
+				ResetDrumChannels();
+			}
+			else if (exlen == 11 &&
+				sysexbuffer[0] == (char)0xF0 && sysexbuffer[1] == 0x41 && sysexbuffer[3] == 0x42 &&
+				sysexbuffer[4] == 0x12 && sysexbuffer[5] == 0x40 && (sysexbuffer[6] & 0xF0) == 0x10 &&
+				sysexbuffer[10] == (char)0xF7)
+			{
+				if (sysexbuffer[7] == 2)
+				{
+					// GS MIDI channel to part assign
+					gs_part_to_ch[sysexbuffer[6] & 15] = sysexbuffer[8];
+				}
+				else if (sysexbuffer[7] == 0x15)
+				{
+					// GS part to rhythm allocation
+					unsigned int drum_channel = gs_part_to_ch[sysexbuffer[6] & 15];
+					if (drum_channel < 16)
+					{
+						drum_channels[drum_channel] = sysexbuffer[8];
+					}
+				}
+			}
 			free(sysexbuffer);
 			break;
 		}
-	} while (InterlockedDecrement(&evbcount));
+	} while (bmsyn_buf_check());
 	return played;
-}
-
-bool modmdata_old(UINT evbpoint, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, char *sysexbufferold) {
-	EnterCriticalSection(&mim_section);
-	evbpoint = evbwpoint_old;
-	if (++evbwpoint_old >= EVBUFF_SIZE_OLD)
-		evbwpoint_old -= EVBUFF_SIZE_OLD;
-	evbuf_old[evbpoint].uMsg = uMsg;
-	evbuf_old[evbpoint].dwParam1 = dwParam1;
-	evbuf_old[evbpoint].dwParam2 = dwParam2;
-	evbuf_old[evbpoint].exlen = exlen;
-	evbuf_old[evbpoint].sysexbuffer = sysexbufferold;
-	LeaveCriticalSection(&mim_section);
-	return MMSYSERR_NOERROR;
 }
 
 bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
@@ -214,30 +132,7 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 	evbuf[evbpoint].exlen = exlen;
 	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 	LeaveCriticalSection(&mim_section);
-	if (InterlockedIncrement(&evbcount) >= EVBUFF_SIZE) {
-		do
-		{
-
-		} while (evbcount >= EVBUFF_SIZE);
-	}
 	return MMSYSERR_NOERROR;
-}
-
-bool longmodmdata_old(MIDIHDR *IIMidiHdr, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, char *sysexbuffer) {
-	IIMidiHdr = (MIDIHDR *)dwParam1;
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-	IIMidiHdr->dwFlags &= ~MHDR_DONE;
-	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-	IIMidiHdr = (MIDIHDR *)dwParam1;
-	exlen = (int)IIMidiHdr->dwBufferLength;
-	if (NULL == (sysexbuffer = (char *)malloc(exlen * sizeof(char)))){
-		return MMSYSERR_NOMEM;
-	}
-	else{
-		memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-	}
-	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-	IIMidiHdr->dwFlags |= MHDR_DONE;
 }
 
 bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
