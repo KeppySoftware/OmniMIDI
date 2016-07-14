@@ -2,6 +2,64 @@
 Keppy's Driver settings loading system
 */
 
+// Channels volume
+static int ch1 = 16383;
+static int ch2 = 16383;
+static int ch3 = 16383;
+static int ch4 = 16383;
+static int ch5 = 16383;
+static int ch6 = 16383;
+static int ch7 = 16383;
+static int ch8 = 16383;
+static int ch9 = 16383;
+static int ch10 = 16383;
+static int ch11 = 16383;
+static int ch12 = 16383;
+static int ch13 = 16383;
+static int ch14 = 16383;
+static int ch15 = 16383;
+static int ch16 = 16383;
+static int tch1 = 16383;
+static int tch2 = 16383;
+static int tch3 = 16383;
+static int tch4 = 16383;
+static int tch5 = 16383;
+static int tch6 = 16383;
+static int tch7 = 16383;
+static int tch8 = 16383;
+static int tch9 = 16383;
+static int tch10 = 16383;
+static int tch11 = 16383;
+static int tch12 = 16383;
+static int tch13 = 16383;
+static int tch14 = 16383;
+static int tch15 = 16383;
+static int tch16 = 16383;
+
+// Watchdog
+static int rel1 = 0;
+static int rel2 = 0;
+static int rel3 = 0;
+static int rel4 = 0;
+static int rel5 = 0;
+static int rel6 = 0;
+static int rel7 = 0;
+static int rel8 = 0;
+
+struct evbuf_t{
+	UINT uDeviceID;
+	UINT   uMsg;
+	DWORD_PTR	dwParam1;
+	DWORD_PTR	dwParam2;
+	int exlen;
+	unsigned char *sysexbuffer;
+};
+
+static struct evbuf_t evbuf[524288];
+static UINT  evbwpoint = 0;
+static UINT  evbrpoint = 0;
+static UINT evbsysexpoint;
+
 void crashhandler(int e) {
 	std::wstring s = std::to_wstring(e);
 	std::wstring stemp = L"Fatal error during the execution of the driver!\n\nError code: " + s;
@@ -114,6 +172,7 @@ void load_settings()
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
+		RegQueryValueEx(hKey, L"newevbuffvalue", NULL, &dwType, (LPBYTE)&newevbuffvalue, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 		RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
@@ -127,6 +186,7 @@ void load_settings()
 		RegCloseKey(hKey);
 
 		sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
+		memset(evbuf, newevbuffvalue, sizeof(newevbuffvalue));
 
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
@@ -151,6 +211,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
+		RegQueryValueEx(hKey, L"newevbuffvalue", NULL, &dwType, (LPBYTE)&newevbuffvalue, &dwSize);
 		RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
@@ -173,6 +234,7 @@ void realtime_load_settings()
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+		memset(evbuf, newevbuffvalue, sizeof(newevbuffvalue));
 		if (noteoff1) {
 			BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
 		}

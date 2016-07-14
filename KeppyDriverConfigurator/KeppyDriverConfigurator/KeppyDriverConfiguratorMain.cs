@@ -1617,6 +1617,12 @@ namespace KeppyDriverConfigurator
             Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q2V5AUKED5R8S");
         }
 
+        private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverEVBuffer frm = new KeppyDriverEVBuffer();
+            frm.ShowDialog();
+        }
+
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppyDriverOutputWAVDir frm = new KeppyDriverOutputWAVDir();

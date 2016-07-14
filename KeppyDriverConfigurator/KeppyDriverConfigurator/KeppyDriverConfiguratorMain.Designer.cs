@@ -219,6 +219,7 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -2071,6 +2072,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
@@ -2355,6 +2357,13 @@
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
             // 
+            // changeTheSizeOfTheEVBufferToolStripMenuItem
+            // 
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Name = "changeTheSizeOfTheEVBufferToolStripMenuItem";
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
+            // 
             // KeppyDriverConfiguratorMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2610,6 +2619,7 @@
         private System.Windows.Forms.ToolStripMenuItem watchdogEnabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem watchdogDisabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToSupportUsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
     }
 }
 

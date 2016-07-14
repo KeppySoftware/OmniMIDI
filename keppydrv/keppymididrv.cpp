@@ -2,17 +2,6 @@
 Keppy's Driver, a fork of BASSMIDI Driver
 */
 
-#define STRICT
-
-#if __DMC__
-unsigned long _beginthreadex(void *security, unsigned stack_size,
-	unsigned(__stdcall *start_address)(void *), void *arglist,
-	unsigned initflag, unsigned *thrdaddr);
-void _endthreadex(unsigned retval);
-#endif
-
-#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
-#define _CRT_SECURE_NO_WARNINGS 1
 #include "stdafx.h"
 #include <Shlwapi.h>
 #include <Tlhelp32.h>
@@ -55,12 +44,8 @@ void _endthreadex(unsigned retval);
 
 #include "sound_out.h"
 
-#define MAX_DRIVERS 255
-#define MAX_CLIENTS 255 // Per driver
-
-#ifndef _LOADRESTRICTIONS_OFF
-#define _LOADRESTRICTIONS_ON
-#endif
+#define MAX_DRIVERS 1024
+#define MAX_CLIENTS 1024 // Per driver
 
 struct Driver_Client {
 	int allocated;
@@ -88,8 +73,6 @@ static HANDLE hCalcThread = NULL;
 static DWORD processPriority;
 static HANDLE load_sfevent = NULL;
 
-static unsigned int font_count[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-static HSOUNDFONT * hFonts[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 static HSTREAM hStream = 0;
 
 static BOOL com_initialized = FALSE;
@@ -97,13 +80,9 @@ static BOOL sound_out_float = FALSE;
 static float sound_out_volume_float = 1.0;
 static int sound_out_volume_int = 0x1000;
 
-static BYTE gs_part_to_ch[16];
-static BYTE drum_channels[16];
-
 // Variables
 static float *sndbf;
 static int allhotkeys = 1; // Enable/Disable all the hotkeys
-static int availableports = 4; // How many ports are available
 static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
 static int frames = 0; // Default
@@ -112,11 +91,12 @@ static int maxcpu = 0; // CPU usage INT
 static int midivoices = 0; // Max voices INT
 static int midivolumeoverride = 0; // MIDI track volume override
 static int newsndbfvalue; // DO NOT TOUCH
+static int newevbuffvalue = 64; // DO NOT TOUCH
 static int nofloat = 1; // Enable or disable the float engine
 static int nofx = 0; // Enable or disable FXs
 static int noteoff1 = 0; // Note cut INT
 static int preload = 0; // Soundfont preloading
-static int sfdisableconf = 0; // Enable/Disable that annoying confirmation popup that asks you if you want to change the sf list lel
+static int sfdisableconf = 0; // Enable/Disable that annoying confirmation popup that asks you if you want to change the sf list
 static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
@@ -125,50 +105,6 @@ static int volume = 0; // Volume limit
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
 static int volumemon = 1; // Volume monitoring
 static int xaudiodisabled = 0; // Override the default engine
-
-// Channels volume
-static int ch1 = 16383;
-static int ch2 = 16383;
-static int ch3 = 16383;
-static int ch4 = 16383;
-static int ch5 = 16383;
-static int ch6 = 16383;
-static int ch7 = 16383;
-static int ch8 = 16383;
-static int ch9 = 16383;
-static int ch10 = 16383;
-static int ch11 = 16383;
-static int ch12 = 16383;
-static int ch13 = 16383;
-static int ch14 = 16383;
-static int ch15 = 16383;
-static int ch16 = 16383;
-static int tch1 = 16383;
-static int tch2 = 16383;
-static int tch3 = 16383;
-static int tch4 = 16383;
-static int tch5 = 16383;
-static int tch6 = 16383;
-static int tch7 = 16383;
-static int tch8 = 16383;
-static int tch9 = 16383;
-static int tch10 = 16383;
-static int tch11 = 16383;
-static int tch12 = 16383;
-static int tch13 = 16383;
-static int tch14 = 16383;
-static int tch15 = 16383;
-static int tch16 = 16383;
-
-// Watchdog
-static int rel1 = 0;
-static int rel2 = 0;
-static int rel3 = 0;
-static int rel4 = 0;
-static int rel5 = 0;
-static int rel6 = 0;
-static int rel7 = 0;
-static int rel8 = 0;
 
 // Other stuff
 static int decoded;
@@ -183,9 +119,9 @@ static HINSTANCE hinst = NULL;             //main DLL handle
 
 // Keppy's Driver vital parts
 #include "sfsystem.h"
+#include "settings.h"
 #include "bufsystem.h"
 #include "bansystem.h"
-#include "settings.h"
 #include "watchdog.h"
 
 static void DoStopClient();
@@ -379,36 +315,6 @@ bool compare_nocase(const std::string& first, const std::string& second)
 		++i;
 	}
 	return (first.length() < second.length());
-}
-
-void AudioRender(int bassoutput) {
-	try {
-		if (bassoutput == -1) {
-			BASS_ChannelUpdate(hStream, 0);
-		}
-		else {
-			decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
-			if (encmode == 1) {
-
-			}
-			else if (encmode == 0) {
-				if (decoded < 0) {
-
-				}
-				else {
-					for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-						float sample = sndbf[i];
-						sample *= sound_out_volume_float;
-						sndbf[i] = sample;
-					}
-					sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
-				}
-			}
-		}
-	}
-	catch (int e) {
-		crashhandler(e);
-	}
 }
 
 unsigned __stdcall threadfunc(LPVOID lpV){
@@ -664,11 +570,18 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 }
 
 LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
-	KillWatchdog();
-
 	if (!driver->clients[dwUser].allocated) {
 		return MMSYSERR_INVALPARAM;
 	}
+
+	if (stop_thread != 0) return MIDIERR_STILLPLAYING;
+	--OpenCount;
+	if (OpenCount < 0){
+		OpenCount = 0;
+		return MMSYSERR_NOTENABLED;
+	}
+
+	KillWatchdog();
 
 	driver->clients[dwUser].allocated = 0;
 	driver->clientCount--;
