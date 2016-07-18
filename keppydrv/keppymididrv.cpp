@@ -118,11 +118,11 @@ static HINSTANCE bassenc = 0;			// bassmidi handle
 static HINSTANCE hinst = NULL;             //main DLL handle
 
 // Keppy's Driver vital parts
+#include "watchdog.h"
 #include "sfsystem.h"
 #include "settings.h"
 #include "bufsystem.h"
 #include "bansystem.h"
-#include "watchdog.h"
 
 static void DoStopClient();
 
@@ -536,6 +536,8 @@ void DoStopClient() {
 
 void DoResetClient(UINT uDeviceID) {
 	ResetSynth();
+	KillWatchdog();
+	RunWatchdog();
 	reset_synth = 1;
 }
 
@@ -568,9 +570,8 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	*dwUser = clientNum;
 	driver->clientCount++;
 	SetPriorityClass(GetCurrentProcess(), processPriority);
-
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
-
+	RunWatchdog();
 	return MMSYSERR_NOERROR;
 }
 
@@ -586,6 +587,7 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 		driver->clientCount = 0;
 	}
 	DoCallback(uDeviceID, dwUser, MOM_CLOSE, 0, 0);
+	KillWatchdog();
 	return MMSYSERR_NOERROR;
 }
 

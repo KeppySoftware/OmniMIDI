@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.4.1.5
+AppVersion=3.4.1.6
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.4.1.5
+VersionInfoProductTextVersion=3.4.1.6
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=3.4.1.5
+VersionInfoVersion=3.4.1.6
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -121,7 +121,6 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volume"; ValueData: "10000"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volumehotkeys"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "volumemon"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
-Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "watchdog"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Settings"; ValueType: dword; ValueName: "xaudiodisabled"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 
 ;Channels volume
@@ -142,7 +141,8 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch15"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Channels"; ValueType: dword; ValueName: "ch16"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 
-;Watchdog
+;Watchdog              
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "closewatchdog"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel1"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel2"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel3"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
@@ -151,6 +151,8 @@ Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel6"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel7"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "rel8"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "runwd"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Driver\Watchdog"; ValueType: dword; ValueName: "watchdog"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 
 ; 64-bit OS
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppydrv\keppydrv.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode

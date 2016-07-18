@@ -96,7 +96,7 @@
             this.RichTextBox1.Location = new System.Drawing.Point(277, 65);
             this.RichTextBox1.Name = "RichTextBox1";
             this.RichTextBox1.ReadOnly = true;
-            this.RichTextBox1.Size = new System.Drawing.Size(344, 189);
+            this.RichTextBox1.Size = new System.Drawing.Size(344, 210);
             this.RichTextBox1.TabIndex = 22;
             this.RichTextBox1.Text = resources.GetString("RichTextBox1.Text");
             // 
@@ -198,9 +198,9 @@
             this.label3.ForeColor = System.Drawing.Color.Crimson;
             this.label3.Location = new System.Drawing.Point(6, 257);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(248, 13);
+            this.label3.Size = new System.Drawing.Size(278, 13);
             this.label3.TabIndex = 3;
-            this.label3.Text = "DLS, EXB, GIG, FXP, NKI, XRNI, STH, BNK, AKP";
+            this.label3.Text = "AKP, BNK, DLS, ECW, EXB, FXP, GIG, NKI, STH, XRNI";
             // 
             // label4
             // 
@@ -220,7 +220,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(169, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "SF1, SF2, SFZ, SFPACK, SFARK";
+            this.label2.Text = "SF1, SF2, SFARK, SFPACK, SFZ";
             // 
             // label1
             // 

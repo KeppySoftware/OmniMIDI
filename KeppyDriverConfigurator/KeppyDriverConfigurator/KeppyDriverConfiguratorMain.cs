@@ -783,7 +783,7 @@ namespace KeppyDriverConfigurator
                     hLSEnabledToolStripMenuItem.Enabled = true;
                     hLSDisabledToolStripMenuItem.Enabled = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("watchdog")) == 1)
+                if (Convert.ToInt32(Watchdog.GetValue("watchdog")) == 1)
                 {
                     soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
                     volumeHotkeysToolStripMenuItem.Enabled = true;
@@ -1717,7 +1717,7 @@ namespace KeppyDriverConfigurator
 
         private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("watchdog", "1", RegistryValueKind.DWord);
+            Watchdog.SetValue("watchdog", "1", RegistryValueKind.DWord);
             watchdogEnabledToolStripMenuItem.Checked = true;
             watchdogDisabledToolStripMenuItem.Checked = false;
             watchdogEnabledToolStripMenuItem.Enabled = false;
@@ -1726,7 +1726,7 @@ namespace KeppyDriverConfigurator
 
         private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("watchdog", "0", RegistryValueKind.DWord);
+            Watchdog.SetValue("watchdog", "0", RegistryValueKind.DWord);
             watchdogEnabledToolStripMenuItem.Checked = false;
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;
