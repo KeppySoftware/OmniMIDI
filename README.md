@@ -1,4 +1,4 @@
-# Keppy's Driver
+# Keppy's Driver: A MIDI driver for professional use
 
 [![Join the chat at https://gitter.im/KaleidonKep99/Keppy-s-Driver](https://badges.gitter.im/KaleidonKep99/Keppy-s-Driver.svg)](https://gitter.im/KaleidonKep99/Keppy-s-Driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A fork of the original [BASSMIDI Driver by Kode54] (https://github.com/kode54/BASSMIDI-Driver), with new functions.
@@ -10,6 +10,13 @@ I optimized this fork by doing these things:
 - Modifiable buffer size
 - Note off event and sound effects disabler settings
 - Better UI for the configurator
+
+## What do you mean by "for professional use"?
+Certain functions in this driver are not suited for newbies or for people that don't know how to use programs well.
+Changing one single driver function could break the entire audio stream, and if you're not an advanced user, you could have troubles on getting it working again.
+<br>
+My advice for such people is to download CoolSoft VirtualMIDISynth driver from there: [Click me] (http://coolsoft.altervista.org/en/virtualmidisynth)
+It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanoseconds. (Unlike mine)
 
 ## Required software
 You need this software installed before attempting to run the setup:
