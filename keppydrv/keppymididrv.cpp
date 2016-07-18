@@ -44,8 +44,8 @@ Keppy's Driver, a fork of BASSMIDI Driver
 
 #include "sound_out.h"
 
-#define MAX_DRIVERS 1024
-#define MAX_CLIENTS 1024 // Per driver
+#define MAX_DRIVERS 255
+#define MAX_CLIENTS 255 // Per driver
 
 struct Driver_Client {
 	int allocated;
@@ -488,13 +488,17 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 
 void DoStartClient() {
 	if (modm_closed == 1) {
-		RunWatchdog();
 		DWORD result;
 		unsigned int thrdaddr;
 		InitializeCriticalSection(&mim_section);
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-		load_sfevent = CreateEvent(NULL, TRUE, FALSE, TEXT("SoundFontEvent"));
+		load_sfevent = CreateEvent(
+			NULL,               // default security attributes
+			TRUE,               // manual-reset event
+			FALSE,              // initial state is nonsignaled
+			TEXT("SoundFontEvent")  // object name
+			);
 		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr);
 		SetPriorityClass(hCalcThread, REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(hCalcThread, THREAD_PRIORITY_TIME_CRITICAL);
@@ -504,6 +508,7 @@ void DoStartClient() {
 			CloseHandle(load_sfevent);
 		}
 		modm_closed = 0;
+		RunWatchdog();
 	}
 }
 
@@ -526,6 +531,7 @@ void DoStopClient() {
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
 	DeleteCriticalSection(&mim_section);
+	KillWatchdog();
 }
 
 void DoResetClient(UINT uDeviceID) {
@@ -562,9 +568,8 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	*dwUser = clientNum;
 	driver->clientCount++;
 	SetPriorityClass(GetCurrentProcess(), processPriority);
-	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 
-	RunWatchdog();
+	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 
 	return MMSYSERR_NOERROR;
 }
@@ -573,15 +578,6 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 	if (!driver->clients[dwUser].allocated) {
 		return MMSYSERR_INVALPARAM;
 	}
-
-	if (stop_thread != 0) return MIDIERR_STILLPLAYING;
-	--OpenCount;
-	if (OpenCount < 0){
-		OpenCount = 0;
-		return MMSYSERR_NOTENABLED;
-	}
-
-	KillWatchdog();
 
 	driver->clients[dwUser].allocated = 0;
 	driver->clientCount--;
