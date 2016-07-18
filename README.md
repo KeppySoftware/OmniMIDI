@@ -13,9 +13,11 @@ I optimized this fork by doing these things:
 
 ## What do you mean by "for professional use"?
 Certain functions in this driver are not suited for newbies or for people that don't know how to use programs well.
+<br>
 Changing one single driver function could break the entire audio stream, and if you're not an advanced user, you could have troubles on getting it working again.
 <br>
 My advice for such people is to download CoolSoft VirtualMIDISynth driver from there: [Click me] (http://coolsoft.altervista.org/en/virtualmidisynth)
+<br>
 It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanoseconds. (Unlike mine)
 
 ## Required software
