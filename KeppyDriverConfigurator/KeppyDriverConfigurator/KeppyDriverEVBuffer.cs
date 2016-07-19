@@ -84,7 +84,18 @@ namespace KeppyDriverConfigurator
             {
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
                 int potato = Convert.ToInt32(Settings.GetValue("newevbuffvalue", 16384));
-                numericUpDown1.Value = potato;
+                if (potato > 32768)
+                {
+                    numericUpDown1.Value = 32768;
+                }
+                else if (potato < 1)
+                {
+                    numericUpDown1.Value = 1;
+                }
+                else
+                {
+                    numericUpDown1.Value = potato;
+                }
             }
             catch (Exception ex)
             {

@@ -21,6 +21,7 @@ void RunWatchdog()
 			PathAppend(watchdog, _T("\\keppydrv\\KeppyDriverWatchdog.exe"));
 			ShellExecute(NULL, L"open", watchdog, NULL, NULL, SW_SHOWNORMAL);
 		}
+		RegCloseKey(hKey);
 	}
 	catch (int e)
 	{
@@ -45,7 +46,7 @@ void KillWatchdog()
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 		RegSetValueEx(hKey, L"closewatchdog", 0, dwType, (LPBYTE)&one, sizeof(one));
 		RegSetValueEx(hKey, L"wdrun", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-
+		RegCloseKey(hKey);
 		while (hRes)
 		{
 			if (wcscmp(pEntry.szExeFile, L"KeppyDriverWatchdog.exe") == 0)

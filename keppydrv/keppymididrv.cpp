@@ -398,6 +398,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 							PathAppend(encpath, CString(poop));
 							PathAppend(encpath, result2);
 						}
+						RegCloseKey(hKey);
 						_bstr_t b(encpath);
 						const char* c = b;
 						const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Driver", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);

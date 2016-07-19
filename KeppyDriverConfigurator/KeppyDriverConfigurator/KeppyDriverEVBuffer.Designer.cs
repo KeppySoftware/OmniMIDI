@@ -86,7 +86,7 @@
             this.numericUpDown1.TabIndex = 8;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericUpDown1.Value = new decimal(new int[] {
-            524288,
+            32768,
             0,
             0,
             0});
@@ -94,11 +94,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(143, 76);
+            this.label2.Location = new System.Drawing.Point(149, 76);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(132, 13);
+            this.label2.Size = new System.Drawing.Size(126, 13);
             this.label2.TabIndex = 9;
-            this.label2.Text = "EV buffer size (1-524288): ";
+            this.label2.Text = "EV buffer size (1-32768): ";
             // 
             // KeppyDriverEVBuffer
             // 

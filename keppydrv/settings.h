@@ -55,7 +55,7 @@ struct evbuf_t{
 	unsigned char *sysexbuffer;
 };
 
-static struct evbuf_t evbuf[524288];
+static struct evbuf_t evbuf[32768];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
 static UINT evbsysexpoint;
@@ -211,7 +211,6 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		RegQueryValueEx(hKey, L"newevbuffvalue", NULL, &dwType, (LPBYTE)&newevbuffvalue, &dwSize);
 		RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
@@ -234,7 +233,6 @@ void realtime_load_settings()
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-		memset(evbuf, newevbuffvalue, sizeof(newevbuffvalue));
 		if (noteoff1) {
 			BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
 		}
@@ -305,6 +303,7 @@ void LoadSoundfont(DWORD whichsf){
 			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&number, sizeof(number));
 			RegCloseKey(hKey);
 		}
+		RegCloseKey(hKey);
 		LoadFonts(0, config);
 		BASS_MIDI_StreamLoadSamples(hStream);
 	}
@@ -382,6 +381,7 @@ int AreEffectsDisabled(){
 	DWORD dwSize = sizeof(DWORD);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
+	RegCloseKey(hKey);
 	return nofx;
 }
 
@@ -392,6 +392,7 @@ int IsNoteOff1TurnedOn(){
 	DWORD dwSize = sizeof(DWORD);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegCloseKey(hKey);
 	return noteoff1;
 }
 
@@ -563,6 +564,7 @@ void mixervoid() {
 				tch16 = ch16;
 			}
 		}
+		RegCloseKey(hKey);
 	}
 	catch (int e) {
 		crashhandler(e);
@@ -608,6 +610,7 @@ void Volume(char* UpOrDown) {
 				RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&tempvolume, sizeof(tempvolume));
 			}
 		}
+		RegCloseKey(hKey);
 	}
 	catch (int e) {
 		crashhandler(e);
