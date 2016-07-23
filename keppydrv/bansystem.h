@@ -17,8 +17,8 @@ BOOL ProcessBlackList(){
 	PathStripPath(modulename);
 	try {
 		if (PathFileExists(vmidisynthpath)) {
-			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nWhy this? Well, VirtualMIDISynth 1.x causes a DLL Hell while loading the BASS libraries, that's why you need to uninstall it before using my driver.\n\nYou can still use VirtualMIDISynth 2.x, since it doesn't load the DLLs directly into the MIDI application.", L"Keppy's Driver", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			return 0x0;
+			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress OK to quit.", L"Keppy's Driver", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			exit(0);
 		}
 		else {
 			if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
@@ -39,7 +39,7 @@ BOOL ProcessBlackList(){
 					exit(0);
 				}
 			}
-			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, userblacklistdirectory))) {
+			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
 				PathAppend(userblacklistdirectory, _T("\\Keppy's Driver\\blacklist\\keppymididrv.blacklist"));
 				std::wifstream file(userblacklistdirectory);
 				OutputDebugString(userblacklistdirectory);

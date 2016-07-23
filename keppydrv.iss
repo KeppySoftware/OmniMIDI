@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.4.1.7
+AppVersion=3.4.1.8
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=Keppy Studios
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Driver
-VersionInfoProductTextVersion=3.4.1.7
+VersionInfoProductTextVersion=3.4.1.8
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=3.4.1.7
+VersionInfoVersion=3.4.1.8
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -82,11 +82,11 @@ Name: "{sys}\keppydrv"; Attribs: system; Check: not Is64BitInstallMode
 [Icons]
 ; 64-bit OS
 Name: "{group}\Configure Keppy's Driver"; Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
-Name: "{group}\Change advanced settings"; Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Parameters: "-advancedtab"; WorkingDir: "{app}"; Check: Is64BitInstallMode
+Name: "{group}\Change advanced settings"; Filename: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Parameters: "/AT"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{syswow64}\keppydrv\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 ; 32-bit OS
 Name: "{group}\Configure Keppy's Driver"; Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
-Name: "{group}\Change advanced settings"; Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Parameters: "-advancedtab"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
+Name: "{group}\Change advanced settings"; Filename: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Parameters: "/AT"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\keppydrv\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode   
 ; Generic for all the OSes
 Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"

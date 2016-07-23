@@ -2,6 +2,8 @@
 Keppy's Driver settings loading system
 */
 
+
+
 // Channels volume
 static int ch1 = 16383;
 static int ch2 = 16383;
@@ -74,6 +76,107 @@ void DLLLoadError(LPCWSTR dll) {
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
 	MessageBox(NULL, errormessage, L"Keppy's Driver - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
+}
+
+
+BOOL IsRunningXP(){
+	if (xaudiodisabled == 1)
+		return TRUE;
+	return FALSE;
+}
+
+int AreEffectsDisabled(){
+	long lResult;
+	HKEY hKey;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
+	RegCloseKey(hKey);
+	return nofx;
+}
+
+int IsNoteOff1TurnedOn(){
+	long lResult;
+	HKEY hKey;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
+	RegCloseKey(hKey);
+	return noteoff1;
+}
+
+int IgnoreSystemReset()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
+	RegCloseKey(hKey);
+	return sysresetignore;
+}
+
+int check_sinc()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+	RegCloseKey(hKey);
+	return sinc;
+}
+
+void LoadSoundfont(int whichsf){
+	try {
+		TCHAR config[MAX_PATH];
+		BASS_MIDI_FONT * mf;
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		FreeFonts(0);
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
+		{
+			if (whichsf == 1) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidi.sflist"));
+			}
+			else if (whichsf == 2) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidib.sflist"));
+			}
+			else if (whichsf == 3) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidic.sflist"));
+			}
+			else if (whichsf == 4) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidid.sflist"));
+			}
+			else if (whichsf == 5) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidie.sflist"));
+			}
+			else if (whichsf == 6) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidif.sflist"));
+			}
+			else if (whichsf == 7) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidig.sflist"));
+			}
+			else if (whichsf == 8) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
+			}
+			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+			RegCloseKey(hKey);
+		}
+		RegCloseKey(hKey);
+		LoadFonts(0, config);
+		BASS_MIDI_StreamLoadSamples(hStream);
+	}
+	catch (int e) {
+		crashhandler(e);
+	}
 }
 
 BOOL load_bassfuncs()
@@ -185,6 +288,8 @@ void load_settings()
 		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
 		RegCloseKey(hKey);
 
+		frequencynew = frequency;
+
 		sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
 		memset(evbuf, newevbuffvalue, sizeof(newevbuffvalue));
 
@@ -230,6 +335,7 @@ void realtime_load_settings()
 		//another cake
 		int maxmidivoices = static_cast <int> (midivoices);
 		float trackslimit = static_cast <int> (tracks);
+		BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
@@ -257,55 +363,6 @@ void realtime_load_settings()
 		else {
 			BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
 		}
-	}
-	catch (int e) {
-		crashhandler(e);
-	}
-}
-
-void LoadSoundfont(DWORD whichsf){
-	try {
-		TCHAR config[MAX_PATH];
-		BASS_MIDI_FONT * mf;
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
-		int number = whichsf;
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-		FreeFonts(0);
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
-		{
-			if (whichsf == 1) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidi.sflist"));
-			}
-			else if (whichsf == 2) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidib.sflist"));
-			}
-			else if (whichsf == 3) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidic.sflist"));
-			}
-			else if (whichsf == 4) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidid.sflist"));
-			}
-			else if (whichsf == 5) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidie.sflist"));
-			}
-			else if (whichsf == 6) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidif.sflist"));
-			}
-			else if (whichsf == 7) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidig.sflist"));
-			}
-			else if (whichsf == 8) {
-				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
-			}
-			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&number, sizeof(number));
-			RegCloseKey(hKey);
-		}
-		RegCloseKey(hKey);
-		LoadFonts(0, config);
-		BASS_MIDI_StreamLoadSamples(hStream);
 	}
 	catch (int e) {
 		crashhandler(e);
@@ -366,58 +423,6 @@ void WatchdogCheck()
 	catch (int e) {
 		crashhandler(e);
 	}
-}
-
-BOOL IsRunningXP(){
-	if (xaudiodisabled == 1)
-		return TRUE;
-	return FALSE;
-}
-
-int AreEffectsDisabled(){
-	long lResult;
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
-	RegCloseKey(hKey);
-	return nofx;
-}
-
-int IsNoteOff1TurnedOn(){
-	long lResult;
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegCloseKey(hKey);
-	return noteoff1;
-}
-
-int IgnoreSystemReset()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
-	RegCloseKey(hKey);
-	return sysresetignore;
-}
-
-int check_sinc()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-	RegCloseKey(hKey);
-	return sinc;
 }
 
 void debug_info() {
@@ -686,19 +691,23 @@ void keybindings()
 			}
 			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
 				TCHAR configuratorapp[MAX_PATH];
+				BOOL run = TRUE;
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 				{
 					PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
 					ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
+					Sleep(10);
 					return;
 				}
 			}
 			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x30) & 0x8000) {
 				TCHAR configuratorapp[MAX_PATH];
+				BOOL run = TRUE;
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 				{
 					PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
 					ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
+					Sleep(10);
 					return;
 				}
 			}

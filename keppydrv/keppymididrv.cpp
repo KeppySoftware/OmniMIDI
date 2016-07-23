@@ -83,10 +83,12 @@ static int sound_out_volume_int = 0x1000;
 // Variables
 static float *sndbf;
 static int allhotkeys = 1; // Enable/Disable all the hotkeys
+static int bassoutputfinal = 0; // DO NOT TOUCH
 static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
 static int frames = 0; // Default
 static int frequency = 0; // Audio frequency
+static int frequencynew = 0; // Audio frequency
 static int maxcpu = 0; // CPU usage INT
 static int midivoices = 0; // Max voices INT
 static int midivolumeoverride = 0; // MIDI track volume override
@@ -111,20 +113,7 @@ static int decoded;
 
 static sound_out * sound_driver = NULL;
 
-static HINSTANCE bass = 0;			// bass handle
-static HINSTANCE bassmidi = 0;			// bassmidi handle
-static HINSTANCE bassenc = 0;			// bassmidi handle
-
 static HINSTANCE hinst = NULL;             //main DLL handle
-
-// Keppy's Driver vital parts
-#include "watchdog.h"
-#include "sfsystem.h"
-#include "settings.h"
-#include "bufsystem.h"
-#include "bansystem.h"
-
-static void DoStopClient();
 
 class message_window
 {
@@ -158,6 +147,21 @@ public:
 };
 
 message_window * g_msgwnd = NULL;
+
+static HINSTANCE bass = 0;			// bass handle
+static HINSTANCE bassmidi = 0;			// bassmidi handle
+static HINSTANCE bassenc = 0;			// bassmidi handle
+
+
+
+// Keppy's Driver vital parts
+#include "watchdog.h"
+#include "sfsystem.h"
+#include "settings.h"
+#include "bufsystem.h"
+#include "bansystem.h"
+
+static void DoStopClient();
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 
@@ -325,7 +329,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		}
 		else {
 			unsigned i;
-			int bassoutputfinal = 0;
 			int opend = 0;
 			BASS_MIDI_FONT * mf;
 			BASS_INFO info;
@@ -356,10 +359,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					if (bassoutputfinal == -1) {
 						BASS_GetInfo(&info);
 						if (vmsemu == 1) {
-							BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10 + frames); // default buffer size = 'minbuf' + additional buffer size
+							BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 11 + frames); // default buffer size = 'minbuf' + additional buffer size
 						}
 						else {
-							BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 10 + 1); // default buffer size
+							BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + 11); // default buffer size
 						}
 						hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), 0);
 						BASS_ChannelPlay(hStream, false);
@@ -420,6 +423,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					// Cake.
 					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
