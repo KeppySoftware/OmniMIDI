@@ -20,8 +20,8 @@ int bmsyn_play_some_data(void){
 	int exlen;
 	unsigned char *sysexbuffer;
 	int played;
-
 	played = 0;
+
 	if (!bmsyn_buf_check()){
 		played = ~0;
 		return played;
@@ -29,8 +29,12 @@ int bmsyn_play_some_data(void){
 	do{
 		EnterCriticalSection(&mim_section);
 		evbpoint = evbrpoint;
-		if (++evbrpoint >= newevbuffvalue)
-			evbrpoint -= newevbuffvalue;
+
+		if (++evbrpoint >= newevbuffvalue) {
+			evbrpoint = 0;
+			LeaveCriticalSection(&mim_section);
+			return played;
+		}
 
 		uDeviceID = evbuf[evbpoint].uDeviceID;
 		uMsg = evbuf[evbpoint].uMsg;
@@ -58,8 +62,11 @@ int bmsyn_play_some_data(void){
 bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
 	EnterCriticalSection(&mim_section);
 	evbpoint = evbwpoint;
-	if (++evbwpoint >= newevbuffvalue)
-		evbwpoint -= newevbuffvalue;
+	if (++evbwpoint >= newevbuffvalue) {
+		evbwpoint = 0;
+		LeaveCriticalSection(&mim_section);
+		return MMSYSERR_NOERROR;
+	}
 	evbuf[evbpoint].uDeviceID = uDeviceID;
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;

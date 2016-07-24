@@ -60,6 +60,7 @@ struct evbuf_t{
 static struct evbuf_t evbuf[32768];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
+static volatile LONG evbcount = 0;
 static UINT evbsysexpoint;
 
 void crashhandler(int e) {
@@ -220,6 +221,7 @@ BOOL load_bassfuncs()
 	LOADBASSFUNCTION(BASS_ChannelGetData);
 	LOADBASSFUNCTION(BASS_ChannelGetLevel);
 	LOADBASSFUNCTION(BASS_ChannelPlay);
+	LOADBASSFUNCTION(BASS_ChannelStop);
 	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
 	LOADBASSFUNCTION(BASS_ChannelSetAttribute);
 	LOADBASSFUNCTION(BASS_ChannelSetFX);
@@ -628,6 +630,12 @@ void ResetSynth(){
 
 void ReloadSFList(DWORD whichsflist){
 	try {
+		if (xaudiodisabled == 1) {
+			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, 0.0f / 10000.0f);
+		}
+		else {
+			sound_out_volume_float = 0.0f / 10000.0f;
+		}
 		std::wstringstream ss;
 		ss << "Do you want to (re)load list n°" << whichsflist << "?";
 		std::wstring s = ss.str();
@@ -646,6 +654,12 @@ void ReloadSFList(DWORD whichsflist){
 			case IDNO:
 				break;
 			}
+		}
+		if (xaudiodisabled == 1) {
+			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
+		}
+		else {
+			sound_out_volume_float = (float)volume / 10000.0f;
 		}
 	}
 	catch (int e) {
