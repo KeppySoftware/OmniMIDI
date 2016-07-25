@@ -48,8 +48,11 @@ static int rel6 = 0;
 static int rel7 = 0;
 static int rel8 = 0;
 
+// Other
+static int buffull = 0;
+
 struct evbuf_t{
-	UINT uDeviceID;
+	UINT   uDeviceID;
 	UINT   uMsg;
 	DWORD_PTR	dwParam1;
 	DWORD_PTR	dwParam2;
@@ -454,6 +457,7 @@ void debug_info() {
 		// Things
 		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
+		RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&buffull, sizeof(buffull));
 
 		// OTHER THINGS
 		RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&decoded, sizeof(decoded));

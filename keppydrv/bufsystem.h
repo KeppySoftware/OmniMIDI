@@ -20,7 +20,10 @@ int bmsyn_play_some_data(void){
 	int exlen;
 	unsigned char *sysexbuffer;
 	int played;
+	int buffullno;
+	int buffullye;
 	played = 0;
+	buffull = 0;
 
 	if (!bmsyn_buf_check()){
 		played = ~0;
@@ -31,7 +34,8 @@ int bmsyn_play_some_data(void){
 		evbpoint = evbrpoint;
 
 		if (++evbrpoint >= newevbuffvalue) {
-			evbrpoint = 0;
+			evbrpoint -= newevbuffvalue;
+			buffull = 1;
 			LeaveCriticalSection(&mim_section);
 			return played;
 		}
@@ -63,7 +67,7 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 	EnterCriticalSection(&mim_section);
 	evbpoint = evbwpoint;
 	if (++evbwpoint >= newevbuffvalue) {
-		evbwpoint = 0;
+		evbwpoint -= newevbuffvalue;
 		LeaveCriticalSection(&mim_section);
 		return MMSYSERR_NOERROR;
 	}
@@ -107,13 +111,17 @@ void AudioRender(int bassoutput) {
 				if (decoded < 0) {
 
 				}
+				if (evbrpoint >= newevbuffvalue | evbwpoint >= newevbuffvalue) {
+					for (unsigned i = 0, j = 0.0f / sizeof(float); i < j; i++) {
+						sndbf[i] *= sound_out_volume_float;
+					}
+					sound_driver->write_frame(sndbf, 0.0f / sizeof(float), true);
+				}
 				else {
 					for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-						float sample = sndbf[i];
-						sample *= sound_out_volume_float;
-						sndbf[i] = sample;
+						sndbf[i] *= sound_out_volume_float;
 					}
-					sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
+					sound_driver->write_frame(sndbf, decoded / sizeof(float), true);
 				}
 			}
 		}

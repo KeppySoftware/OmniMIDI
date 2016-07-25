@@ -45,23 +45,24 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.Info.SuspendLayout();
             this.SupForm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // Button1
             // 
             this.Button1.AutoSize = true;
             this.Button1.BackColor = System.Drawing.Color.Transparent;
-            this.Button1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.Button1.ForeColor = System.Drawing.Color.Black;
-            this.Button1.Location = new System.Drawing.Point(0, 306);
+            this.Button1.Location = new System.Drawing.Point(541, 307);
             this.Button1.Name = "Button1";
-            this.Button1.Size = new System.Drawing.Size(621, 29);
+            this.Button1.Size = new System.Drawing.Size(75, 23);
             this.Button1.TabIndex = 25;
             this.Button1.Text = "Okay";
             this.Button1.UseVisualStyleBackColor = false;
@@ -231,11 +232,24 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Supported formats:";
             // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox4.Image = global::KeppyDriverConfigurator.Properties.Resources.donatebtn;
+            this.pictureBox4.Location = new System.Drawing.Point(2, 306);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(142, 27);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox4.TabIndex = 27;
+            this.pictureBox4.TabStop = false;
+            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
+            // 
             // KeppyDriverInformation
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(621, 335);
+            this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.Button1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -256,6 +270,7 @@
             this.SupForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,5 +294,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox4;
     }
 }

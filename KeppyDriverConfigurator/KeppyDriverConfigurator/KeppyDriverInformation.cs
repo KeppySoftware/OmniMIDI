@@ -31,5 +31,25 @@ namespace KeppyDriverConfigurator
         {
             Process.Start("http://www.un4seen.com/forum/?board=1.0");
         }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            string url = "";
+
+            string business = "prapapappo1999@gmail.com";
+            string description = "Donation";
+            string country = "US";
+            string currency = "USD";
+
+            url += "https://www.paypal.com/cgi-bin/webscr" +
+                "?cmd=" + "_donations" +
+                "&business=" + business +
+                "&lc=" + country +
+                "&item_name=" + description +
+                "&currency_code=" + currency +
+                "&bn=" + "PP%2dDonationsBF";
+
+            Process.Start(url);
+        }
     }
 }

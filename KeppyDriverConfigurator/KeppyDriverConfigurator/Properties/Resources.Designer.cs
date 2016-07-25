@@ -71,6 +71,16 @@ namespace KeppyDriverConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap donatebtn {
+            get {
+                object obj = ResourceManager.GetObject("donatebtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a The bank ID is 0.
         ///For the presets, here&apos;s the list:
         ///

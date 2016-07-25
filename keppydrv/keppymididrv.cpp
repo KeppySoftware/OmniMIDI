@@ -44,8 +44,8 @@ Keppy's Driver, a fork of BASSMIDI Driver
 
 #include "sound_out.h"
 
-#define MAX_DRIVERS 255
-#define MAX_CLIENTS 255 // Per driver
+#define MAX_DRIVERS 256
+#define MAX_CLIENTS 256 // Per driver
 
 struct Driver_Client {
 	int allocated;
@@ -526,6 +526,7 @@ void DoStopClient() {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Driver", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
 	RegCloseKey(hKey);
 	if (modm_closed == 0){
