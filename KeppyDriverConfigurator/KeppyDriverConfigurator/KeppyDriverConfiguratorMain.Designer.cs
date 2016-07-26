@@ -1581,20 +1581,22 @@
             // 
             // Label4
             // 
+            this.Label4.AutoSize = true;
             this.Label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label4.Location = new System.Drawing.Point(4, 79);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(579, 13);
+            this.Label4.Size = new System.Drawing.Size(528, 13);
             this.Label4.TabIndex = 26;
             this.Label4.Text = "Set the channels the driver is allowed to use (Different values from 16 will set " +
     "the drums channel to melodic):";
             // 
             // BufferText
             // 
+            this.BufferText.AutoSize = true;
             this.BufferText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BufferText.Location = new System.Drawing.Point(4, 56);
             this.BufferText.Name = "BufferText";
-            this.BufferText.Size = new System.Drawing.Size(561, 13);
+            this.BufferText.Size = new System.Drawing.Size(291, 13);
             this.BufferText.TabIndex = 23;
             this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
             // 
@@ -1648,10 +1650,11 @@
             // 
             // Label6
             // 
+            this.Label6.AutoSize = true;
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label6.Location = new System.Drawing.Point(6, 133);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(580, 13);
+            this.Label6.Size = new System.Drawing.Size(229, 13);
             this.Label6.TabIndex = 24;
             this.Label6.Text = "Set the audio frequency for the driver output:";
             // 
@@ -1687,10 +1690,11 @@
             // 
             // Label5
             // 
+            this.Label5.AutoSize = true;
             this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label5.Location = new System.Drawing.Point(6, 108);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(579, 13);
+            this.Label5.Size = new System.Drawing.Size(423, 13);
             this.Label5.TabIndex = 22;
             this.Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:";
             // 
@@ -1807,10 +1811,11 @@
             // 
             // Label3
             // 
+            this.Label3.AutoSize = true;
             this.Label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label3.Location = new System.Drawing.Point(6, 82);
             this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(561, 13);
+            this.Label3.Size = new System.Drawing.Size(240, 13);
             this.Label3.TabIndex = 20;
             this.Label3.Text = "Set the voice limit for the driver, from 1 to 9999:";
             // 
@@ -1856,10 +1861,9 @@
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Preload.Location = new System.Drawing.Point(8, 17);
             this.Preload.Name = "Preload";
-            this.Preload.Size = new System.Drawing.Size(633, 17);
+            this.Preload.Size = new System.Drawing.Size(410, 17);
             this.Preload.TabIndex = 2;
-            this.Preload.Text = "Enable soundfont preload. (Turn on or off the preloading soundfont system, useful" +
-    " with systems that have limited RAM resources.)";
+            this.Preload.Text = "Enable soundfont preload. (Useful with systems that have limited RAM resources.)";
             this.Preload.UseVisualStyleBackColor = true;
             // 
             // NoteOffCheck
