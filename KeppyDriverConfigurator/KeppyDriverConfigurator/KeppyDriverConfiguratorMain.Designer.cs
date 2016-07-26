@@ -182,6 +182,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -219,7 +220,6 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -2082,6 +2082,13 @@
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
             // 
+            // changeTheSizeOfTheEVBufferToolStripMenuItem
+            // 
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Name = "changeTheSizeOfTheEVBufferToolStripMenuItem";
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
+            // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Name = "changeDirectoryOfTheOutputToWAVModeToolStripMenuItem";
@@ -2357,16 +2364,10 @@
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
             // 
-            // changeTheSizeOfTheEVBufferToolStripMenuItem
-            // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Name = "changeTheSizeOfTheEVBufferToolStripMenuItem";
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
-            // 
             // KeppyDriverConfiguratorMain
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(685, 449);
             this.Controls.Add(this.TabsForTheControls);
