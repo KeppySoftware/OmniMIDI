@@ -182,10 +182,15 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysAndListSwitchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hLSEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -220,6 +225,7 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
+            this.killTheWatchdogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -2076,43 +2082,80 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem,
+            this.killTheWatchdogToolStripMenuItem,
+            this.toolStripSeparator7,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.toolStripSeparator6,
             this.hotkeysToolStripMenuItem,
             this.watchdogToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.settingsToolStripMenuItem.Text = "Advanced settings";
             // 
+            // checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem
+            // 
+            this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkEnabledToolStripMenuItem,
+            this.checkDisabledToolStripMenuItem});
+            this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem.Name = "checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem";
+            this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem.Text = "Automatically check for updates when starting the configurator";
+            // 
+            // checkEnabledToolStripMenuItem
+            // 
+            this.checkEnabledToolStripMenuItem.Name = "checkEnabledToolStripMenuItem";
+            this.checkEnabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.checkEnabledToolStripMenuItem.Text = "Enabled";
+            this.checkEnabledToolStripMenuItem.Click += new System.EventHandler(this.checkEnabledToolStripMenuItem_Click);
+            // 
+            // checkDisabledToolStripMenuItem
+            // 
+            this.checkDisabledToolStripMenuItem.Name = "checkDisabledToolStripMenuItem";
+            this.checkDisabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.checkDisabledToolStripMenuItem.Text = "Disabled";
+            this.checkDisabledToolStripMenuItem.Click += new System.EventHandler(this.checkDisabledToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(406, 6);
+            // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Name = "changeTheSizeOfTheEVBufferToolStripMenuItem";
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Name = "changeDirectoryOfTheOutputToWAVModeToolStripMenuItem";
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Name = "changeTheMaximumSamplesPerFrameToolStripMenuItem";
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
             this.changeDefaultSoundfontListToolStripMenuItem1.Name = "changeDefaultSoundfontListToolStripMenuItem1";
-            this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(326, 22);
+            this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(409, 22);
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(406, 6);
             // 
             // hotkeysToolStripMenuItem
             // 
@@ -2122,7 +2165,7 @@
             this.soundfontListChangeConfirmationDialogToolStripMenuItem,
             this.volumeHotkeysToolStripMenuItem});
             this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
-            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
             this.hotkeysToolStripMenuItem.Text = "Hotkeys";
             // 
             // hotkeysAndListSwitchingToolStripMenuItem
@@ -2205,7 +2248,7 @@
             this.watchdogEnabledToolStripMenuItem,
             this.watchdogDisabledToolStripMenuItem});
             this.watchdogToolStripMenuItem.Name = "watchdogToolStripMenuItem";
-            this.watchdogToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
+            this.watchdogToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
             this.watchdogToolStripMenuItem.Text = "Watchdog";
             // 
             // watchdogEnabledToolStripMenuItem
@@ -2367,6 +2410,13 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
+            // 
+            // killTheWatchdogToolStripMenuItem
+            // 
+            this.killTheWatchdogToolStripMenuItem.Name = "killTheWatchdogToolStripMenuItem";
+            this.killTheWatchdogToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
+            this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2625,6 +2675,12 @@
         private System.Windows.Forms.ToolStripMenuItem watchdogDisabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToSupportUsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkEnabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkDisabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem killTheWatchdogToolStripMenuItem;
     }
 }
 

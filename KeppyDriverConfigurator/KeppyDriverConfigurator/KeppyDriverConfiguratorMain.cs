@@ -704,6 +704,7 @@ namespace KeppyDriverConfigurator
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
             }
 
             if (Environment.Is64BitOperatingSystem == false)
@@ -764,6 +765,20 @@ namespace KeppyDriverConfigurator
                     enabledToolStripMenuItem1.Enabled = true;
                     disabledToolStripMenuItem1.Checked = true;
                     disabledToolStripMenuItem1.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
+                {
+                    checkEnabledToolStripMenuItem.Checked = true;
+                    checkDisabledToolStripMenuItem.Checked = false;
+                    checkEnabledToolStripMenuItem.Enabled = false;
+                    checkDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    checkEnabledToolStripMenuItem.Checked = false;
+                    checkDisabledToolStripMenuItem.Checked = true;
+                    checkEnabledToolStripMenuItem.Enabled = true;
+                    checkDisabledToolStripMenuItem.Enabled = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys")) == 1)
                 {
@@ -1746,6 +1761,30 @@ namespace KeppyDriverConfigurator
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;
             watchdogDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void checkEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("autoupdatecheck", "1", RegistryValueKind.DWord);
+            checkEnabledToolStripMenuItem.Checked = true;
+            checkDisabledToolStripMenuItem.Checked = false;
+            checkEnabledToolStripMenuItem.Enabled = false;
+            checkDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void checkDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
+            checkEnabledToolStripMenuItem.Checked = false;
+            checkDisabledToolStripMenuItem.Checked = true;
+            checkEnabledToolStripMenuItem.Enabled = true;
+            checkDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void killTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("closewatchdog", "1", RegistryValueKind.DWord);
+            Watchdog.SetValue("wdrun", "0", RegistryValueKind.DWord);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
