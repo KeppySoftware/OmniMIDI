@@ -325,6 +325,7 @@ bool LoadSoundfontStartup() {
 			}
 		}
 	}
+	return FALSE;
 }
 
 BOOL load_bassfuncs()
