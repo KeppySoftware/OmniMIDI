@@ -185,6 +185,7 @@
             this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.killTheWatchdogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -225,7 +226,6 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.killTheWatchdogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -1580,7 +1580,7 @@
             this.TracksLimit.Size = new System.Drawing.Size(64, 21);
             this.TracksLimit.TabIndex = 11;
             this.TracksLimit.Value = new decimal(new int[] {
-            10,
+            16,
             0,
             0,
             0});
@@ -1631,7 +1631,7 @@
             this.bufsize.TabIndex = 10;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.bufsize.Value = new decimal(new int[] {
-            100,
+            20,
             0,
             0,
             0});
@@ -1692,7 +1692,7 @@
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 7;
-            this.Frequency.Text = "192000";
+            this.Frequency.Text = "44100";
             // 
             // Label5
             // 
@@ -1706,8 +1706,11 @@
             // 
             // MaxCPU
             // 
+            this.MaxCPU.DropDownHeight = 150;
             this.MaxCPU.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MaxCPU.DropDownWidth = 64;
             this.MaxCPU.FormattingEnabled = true;
+            this.MaxCPU.IntegralHeight = false;
             this.MaxCPU.Items.AddRange(new object[] {
             "Disabled",
             "100",
@@ -1821,15 +1824,15 @@
             this.Label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label3.Location = new System.Drawing.Point(6, 82);
             this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(240, 13);
+            this.Label3.Size = new System.Drawing.Size(252, 13);
             this.Label3.TabIndex = 20;
-            this.Label3.Text = "Set the voice limit for the driver, from 1 to 9999:";
+            this.Label3.Text = "Set the voice limit for the driver, from 1 to 100000:";
             // 
             // PolyphonyLimit
             // 
             this.PolyphonyLimit.Location = new System.Drawing.Point(588, 80);
             this.PolyphonyLimit.Maximum = new decimal(new int[] {
-            9999,
+            100000,
             0,
             0,
             0});
@@ -2118,6 +2121,13 @@
             this.checkDisabledToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.checkDisabledToolStripMenuItem.Text = "Disabled";
             this.checkDisabledToolStripMenuItem.Click += new System.EventHandler(this.checkDisabledToolStripMenuItem_Click);
+            // 
+            // killTheWatchdogToolStripMenuItem
+            // 
+            this.killTheWatchdogToolStripMenuItem.Name = "killTheWatchdogToolStripMenuItem";
+            this.killTheWatchdogToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
+            this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -2410,13 +2420,6 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
-            // 
-            // killTheWatchdogToolStripMenuItem
-            // 
-            this.killTheWatchdogToolStripMenuItem.Name = "killTheWatchdogToolStripMenuItem";
-            this.killTheWatchdogToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
-            this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
-            this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 

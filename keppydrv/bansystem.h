@@ -65,29 +65,26 @@ BOOL ProcessBlackList(){
 
 BOOL BannedSystemProcess() {
 	// These processes are PERMANENTLY banned because of some internal bugs inside them.
-	TCHAR modulename[MAX_PATH];
 	TCHAR bannedconsent[MAX_PATH];
-	TCHAR bannedexplorer[MAX_PATH];
 	TCHAR bannedcsrss[MAX_PATH];
+	TCHAR bannedexplorer[MAX_PATH];
 	TCHAR bannedscratch[MAX_PATH];
-	TCHAR banneddiscord[MAX_PATH];
-	TCHAR banneddiscordptb[MAX_PATH];
+	TCHAR bannedshare[MAX_PATH];
+	TCHAR modulename[MAX_PATH];
 
 	_tcscpy_s(bannedconsent, _countof(bannedconsent), _T("consent.exe"));
-	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
 	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
+	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
 	_tcscpy_s(bannedscratch, _countof(bannedscratch), _T("scratch.exe"));
-	_tcscpy_s(banneddiscord, _countof(banneddiscord), _T("discord.exe"));
-	_tcscpy_s(banneddiscordptb, _countof(banneddiscordptb), _T("discordptb.exe"));
+	_tcscpy_s(bannedshare, _countof(bannedshare), _T("NVIDIA Share.exe"));
 
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
 	if (!_tcsicmp(modulename, bannedconsent) | 
 		!_tcsicmp(modulename, bannedexplorer) | 
 		!_tcsicmp(modulename, bannedcsrss) |
-		!_tcsicmp(modulename, bannedscratch) |
-		!_tcsicmp(modulename, banneddiscord) |
-		!_tcsicmp(modulename, banneddiscordptb)) {
+		!_tcsicmp(modulename, bannedscratch) | 
+		!_tcsicmp(modulename, bannedshare)) {
 		return TRUE;
 		// It's a blacklisted process, so it can NOT create a BASS audio stream.
 	}

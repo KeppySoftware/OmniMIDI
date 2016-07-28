@@ -1783,6 +1783,17 @@ namespace KeppyDriverConfigurator
 
         private void killTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("KeppyDriverWatchdog"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             Watchdog.SetValue("closewatchdog", "1", RegistryValueKind.DWord);
             Watchdog.SetValue("wdrun", "0", RegistryValueKind.DWord);
         }
