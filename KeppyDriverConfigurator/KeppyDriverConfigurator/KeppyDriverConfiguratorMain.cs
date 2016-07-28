@@ -21,6 +21,7 @@ namespace KeppyDriverConfigurator
         public string List6PathOld { get; set; }
         public string List7PathOld { get; set; }
         public string List8PathOld { get; set; }
+
         public string List1Path { get; set; }
         public string List2Path { get; set; }
         public string List3Path { get; set; }
@@ -30,7 +31,9 @@ namespace KeppyDriverConfigurator
         public string List7Path { get; set; }
         public string List8Path { get; set; }
         public int openadvanced { get; set; }
+
         public int istheconfiguratorready { get; set; }
+
         public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
         public RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
 
