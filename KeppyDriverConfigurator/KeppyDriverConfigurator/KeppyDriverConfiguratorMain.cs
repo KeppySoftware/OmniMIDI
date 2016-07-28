@@ -1686,6 +1686,18 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void assignSoundfontListToAppToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverSFListAssign frm = new KeppyDriverSFListAssign();
+            frm.ShowDialog();
+        }
+
+        private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverSFListAssign frm = new KeppyDriverSFListAssign();
+            frm.ShowDialog();
+        }
+
         private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);

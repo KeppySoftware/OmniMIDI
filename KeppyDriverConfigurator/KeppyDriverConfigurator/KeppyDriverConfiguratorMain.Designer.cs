@@ -191,6 +191,7 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.assignASoundfontListToASpecificAppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysAndListSwitchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -226,6 +227,7 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExportList = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
+            this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List1.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -1941,6 +1943,7 @@
             this.applySettingsToolStripMenuItem,
             this.resetToDefaultToolStripMenuItem,
             this.settingsPresetsToolStripMenuItem,
+            this.assignSoundfontListToAppToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 368);
             this.menuStrip1.Name = "menuStrip1";
@@ -2092,6 +2095,7 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.assignASoundfontListToASpecificAppToolStripMenuItem,
             this.toolStripSeparator6,
             this.hotkeysToolStripMenuItem,
             this.watchdogToolStripMenuItem});
@@ -2161,6 +2165,13 @@
             this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(409, 22);
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
+            // 
+            // assignASoundfontListToASpecificAppToolStripMenuItem
+            // 
+            this.assignASoundfontListToASpecificAppToolStripMenuItem.Name = "assignASoundfontListToASpecificAppToolStripMenuItem";
+            this.assignASoundfontListToASpecificAppToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.assignASoundfontListToASpecificAppToolStripMenuItem.Text = "Assign a soundfont list to a specific app";
+            this.assignASoundfontListToASpecificAppToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -2420,6 +2431,13 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
+            // 
+            // assignSoundfontListToAppToolStripMenuItem
+            // 
+            this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
+            this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(152, 27);
+            this.assignSoundfontListToAppToolStripMenuItem.Text = "Assign soundfont list to app";
+            this.assignSoundfontListToAppToolStripMenuItem.Click += new System.EventHandler(this.assignSoundfontListToAppToolStripMenuItem_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -2684,6 +2702,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem killTheWatchdogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assignASoundfontListToASpecificAppToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assignSoundfontListToAppToolStripMenuItem;
     }
 }
 

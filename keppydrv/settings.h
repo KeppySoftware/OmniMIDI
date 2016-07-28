@@ -135,6 +135,7 @@ int check_sinc()
 	return sinc;
 }
 
+
 void LoadSoundfont(int whichsf){
 	try {
 		TCHAR config[MAX_PATH];
@@ -180,6 +181,149 @@ void LoadSoundfont(int whichsf){
 	}
 	catch (int e) {
 		crashhandler(e);
+	}
+}
+
+bool LoadSoundfontStartup() {
+	TCHAR defaultstring[MAX_PATH];
+	TCHAR listanalyze1[MAX_PATH];
+	TCHAR listanalyze2[MAX_PATH];
+	TCHAR listanalyze3[MAX_PATH];
+	TCHAR listanalyze4[MAX_PATH];
+	TCHAR listanalyze5[MAX_PATH];
+	TCHAR listanalyze6[MAX_PATH];
+	TCHAR listanalyze7[MAX_PATH];
+	TCHAR listanalyze8[MAX_PATH];
+	TCHAR modulename[MAX_PATH];
+	GetModuleFileName(NULL, modulename, MAX_PATH);
+	PathStripPath(modulename);
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze1))) {
+		_tcscat(listanalyze1, L"\\Keppy's Driver\\applists\\keppymidi.applist");
+		std::wifstream file(listanalyze1);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(1);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze2))) {
+		_tcscat(listanalyze2, L"\\Keppy's Driver\\applists\\keppymidib.applist");
+		std::wifstream file(listanalyze2);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(2);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze3))) {
+		_tcscat(listanalyze3, L"\\Keppy's Driver\\applists\\keppymidic.applist");
+		std::wifstream file(listanalyze3);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(3);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze4))) {
+		_tcscat(listanalyze4, L"\\Keppy's Driver\\applists\\keppymidid.applist");
+		std::wifstream file(listanalyze4);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(4);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze5))) {
+		_tcscat(listanalyze5, L"\\Keppy's Driver\\applists\\keppymidie.applist");
+		std::wifstream file(listanalyze5);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(5);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze6))) {
+		_tcscat(listanalyze6, L"\\Keppy's Driver\\applists\\keppymidif.applist");
+		std::wifstream file(listanalyze6);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(6);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze7))) {
+		_tcscat(listanalyze7, L"\\Keppy's Driver\\applists\\keppymidig.applist");
+		std::wifstream file(listanalyze7);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(7);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze8))) {
+		_tcscat(listanalyze8, L"\\Keppy's Driver\\applists\\keppymidih.applist");
+		std::wifstream file(listanalyze8);
+		if (file) {
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) == 0) {
+					LoadSoundfont(8);
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+		}
 	}
 }
 

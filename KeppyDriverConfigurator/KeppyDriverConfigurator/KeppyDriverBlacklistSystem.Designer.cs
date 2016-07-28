@@ -66,19 +66,19 @@
             // 
             this.ManualBlackListLabel.Enabled = false;
             this.ManualBlackListLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.ManualBlackListLabel.Location = new System.Drawing.Point(12, 63);
+            this.ManualBlackListLabel.Location = new System.Drawing.Point(12, 65);
             this.ManualBlackListLabel.Name = "ManualBlackListLabel";
-            this.ManualBlackListLabel.Size = new System.Drawing.Size(209, 13);
+            this.ManualBlackListLabel.Size = new System.Drawing.Size(221, 13);
             this.ManualBlackListLabel.TabIndex = 28;
-            this.ManualBlackListLabel.Text = "Name of the program (with .exe extension):";
-            this.ManualBlackListLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.ManualBlackListLabel.Text = "Full path to the program (with .exe extension):";
+            this.ManualBlackListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ManualBlackList
             // 
             this.ManualBlackList.Enabled = false;
-            this.ManualBlackList.Location = new System.Drawing.Point(222, 60);
+            this.ManualBlackList.Location = new System.Drawing.Point(234, 62);
             this.ManualBlackList.Name = "ManualBlackList";
-            this.ManualBlackList.Size = new System.Drawing.Size(191, 20);
+            this.ManualBlackList.Size = new System.Drawing.Size(269, 20);
             this.ManualBlackList.TabIndex = 27;
             // 
             // BlackListDef
@@ -95,7 +95,7 @@
             // 
             this.BlackListAdvancedMode.AutoSize = true;
             this.BlackListAdvancedMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.BlackListAdvancedMode.Location = new System.Drawing.Point(15, 43);
+            this.BlackListAdvancedMode.Location = new System.Drawing.Point(15, 45);
             this.BlackListAdvancedMode.Name = "BlackListAdvancedMode";
             this.BlackListAdvancedMode.Size = new System.Drawing.Size(229, 17);
             this.BlackListAdvancedMode.TabIndex = 25;

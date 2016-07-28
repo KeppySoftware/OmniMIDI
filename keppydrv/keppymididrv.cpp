@@ -428,7 +428,12 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-					LoadSoundfont(defaultsflist);
+					if (LoadSoundfontStartup() == TRUE) {
+						// Wew
+					}
+					else {
+						LoadSoundfont(defaultsflist);
+					}
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
