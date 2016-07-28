@@ -5,7 +5,7 @@
 This driver is special because:
 - It's really easy for it to achieve very low latencies without struggling. (Almost 1ms with the right settings)
 - It's meant for [professional people] (#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
-- The buffer*/sample per frame rate are changeable *in real-time*. (* = Not this one tho)
+- The buffer§/sample per frame rate are changeable *in real-time*. (§ = Not this one tho)
 - It offers a pretty spartan interface, for simple people who aims for features more than for style.
 
 ## What do you mean by "for professional use"?
