@@ -1,15 +1,12 @@
 # Keppy's Driver: A MIDI driver for professional use
-[![Join the chat at https://gitter.im/KaleidonKep99/Keppy-s-Driver](https://badges.gitter.im/KaleidonKep99/Keppy-s-Driver.svg)](https://gitter.im/KaleidonKep99/Keppy-s-Driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-<br>
-A fork of the original [BASSMIDI Driver by Kode54] (https://github.com/kode54/BASSMIDI-Driver), with new functions.
+[![Join the chat at https://gitter.im/KaleidonKep99/Keppy-s-Driver](https://badges.gitter.im/KaleidonKep99/Keppy-s-Driver.svg)](https://gitter.im/KaleidonKep99/Keppy-s-Driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) ~ A fork of the original [BASSMIDI Driver by Kode54] (https://github.com/kode54/BASSMIDI-Driver), with new functions.
 
-## What's the difference between the original driver and your fork?
-I optimized this fork by doing these things:
-- Blacklist in the driver, to prevent strange processes from blocking it
-- Modifiable audio frequency
-- Modifiable buffer size
-- Note off event and sound effects disabler settings
-- Better UI for the configurator
+## What's so special about your driver that makes it different from the others out there?
+This driver is special because:
+- It's really easy for it to achieve very low latencies without struggling. (Almost 1ms with the right settings)
+- It's meant for [professional people] (#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
+- The buffer*/sample per frame rate are changeable *in real-time*. (* = Not this one tho)
+- It offers a pretty spartan interface, for simple people who aims for features more than for style.
 
 ## What do you mean by "for professional use"?
 Certain functions in this driver are not suited for newbies or for people that don't know how to use programs well.
@@ -24,7 +21,7 @@ It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanosecond
 You need this software installed before attempting to run the setup:
 - [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) (Install the 64-bit version too if you're using a 64-bit O.S.)
 - [Microsoft .NET Framework 4.0] (https://www.microsoft.com/en-US/download/details.aspx?id=17718)
-- [XP: Windows Imaging Component] (https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
+- [Windows XP: Windows Imaging Component] (https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
 
 The DirectX Web Installer is already included with the driver setup, so there's no need to install it separately.
 
