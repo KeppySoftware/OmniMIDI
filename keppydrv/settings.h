@@ -195,7 +195,9 @@ bool LoadSoundfontStartup() {
 	TCHAR listanalyze7[MAX_PATH];
 	TCHAR listanalyze8[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
+	TCHAR fullmodulename[MAX_PATH];
 	GetModuleFileName(NULL, modulename, MAX_PATH);
+	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
 	PathStripPath(modulename);
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze1))) {
 		_tcscat(listanalyze1, L"\\Keppy's Driver\\applists\\keppymidi.applist");
@@ -203,7 +205,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(1);
 					return TRUE;
 				}
@@ -219,7 +221,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(2);
 					return TRUE;
 				}
@@ -235,7 +237,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(3);
 					return TRUE;
 				}
@@ -251,7 +253,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(4);
 					return TRUE;
 				}
@@ -267,7 +269,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(5);
 					return TRUE;
 				}
@@ -283,7 +285,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(6);
 					return TRUE;
 				}
@@ -299,7 +301,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(7);
 					return TRUE;
 				}
@@ -315,7 +317,7 @@ bool LoadSoundfontStartup() {
 		if (file) {
 			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 			{
-				if (_tcsicmp(modulename, defaultstring) == 0) {
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 					LoadSoundfont(8);
 					return TRUE;
 				}

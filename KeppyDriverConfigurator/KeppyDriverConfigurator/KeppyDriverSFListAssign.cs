@@ -229,7 +229,7 @@ namespace KeppyDriverConfigurator
 
         private void AddAppToListTrigger(ListBox list, string str, string listtosave)
         {
-            list.Items.Add(Path.GetFileName(str));
+            list.Items.Add(str);
             SaveList(listtosave, list);
         }
 
@@ -265,6 +265,48 @@ namespace KeppyDriverConfigurator
             else if (selectedlist == "listBox8")
             {
                 AddAppToListTrigger(listBox8, str, List8Path);
+            }
+        }
+
+        private void AddAppNameOnlyToListTrigger(ListBox list, string str, string listtosave)
+        {
+            list.Items.Add(Path.GetFileName(str));
+            SaveList(listtosave, list);
+        }
+
+        private void AddAppNameOnlyToList(string selectedlist, string str)
+        {
+            if (selectedlist == "listBox1")
+            {
+                AddAppNameOnlyToListTrigger(listBox1, str, List1Path);
+            }
+            else if (selectedlist == "listBox2")
+            {
+                AddAppNameOnlyToListTrigger(listBox2, str, List2Path);
+            }
+            else if (selectedlist == "listBox3")
+            {
+                AddAppNameOnlyToListTrigger(listBox3, str, List3Path);
+            }
+            else if (selectedlist == "listBox4")
+            {
+                AddAppNameOnlyToListTrigger(listBox4, str, List4Path);
+            }
+            else if (selectedlist == "listBox5")
+            {
+                AddAppNameOnlyToListTrigger(listBox5, str, List5Path);
+            }
+            else if (selectedlist == "listBox6")
+            {
+                AddAppNameOnlyToListTrigger(listBox6, str, List6Path);
+            }
+            else if (selectedlist == "listBox7")
+            {
+                AddAppNameOnlyToListTrigger(listBox7, str, List7Path);
+            }
+            else if (selectedlist == "listBox8")
+            {
+                AddAppNameOnlyToListTrigger(listBox8, str, List8Path);
             }
         }
 
@@ -333,6 +375,38 @@ namespace KeppyDriverConfigurator
                                 listBox4.Items.Add(line); // The program is copying the entire text file to the List 4's listbox.
                             }
                         }
+                        using (StreamReader r = new StreamReader(List5Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                listBox5.Items.Add(line); // The program is copying the entire text file to the List 5's listbox.
+                            }
+                        }
+                        using (StreamReader r = new StreamReader(List6Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                listBox6.Items.Add(line); // The program is copying the entire text file to the List 6's listbox.
+                            }
+                        }
+                        using (StreamReader r = new StreamReader(List7Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                listBox7.Items.Add(line); // The program is copying the entire text file to the List 7's listbox.
+                            }
+                        }
+                        using (StreamReader r = new StreamReader(List8Path))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                listBox8.Items.Add(line); // The program is copying the entire text file to the List 8's listbox.
+                            }
+                        }
                     }
                     catch
                     {
@@ -384,44 +458,6 @@ namespace KeppyDriverConfigurator
             InitializeLists();
         }
 
-        private void Back_Click(object sender, EventArgs e)
-        {
-            Load1234();
-            label1.Text = "List 1's apps:";
-            label2.Text = "List 2's apps:";
-            label3.Text = "List 3's apps:";
-            label4.Text = "List 4's apps:";
-            listBox1.Visible = true;
-            listBox2.Visible = true;
-            listBox3.Visible = true;
-            listBox4.Visible = true;
-            listBox5.Visible = false;
-            listBox6.Visible = false;
-            listBox7.Visible = false;
-            listBox8.Visible = false;
-            Next.Enabled = true;
-            Back.Enabled = false;
-        }
-
-        private void Next_Click(object sender, EventArgs e)
-        {
-            Load5678();
-            label1.Text = "List 5's apps:";
-            label2.Text = "List 6's apps:";
-            label3.Text = "List 7's apps:";
-            label4.Text = "List 8's apps:";
-            listBox1.Visible = false;
-            listBox2.Visible = false;
-            listBox3.Visible = false;
-            listBox4.Visible = false;
-            listBox5.Visible = true;
-            listBox6.Visible = true;
-            listBox7.Visible = true;
-            listBox8.Visible = true;
-            Next.Enabled = false;
-            Back.Enabled = true;
-        }
-
         private void addAnAppToTheListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Control LeControl = WhoTriggeredMe(sender);
@@ -430,6 +466,18 @@ namespace KeppyDriverConfigurator
                 foreach (string str in AddApp.FileNames)
                 {
                     AddAppToList(LeControl.Name, str);
+                }
+            }
+        }
+
+        private void addAnAppToTheListAppNameOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Control LeControl = WhoTriggeredMe(sender);
+            if (AddApp.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string str in AddApp.FileNames)
+                {
+                    AddAppNameOnlyToList(LeControl.Name, str);
                 }
             }
         }

@@ -28,10 +28,9 @@ BOOL ProcessBlackList(){
 				std::wifstream file(defaultblacklistdirectory);
 				if (file) {
 					// The default blacklist exists, continue
-					OutputDebugString(defaultblacklistdirectory);
 					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 					{
-						if (_tcsicmp(modulename, defaultstring) == 0) {
+						if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
 							return 0x0;
 						}
 					}
@@ -57,8 +56,7 @@ BOOL ProcessBlackList(){
 					}
 				}
 				else {
-					MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					exit(0);
+
 				}
 			}
 			return 0x1;
@@ -72,6 +70,7 @@ BOOL ProcessBlackList(){
 
 BOOL BannedSystemProcess() {
 	// These processes are PERMANENTLY banned because of some internal bugs inside them.
+	TCHAR bannedbattlenet[MAX_PATH];
 	TCHAR bannedconsent[MAX_PATH];
 	TCHAR bannedcsrss[MAX_PATH];
 	TCHAR bannedexplorer[MAX_PATH];
@@ -79,6 +78,7 @@ BOOL BannedSystemProcess() {
 	TCHAR bannedshare[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
 
+	_tcscpy_s(bannedbattlenet, _countof(bannedbattlenet), _T("Battle.net Launcher.exe"));
 	_tcscpy_s(bannedconsent, _countof(bannedconsent), _T("consent.exe"));
 	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
 	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
@@ -87,7 +87,8 @@ BOOL BannedSystemProcess() {
 
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
-	if (!_tcsicmp(modulename, bannedconsent) | 
+	if (!_tcsicmp(modulename, bannedbattlenet) |
+		!_tcsicmp(modulename, bannedconsent) |
 		!_tcsicmp(modulename, bannedexplorer) | 
 		!_tcsicmp(modulename, bannedcsrss) |
 		!_tcsicmp(modulename, bannedscratch) | 
