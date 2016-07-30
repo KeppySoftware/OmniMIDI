@@ -13,6 +13,7 @@ namespace KeppyDriverConfigurator
 {
     public partial class KeppyDriverSFListAssign : Form
     {
+        public string LastBrowserPath { get; set; }
         public string List1Path { get; set; }
         public string List2Path { get; set; }
         public string List3Path { get; set; }
@@ -26,92 +27,6 @@ namespace KeppyDriverConfigurator
         public KeppyDriverSFListAssign()
         {
             InitializeComponent();
-        }
-
-        private void Load1234()
-        {
-            try
-            {
-                using (StreamReader r = new StreamReader(List1Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox1.Items.Add(line); // The program is copying the entire text file to the List 1's listbox.
-                    }
-                }
-                using (StreamReader r = new StreamReader(List2Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox2.Items.Add(line); // The program is copying the entire text file to the List 2's listbox.
-                    }
-                }
-                using (StreamReader r = new StreamReader(List3Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox3.Items.Add(line); // The program is copying the entire text file to the List 3's listbox.
-                    }
-                }
-                using (StreamReader r = new StreamReader(List4Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox4.Items.Add(line); // The program is copying the entire text file to the List 4's listbox.
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void Load5678()
-        {
-            try
-            {
-                using (StreamReader r = new StreamReader(List5Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox5.Items.Add(line); // The program is copying the entire text file to the List 5's listbox.
-                    }
-                }
-                using (StreamReader r = new StreamReader(List6Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox6.Items.Add(line); // The program is copying the entire text file to the List 6's listbox.
-                    }
-                }
-                using (StreamReader r = new StreamReader(List7Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox7.Items.Add(line); // The program is copying the entire text file to the List 7's listbox.
-                    }
-                }
-                using (StreamReader r = new StreamReader(List8Path))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        listBox8.Items.Add(line); // The program is copying the entire text file to the List 8's listbox.
-                    }
-                }
-            }
-            catch
-            {
-
-            }
         }
 
         private Control WhoTriggeredMe(object sender)
@@ -310,6 +225,34 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        private void InitializeLastPath()
+        {
+            try
+            {
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                if (SynthPaths.GetValue("lastpathsfassign", null) != null)
+                {
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfassign").ToString();
+                    AddApp.InitialDirectory = LastBrowserPath;
+                }
+                else
+                {
+                    SynthPaths.SetValue("lastpathsfassign", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfassign").ToString();
+                    AddApp.InitialDirectory = LastBrowserPath;
+                }
+                SynthPaths.Close();      
+            }
+            catch {
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Driver\\Paths");
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                SynthPaths.SetValue("lastpathsfassign", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                LastBrowserPath = SynthPaths.GetValue("lastpathsfassign").ToString();
+                AddApp.InitialDirectory = LastBrowserPath;
+                SynthPaths.Close();      
+            }
+        }
+
         private void InitializeLists()
         {
             string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
@@ -455,16 +398,22 @@ namespace KeppyDriverConfigurator
 
         private void KeppyDriverSFListAssign_Load(object sender, EventArgs e)
         {
+            InitializeLastPath();
             InitializeLists();
         }
 
         private void addAnAppToTheListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Control LeControl = WhoTriggeredMe(sender);
+            AddApp.InitialDirectory = LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
                 foreach (string str in AddApp.FileNames)
                 {
+                    RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                    LastBrowserPath = Path.GetDirectoryName(str);
+                    SynthPaths.SetValue("lastpathsfassign", LastBrowserPath, RegistryValueKind.String);
+                    SynthPaths.Close();    
                     AddAppToList(LeControl.Name, str);
                 }
             }
@@ -473,6 +422,7 @@ namespace KeppyDriverConfigurator
         private void addAnAppToTheListAppNameOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Control LeControl = WhoTriggeredMe(sender);
+            AddApp.InitialDirectory = LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
                 foreach (string str in AddApp.FileNames)

@@ -13,6 +13,7 @@ namespace KeppyDriverConfigurator
 {
     public partial class KeppyDriverBlacklistSystem : Form
     {
+        public string LastBrowserPath { get; set; }
         public string BlacklistPath { get; set; }
         public string DefBlacklistPath { get; set; }
         public string blacklistnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
@@ -41,6 +42,35 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        private void InitializeLastPath()
+        {
+            try
+            {
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                if (SynthPaths.GetValue("lastpathblacklist", null) != null)
+                {
+                    LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();
+                    AddBlacklistedProgram.InitialDirectory = LastBrowserPath;
+                }
+                else
+                {
+                    SynthPaths.SetValue("lastpathblacklist", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();
+                    AddBlacklistedProgram.InitialDirectory = LastBrowserPath;
+                }
+                SynthPaths.Close();
+            }
+            catch
+            {
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Driver\\Paths");
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                SynthPaths.SetValue("lastpathblacklist", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();
+                AddBlacklistedProgram.InitialDirectory = LastBrowserPath;
+                SynthPaths.Close();
+            }
+        }
+
         private void KeppyDriverBlacklistSystem_Load(object sender, EventArgs e)
         {
             if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\"))
@@ -50,6 +80,8 @@ namespace KeppyDriverConfigurator
                 File.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
                 Directory.Delete(blacklistoldlocation + "\\Keppy's Driver\\blacklist\\");
             }
+
+            InitializeLastPath();
 
             // Initialize blacklist
             BlacklistPath = blacklistnewlocation + "\\Keppy's Driver\\blacklist\\keppymididrv.blacklist";
@@ -112,6 +144,10 @@ namespace KeppyDriverConfigurator
                 {
                     foreach (string str in AddBlacklistedProgram.FileNames)
                     {
+                        RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                        LastBrowserPath = Path.GetDirectoryName(str);
+                        SynthPaths.SetValue("lastpathblacklist", LastBrowserPath, RegistryValueKind.String);
+                        SynthPaths.Close();   
                         ProgramsBlackList.Items.Add(str);
                     }
                 }

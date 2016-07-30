@@ -617,7 +617,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_UNPREPARE:
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_GETNUMDEVS:
-		return ProcessBlackList();
+		return VMSBlackList();
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:

@@ -13,6 +13,9 @@ namespace KeppyDriverConfigurator
 {
     public partial class KeppyDriverConfiguratorMain : Form
     {
+        public string LastBrowserPath { get; set; }
+        public string LastImportExportPath { get; set; }
+
         public string List1PathOld { get; set; }
         public string List2PathOld { get; set; }
         public string List3PathOld { get; set; }
@@ -110,6 +113,10 @@ namespace KeppyDriverConfigurator
         {
             try
             {
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                LastBrowserPath = Path.GetDirectoryName(SelectedExternalList);
+                SynthPaths.SetValue("lastpathlistimpexp", LastBrowserPath, RegistryValueKind.String);
+                SynthPaths.Close();   
                 using (StreamReader r = new StreamReader(SelectedExternalList))
                 {
                     string line;
@@ -132,6 +139,10 @@ namespace KeppyDriverConfigurator
         private void ExportListToFile(String FinalPathList, ListBox SelectedList)
         {
             System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(FinalPathList);
+            RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+            LastBrowserPath = Path.GetDirectoryName(FinalPathList);
+            SynthPaths.SetValue("lastpathlistimpexp", LastBrowserPath, RegistryValueKind.String);
+            SynthPaths.Close();   
             foreach (var item in SelectedList.Items)
             {
                 SaveFile.WriteLine(item.ToString());
@@ -156,10 +167,15 @@ namespace KeppyDriverConfigurator
             try
             {
                 SoundfontImport.FileName = "";
+                SoundfontImport.InitialDirectory = LastBrowserPath;
                 if (SoundfontImport.ShowDialog() == DialogResult.OK)
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
+                        RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                        LastBrowserPath = Path.GetDirectoryName(str);
+                        SynthPaths.SetValue("lastpathsfimport", LastBrowserPath, RegistryValueKind.String);
+                        SynthPaths.Close();   
                         if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
                             OriginalList.Items.Add(str);
@@ -696,6 +712,47 @@ namespace KeppyDriverConfigurator
             }
         }
 
+        private void InitializeLastPath()
+        {
+            try
+            {
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                if (SynthPaths.GetValue("lastpathsfimport", null) != null && SynthPaths.GetValue("lastpathsfimport", null) != null)
+                {
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    SoundfontImport.InitialDirectory = LastBrowserPath;
+                    ExternalListImport.InitialDirectory = LastImportExportPath;
+                    ExportList.InitialDirectory = LastImportExportPath;
+                }
+                else
+                {
+                    SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    SoundfontImport.InitialDirectory = LastBrowserPath;
+                    ExternalListImport.InitialDirectory = LastImportExportPath;
+                    ExportList.InitialDirectory = LastImportExportPath;
+                }
+                SynthPaths.Close();
+            }
+            catch
+            {
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Driver\\Paths");
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
+                SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                SoundfontImport.InitialDirectory = LastBrowserPath;
+                ExternalListImport.InitialDirectory = LastImportExportPath;
+                ExportList.InitialDirectory = LastImportExportPath;
+                SoundfontImport.InitialDirectory = LastBrowserPath;
+                SynthPaths.Close();
+            }
+        }
+
         // Here we go!
         private void KeppyDriverConfiguratorMain_Load(object sender, EventArgs e)
         {
@@ -723,6 +780,7 @@ namespace KeppyDriverConfigurator
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
             }
 
+            InitializeLastPath();
             InitializeLists();
 
             // ======= Load settings from the registry
@@ -1222,6 +1280,7 @@ namespace KeppyDriverConfigurator
         private void IEL1_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis1, 1);
@@ -1232,6 +1291,7 @@ namespace KeppyDriverConfigurator
         private void IEL2_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis2, 2);
@@ -1242,6 +1302,7 @@ namespace KeppyDriverConfigurator
         private void IEL3_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis3, 3);
@@ -1252,6 +1313,7 @@ namespace KeppyDriverConfigurator
         private void IEL4_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis4, 4);
@@ -1262,6 +1324,7 @@ namespace KeppyDriverConfigurator
         private void IEL5_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis5, 5);
@@ -1272,6 +1335,7 @@ namespace KeppyDriverConfigurator
         private void IEL6_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis6, 6);
@@ -1282,6 +1346,7 @@ namespace KeppyDriverConfigurator
         private void IEL7_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis7, 7);
@@ -1292,6 +1357,7 @@ namespace KeppyDriverConfigurator
         private void IEL8_Click(object sender, EventArgs e)
         {
             ExternalListImport.FileName = "";
+            ExternalListImport.InitialDirectory = LastImportExportPath;
             if (ExternalListImport.ShowDialog() == DialogResult.OK)
             {
                 ImportExternalList(ExternalListImport.FileName, Lis8, 8);
@@ -1303,6 +1369,7 @@ namespace KeppyDriverConfigurator
         private void EL1_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis1);
@@ -1312,6 +1379,7 @@ namespace KeppyDriverConfigurator
         private void EL2_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis2);
@@ -1321,6 +1389,7 @@ namespace KeppyDriverConfigurator
         private void EL3_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis3);
@@ -1330,6 +1399,7 @@ namespace KeppyDriverConfigurator
         private void EL4_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis4);
@@ -1339,6 +1409,7 @@ namespace KeppyDriverConfigurator
         private void EL5_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis5);
@@ -1348,6 +1419,7 @@ namespace KeppyDriverConfigurator
         private void EL6_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis6);
@@ -1357,6 +1429,7 @@ namespace KeppyDriverConfigurator
         private void EL7_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis7);
@@ -1366,6 +1439,7 @@ namespace KeppyDriverConfigurator
         private void EL8_Click(object sender, EventArgs e)
         {
             ExportList.FileName = "";
+            ExportList.InitialDirectory = LastImportExportPath;
             if (ExportList.ShowDialog() == DialogResult.OK)
             {
                 ExportListToFile(ExportList.FileName, Lis8);

@@ -2,7 +2,7 @@
 Keppy's Driver blacklist system
 */
 
-BOOL ProcessBlackList(){
+BOOL BlackListSystem(){
 	// Blacklist system init
 	TCHAR defaultstring[MAX_PATH];
 	TCHAR userstring[MAX_PATH];
@@ -10,23 +10,65 @@ BOOL ProcessBlackList(){
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
-	TCHAR sndvol[MAX_PATH];
-	// VirtualMIDISynth 1.x ban init
-	TCHAR vmidisynthdll[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
-	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
-	TCHAR vmidisynth2exe[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
-	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
+	if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
+		_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
+		std::wifstream file(defaultblacklistdirectory);
+		if (file) {
+			// The default blacklist exists, continue
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+					return 0x0;
+				}
+			}
+		}
+		else {
+			MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			exit(0);
+		}
+	}
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
+		_tcscat(userblacklistdirectory, L"\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
+		std::wifstream file(userblacklistdirectory);
+		if (file) {
+			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
+			{
+				if (_tcsicmp(fullmodulename, userstring) == 0) {
+					std::wstring modulenamelpcwstr(modulename);
+					std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
+					LPCWSTR messageboxtitle = concatted_stdstr.c_str();
+					MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+					return 0x0;
+				}
+			}
+		}
+		else {
+
+		}
+	}
+	return 0x1;
+}
+
+BOOL VMSBlackList(){
+	// First, the VMS blacklist system, then the main one
+	TCHAR modulename[MAX_PATH];
+	TCHAR sndvol[MAX_PATH];
+	TCHAR vmidisynthdll[MAX_PATH];
+	TCHAR vmidisynth2exe[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
+	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
+	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
 	// Lel stuff
 	_tcscpy_s(sndvol, _countof(sndvol), _T("SndVol.exe"));
 	try {
 		if (PathFileExists(vmidisynthdll)) {
 			if (PathFileExists(vmidisynth2exe)) {
-				return 0x1;
+				return BlackListSystem();
 			}
 			else {
 				if (!_tcsicmp(modulename, sndvol)) {
@@ -38,50 +80,15 @@ BOOL ProcessBlackList(){
 						return 0x0;
 					}
 					else {
-						return 0x1;
+						return BlackListSystem();
 					}
 				}
 			}
 		}
 		else {
-			if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
-				_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
-				std::wifstream file(defaultblacklistdirectory);
-				if (file) {
-					// The default blacklist exists, continue
-					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-					{
-						if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-							return 0x0;
-						}
-					}
-				}
-				else {
-					MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					exit(0);
-				}
-			}
-			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
-				_tcscat(userblacklistdirectory, L"\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
-				std::wifstream file(userblacklistdirectory);
-				if (file) {
-					while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
-					{
-						if (_tcsicmp(fullmodulename, userstring) == 0) {
-							std::wstring modulenamelpcwstr(modulename);
-							std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
-							LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-							MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
-							return 0x0;
-						}
-					}
-				}
-				else {
-
-				}
-			}
+			return BlackListSystem();
 		}
-		return 0x1;
+		return BlackListSystem();
 	}
 	catch (std::exception & e) {
 		OutputDebugStringA(e.what());
