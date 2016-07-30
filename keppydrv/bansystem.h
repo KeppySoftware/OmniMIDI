@@ -10,17 +10,38 @@ BOOL ProcessBlackList(){
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
+	TCHAR sndvol[MAX_PATH];
 	// VirtualMIDISynth 1.x ban init
-	TCHAR vmidisynthpath[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthpath);
-	PathAppend(vmidisynthpath, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
+	TCHAR vmidisynthdll[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
+	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
+	TCHAR vmidisynth2exe[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
 	PathStripPath(modulename);
+	// Lel stuff
+	_tcscpy_s(sndvol, _countof(sndvol), _T("SndVol.exe"));
 	try {
-		if (PathFileExists(vmidisynthpath)) {
-			MessageBox(NULL, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress OK to quit.", L"Keppy's Driver", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			exit(0);
+		if (PathFileExists(vmidisynthdll)) {
+			if (PathFileExists(vmidisynth2exe)) {
+				return 0x1;
+			}
+			else {
+				if (!_tcsicmp(modulename, sndvol)) {
+					return 0x0;
+				}
+				else {
+					if (MessageBox(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use Keppy's Driver anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using Keppy's Driver)", L"Keppy's Driver", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
+					{
+						return 0x0;
+					}
+					else {
+						return 0x1;
+					}
+				}
+			}
 		}
 		else {
 			if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
@@ -59,8 +80,8 @@ BOOL ProcessBlackList(){
 
 				}
 			}
-			return 0x1;
 		}
+		return 0x1;
 	}
 	catch (std::exception & e) {
 		OutputDebugStringA(e.what());
