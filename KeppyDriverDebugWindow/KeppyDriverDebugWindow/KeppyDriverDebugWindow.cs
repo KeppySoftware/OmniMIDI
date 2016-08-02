@@ -13,7 +13,7 @@ using Microsoft.VisualBasic.Devices;
 using Microsoft.Win32;
 
 
-namespace KeppyDriverConfigurator
+namespace KeppyDriverDebugWindow
 {
     public partial class KeppyDriverDebugWindow : Form
     {
@@ -102,14 +102,15 @@ namespace KeppyDriverConfigurator
                     }
                     else
                     {
-                        if (Convert.ToInt32(Debug.GetValue("buffull")) == 0) {
+                        if (Convert.ToInt32(Debug.GetValue("buffull")) == 0)
+                        {
                             richTextBox1.AppendText("Rendering time: " + Debug.GetValue("currentcpuusage0").ToString() + "%");
                         }
                         else
                         {
                             richTextBox1.AppendText("Rendering time: " + Debug.GetValue("currentcpuusage0").ToString() + "% (Buffer is full)");
                         }
-                           
+
                     }
 
                     if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
@@ -126,7 +127,7 @@ namespace KeppyDriverConfigurator
                 {
                     richTextBox1.Resume();
                     richTextBox1.Refresh();
-                }      
+                }
             }
             catch (Exception ex)
             {

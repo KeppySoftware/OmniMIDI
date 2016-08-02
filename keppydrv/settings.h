@@ -60,7 +60,7 @@ struct evbuf_t{
 	unsigned char *sysexbuffer;
 };
 
-static struct evbuf_t evbuf[32768];
+static struct evbuf_t evbuf[36864];
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
 static volatile LONG evbcount = 0;
@@ -866,12 +866,12 @@ void keybindings()
 				}
 			}
 			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x30) & 0x8000) {
-				TCHAR configuratorapp[MAX_PATH];
+				TCHAR debugwindowapp[MAX_PATH];
 				BOOL run = TRUE;
-				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, debugwindowapp)))
 				{
-					PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-					ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
+					PathAppend(debugwindowapp, _T("\\keppydrv\\KeppyDriverDebugWindow.exe"));
+					ShellExecute(NULL, L"open", debugwindowapp, NULL, NULL, SW_SHOWNORMAL);
 					Sleep(10);
 					return;
 				}

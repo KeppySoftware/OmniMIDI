@@ -86,12 +86,6 @@
     <Compile Include="BankNPresetSel.Designer.cs">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppyDriverDebugWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="KeppyDriverDebugWindow.Designer.cs">
-      <DependentUpon>KeppyDriverDebugWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="KeppyDriverEVBuffer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,9 +149,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BankNPresetSel.resx">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="KeppyDriverDebugWindow.resx">
-      <DependentUpon>KeppyDriverDebugWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverEVBuffer.resx">
       <DependentUpon>KeppyDriverEVBuffer.cs</DependentUpon>

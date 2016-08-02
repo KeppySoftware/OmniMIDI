@@ -1633,9 +1633,15 @@ namespace KeppyDriverConfigurator
 
         private void openDebugWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppyDriverDebugWindow.GetForm.Show();
+            if (Process.GetProcessesByName("KeppyDriverDebugWindow").Length > 0)
+            {
+                MessageBox.Show("The debug window is already opened!", "Keppy's Driver Configurator - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppydrv\\KeppyDriverDebugWindow.exe");
+            }
         }
-
 
         private void openTheMixerToolStripMenuItem_Click(object sender, EventArgs e)
         {

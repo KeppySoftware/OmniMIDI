@@ -1,16 +1,16 @@
-﻿namespace KeppyDriverConfigurator
+﻿namespace KeppyDriverDebugWindow
 {
     partial class KeppyDriverDebugWindow
     {
         /// <summary>
-        /// Required designer variable.
+        /// Variabile di progettazione necessaria.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Pulire le risorse in uso.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">ha valore true se le risorse gestite devono essere eliminate, false in caso contrario.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,23 +20,19 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Codice generato da Progettazione Windows Form
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Metodo necessario per il supporto della finestra di progettazione. Non modificare
+        /// il contenuto del metodo con l'editor di codice.
         /// </summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.DebugRefresh = new System.Windows.Forms.Timer(this.components);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppyDriverDebugWindow));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.DebugRefresh = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
-            // 
-            // DebugRefresh
-            // 
-            this.DebugRefresh.Enabled = true;
-            this.DebugRefresh.Tick += new System.EventHandler(this.DebugRefresh_Tick);
             // 
             // richTextBox1
             // 
@@ -45,8 +41,13 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(405, 180);
-            this.richTextBox1.TabIndex = 6;
-            this.richTextBox1.Text = "cazzo";
+            this.richTextBox1.TabIndex = 7;
+            this.richTextBox1.Text = "a";
+            // 
+            // DebugRefresh
+            // 
+            this.DebugRefresh.Enabled = true;
+            this.DebugRefresh.Tick += new System.EventHandler(this.DebugRefresh_Tick);
             // 
             // KeppyDriverDebugWindow
             // 
@@ -54,14 +55,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(421, 198);
             this.Controls.Add(this.richTextBox1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "KeppyDriverDebugWindow";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Debug window";
+            this.Text = "Keppy\'s Driver Debug Window";
             this.Load += new System.EventHandler(this.KeppyDriverDebugWindow_Load);
             this.ResumeLayout(false);
 
@@ -69,7 +68,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer DebugRefresh;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Timer DebugRefresh;
     }
 }
+
