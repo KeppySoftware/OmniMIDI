@@ -9,33 +9,38 @@ BOOL BlackListSystem(){
 	TCHAR defaultblacklistdirectory[MAX_PATH];
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
-	TCHAR fullmodulename[MAX_PATH];
+	// VirtualMIDISynth 1.x ban init
+	TCHAR vmidisynthpath[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthpath);
+	PathAppend(vmidisynthpath, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
-	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-	if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
-		_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
-		std::wifstream file(defaultblacklistdirectory);
-		if (file) {
-			// The default blacklist exists, continue
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					return 0x0;
+	PathStripPath(modulename);
+	try {
+		if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
+			_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
+			std::wifstream file(defaultblacklistdirectory);
+			if (file) {
+				// The default blacklist exists, continue
+				OutputDebugString(defaultblacklistdirectory);
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) == 0) {
+						return 0x0;
+					}
 				}
 			}
+			else {
+				MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+				exit(0);
+			}
 		}
-		else {
-			MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's MIDI Driver - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			exit(0);
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
-		_tcscat(userblacklistdirectory, L"\\Keppy's Driver\\blacklist\\keppymididrv.blacklist");
-		std::wifstream file(userblacklistdirectory);
-		if (file) {
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
+			PathAppend(userblacklistdirectory, _T("\\Keppy's Driver\\blacklist\\keppymididrv.blacklist"));
+			std::wifstream file(userblacklistdirectory);
+			OutputDebugString(userblacklistdirectory);
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
-				if (_tcsicmp(fullmodulename, userstring) == 0) {
+				if (_tcsicmp(modulename, userstring) == 0) {
 					std::wstring modulenamelpcwstr(modulename);
 					std::wstring concatted_stdstr = L"Keppy's Driver - " + modulenamelpcwstr + L" is blacklisted";
 					LPCWSTR messageboxtitle = concatted_stdstr.c_str();
@@ -44,11 +49,12 @@ BOOL BlackListSystem(){
 				}
 			}
 		}
-		else {
-
-		}
+		return 0x1;
 	}
-	return 0x1;
+	catch (std::exception & e) {
+		OutputDebugStringA(e.what());
+		exit;
+	}
 }
 
 BOOL VMSBlackList(){
@@ -69,7 +75,6 @@ BOOL VMSBlackList(){
 	try {
 		if (PathFileExists(vmidisynthdll)) {
 			if (PathFileExists(vmidisynth2exe)) {
-
 				return result;
 			}
 			else {
@@ -88,9 +93,9 @@ BOOL VMSBlackList(){
 			}
 		}
 		else {
-			return BlackListSystem();
+			return result;
 		}
-		return BlackListSystem();
+		return 0x0;
 	}
 	catch (std::exception & e) {
 		OutputDebugStringA(e.what());
@@ -106,6 +111,10 @@ BOOL BannedSystemProcess() {
 	TCHAR bannedexplorer[MAX_PATH];
 	TCHAR bannedscratch[MAX_PATH];
 	TCHAR bannedshare[MAX_PATH];
+	TCHAR bannedshellinfrastructure[MAX_PATH];
+	TCHAR bannedsndvol[MAX_PATH];
+	TCHAR bannedvmware[MAX_PATH];
+
 	TCHAR modulename[MAX_PATH];
 
 	_tcscpy_s(bannedbattlenet, _countof(bannedbattlenet), _T("Battle.net Launcher.exe"));
@@ -114,15 +123,21 @@ BOOL BannedSystemProcess() {
 	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
 	_tcscpy_s(bannedscratch, _countof(bannedscratch), _T("scratch.exe"));
 	_tcscpy_s(bannedshare, _countof(bannedshare), _T("NVIDIA Share.exe"));
+	_tcscpy_s(bannedshellinfrastructure, _countof(bannedshellinfrastructure), _T("ShellExperienceHost.exe"));
+	_tcscpy_s(bannedsndvol, _countof(bannedsndvol), _T("SndVol.exe"));
+	_tcscpy_s(bannedvmware, _countof(bannedvmware), _T("vmware-hostd.exe"));
 
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
 	if (!_tcsicmp(modulename, bannedbattlenet) |
 		!_tcsicmp(modulename, bannedconsent) |
-		!_tcsicmp(modulename, bannedexplorer) | 
 		!_tcsicmp(modulename, bannedcsrss) |
-		!_tcsicmp(modulename, bannedscratch) | 
-		!_tcsicmp(modulename, bannedshare)) {
+		!_tcsicmp(modulename, bannedexplorer) |
+		!_tcsicmp(modulename, bannedscratch) |
+		!_tcsicmp(modulename, bannedshare) |
+		!_tcsicmp(modulename, bannedshellinfrastructure) |
+		!_tcsicmp(modulename, bannedsndvol) |
+		!_tcsicmp(modulename, bannedvmware)) {
 		return TRUE;
 		// It's a blacklisted process, so it can NOT create a BASS audio stream.
 	}
