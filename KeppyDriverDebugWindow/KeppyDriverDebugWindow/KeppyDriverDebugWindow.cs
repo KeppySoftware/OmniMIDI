@@ -59,6 +59,8 @@ namespace KeppyDriverDebugWindow
         {
             try
             {
+                Process thisProc = Process.GetCurrentProcess();
+                thisProc.PriorityClass = ProcessPriorityClass.Idle;
                 RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver", false);
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", false);
                 RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");

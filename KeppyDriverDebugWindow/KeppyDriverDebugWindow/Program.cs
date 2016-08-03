@@ -29,6 +29,8 @@ namespace KeppyDriverDebugWindow
             {
                 return;
             }
+            Process thisProc = Process.GetCurrentProcess();
+            thisProc.PriorityClass = ProcessPriorityClass.Idle;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new KeppyDriverDebugWindow());

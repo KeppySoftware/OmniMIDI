@@ -68,6 +68,46 @@ namespace KeppyDriverWatchdog
             item.Click += new EventHandler(SoundfontReload8);
             menu.Items.Add(item);
 
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 9";
+            item.Click += new EventHandler(SoundfontReload9);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 10";
+            item.Click += new EventHandler(SoundfontReload10);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 11";
+            item.Click += new EventHandler(SoundfontReload11);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 12";
+            item.Click += new EventHandler(SoundfontReload12);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 13";
+            item.Click += new EventHandler(SoundfontReload13);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 14";
+            item.Click += new EventHandler(SoundfontReload14);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 15";
+            item.Click += new EventHandler(SoundfontReload15);
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem();
+            item.Text = "Reload list 16";
+            item.Click += new EventHandler(SoundfontReload16);
+            menu.Items.Add(item);
+
             return menu;
         }
 
@@ -115,6 +155,46 @@ namespace KeppyDriverWatchdog
         void SoundfontReload8(object sender, EventArgs e)
         {
             LoadSoundfont(8);
+        }
+
+        void SoundfontReload9(object sender, EventArgs e)
+        {
+            LoadSoundfont(9);
+        }
+
+        void SoundfontReload10(object sender, EventArgs e)
+        {
+            LoadSoundfont(10);
+        }
+
+        void SoundfontReload11(object sender, EventArgs e)
+        {
+            LoadSoundfont(11);
+        }
+
+        void SoundfontReload12(object sender, EventArgs e)
+        {
+            LoadSoundfont(12);
+        }
+
+        void SoundfontReload13(object sender, EventArgs e)
+        {
+            LoadSoundfont(13);
+        }
+
+        void SoundfontReload14(object sender, EventArgs e)
+        {
+            LoadSoundfont(14);
+        }
+
+        void SoundfontReload15(object sender, EventArgs e)
+        {
+            LoadSoundfont(15);
+        }
+
+        void SoundfontReload16(object sender, EventArgs e)
+        {
+            LoadSoundfont(16);
         }
 
         private static void CheckPop(object source, EventArgs e)

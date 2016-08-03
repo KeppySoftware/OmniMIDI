@@ -50,6 +50,7 @@ static int rel8 = 0;
 
 // Other
 static int buffull = 0;
+static int extra8lists = 0;
 
 struct evbuf_t{
 	UINT   uDeviceID;
@@ -172,6 +173,30 @@ void LoadSoundfont(int whichsf){
 			else if (whichsf == 8) {
 				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidih.sflist"));
 			}
+			else if (whichsf == 9) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidii.sflist"));
+			}
+			else if (whichsf == 10) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidij.sflist"));
+			}
+			else if (whichsf == 11) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidik.sflist"));
+			}
+			else if (whichsf == 12) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidil.sflist"));
+			}
+			else if (whichsf == 13) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidim.sflist"));
+			}
+			else if (whichsf == 14) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidin.sflist"));
+			}
+			else if (whichsf == 15) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidio.sflist"));
+			}
+			else if (whichsf == 16) {
+				PathAppend(config, _T("\\Keppy's Driver\\lists\\keppymidip.sflist"));
+			}
 			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
 			RegCloseKey(hKey);
 		}
@@ -194,6 +219,14 @@ bool LoadSoundfontStartup() {
 	TCHAR listanalyze6[MAX_PATH];
 	TCHAR listanalyze7[MAX_PATH];
 	TCHAR listanalyze8[MAX_PATH];
+	TCHAR listanalyze9[MAX_PATH];
+	TCHAR listanalyze10[MAX_PATH];
+	TCHAR listanalyze11[MAX_PATH];
+	TCHAR listanalyze12[MAX_PATH];
+	TCHAR listanalyze13[MAX_PATH];
+	TCHAR listanalyze14[MAX_PATH];
+	TCHAR listanalyze15[MAX_PATH];
+	TCHAR listanalyze16[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
 	GetModuleFileName(NULL, modulename, MAX_PATH);
@@ -327,6 +360,136 @@ bool LoadSoundfontStartup() {
 			}
 		}
 	}
+	if (extra8lists == 1) {
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze9))) {
+			_tcscat(listanalyze9, L"\\Keppy's Driver\\applists\\keppymidii.applist");
+			std::wifstream file(listanalyze9);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(9);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze10))) {
+			_tcscat(listanalyze10, L"\\Keppy's Driver\\applists\\keppymidij.applist");
+			std::wifstream file(listanalyze10);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(10);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze11))) {
+			_tcscat(listanalyze11, L"\\Keppy's Driver\\applists\\keppymidik.applist");
+			std::wifstream file(listanalyze11);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(11);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze12))) {
+			_tcscat(listanalyze12, L"\\Keppy's Driver\\applists\\keppymidil.applist");
+			std::wifstream file(listanalyze12);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(12);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze13))) {
+			_tcscat(listanalyze13, L"\\Keppy's Driver\\applists\\keppymidim.applist");
+			std::wifstream file(listanalyze13);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(13);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze13))) {
+			_tcscat(listanalyze13, L"\\Keppy's Driver\\applists\\keppymidin.applist");
+			std::wifstream file(listanalyze13);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(13);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze15))) {
+			_tcscat(listanalyze15, L"\\Keppy's Driver\\applists\\keppymidio.applist");
+			std::wifstream file(listanalyze15);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(15);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze16))) {
+			_tcscat(listanalyze16, L"\\Keppy's Driver\\applists\\keppymidip.applist");
+			std::wifstream file(listanalyze16);
+			if (file) {
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(16);
+						return TRUE;
+					}
+					else {
+						return FALSE;
+					}
+				}
+			}
+		}
+	}
 	return FALSE;
 }
 
@@ -427,6 +590,7 @@ void load_settings()
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
+		RegQueryValueEx(hKey, L"extra8lists", NULL, &dwType, (LPBYTE)&extra8lists, &dwSize);
 		RegQueryValueEx(hKey, L"newevbuffvalue", NULL, &dwType, (LPBYTE)&newevbuffvalue, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
@@ -822,39 +986,108 @@ void keybindings()
 {
 	try {
 		if (allhotkeys == 1) {
-			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
-				ReloadSFList(1);
-				return;
+			if (extra8lists == 1) {
+				BOOL ControlPressed = (GetAsyncKeyState(VK_CONTROL) & (1 << 15));
+				if (!ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
+					ReloadSFList(1);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
+					ReloadSFList(2);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
+					ReloadSFList(3);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
+					ReloadSFList(4);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+					ReloadSFList(5);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+					ReloadSFList(6);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+					ReloadSFList(7);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+					ReloadSFList(8);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
+					ReloadSFList(9);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
+					ReloadSFList(10);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
+					ReloadSFList(11);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
+					ReloadSFList(12);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+					ReloadSFList(13);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+					ReloadSFList(14);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+					ReloadSFList(15);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+					ReloadSFList(16);
+					return;
+				}
 			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
-				ReloadSFList(2);
-				return;
+			else {
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
+					ReloadSFList(1);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
+					ReloadSFList(2);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
+					ReloadSFList(3);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
+					ReloadSFList(4);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+					ReloadSFList(5);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+					ReloadSFList(6);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+					ReloadSFList(7);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+					ReloadSFList(8);
+					return;
+				}
 			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
-				ReloadSFList(3);
-				return;
-			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
-				ReloadSFList(4);
-				return;
-			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
-				ReloadSFList(5);
-				return;
-			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
-				ReloadSFList(6);
-				return;
-			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
-				ReloadSFList(7);
-				return;
-			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
-				ReloadSFList(8);
-				return;
-			}
-			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
+			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
 				TCHAR configuratorapp[MAX_PATH];
 				BOOL run = TRUE;
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))

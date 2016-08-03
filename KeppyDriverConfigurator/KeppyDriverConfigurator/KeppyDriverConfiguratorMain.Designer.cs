@@ -32,6 +32,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppyDriverConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List = new System.Windows.Forms.TabPage();
+            this.SelectedListBox = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.DisableSF = new System.Windows.Forms.Button();
+            this.EnableSF = new System.Windows.Forms.Button();
+            this.List1Override = new System.Windows.Forms.Label();
+            this.IELPan1 = new System.Windows.Forms.Panel();
+            this.EL = new System.Windows.Forms.Button();
+            this.IEL = new System.Windows.Forms.Button();
+            this.CLi = new System.Windows.Forms.Button();
+            this.MvD = new System.Windows.Forms.Button();
+            this.MvU = new System.Windows.Forms.Button();
+            this.RmvSF = new System.Windows.Forms.Button();
+            this.AddSF = new System.Windows.Forms.Button();
+            this.Lis = new System.Windows.Forms.ListBox();
             this.Settings = new System.Windows.Forms.TabPage();
             this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
             this.XAudioDisable = new System.Windows.Forms.CheckBox();
@@ -73,6 +87,8 @@
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTheMixerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +105,6 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.assignASoundfontListToASpecificAppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysAndListSwitchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -125,22 +140,12 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.SelectedListBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.DisableSF = new System.Windows.Forms.Button();
-            this.EnableSF = new System.Windows.Forms.Button();
-            this.List1Override = new System.Windows.Forms.Label();
-            this.IELPan1 = new System.Windows.Forms.Panel();
-            this.EL = new System.Windows.Forms.Button();
-            this.IEL = new System.Windows.Forms.Button();
-            this.CLi = new System.Windows.Forms.Button();
-            this.MvD = new System.Windows.Forms.Button();
-            this.MvU = new System.Windows.Forms.Button();
-            this.RmvSF = new System.Windows.Forms.Button();
-            this.AddSF = new System.Windows.Forms.Button();
-            this.Lis = new System.Windows.Forms.ListBox();
+            this.enableExtra8SoundfontListsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.disabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
+            this.IELPan1.SuspendLayout();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -152,7 +157,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.MainMenu.SuspendLayout();
-            this.IELPan1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabsForTheControls
@@ -164,7 +168,7 @@
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
             this.TabsForTheControls.Size = new System.Drawing.Size(685, 425);
-            this.TabsForTheControls.TabIndex = 0;
+            this.TabsForTheControls.TabIndex = 1;
             // 
             // List
             // 
@@ -188,6 +192,160 @@
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             this.List.UseVisualStyleBackColor = true;
+            // 
+            // SelectedListBox
+            // 
+            this.SelectedListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SelectedListBox.FormattingEnabled = true;
+            this.SelectedListBox.Items.AddRange(new object[] {
+            "List 1",
+            "List 2",
+            "List 3",
+            "List 4",
+            "List 5",
+            "List 6",
+            "List 7",
+            "List 8"});
+            this.SelectedListBox.Location = new System.Drawing.Point(101, 8);
+            this.SelectedListBox.Name = "SelectedListBox";
+            this.SelectedListBox.Size = new System.Drawing.Size(474, 21);
+            this.SelectedListBox.TabIndex = 2;
+            this.SelectedListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedListBox_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.TabIndex = 34;
+            this.label1.Text = "Select list to edit:";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // DisableSF
+            // 
+            this.DisableSF.Location = new System.Drawing.Point(581, 262);
+            this.DisableSF.Name = "DisableSF";
+            this.DisableSF.Size = new System.Drawing.Size(89, 23);
+            this.DisableSF.TabIndex = 9;
+            this.DisableSF.Text = "Disable SF";
+            this.DisableSF.UseVisualStyleBackColor = true;
+            this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
+            // 
+            // EnableSF
+            // 
+            this.EnableSF.Location = new System.Drawing.Point(581, 233);
+            this.EnableSF.Name = "EnableSF";
+            this.EnableSF.Size = new System.Drawing.Size(89, 23);
+            this.EnableSF.TabIndex = 8;
+            this.EnableSF.Text = "Enable SF";
+            this.EnableSF.UseVisualStyleBackColor = true;
+            this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
+            // 
+            // List1Override
+            // 
+            this.List1Override.AutoSize = true;
+            this.List1Override.Enabled = false;
+            this.List1Override.Location = new System.Drawing.Point(8, 382);
+            this.List1Override.Name = "List1Override";
+            this.List1Override.Size = new System.Drawing.Size(250, 13);
+            this.List1Override.TabIndex = 31;
+            this.List1Override.Text = "The last soundfont will override the previous ones.";
+            // 
+            // IELPan1
+            // 
+            this.IELPan1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.IELPan1.Controls.Add(this.EL);
+            this.IELPan1.Controls.Add(this.IEL);
+            this.IELPan1.Location = new System.Drawing.Point(581, 316);
+            this.IELPan1.Name = "IELPan1";
+            this.IELPan1.Size = new System.Drawing.Size(89, 63);
+            this.IELPan1.TabIndex = 30;
+            // 
+            // EL
+            // 
+            this.EL.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EL.Location = new System.Drawing.Point(0, 29);
+            this.EL.Name = "EL";
+            this.EL.Size = new System.Drawing.Size(85, 30);
+            this.EL.TabIndex = 11;
+            this.EL.Text = "Export list";
+            this.EL.UseVisualStyleBackColor = true;
+            this.EL.Click += new System.EventHandler(this.EL_Click);
+            // 
+            // IEL
+            // 
+            this.IEL.Dock = System.Windows.Forms.DockStyle.Top;
+            this.IEL.Location = new System.Drawing.Point(0, 0);
+            this.IEL.Name = "IEL";
+            this.IEL.Size = new System.Drawing.Size(85, 30);
+            this.IEL.TabIndex = 10;
+            this.IEL.Text = "Import list";
+            this.IEL.UseVisualStyleBackColor = true;
+            this.IEL.Click += new System.EventHandler(this.IEL_Click);
+            // 
+            // CLi
+            // 
+            this.CLi.Location = new System.Drawing.Point(581, 7);
+            this.CLi.Name = "CLi";
+            this.CLi.Size = new System.Drawing.Size(89, 23);
+            this.CLi.TabIndex = 3;
+            this.CLi.Text = "Clear list";
+            this.CLi.UseVisualStyleBackColor = true;
+            this.CLi.Click += new System.EventHandler(this.CLi_Click);
+            // 
+            // MvD
+            // 
+            this.MvD.Location = new System.Drawing.Point(581, 163);
+            this.MvD.Name = "MvD";
+            this.MvD.Size = new System.Drawing.Size(89, 23);
+            this.MvD.TabIndex = 7;
+            this.MvD.Text = "Move ▼";
+            this.MvD.UseVisualStyleBackColor = true;
+            this.MvD.Click += new System.EventHandler(this.MvD_Click);
+            // 
+            // MvU
+            // 
+            this.MvU.Location = new System.Drawing.Point(581, 134);
+            this.MvU.Name = "MvU";
+            this.MvU.Size = new System.Drawing.Size(89, 23);
+            this.MvU.TabIndex = 6;
+            this.MvU.Text = "Move ▲";
+            this.MvU.UseVisualStyleBackColor = true;
+            this.MvU.Click += new System.EventHandler(this.MvU_Click);
+            // 
+            // RmvSF
+            // 
+            this.RmvSF.Location = new System.Drawing.Point(581, 65);
+            this.RmvSF.Name = "RmvSF";
+            this.RmvSF.Size = new System.Drawing.Size(89, 23);
+            this.RmvSF.TabIndex = 5;
+            this.RmvSF.Text = "Remove -";
+            this.RmvSF.UseVisualStyleBackColor = true;
+            this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
+            // 
+            // AddSF
+            // 
+            this.AddSF.Location = new System.Drawing.Point(581, 36);
+            this.AddSF.Name = "AddSF";
+            this.AddSF.Size = new System.Drawing.Size(89, 23);
+            this.AddSF.TabIndex = 4;
+            this.AddSF.Text = "Add +";
+            this.AddSF.UseVisualStyleBackColor = true;
+            this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
+            // 
+            // Lis
+            // 
+            this.Lis.AllowDrop = true;
+            this.Lis.FormattingEnabled = true;
+            this.Lis.HorizontalScrollbar = true;
+            this.Lis.Location = new System.Drawing.Point(6, 36);
+            this.Lis.Name = "Lis";
+            this.Lis.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.Lis.Size = new System.Drawing.Size(568, 342);
+            this.Lis.TabIndex = 12;
+            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
+            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
             // 
             // Settings
             // 
@@ -765,7 +923,7 @@
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.MainMenu.Size = new System.Drawing.Size(685, 24);
-            this.MainMenu.TabIndex = 1;
+            this.MainMenu.TabIndex = 0;
             this.MainMenu.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
@@ -774,6 +932,8 @@
             this.openDebugWindowToolStripMenuItem,
             this.openTheMixerToolStripMenuItem,
             this.openTheBlacklistManagerToolStripMenuItem,
+            this.toolStripSeparator8,
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem,
             this.toolStripSeparator3,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
@@ -787,59 +947,71 @@
             // openDebugWindowToolStripMenuItem
             // 
             this.openDebugWindowToolStripMenuItem.Name = "openDebugWindowToolStripMenuItem";
-            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.openDebugWindowToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
             // 
             // openTheMixerToolStripMenuItem
             // 
             this.openTheMixerToolStripMenuItem.Name = "openTheMixerToolStripMenuItem";
-            this.openTheMixerToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.openTheMixerToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.openTheMixerToolStripMenuItem.Text = "Open the mixer";
             this.openTheMixerToolStripMenuItem.Click += new System.EventHandler(this.openTheMixerToolStripMenuItem_Click);
             // 
             // openTheBlacklistManagerToolStripMenuItem
             // 
             this.openTheBlacklistManagerToolStripMenuItem.Name = "openTheBlacklistManagerToolStripMenuItem";
-            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.openTheBlacklistManagerToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.openTheBlacklistManagerToolStripMenuItem.Text = "Open the blacklist manager";
             this.openTheBlacklistManagerToolStripMenuItem.Click += new System.EventHandler(this.openTheBlacklistManagerToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(280, 6);
+            // 
+            // assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem
+            // 
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Name = "assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem";
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Text = "Assign a soundfont list to a specific app";
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(280, 6);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem1
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem1";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Size = new System.Drawing.Size(275, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Size = new System.Drawing.Size(283, 22);
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Name = "changeDefaultMIDIOutDeviceToolStripMenuItem";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault32bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefault64bitMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Name = "changeDefault64bitMIDIOutDeviceToolStripMenuItem";
-            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(280, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -849,11 +1021,11 @@
             this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem,
             this.killTheWatchdogToolStripMenuItem,
             this.toolStripSeparator7,
+            this.enableExtra8SoundfontListsToolStripMenuItem,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
-            this.assignASoundfontListToASpecificAppToolStripMenuItem,
             this.toolStripSeparator6,
             this.hotkeysToolStripMenuItem,
             this.watchdogToolStripMenuItem});
@@ -923,13 +1095,6 @@
             this.changeDefaultSoundfontListToolStripMenuItem1.Size = new System.Drawing.Size(409, 22);
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
-            // 
-            // assignASoundfontListToASpecificAppToolStripMenuItem
-            // 
-            this.assignASoundfontListToASpecificAppToolStripMenuItem.Name = "assignASoundfontListToASpecificAppToolStripMenuItem";
-            this.assignASoundfontListToASpecificAppToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
-            this.assignASoundfontListToASpecificAppToolStripMenuItem.Text = "Assign a soundfont list to a specific app";
-            this.assignASoundfontListToASpecificAppToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -1190,158 +1355,28 @@
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
             // 
-            // SelectedListBox
+            // enableExtra8SoundfontListsToolStripMenuItem
             // 
-            this.SelectedListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SelectedListBox.FormattingEnabled = true;
-            this.SelectedListBox.Items.AddRange(new object[] {
-            "List 1",
-            "List 2",
-            "List 3",
-            "List 4",
-            "List 5",
-            "List 6",
-            "List 7",
-            "List 8"});
-            this.SelectedListBox.Location = new System.Drawing.Point(101, 8);
-            this.SelectedListBox.Name = "SelectedListBox";
-            this.SelectedListBox.Size = new System.Drawing.Size(474, 21);
-            this.SelectedListBox.TabIndex = 35;
-            this.SelectedListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedListBox_SelectedIndexChanged);
+            this.enableExtra8SoundfontListsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enabledToolStripMenuItem2,
+            this.disabledToolStripMenuItem2});
+            this.enableExtra8SoundfontListsToolStripMenuItem.Name = "enableExtra8SoundfontListsToolStripMenuItem";
+            this.enableExtra8SoundfontListsToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.enableExtra8SoundfontListsToolStripMenuItem.Text = "Enable extra 8 soundfont lists";
             // 
-            // label1
+            // enabledToolStripMenuItem2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
-            this.label1.TabIndex = 34;
-            this.label1.Text = "Select list to edit:";
+            this.enabledToolStripMenuItem2.Name = "enabledToolStripMenuItem2";
+            this.enabledToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.enabledToolStripMenuItem2.Text = "Enabled";
+            this.enabledToolStripMenuItem2.Click += new System.EventHandler(this.enabledToolStripMenuItem2_Click);
             // 
-            // DisableSF
+            // disabledToolStripMenuItem2
             // 
-            this.DisableSF.Location = new System.Drawing.Point(581, 262);
-            this.DisableSF.Name = "DisableSF";
-            this.DisableSF.Size = new System.Drawing.Size(89, 23);
-            this.DisableSF.TabIndex = 33;
-            this.DisableSF.Text = "Disable SF";
-            this.DisableSF.UseVisualStyleBackColor = true;
-            this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
-            // 
-            // EnableSF
-            // 
-            this.EnableSF.Location = new System.Drawing.Point(581, 233);
-            this.EnableSF.Name = "EnableSF";
-            this.EnableSF.Size = new System.Drawing.Size(89, 23);
-            this.EnableSF.TabIndex = 32;
-            this.EnableSF.Text = "Enable SF";
-            this.EnableSF.UseVisualStyleBackColor = true;
-            this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
-            // 
-            // List1Override
-            // 
-            this.List1Override.AutoSize = true;
-            this.List1Override.Enabled = false;
-            this.List1Override.Location = new System.Drawing.Point(8, 382);
-            this.List1Override.Name = "List1Override";
-            this.List1Override.Size = new System.Drawing.Size(250, 13);
-            this.List1Override.TabIndex = 31;
-            this.List1Override.Text = "The last soundfont will override the previous ones.";
-            // 
-            // IELPan1
-            // 
-            this.IELPan1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.IELPan1.Controls.Add(this.EL);
-            this.IELPan1.Controls.Add(this.IEL);
-            this.IELPan1.Location = new System.Drawing.Point(581, 316);
-            this.IELPan1.Name = "IELPan1";
-            this.IELPan1.Size = new System.Drawing.Size(89, 63);
-            this.IELPan1.TabIndex = 30;
-            // 
-            // EL
-            // 
-            this.EL.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.EL.Location = new System.Drawing.Point(0, 29);
-            this.EL.Name = "EL";
-            this.EL.Size = new System.Drawing.Size(85, 30);
-            this.EL.TabIndex = 7;
-            this.EL.Text = "Export list";
-            this.EL.UseVisualStyleBackColor = true;
-            this.EL.Click += new System.EventHandler(this.EL_Click);
-            // 
-            // IEL
-            // 
-            this.IEL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.IEL.Location = new System.Drawing.Point(0, 0);
-            this.IEL.Name = "IEL";
-            this.IEL.Size = new System.Drawing.Size(85, 30);
-            this.IEL.TabIndex = 6;
-            this.IEL.Text = "Import list";
-            this.IEL.UseVisualStyleBackColor = true;
-            this.IEL.Click += new System.EventHandler(this.IEL_Click);
-            // 
-            // CLi
-            // 
-            this.CLi.Location = new System.Drawing.Point(581, 7);
-            this.CLi.Name = "CLi";
-            this.CLi.Size = new System.Drawing.Size(89, 23);
-            this.CLi.TabIndex = 29;
-            this.CLi.Text = "Clear list";
-            this.CLi.UseVisualStyleBackColor = true;
-            this.CLi.Click += new System.EventHandler(this.CLi_Click);
-            // 
-            // MvD
-            // 
-            this.MvD.Location = new System.Drawing.Point(581, 163);
-            this.MvD.Name = "MvD";
-            this.MvD.Size = new System.Drawing.Size(89, 23);
-            this.MvD.TabIndex = 28;
-            this.MvD.Text = "Move ▼";
-            this.MvD.UseVisualStyleBackColor = true;
-            this.MvD.Click += new System.EventHandler(this.MvD_Click);
-            // 
-            // MvU
-            // 
-            this.MvU.Location = new System.Drawing.Point(581, 134);
-            this.MvU.Name = "MvU";
-            this.MvU.Size = new System.Drawing.Size(89, 23);
-            this.MvU.TabIndex = 27;
-            this.MvU.Text = "Move ▲";
-            this.MvU.UseVisualStyleBackColor = true;
-            this.MvU.Click += new System.EventHandler(this.MvU_Click);
-            // 
-            // RmvSF
-            // 
-            this.RmvSF.Location = new System.Drawing.Point(581, 65);
-            this.RmvSF.Name = "RmvSF";
-            this.RmvSF.Size = new System.Drawing.Size(89, 23);
-            this.RmvSF.TabIndex = 26;
-            this.RmvSF.Text = "Remove -";
-            this.RmvSF.UseVisualStyleBackColor = true;
-            this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
-            // 
-            // AddSF
-            // 
-            this.AddSF.Location = new System.Drawing.Point(581, 36);
-            this.AddSF.Name = "AddSF";
-            this.AddSF.Size = new System.Drawing.Size(89, 23);
-            this.AddSF.TabIndex = 25;
-            this.AddSF.Text = "Add +";
-            this.AddSF.UseVisualStyleBackColor = true;
-            this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
-            // 
-            // Lis
-            // 
-            this.Lis.AllowDrop = true;
-            this.Lis.FormattingEnabled = true;
-            this.Lis.HorizontalScrollbar = true;
-            this.Lis.Location = new System.Drawing.Point(6, 36);
-            this.Lis.Name = "Lis";
-            this.Lis.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.Lis.Size = new System.Drawing.Size(568, 342);
-            this.Lis.TabIndex = 24;
-            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
-            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
+            this.disabledToolStripMenuItem2.Name = "disabledToolStripMenuItem2";
+            this.disabledToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.disabledToolStripMenuItem2.Text = "Disabled";
+            this.disabledToolStripMenuItem2.Click += new System.EventHandler(this.disabledToolStripMenuItem2_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1365,6 +1400,7 @@
             this.TabsForTheControls.ResumeLayout(false);
             this.List.ResumeLayout(false);
             this.List.PerformLayout();
+            this.IELPan1.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
@@ -1381,7 +1417,6 @@
             this.menuStrip1.PerformLayout();
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
-            this.IELPan1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1482,7 +1517,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem killTheWatchdogToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem assignASoundfontListToASpecificAppToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assignSoundfontListToAppToolStripMenuItem;
         private System.Windows.Forms.ComboBox SelectedListBox;
         private System.Windows.Forms.Label label1;
@@ -1498,6 +1532,11 @@
         private System.Windows.Forms.Button RmvSF;
         private System.Windows.Forms.Button AddSF;
         private System.Windows.Forms.ListBox Lis;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enableExtra8SoundfontListsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem2;
     }
 }
 

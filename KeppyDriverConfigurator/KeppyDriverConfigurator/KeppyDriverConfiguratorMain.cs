@@ -25,14 +25,25 @@ namespace KeppyDriverConfigurator
         public string List7PathOld { get; set; }
         public string List8PathOld { get; set; }
 
-        public string List1Path { get; set; }
-        public string List2Path { get; set; }
-        public string List3Path { get; set; }
-        public string List4Path { get; set; }
-        public string List5Path { get; set; }
-        public string List6Path { get; set; }
-        public string List7Path { get; set; }
-        public string List8Path { get; set; }
+        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+
+        public string List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
+        public string List2Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
+        public string List3Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
+        public string List4Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
+        public string List5Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
+        public string List6Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
+        public string List7Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
+        public string List8Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
+        public string List9Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidii.sflist";
+        public string List10Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidij.sflist";
+        public string List11Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidik.sflist";
+        public string List12Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidil.sflist";
+        public string List13Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidim.sflist";
+        public string List14Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidin.sflist";
+        public string List15Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidio.sflist";
+        public string List16Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidip.sflist";
+
         public int openadvanced { get; set; }
 
         public int istheconfiguratorready { get; set; }
@@ -195,16 +206,38 @@ namespace KeppyDriverConfigurator
 
         private void ChangeList(string WhichList)
         {
-            using (StreamReader r = new StreamReader(WhichList))
+            try
             {
-                string line;
-                Lis.Items.Clear();
-                while ((line = r.ReadLine()) != null)
+                if (!System.IO.File.Exists(WhichList))
                 {
-                    Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                }
+                else
+                {
+                    try
+                    {
+                        using (StreamReader r = new StreamReader(WhichList))
+                        {
+                            string line;
+                            Lis.Items.Clear();
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        File.Create(WhichList).Dispose();
+                        MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
-
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
         }
 
         private void SaveSettings()
@@ -361,16 +394,7 @@ namespace KeppyDriverConfigurator
         private void KeppyDriverConfiguratorMain_Load(object sender, EventArgs e)
         {
             // Just some stuff lel
-            string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
             istheconfiguratorready = 0;
-            List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
-            List2Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
-            List3Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
-            List4Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidid.sflist";
-            List5Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidie.sflist";
-            List6Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidif.sflist";
-            List7Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidig.sflist";
-            List8Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidih.sflist";
             // MIDI out selector disabler
             if (IsWindows10() == true)
             {
@@ -453,6 +477,28 @@ namespace KeppyDriverConfigurator
                     checkDisabledToolStripMenuItem.Checked = true;
                     checkEnabledToolStripMenuItem.Enabled = true;
                     checkDisabledToolStripMenuItem.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
+                {
+                    enabledToolStripMenuItem2.Checked = true;
+                    disabledToolStripMenuItem2.Checked = false;
+                    enabledToolStripMenuItem2.Enabled = false;
+                    disabledToolStripMenuItem2.Enabled = true;
+                    SelectedListBox.Items.Add("List 9");
+                    SelectedListBox.Items.Add("List 10");
+                    SelectedListBox.Items.Add("List 11");
+                    SelectedListBox.Items.Add("List 12");
+                    SelectedListBox.Items.Add("List 13");
+                    SelectedListBox.Items.Add("List 14");
+                    SelectedListBox.Items.Add("List 15");
+                    SelectedListBox.Items.Add("List 16");
+                }
+                else
+                {
+                    enabledToolStripMenuItem2.Checked = false;
+                    disabledToolStripMenuItem2.Checked = true;
+                    enabledToolStripMenuItem2.Enabled = true;
+                    disabledToolStripMenuItem2.Enabled = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys")) == 1)
                 {
@@ -944,6 +990,54 @@ namespace KeppyDriverConfigurator
                 whichone = 8;
                 ChangeList(List8Path);
             }
+            else if (SelectedListBox.Text == "List 9")
+            {
+                CurrentList = List9Path;
+                whichone = 9;
+                ChangeList(List9Path);
+            }
+            else if (SelectedListBox.Text == "List 10")
+            {
+                CurrentList = List10Path;
+                whichone = 10;
+                ChangeList(List10Path);
+            }
+            else if (SelectedListBox.Text == "List 11")
+            {
+                CurrentList = List11Path;
+                whichone = 11;
+                ChangeList(List11Path);
+            }
+            else if (SelectedListBox.Text == "List 12")
+            {
+                CurrentList = List12Path;
+                whichone = 12;
+                ChangeList(List12Path);
+            }
+            else if (SelectedListBox.Text == "List 13")
+            {
+                CurrentList = List13Path;
+                whichone = 13;
+                ChangeList(List13Path);
+            }
+            else if (SelectedListBox.Text == "List 14")
+            {
+                CurrentList = List14Path;
+                whichone = 14;
+                ChangeList(List14Path);
+            }
+            else if (SelectedListBox.Text == "List 15")
+            {
+                CurrentList = List15Path;
+                whichone = 15;
+                ChangeList(List15Path);
+            }
+            else if (SelectedListBox.Text == "List 16")
+            {
+                CurrentList = List16Path;
+                whichone = 16;
+                ChangeList(List16Path);
+            }
         }
 
         private void Lis_DragDrop(object sender, DragEventArgs e)
@@ -1306,6 +1400,40 @@ namespace KeppyDriverConfigurator
             checkDisabledToolStripMenuItem.Enabled = false;
         }
 
+        private void enabledToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("extra8lists", "1", RegistryValueKind.DWord);
+            enabledToolStripMenuItem2.Checked = true;
+            disabledToolStripMenuItem2.Checked = false;
+            enabledToolStripMenuItem2.Enabled = false;
+            disabledToolStripMenuItem2.Enabled = true;
+            SelectedListBox.Items.Add("List 9");
+            SelectedListBox.Items.Add("List 10");
+            SelectedListBox.Items.Add("List 11");
+            SelectedListBox.Items.Add("List 12");
+            SelectedListBox.Items.Add("List 13");
+            SelectedListBox.Items.Add("List 14");
+            SelectedListBox.Items.Add("List 15");
+            SelectedListBox.Items.Add("List 16");
+        }
+
+        private void disabledToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("extra8lists", "0", RegistryValueKind.DWord);
+            enabledToolStripMenuItem2.Checked = false;
+            disabledToolStripMenuItem2.Checked = true;
+            enabledToolStripMenuItem2.Enabled = true;
+            disabledToolStripMenuItem2.Enabled = false;
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+        }
+
         private void killTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1344,8 +1472,8 @@ namespace KeppyDriverConfigurator
         private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 8.\n\n" +
-                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\n\n" +
-                "You can also reload lists that are already loaded.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\nCTRL+ALT+1: Load soundfont list 9\nCTRL+ALT+2: Load soundfont list 10\nCTRL+ALT+3: Load soundfont list 11\nCTRL+ALT+4: Load soundfont list 12\nCTRL+ALT+5: Load soundfont list 13\nCTRL+ALT+6: Load soundfont list 14\nCTRL+ALT+7: Load soundfont list 15\nCTRL+ALT+8: Load soundfont list 16\n\n" +
+                "You can also reload lists that are already loaded in memory.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
         private void howCanIResetTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1477,6 +1605,11 @@ namespace KeppyDriverConfigurator
             {
                 bufsize.Enabled = false;
             } 
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -47,6 +47,7 @@
             // DebugRefresh
             // 
             this.DebugRefresh.Enabled = true;
+            this.DebugRefresh.Interval = 150;
             this.DebugRefresh.Tick += new System.EventHandler(this.DebugRefresh_Tick);
             // 
             // KeppyDriverDebugWindow

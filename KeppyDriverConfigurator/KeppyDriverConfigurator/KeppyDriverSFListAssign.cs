@@ -14,19 +14,49 @@ namespace KeppyDriverConfigurator
     public partial class KeppyDriverSFListAssign : Form
     {
         public string LastBrowserPath { get; set; }
-        public string List1Path { get; set; }
-        public string List2Path { get; set; }
-        public string List3Path { get; set; }
-        public string List4Path { get; set; }
-        public string List5Path { get; set; }
-        public string List6Path { get; set; }
-        public string List7Path { get; set; }
-        public string List8Path { get; set; }
-        public bool listswitch { get; set; }
+
+        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+
+        public string List1Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidi.applist";
+        public string List2Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidib.applist";
+        public string List3Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidic.applist";
+        public string List4Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidid.applist";
+        public string List5Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidie.applist";
+        public string List6Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidif.applist";
+        public string List7Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidig.applist";
+        public string List8Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidih.applist";
+        public string List9Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidii.applist";
+        public string List10Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidij.applist";
+        public string List11Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidik.applist";
+        public string List12Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidil.applist";
+        public string List13Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidim.applist";
+        public string List14Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidin.applist";
+        public string List15Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidio.applist";
+        public string List16Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidip.applist";
+
+        public int whichone { get; set; }
+
+        public string CurrentList { get; set; }
 
         public KeppyDriverSFListAssign()
         {
             InitializeComponent();
+            RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
+            if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
+            {
+                SelectedListBox.Items.Add("List 9");
+                SelectedListBox.Items.Add("List 10");
+                SelectedListBox.Items.Add("List 11");
+                SelectedListBox.Items.Add("List 12");
+                SelectedListBox.Items.Add("List 13");
+                SelectedListBox.Items.Add("List 14");
+                SelectedListBox.Items.Add("List 15");
+                SelectedListBox.Items.Add("List 16");
+            }
+            else
+            {
+
+            }
         }
 
         private Control WhoTriggeredMe(object sender)
@@ -44,185 +74,79 @@ namespace KeppyDriverConfigurator
             return null;
         }
 
-        private void SaveList(String SelectedList, ListBox OriginalList)
+        private void ChangeList(string WhichList)
+        {
+            try
+            {
+                if (!System.IO.File.Exists(WhichList))
+                {
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                }
+                else
+                {
+                    try
+                    {
+                        using (StreamReader r = new StreamReader(WhichList))
+                        {
+                            string line;
+                            Lis.Items.Clear();
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        File.Create(WhichList).Dispose();
+                        MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+
+        private void SaveList(String SelectedList)
         {
             using (StreamWriter sw = new StreamWriter(SelectedList))
             {
-                foreach (var item in OriginalList.Items)
+                foreach (var item in Lis.Items)
                 {
                     sw.WriteLine(item.ToString());
                 }
             }
         }
 
-        private void ClearAppListTrigger(ListBox list, string listtosave)
+        private void ClearAppList()
         {
-            list.Items.Clear();
-            SaveList(listtosave, list);
-        }
-
-        private void ClearAppList(string selectedlist)
-        {
-            if (selectedlist == "listBox1")
-            {
-                ClearAppListTrigger(listBox1, List1Path);
-            }
-            else if (selectedlist == "listBox2")
-            {
-                ClearAppListTrigger(listBox2, List2Path);
-            }
-            else if (selectedlist == "listBox3")
-            {
-                ClearAppListTrigger(listBox3, List3Path);
-            }
-            else if (selectedlist == "listBox4")
-            {
-                ClearAppListTrigger(listBox4, List4Path);
-            }
-            else if (selectedlist == "listBox5")
-            {
-                ClearAppListTrigger(listBox5, List5Path);
-            }
-            else if (selectedlist == "listBox6")
-            {
-                ClearAppListTrigger(listBox6, List6Path);
-            }
-            else if (selectedlist == "listBox7")
-            {
-                ClearAppListTrigger(listBox7, List7Path);
-            }
-            else if (selectedlist == "listBox8")
-            {
-                ClearAppListTrigger(listBox8, List8Path);
-            }
-        }
-
-        private void RemoveAppFromListTrigger(ListBox list, string listtosave)
-        {
-            for (int i = list.SelectedIndices.Count - 1; i >= 0; i--)
-            {
-                list.Items.RemoveAt(list.SelectedIndices[i]);
-            }
-            SaveList(listtosave, list);
+            Lis.Items.Clear();
+            SaveList(CurrentList);
         }
 
         private void RemoveAppFromList(string selectedlist)
         {
-            if (selectedlist == "listBox1")
+            for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                RemoveAppFromListTrigger(listBox1, List1Path);
+                Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
             }
-            else if (selectedlist == "listBox2")
-            {
-                RemoveAppFromListTrigger(listBox2, List2Path);
-            }
-            else if (selectedlist == "listBox3")
-            {
-                RemoveAppFromListTrigger(listBox3, List3Path);
-            }
-            else if (selectedlist == "listBox4")
-            {
-                RemoveAppFromListTrigger(listBox4, List4Path);
-            }
-            else if (selectedlist == "listBox5")
-            {
-                RemoveAppFromListTrigger(listBox5, List5Path);
-            }
-            else if (selectedlist == "listBox6")
-            {
-                RemoveAppFromListTrigger(listBox6, List6Path);
-            }
-            else if (selectedlist == "listBox7")
-            {
-                RemoveAppFromListTrigger(listBox7, List7Path);
-            }
-            else if (selectedlist == "listBox8")
-            {
-                RemoveAppFromListTrigger(listBox8, List8Path);
-            }
+            SaveList(CurrentList);
         }
 
-        private void AddAppToListTrigger(ListBox list, string str, string listtosave)
+        private void AddAppToList(string str) 
         {
-            list.Items.Add(str);
-            SaveList(listtosave, list);
+            Lis.Items.Add(str);
+            SaveList(CurrentList);
         }
 
-        private void AddAppToList(string selectedlist, string str) {
-            if (selectedlist == "listBox1")
-            {
-                AddAppToListTrigger(listBox1, str, List1Path);
-            }
-            else if (selectedlist == "listBox2")
-            {
-                AddAppToListTrigger(listBox2, str, List2Path);
-            }
-            else if (selectedlist == "listBox3")
-            {
-                AddAppToListTrigger(listBox3, str, List3Path);
-            }
-            else if (selectedlist == "listBox4")
-            {
-                AddAppToListTrigger(listBox4, str, List4Path);
-            }
-            else if (selectedlist == "listBox5")
-            {
-                AddAppToListTrigger(listBox5, str, List5Path);
-            }
-            else if (selectedlist == "listBox6")
-            {
-                AddAppToListTrigger(listBox6, str, List6Path);
-            }
-            else if (selectedlist == "listBox7")
-            {
-                AddAppToListTrigger(listBox7, str, List7Path);
-            }
-            else if (selectedlist == "listBox8")
-            {
-                AddAppToListTrigger(listBox8, str, List8Path);
-            }
-        }
-
-        private void AddAppNameOnlyToListTrigger(ListBox list, string str, string listtosave)
+        private void AddAppNameOnlyToList(string str)
         {
-            list.Items.Add(Path.GetFileName(str));
-            SaveList(listtosave, list);
-        }
-
-        private void AddAppNameOnlyToList(string selectedlist, string str)
-        {
-            if (selectedlist == "listBox1")
-            {
-                AddAppNameOnlyToListTrigger(listBox1, str, List1Path);
-            }
-            else if (selectedlist == "listBox2")
-            {
-                AddAppNameOnlyToListTrigger(listBox2, str, List2Path);
-            }
-            else if (selectedlist == "listBox3")
-            {
-                AddAppNameOnlyToListTrigger(listBox3, str, List3Path);
-            }
-            else if (selectedlist == "listBox4")
-            {
-                AddAppNameOnlyToListTrigger(listBox4, str, List4Path);
-            }
-            else if (selectedlist == "listBox5")
-            {
-                AddAppNameOnlyToListTrigger(listBox5, str, List5Path);
-            }
-            else if (selectedlist == "listBox6")
-            {
-                AddAppNameOnlyToListTrigger(listBox6, str, List6Path);
-            }
-            else if (selectedlist == "listBox7")
-            {
-                AddAppNameOnlyToListTrigger(listBox7, str, List7Path);
-            }
-            else if (selectedlist == "listBox8")
-            {
-                AddAppNameOnlyToListTrigger(listBox8, str, List8Path);
-            }
+            Lis.Items.Add(Path.GetFileName(str));
+            SaveList(CurrentList);
         }
 
         private void InitializeLastPath()
@@ -253,153 +177,10 @@ namespace KeppyDriverConfigurator
             }
         }
 
-        private void InitializeLists()
-        {
-            string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-
-            // Initialize the eight list paths
-            List1Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidi.applist";
-            List2Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidib.applist";
-            List3Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidic.applist";
-            List4Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidid.applist";
-            List5Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidie.applist";
-            List6Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidif.applist";
-            List7Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidig.applist";
-            List8Path = soundfontnewlocation + "\\Keppy's Driver\\applists\\keppymidih.applist";
-
-            // ======= Read soundfont lists
-            try
-            {
-                if (!System.IO.Directory.Exists(soundfontnewlocation + "\\Keppy's Driver\\applists\\"))
-                {
-                    System.IO.Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Driver\\applists\\");
-                    File.Create(List1Path).Dispose();
-                    File.Create(List2Path).Dispose();
-                    File.Create(List3Path).Dispose();
-                    File.Create(List4Path).Dispose();
-                    File.Create(List5Path).Dispose();
-                    File.Create(List6Path).Dispose();
-                    File.Create(List7Path).Dispose();
-                    File.Create(List8Path).Dispose();
-                }
-                else
-                {
-                    try
-                    {
-                        using (StreamReader r = new StreamReader(List1Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox1.Items.Add(line); // The program is copying the entire text file to the List 1's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List2Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox2.Items.Add(line); // The program is copying the entire text file to the List 2's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List3Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox3.Items.Add(line); // The program is copying the entire text file to the List 3's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List4Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox4.Items.Add(line); // The program is copying the entire text file to the List 4's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List5Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox5.Items.Add(line); // The program is copying the entire text file to the List 5's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List6Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox6.Items.Add(line); // The program is copying the entire text file to the List 6's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List7Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox7.Items.Add(line); // The program is copying the entire text file to the List 7's listbox.
-                            }
-                        }
-                        using (StreamReader r = new StreamReader(List8Path))
-                        {
-                            string line;
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                listBox8.Items.Add(line); // The program is copying the entire text file to the List 8's listbox.
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // If the program fails at reading the lists, it'll create them for you
-                        if (File.Exists(List1Path) == false)
-                        {
-                            File.Create(List1Path).Dispose();
-                        }
-                        if (File.Exists(List2Path) == false)
-                        {
-                            File.Create(List2Path).Dispose();
-                        }
-                        if (File.Exists(List3Path) == false)
-                        {
-                            File.Create(List3Path).Dispose();
-                        }
-                        if (File.Exists(List4Path) == false)
-                        {
-                            File.Create(List4Path).Dispose();
-                        }
-                        if (File.Exists(List5Path) == false)
-                        {
-                            File.Create(List5Path).Dispose();
-                        }
-                        if (File.Exists(List6Path) == false)
-                        {
-                            File.Create(List6Path).Dispose();
-                        }
-                        if (File.Exists(List7Path) == false)
-                        {
-                            File.Create(List7Path).Dispose();
-                        }
-                        if (File.Exists(List8Path) == false)
-                        {
-                            File.Create(List8Path).Dispose();
-                        }
-                        MessageBox.Show("One of the app lists were missing, so the configurator automatically restored them.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-        }
-
         private void KeppyDriverSFListAssign_Load(object sender, EventArgs e)
         {
+            SelectedListBox.Text = "List 1";
             InitializeLastPath();
-            InitializeLists();
         }
 
         private void addAnAppToTheListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -413,8 +194,8 @@ namespace KeppyDriverConfigurator
                     RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Paths", true);
                     LastBrowserPath = Path.GetDirectoryName(str);
                     SynthPaths.SetValue("lastpathsfassign", LastBrowserPath, RegistryValueKind.String);
-                    SynthPaths.Close();    
-                    AddAppToList(LeControl.Name, str);
+                    SynthPaths.Close();
+                    AddAppToList(str);
                 }
             }
         }
@@ -427,7 +208,7 @@ namespace KeppyDriverConfigurator
             {
                 foreach (string str in AddApp.FileNames)
                 {
-                    AddAppNameOnlyToList(LeControl.Name, str);
+                    AddAppNameOnlyToList(str);
                 }
             }
         }
@@ -441,7 +222,107 @@ namespace KeppyDriverConfigurator
         private void clearListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Control LeControl = WhoTriggeredMe(sender);
-            ClearAppList(LeControl.Name);
+            ClearAppList();
+        }
+
+        private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (SelectedListBox.Text == "List 1")
+            {
+                CurrentList = List1Path;
+                whichone = 1;
+                ChangeList(List1Path);
+            }
+            else if (SelectedListBox.Text == "List 2")
+            {
+                CurrentList = List2Path;
+                whichone = 2;
+                ChangeList(List2Path);
+            }
+            else if (SelectedListBox.Text == "List 3")
+            {
+                CurrentList = List3Path;
+                whichone = 3;
+                ChangeList(List3Path);
+            }
+            else if (SelectedListBox.Text == "List 4")
+            {
+                CurrentList = List4Path;
+                whichone = 4;
+                ChangeList(List4Path);
+            }
+            else if (SelectedListBox.Text == "List 5")
+            {
+                CurrentList = List5Path;
+                whichone = 5;
+                ChangeList(List5Path);
+            }
+            else if (SelectedListBox.Text == "List 6")
+            {
+                CurrentList = List6Path;
+                whichone = 6;
+                ChangeList(List6Path);
+            }
+            else if (SelectedListBox.Text == "List 7")
+            {
+                CurrentList = List7Path;
+                whichone = 7;
+                ChangeList(List7Path);
+            }
+            else if (SelectedListBox.Text == "List 8")
+            {
+                CurrentList = List8Path;
+                whichone = 8;
+                ChangeList(List8Path);
+            }
+            else if (SelectedListBox.Text == "List 9")
+            {
+                CurrentList = List9Path;
+                whichone = 9;
+                ChangeList(List9Path);
+            }
+            else if (SelectedListBox.Text == "List 10")
+            {
+                CurrentList = List10Path;
+                whichone = 10;
+                ChangeList(List10Path);
+            }
+            else if (SelectedListBox.Text == "List 11")
+            {
+                CurrentList = List11Path;
+                whichone = 11;
+                ChangeList(List11Path);
+            }
+            else if (SelectedListBox.Text == "List 12")
+            {
+                CurrentList = List12Path;
+                whichone = 12;
+                ChangeList(List12Path);
+            }
+            else if (SelectedListBox.Text == "List 13")
+            {
+                CurrentList = List13Path;
+                whichone = 13;
+                ChangeList(List13Path);
+            }
+            else if (SelectedListBox.Text == "List 14")
+            {
+                CurrentList = List14Path;
+                whichone = 14;
+                ChangeList(List14Path);
+            }
+            else if (SelectedListBox.Text == "List 15")
+            {
+                CurrentList = List15Path;
+                whichone = 15;
+                ChangeList(List15Path);
+            }
+            else if (SelectedListBox.Text == "List 16")
+            {
+                CurrentList = List16Path;
+                whichone = 16;
+                ChangeList(List16Path);
+            }
         }
     }
 }
