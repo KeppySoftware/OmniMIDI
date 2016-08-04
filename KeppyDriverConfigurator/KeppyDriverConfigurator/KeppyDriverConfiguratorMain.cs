@@ -27,6 +27,8 @@ namespace KeppyDriverConfigurator
 
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
 
+        public string AbsolutePath = soundfontnewlocation + "\\Keppy's Driver";
+        public string ListsPath = soundfontnewlocation + "\\Keppy's Driver\\lists";
         public string List1Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidi.sflist";
         public string List2Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidib.sflist";
         public string List3Path = soundfontnewlocation + "\\Keppy's Driver\\lists\\keppymidic.sflist";
@@ -208,30 +210,43 @@ namespace KeppyDriverConfigurator
         {
             try
             {
+                if (!System.IO.Directory.Exists(AbsolutePath))
+                {
+                    Directory.CreateDirectory(AbsolutePath);
+                    Directory.CreateDirectory(ListsPath);
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                    return;
+                }
+                if (!System.IO.Directory.Exists(ListsPath))
+                {
+                    Directory.CreateDirectory(ListsPath);
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                    return;
+                }
                 if (!System.IO.File.Exists(WhichList))
                 {
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
+                    return;
                 }
-                else
+                try
                 {
-                    try
+                    using (StreamReader r = new StreamReader(WhichList))
                     {
-                        using (StreamReader r = new StreamReader(WhichList))
+                        string line;
+                        Lis.Items.Clear();
+                        while ((line = r.ReadLine()) != null)
                         {
-                            string line;
-                            Lis.Items.Clear();
-                            while ((line = r.ReadLine()) != null)
-                            {
-                                Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
-                            }
+                            Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
                         }
                     }
-                    catch
-                    {
-                        File.Create(WhichList).Dispose();
-                        MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                }
+                catch
+                {
+                    File.Create(WhichList).Dispose();
+                    MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -625,7 +640,7 @@ namespace KeppyDriverConfigurator
                 // Jakuberino
                 if (openadvanced == 1)
                 {
-                    TabsForTheControls.SelectedIndex = 8;
+                    TabsForTheControls.SelectedIndex = 1;
                 }
 
                 istheconfiguratorready = 1;

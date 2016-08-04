@@ -14,6 +14,7 @@ namespace KeppyDriverWatchdog
             ContextMenuStrip menu = new ContextMenuStrip();
             ToolStripMenuItem item;
             ToolStripSeparator sep;
+            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Settings", true);
 
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(CheckPop);
@@ -68,45 +69,48 @@ namespace KeppyDriverWatchdog
             item.Click += new EventHandler(SoundfontReload8);
             menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 9";
-            item.Click += new EventHandler(SoundfontReload9);
-            menu.Items.Add(item);
+            if (Convert.ToInt32(Settings.GetValue("extra8lists", 0)) == 1)
+            {
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 9";
+                item.Click += new EventHandler(SoundfontReload9);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 10";
-            item.Click += new EventHandler(SoundfontReload10);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 10";
+                item.Click += new EventHandler(SoundfontReload10);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 11";
-            item.Click += new EventHandler(SoundfontReload11);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 11";
+                item.Click += new EventHandler(SoundfontReload11);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 12";
-            item.Click += new EventHandler(SoundfontReload12);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 12";
+                item.Click += new EventHandler(SoundfontReload12);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 13";
-            item.Click += new EventHandler(SoundfontReload13);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 13";
+                item.Click += new EventHandler(SoundfontReload13);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 14";
-            item.Click += new EventHandler(SoundfontReload14);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 14";
+                item.Click += new EventHandler(SoundfontReload14);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 15";
-            item.Click += new EventHandler(SoundfontReload15);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 15";
+                item.Click += new EventHandler(SoundfontReload15);
+                menu.Items.Add(item);
 
-            item = new ToolStripMenuItem();
-            item.Text = "Reload list 16";
-            item.Click += new EventHandler(SoundfontReload16);
-            menu.Items.Add(item);
+                item = new ToolStripMenuItem();
+                item.Text = "Reload list 16";
+                item.Click += new EventHandler(SoundfontReload16);
+                menu.Items.Add(item);
+            }
 
             return menu;
         }
@@ -213,6 +217,7 @@ namespace KeppyDriverWatchdog
             {
                 RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver\\Watchdog", true);
                 Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                Watchdog.Close();
             }
             catch
             {

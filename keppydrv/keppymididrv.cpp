@@ -415,7 +415,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 							if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 							{
 								PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-								ShellExecute(NULL, L"open", configuratorapp, L"-advancedtab", NULL, SW_SHOWNORMAL);
+								ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
 								exit(0);
 								break;
 							}
