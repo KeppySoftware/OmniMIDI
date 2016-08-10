@@ -100,7 +100,12 @@
             this.checkEnabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.killTheWatchdogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.enableExtra8SoundfontListsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.disabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,9 +145,6 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
             this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
-            this.enableExtra8SoundfontListsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.disabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -220,7 +222,6 @@
             this.label1.Size = new System.Drawing.Size(90, 13);
             this.label1.TabIndex = 34;
             this.label1.Text = "Select list to edit:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // DisableSF
             // 
@@ -1020,6 +1021,8 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkForUpdatesWhenStartingTheConfiguratorToolStripMenuItem,
             this.killTheWatchdogToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.manageFolderFavouritesToolStripMenuItem,
             this.toolStripSeparator7,
             this.enableExtra8SoundfontListsToolStripMenuItem,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
@@ -1063,10 +1066,45 @@
             this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
             this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(406, 6);
+            // 
+            // manageFolderFavouritesToolStripMenuItem
+            // 
+            this.manageFolderFavouritesToolStripMenuItem.Name = "manageFolderFavouritesToolStripMenuItem";
+            this.manageFolderFavouritesToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.manageFolderFavouritesToolStripMenuItem.Text = "Manage folder favourites";
+            this.manageFolderFavouritesToolStripMenuItem.Click += new System.EventHandler(this.manageFolderFavouritesToolStripMenuItem_Click);
+            // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(406, 6);
+            // 
+            // enableExtra8SoundfontListsToolStripMenuItem
+            // 
+            this.enableExtra8SoundfontListsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enabledToolStripMenuItem2,
+            this.disabledToolStripMenuItem2});
+            this.enableExtra8SoundfontListsToolStripMenuItem.Name = "enableExtra8SoundfontListsToolStripMenuItem";
+            this.enableExtra8SoundfontListsToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.enableExtra8SoundfontListsToolStripMenuItem.Text = "Enable extra 8 soundfont lists";
+            // 
+            // enabledToolStripMenuItem2
+            // 
+            this.enabledToolStripMenuItem2.Name = "enabledToolStripMenuItem2";
+            this.enabledToolStripMenuItem2.Size = new System.Drawing.Size(119, 22);
+            this.enabledToolStripMenuItem2.Text = "Enabled";
+            this.enabledToolStripMenuItem2.Click += new System.EventHandler(this.enabledToolStripMenuItem2_Click);
+            // 
+            // disabledToolStripMenuItem2
+            // 
+            this.disabledToolStripMenuItem2.Name = "disabledToolStripMenuItem2";
+            this.disabledToolStripMenuItem2.Size = new System.Drawing.Size(119, 22);
+            this.disabledToolStripMenuItem2.Text = "Disabled";
+            this.disabledToolStripMenuItem2.Click += new System.EventHandler(this.disabledToolStripMenuItem2_Click);
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
@@ -1335,7 +1373,6 @@
             // 
             // SoundfontImport
             // 
-            this.SoundfontImport.FileName = "openFileDialog1";
             this.SoundfontImport.Filter = "Soundfont files|*.sf2;*.sfz;*.sfpack;";
             this.SoundfontImport.Multiselect = true;
             this.SoundfontImport.RestoreDirectory = true;
@@ -1354,29 +1391,6 @@
             // 
             this.VolumeHotkeysCheck.Interval = 1;
             this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
-            // 
-            // enableExtra8SoundfontListsToolStripMenuItem
-            // 
-            this.enableExtra8SoundfontListsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.enabledToolStripMenuItem2,
-            this.disabledToolStripMenuItem2});
-            this.enableExtra8SoundfontListsToolStripMenuItem.Name = "enableExtra8SoundfontListsToolStripMenuItem";
-            this.enableExtra8SoundfontListsToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
-            this.enableExtra8SoundfontListsToolStripMenuItem.Text = "Enable extra 8 soundfont lists";
-            // 
-            // enabledToolStripMenuItem2
-            // 
-            this.enabledToolStripMenuItem2.Name = "enabledToolStripMenuItem2";
-            this.enabledToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
-            this.enabledToolStripMenuItem2.Text = "Enabled";
-            this.enabledToolStripMenuItem2.Click += new System.EventHandler(this.enabledToolStripMenuItem2_Click);
-            // 
-            // disabledToolStripMenuItem2
-            // 
-            this.disabledToolStripMenuItem2.Name = "disabledToolStripMenuItem2";
-            this.disabledToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
-            this.disabledToolStripMenuItem2.Text = "Disabled";
-            this.disabledToolStripMenuItem2.Click += new System.EventHandler(this.disabledToolStripMenuItem2_Click);
             // 
             // KeppyDriverConfiguratorMain
             // 
@@ -1537,6 +1551,8 @@
         private System.Windows.Forms.ToolStripMenuItem enableExtra8SoundfontListsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem manageFolderFavouritesToolStripMenuItem;
     }
 }
 

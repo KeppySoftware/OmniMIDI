@@ -671,6 +671,26 @@ namespace KeppyDriverConfigurator
         // -------------------------
         // Soundfont lists functions
 
+        private void OpenFileDialogAddCustomPaths(FileDialog dialog)
+        {
+            try
+            {
+                // Import the blacklist file
+                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\keppymididrv.favlist"))
+                {
+                    string line;
+                    while ((line = r.ReadLine()) != null)
+                    {
+                        dialog.CustomPlaces.Add(line);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
 
         private void CLi_Click(object sender, EventArgs e)
         {
@@ -703,7 +723,9 @@ namespace KeppyDriverConfigurator
         {
             try
             {
+                SoundfontImport.InitialDirectory = LastBrowserPath;
                 SoundfontImport.FileName = "";
+                OpenFileDialogAddCustomPaths(SoundfontImport);
                 if (SoundfontImport.ShowDialog() == DialogResult.OK)
                 {
                     foreach (string str in SoundfontImport.FileNames)
@@ -729,6 +751,8 @@ namespace KeppyDriverConfigurator
                         {
                             MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
+                        LastBrowserPath = Path.GetDirectoryName(str);
+                        SynthSettings.SetValue("lastpathsfimport", Path.GetDirectoryName(str));
                     }
                     if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
                     {
@@ -1317,6 +1341,12 @@ namespace KeppyDriverConfigurator
             frm.ShowDialog();
         }
 
+        private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppyDriverFavouritesManager frm = new KeppyDriverFavouritesManager();
+            frm.ShowDialog();
+        }
+
         private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
@@ -1354,7 +1384,6 @@ namespace KeppyDriverConfigurator
             disabledToolStripMenuItem1.Checked = true;
             disabledToolStripMenuItem1.Enabled = false;
         }
-
 
         private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1622,9 +1651,5 @@ namespace KeppyDriverConfigurator
             } 
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

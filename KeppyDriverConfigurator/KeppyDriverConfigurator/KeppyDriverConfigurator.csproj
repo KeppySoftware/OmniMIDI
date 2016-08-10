@@ -68,6 +68,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KeppyDriverFavouritesManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppyDriverFavouritesManager.Designer.cs">
+      <DependentUpon>KeppyDriverFavouritesManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeppyDriverBlacklistSystem.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +147,9 @@
     <Compile Include="MIDI\NET\Devices\Output.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="KeppyDriverFavouritesManager.resx">
+      <DependentUpon>KeppyDriverFavouritesManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="KeppyDriverBlacklistSystem.resx">
       <DependentUpon>KeppyDriverBlacklistSystem.cs</DependentUpon>
     </EmbeddedResource>
