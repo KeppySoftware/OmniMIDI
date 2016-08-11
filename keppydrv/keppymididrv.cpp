@@ -34,13 +34,16 @@ Keppy's Driver, a fork of BASSMIDI Driver
 #define BASSDEF(f) (WINAPI *f)	// define the BASS/BASSMIDI functions as pointers
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSENCDEF(f) (WINAPI *f)	
+#define BASS_VSTDEF(f) (WINAPI *f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
+#define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 
 #include <bass.h>
 #include <bassmidi.h>
 #include <bassenc.h>
+#include <bass_vst.h>
 
 #include "sound_out.h"
 
@@ -150,7 +153,8 @@ message_window * g_msgwnd = NULL;
 
 static HINSTANCE bass = 0;			// bass handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
-static HINSTANCE bassenc = 0;			// bassmidi handle
+static HINSTANCE bassenc = 0;			// bassenc handle
+static HINSTANCE bass_vst = 0;			// bass_vst handle
 
 
 
@@ -332,6 +336,15 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			int opend = 0;
 			BASS_MIDI_FONT * mf;
 			BASS_INFO info;
+			TCHAR loudmaxdll[MAX_PATH];
+			TCHAR loudmaxdll64[MAX_PATH];
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, loudmaxdll);
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, loudmaxdll64);
+			PathAppend(loudmaxdll, _T("\\Keppy's Driver\\LoudMax.dll"));
+			PathAppend(loudmaxdll64, _T("\\Keppy's Driver\\LoudMax64.dll"));
+			USES_CONVERSION;
+			const char *LMDLL = T2A(loudmaxdll);
+			const char *LMDLL64 = T2A(loudmaxdll64);
 			while (opend == 0 && stop_thread == 0) {
 				if (!com_initialized) {
 					if (FAILED(CoInitialize(NULL))) continue;
@@ -374,6 +387,13 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						BASS_StreamFree(hStream);
 						hStream = 0;
 						continue;
+					}
+					// LoudMax stuff lel
+					if (PathFileExists(loudmaxdll)) {
+						BASS_VST_ChannelSetDSP(hStream, LMDLL, 0, 1);
+					}
+					if (PathFileExists(loudmaxdll64)) {
+						BASS_VST_ChannelSetDSP(hStream, LMDLL64, 0, 1);
 					}
 					// Encoder code
 					if (encmode == 1) {

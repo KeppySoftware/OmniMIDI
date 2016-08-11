@@ -9,7 +9,7 @@ AppPublisherURL=http://keppystudios.com
 AppSupportPhone=+393511888475
 AppSupportURL=mailto:kaleidonkep99@outlook.com
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/releases
-AppVersion=3.5.2.3
+AppVersion=3.5.3.0
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -36,7 +36,7 @@ VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) an
 VersionInfoProductName=Keppy's Driver
 VersionInfoProductTextVersion=3.5.2.3
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=3.5.2.3
+VersionInfoVersion=3.5.3.0
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -47,9 +47,11 @@ AlwaysShowDirOnReadyPage=True
 Source: "external_packages\lib64\bass.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib64\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib64\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bass_vst.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bass.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bassenc.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bassmidi.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bass_vst.dll"; DestDir: "{syswow64}\keppydrv"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\keppydrv.dll"; DestDir: "{sys}\keppydrv"; DestName: "keppydrv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppyDriverDebugWindow.exe"; DestDir: "{syswow64}\keppydrv"; DestName: "KeppyDriverDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -63,6 +65,7 @@ Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppydrv"; DestName: "sfzgui
 Source: "external_packages\lib\bass.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\bassenc.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppydrv"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bass_vst.dll"; DestDir: "{sys}\keppydrv"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverConfigurator.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverDebugWindow.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppyDriverWatchdog.exe"; DestDir: "{sys}\keppydrv"; DestName: "KeppyDriverWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode

@@ -499,6 +499,7 @@ BOOL load_bassfuncs()
 	TCHAR basspath[MAX_PATH] = { 0 };
 	TCHAR bassmidipath[MAX_PATH] = { 0 };
 	TCHAR bassencpath[MAX_PATH] = { 0 };
+	TCHAR bassvstpath[MAX_PATH] = { 0 };
 	TCHAR pluginpath[MAX_PATH] = { 0 };
 	WIN32_FIND_DATA fd;
 	HANDLE fh;
@@ -523,6 +524,12 @@ BOOL load_bassfuncs()
 	lstrcat(bassencpath, L"\\bassenc.dll");
 	if (!(bassenc = LoadLibrary(bassencpath))) {
 		DLLLoadError(bassencpath);
+		exit(0);
+	}
+	lstrcat(bassvstpath, installpath);
+	lstrcat(bassvstpath, L"\\bass_vst.dll");
+	if (!(bass_vst = LoadLibrary(bassvstpath))) {
+		DLLLoadError(bassvstpath);
 		exit(0);
 	}
 	/* "load" all the BASS functions that are to be used */
@@ -557,6 +564,7 @@ BOOL load_bassfuncs()
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+	LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
 	OutputDebugString(L"Done.");
 
 	installpathlength = lstrlen(installpath) + 1;
