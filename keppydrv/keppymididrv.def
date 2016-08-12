@@ -1,4 +1,0 @@
-LIBRARY      "keppydrv.dll"
-EXPORTS
-	DriverProc PRIVATE
-	modMessage PRIVATE

@@ -1,0 +1,4 @@
+LIBRARY      "keppysynth.dll"
+EXPORTS
+	DriverProc PRIVATE
+	modMessage PRIVATE

@@ -1,0 +1,1655 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using System.IO;
+using System.Diagnostics;
+using Microsoft.Win32;
+
+namespace KeppySynthConfigurator
+{
+    public partial class KeppySynthConfiguratorMain : Form
+    {
+        public string LastBrowserPath { get; set; }
+        public string LastImportExportPath { get; set; }
+
+        public string List1PathOld { get; set; }
+        public string List2PathOld { get; set; }
+        public string List3PathOld { get; set; }
+        public string List4PathOld { get; set; }
+        public string List5PathOld { get; set; }
+        public string List6PathOld { get; set; }
+        public string List7PathOld { get; set; }
+        public string List8PathOld { get; set; }
+
+        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+
+        public string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
+        public string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
+        public string List1Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidi.sflist";
+        public string List2Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidib.sflist";
+        public string List3Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidic.sflist";
+        public string List4Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidid.sflist";
+        public string List5Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidie.sflist";
+        public string List6Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidif.sflist";
+        public string List7Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidig.sflist";
+        public string List8Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidih.sflist";
+        public string List9Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidii.sflist";
+        public string List10Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidij.sflist";
+        public string List11Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidik.sflist";
+        public string List12Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidil.sflist";
+        public string List13Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidim.sflist";
+        public string List14Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidin.sflist";
+        public string List15Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidio.sflist";
+        public string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist";
+
+        public int openadvanced { get; set; }
+
+        public int istheconfiguratorready { get; set; }
+        public int whichone { get; set; }
+
+        public string CurrentList { get; set; }
+
+        public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+        public RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
+
+        public KeppySynthConfiguratorMain(String[] args)
+        {
+            foreach (String s in args)
+            {
+                switch (s.Substring(0, 3).ToUpper())
+                {
+                    case "/AS":
+                        UserProfileMigration();
+                        Environment.Exit(0);
+                        break;
+                    case "/AT":
+                        openadvanced = 1;
+                        break;
+                    default:
+                        // do other stuff...
+                        break;
+                }
+            }
+            InitializeComponent();
+        }
+
+        private void KeppySynthConfiguratorMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SynthSettings.Close();
+            Watchdog.Close();
+        }
+
+        static bool IsWindows10()
+        {
+            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            string productName = (string)reg.GetValue("ProductName");
+            return productName.StartsWith("Windows 10");
+        }
+
+        static bool IsWindowsXP()
+        {
+            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            string productName = (string)reg.GetValue("ProductName");
+            return productName.StartsWith("Windows XP");
+        }
+
+        // Just stuff to reduce code's length
+        private void SFZCompliant()
+        {
+            MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SaveList(String SelectedList)
+        {
+            using (StreamWriter sw = new StreamWriter(SelectedList))
+            {
+                foreach (var item in Lis.Items)
+                {
+                    sw.WriteLine(item.ToString());
+                }
+            }
+        }
+
+        private void ReinitializeList(Exception ex, String selectedlistpath)
+        {
+            try
+            {
+                MessageBox.Show("There was an error while trying to save the soundfont list!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Lis.Items.Clear();
+                using (StreamReader r = new StreamReader(selectedlistpath))
+                {
+                    string line;
+                    while ((line = r.ReadLine()) != null)
+                    {
+                        Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox because it wasn't able to save the soundfont list.
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.Exit();
+            }
+        }
+
+        private void AddSoundfontDragNDrop(String SelectedList, DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int i;
+            for (i = 0; i < s.Length; i++)
+            {
+                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
+                {
+                    Lis.Items.Add(s[i]);
+                    SaveList(CurrentList);
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
+                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
+                {
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            string bank = form.BankValueReturn;
+                            string preset = form.PresetValueReturn;
+                            Lis.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
+                            SaveList(CurrentList);
+                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                            {
+                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                            }
+                        }
+                    }
+                }
+                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        public void AddSoundfontDragNDropTriv(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void UserProfileMigration()
+        {
+            try
+            {
+                string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Synthesizer\\";
+                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
+                if (IsWindowsXP() == false)
+                {
+                    Directory.Move(oldlocation, newlocation);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void ChangeList(string WhichList)
+        {
+            try
+            {
+                if (!System.IO.Directory.Exists(AbsolutePath))
+                {
+                    Directory.CreateDirectory(AbsolutePath);
+                    Directory.CreateDirectory(ListsPath);
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                    return;
+                }
+                if (!System.IO.Directory.Exists(ListsPath))
+                {
+                    Directory.CreateDirectory(ListsPath);
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                    return;
+                }
+                if (!System.IO.File.Exists(WhichList))
+                {
+                    File.Create(WhichList).Dispose();
+                    Lis.Items.Clear();
+                    return;
+                }
+                try
+                {
+                    using (StreamReader r = new StreamReader(WhichList))
+                    {
+                        string line;
+                        Lis.Items.Clear();
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                        }
+                    }
+                }
+                catch
+                {
+                    File.Create(WhichList).Dispose();
+                    MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+        private void SaveSettings()
+        {
+            try
+            {
+                // Normal settings
+                SynthSettings.SetValue("polyphony", PolyphonyLimit.Value.ToString(), RegistryValueKind.DWord);
+                if (MaxCPU.Text == "Disabled")
+                {
+                    SynthSettings.SetValue("cpu", "0", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("cpu", MaxCPU.Text, RegistryValueKind.DWord);
+                }
+                if (string.IsNullOrWhiteSpace(Frequency.Text))
+                {
+                    Frequency.Text = "48000";
+                    SynthSettings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
+                }
+
+                // Advanced SynthSettings
+                SynthSettings.SetValue("buflen", bufsize.Value.ToString(), RegistryValueKind.DWord);
+                SynthSettings.SetValue("tracks", TracksLimit.Value.ToString(), RegistryValueKind.DWord);
+
+                // Let's not forget about the volume!
+                int VolumeValue = 0;
+                double x = VolTrackBar.Value / 100;
+                VolumeValue = Convert.ToInt32(x);
+                VolSimView.Text = VolumeValue.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+                SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+                
+                // Checkbox stuff yay
+                if (Preload.Checked == true)
+                {
+                    SynthSettings.SetValue("preload", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("preload", "0", RegistryValueKind.DWord);
+                }
+                if (DisableSFX.Checked == true)
+                {
+                    SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
+                }
+                if (VMSEmu.Checked == true)
+                {
+                    SynthSettings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
+                }
+                if (NoteOffCheck.Checked == true)
+                {
+                    SynthSettings.SetValue("noteoff", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("noteoff", "0", RegistryValueKind.DWord);
+                }
+                if (SincInter.Checked == true)
+                {
+                    SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
+                }
+                if (SysResetIgnore.Checked == true)
+                {
+                    SynthSettings.SetValue("sysresetignore", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
+                }
+                if (OutputWAV.Checked == true)
+                {
+                    SynthSettings.SetValue("encmode", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
+                }
+                if (XAudioDisable.Checked == true)
+                {
+                    SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.Exit();
+            }
+        }
+
+        private void InitializeLastPath()
+        {
+            try
+            {
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+                if (SynthPaths.GetValue("lastpathsfimport", null) != null && SynthPaths.GetValue("lastpathsfimport", null) != null)
+                {
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    SoundfontImport.InitialDirectory = LastBrowserPath;
+                    ExternalListImport.InitialDirectory = LastImportExportPath;
+                    ExternalListExport.InitialDirectory = LastImportExportPath;
+                }
+                else
+                {
+                    SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    SoundfontImport.InitialDirectory = LastBrowserPath;
+                    ExternalListImport.InitialDirectory = LastImportExportPath;
+                    ExternalListExport.InitialDirectory = LastImportExportPath;
+                }
+                SynthPaths.Close();
+            }
+            catch
+            {
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+                SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                SoundfontImport.InitialDirectory = LastBrowserPath;
+                ExternalListImport.InitialDirectory = LastImportExportPath;
+                ExternalListExport.InitialDirectory = LastImportExportPath;
+                SoundfontImport.InitialDirectory = LastBrowserPath;
+                SynthPaths.Close();
+            }
+        }
+
+        // Here we go!
+        private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
+        {
+            // Just some stuff lel
+            istheconfiguratorready = 0;
+            // MIDI out selector disabler
+            if (IsWindows10() == true)
+            {
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
+            }
+
+            if (Environment.Is64BitOperatingSystem == false)
+            {
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+            }
+            else if (Environment.Is64BitOperatingSystem == true)
+            {
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
+            }
+
+            InitializeLastPath();
+            SelectedListBox.Text = "List 1";
+
+            // ======= Load settings from the registry
+            try
+            {
+                // First, the most important settings
+                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
+                PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony"));
+                if (SynthSettings.GetValue("cpu").ToString() == "0")
+                {
+                    MaxCPU.Text = "Disabled";
+                }
+                else
+                {
+                    MaxCPU.Text = SynthSettings.GetValue("cpu").ToString();
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("sfdisableconf")) == 0)
+                {
+                    enabledToolStripMenuItem.Checked = true;
+                    enabledToolStripMenuItem.Enabled = false;
+                    disabledToolStripMenuItem.Checked = false;
+                    disabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    enabledToolStripMenuItem.Checked = false;
+                    enabledToolStripMenuItem.Enabled = true;
+                    disabledToolStripMenuItem.Checked = true;
+                    disabledToolStripMenuItem.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("volumehotkeys")) == 1)
+                {
+                    VolumeHotkeysCheck.Enabled = true;
+                    enabledToolStripMenuItem1.Checked = true;
+                    enabledToolStripMenuItem1.Enabled = false;
+                    disabledToolStripMenuItem1.Checked = false;
+                    disabledToolStripMenuItem1.Enabled = true;
+                }
+                else
+                {
+                    VolumeHotkeysCheck.Enabled = false;
+                    enabledToolStripMenuItem1.Checked = false;
+                    enabledToolStripMenuItem1.Enabled = true;
+                    disabledToolStripMenuItem1.Checked = true;
+                    disabledToolStripMenuItem1.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
+                {
+                    checkEnabledToolStripMenuItem.Checked = true;
+                    checkDisabledToolStripMenuItem.Checked = false;
+                    checkEnabledToolStripMenuItem.Enabled = false;
+                    checkDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    checkEnabledToolStripMenuItem.Checked = false;
+                    checkDisabledToolStripMenuItem.Checked = true;
+                    checkEnabledToolStripMenuItem.Enabled = true;
+                    checkDisabledToolStripMenuItem.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
+                {
+                    enabledToolStripMenuItem2.Checked = true;
+                    disabledToolStripMenuItem2.Checked = false;
+                    enabledToolStripMenuItem2.Enabled = false;
+                    disabledToolStripMenuItem2.Enabled = true;
+                    SelectedListBox.Items.Add("List 9");
+                    SelectedListBox.Items.Add("List 10");
+                    SelectedListBox.Items.Add("List 11");
+                    SelectedListBox.Items.Add("List 12");
+                    SelectedListBox.Items.Add("List 13");
+                    SelectedListBox.Items.Add("List 14");
+                    SelectedListBox.Items.Add("List 15");
+                    SelectedListBox.Items.Add("List 16");
+                }
+                else
+                {
+                    enabledToolStripMenuItem2.Checked = false;
+                    disabledToolStripMenuItem2.Checked = true;
+                    enabledToolStripMenuItem2.Enabled = true;
+                    disabledToolStripMenuItem2.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys")) == 1)
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
+                    volumeHotkeysToolStripMenuItem.Enabled = true;
+                    hLSEnabledToolStripMenuItem.Checked = true;
+                    hLSDisabledToolStripMenuItem.Checked = false;
+                    hLSEnabledToolStripMenuItem.Enabled = false;
+                    hLSDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
+                    volumeHotkeysToolStripMenuItem.Enabled = false;
+                    hLSEnabledToolStripMenuItem.Checked = false;
+                    hLSDisabledToolStripMenuItem.Checked = true;
+                    hLSEnabledToolStripMenuItem.Enabled = true;
+                    hLSDisabledToolStripMenuItem.Enabled = false;
+                }
+                if (Convert.ToInt32(Watchdog.GetValue("watchdog")) == 1)
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
+                    volumeHotkeysToolStripMenuItem.Enabled = true;
+                    watchdogEnabledToolStripMenuItem.Checked = true;
+                    watchdogDisabledToolStripMenuItem.Checked = false;
+                    watchdogEnabledToolStripMenuItem.Enabled = false;
+                    watchdogDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
+                    watchdogEnabledToolStripMenuItem.Checked = false;
+                    watchdogDisabledToolStripMenuItem.Checked = true;
+                    watchdogEnabledToolStripMenuItem.Enabled = true;
+                    watchdogDisabledToolStripMenuItem.Enabled = false;
+                }
+                Frequency.Text = SynthSettings.GetValue("frequency").ToString();
+                TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks"));
+
+                // Then the filthy checkboxes
+                if (Convert.ToInt32(SynthSettings.GetValue("preload")) == 1)
+                {
+                    Preload.Checked = true;
+                }
+                else
+                {
+                    Preload.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("nofx")) == 1)
+                {
+                    DisableSFX.Checked = true;
+                }
+                else
+                {
+                    DisableSFX.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("noteoff")) == 1)
+                {
+                    NoteOffCheck.Checked = true;
+                }
+                else
+                {
+                    NoteOffCheck.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("sinc")) == 1)
+                {
+                    SincInter.Checked = true;
+                }
+                else
+                {
+                    SincInter.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("sysresetignore")) == 1)
+                {
+                    SysResetIgnore.Checked = true;
+                }
+                else
+                {
+                    SysResetIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("encmode")) == 1)
+                {
+                    OutputWAV.Checked = true;
+                }
+                else
+                {
+                    OutputWAV.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("xaudiodisabled")) == 1)
+                {
+                    XAudioDisable.Checked = true;
+                    VMSEmu.Visible = true;
+                    SPFSecondaryBut.Visible = false;
+                    if (Convert.ToInt32(SynthSettings.GetValue("vmsemu")) == 1)
+                    {
+                        VMSEmu.Checked = true;
+                        bufsize.Enabled = true;
+                    }
+                    else
+                    {
+                        VMSEmu.Checked = false;
+                        bufsize.Enabled = false;
+                        bufsize.Value = 0;
+                    }
+                }
+                else
+                {
+                    XAudioDisable.Checked = false;
+                    VMSEmu.Visible = false;
+                    SPFSecondaryBut.Visible = true;
+                    bufsize.Enabled = true;
+                }
+
+                // LEL
+                bufsize.Value = Convert.ToInt32(SynthSettings.GetValue("buflen"));
+
+                // And finally, the volume!
+                int VolumeValue = Convert.ToInt32(SynthSettings.GetValue("volume"));
+                double x = VolumeValue / 100;
+                VolSimView.Text = x.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
+                VolTrackBar.Value = VolumeValue;
+
+                // Jakuberino
+                if (openadvanced == 1)
+                {
+                    TabsForTheControls.SelectedIndex = 1;
+                }
+
+                istheconfiguratorready = 1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Can not read settings from the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+        private void VolTrackBar_Scroll(object sender, EventArgs e)
+        {
+            try
+            {
+                int VolumeValue = 0;
+                double x = VolTrackBar.Value / 100;
+                VolumeValue = Convert.ToInt32(x);
+                VolSimView.Text = VolumeValue.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+                SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+            }
+            catch
+            {
+
+            }
+        }
+
+        // -------------------------
+        // Soundfont lists functions
+
+        private void OpenFileDialogAddCustomPaths(FileDialog dialog)
+        {
+            try
+            {
+                // Import the blacklist file
+                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\keppymididrv.favlist"))
+                {
+                    string line;
+                    while ((line = r.ReadLine()) != null)
+                    {
+                        dialog.CustomPlaces.Add(line);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        private void CLi_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to clear the list?", "Keppy's Synthesizer Configurator ~ Clear list " + whichone.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
+            {
+                try
+                {
+                    Lis.Items.Clear();
+                    File.Delete(CurrentList);
+                    var TempFile = File.Create(CurrentList);
+                    TempFile.Close();
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ReinitializeList(ex, CurrentList);
+                }
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+
+            }
+        }
+
+        private void AddSF_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SoundfontImport.InitialDirectory = LastBrowserPath;
+                SoundfontImport.FileName = "";
+                OpenFileDialogAddCustomPaths(SoundfontImport);
+                if (SoundfontImport.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string str in SoundfontImport.FileNames)
+                    {
+                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        {
+                            Lis.Items.Add(str);
+                        }
+                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        {
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
+                            {
+                                var result = form.ShowDialog();
+                                if (result == DialogResult.OK)
+                                {
+                                    string bank = form.BankValueReturn;
+                                    string preset = form.PresetValueReturn;
+                                    Lis.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        LastBrowserPath = Path.GetDirectoryName(str);
+                        SynthSettings.SetValue("lastpathsfimport", Path.GetDirectoryName(str));
+                    }
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
+                    SaveList(CurrentList);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, CurrentList);
+            }
+        }
+
+        private void RmvSF_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                {
+                    Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
+                }
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
+                SaveList(CurrentList);
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, CurrentList);
+            }
+        }
+
+        private void MvU_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                object selected = Lis.SelectedItem;
+                int indx = Lis.Items.IndexOf(selected);
+                int totl = Lis.Items.Count;
+                if (indx == 0)
+                {
+                    Lis.Items.Remove(selected);
+                    Lis.Items.Insert(totl - 1, selected);
+                    Lis.SetSelected(totl - 1, true);
+                }
+                else
+                {
+                    Lis.Items.Remove(selected);
+                    Lis.Items.Insert(indx - 1, selected);
+                    Lis.SetSelected(indx - 1, true);
+                }
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
+                SaveList(CurrentList);
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, CurrentList);
+            }
+        }
+
+        private void MvD_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                object selected = Lis.SelectedItem;
+                int indx = Lis.Items.IndexOf(selected);
+                int totl = Lis.Items.Count;
+                if (indx == totl - 1)
+                {
+                    Lis.Items.Remove(selected);
+                    Lis.Items.Insert(0, selected);
+                    Lis.SetSelected(0, true);
+                }
+                else
+                {
+                    Lis.Items.Remove(selected);
+                    Lis.Items.Insert(indx + 1, selected);
+                    Lis.SetSelected(indx + 1, true);
+                }
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
+                SaveList(CurrentList);
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, CurrentList);
+            }
+        }
+
+        private void EnableSF_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Lis.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    string result = Lis.SelectedItem.ToString().Substring(0, 1);
+                    if (result == "@")
+                    {
+                        string newvalue = Lis.SelectedItem.ToString().Remove(0, 1);
+                        int index = Lis.Items.IndexOf(Lis.SelectedItem);
+                        Lis.Items.RemoveAt(index);
+                        Lis.Items.Insert(index, newvalue);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
+                    SaveList(CurrentList);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, CurrentList);
+            }
+        }
+
+        private void DisableSF_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Lis.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    string result = Lis.SelectedItem.ToString().Substring(0, 1);
+                    if (result != "@")
+                    {
+                        string newvalue = "@" + Lis.SelectedItem.ToString();
+                        int index = Lis.Items.IndexOf(Lis.SelectedItem);
+                        Lis.Items.RemoveAt(index);
+                        Lis.Items.Insert(index, newvalue);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
+                    SaveList(CurrentList);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReinitializeList(ex, CurrentList);
+            }
+        }
+
+        private void IEL_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ExternalListImport.FileName = "";
+                ExternalListImport.InitialDirectory = LastImportExportPath;
+                if (ExternalListImport.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string file in ExternalListImport.FileNames)
+                    {
+                        RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+                        LastImportExportPath = Path.GetDirectoryName(file);
+                        SynthPaths.SetValue("lastpathlistimpexp", LastImportExportPath, RegistryValueKind.String);
+                        SynthPaths.Close();
+                        using (StreamReader r = new StreamReader(file))
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Lis.Items.Add(line); // Read the external list and add the items to the selected list
+                            }
+                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                            {
+                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                            }
+                        }
+                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                        {
+                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        }
+                        SaveList(CurrentList);
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Error during the import process of the list!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+        private void EL_Click(object sender, EventArgs e)
+        {
+            ExternalListExport.FileName = "";
+            ExternalListExport.InitialDirectory = LastImportExportPath;
+            if (ExternalListExport.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+                LastImportExportPath = Path.GetDirectoryName(ExternalListExport.FileName);
+                SynthPaths.SetValue("lastpathlistimpexp", LastImportExportPath, RegistryValueKind.String);
+                SynthPaths.Close();
+                foreach (var item in Lis.Items)
+                {
+                    SaveFile.WriteLine(item.ToString());
+                }
+                SaveFile.Close();
+                MessageBox.Show("Soundfont list exported succesfully to \"" + Path.GetDirectoryName(ExternalListExport.FileName) + "\\\"", "Soundfont list exported!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (SelectedListBox.Text == "List 1")
+            {
+                CurrentList = List1Path;
+                whichone = 1;
+                ChangeList(List1Path);
+            }
+            else if (SelectedListBox.Text == "List 2")
+            {
+                CurrentList = List2Path;
+                whichone = 2;
+                ChangeList(List2Path);
+            }
+            else if (SelectedListBox.Text == "List 3")
+            {
+                CurrentList = List3Path;
+                whichone = 3;
+                ChangeList(List3Path);
+            }
+            else if (SelectedListBox.Text == "List 4")
+            {
+                CurrentList = List4Path;
+                whichone = 4;
+                ChangeList(List4Path);
+            }
+            else if (SelectedListBox.Text == "List 5")
+            {
+                CurrentList = List5Path;
+                whichone = 5;
+                ChangeList(List5Path);
+            }
+            else if (SelectedListBox.Text == "List 6")
+            {
+                CurrentList = List6Path;
+                whichone = 6;
+                ChangeList(List6Path);
+            }
+            else if (SelectedListBox.Text == "List 7")
+            {
+                CurrentList = List7Path;
+                whichone = 7;
+                ChangeList(List7Path);
+            }
+            else if (SelectedListBox.Text == "List 8")
+            {
+                CurrentList = List8Path;
+                whichone = 8;
+                ChangeList(List8Path);
+            }
+            else if (SelectedListBox.Text == "List 9")
+            {
+                CurrentList = List9Path;
+                whichone = 9;
+                ChangeList(List9Path);
+            }
+            else if (SelectedListBox.Text == "List 10")
+            {
+                CurrentList = List10Path;
+                whichone = 10;
+                ChangeList(List10Path);
+            }
+            else if (SelectedListBox.Text == "List 11")
+            {
+                CurrentList = List11Path;
+                whichone = 11;
+                ChangeList(List11Path);
+            }
+            else if (SelectedListBox.Text == "List 12")
+            {
+                CurrentList = List12Path;
+                whichone = 12;
+                ChangeList(List12Path);
+            }
+            else if (SelectedListBox.Text == "List 13")
+            {
+                CurrentList = List13Path;
+                whichone = 13;
+                ChangeList(List13Path);
+            }
+            else if (SelectedListBox.Text == "List 14")
+            {
+                CurrentList = List14Path;
+                whichone = 14;
+                ChangeList(List14Path);
+            }
+            else if (SelectedListBox.Text == "List 15")
+            {
+                CurrentList = List15Path;
+                whichone = 15;
+                ChangeList(List15Path);
+            }
+            else if (SelectedListBox.Text == "List 16")
+            {
+                CurrentList = List16Path;
+                whichone = 16;
+                ChangeList(List16Path);
+            }
+        }
+
+        private void Lis_DragDrop(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDrop(CurrentList, e);
+        }
+
+        private void Lis_DragEnter(object sender, DragEventArgs e)
+        {
+            AddSoundfontDragNDropTriv(e);
+        }
+
+        // End of the soundfont lists functions
+        // ------------------------------------
+
+        private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 512;
+            MaxCPU.Text = "65";
+            Frequency.Text = "48000";
+            bufsize.Value = 30;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = false;
+            SincInter.Checked = false;
+            DisableSFX.Checked = false;
+            SysResetIgnore.Checked = false;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
+
+            // And then...
+            SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("Settings restored to the default values!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Just save the Settings
+            SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("Settings saved to the registry!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 1000;
+            MaxCPU.Text = "75";
+            Frequency.Text = "48000";
+            bufsize.Value = 15;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = true;
+            SincInter.Checked = false;
+            DisableSFX.Checked = true;
+            SysResetIgnore.Checked = true;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
+
+            // And then...
+            SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void lowLatencyPresetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 500;
+            MaxCPU.Text = "80";
+            Frequency.Text = "44100";
+            bufsize.Value = 10;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = true;
+            SincInter.Checked = true;
+            DisableSFX.Checked = false;
+            SysResetIgnore.Checked = true;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
+
+            // And then...
+            SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void VolumeHotkeysCheck_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
+                double x = VolTrackBar.Value / 100;
+                int VolumeValue = Convert.ToInt32(x);
+                VolSimView.Text = VolumeValue.ToString("000\\%");
+                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+            }
+            catch
+            {
+
+            }
+        }
+
+        // Now, menustrip functions here
+
+        private void openDebugWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Process.GetProcessesByName("KeppySynthDebugWindow").Length > 0)
+            {
+                MessageBox.Show("The debug window is already opened!", "Keppy's Synthesizer Configurator - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppydrv\\KeppySynthDebugWindow.exe");
+            }
+        }
+
+        private void openTheMixerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthMixerWindow.GetForm.Show();
+        }
+
+        private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthBlacklistSystem frm = new KeppySynthBlacklistSystem();
+            frm.ShowDialog();
+        }
+
+        private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthInformation frm = new KeppySynthInformation();
+            frm.ShowDialog();
+        }
+
+        private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppydrv\\midioutsetter32.exe");
+        }
+
+        private void changeDefault32bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppydrv\\midioutsetter32.exe");
+        }
+
+        private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppydrv\\midioutsetter64.exe");
+        }
+
+        private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthUpdater frm = new KeppySynthUpdater();
+            frm.ShowDialog();
+        }
+
+        private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Synthesizer?\n\nWARNING: Only use this function to report serious bugs, like memory leaks and security flaws.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                
+            }
+        }
+
+        private void downloadTheSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
+        }
+
+        private void visitKeppyStudiosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://keppystudios.com");
+        }
+
+        private void getTheMIDIMapperForWindows10ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://plus.google.com/+RichardForhenson/posts/bkrqUfbV3xz");
+        }
+
+
+        private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string url = "";
+
+            string business = "prapapappo1999@gmail.com";
+            string description = "Donation";
+            string country = "US";
+            string currency = "USD";
+
+            url += "https://www.paypal.com/cgi-bin/webscr" +
+                "?cmd=" + "_donations" +
+                "&business=" + business +
+                "&lc=" + country +
+                "&item_name=" + description +
+                "&currency_code=" + currency +
+                "&bn=" + "PP%2dDonationsBF";
+
+            Process.Start(url);
+        }
+
+        private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthEVBuffer frm = new KeppySynthEVBuffer();
+            frm.ShowDialog();
+        }
+
+        private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthOutputWAVDir frm = new KeppySynthOutputWAVDir();
+            frm.ShowDialog();
+        }
+
+        private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
+            frm.ShowDialog();
+        }
+
+        private void changeDefaultSoundfontListToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
+            frm.ShowDialog();
+        }
+
+        private void changeTheMaximumSamplesPerFrameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
+            frm.ShowDialog();
+        }
+
+        private void SPFSecondaryBut_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
+            frm.ShowDialog();
+        }
+
+        private void assignSoundfontListToAppToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
+            frm.ShowDialog();
+        }
+
+        private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
+            frm.ShowDialog();
+        }
+
+        private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KeppySynthFavouritesManager frm = new KeppySynthFavouritesManager();
+            frm.ShowDialog();
+        }
+
+        private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
+            enabledToolStripMenuItem.Checked = true;
+            enabledToolStripMenuItem.Enabled = false;
+            disabledToolStripMenuItem.Checked = false;
+            disabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void SFListConfirmationdisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
+            enabledToolStripMenuItem.Checked = false;
+            enabledToolStripMenuItem.Enabled = true;
+            disabledToolStripMenuItem.Checked = true;
+            disabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void enabledToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("volumehotkeys", "1", RegistryValueKind.DWord);
+            VolumeHotkeysCheck.Enabled = true;
+            enabledToolStripMenuItem1.Checked = true;
+            enabledToolStripMenuItem1.Enabled = false;
+            disabledToolStripMenuItem1.Checked = false;
+            disabledToolStripMenuItem1.Enabled = true;
+        }
+
+        private void disabledToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("volumehotkeys", "0", RegistryValueKind.DWord);
+            VolumeHotkeysCheck.Enabled = false;
+            enabledToolStripMenuItem1.Checked = false;
+            enabledToolStripMenuItem1.Enabled = true;
+            disabledToolStripMenuItem1.Checked = true;
+            disabledToolStripMenuItem1.Enabled = false;
+        }
+
+        private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+            soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
+            volumeHotkeysToolStripMenuItem.Enabled = true;
+            hLSEnabledToolStripMenuItem.Checked = true;
+            hLSDisabledToolStripMenuItem.Checked = false;
+            hLSEnabledToolStripMenuItem.Enabled = false;
+            hLSDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+            soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
+            volumeHotkeysToolStripMenuItem.Enabled = false;
+            hLSEnabledToolStripMenuItem.Checked = false;
+            hLSDisabledToolStripMenuItem.Checked = true;
+            hLSEnabledToolStripMenuItem.Enabled = true;
+            hLSDisabledToolStripMenuItem.Enabled = false;
+        }
+
+
+        private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("watchdog", "1", RegistryValueKind.DWord);
+            watchdogEnabledToolStripMenuItem.Checked = true;
+            watchdogDisabledToolStripMenuItem.Checked = false;
+            watchdogEnabledToolStripMenuItem.Enabled = false;
+            watchdogDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("watchdog", "0", RegistryValueKind.DWord);
+            watchdogEnabledToolStripMenuItem.Checked = false;
+            watchdogDisabledToolStripMenuItem.Checked = true;
+            watchdogEnabledToolStripMenuItem.Enabled = true;
+            watchdogDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void checkEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("autoupdatecheck", "1", RegistryValueKind.DWord);
+            checkEnabledToolStripMenuItem.Checked = true;
+            checkDisabledToolStripMenuItem.Checked = false;
+            checkEnabledToolStripMenuItem.Enabled = false;
+            checkDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void checkDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
+            checkEnabledToolStripMenuItem.Checked = false;
+            checkDisabledToolStripMenuItem.Checked = true;
+            checkEnabledToolStripMenuItem.Enabled = true;
+            checkDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void enabledToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("extra8lists", "1", RegistryValueKind.DWord);
+            enabledToolStripMenuItem2.Checked = true;
+            disabledToolStripMenuItem2.Checked = false;
+            enabledToolStripMenuItem2.Enabled = false;
+            disabledToolStripMenuItem2.Enabled = true;
+            SelectedListBox.Items.Add("List 9");
+            SelectedListBox.Items.Add("List 10");
+            SelectedListBox.Items.Add("List 11");
+            SelectedListBox.Items.Add("List 12");
+            SelectedListBox.Items.Add("List 13");
+            SelectedListBox.Items.Add("List 14");
+            SelectedListBox.Items.Add("List 15");
+            SelectedListBox.Items.Add("List 16");
+        }
+
+        private void disabledToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("extra8lists", "0", RegistryValueKind.DWord);
+            enabledToolStripMenuItem2.Checked = false;
+            disabledToolStripMenuItem2.Checked = true;
+            enabledToolStripMenuItem2.Enabled = true;
+            disabledToolStripMenuItem2.Enabled = false;
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+            SelectedListBox.Items.RemoveAt(8);
+        }
+
+        private void killTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("KeppySynthWatchdog"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            Watchdog.SetValue("closewatchdog", "1", RegistryValueKind.DWord);
+            Watchdog.SetValue("wdrun", "0", RegistryValueKind.DWord);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        // Guide part
+        private void isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To open the configurator while playing a MIDI, press ALT+9.\nYou could also press ALT+0 to directly open the \"Settings\" tab.",
+                "What are the hotkeys to open the configurator?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To change the volume, simply press \"Add\" or \"Subtract\" buttons of the numeric keypad.\n\nYou can disable the hotkeys through \"Advanced settings > Volume hotkeys\".",
+                "What are the hotkeys to change the volume?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 8.\n\n" +
+                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\nCTRL+ALT+1: Load soundfont list 9\nCTRL+ALT+2: Load soundfont list 10\nCTRL+ALT+3: Load soundfont list 11\nCTRL+ALT+4: Load soundfont list 12\nCTRL+ALT+5: Load soundfont list 13\nCTRL+ALT+6: Load soundfont list 14\nCTRL+ALT+7: Load soundfont list 15\nCTRL+ALT+8: Load soundfont list 16\n\n" +
+                "You can also reload lists that are already loaded in memory.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void howCanIResetTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To reset the driver, press INS.\nThis will stop all the samples that are currently playing, and it'll also send a \"System Reset\" to all the MIDI channels.", "How can I reset the driver?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 30-35.\nFor all the AC'97 audio cards, it's 40.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        // Brand new output mode
+        private void WhatIsOutput_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" + 
+                "You can change the output directory by clicking \"Settings > Change directory of the \"Output to WAV\" mode\".\n\n" + 
+                "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        // Brand new XAudio disabler
+        private void WhatIsXAudio_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Check this, if you don't want static noises or the XAudio interface doesn't work properly and/or it's buggy.\n\n(Notice: Disabling XAudio also increases the latency by a bit, and disables the \"Output to WAV\" mode.)", "\"Disable the XAudio engine\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void XAudioDisable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (XAudioDisable.Checked == true)
+            {
+                if (istheconfiguratorready == 1)
+                {
+                    DialogResult dialogResult = MessageBox.Show("Are you sure you would like to enable DirectSound? Enabling this could reduce the battery life if you are on a laptop.", "DirectSound engine: Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        OutputWAV.Enabled = false;
+                        OutputWAV.Checked = false;
+                        VMSEmu.Visible = true;
+                        SPFSecondaryBut.Visible = false;
+                        BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                        bufsize.Minimum = 0;
+                        bufsize.Maximum = 1000;
+                        bufsize.Enabled = false;
+                        if (VMSEmu.Checked == true)
+                        {
+                            bufsize.Enabled = true;
+                        }
+                        else
+                        {
+                            bufsize.Enabled = false;
+                            bufsize.Value = 0;
+                        }
+                    }
+                    else if (dialogResult == DialogResult.No)
+                    {
+                        XAudioDisable.Checked = false;
+                    }
+                }
+                else
+                {
+                    OutputWAV.Enabled = false;
+                    OutputWAV.Checked = false;
+                    VMSEmu.Visible = true;
+                    SPFSecondaryBut.Visible = false;
+                    BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                    bufsize.Minimum = 0;
+                    bufsize.Maximum = 1000;
+                    bufsize.Enabled = false;
+                    if (VMSEmu.Checked == true)
+                    {
+                        bufsize.Enabled = true;
+                    }
+                    else
+                    {
+                        bufsize.Enabled = false;
+                        bufsize.Value = 0;
+                    }
+                }
+            }
+            else if (XAudioDisable.Checked == false)
+            {
+                OutputWAV.Enabled = true;
+                VMSEmu.Visible = false;
+                SPFSecondaryBut.Visible = true;
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
+                bufsize.Minimum = 1;
+                bufsize.Maximum = 100;
+                bufsize.Enabled = true;
+                bufsize.Value = 15;
+            }
+        }
+
+        private void OutputWAV_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OutputWAV.Checked == true)
+            {
+                XAudioDisable.Enabled = false;
+                XAudioDisable.Checked = false;
+                Label5.Enabled = false;
+                bufsize.Enabled = false;
+                MaxCPU.Enabled = false;
+                BufferText.Enabled = false;
+                bufsize.Enabled = false;
+                bufsize.Minimum = 0;
+                bufsize.Value = 0;
+                MaxCPU.Text = "Disabled";
+            }
+            else if (OutputWAV.Checked == false)
+            {
+                XAudioDisable.Enabled = true;
+                Label5.Enabled = true;
+                bufsize.Enabled = true;
+                MaxCPU.Enabled = true;
+                BufferText.Enabled = true;
+                bufsize.Enabled = true;
+                bufsize.Minimum = 1;
+                bufsize.Value = 15;
+                MaxCPU.Text = "75";
+            }
+        }
+
+        private void VMSEmu_CheckedChanged(object sender, EventArgs e)
+        {
+            if (VMSEmu.Checked == true)
+            {
+                bufsize.Enabled = true;
+            }
+            else
+            {
+                bufsize.Enabled = false;
+            } 
+        }
+
+    }
+}

@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7BEA59AC-45B7-4CC8-A4C0-254C6297BEF8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KeppySynthConfigurator</RootNamespace>
+    <AssemblyName>KeppySynthConfigurator</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\gear.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+    <WarningLevel>1</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>none</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="KeppySynthFavouritesManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthFavouritesManager.Designer.cs">
+      <DependentUpon>KeppySynthFavouritesManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthBlacklistSystem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthBlacklistSystem.Designer.cs">
+      <DependentUpon>KeppySynthBlacklistSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthConfiguratorMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthConfiguratorMain.Designer.cs">
+      <DependentUpon>KeppySynthConfiguratorMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BankNPresetSel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BankNPresetSel.Designer.cs">
+      <DependentUpon>BankNPresetSel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthEVBuffer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthEVBuffer.Designer.cs">
+      <DependentUpon>KeppySynthEVBuffer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthDefaultSFList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthDefaultSFList.Designer.cs">
+      <DependentUpon>KeppySynthDefaultSFList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthInformation.Designer.cs">
+      <DependentUpon>KeppySynthInformation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthMixerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthMixerWindow.Designer.cs">
+      <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthOutputWAVDir.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthOutputWAVDir.Designer.cs">
+      <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthSamplePerFrameSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthSamplePerFrameSetting.Designer.cs">
+      <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthSFListAssign.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthSFListAssign.Designer.cs">
+      <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeppySynthUpdater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthUpdater.Designer.cs">
+      <DependentUpon>KeppySynthUpdater.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="KeppySynthFavouritesManager.resx">
+      <DependentUpon>KeppySynthFavouritesManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthBlacklistSystem.resx">
+      <DependentUpon>KeppySynthBlacklistSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthConfiguratorMain.resx">
+      <DependentUpon>KeppySynthConfiguratorMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BankNPresetSel.resx">
+      <DependentUpon>BankNPresetSel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthEVBuffer.resx">
+      <DependentUpon>KeppySynthEVBuffer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthDefaultSFList.resx">
+      <DependentUpon>KeppySynthDefaultSFList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthInformation.resx">
+      <DependentUpon>KeppySynthInformation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthMixerWindow.resx">
+      <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthOutputWAVDir.resx">
+      <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthSamplePerFrameSetting.resx">
+      <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthSFListAssign.resx">
+      <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthUpdater.resx">
+      <DependentUpon>KeppySynthUpdater.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\KSynthLogo.png" />
+    <None Include="Resources\wi.png" />
+    <None Include="Resources\logo_bass.gif" />
+    <None Include="Resources\bk.jpg" />
+    <None Include="Resources\donatebtn.png" />
+    <Content Include="Resources\gear.ico" />
+    <None Include="Resources\what.png" />
+    <None Include="Resources\sfzcomp.png" />
+    <None Include="Resources\gmlist.txt" />
+    <None Include="Resources\updatebk.png" />
+    <None Include="Resources\keppydriverlogobyfrozennotrasparency2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
