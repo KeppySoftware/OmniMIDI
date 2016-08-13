@@ -1,4 +1,4 @@
-# Keppy's Driver: A MIDI driver for professional use
+# Keppy's Synthesizer: A MIDI driver for professional use
 [![Join the chat at https://gitter.im/KaleidonKep99/Keppy-s-Driver](https://badges.gitter.im/KaleidonKep99/Keppy-s-Driver.svg)](https://gitter.im/KaleidonKep99/Keppy-s-Driver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) ~ A fork of the original [BASSMIDI Driver by Kode54] (https://github.com/kode54/BASSMIDI-Driver), with new functions.
 
 ## What's so special about your driver that makes it different from the others out there?
@@ -19,7 +19,7 @@ It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanosecond
 
 ## Required software
 You need this software installed before attempting to run the setup:
-- [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) (Install the 64-bit version too if you're using a 64-bit O.S.)
+- [Microsoft Visual C++ 2010] (https://www.microsoft.com/en-us/download/details.aspx?id=5555) and [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) (Install the 64-bit version too if you're using a 64-bit O.S.)
 - [Microsoft .NET Framework 4.0] (https://www.microsoft.com/en-US/download/details.aspx?id=17718)
 - [Windows XP: Windows Imaging Component] (https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
 
@@ -27,7 +27,7 @@ The DirectX Web Installer is already included with the driver setup, so there's 
 
 ## Minimum system requirements for standard MIDIs playback
 To use the driver, you need at least:
-- A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support)
+- A dual-core CPU (Hyper-Threading) running at 1.0GHz (With MMX instruction set support)
 - 256MB of RAM
 - Windows XP SP3 [SP2 for 64-bit] or greater (Server versions are supported too)
 
@@ -46,7 +46,7 @@ To compile (and test) the driver, you need:
 - Windows 7 SP1 or greater (Otherwise, no VS2013 for you)
 
 ## Does it support Windows 10?
-Yes it does. I'm constantly optimizing the driver for it... I had to upgrade from W7 to W10 to do this.
+Yes it does.
 
 ## Are you trying to overshadow the original project?
 Absolutely not, Kode54's driver is better than mine. (His code is cleaner, and way more stable)
