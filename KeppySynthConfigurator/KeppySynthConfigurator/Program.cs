@@ -28,10 +28,19 @@ namespace KeppySynthConfigurator
                 RegistryKey rkCurrentUser = Registry.CurrentUser;
                 CopyKey(rkCurrentUser, "SOFTWARE\\Keppy's Driver", "SOFTWARE\\Keppy's Synthesizer");
                 Directory.Move(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\", System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\");
+                Directory.Delete(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\");
                 DoAnyway(args);
             }
             catch
             {
+                RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver", true);
+                if (sourceKey != null)
+                {
+                    RegistryKey deleteme = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
+                    deleteme.DeleteSubKeyTree("Keppy's Driver");
+                    deleteme.Close();
+                    sourceKey.Close();
+                }
                 DoAnyway(args);
             }
         }
@@ -106,7 +115,7 @@ namespace KeppySynthConfigurator
         public static bool CopyKey(RegistryKey parentKey, string keyNameToCopy, string newKeyName)
         {
             RegistryKey destinationKey = parentKey.CreateSubKey(newKeyName);
-            RegistryKey sourceKey = parentKey.OpenSubKey(keyNameToCopy);
+            RegistryKey sourceKey = parentKey.OpenSubKey(keyNameToCopy, true);
             RecurseCopyKey(sourceKey, destinationKey);
             sourceKey.DeleteSubKey(keyNameToCopy);
             destinationKey.Close();
