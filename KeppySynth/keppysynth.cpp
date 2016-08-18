@@ -352,7 +352,8 @@ unsigned __stdcall audioengine(LPVOID lpV){
 			BASS_MIDI_StreamLoadSamples(hStream);
 		}
 		if (xaudiodisabled == 1) {
-			BASS_ChannelUpdate(hStream, 1);
+			Sleep(1);
+			BASS_ChannelUpdate(hStream, 0);
 		}
 		else {
 			AudioRender();

@@ -87,7 +87,7 @@
             this.Label8.Name = "Label8";
             this.Label8.Size = new System.Drawing.Size(340, 43);
             this.Label8.TabIndex = 23;
-            this.Label8.Text = "Keppy\'s Synthesizer VER\r\nBy Keppy Studios";
+            this.Label8.Text = "Keppy\'s Synthesizer VER\r\nBy KaleidonKep99";
             // 
             // RichTextBox1
             // 

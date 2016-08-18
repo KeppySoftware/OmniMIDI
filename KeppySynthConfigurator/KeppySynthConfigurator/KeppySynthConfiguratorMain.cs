@@ -48,13 +48,13 @@ namespace KeppySynthConfigurator
 
         public int openadvanced { get; set; }
 
-        public int istheconfiguratorready { get; set; }
         public int whichone { get; set; }
 
         public string CurrentList { get; set; }
 
         public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
         public RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
+        public RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
 
         public KeppySynthConfiguratorMain(String[] args)
         {
@@ -368,16 +368,20 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                if (SynthPaths.GetValue("lastpathsfimport", null) != null && SynthPaths.GetValue("lastpathsfimport", null) != null)
+                if (SynthPaths.GetValue("lastpathsfimport", null) == null)
                 {
+                    SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
                     SoundfontImport.InitialDirectory = LastBrowserPath;
+                }
+                else if (SynthPaths.GetValue("lastpathlistimpexp", null) == null)
+                {
+                    SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
                     ExternalListImport.InitialDirectory = LastImportExportPath;
                     ExternalListExport.InitialDirectory = LastImportExportPath;
                 }
-                else
+                else if (SynthPaths.GetValue("lastpathsfimport", null) == null && SynthPaths.GetValue("lastpathlistimpexp", null) == null)
                 {
                     SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
@@ -387,7 +391,14 @@ namespace KeppySynthConfigurator
                     ExternalListImport.InitialDirectory = LastImportExportPath;
                     ExternalListExport.InitialDirectory = LastImportExportPath;
                 }
-                SynthPaths.Close();
+                else
+                {
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    SoundfontImport.InitialDirectory = LastBrowserPath;
+                    ExternalListImport.InitialDirectory = LastImportExportPath;
+                    ExternalListExport.InitialDirectory = LastImportExportPath;
+                }
             }
             catch
             {
@@ -401,15 +412,12 @@ namespace KeppySynthConfigurator
                 ExternalListImport.InitialDirectory = LastImportExportPath;
                 ExternalListExport.InitialDirectory = LastImportExportPath;
                 SoundfontImport.InitialDirectory = LastBrowserPath;
-                SynthPaths.Close();
             }
         }
 
         // Here we go!
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
-            // Just some stuff lel
-            istheconfiguratorready = 0;
             // MIDI out selector disabler
             if (IsWindows10() == true)
             {
@@ -642,8 +650,6 @@ namespace KeppySynthConfigurator
                 {
                     TabsForTheControls.SelectedIndex = 1;
                 }
-
-                istheconfiguratorready = 1;
             }
             catch (Exception ex)
             {
@@ -662,9 +668,9 @@ namespace KeppySynthConfigurator
                 VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
-            catch
+            catch (Exception ex)
             {
-
+                MessageBox.Show("Crap, an error!\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -752,9 +758,9 @@ namespace KeppySynthConfigurator
                             MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         LastBrowserPath = Path.GetDirectoryName(str);
-                        SynthSettings.SetValue("lastpathsfimport", Path.GetDirectoryName(str));
+                        SynthPaths.SetValue("lastpathsfimport", Path.GetDirectoryName(str));
                     }
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone) 
                     {
                         Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
                     }
@@ -929,10 +935,8 @@ namespace KeppySynthConfigurator
                 {
                     foreach (string file in ExternalListImport.FileNames)
                     {
-                        RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                         LastImportExportPath = Path.GetDirectoryName(file);
                         SynthPaths.SetValue("lastpathlistimpexp", LastImportExportPath, RegistryValueKind.String);
-                        SynthPaths.Close();
                         using (StreamReader r = new StreamReader(file))
                         {
                             string line;
@@ -966,10 +970,7 @@ namespace KeppySynthConfigurator
             if (ExternalListExport.ShowDialog() == DialogResult.OK)
             {
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
-                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                LastImportExportPath = Path.GetDirectoryName(ExternalListExport.FileName);
                 SynthPaths.SetValue("lastpathlistimpexp", LastImportExportPath, RegistryValueKind.String);
-                SynthPaths.Close();
                 foreach (var item in Lis.Items)
                 {
                     SaveFile.WriteLine(item.ToString());
@@ -1548,53 +1549,22 @@ namespace KeppySynthConfigurator
         {
             if (XAudioDisable.Checked == true)
             {
-                if (istheconfiguratorready == 1)
+                OutputWAV.Enabled = false;
+                OutputWAV.Checked = false;
+                VMSEmu.Visible = true;
+                SPFSecondaryBut.Visible = false;
+                BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                bufsize.Minimum = 0;
+                bufsize.Maximum = 1000;
+                bufsize.Enabled = false;
+                if (VMSEmu.Checked == true)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Are you sure you would like to enable DirectSound? Enabling this could reduce the battery life if you are on a laptop.", "DirectSound engine: Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        OutputWAV.Enabled = false;
-                        OutputWAV.Checked = false;
-                        VMSEmu.Visible = true;
-                        SPFSecondaryBut.Visible = false;
-                        BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
-                        bufsize.Minimum = 0;
-                        bufsize.Maximum = 1000;
-                        bufsize.Enabled = false;
-                        if (VMSEmu.Checked == true)
-                        {
-                            bufsize.Enabled = true;
-                        }
-                        else
-                        {
-                            bufsize.Enabled = false;
-                            bufsize.Value = 0;
-                        }
-                    }
-                    else if (dialogResult == DialogResult.No)
-                    {
-                        XAudioDisable.Checked = false;
-                    }
+                    bufsize.Enabled = true;
                 }
                 else
                 {
-                    OutputWAV.Enabled = false;
-                    OutputWAV.Checked = false;
-                    VMSEmu.Visible = true;
-                    SPFSecondaryBut.Visible = false;
-                    BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
-                    bufsize.Minimum = 0;
-                    bufsize.Maximum = 1000;
                     bufsize.Enabled = false;
-                    if (VMSEmu.Checked == true)
-                    {
-                        bufsize.Enabled = true;
-                    }
-                    else
-                    {
-                        bufsize.Enabled = false;
-                        bufsize.Value = 0;
-                    }
+                    bufsize.Value = 0;
                 }
             }
             else if (XAudioDisable.Checked == false)
