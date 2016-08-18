@@ -45,12 +45,9 @@ int bmsyn_play_some_data(void){
 	UINT evbpoint;
 	int exlen;
 	unsigned char *sysexbuffer;
-	int played;
-	played = 0;
 
 	if (!bmsyn_buf_check()){
-		played = ~0;
-		return played;
+		return ~0;
 	}
 	do{
 		EnterCriticalSection(&mim_section);
@@ -58,8 +55,6 @@ int bmsyn_play_some_data(void){
 
 		if (++evbrpoint >= newevbuffvalue) {
 			evbrpoint -= newevbuffvalue;
-			LeaveCriticalSection(&mim_section);
-			return played;
 		}
 
 		uDeviceID = evbuf[evbpoint].uDeviceID;
@@ -72,11 +67,6 @@ int bmsyn_play_some_data(void){
 		LeaveCriticalSection(&mim_section);
 		switch (uMsg) {
 		case MODM_DATA:
-			dwParam2 = dwParam1 & 0xF0;
-			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
-			break;
-		case MODM_STRMDATA:
 			dwParam2 = dwParam1 & 0xF0;
 			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
@@ -112,18 +102,15 @@ int bmsyn_play_some_data(void){
 			break;
 		}
 	} while (bmsyn_buf_check());
-	return played;
+	return 0;
 }
 
 bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
 	EnterCriticalSection(&mim_section);
 	evbpoint = evbwpoint;
-	if (++evbwpoint >= newevbuffvalue) {
+	if (++evbwpoint >= newevbuffvalue)
 		evbwpoint -= newevbuffvalue;
-		LeaveCriticalSection(&mim_section);
-		return MMSYSERR_NOERROR;
-	}
-	evbuf[evbpoint].uDeviceID = uDeviceID;
+	evbuf[evbpoint].uDeviceID = !!uDeviceID;
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
@@ -139,10 +126,10 @@ bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 	exlen = (int)IIMidiHdr->dwBufferLength;
-	if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(unsigned char)))){
+	if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char)))) {
 		return MMSYSERR_NOMEM;
 	}
-	else{
+	else {
 		memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
 	}
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;

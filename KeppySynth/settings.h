@@ -949,6 +949,7 @@ void Volume(char* UpOrDown) {
 
 void ResetSynth(){
 	BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
+	reset_synth = 0;
 }
 
 void ReloadSFList(DWORD whichsflist){

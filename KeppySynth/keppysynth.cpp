@@ -333,16 +333,24 @@ bool compare_nocase(const std::string& first, const std::string& second)
 	return (first.length() < second.length());
 }
 
+unsigned _stdcall notescatcher(LPVOID lpV){
+	while (stop_thread == 0){
+		Sleep(1);
+		bmsyn_play_some_data();
+	}
+	stop_thread = 0;
+	_endthreadex(0);
+	return 0;
+}
+
 unsigned __stdcall audioengine(LPVOID lpV){
 	while (stop_thread == 0){
-
 		if (reset_synth != 0){
 			reset_synth = 0;
 			load_settings();
 			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 			BASS_MIDI_StreamLoadSamples(hStream);
 		}
-		bmsyn_play_some_data();
 		if (xaudiodisabled == 1) {
 			BASS_ChannelUpdate(hStream, 1);
 		}
@@ -364,6 +372,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		}
 		else {
 			HANDLE hThread = NULL;
+			HANDLE hThread2 = NULL;
 			unsigned int thrdaddr;
 			unsigned i;
 			int opend = 0;
@@ -496,8 +505,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					opend = 1;
 					reset_synth = 0;
 					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
+					hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
 					SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
+					SetPriorityClass(hThread2, REALTIME_PRIORITY_CLASS);
 					SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
+					SetThreadPriority(hThread2, THREAD_PRIORITY_TIME_CRITICAL);
 				}
 			}
 			while (stop_rtthread == 0){
@@ -696,7 +708,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	}
 	case MODM_SETVOLUME: {
 		sound_out_volume_float = LOWORD(dwParam1) / (float)0xFFFF;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_PAUSE: {
