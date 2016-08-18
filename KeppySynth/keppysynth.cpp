@@ -98,6 +98,7 @@ static int midivoices = 0; // Max voices INT
 static int midivolumeoverride = 0; // MIDI track volume override
 static int newsndbfvalue; // DO NOT TOUCH
 static int newevbuffvalue = 64; // DO NOT TOUCH
+static int oldbuffermode = 0; // For old-ass PCs
 static int nofloat = 1; // Enable or disable the float engine
 static int nofx = 0; // Enable or disable FXs
 static int noteoff1 = 0; // Note cut INT
@@ -364,6 +365,28 @@ unsigned __stdcall audioengine(LPVOID lpV){
 	return 0;
 }
 
+unsigned __stdcall oldbuffersystemforaldotarving(LPVOID lpV){
+	while (stop_thread == 0){
+		if (reset_synth != 0){
+			reset_synth = 0;
+			load_settings();
+			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+			BASS_MIDI_StreamLoadSamples(hStream);
+		}
+		bmsyn_play_some_data();
+		if (xaudiodisabled == 1) {
+			Sleep(1);
+			BASS_ChannelUpdate(hStream, 0);
+		}
+		else {
+			AudioRender();
+		}
+	}
+	stop_thread = 0;
+	_endthreadex(0);
+	return 0;
+}
+
 unsigned __stdcall threadfunc(LPVOID lpV){
 	USES_CONVERSION;
 	try {
@@ -505,12 +528,19 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
-					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
-					hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
-					SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
-					SetPriorityClass(hThread2, REALTIME_PRIORITY_CLASS);
-					SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
-					SetThreadPriority(hThread2, THREAD_PRIORITY_TIME_CRITICAL);
+					if (oldbuffermode == 1) {
+						hThread = (HANDLE)_beginthreadex(NULL, 0, oldbuffersystemforaldotarving, 0, 0, &thrdaddr);
+						SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
+						SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
+					}
+					else {
+						hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
+						hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
+						SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
+						SetPriorityClass(hThread2, REALTIME_PRIORITY_CLASS);
+						SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
+						SetThreadPriority(hThread2, THREAD_PRIORITY_TIME_CRITICAL);
+					}
 				}
 			}
 			while (stop_rtthread == 0){

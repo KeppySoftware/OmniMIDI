@@ -47,9 +47,7 @@ namespace KeppySynthConfigurator
         public string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist";
 
         public int openadvanced { get; set; }
-
         public int whichone { get; set; }
-
         public string CurrentList { get; set; }
 
         public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
@@ -487,6 +485,20 @@ namespace KeppySynthConfigurator
                     disabledToolStripMenuItem1.Checked = true;
                     disabledToolStripMenuItem1.Enabled = false;
                 }
+                if (Convert.ToInt32(SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
+                {
+                    enabledToolStripMenuItem3.Checked = true;
+                    disabledToolStripMenuItem3.Checked = false;
+                    enabledToolStripMenuItem3.Enabled = false;
+                    disabledToolStripMenuItem3.Enabled = true;
+                }
+                else
+                {
+                    enabledToolStripMenuItem3.Checked = false;
+                    disabledToolStripMenuItem3.Checked = true;
+                    enabledToolStripMenuItem3.Enabled = true;
+                    disabledToolStripMenuItem3.Enabled = false;
+                }
                 if (Convert.ToInt32(SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
                 {
                     checkEnabledToolStripMenuItem.Checked = true;
@@ -692,6 +704,9 @@ namespace KeppySynthConfigurator
                 }
             }
             catch
+
+
+
             {
 
             }
@@ -1445,6 +1460,24 @@ namespace KeppySynthConfigurator
             checkDisabledToolStripMenuItem.Enabled = false;
         }
 
+        private void enabledToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
+            enabledToolStripMenuItem3.Checked = false;
+            disabledToolStripMenuItem3.Checked = true;
+            enabledToolStripMenuItem3.Enabled = true;
+            disabledToolStripMenuItem3.Enabled = false;
+        }
+
+        private void disabledToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("oldbuffersystem", "0", RegistryValueKind.DWord);
+            enabledToolStripMenuItem3.Checked = false;
+            disabledToolStripMenuItem3.Checked = true;
+            enabledToolStripMenuItem3.Enabled = true;
+            disabledToolStripMenuItem3.Enabled = false;
+        }
+
         private void enabledToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("extra8lists", "1", RegistryValueKind.DWord);
@@ -1528,7 +1561,7 @@ namespace KeppySynthConfigurator
 
         private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 30-35.\nFor all the AC'97 audio cards, it's 40.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+            MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15-20.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 25-35.\nFor all the AC'97 audio cards, it's 35.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
         // Brand new output mode
@@ -1620,6 +1653,5 @@ namespace KeppySynthConfigurator
                 bufsize.Enabled = false;
             } 
         }
-
     }
 }

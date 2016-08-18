@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.Timer DebugCheck;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthDebugWindow));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.DebugRefresh = new System.Windows.Forms.Timer(this.components);
+            DebugCheck = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -44,11 +45,11 @@
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "a";
             // 
-            // DebugRefresh
+            // DebugCheck
             // 
-            this.DebugRefresh.Enabled = true;
-            this.DebugRefresh.Interval = 150;
-            this.DebugRefresh.Tick += new System.EventHandler(this.DebugRefresh_Tick);
+            DebugCheck.Enabled = true;
+            DebugCheck.Interval = 50;
+            DebugCheck.Tick += new System.EventHandler(this.DebugRefresh_Tick);
             // 
             // KeppySynthDebugWindow
             // 
@@ -70,7 +71,6 @@
         #endregion
 
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Timer DebugRefresh;
     }
 }
 

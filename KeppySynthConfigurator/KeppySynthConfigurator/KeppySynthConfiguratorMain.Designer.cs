@@ -106,6 +106,9 @@
             this.enableExtra8SoundfontListsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.disabledToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.useTheOldBufferSystemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enabledToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.disabledToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1025,6 +1028,7 @@
             this.manageFolderFavouritesToolStripMenuItem,
             this.toolStripSeparator7,
             this.enableExtra8SoundfontListsToolStripMenuItem,
+            this.useTheOldBufferSystemToolStripMenuItem,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
@@ -1105,6 +1109,29 @@
             this.disabledToolStripMenuItem2.Size = new System.Drawing.Size(119, 22);
             this.disabledToolStripMenuItem2.Text = "Disabled";
             this.disabledToolStripMenuItem2.Click += new System.EventHandler(this.disabledToolStripMenuItem2_Click);
+            // 
+            // useTheOldBufferSystemToolStripMenuItem
+            // 
+            this.useTheOldBufferSystemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enabledToolStripMenuItem3,
+            this.disabledToolStripMenuItem3});
+            this.useTheOldBufferSystemToolStripMenuItem.Name = "useTheOldBufferSystemToolStripMenuItem";
+            this.useTheOldBufferSystemToolStripMenuItem.Size = new System.Drawing.Size(409, 22);
+            this.useTheOldBufferSystemToolStripMenuItem.Text = "Use the old buffer system (No slowdowns)";
+            // 
+            // enabledToolStripMenuItem3
+            // 
+            this.enabledToolStripMenuItem3.Name = "enabledToolStripMenuItem3";
+            this.enabledToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.enabledToolStripMenuItem3.Text = "Enabled";
+            this.enabledToolStripMenuItem3.Click += new System.EventHandler(this.enabledToolStripMenuItem3_Click);
+            // 
+            // disabledToolStripMenuItem3
+            // 
+            this.disabledToolStripMenuItem3.Name = "disabledToolStripMenuItem3";
+            this.disabledToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.disabledToolStripMenuItem3.Text = "Disabled";
+            this.disabledToolStripMenuItem3.Click += new System.EventHandler(this.disabledToolStripMenuItem3_Click);
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
@@ -1553,6 +1580,9 @@
         private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem manageFolderFavouritesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem useTheOldBufferSystemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enabledToolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem disabledToolStripMenuItem3;
     }
 }
 

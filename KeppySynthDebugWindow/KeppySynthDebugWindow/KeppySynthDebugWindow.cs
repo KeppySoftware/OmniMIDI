@@ -20,10 +20,7 @@ namespace KeppySynthDebugWindow
         private static KeppySynthDebugWindow inst;
         public static FileVersionInfo Driver { get; set; }
 
-        private const int WM_SETREDRAW = 0x000B;
-        private const int WM_USER = 0x400;
-        private const int EM_GETEVENTMASK = (WM_USER + 59);
-        private const int EM_SETEVENTMASK = (WM_USER + 69);
+        public StringBuilder sb = new StringBuilder();
 
         [DllImport("user32", CharSet = CharSet.Auto)]
         private extern static IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
@@ -82,35 +79,36 @@ namespace KeppySynthDebugWindow
                 try
                 {
                     richTextBox1.Suspend();
+                    sb.Clear();
                     richTextBox1.Clear();
 
-                    richTextBox1.AppendText("Keppy's Synthesizer Debug Window - Version " + Driver.FileVersion.ToString());
-                    richTextBox1.AppendText(Environment.NewLine);
-                    richTextBox1.AppendText("---------------------------------------------------------");
-                    richTextBox1.AppendText(Environment.NewLine);
-                    richTextBox1.AppendText("Operating system: " + (string)WinVer.GetValue("ProductName") + " (" + FullVersion + bit + ")");
-                    richTextBox1.AppendText(Environment.NewLine);
-                    richTextBox1.AppendText("Total memory: " + (tlmem / (1024 * 1024) + "MB").ToString());
-                    richTextBox1.AppendText(Environment.NewLine);
-                    richTextBox1.AppendText("Available memory: " + (avmem / (1024 * 1024) + "MB").ToString() + " (" + Math.Round(percentage, 1).ToString() + "% available)");
-                    richTextBox1.AppendText(Environment.NewLine);
-                    richTextBox1.AppendText("---------------------------------------------------------");
-                    richTextBox1.AppendText(Environment.NewLine);
-                    richTextBox1.AppendText("Active voices: " + Debug.GetValue("currentvoices0").ToString());
-                    richTextBox1.AppendText(Environment.NewLine);
+                    sb.Append("Keppy's Synthesizer Debug Window - Version " + Driver.FileVersion.ToString());
+                    sb.Append(Environment.NewLine);
+                    sb.Append("---------------------------------------------------------");
+                    sb.Append(Environment.NewLine);
+                    sb.Append("Operating system: " + (string)WinVer.GetValue("ProductName") + " (" + FullVersion + bit + ")");
+                    sb.Append(Environment.NewLine);
+                    sb.Append("Total memory: " + (tlmem / (1024 * 1024) + "MB").ToString());
+                    sb.Append(Environment.NewLine);
+                    sb.Append("Available memory: " + (avmem / (1024 * 1024) + "MB").ToString() + " (" + Math.Round(percentage, 1).ToString() + "% available)");
+                    sb.Append(Environment.NewLine);
+                    sb.Append("---------------------------------------------------------");
+                    sb.Append(Environment.NewLine);
+                    sb.Append("Active voices: " + Debug.GetValue("currentvoices0").ToString());
+                    sb.Append(Environment.NewLine);
                     if (Convert.ToInt32(Settings.GetValue("encmode")) == 1)
                     {
-                        richTextBox1.AppendText("BASS CPU usage: Unavailable");
+                        sb.Append("BASS CPU usage: Unavailable");
                     }
                     else
                     {
                         if (Convert.ToInt32(Debug.GetValue("buffull")) == 0)
                         {
-                            richTextBox1.AppendText("Rendering time: " + Debug.GetValue("currentcpuusage0").ToString() + "%");
+                            sb.Append("Rendering time: " + Debug.GetValue("currentcpuusage0").ToString() + "%");
                         }
                         else
                         {
-                            richTextBox1.AppendText("Rendering time: " + Debug.GetValue("currentcpuusage0").ToString() + "% (Buffer is full)");
+                            sb.Append("Rendering time: " + Debug.GetValue("currentcpuusage0").ToString() + "% (Buffer is full)");
                         }
 
                     }
@@ -121,12 +119,13 @@ namespace KeppySynthDebugWindow
                     }
                     else
                     {
-                        richTextBox1.AppendText(Environment.NewLine);
-                        richTextBox1.AppendText("Decoded data size (bytes): " + Debug.GetValue("int").ToString());
+                        sb.Append(Environment.NewLine);
+                        sb.Append("Decoded data size (bytes): " + Debug.GetValue("int").ToString());
                     }
                 }
                 finally
                 {
+                    richTextBox1.Text = sb.ToString();
                     richTextBox1.Resume();
                     richTextBox1.Refresh();
                 }
