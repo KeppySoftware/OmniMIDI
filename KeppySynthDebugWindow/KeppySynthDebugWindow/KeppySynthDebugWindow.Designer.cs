@@ -61,7 +61,7 @@
             this.MaximizeBox = false;
             this.Name = "KeppySynthDebugWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Keppy\'s Driver Debug Window";
+            this.Text = "Keppy\'s Synthesizer Debug Window";
             this.Load += new System.EventHandler(this.KeppySynthDebugWindow_Load);
             this.ResumeLayout(false);
 

@@ -9,7 +9,7 @@ AppPublisherURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer
 AppSupportPhone=+393511888475
 AppSupportURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/issues
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
-AppVersion=4.0.0.0
+AppVersion=4.0.0.1
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Synthesizer
-VersionInfoProductTextVersion=4.0.0.0
+VersionInfoProductTextVersion=4.0.0.1
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=4.0.0.0
+VersionInfoVersion=4.0.0.1
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -95,6 +95,13 @@ Name: "{group}\Change advanced settings"; Filename: "{sys}\keppysynth\KeppySynth
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\keppysynth\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode   
 ; Generic for all the OSes
 Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"
+
+[Languages]
+Name: en; MessagesFile: "compiler:Default.isl"
+Name: it; MessagesFile: "compiler:Languages\Italian.isl"
+Name: nl; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: de; MessagesFile: "compiler:Languages\German.isl"
+Name: jp; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Registry]
 ; Normal settings

@@ -1132,11 +1132,11 @@ namespace KeppySynthConfigurator
             VolTrackBar.Value = 10000;
             PolyphonyLimit.Value = 1000;
             MaxCPU.Text = "75";
-            Frequency.Text = "48000";
+            Frequency.Text = "44100";
             bufsize.Value = 15;
             TracksLimit.Value = 16;
             Preload.Checked = true;
-            NoteOffCheck.Checked = true;
+            NoteOffCheck.Checked = false;
             SincInter.Checked = false;
             DisableSFX.Checked = true;
             SysResetIgnore.Checked = true;
