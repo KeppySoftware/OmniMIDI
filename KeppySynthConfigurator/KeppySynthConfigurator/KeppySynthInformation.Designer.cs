@@ -32,9 +32,9 @@
             this.Button1 = new System.Windows.Forms.Button();
             this.PictureBox1 = new System.Windows.Forms.PictureBox();
             this.Label8 = new System.Windows.Forms.Label();
-            this.RichTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Info = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
             this.SupForm = new System.Windows.Forms.TabPage();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.u4sforum = new System.Windows.Forms.LinkLabel();
@@ -89,19 +89,6 @@
             this.Label8.TabIndex = 23;
             this.Label8.Text = "Keppy\'s Synthesizer VER\r\nBy KaleidonKep99";
             // 
-            // RichTextBox1
-            // 
-            this.RichTextBox1.BackColor = System.Drawing.Color.White;
-            this.RichTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RichTextBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.RichTextBox1.ForeColor = System.Drawing.Color.Black;
-            this.RichTextBox1.Location = new System.Drawing.Point(267, 65);
-            this.RichTextBox1.Name = "RichTextBox1";
-            this.RichTextBox1.ReadOnly = true;
-            this.RichTextBox1.Size = new System.Drawing.Size(337, 210);
-            this.RichTextBox1.TabIndex = 22;
-            this.RichTextBox1.Text = resources.GetString("RichTextBox1.Text");
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.Info);
@@ -115,8 +102,8 @@
             // Info
             // 
             this.Info.BackColor = System.Drawing.Color.White;
+            this.Info.Controls.Add(this.label7);
             this.Info.Controls.Add(this.PictureBox1);
-            this.Info.Controls.Add(this.RichTextBox1);
             this.Info.Controls.Add(this.Label8);
             this.Info.ForeColor = System.Drawing.Color.Black;
             this.Info.Location = new System.Drawing.Point(4, 22);
@@ -125,6 +112,14 @@
             this.Info.Size = new System.Drawing.Size(610, 277);
             this.Info.TabIndex = 0;
             this.Info.Text = "Information";
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(266, 66);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(341, 197);
+            this.label7.TabIndex = 25;
+            this.label7.Text = resources.GetString("label7.Text");
             // 
             // SupForm
             // 
@@ -250,7 +245,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(621, 335);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.tabControl1);
@@ -284,7 +279,6 @@
         internal System.Windows.Forms.Button Button1;
         internal System.Windows.Forms.PictureBox PictureBox1;
         internal System.Windows.Forms.Label Label8;
-        internal System.Windows.Forms.RichTextBox RichTextBox1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage Info;
         private System.Windows.Forms.TabPage SupForm;
@@ -298,5 +292,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.Label label7;
     }
 }

@@ -1241,11 +1241,6 @@ namespace KeppySynthConfigurator
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppysynth\\midioutsetter32.exe");
-        }
-
-        private void changeDefault32bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
             System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
         }
 
@@ -1342,12 +1337,6 @@ namespace KeppySynthConfigurator
         private void SPFSecondaryBut_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
-            frm.ShowDialog();
-        }
-
-        private void assignSoundfontListToAppToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
             frm.ShowDialog();
         }
 
@@ -1463,10 +1452,10 @@ namespace KeppySynthConfigurator
         private void enabledToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
-            enabledToolStripMenuItem3.Checked = false;
-            disabledToolStripMenuItem3.Checked = true;
-            enabledToolStripMenuItem3.Enabled = true;
-            disabledToolStripMenuItem3.Enabled = false;
+            enabledToolStripMenuItem3.Checked = true;
+            disabledToolStripMenuItem3.Checked = false;
+            enabledToolStripMenuItem3.Enabled = false;
+            disabledToolStripMenuItem3.Enabled = true;
         }
 
         private void disabledToolStripMenuItem3_Click(object sender, EventArgs e)

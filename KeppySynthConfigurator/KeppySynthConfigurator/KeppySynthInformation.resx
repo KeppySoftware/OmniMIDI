@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RichTextBox1.Text" xml:space="preserve">
+  <data name="label7.Text" xml:space="preserve">
     <value>The perfect driver for professional environments.
 
 Keppy's Synthesizer is a direct for of the original BASSMIDI Driver by
@@ -131,7 +131,8 @@ Frozen Snow - For being such an awesome friend! (And supporter)
 Dave Meadowcroft - For the MIDI out selector
 Black MIDI Team (Especially Gingeas) - "Official" testers of the driver
 
-And many thanks to other people who gave me feedback about the quality of the driver!</value>
+And many thanks to other people who gave me feedback about the quality of the driver!
+</value>
   </data>
   <data name="label6.Text" xml:space="preserve">
     <value>The formats support on Keppy's Synthesizer is handled by BASSMIDI, a library from Un4seen Developments.

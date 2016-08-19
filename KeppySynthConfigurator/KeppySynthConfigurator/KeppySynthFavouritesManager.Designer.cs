@@ -127,10 +127,11 @@
             this.FolderList.Size = new System.Drawing.Size(695, 287);
             this.FolderList.TabIndex = 32;
             // 
-            // KeppyDriverFavouritesManager
+            // KeppySynthFavouritesManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(695, 386);
             this.Controls.Add(this.ClearFolderList);
             this.Controls.Add(this.ManualListLabel);
@@ -143,7 +144,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppyDriverFavouritesManager";
+            this.Name = "KeppySynthFavouritesManager";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Favourites manager";
             this.Load += new System.EventHandler(this.KeppyDriverFavouritesManager_Load);

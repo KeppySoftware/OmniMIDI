@@ -144,10 +144,11 @@
             this.label1.TabIndex = 36;
             this.label1.Text = "Select applist to edit:";
             // 
-            // KeppyDriverSFListAssign
+            // KeppySynthSFListAssign
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(643, 378);
             this.Controls.Add(this.SelectedListBox);
             this.Controls.Add(this.label1);
@@ -156,7 +157,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppyDriverSFListAssign";
+            this.Name = "KeppySynthSFListAssign";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
