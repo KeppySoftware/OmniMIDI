@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List = new System.Windows.Forms.TabPage();
+            this.BankPresetOverride = new System.Windows.Forms.CheckBox();
             this.SelectedListBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.DisableSF = new System.Windows.Forms.Button();
@@ -61,10 +62,10 @@
             this.SysResetIgnore = new System.Windows.Forms.CheckBox();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MaxCPU = new System.Windows.Forms.NumericUpDown();
             this.Label6 = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
             this.Label5 = new System.Windows.Forms.Label();
-            this.MaxCPU = new System.Windows.Forms.ComboBox();
             this.Label3 = new System.Windows.Forms.Label();
             this.PolyphonyLimit = new System.Windows.Forms.NumericUpDown();
             this.DisableSFX = new System.Windows.Forms.CheckBox();
@@ -74,7 +75,7 @@
             this.VolSimView = new System.Windows.Forms.Label();
             this.VolStaticLab = new System.Windows.Forms.Label();
             this.VolTrackBar = new System.Windows.Forms.TrackBar();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.SettingsButtons = new System.Windows.Forms.MenuStrip();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,6 +148,12 @@
             this.menuItem44 = new System.Windows.Forms.MenuItem();
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.RightClickMenu = new System.Windows.Forms.ContextMenu();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -157,9 +164,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.TracksLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
-            this.menuStrip1.SuspendLayout();
+            this.SettingsButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabsForTheControls
@@ -176,6 +184,7 @@
             // List
             // 
             this.List.BackColor = System.Drawing.Color.White;
+            this.List.Controls.Add(this.BankPresetOverride);
             this.List.Controls.Add(this.SelectedListBox);
             this.List.Controls.Add(this.label1);
             this.List.Controls.Add(this.DisableSF);
@@ -195,6 +204,16 @@
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             this.List.UseVisualStyleBackColor = true;
+            // 
+            // BankPresetOverride
+            // 
+            this.BankPresetOverride.AutoSize = true;
+            this.BankPresetOverride.Location = new System.Drawing.Point(165, 11);
+            this.BankPresetOverride.Name = "BankPresetOverride";
+            this.BankPresetOverride.Size = new System.Drawing.Size(328, 17);
+            this.BankPresetOverride.TabIndex = 35;
+            this.BankPresetOverride.Text = "Import specific bank/preset from SF2 file and assign it manually";
+            this.BankPresetOverride.UseVisualStyleBackColor = true;
             // 
             // SelectedListBox
             // 
@@ -363,7 +382,7 @@
             this.Settings.Controls.Add(this.VolSimView);
             this.Settings.Controls.Add(this.VolStaticLab);
             this.Settings.Controls.Add(this.VolTrackBar);
-            this.Settings.Controls.Add(this.menuStrip1);
+            this.Settings.Controls.Add(this.SettingsButtons);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(677, 397);
@@ -552,10 +571,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.MaxCPU);
             this.groupBox1.Controls.Add(this.Label6);
             this.groupBox1.Controls.Add(this.Frequency);
             this.groupBox1.Controls.Add(this.Label5);
-            this.groupBox1.Controls.Add(this.MaxCPU);
             this.groupBox1.Controls.Add(this.Label3);
             this.groupBox1.Controls.Add(this.PolyphonyLimit);
             this.groupBox1.Controls.Add(this.DisableSFX);
@@ -567,6 +586,19 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Audio settings";
+            // 
+            // MaxCPU
+            // 
+            this.MaxCPU.Location = new System.Drawing.Point(588, 104);
+            this.MaxCPU.Name = "MaxCPU";
+            this.MaxCPU.Size = new System.Drawing.Size(64, 21);
+            this.MaxCPU.TabIndex = 25;
+            this.MaxCPU.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.MaxCPU.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // Label6
             // 
@@ -582,6 +614,7 @@
             // 
             this.Frequency.FormattingEnabled = true;
             this.Frequency.Items.AddRange(new object[] {
+            "352800",
             "192000",
             "176400",
             "142180",
@@ -596,6 +629,7 @@
             "44100",
             "44056 ",
             "37800",
+            "34750",
             "32000",
             "22050",
             "16000",
@@ -614,123 +648,10 @@
             this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label5.Location = new System.Drawing.Point(6, 108);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(423, 13);
+            this.Label5.Size = new System.Drawing.Size(494, 13);
             this.Label5.TabIndex = 22;
-            this.Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI:";
-            // 
-            // MaxCPU
-            // 
-            this.MaxCPU.DropDownHeight = 150;
-            this.MaxCPU.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MaxCPU.DropDownWidth = 64;
-            this.MaxCPU.FormattingEnabled = true;
-            this.MaxCPU.IntegralHeight = false;
-            this.MaxCPU.Items.AddRange(new object[] {
-            "Disabled",
-            "100",
-            "99",
-            "98",
-            "97",
-            "96",
-            "95",
-            "94",
-            "93",
-            "92",
-            "91",
-            "90",
-            "89",
-            "88",
-            "87",
-            "86",
-            "85",
-            "84",
-            "83",
-            "82",
-            "81",
-            "80",
-            "79",
-            "78",
-            "77",
-            "76",
-            "75",
-            "74",
-            "73",
-            "72",
-            "71",
-            "70",
-            "69",
-            "68",
-            "67",
-            "66",
-            "65",
-            "64",
-            "63",
-            "62",
-            "61",
-            "60",
-            "59",
-            "58",
-            "57",
-            "56",
-            "55",
-            "54",
-            "53",
-            "52",
-            "51",
-            "50",
-            "49",
-            "48",
-            "47",
-            "46",
-            "45",
-            "44",
-            "43",
-            "42",
-            "41",
-            "40",
-            "39",
-            "38",
-            "37",
-            "36",
-            "35",
-            "34",
-            "33",
-            "32",
-            "31",
-            "30",
-            "29",
-            "28",
-            "27",
-            "26",
-            "25",
-            "24",
-            "23",
-            "22",
-            "21",
-            "20",
-            "19",
-            "18",
-            "17",
-            "16",
-            "15",
-            "14",
-            "13",
-            "12",
-            "11",
-            "10",
-            "9",
-            "8",
-            "7",
-            "6",
-            "5",
-            "4",
-            "3",
-            "2",
-            "1"});
-            this.MaxCPU.Location = new System.Drawing.Point(588, 104);
-            this.MaxCPU.Name = "MaxCPU";
-            this.MaxCPU.Size = new System.Drawing.Size(64, 21);
-            this.MaxCPU.TabIndex = 6;
+            this.Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI (Di" +
+    "sabled = 0):";
             // 
             // Label3
             // 
@@ -759,8 +680,9 @@
             this.PolyphonyLimit.Size = new System.Drawing.Size(64, 21);
             this.PolyphonyLimit.TabIndex = 5;
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.PolyphonyLimit.ThousandsSeparator = true;
             this.PolyphonyLimit.Value = new decimal(new int[] {
-            1,
+            100000,
             0,
             0,
             0});
@@ -845,25 +767,24 @@
             this.VolTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.VolTrackBar.Scroll += new System.EventHandler(this.VolTrackBar_Scroll);
             // 
-            // menuStrip1
+            // SettingsButtons
             // 
-            this.menuStrip1.AutoSize = false;
-            this.menuStrip1.BackColor = System.Drawing.Color.Transparent;
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.menuStrip1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SettingsButtons.AutoSize = false;
+            this.SettingsButtons.BackColor = System.Drawing.Color.Transparent;
+            this.SettingsButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.SettingsButtons.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsButtons.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applySettingsToolStripMenuItem,
             this.resetToDefaultToolStripMenuItem,
             this.settingsPresetsToolStripMenuItem,
             this.assignSoundfontListToAppToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 366);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.menuStrip1.Size = new System.Drawing.Size(677, 31);
-            this.menuStrip1.TabIndex = 40;
-            this.menuStrip1.Text = "menuStrip1";
+            this.SettingsButtons.Location = new System.Drawing.Point(0, 366);
+            this.SettingsButtons.Name = "SettingsButtons";
+            this.SettingsButtons.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.SettingsButtons.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.SettingsButtons.Size = new System.Drawing.Size(677, 31);
+            this.SettingsButtons.TabIndex = 40;
             // 
             // applySettingsToolStripMenuItem
             // 
@@ -999,18 +920,21 @@
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 6;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 7;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
             // 
             // changeDefault64bitMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 8;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // menuItem13
@@ -1287,6 +1211,7 @@
             // 
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 3;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // menuItem42
@@ -1352,6 +1277,44 @@
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
+            // RightClickMenu
+            // 
+            this.RightClickMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem4,
+            this.menuItem5,
+            this.menuItem6,
+            this.menuItem8,
+            this.menuItem10});
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 0;
+            this.menuItem4.Text = "Add soundfont(s)";
+            this.menuItem4.Click += new System.EventHandler(this.AddSF_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 1;
+            this.menuItem5.Text = "Remove soundfont(s)";
+            this.menuItem5.Click += new System.EventHandler(this.RmvSF_Click);
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 2;
+            this.menuItem6.Text = "-";
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 3;
+            this.menuItem8.Text = "Move up";
+            this.menuItem8.Click += new System.EventHandler(this.MvU_Click);
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 4;
+            this.menuItem10.Text = "Move down";
+            this.menuItem10.Click += new System.EventHandler(this.MvD_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1384,10 +1347,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.SettingsButtons.ResumeLayout(false);
+            this.SettingsButtons.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1412,7 +1376,6 @@
         internal System.Windows.Forms.Label Label6;
         internal System.Windows.Forms.ComboBox Frequency;
         internal System.Windows.Forms.Label Label5;
-        internal System.Windows.Forms.ComboBox MaxCPU;
         internal System.Windows.Forms.Label Label3;
         internal System.Windows.Forms.NumericUpDown PolyphonyLimit;
         internal System.Windows.Forms.CheckBox DisableSFX;
@@ -1427,7 +1390,7 @@
         private System.Windows.Forms.CheckBox VMSEmu;
         private System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.Windows.Forms.LinkLabel SPFSecondaryBut;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip SettingsButtons;
         private System.Windows.Forms.ToolStripMenuItem applySettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToDefaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsPresetsToolStripMenuItem;
@@ -1511,6 +1474,14 @@
         private System.Windows.Forms.MenuItem volumeHotkeysToolStripMenuItem;
         private System.Windows.Forms.MenuItem enabledToolStripMenuItem1;
         private System.Windows.Forms.MenuItem disabledToolStripMenuItem1;
+        private System.Windows.Forms.ContextMenu RightClickMenu;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem menuItem10;
+        internal System.Windows.Forms.NumericUpDown MaxCPU;
+        private System.Windows.Forms.CheckBox BankPresetOverride;
     }
 }
 

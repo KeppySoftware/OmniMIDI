@@ -116,21 +116,21 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                MessageBox.Show("There was an error while trying to save the soundfont list!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Lis.Items.Clear();
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {
                     string line;
                     while ((line = r.ReadLine()) != null)
                     {
-                        Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox because it wasn't able to save the soundfont list.
+                        Lis.Items.Add(line);
                     }
                 }
             }
             catch
             {
                 MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Application.Exit();
+                Environment.Exit(-1);
             }
         }
 
@@ -142,26 +142,49 @@ namespace KeppySynthConfigurator
             {
                 if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
                 {
-                    Lis.Items.Add(s[i]);
+                    if (BankPresetOverride.Checked == true)
+                    {
+                        using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 0, 1))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                string sbank = form.BankValueReturn;
+                                string spreset = form.PresetValueReturn;
+                                string dbank = form.DesBankValueReturn;
+                                string dpreset = form.DesPresetValueReturn;
+                                Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + s[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Lis.Items.Add(s[i]);
+                    }
                     SaveList(CurrentList);
-                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
                 }
                 else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
                 {
-                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1))
+                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1, 0))
                     {
                         var result = form.ShowDialog();
                         if (result == DialogResult.OK)
                         {
-                            string bank = form.BankValueReturn;
-                            string preset = form.PresetValueReturn;
-                            Lis.Items.Add("p" + bank + "," + preset + "=0,0|" + s[i]);
-                            SaveList(CurrentList);
-                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                            {
-                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                            }
+                            string sbank = form.BankValueReturn;
+                            string spreset = form.PresetValueReturn;
+                            string dbank = form.DesBankValueReturn;
+                            string dpreset = form.DesPresetValueReturn;
+                            Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + s[i]);
                         }
+                    }
+                    SaveList(CurrentList);
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
                     }
                 }
                 else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
@@ -204,6 +227,20 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void DriverToSynthMigration()
+        {
+            try
+            {
+                string oldlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Driver\\";
+                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
+                Directory.Move(oldlocation, newlocation);
+            }
+            catch
+            {
+
+            }
+        }
+
         private void ChangeList(string WhichList)
         {
             try
@@ -214,20 +251,17 @@ namespace KeppySynthConfigurator
                     Directory.CreateDirectory(ListsPath);
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
-                    return;
                 }
                 if (!System.IO.Directory.Exists(ListsPath))
                 {
                     Directory.CreateDirectory(ListsPath);
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
-                    return;
                 }
                 if (!System.IO.File.Exists(WhichList))
                 {
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
-                    return;
                 }
                 try
                 {
@@ -237,7 +271,7 @@ namespace KeppySynthConfigurator
                         Lis.Items.Clear();
                         while ((line = r.ReadLine()) != null)
                         {
-                            Lis.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
+                            Lis.Items.Add(line);
                         }
                     }
                 }
@@ -259,14 +293,7 @@ namespace KeppySynthConfigurator
             {
                 // Normal settings
                 SynthSettings.SetValue("polyphony", PolyphonyLimit.Value.ToString(), RegistryValueKind.DWord);
-                if (MaxCPU.Text == "Disabled")
-                {
-                    SynthSettings.SetValue("cpu", "0", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("cpu", MaxCPU.Text, RegistryValueKind.DWord);
-                }
+                SynthSettings.SetValue("cpu", MaxCPU.Value, RegistryValueKind.DWord);
                 if (string.IsNullOrWhiteSpace(Frequency.Text))
                 {
                     Frequency.Text = "48000";
@@ -369,13 +396,13 @@ namespace KeppySynthConfigurator
                 if (SynthPaths.GetValue("lastpathsfimport", null) == null)
                 {
                     SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                     SoundfontImport.InitialDirectory = LastBrowserPath;
                 }
                 else if (SynthPaths.GetValue("lastpathlistimpexp", null) == null)
                 {
                     SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                     ExternalListImport.InitialDirectory = LastImportExportPath;
                     ExternalListExport.InitialDirectory = LastImportExportPath;
                 }
@@ -383,16 +410,16 @@ namespace KeppySynthConfigurator
                 {
                     SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                     SoundfontImport.InitialDirectory = LastBrowserPath;
                     ExternalListImport.InitialDirectory = LastImportExportPath;
                     ExternalListExport.InitialDirectory = LastImportExportPath;
                 }
                 else
                 {
-                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
+                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                     SoundfontImport.InitialDirectory = LastBrowserPath;
                     ExternalListImport.InitialDirectory = LastImportExportPath;
                     ExternalListExport.InitialDirectory = LastImportExportPath;
@@ -404,8 +431,8 @@ namespace KeppySynthConfigurator
                 RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                 SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                 SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                LastBrowserPath = SynthPaths.GetValue("lastpathsfimport").ToString();
-                LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp").ToString();
+                LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
+                LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                 SoundfontImport.InitialDirectory = LastBrowserPath;
                 ExternalListImport.InitialDirectory = LastImportExportPath;
                 ExternalListExport.InitialDirectory = LastImportExportPath;
@@ -438,6 +465,7 @@ namespace KeppySynthConfigurator
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
             }
 
+            Lis.ContextMenu = RightClickMenu;
             InitializeLastPath();
             SelectedListBox.Text = "List 1";
 
@@ -447,14 +475,7 @@ namespace KeppySynthConfigurator
                 // First, the most important settings
                 VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
                 PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony"));
-                if (SynthSettings.GetValue("cpu").ToString() == "0")
-                {
-                    MaxCPU.Text = "Disabled";
-                }
-                else
-                {
-                    MaxCPU.Text = SynthSettings.GetValue("cpu").ToString();
-                }
+                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu"));
                 if (Convert.ToInt32(SynthSettings.GetValue("sfdisableconf")) == 0)
                 {
                     enabledToolStripMenuItem.Checked = true;
@@ -701,14 +722,12 @@ namespace KeppySynthConfigurator
                     {
                         dialog.CustomPlaces.Add(line);
                     }
+                    return;
                 }
             }
             catch
-
-
-
             {
-
+                return;
             }
         }
 
@@ -753,18 +772,43 @@ namespace KeppySynthConfigurator
                     {
                         if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
                         {
-                            Lis.Items.Add(str);
+                            if (BankPresetOverride.Checked == true)
+                            {
+                                using (var form = new BankNPresetSel(Path.GetFileName(str), 0, 1))
+                                {
+                                    var result = form.ShowDialog();
+                                    if (result == DialogResult.OK)
+                                    {
+                                        string sbank = form.BankValueReturn;
+                                        string spreset = form.PresetValueReturn;
+                                        string dbank = form.DesBankValueReturn;
+                                        string dpreset = form.DesPresetValueReturn;
+                                        Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + str);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Lis.Items.Add(str);
+                            }
+                            SaveList(CurrentList);
+                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                            {
+                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                            }
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0))
+                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0, 0))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
                                 {
-                                    string bank = form.BankValueReturn;
-                                    string preset = form.PresetValueReturn;
-                                    Lis.Items.Add("p" + bank + "," + preset + "=0,0|" + str);
+                                    string sbank = form.BankValueReturn;
+                                    string spreset = form.PresetValueReturn;
+                                    string dbank = form.DesBankValueReturn;
+                                    string dpreset = form.DesPresetValueReturn;
+                                    Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + str);
                                 }
                             }
                         }
@@ -775,11 +819,11 @@ namespace KeppySynthConfigurator
                         LastBrowserPath = Path.GetDirectoryName(str);
                         SynthPaths.SetValue("lastpathsfimport", Path.GetDirectoryName(str));
                     }
+                    SaveList(CurrentList);
                     if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone) 
                     {
                         Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
                     }
-                    SaveList(CurrentList);
                 }
             }
             catch (Exception ex)
@@ -812,20 +856,24 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                object selected = Lis.SelectedItem;
-                int indx = Lis.Items.IndexOf(selected);
-                int totl = Lis.Items.Count;
-                if (indx == 0)
+                int howmany = Lis.SelectedItems.Count;
+                if (howmany > 0)
                 {
-                    Lis.Items.Remove(selected);
-                    Lis.Items.Insert(totl - 1, selected);
-                    Lis.SetSelected(totl - 1, true);
-                }
-                else
-                {
-                    Lis.Items.Remove(selected);
-                    Lis.Items.Insert(indx - 1, selected);
-                    Lis.SetSelected(indx - 1, true);
+                    object selected = Lis.SelectedItem;
+                    int indx = Lis.Items.IndexOf(selected);
+                    int totl = Lis.Items.Count;
+                    if (indx == 0)
+                    {
+                        Lis.Items.Remove(selected);
+                        Lis.Items.Insert(totl - 1, selected);
+                        Lis.SetSelected(totl - 1, true);
+                    }
+                    else
+                    {
+                        Lis.Items.Remove(selected);
+                        Lis.Items.Insert(indx - 1, selected);
+                        Lis.SetSelected(indx - 1, true);
+                    }
                 }
                 if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
                 {
@@ -843,20 +891,25 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                object selected = Lis.SelectedItem;
-                int indx = Lis.Items.IndexOf(selected);
-                int totl = Lis.Items.Count;
-                if (indx == totl - 1)
+                int howmany = Lis.SelectedItems.Count;
+                if (howmany > 0)
                 {
-                    Lis.Items.Remove(selected);
-                    Lis.Items.Insert(0, selected);
-                    Lis.SetSelected(0, true);
-                }
-                else
-                {
-                    Lis.Items.Remove(selected);
-                    Lis.Items.Insert(indx + 1, selected);
-                    Lis.SetSelected(indx + 1, true);
+                    object selected = Lis.SelectedItem;
+                    int indx = Lis.Items.IndexOf(selected);
+                    int totl = Lis.Items.Count;
+                    if (indx == totl - 1)
+                    {
+                        Lis.Items.Remove(selected);
+                        Lis.Items.Insert(0, selected);
+                        Lis.SetSelected(0, true);
+                    }
+                    else
+                    {
+                        Lis.Items.Remove(selected);
+                        Lis.Items.Insert(indx + 1, selected);
+                        Lis.SetSelected(indx + 1, true);
+                    }
+
                 }
                 if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
                 {
@@ -1113,7 +1166,7 @@ namespace KeppySynthConfigurator
             // Set some values...
             VolTrackBar.Value = 10000;
             PolyphonyLimit.Value = 512;
-            MaxCPU.Text = "65";
+            MaxCPU.Value = 65;
             Frequency.Text = "48000";
             bufsize.Value = 30;
             TracksLimit.Value = 16;
@@ -1147,7 +1200,7 @@ namespace KeppySynthConfigurator
             // Set some values...
             VolTrackBar.Value = 10000;
             PolyphonyLimit.Value = 1000;
-            MaxCPU.Text = "75";
+            MaxCPU.Value = 75;
             Frequency.Text = "44100";
             bufsize.Value = 15;
             TracksLimit.Value = 16;
@@ -1172,7 +1225,7 @@ namespace KeppySynthConfigurator
             // Set some values...
             VolTrackBar.Value = 10000;
             PolyphonyLimit.Value = 500;
-            MaxCPU.Text = "80";
+            MaxCPU.Value = 80;
             Frequency.Text = "44100";
             bufsize.Value = 10;
             TracksLimit.Value = 16;
@@ -1615,7 +1668,7 @@ namespace KeppySynthConfigurator
                 bufsize.Enabled = false;
                 bufsize.Minimum = 0;
                 bufsize.Value = 0;
-                MaxCPU.Text = "Disabled";
+                MaxCPU.Value = 0;
             }
             else if (OutputWAV.Checked == false)
             {
@@ -1627,7 +1680,7 @@ namespace KeppySynthConfigurator
                 bufsize.Enabled = true;
                 bufsize.Minimum = 1;
                 bufsize.Value = 15;
-                MaxCPU.Text = "75";
+                MaxCPU.Value = 75;
             }
         }
 
