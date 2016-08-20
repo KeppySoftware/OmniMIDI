@@ -95,6 +95,9 @@
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.SetSynthDefault = new System.Windows.Forms.MenuItem();
+            this.DefaultOut810enabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.DefaultOut810disabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -154,6 +157,7 @@
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -875,6 +879,7 @@
             this.menuItem7,
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem,
             this.menuItem9,
+            this.SetSynthDefault,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem,
@@ -916,35 +921,56 @@
             this.menuItem9.Index = 5;
             this.menuItem9.Text = "-";
             // 
+            // SetSynthDefault
+            // 
+            this.SetSynthDefault.Index = 6;
+            this.SetSynthDefault.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DefaultOut810enabledToolStripMenuItem,
+            this.DefaultOut810disabledToolStripMenuItem});
+            this.SetSynthDefault.Text = "Set the synthesizer as default MIDI out device";
+            this.SetSynthDefault.Visible = false;
+            // 
+            // DefaultOut810enabledToolStripMenuItem
+            // 
+            this.DefaultOut810enabledToolStripMenuItem.Index = 0;
+            this.DefaultOut810enabledToolStripMenuItem.Text = "Enabled";
+            this.DefaultOut810enabledToolStripMenuItem.Click += new System.EventHandler(this.DefaultOut810enabledToolStripMenuItem_Click);
+            // 
+            // DefaultOut810disabledToolStripMenuItem
+            // 
+            this.DefaultOut810disabledToolStripMenuItem.Index = 1;
+            this.DefaultOut810disabledToolStripMenuItem.Text = "Disabled";
+            this.DefaultOut810disabledToolStripMenuItem.Click += new System.EventHandler(this.DefaultOut810disabledToolStripMenuItem_Click);
+            // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem1
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 6;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 7;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 7;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 8;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
             // 
             // changeDefault64bitMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 8;
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 9;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // menuItem13
             // 
-            this.menuItem13.Index = 9;
+            this.menuItem13.Index = 10;
             this.menuItem13.Text = "-";
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Index = 10;
+            this.exitToolStripMenuItem.Index = 11;
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1181,6 +1207,7 @@
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
             this.reportABugToolStripMenuItem,
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem,
             this.getTheMIDIMapperForWindows10ToolStripMenuItem,
             this.menuItem42,
             this.guidesToolStripMenuItem,
@@ -1209,19 +1236,19 @@
             // 
             // getTheMIDIMapperForWindows10ToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 3;
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 4;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 4;
+            this.menuItem42.Index = 5;
             this.menuItem42.Text = "-";
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 5;
+            this.guidesToolStripMenuItem.Index = 6;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.isThereAnyShortcutForToOpenTheConfiguratorToolStripMenuItem,
             this.whatAreTheHotkeysToChangeTheVolumeToolStripMenuItem,
@@ -1262,18 +1289,18 @@
             // 
             // menuItem44
             // 
-            this.menuItem44.Index = 6;
+            this.menuItem44.Index = 7;
             this.menuItem44.Text = "-";
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 7;
+            this.donateToSupportUsToolStripMenuItem.Index = 8;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate to support us";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 8;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 9;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -1314,6 +1341,13 @@
             this.menuItem10.Index = 4;
             this.menuItem10.Text = "Move down";
             this.menuItem10.Click += new System.EventHandler(this.MvD_Click);
+            // 
+            // getTheMIDIMapperForWindows8xToolStripMenuItem
+            // 
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 3;
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 8.x";
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = false;
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows8xToolStripMenuItem_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1482,6 +1516,10 @@
         private System.Windows.Forms.MenuItem menuItem10;
         internal System.Windows.Forms.NumericUpDown MaxCPU;
         private System.Windows.Forms.CheckBox BankPresetOverride;
+        private System.Windows.Forms.MenuItem SetSynthDefault;
+        private System.Windows.Forms.MenuItem DefaultOut810enabledToolStripMenuItem;
+        private System.Windows.Forms.MenuItem DefaultOut810disabledToolStripMenuItem;
+        private System.Windows.Forms.MenuItem getTheMIDIMapperForWindows8xToolStripMenuItem;
     }
 }
 

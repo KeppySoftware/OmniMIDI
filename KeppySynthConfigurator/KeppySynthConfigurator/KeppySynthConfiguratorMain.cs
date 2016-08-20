@@ -81,11 +81,11 @@ namespace KeppySynthConfigurator
             Watchdog.Close();
         }
 
-        static bool IsWindows10()
+        static bool IsWindows8OrNewer()
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             string productName = (string)reg.GetValue("ProductName");
-            return productName.StartsWith("Windows 10");
+            return productName.StartsWith("Windows 8") | productName.StartsWith("Windows 10");
         }
 
         static bool IsWindowsXP()
@@ -116,7 +116,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                MessageBox.Show("Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath + "\n\n.NET error:\n" + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Lis.Items.Clear();
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {
@@ -162,9 +162,16 @@ namespace KeppySynthConfigurator
                         Lis.Items.Add(s[i]);
                     }
                     SaveList(CurrentList);
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    try
                     {
-                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                        {
+                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        }
+                    }
+                    catch
+                    {
+
                     }
                 }
                 else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
@@ -182,9 +189,16 @@ namespace KeppySynthConfigurator
                         }
                     }
                     SaveList(CurrentList);
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    try
                     {
-                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                        {
+                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        }
+                    }
+                    catch
+                    {
+
                     }
                 }
                 else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
@@ -444,12 +458,14 @@ namespace KeppySynthConfigurator
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
             // MIDI out selector disabler
-            if (IsWindows10() == true)
+            if (IsWindows8OrNewer() == true)
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = true;
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
+                SetSynthDefault.Visible = true;
             }
 
             if (Environment.Is64BitOperatingSystem == false)
@@ -475,8 +491,8 @@ namespace KeppySynthConfigurator
                 // First, the most important settings
                 VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
                 PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony"));
-                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu"));
-                if (Convert.ToInt32(SynthSettings.GetValue("sfdisableconf")) == 0)
+                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu")); 
+                if (Convert.ToInt32(SynthSettings.GetValue("sfdisableconf", 0)) == 0)
                 {
                     enabledToolStripMenuItem.Checked = true;
                     enabledToolStripMenuItem.Enabled = false;
@@ -490,7 +506,21 @@ namespace KeppySynthConfigurator
                     disabledToolStripMenuItem.Checked = true;
                     disabledToolStripMenuItem.Enabled = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("volumehotkeys")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("defaultmidiout", 0)) == 0)
+                {
+                    DefaultOut810enabledToolStripMenuItem.Checked = false;
+                    DefaultOut810enabledToolStripMenuItem.Enabled = true;
+                    DefaultOut810disabledToolStripMenuItem.Checked = true;
+                    DefaultOut810disabledToolStripMenuItem.Enabled = false;
+                }
+                else
+                {
+                    DefaultOut810enabledToolStripMenuItem.Checked = true;
+                    DefaultOut810enabledToolStripMenuItem.Enabled = false;
+                    DefaultOut810disabledToolStripMenuItem.Checked = false;
+                    DefaultOut810disabledToolStripMenuItem.Enabled = true;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("volumehotkeys", 1)) == 1)
                 {
                     VolumeHotkeysCheck.Enabled = true;
                     enabledToolStripMenuItem1.Checked = true;
@@ -686,7 +716,12 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can not read settings from the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
+                {
+                    this.Hide();
+                    throw new Exception();
+                }));
             }
         }
 
@@ -792,9 +827,16 @@ namespace KeppySynthConfigurator
                                 Lis.Items.Add(str);
                             }
                             SaveList(CurrentList);
-                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                            try
                             {
-                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                                {
+                                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                                }
+                            }
+                            catch
+                            {
+
                             }
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
@@ -817,12 +859,19 @@ namespace KeppySynthConfigurator
                             MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         LastBrowserPath = Path.GetDirectoryName(str);
-                        SynthPaths.SetValue("lastpathsfimport", Path.GetDirectoryName(str));
+                        SynthPaths.SetValue("lastpathsfimport", LastBrowserPath);
                     }
                     SaveList(CurrentList);
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone) 
+                    try
                     {
-                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                        {
+                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                        }
+                    }
+                    catch
+                    {
+
                     }
                 }
             }
@@ -840,9 +889,16 @@ namespace KeppySynthConfigurator
                 {
                     Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                 }
-                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                try
                 {
-                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                    {
+                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                    }
+                }
+                catch
+                {
+
                 }
                 SaveList(CurrentList);
             }
@@ -1331,11 +1387,15 @@ namespace KeppySynthConfigurator
             Process.Start("http://keppystudios.com");
         }
 
+        private void getTheMIDIMapperForWindows8xToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://drive.google.com/file/d/0B05Sp4zxPFR6UW9CQ0RRak85eDA/view?usp=sharing");
+        }
+
         private void getTheMIDIMapperForWindows10ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://plus.google.com/+RichardForhenson/posts/bkrqUfbV3xz");
         }
-
 
         private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1500,6 +1560,24 @@ namespace KeppySynthConfigurator
             checkDisabledToolStripMenuItem.Checked = true;
             checkEnabledToolStripMenuItem.Enabled = true;
             checkDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void DefaultOut810enabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
+            DefaultOut810enabledToolStripMenuItem.Checked = true;
+            DefaultOut810disabledToolStripMenuItem.Checked = false;
+            DefaultOut810enabledToolStripMenuItem.Enabled = false;
+            DefaultOut810disabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void DefaultOut810disabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
+            DefaultOut810enabledToolStripMenuItem.Checked = false;
+            DefaultOut810disabledToolStripMenuItem.Checked = true;
+            DefaultOut810enabledToolStripMenuItem.Enabled = true;
+            DefaultOut810disabledToolStripMenuItem.Enabled = false;
         }
 
         private void enabledToolStripMenuItem3_Click(object sender, EventArgs e)

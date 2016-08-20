@@ -9,7 +9,7 @@ AppPublisherURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer
 AppSupportPhone=+393511888475
 AppSupportURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/issues
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
-AppVersion=4.0.1.1
+AppVersion=4.0.1.2
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,13 +34,15 @@ VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Synthesizer
-VersionInfoProductTextVersion=4.0.1.1
+VersionInfoProductTextVersion=4.0.1.2
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=4.0.1.1
+VersionInfoVersion=4.0.1.2
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
 AlwaysShowDirOnReadyPage=True
+WizardImageFile=compiler:WizModernImage-IS.bmp
+WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
 
 [Files]
 ; 64-bit OS
@@ -313,22 +315,3 @@ Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AS";
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AS"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
-
-[Messages]
-AboutSetupTitle=About the driver
-ApplicationsFound2=The driver's files are locked by some programs or by Windows itself.%n%nIt is recommended to close the following programs and/or restart Windows to solve the issue.
-ApplicationsFound=The driver's files are locked by some programs or by Windows itself.%n%nIt is recommended to close the following programs and/or restart Windows to solve the issue.
-CannotContinue=The installation cannot continue.%n%nClick Cancel to exit.
-CannotContinue=The setup cannot continue. Click Cancel to exit.
-CloseApplications=Close them immediately!
-ConfirmUninstall=Are you sure you want to uninstall the driver? Be sure to select another MIDI device on your programs, before uninstalling.
-ConfirmUninstall=Before uninstalling, be sure to set your MIDI programs to the default synth (Microsoft GS Wavetable Synth), to avoid crashes.%n%nPress Yes to continue, or no to abort the uninstallation.
-DontCloseApplications=Nah, leave them opened. (I'll restart later to finish the installation)
-ErrorRestartingComputer=Unable to restart the computer. Please do this manually.
-ExitSetupMessage=You didn't finished the installation. If you exit now, the driver will not be installed!%n%nYou may run the setup again at another time to complete the installation.%n%nAre you sure you want to exit?
-FinishedLabel=The driver has been succesfully installed. Please configure your MIDI programs to allow them to use it, and add some soundfonts to the soundfonts lists!
-FinishedLabelNoIcons=The driver has been succesfully installed.
-SetupAppTitle=Keppy's Driver Installer
-UninstallAppFullTitle=Keppy's Driver Uninstaller
-WelcomeLabel1=Keppy's Driver Installation Wizard
-WelcomeLabel2=The setup will install the driver on your computer.%n%nIt is recommended that you close all other applications before continuing.

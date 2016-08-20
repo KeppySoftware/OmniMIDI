@@ -103,6 +103,7 @@ static int nofloat = 1; // Enable or disable the float engine
 static int nofx = 0; // Enable or disable FXs
 static int noteoff1 = 0; // Note cut INT
 static int preload = 0; // Soundfont preloading
+static int defaultmidiout = 0; // Set as default MIDI out device for 8.x or newer
 static int sfdisableconf = 0; // Enable/Disable that annoying confirmation popup that asks you if you want to change the sf list
 static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
@@ -245,6 +246,20 @@ STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM
 }
 
 HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
+	HKEY hKey;
+	long lResult;
+	int defaultmode;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
+	RegCloseKey(hKey);
+
+	if (defaultmidiout == 1)
+		defaultmode = MOD_SWSYNTH;
+	else
+		defaultmode = MOD_MIDIPORT;
+
 	MIDIOUTCAPSA * myCapsA;
 	MIDIOUTCAPSW * myCapsW;
 	MIDIOUTCAPS2A * myCaps2A;
@@ -261,12 +276,12 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wMid = 0xffff; //MM_UNMAPPED
 		myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
 		memcpy(myCapsA->szPname, synthName, sizeof(synthName));
-		myCapsA->wTechnology = MOD_MIDIPORT;
-		myCapsA->vDriverVersion = 0x0090;
-		myCapsA->wVoices = 0;
-		myCapsA->wNotes = 0;
+		myCapsA->wTechnology = defaultmode;
+		myCapsA->vDriverVersion = 0x022;
+		myCapsA->wVoices = 100000;
+		myCapsA->wNotes = 2147483647;
 		myCapsA->wChannelMask = 0xffff;
-		myCapsA->dwSupport = 0;
+		myCapsA->dwSupport = MIDICAPS_VOLUME;
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -275,12 +290,12 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
 		memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW));
-		myCapsW->wTechnology = MOD_MIDIPORT;
-		myCapsW->vDriverVersion = 0x0090;
-		myCapsW->wVoices = 0;
-		myCapsW->wNotes = 0;
+		myCapsW->wTechnology = defaultmode;
+		myCapsW->vDriverVersion = 0x022;
+		myCapsW->wVoices = 100000;
+		myCapsW->wNotes = 2147483647;
 		myCapsW->wChannelMask = 0xffff;
-		myCapsW->dwSupport = 0;
+		myCapsW->dwSupport = MIDICAPS_VOLUME;
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -289,12 +304,12 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wMid = 0xffff;
 		myCaps2A->wPid = 0xffff;
 		memcpy(myCaps2A->szPname, synthName, sizeof(synthName));
-		myCaps2A->wTechnology = MOD_MIDIPORT;
-		myCaps2A->vDriverVersion = 0x0090;
-		myCaps2A->wVoices = 0;
-		myCaps2A->wNotes = 0;
+		myCaps2A->wTechnology = defaultmode;
+		myCaps2A->vDriverVersion = 0x022;
+		myCaps2A->wVoices = 100000;
+		myCaps2A->wNotes = 2147483647;
 		myCaps2A->wChannelMask = 0xffff;
-		myCaps2A->dwSupport = 0;
+		myCaps2A->dwSupport = MIDICAPS_VOLUME;
 		myCaps2A->ManufacturerGuid = CLSID_bassmidi_synth;
 		myCaps2A->ProductGuid = CLSID_bassmidi_synth;
 		myCaps2A->NameGuid = CLSID_bassmidi_synth;
@@ -305,12 +320,12 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
 		memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW));
-		myCaps2W->wTechnology = MOD_MIDIPORT;
-		myCaps2W->vDriverVersion = 0x0090;
-		myCaps2W->wVoices = 0;
-		myCaps2W->wNotes = 0;
+		myCaps2W->wTechnology = defaultmode;
+		myCaps2W->vDriverVersion = 0x022;
+		myCaps2W->wVoices = 100000;
+		myCaps2W->wNotes = 2147483647;
 		myCaps2W->wChannelMask = 0xffff;
-		myCaps2W->dwSupport = 0;
+		myCaps2W->dwSupport = MIDICAPS_VOLUME;
 		myCaps2W->ManufacturerGuid = CLSID_bassmidi_synth;
 		myCaps2W->ProductGuid = CLSID_bassmidi_synth;
 		myCaps2W->NameGuid = CLSID_bassmidi_synth;
@@ -599,7 +614,7 @@ void DoStartClient() {
 		unsigned int thrdaddr;
 		InitializeCriticalSection(&mim_section);
 		processPriority = GetPriorityClass(GetCurrentProcess());
-		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 		load_sfevent = CreateEvent(
 			NULL,               // default security attributes
 			TRUE,               // manual-reset event

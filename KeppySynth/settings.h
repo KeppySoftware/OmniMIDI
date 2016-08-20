@@ -83,6 +83,13 @@ void DLLLoadError(LPCWSTR dll) {
 	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
 }
 
+void DLLLoadError2(LPCWSTR dll) {
+	TCHAR errormessage[MAX_PATH] = L"The following DLL hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nPlease installed the required libraries, and restart the application.\n\nDLL: ";
+	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
+	lstrcat(errormessage, dll);
+	lstrcat(errormessage, clickokmsg);
+	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONASTERISK | MB_SYSTEMMODAL);
+}
 
 BOOL IsRunningXP(){
 	if (xaudiodisabled == 1)
@@ -529,7 +536,7 @@ BOOL load_bassfuncs()
 	lstrcat(bassvstpath, installpath);
 	lstrcat(bassvstpath, L"\\bass_vst.dll");
 	if (!(bass_vst = LoadLibrary(bassvstpath))) {
-		DLLLoadError(bassvstpath);
+		DLLLoadError2(bassencpath);
 		exit(0);
 	}
 	/* "load" all the BASS functions that are to be used */
