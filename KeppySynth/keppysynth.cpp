@@ -6,6 +6,7 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 #include <Shlwapi.h>
 #include <Tlhelp32.h>
 #include <assert.h>
+#include <Dbghelp.h>
 #include <atlbase.h>
 #include <atlstr.h>
 #include <cctype>
@@ -20,6 +21,7 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 #include <process.h>
 #include <shlobj.h>
 #include <signal.h>
+#include <shellapi.h>
 #include <sstream>
 #include <stdarg.h>
 #include <stdio.h>
@@ -27,6 +29,7 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 #include <string.h>
 #include <string>
 #include <tchar.h>
+#include <Psapi.h>
 #include <vector>
 #include <winbase.h>
 #include <windows.h>
@@ -159,8 +162,6 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
 
-
-
 // Keppy's Synthesizer vital parts
 #include "watchdog.h"
 #include "sfsystem.h"
@@ -169,6 +170,7 @@ static HINSTANCE bass_vst = 0;			// bass_vst handle
 #include "bansystem.h"
 
 static void DoStopClient();
+
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 
@@ -561,7 +563,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			while (stop_rtthread == 0){
 				Sleep(1);
 				realtime_load_settings();
-				keybindings();
 				debug_info();
 				WatchdogCheck();
 				mixervoid();
@@ -645,6 +646,11 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
+	RegCloseKey(hKey);
+	dwType = REG_SZ;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+	RegSetValueEx(hKey, L"currentapp", 0, dwType, NULL, NULL);
+	RegSetValueEx(hKey, L"bit", 0, dwType, NULL, NULL);
 	RegCloseKey(hKey);
 	if (modm_closed == 0){
 		stop_thread = 1;

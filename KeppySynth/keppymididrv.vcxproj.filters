@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="xaudiopipe.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="keppysynth.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bansystem.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bass.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bass_vst.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bassenc.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bassmidi.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="bufsystem.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\comdecl.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\mmddk.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="sfsystem.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="settings.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_out.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="watchdog.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\XAudio2.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\xma2defs.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\audiodefs.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{6f88a41c-e912-46ce-acb5-d14dd8632d4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{01b44475-5ffd-4047-b653-0269e75f3755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{2c532282-6727-4b27-b6e7-afea27cb19f2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="keppysynth.def">
+      <Filter>Source files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resource files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\KeppySynthConfigurator\KeppySynthConfigurator\Resources\gear.ico">
+      <Filter>Resource files</Filter>
+    </Image>
+    <Image Include="icon1.ico">
+      <Filter>Resource files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

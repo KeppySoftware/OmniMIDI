@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
 namespace KeppySynthWatchdog
@@ -57,6 +58,8 @@ namespace KeppySynthWatchdog
 
     public class ProcessIcon : IDisposable
     {
+        static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
+
         NotifyIcon ni;
 
         public ProcessIcon()
@@ -66,12 +69,25 @@ namespace KeppySynthWatchdog
 
         public void Display()
         {
+            if (Convert.ToInt32(Watchdog.GetValue("watchdognotify", 1)) == 1)
+            {
+                string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString();
+                string bit = Watchdog.GetValue("bit", "Unknown").ToString();
+                ni.BalloonTipIcon = ToolTipIcon.Info;
+                ni.BalloonTipTitle = "Keppy's Synthesizer is up and running";
+                ni.BalloonTipText = String.Format("Current MIDI app:\n{0} ({1})", System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters()), bit.RemoveGarbageCharacters());
+            }
+
             ni.MouseClick += new MouseEventHandler(ni_MouseClick);
+
             ni.Text = "Keppy's Synthesizer Watchdog";
             ni.Icon = KeppySynthWatchdog.Properties.Resources.gear;
             ni.Visible = true;
 
-            ni.ContextMenuStrip = new ContextMenus().Create();
+            if (Convert.ToInt32(Watchdog.GetValue("watchdognotify", 1)) == 1)
+                ni.ShowBalloonTip(30000);
+
+            ni.ContextMenu = new ContextMenus().Create();
         }
 
         public void Dispose()
@@ -85,7 +101,7 @@ namespace KeppySynthWatchdog
         {
             ni.Visible = false;
 
-            Application.Exit();
+            Environment.Exit(-1);
         }
 
         void ni_MouseClick(object sender, MouseEventArgs e)
@@ -96,5 +112,14 @@ namespace KeppySynthWatchdog
                 Process.Start(currentpath + "\\KeppySynthConfigurator.exe", null);
             }
         }
+    }
+}
+
+public static class RegexConvert
+{
+    public static string RemoveGarbageCharacters(this string input)
+    {
+        Regex rgx = new Regex("[^a-zA-Z0-9()!'-_.\\\\ ]");
+        return rgx.Replace(input, "");
     }
 }

@@ -56,23 +56,33 @@ namespace KeppySynthConfigurator
 
         public KeppySynthConfiguratorMain(String[] args)
         {
-            foreach (String s in args)
+            try
             {
-                switch (s.Substring(0, 3).ToUpper())
+                foreach (String s in args)
                 {
-                    case "/AS":
-                        UserProfileMigration();
-                        Environment.Exit(0);
-                        break;
-                    case "/AT":
-                        openadvanced = 1;
-                        break;
-                    default:
-                        // do other stuff...
-                        break;
+                    switch (s.Substring(0, 3).ToUpper())
+                    {
+                        case "/AS":
+                            UserProfileMigration();
+                            Environment.Exit(0);
+                            break;
+                        case "/AT":
+                            openadvanced = 1;
+                            break;
+                        case "/NL":
+                            break;
+                        default:
+                            // do other stuff...
+                            break;
+                    }
                 }
             }
+            catch
+            {
+
+            }
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
         }
 
         private void KeppySynthConfiguratorMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -492,20 +502,6 @@ namespace KeppySynthConfigurator
                 VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
                 PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony"));
                 MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu")); 
-                if (Convert.ToInt32(SynthSettings.GetValue("sfdisableconf", 0)) == 0)
-                {
-                    enabledToolStripMenuItem.Checked = true;
-                    enabledToolStripMenuItem.Enabled = false;
-                    disabledToolStripMenuItem.Checked = false;
-                    disabledToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    enabledToolStripMenuItem.Checked = false;
-                    enabledToolStripMenuItem.Enabled = true;
-                    disabledToolStripMenuItem.Checked = true;
-                    disabledToolStripMenuItem.Enabled = false;
-                }
                 if (Convert.ToInt32(SynthSettings.GetValue("defaultmidiout", 0)) == 0)
                 {
                     DefaultOut810enabledToolStripMenuItem.Checked = false;
@@ -519,22 +515,6 @@ namespace KeppySynthConfigurator
                     DefaultOut810enabledToolStripMenuItem.Enabled = false;
                     DefaultOut810disabledToolStripMenuItem.Checked = false;
                     DefaultOut810disabledToolStripMenuItem.Enabled = true;
-                }
-                if (Convert.ToInt32(SynthSettings.GetValue("volumehotkeys", 1)) == 1)
-                {
-                    VolumeHotkeysCheck.Enabled = true;
-                    enabledToolStripMenuItem1.Checked = true;
-                    enabledToolStripMenuItem1.Enabled = false;
-                    disabledToolStripMenuItem1.Checked = false;
-                    disabledToolStripMenuItem1.Enabled = true;
-                }
-                else
-                {
-                    VolumeHotkeysCheck.Enabled = false;
-                    enabledToolStripMenuItem1.Checked = false;
-                    enabledToolStripMenuItem1.Enabled = true;
-                    disabledToolStripMenuItem1.Checked = true;
-                    disabledToolStripMenuItem1.Enabled = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
                 {
@@ -586,28 +566,8 @@ namespace KeppySynthConfigurator
                     enabledToolStripMenuItem2.Enabled = true;
                     disabledToolStripMenuItem2.Enabled = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys")) == 1)
+                if (Convert.ToInt32(Watchdog.GetValue("watchdog", 1)) == 1)
                 {
-                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
-                    volumeHotkeysToolStripMenuItem.Enabled = true;
-                    hLSEnabledToolStripMenuItem.Checked = true;
-                    hLSDisabledToolStripMenuItem.Checked = false;
-                    hLSEnabledToolStripMenuItem.Enabled = false;
-                    hLSDisabledToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
-                    volumeHotkeysToolStripMenuItem.Enabled = false;
-                    hLSEnabledToolStripMenuItem.Checked = false;
-                    hLSDisabledToolStripMenuItem.Checked = true;
-                    hLSEnabledToolStripMenuItem.Enabled = true;
-                    hLSDisabledToolStripMenuItem.Enabled = false;
-                }
-                if (Convert.ToInt32(Watchdog.GetValue("watchdog")) == 1)
-                {
-                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
-                    volumeHotkeysToolStripMenuItem.Enabled = true;
                     watchdogEnabledToolStripMenuItem.Checked = true;
                     watchdogDisabledToolStripMenuItem.Checked = false;
                     watchdogEnabledToolStripMenuItem.Enabled = false;
@@ -615,11 +575,24 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
                     watchdogEnabledToolStripMenuItem.Checked = false;
                     watchdogDisabledToolStripMenuItem.Checked = true;
                     watchdogEnabledToolStripMenuItem.Enabled = true;
                     watchdogDisabledToolStripMenuItem.Enabled = false;
+                }
+                if (Convert.ToInt32(Watchdog.GetValue("watchdognotify", 1)) == 1)
+                {
+                    MIDIAppNotifyEnabledToolStripMenuItem.Checked = true;
+                    MIDIAppNotifyDisabledToolStripMenuItem.Checked = false;
+                    MIDIAppNotifyEnabledToolStripMenuItem.Enabled = false;
+                    MIDIAppNotifyDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    MIDIAppNotifyEnabledToolStripMenuItem.Checked = false;
+                    MIDIAppNotifyDisabledToolStripMenuItem.Checked = true;
+                    MIDIAppNotifyEnabledToolStripMenuItem.Enabled = true;
+                    MIDIAppNotifyDisabledToolStripMenuItem.Enabled = false;
                 }
                 Frequency.Text = SynthSettings.GetValue("frequency").ToString();
                 TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks"));
@@ -1465,67 +1438,6 @@ namespace KeppySynthConfigurator
             frm.ShowDialog();
         }
 
-        private void SFListConfirmationenabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("sfdisableconf", "0", RegistryValueKind.DWord);
-            enabledToolStripMenuItem.Checked = true;
-            enabledToolStripMenuItem.Enabled = false;
-            disabledToolStripMenuItem.Checked = false;
-            disabledToolStripMenuItem.Enabled = true;
-        }
-
-        private void SFListConfirmationdisabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("sfdisableconf", "1", RegistryValueKind.DWord);
-            enabledToolStripMenuItem.Checked = false;
-            enabledToolStripMenuItem.Enabled = true;
-            disabledToolStripMenuItem.Checked = true;
-            disabledToolStripMenuItem.Enabled = false;
-        }
-
-        private void enabledToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("volumehotkeys", "1", RegistryValueKind.DWord);
-            VolumeHotkeysCheck.Enabled = true;
-            enabledToolStripMenuItem1.Checked = true;
-            enabledToolStripMenuItem1.Enabled = false;
-            disabledToolStripMenuItem1.Checked = false;
-            disabledToolStripMenuItem1.Enabled = true;
-        }
-
-        private void disabledToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("volumehotkeys", "0", RegistryValueKind.DWord);
-            VolumeHotkeysCheck.Enabled = false;
-            enabledToolStripMenuItem1.Checked = false;
-            enabledToolStripMenuItem1.Enabled = true;
-            disabledToolStripMenuItem1.Checked = true;
-            disabledToolStripMenuItem1.Enabled = false;
-        }
-
-        private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
-            soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = true;
-            volumeHotkeysToolStripMenuItem.Enabled = true;
-            hLSEnabledToolStripMenuItem.Checked = true;
-            hLSDisabledToolStripMenuItem.Checked = false;
-            hLSEnabledToolStripMenuItem.Enabled = false;
-            hLSDisabledToolStripMenuItem.Enabled = true;
-        }
-
-        private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
-            soundfontListChangeConfirmationDialogToolStripMenuItem.Enabled = false;
-            volumeHotkeysToolStripMenuItem.Enabled = false;
-            hLSEnabledToolStripMenuItem.Checked = false;
-            hLSDisabledToolStripMenuItem.Checked = true;
-            hLSEnabledToolStripMenuItem.Enabled = true;
-            hLSDisabledToolStripMenuItem.Enabled = false;
-        }
-
-
         private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Watchdog.SetValue("watchdog", "1", RegistryValueKind.DWord);
@@ -1542,6 +1454,25 @@ namespace KeppySynthConfigurator
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;
             watchdogDisabledToolStripMenuItem.Enabled = false;
+        }
+
+
+        private void MIDIAppNotifyEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("watchdognotify", "1", RegistryValueKind.DWord);
+            MIDIAppNotifyEnabledToolStripMenuItem.Checked = true;
+            MIDIAppNotifyDisabledToolStripMenuItem.Checked = false;
+            MIDIAppNotifyEnabledToolStripMenuItem.Enabled = false;
+            MIDIAppNotifyDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void MIDIAppNotifyDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("watchdognotify", "0", RegistryValueKind.DWord);
+            MIDIAppNotifyEnabledToolStripMenuItem.Checked = false;
+            MIDIAppNotifyDisabledToolStripMenuItem.Checked = true;
+            MIDIAppNotifyEnabledToolStripMenuItem.Enabled = true;
+            MIDIAppNotifyDisabledToolStripMenuItem.Enabled = false;
         }
 
         private void checkEnabledToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1649,9 +1580,15 @@ namespace KeppySynthConfigurator
             Watchdog.SetValue("wdrun", "0", RegistryValueKind.DWord);
         }
 
+        private void CloseConfigurator(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+            Environment.Exit(-1);
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Environment.Exit(-1);
         }
 
         // Guide part

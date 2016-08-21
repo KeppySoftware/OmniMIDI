@@ -76,6 +76,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MIDIVolumeOverride = new System.Windows.Forms.CheckBox();
+            this.showTheConfiguratorWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -519,6 +520,7 @@
             // Main
             // 
             this.Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTheConfiguratorWindowToolStripMenuItem,
             this.resetToDefaultToolStripMenuItem,
             this.muteToolStripMenuItem,
             this.fullVolumeToolStripMenuItem,
@@ -574,7 +576,15 @@
             this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
             this.MIDIVolumeOverride.CheckedChanged += new System.EventHandler(this.MIDIVolumeOverride_CheckedChanged);
             // 
-            // KeppyDriverMixerWindow
+            // showTheConfiguratorWindowToolStripMenuItem
+            // 
+            this.showTheConfiguratorWindowToolStripMenuItem.Name = "showTheConfiguratorWindowToolStripMenuItem";
+            this.showTheConfiguratorWindowToolStripMenuItem.Size = new System.Drawing.Size(182, 20);
+            this.showTheConfiguratorWindowToolStripMenuItem.Text = "Show the configurator window";
+            this.showTheConfiguratorWindowToolStripMenuItem.Visible = false;
+            this.showTheConfiguratorWindowToolStripMenuItem.Click += new System.EventHandler(this.showTheConfiguratorWindowToolStripMenuItem_Click);
+            // 
+            // KeppySynthMixerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -624,7 +634,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.Main;
             this.MaximizeBox = false;
-            this.Name = "KeppyDriverMixerWindow";
+            this.Name = "KeppySynthMixerWindow";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keppy\'s Driver Mixer";
@@ -701,5 +711,6 @@
         private System.Windows.Forms.ToolTip VolumeTip;
         private System.Windows.Forms.ToolStripMenuItem fullVolumeToolStripMenuItem;
         private System.Windows.Forms.CheckBox MIDIVolumeOverride;
+        private System.Windows.Forms.ToolStripMenuItem showTheConfiguratorWindowToolStripMenuItem;
     }
 }

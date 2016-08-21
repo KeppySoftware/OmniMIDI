@@ -22,7 +22,9 @@ namespace KeppySynthConfigurator
             {
                 if (inst == null || inst.IsDisposed)
                 {
-                    inst = new KeppySynthMixerWindow();
+                    List<string> nothing = new List<string>();
+                    nothing.Add("/NUL");
+                    inst = new KeppySynthMixerWindow(nothing.ToArray());
                 }
                 else
                 {
@@ -33,10 +35,29 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public KeppySynthMixerWindow()
+        public KeppySynthMixerWindow(string[] args)
         {
-            this.Controls.Add(LeftChannel);
             InitializeComponent();
+            try
+            {
+                foreach (String s in args)
+                {
+                    switch (s.Substring(0, 4).ToUpper())
+                    {
+                        case "/MIX":
+                            showTheConfiguratorWindowToolStripMenuItem.Visible = true;
+                            break;
+                        case "/NUL":
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         public void CPUSpeed()
@@ -316,6 +337,22 @@ namespace KeppySynthConfigurator
             {
                 MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
+        }
+
+        private void showTheConfiguratorWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<string> nothing = new List<string>();
+            nothing.Add("/NL");
+            showTheConfiguratorWindowToolStripMenuItem.Visible = false;
+            this.FormClosing += new FormClosingEventHandler(CloseMixer);
+            KeppySynthConfiguratorMain frm = new KeppySynthConfiguratorMain(nothing.ToArray());
+            frm.Show();
+        }
+
+        void CloseMixer(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
         }
 
         private void CH16VOL_Scroll(object sender, EventArgs e)

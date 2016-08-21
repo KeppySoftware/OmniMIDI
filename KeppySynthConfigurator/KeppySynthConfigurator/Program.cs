@@ -42,12 +42,14 @@ namespace KeppySynthConfigurator
                     sourceKey.Close();
                 }
                 DoAnyway(args);
+
             }
         }
 
         static void DoAnyway(String[] args)
         {
             RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+            int runmode = 0;
             bool ok;
             Mutex m = new Mutex(true, "KeppySynthConfigurator", out ok);
             if (!ok)
@@ -56,52 +58,48 @@ namespace KeppySynthConfigurator
             }
             try
             {
-                if (Convert.ToInt32(SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
+                foreach (String s in args)
                 {
-                    WebClient client = new WebClient();
-                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/keppydriverupdate.txt");
-                    StreamReader reader = new StreamReader(stream);
-                    String newestversion = reader.ReadToEnd();
-                    FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppydrv\\keppydrv.dll");
-                    Version x = null;
-                    Version.TryParse(newestversion.ToString(), out x);
-                    Version y = null;
-                    Version.TryParse(Driver.FileVersion.ToString(), out y);
-                    Thread.Sleep(50);
-                    if (x > y)
+                    switch (s.Substring(0, 4).ToUpper())
                     {
-                        DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            Process.Start("https://github.com/KaleidonKep99/Keppy-s-Driver/releases");
-                            Application.ExitThread();
-                        }
-                        else if (dialogResult == DialogResult.No)
-                        {
-                            SynthSettings.Close();
-                            Application.EnableVisualStyles();
-                            Application.SetCompatibleTextRenderingDefault(false);
-                            Application.Run(new KeppySynthConfiguratorMain(args));
-                            GC.KeepAlive(m);
-                        }
-                    }
-                    else
-                    {
-                        SynthSettings.Close();
-                        Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(false);
-                        Application.Run(new KeppySynthConfiguratorMain(args));
-                        GC.KeepAlive(m);
+                        case "/MIX":
+                            runmode = 1;
+                            break;
+                        default:
+                            runmode = 0;
+                            if (Convert.ToInt32(SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
+                            {
+                                WebClient client = new WebClient();
+                                Stream stream = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/keppydriverupdate.txt");
+                                StreamReader reader = new StreamReader(stream);
+                                String newestversion = reader.ReadToEnd();
+                                FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppydrv\\keppydrv.dll");
+                                Version x = null;
+                                Version.TryParse(newestversion.ToString(), out x);
+                                Version y = null;
+                                Version.TryParse(Driver.FileVersion.ToString(), out y);
+                                Thread.Sleep(50);
+                                if (x > y)
+                                {
+                                    DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                    if (dialogResult == DialogResult.Yes)
+                                    {
+                                        Process.Start("https://github.com/KaleidonKep99/Keppy-s-Driver/releases");
+                                        Application.ExitThread();
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
-                else
-                {
-                    SynthSettings.Close();
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
+                SynthSettings.Close();
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                if (runmode == 0)
                     Application.Run(new KeppySynthConfiguratorMain(args));
-                    GC.KeepAlive(m);
-                }
+                if (runmode == 1)
+                    Application.Run(new KeppySynthMixerWindow(args));
+                GC.KeepAlive(m);
             }
             catch
             {
