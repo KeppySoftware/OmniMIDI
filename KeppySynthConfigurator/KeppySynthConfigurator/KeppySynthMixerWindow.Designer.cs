@@ -70,13 +70,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.VolumeMonitor = new System.Windows.Forms.CheckBox();
             this.Main = new System.Windows.Forms.MenuStrip();
+            this.showTheConfiguratorWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MIDIVolumeOverride = new System.Windows.Forms.CheckBox();
-            this.showTheConfiguratorWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -532,6 +532,14 @@
             this.Main.TabIndex = 26;
             this.Main.Text = "menuStrip1";
             // 
+            // showTheConfiguratorWindowToolStripMenuItem
+            // 
+            this.showTheConfiguratorWindowToolStripMenuItem.Name = "showTheConfiguratorWindowToolStripMenuItem";
+            this.showTheConfiguratorWindowToolStripMenuItem.Size = new System.Drawing.Size(182, 20);
+            this.showTheConfiguratorWindowToolStripMenuItem.Text = "Show the configurator window";
+            this.showTheConfiguratorWindowToolStripMenuItem.Visible = false;
+            this.showTheConfiguratorWindowToolStripMenuItem.Click += new System.EventHandler(this.showTheConfiguratorWindowToolStripMenuItem_Click);
+            // 
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
@@ -575,14 +583,6 @@
             this.MIDIVolumeOverride.Text = "Enable MIDI volume event override";
             this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
             this.MIDIVolumeOverride.CheckedChanged += new System.EventHandler(this.MIDIVolumeOverride_CheckedChanged);
-            // 
-            // showTheConfiguratorWindowToolStripMenuItem
-            // 
-            this.showTheConfiguratorWindowToolStripMenuItem.Name = "showTheConfiguratorWindowToolStripMenuItem";
-            this.showTheConfiguratorWindowToolStripMenuItem.Size = new System.Drawing.Size(182, 20);
-            this.showTheConfiguratorWindowToolStripMenuItem.Text = "Show the configurator window";
-            this.showTheConfiguratorWindowToolStripMenuItem.Visible = false;
-            this.showTheConfiguratorWindowToolStripMenuItem.Click += new System.EventHandler(this.showTheConfiguratorWindowToolStripMenuItem_Click);
             // 
             // KeppySynthMixerWindow
             // 
@@ -637,7 +637,7 @@
             this.Name = "KeppySynthMixerWindow";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Keppy\'s Driver Mixer";
+            this.Text = "Keppy\'s Synthesizer Mixer";
             this.Load += new System.EventHandler(this.KeppyDriverMixerWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).EndInit();

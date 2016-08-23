@@ -9,7 +9,7 @@ AppPublisherURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer
 AppSupportPhone=+393511888475
 AppSupportURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/issues
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
-AppVersion=4.0.1.3
+AppVersion=4.0.1.4
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Synthesizer
-VersionInfoProductTextVersion=4.0.1.3
+VersionInfoProductTextVersion=4.0.1.4
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=4.0.1.3
+VersionInfoVersion=4.0.1.4
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -46,14 +46,6 @@ WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
 
 [Files]
 ; 64-bit OS
-Source: "external_packages\lib64\bass.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib64\bassenc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib64\bassmidi.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib64\bass_vst.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib\bass.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib\bassenc.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib\bassmidi.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "external_packages\lib\bass_vst.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\64\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -64,10 +56,7 @@ Source: "output\midioutsetter64.exe"; DestDir: "{syswow64}\keppysynth"; DestName
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppysynth"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 ; 32-bit OS
-Source: "external_packages\lib\bass.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "external_packages\lib\bassenc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "external_packages\lib\bass_vst.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthWatchdog.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -75,6 +64,32 @@ Source: "output\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysy
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{sys}\keppysynth"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+; 64-bit libs
+Source: "external_packages\lib64\bass.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bass_mpc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bass_vst.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassenc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassflac.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassmidi.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\bassopus.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib64\basswv.dll"; DestDir: "{sys}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bass.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bass_mpc.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bass_vst.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassenc.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassflac.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassmidi.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\bassopus.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "external_packages\lib\basswv.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+; 32-bit libs
+Source: "external_packages\lib\bass.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bass_mpc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bass_vst.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassenc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassflac.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 ; Generic for all the OSes
 Source: "dxwebsetup.exe"; DestDir: "{tmp}"; DestName: "dxwebsetup.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3
 Source: "output\keppymididrv.defaultblacklist"; DestDir: "{win}"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3

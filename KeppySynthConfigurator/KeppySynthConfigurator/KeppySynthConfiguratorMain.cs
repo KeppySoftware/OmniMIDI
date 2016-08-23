@@ -337,7 +337,7 @@ namespace KeppySynthConfigurator
                 double x = VolTrackBar.Value / 100;
                 VolumeValue = Convert.ToInt32(x);
                 VolSimView.Text = VolumeValue.ToString("000\\%");
-                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
                 
                 // Checkbox stuff yay
@@ -678,7 +678,7 @@ namespace KeppySynthConfigurator
                 int VolumeValue = Convert.ToInt32(SynthSettings.GetValue("volume"));
                 double x = VolumeValue / 100;
                 VolSimView.Text = x.ToString("000\\%");
-                VolIntView.Text = "Volume in 32-bit integer: " + VolumeValue.ToString("00000") + " (" + (VolumeValue / 100).ToString("000") + "%)";
+                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
                 VolTrackBar.Value = VolumeValue;
 
                 // Jakuberino
@@ -706,7 +706,7 @@ namespace KeppySynthConfigurator
                 double x = VolTrackBar.Value / 100;
                 VolumeValue = Convert.ToInt32(x);
                 VolSimView.Text = VolumeValue.ToString("000\\%");
-                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch (Exception ex)
@@ -1282,7 +1282,7 @@ namespace KeppySynthConfigurator
                 double x = VolTrackBar.Value / 100;
                 int VolumeValue = Convert.ToInt32(x);
                 VolSimView.Text = VolumeValue.ToString("000\\%");
-                VolIntView.Text = "Volume in 32-bit integer: " + VolTrackBar.Value.ToString("00000") + " (" + (VolTrackBar.Value / 100).ToString("000") + "%)";
+                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
             }
             catch
             {
@@ -1563,6 +1563,13 @@ namespace KeppySynthConfigurator
             SelectedListBox.Items.RemoveAt(8);
         }
 
+        private void runTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("closewatchdog", "0", RegistryValueKind.DWord);
+            Watchdog.SetValue("wdrun", "1", RegistryValueKind.DWord);
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthWatchdog.exe");
+        }
+
         private void killTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1578,6 +1585,11 @@ namespace KeppySynthConfigurator
             }
             Watchdog.SetValue("closewatchdog", "1", RegistryValueKind.DWord);
             Watchdog.SetValue("wdrun", "0", RegistryValueKind.DWord);
+        }
+
+        private void FLStudioLicenseDiscount_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://affiliate.image-line.com/BFHHCGAE552");
         }
 
         private void CloseConfigurator(object sender, CancelEventArgs e)
