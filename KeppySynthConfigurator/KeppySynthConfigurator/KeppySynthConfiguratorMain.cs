@@ -172,17 +172,7 @@ namespace KeppySynthConfigurator
                         Lis.Items.Add(s[i]);
                     }
                     SaveList(CurrentList);
-                    try
-                    {
-                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                        {
-                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    TriggerReload();
                 }
                 else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
                 {
@@ -199,17 +189,7 @@ namespace KeppySynthConfigurator
                         }
                     }
                     SaveList(CurrentList);
-                    try
-                    {
-                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                        {
-                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    TriggerReload();
                 }
                 else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
                 {
@@ -718,6 +698,20 @@ namespace KeppySynthConfigurator
         // -------------------------
         // Soundfont lists functions
 
+        private void TriggerReload() {
+            try
+            {
+                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
+                {
+                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
         private void OpenFileDialogAddCustomPaths(FileDialog dialog)
         {
             try
@@ -800,17 +794,7 @@ namespace KeppySynthConfigurator
                                 Lis.Items.Add(str);
                             }
                             SaveList(CurrentList);
-                            try
-                            {
-                                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                                {
-                                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                                }
-                            }
-                            catch
-                            {
-
-                            }
+                            TriggerReload();
                         }
                         else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
                         {
@@ -835,17 +819,7 @@ namespace KeppySynthConfigurator
                         SynthPaths.SetValue("lastpathsfimport", LastBrowserPath);
                     }
                     SaveList(CurrentList);
-                    try
-                    {
-                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                        {
-                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    TriggerReload();
                 }
             }
             catch (Exception ex)
@@ -862,17 +836,7 @@ namespace KeppySynthConfigurator
                 {
                     Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                 }
-                try
-                {
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                    {
-                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                    }
-                }
-                catch
-                {
-
-                }
+                TriggerReload();
                 SaveList(CurrentList);
             }
             catch (Exception ex)
@@ -904,11 +868,8 @@ namespace KeppySynthConfigurator
                         Lis.SetSelected(indx - 1, true);
                     }
                 }
-                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                {
-                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                }
                 SaveList(CurrentList);
+                TriggerReload();
             }
             catch (Exception ex)
             {
@@ -940,11 +901,8 @@ namespace KeppySynthConfigurator
                     }
 
                 }
-                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                {
-                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                }
                 SaveList(CurrentList);
+                TriggerReload();
             }
             catch (Exception ex)
             {
@@ -974,11 +932,8 @@ namespace KeppySynthConfigurator
                     {
                         MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                    {
-                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                    }
                     SaveList(CurrentList);
+                    TriggerReload();
                 }
             }
             catch (Exception ex)
@@ -1009,11 +964,8 @@ namespace KeppySynthConfigurator
                     {
                         MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                    {
-                        Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                    }
                     SaveList(CurrentList);
+                    TriggerReload();
                 }
             }
             catch (Exception ex)
@@ -1041,16 +993,9 @@ namespace KeppySynthConfigurator
                             {
                                 Lis.Items.Add(line); // Read the external list and add the items to the selected list
                             }
-                            if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                            {
-                                Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                            }
-                        }
-                        if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                        {
-                            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
                         }
                         SaveList(CurrentList);
+                        TriggerReload();
                     }
                 }
             }
