@@ -399,12 +399,16 @@ namespace KeppySynthConfigurator
             {
                 if (SynthPaths.GetValue("lastpathsfimport", null) == null)
                 {
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
+                    SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                     SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                     SoundfontImport.InitialDirectory = LastBrowserPath;
                 }
                 else if (SynthPaths.GetValue("lastpathlistimpexp", null) == null)
                 {
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
+                    SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                     SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
                     ExternalListImport.InitialDirectory = LastImportExportPath;
@@ -412,6 +416,8 @@ namespace KeppySynthConfigurator
                 }
                 else if (SynthPaths.GetValue("lastpathsfimport", null) == null && SynthPaths.GetValue("lastpathlistimpexp", null) == null)
                 {
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
+                    SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                     SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
@@ -432,7 +438,7 @@ namespace KeppySynthConfigurator
             catch
             {
                 Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
-                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+                SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                 SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                 SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                 LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
@@ -708,6 +714,30 @@ namespace KeppySynthConfigurator
             }
             catch
             {
+                InitializeLastPath();
+            }
+        }
+
+        private void SetLastPath(string path)
+        {
+            try
+            {
+                SynthPaths.SetValue("lastpathlistimpexp", path);
+            }
+            catch
+            {
+                InitializeLastPath();
+            }
+        }
+
+        private void SetLastImportExportPath(string path)
+        {
+            try
+            {
+                SynthPaths.SetValue("lastpathsfimport", path);
+            }
+            catch
+            {
 
             }
         }
@@ -772,7 +802,7 @@ namespace KeppySynthConfigurator
                 {
                     foreach (string str in SoundfontImport.FileNames)
                     {
-                        if (Path.GetExtension(str) == ".sf2" | Path.GetExtension(str) == ".SF2" | Path.GetExtension(str) == ".sfpack" | Path.GetExtension(str) == ".SFPACK")
+                        if (Path.GetExtension(str).ToLower() == ".sf2" | Path.GetExtension(str).ToLower() == ".sfpack")
                         {
                             if (BankPresetOverride.Checked == true)
                             {
@@ -793,10 +823,8 @@ namespace KeppySynthConfigurator
                             {
                                 Lis.Items.Add(str);
                             }
-                            SaveList(CurrentList);
-                            TriggerReload();
                         }
-                        else if (Path.GetExtension(str) == ".sfz" | Path.GetExtension(str) == ".SFZ")
+                        else if (Path.GetExtension(str).ToLower() == ".sfz")
                         {
                             using (var form = new BankNPresetSel(Path.GetFileName(str), 0, 0))
                             {
@@ -816,7 +844,7 @@ namespace KeppySynthConfigurator
                             MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         LastBrowserPath = Path.GetDirectoryName(str);
-                        SynthPaths.SetValue("lastpathsfimport", LastBrowserPath);
+                        SetLastPath(LastBrowserPath);
                     }
                     SaveList(CurrentList);
                     TriggerReload();
@@ -985,7 +1013,7 @@ namespace KeppySynthConfigurator
                     foreach (string file in ExternalListImport.FileNames)
                     {
                         LastImportExportPath = Path.GetDirectoryName(file);
-                        SynthPaths.SetValue("lastpathlistimpexp", LastImportExportPath, RegistryValueKind.String);
+                        SetLastPath(LastImportExportPath);
                         using (StreamReader r = new StreamReader(file))
                         {
                             string line;
@@ -1012,7 +1040,7 @@ namespace KeppySynthConfigurator
             if (ExternalListExport.ShowDialog() == DialogResult.OK)
             {
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
-                SynthPaths.SetValue("lastpathlistimpexp", LastImportExportPath, RegistryValueKind.String);
+                SetLastPath(LastImportExportPath);
                 foreach (var item in Lis.Items)
                 {
                     SaveFile.WriteLine(item.ToString());
