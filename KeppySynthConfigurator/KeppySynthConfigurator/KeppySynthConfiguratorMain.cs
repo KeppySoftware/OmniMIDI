@@ -1510,8 +1510,14 @@ namespace KeppySynthConfigurator
 
         private void runTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
             Watchdog.SetValue("closewatchdog", "0", RegistryValueKind.DWord);
+            Watchdog.SetValue("watchdog", "1", RegistryValueKind.DWord);
             Watchdog.SetValue("wdrun", "1", RegistryValueKind.DWord);
+            watchdogEnabledToolStripMenuItem.Checked = true;
+            watchdogDisabledToolStripMenuItem.Checked = false;
+            watchdogEnabledToolStripMenuItem.Enabled = false;
+            watchdogDisabledToolStripMenuItem.Enabled = true;
             System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthWatchdog.exe");
         }
 
@@ -1539,7 +1545,6 @@ namespace KeppySynthConfigurator
 
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
-            e.Cancel = true;
             Environment.Exit(-1);
         }
 

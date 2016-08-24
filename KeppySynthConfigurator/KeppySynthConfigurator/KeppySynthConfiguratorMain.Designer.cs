@@ -1159,11 +1159,13 @@
             // 
             this.watchdogEnabledToolStripMenuItem.Index = 0;
             this.watchdogEnabledToolStripMenuItem.Text = "Enabled";
+            this.watchdogEnabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogEnabledToolStripMenuItem_Click);
             // 
             // watchdogDisabledToolStripMenuItem
             // 
             this.watchdogDisabledToolStripMenuItem.Index = 1;
             this.watchdogDisabledToolStripMenuItem.Text = "Disabled";
+            this.watchdogDisabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogDisabledToolStripMenuItem_Click);
             // 
             // menuItem11
             // 

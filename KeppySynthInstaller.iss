@@ -9,7 +9,7 @@ AppPublisherURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer
 AppSupportPhone=+393511888475
 AppSupportURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/issues
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
-AppVersion=4.0.1.4
+AppVersion=4.0.1.5
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +34,9 @@ VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Synthesizer
-VersionInfoProductTextVersion=4.0.1.4
+VersionInfoProductTextVersion=4.0.1.5
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=4.0.1.4
+VersionInfoVersion=4.0.1.5
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -174,7 +174,9 @@ Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Channels"; ValueType: dword;
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Channels"; ValueType: dword; ValueName: "ch15"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Channels"; ValueType: dword; ValueName: "ch16"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 
-;Watchdog              
+;Watchdog
+Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: string; ValueName: "bit"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: string; ValueName: "currentapp"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: dword; ValueName: "closewatchdog"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: dword; ValueName: "rel1"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: dword; ValueName: "rel2"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
@@ -195,133 +197,14 @@ Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppysynth\keppysynth.dll"; Flags: uninsdeletevalue dontcreatekey; Check: not Is64BitInstallMode
 
 [InstallDelete]
-Type: filesandordirs; Name: "{syswow64}\keppydrv"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv"; Check: not Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\KeppyDriverWatchdog.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\KeppySynthWatchdog.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\keppysynth.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\keppysynthcfg.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\sfpacker.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverWatchdog.exe"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass_mpc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassenc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassflac.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassmidi.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassopus.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\basswv.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\keppysynth.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\keppysynth.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
 
 [UninstallDelete]
-Type: files; Name: "{syswow64}\keppydrv\KeppyDriverConfigurator.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\KeppyDriverWatchdog.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppydrv\sfpacker.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\KeppySynthWatchdog.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\keppysynth.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\keppysynthcfg.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{syswow64}\keppysynth\sfpacker.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverConfigurator.exe"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\KeppyDriverWatchdog.exe"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bass_mpc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassenc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassflac.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassmidi.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\bassopus.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\basswv.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\keppysynth.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppysynth\keppysynth.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bass_mpc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassenc.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassflac.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassmidi.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\bassopus.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\basswv.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrv.dll"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\keppydrvcfg.exe"; Check: not Is64BitInstallMode
-Type: files; Name: "{sys}\keppydrv\sfpacker.exe"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
 
 [Run]
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
