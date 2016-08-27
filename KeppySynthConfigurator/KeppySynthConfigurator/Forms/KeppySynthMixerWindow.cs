@@ -355,100 +355,90 @@ namespace KeppySynthConfigurator
             this.Hide();
         }
 
+        private void VolumeToolTip(string channel, TrackBar trackbar)
+        {
+            int percentage = (int)Math.Round((double)(100 * trackbar.Value) / 127); ;
+            VolumeTip.SetToolTip(trackbar, String.Format("{0}: {1}%", channel, percentage));
+        }
+
         private void CH16VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH16VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH16VOL, Convert.ToString("Channel 16: " + percentage + "%"));
+            VolumeToolTip("Channel 16", CH16VOL);
         }
 
         private void CH15VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH15VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH15VOL, Convert.ToString("Channel 15: " + percentage + "%"));
+            VolumeToolTip("Channel 15", CH15VOL);
         }
 
         private void CH14VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH14VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH14VOL, Convert.ToString("Channel 14: " + percentage + "%"));
+            VolumeToolTip("Channel 14", CH14VOL);
         }
 
         private void CH13VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH13VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH13VOL, Convert.ToString("Channel 13: " + percentage + "%"));
+            VolumeToolTip("Channel 13", CH13VOL);
         }
 
         private void CH12VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH12VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH12VOL, Convert.ToString("Channel 12: " + percentage + "%"));
+            VolumeToolTip("Channel 12", CH12VOL);
         }
 
         private void CH11VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH11VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH11VOL, Convert.ToString("Channel 11: " + percentage + "%"));
+            VolumeToolTip("Channel 11", CH11VOL);
         }
 
         private void CH10VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH10VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH10VOL, Convert.ToString("Channel 10: " + percentage + "%"));
+            VolumeToolTip("Channel 10", CH10VOL);
         }
 
         private void CH9VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH9VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH9VOL, Convert.ToString("Channel 9: " + percentage + "%"));
+            VolumeToolTip("Channel 9", CH9VOL);
         }
 
         private void CH8VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH8VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH8VOL, Convert.ToString("Channel 8: " + percentage + "%"));
+            VolumeToolTip("Channel 8", CH8VOL);
         }
 
         private void CH7VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH7VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH7VOL, Convert.ToString("Channel 7: " + percentage + "%"));
+            VolumeToolTip("Channel 7", CH7VOL);
         }
 
         private void CH6VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH6VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH6VOL, Convert.ToString("Channel 6: " + percentage + "%"));
+            VolumeToolTip("Channel 6", CH6VOL);
         }
 
         private void CH5VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH5VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH5VOL, Convert.ToString("Channel 5: " + percentage + "%"));
+            VolumeToolTip("Channel 5", CH5VOL);
         }
 
         private void CH4VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH4VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH4VOL, Convert.ToString("Channel 4: " + percentage + "%"));
+            VolumeToolTip("Channel 4", CH4VOL);
         }
 
         private void CH3VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH3VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH3VOL, Convert.ToString("Channel 3: " + percentage + "%"));
+            VolumeToolTip("Channel 3", CH3VOL);
         }
 
         private void CH2VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH2VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH2VOL, Convert.ToString("Channel 2: " + percentage + "%"));
+            VolumeToolTip("Channel 2", CH2VOL);
         }
 
         private void CH1VOL_Scroll(object sender, EventArgs e)
         {
-            int percentage = (int)Math.Round((double)(100 * CH1VOL.Value) / 127); ;
-            VolumeTip.SetToolTip(CH1VOL, Convert.ToString("Channel 1: " + percentage + "%"));
+            VolumeToolTip("Channel 1", CH1VOL);
         }
     }
 }

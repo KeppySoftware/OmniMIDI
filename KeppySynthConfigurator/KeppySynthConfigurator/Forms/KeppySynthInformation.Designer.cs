@@ -64,7 +64,7 @@
             this.Button1.Name = "Button1";
             this.Button1.Size = new System.Drawing.Size(75, 23);
             this.Button1.TabIndex = 25;
-            this.Button1.Text = "Okay";
+            this.Button1.Text = "OK";
             this.Button1.UseVisualStyleBackColor = false;
             this.Button1.Click += new System.EventHandler(this.Button1_Click);
             // 
@@ -81,11 +81,11 @@
             // Label8
             // 
             this.Label8.BackColor = System.Drawing.Color.White;
-            this.Label8.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label8.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label8.ForeColor = System.Drawing.Color.Black;
-            this.Label8.Location = new System.Drawing.Point(264, 13);
+            this.Label8.Location = new System.Drawing.Point(263, 11);
             this.Label8.Name = "Label8";
-            this.Label8.Size = new System.Drawing.Size(340, 43);
+            this.Label8.Size = new System.Drawing.Size(340, 53);
             this.Label8.TabIndex = 23;
             this.Label8.Text = "Keppy\'s Synthesizer VER\r\nBy KaleidonKep99";
             // 

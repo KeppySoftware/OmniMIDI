@@ -30,10 +30,26 @@ static void ResetDrumChannels()
 
 int bmsyn_buf_check(void){
 	int retval;
+	int retvalemu;
 	EnterCriticalSection(&mim_section);
 	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
+	retvalemu = evbcount;
 	LeaveCriticalSection(&mim_section);
-	return retval;
+	if (vms2emu == 1) {
+		return retvalemu;
+	}
+	else {
+		return retval;
+	}
+}
+
+bool depends() {
+	if (vms2emu == 1) {
+		return InterlockedDecrement(&evbcount);
+	}
+	else {
+		return bmsyn_buf_check();
+	}
 }
 
 int bmsyn_play_some_data(void){
@@ -101,7 +117,7 @@ int bmsyn_play_some_data(void){
 			free(sysexbuffer);
 			break;
 		}
-	} while (bmsyn_buf_check());
+	} while (depends());
 	return 0;
 }
 
@@ -117,6 +133,14 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 	evbuf[evbpoint].exlen = exlen;
 	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 	LeaveCriticalSection(&mim_section);
+	if (vms2emu == 1) {
+		if (InterlockedIncrement(&evbcount) >= newevbuffvalue) {
+			do
+			{
+				Sleep(1);
+			} while (evbcount >= newevbuffvalue);
+		}
+	}
 	return MMSYSERR_NOERROR;
 }
 

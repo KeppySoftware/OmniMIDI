@@ -135,6 +135,9 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.VMSSimulatorEnabled = new System.Windows.Forms.MenuItem();
+            this.VMSSimulatorDisabled = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -1060,13 +1063,13 @@
             // 
             // runTheWatchdogToolStripMenuItem
             // 
-            this.runTheWatchdogToolStripMenuItem.Index = 12;
+            this.runTheWatchdogToolStripMenuItem.Index = 13;
             this.runTheWatchdogToolStripMenuItem.Text = "Force run the Watchdog (Useful when it doesn\'t start automatically)";
             this.runTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.runTheWatchdogToolStripMenuItem_Click);
             // 
             // killTheWatchdogToolStripMenuItem
             // 
-            this.killTheWatchdogToolStripMenuItem.Index = 13;
+            this.killTheWatchdogToolStripMenuItem.Index = 14;
             this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
             this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
             // 
@@ -1128,31 +1131,31 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 6;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 7;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 7;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 8;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 8;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 9;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 9;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 10;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
             // menuItem26
             // 
-            this.menuItem26.Index = 10;
+            this.menuItem26.Index = 11;
             this.menuItem26.Text = "-";
             // 
             // watchdogEnabledToolStripMenuItem
@@ -1197,7 +1200,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 11;
+            this.menuItem28.Index = 12;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem11,
             this.menuItem12});
@@ -1213,6 +1216,7 @@
             this.menuItem19,
             this.menuItem20,
             this.menuItem21,
+            this.menuItem14,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
@@ -1222,6 +1226,26 @@
             this.runTheWatchdogToolStripMenuItem,
             this.killTheWatchdogToolStripMenuItem});
             this.menuItem2.Text = "Advanced settings";
+            // 
+            // menuItem14
+            // 
+            this.menuItem14.Index = 6;
+            this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.VMSSimulatorEnabled,
+            this.VMSSimulatorDisabled});
+            this.menuItem14.Text = "Slow down playback instead of skipping notes";
+            // 
+            // VMSSimulatorEnabled
+            // 
+            this.VMSSimulatorEnabled.Index = 0;
+            this.VMSSimulatorEnabled.Text = "Enabled";
+            this.VMSSimulatorEnabled.Click += new System.EventHandler(this.VMSSimulatorEnabled_Click);
+            // 
+            // VMSSimulatorDisabled
+            // 
+            this.VMSSimulatorDisabled.Index = 1;
+            this.VMSSimulatorDisabled.Text = "Disabled";
+            this.VMSSimulatorDisabled.Click += new System.EventHandler(this.VMSSimulatorDisabled_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -1505,6 +1529,9 @@
         private System.Windows.Forms.MenuItem downloadTheSourceCodeToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MainMenu MainMenu;
+        private System.Windows.Forms.MenuItem menuItem14;
+        private System.Windows.Forms.MenuItem VMSSimulatorEnabled;
+        private System.Windows.Forms.MenuItem VMSSimulatorDisabled;
     }
 }
 

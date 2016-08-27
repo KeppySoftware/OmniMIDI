@@ -68,114 +68,114 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KeppySynthFavouritesManager.cs">
+    <Compile Include="Forms\KeppySynthFavouritesManager.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthFavouritesManager.Designer.cs">
+    <Compile Include="Forms\KeppySynthFavouritesManager.Designer.cs">
       <DependentUpon>KeppySynthFavouritesManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthBlacklistSystem.cs">
+    <Compile Include="Forms\KeppySynthBlacklistSystem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthBlacklistSystem.Designer.cs">
+    <Compile Include="Forms\KeppySynthBlacklistSystem.Designer.cs">
       <DependentUpon>KeppySynthBlacklistSystem.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthConfiguratorMain.cs">
+    <Compile Include="Forms\KeppySynthConfiguratorMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthConfiguratorMain.Designer.cs">
+    <Compile Include="Forms\KeppySynthConfiguratorMain.Designer.cs">
       <DependentUpon>KeppySynthConfiguratorMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="BankNPresetSel.cs">
+    <Compile Include="Forms\BankNPresetSel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BankNPresetSel.Designer.cs">
+    <Compile Include="Forms\BankNPresetSel.Designer.cs">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthEVBuffer.cs">
+    <Compile Include="Forms\KeppySynthEVBuffer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthEVBuffer.Designer.cs">
+    <Compile Include="Forms\KeppySynthEVBuffer.Designer.cs">
       <DependentUpon>KeppySynthEVBuffer.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthDefaultSFList.cs">
+    <Compile Include="Forms\KeppySynthDefaultSFList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthDefaultSFList.Designer.cs">
+    <Compile Include="Forms\KeppySynthDefaultSFList.Designer.cs">
       <DependentUpon>KeppySynthDefaultSFList.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthInformation.cs">
+    <Compile Include="Forms\KeppySynthInformation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthInformation.Designer.cs">
+    <Compile Include="Forms\KeppySynthInformation.Designer.cs">
       <DependentUpon>KeppySynthInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthMixerWindow.cs">
+    <Compile Include="Forms\KeppySynthMixerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthMixerWindow.Designer.cs">
+    <Compile Include="Forms\KeppySynthMixerWindow.Designer.cs">
       <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthOutputWAVDir.cs">
+    <Compile Include="Forms\KeppySynthOutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthOutputWAVDir.Designer.cs">
+    <Compile Include="Forms\KeppySynthOutputWAVDir.Designer.cs">
       <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthSamplePerFrameSetting.cs">
+    <Compile Include="Forms\KeppySynthSamplePerFrameSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthSamplePerFrameSetting.Designer.cs">
+    <Compile Include="Forms\KeppySynthSamplePerFrameSetting.Designer.cs">
       <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthSFListAssign.cs">
+    <Compile Include="Forms\KeppySynthSFListAssign.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthSFListAssign.Designer.cs">
+    <Compile Include="Forms\KeppySynthSFListAssign.Designer.cs">
       <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeppySynthUpdater.cs">
+    <Compile Include="Forms\KeppySynthUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthUpdater.Designer.cs">
+    <Compile Include="Forms\KeppySynthUpdater.Designer.cs">
       <DependentUpon>KeppySynthUpdater.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="KeppySynthFavouritesManager.resx">
+    <EmbeddedResource Include="Forms\KeppySynthFavouritesManager.resx">
       <DependentUpon>KeppySynthFavouritesManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthBlacklistSystem.resx">
+    <EmbeddedResource Include="Forms\KeppySynthBlacklistSystem.resx">
       <DependentUpon>KeppySynthBlacklistSystem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthConfiguratorMain.resx">
+    <EmbeddedResource Include="Forms\KeppySynthConfiguratorMain.resx">
       <DependentUpon>KeppySynthConfiguratorMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BankNPresetSel.resx">
+    <EmbeddedResource Include="Forms\BankNPresetSel.resx">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthEVBuffer.resx">
+    <EmbeddedResource Include="Forms\KeppySynthEVBuffer.resx">
       <DependentUpon>KeppySynthEVBuffer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthDefaultSFList.resx">
+    <EmbeddedResource Include="Forms\KeppySynthDefaultSFList.resx">
       <DependentUpon>KeppySynthDefaultSFList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthInformation.resx">
+    <EmbeddedResource Include="Forms\KeppySynthInformation.resx">
       <DependentUpon>KeppySynthInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthMixerWindow.resx">
+    <EmbeddedResource Include="Forms\KeppySynthMixerWindow.resx">
       <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthOutputWAVDir.resx">
+    <EmbeddedResource Include="Forms\KeppySynthOutputWAVDir.resx">
       <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthSamplePerFrameSetting.resx">
+    <EmbeddedResource Include="Forms\KeppySynthSamplePerFrameSetting.resx">
       <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthSFListAssign.resx">
+    <EmbeddedResource Include="Forms\KeppySynthSFListAssign.resx">
       <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeppySynthUpdater.resx">
+    <EmbeddedResource Include="Forms\KeppySynthUpdater.resx">
       <DependentUpon>KeppySynthUpdater.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

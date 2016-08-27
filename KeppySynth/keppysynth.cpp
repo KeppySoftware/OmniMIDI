@@ -34,6 +34,10 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 #include <winbase.h>
 #include <windows.h>
 
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 #define BASSDEF(f) (WINAPI *f)	// define the BASS/BASSMIDI functions as pointers
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSENCDEF(f) (WINAPI *f)	
@@ -112,6 +116,7 @@ static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
 static int vmsemu = 0; // VirtualMIDISynth buffer emulation
+static int vms2emu = 0; // VirtualMIDISynth 2.x buffer emulation
 static int volume = 0; // Volume limit
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
 static int volumemon = 1; // Volume monitoring
