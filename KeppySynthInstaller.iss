@@ -1,3 +1,9 @@
+#define use_msiproduct
+#define use_vc2010
+#define use_vc2013
+
+#define Version '4.0.1.8'
+
 [Setup]
 AllowCancelDuringInstall=False
 AppContact=kaleidonkep99@outlook.com
@@ -9,7 +15,7 @@ AppPublisherURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer
 AppSupportPhone=+393511888475
 AppSupportURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/issues
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
-AppVersion=4.0.1.7
+AppVersion={#Version}
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=bzip
@@ -34,9 +40,9 @@ VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
 VersionInfoProductName=Keppy's Synthesizer
-VersionInfoProductTextVersion=4.0.1.7
+VersionInfoProductTextVersion={#Version}
 VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
-VersionInfoVersion=4.0.1.7
+VersionInfoVersion={#Version}
 UsePreviousSetupType=False
 FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
@@ -213,3 +219,22 @@ Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AS";
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AS"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
+
+[Code]
+// shared code for installing the products
+#include "scripts\products.iss"
+// helper functions
+#include "scripts\products\stringversion.iss"
+#include "scripts\products\winversion.iss"
+#include "scripts\products\fileversion.iss"
+#include "scripts\products\dotnetfxversion.iss"
+
+#ifdef use_msiproduct
+#include "scripts\products\msiproduct.iss"
+#endif
+#ifdef use_vc2010
+#include "scripts\products\vcredist2010.iss"
+#endif
+#ifdef use_vc2013
+#include "scripts\products\vcredist2013.iss"
+#endif

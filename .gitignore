@@ -38,6 +38,7 @@
 /KeppySynthDebugWindow/output/
 /Release
 /ipch
+/scripts
 /KeppySynthconfig
 /output/*.config
 /output/*.dll

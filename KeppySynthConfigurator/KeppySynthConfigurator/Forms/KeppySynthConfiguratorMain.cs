@@ -1505,7 +1505,7 @@ namespace KeppySynthConfigurator
         private void enabledToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
-            menuItem14.Enabled = true;
+            menuItem14.Enabled = false;
             enabledToolStripMenuItem3.Checked = true;
             disabledToolStripMenuItem3.Checked = false;
             enabledToolStripMenuItem3.Enabled = false;
@@ -1515,7 +1515,7 @@ namespace KeppySynthConfigurator
         private void disabledToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("oldbuffersystem", "0", RegistryValueKind.DWord);
-            menuItem14.Enabled = false;
+            menuItem14.Enabled = true;
             enabledToolStripMenuItem3.Checked = false;
             disabledToolStripMenuItem3.Checked = true;
             enabledToolStripMenuItem3.Enabled = true;

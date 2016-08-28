@@ -93,7 +93,7 @@ void DLLLoadError(LPCWSTR dll) {
 }
 
 void DLLLoadError2(LPCWSTR dll) {
-	TCHAR errormessage[MAX_PATH] = L"The following DLL hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nPlease installed the required libraries, and restart the application.\n\nDLL: ";
+	TCHAR errormessage[MAX_PATH] = L"The following DLL hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nPlease install the required libraries, and restart the application.\n\nDLL: ";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
@@ -544,7 +544,7 @@ BOOL load_bassfuncs()
 	lstrcat(bassvstpath, installpath);
 	lstrcat(bassvstpath, L"\\bass_vst.dll");
 	if (!(bass_vst = LoadLibrary(bassvstpath))) {
-		DLLLoadError2(bassencpath);
+		DLLLoadError2(bassvstpath);
 		exit(0);
 	}
 	/* "load" all the BASS functions that are to be used */
