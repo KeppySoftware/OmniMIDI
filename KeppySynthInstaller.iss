@@ -1,4 +1,6 @@
 #define use_msiproduct
+#define use_dotnetfx40
+#define use_wic
 #define use_vc2010
 #define use_vc2013
 
@@ -231,6 +233,13 @@ Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; 
 
 #ifdef use_msiproduct
 #include "scripts\products\msiproduct.iss"
+#endif
+#ifdef use_wic
+#include "scripts\products\wic.iss"
+#endif
+#ifdef use_dotnetfx40
+#include "scripts\products\dotnetfx40client.iss"
+#include "scripts\products\dotnetfx40full.iss"
 #endif
 #ifdef use_vc2010
 #include "scripts\products\vcredist2010.iss"
