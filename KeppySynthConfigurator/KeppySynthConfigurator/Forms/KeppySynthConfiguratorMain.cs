@@ -504,7 +504,6 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
-                    menuItem21.Enabled = false;
                     VMSSimulatorEnabled.Checked = true;
                     VMSSimulatorDisabled.Checked = false;
                     VMSSimulatorEnabled.Enabled = false;
@@ -512,7 +511,6 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    menuItem21.Enabled = true;
                     VMSSimulatorEnabled.Checked = false;
                     VMSSimulatorDisabled.Checked = true;
                     VMSSimulatorEnabled.Enabled = true;
@@ -520,7 +518,6 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
                 {
-                    menuItem14.Enabled = false;
                     enabledToolStripMenuItem3.Checked = true;
                     disabledToolStripMenuItem3.Checked = false;
                     enabledToolStripMenuItem3.Enabled = false;
@@ -528,7 +525,6 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    menuItem14.Enabled = true;
                     enabledToolStripMenuItem3.Checked = false;
                     disabledToolStripMenuItem3.Checked = true;
                     enabledToolStripMenuItem3.Enabled = true;
@@ -740,7 +736,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                SynthPaths.SetValue("lastpathlistimpexp", path);
+                SynthPaths.SetValue("lastpathsfimport", path);
             }
             catch
             {
@@ -752,7 +748,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                SynthPaths.SetValue("lastpathsfimport", path);
+                SynthPaths.SetValue("lastpathlistimpexp", path);
             }
             catch
             {
@@ -1505,7 +1501,6 @@ namespace KeppySynthConfigurator
         private void enabledToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
-            menuItem14.Enabled = false;
             enabledToolStripMenuItem3.Checked = true;
             disabledToolStripMenuItem3.Checked = false;
             enabledToolStripMenuItem3.Enabled = false;
@@ -1515,7 +1510,6 @@ namespace KeppySynthConfigurator
         private void disabledToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("oldbuffersystem", "0", RegistryValueKind.DWord);
-            menuItem14.Enabled = true;
             enabledToolStripMenuItem3.Checked = false;
             disabledToolStripMenuItem3.Checked = true;
             enabledToolStripMenuItem3.Enabled = true;
@@ -1525,7 +1519,6 @@ namespace KeppySynthConfigurator
         private void VMSSimulatorEnabled_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("vms2emu", "1", RegistryValueKind.DWord);
-            menuItem21.Enabled = false;
             VMSSimulatorEnabled.Checked = true;
             VMSSimulatorDisabled.Checked = false;
             VMSSimulatorEnabled.Enabled = false;
@@ -1535,7 +1528,6 @@ namespace KeppySynthConfigurator
         private void VMSSimulatorDisabled_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("vms2emu", "0", RegistryValueKind.DWord);
-            menuItem21.Enabled = true;
             VMSSimulatorEnabled.Checked = false;
             VMSSimulatorDisabled.Checked = true;
             VMSSimulatorEnabled.Enabled = true;
