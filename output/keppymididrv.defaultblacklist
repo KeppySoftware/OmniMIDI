@@ -1,9 +1,16 @@
+acrotray.exe
 adobe audition cc.exe
 adobe premiere pro.exe
 aertsr64.exe
 afterfx.exe
+agr32svc.exe
+agr64svc.exe
+agrmsdel.exe
+agrsvc.exe
+agsservice.exe
 alg.exe
 ambspie.exe
+armsvc.exe
 battle.net launcher.exe
 camtasiastudio.exe
 ccc.exe
@@ -12,7 +19,6 @@ conhost.exe
 console 1 on-screen display (x64).exe
 console 1 on-screen display.exe
 csrss.exe
-ctaudsvc.exe
 ctaudsvc.exe
 ctfmon.exe
 devenv.exe
@@ -35,11 +41,14 @@ ipoverusbsvc.exe
 kakaotalk.exe
 keppymidiconverter.exe
 khalmnpr.exe
+ldsvc.exe
 lightshot.exe
 loopmidi.exe
 lsass.exe
 lsm.exe
 manycam.exe
+mdm.exe
+mdnsresponder.exe
 mscams64.exe
 mscamsvc.exe
 msiexec.exe
@@ -69,8 +78,9 @@ puush.exe
 ravbg64.exe
 ravcpl64.exe
 rthdcpl.exe
-scratch.exe
 setpoint.exe
+settingssynchost.exe
+sharex.exe
 shellexperiencehost.exe
 sihost.exe
 skydrive.exe
@@ -111,3 +121,4 @@ vscvol.exe
 wininit.exe
 winlogon.exe
 wudfhost.exe
+xmousebuttoncontrol.exe

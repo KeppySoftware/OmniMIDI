@@ -77,6 +77,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MIDIVolumeOverride = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.MainVol = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
@@ -94,11 +96,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             this.Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             this.SuspendLayout();
             // 
             // RightChannel
             // 
-            this.RightChannel.Location = new System.Drawing.Point(586, 146);
+            this.RightChannel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.RightChannel.Location = new System.Drawing.Point(639, 146);
             this.RightChannel.Maximum = 32768;
             this.RightChannel.Name = "RightChannel";
             this.RightChannel.Size = new System.Drawing.Size(151, 23);
@@ -315,7 +319,8 @@
             // 
             // LeftChannel
             // 
-            this.LeftChannel.Location = new System.Drawing.Point(586, 117);
+            this.LeftChannel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.LeftChannel.Location = new System.Drawing.Point(639, 117);
             this.LeftChannel.Maximum = 32768;
             this.LeftChannel.Name = "LeftChannel";
             this.LeftChannel.Size = new System.Drawing.Size(151, 23);
@@ -324,8 +329,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(556, 122);
+            this.label1.Location = new System.Drawing.Point(609, 122);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(30, 13);
             this.label1.TabIndex = 20;
@@ -333,8 +339,9 @@
             // 
             // label2
             // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(550, 151);
+            this.label2.Location = new System.Drawing.Point(603, 151);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(36, 13);
             this.label2.TabIndex = 21;
@@ -498,7 +505,8 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(556, 37);
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label3.Location = new System.Drawing.Point(609, 37);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(181, 29);
             this.label3.TabIndex = 24;
@@ -507,9 +515,10 @@
             // 
             // VolumeMonitor
             // 
+            this.VolumeMonitor.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.VolumeMonitor.AutoSize = true;
             this.VolumeMonitor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VolumeMonitor.Location = new System.Drawing.Point(589, 94);
+            this.VolumeMonitor.Location = new System.Drawing.Point(642, 94);
             this.VolumeMonitor.Name = "VolumeMonitor";
             this.VolumeMonitor.Size = new System.Drawing.Size(148, 17);
             this.VolumeMonitor.TabIndex = 25;
@@ -528,7 +537,7 @@
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
             this.Main.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.Main.Size = new System.Drawing.Size(748, 24);
+            this.Main.Size = new System.Drawing.Size(801, 24);
             this.Main.TabIndex = 26;
             this.Main.Text = "menuStrip1";
             // 
@@ -574,9 +583,10 @@
             // 
             // MIDIVolumeOverride
             // 
+            this.MIDIVolumeOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.MIDIVolumeOverride.AutoSize = true;
             this.MIDIVolumeOverride.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.MIDIVolumeOverride.Location = new System.Drawing.Point(542, 76);
+            this.MIDIVolumeOverride.Location = new System.Drawing.Point(595, 76);
             this.MIDIVolumeOverride.Name = "MIDIVolumeOverride";
             this.MIDIVolumeOverride.Size = new System.Drawing.Size(195, 17);
             this.MIDIVolumeOverride.TabIndex = 27;
@@ -584,12 +594,37 @@
             this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
             this.MIDIVolumeOverride.CheckedChanged += new System.EventHandler(this.MIDIVolumeOverride_CheckedChanged);
             // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(552, 37);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(31, 13);
+            this.label4.TabIndex = 29;
+            this.label4.Text = "All";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MainVol
+            // 
+            this.MainVol.AutoSize = false;
+            this.MainVol.LargeChange = 10;
+            this.MainVol.Location = new System.Drawing.Point(557, 53);
+            this.MainVol.Maximum = 127;
+            this.MainVol.Name = "MainVol";
+            this.MainVol.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.MainVol.Size = new System.Drawing.Size(27, 123);
+            this.MainVol.TabIndex = 28;
+            this.MainVol.TickFrequency = 16;
+            this.MainVol.Value = 127;
+            this.MainVol.Scroll += new System.EventHandler(this.MainVol_Scroll);
+            // 
             // KeppySynthMixerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(748, 181);
+            this.ClientSize = new System.Drawing.Size(801, 181);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.MainVol);
             this.Controls.Add(this.MIDIVolumeOverride);
             this.Controls.Add(this.VolumeMonitor);
             this.Controls.Add(this.label3);
@@ -657,6 +692,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).EndInit();
             this.Main.ResumeLayout(false);
             this.Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MainVol)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -712,5 +748,7 @@
         private System.Windows.Forms.ToolStripMenuItem fullVolumeToolStripMenuItem;
         private System.Windows.Forms.CheckBox MIDIVolumeOverride;
         private System.Windows.Forms.ToolStripMenuItem showTheConfiguratorWindowToolStripMenuItem;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TrackBar MainVol;
     }
 }

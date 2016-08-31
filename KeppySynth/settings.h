@@ -683,7 +683,7 @@ void realtime_load_settings()
 		RegCloseKey(hKey);
 		//cake
 		if (xaudiodisabled == 1) {
-			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
+			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
 		}
 		else {
 			sound_out_volume_float = (float)volume / 10000.0f;
@@ -856,6 +856,7 @@ void debug_info() {
 		}
 		int currentvoicesint0 = int(currentvoices0);
 		int currentcpuusageint0 = int(currentcpuusage0);
+
 		// Things
 		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
@@ -987,7 +988,7 @@ void mixervoid() {
 void ReloadSFList(DWORD whichsflist){
 	try {
 		if (xaudiodisabled == 1) {
-			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, 0.0f / 10000.0f);
+			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, 0);
 		}
 		else {
 			sound_out_volume_float = 0.0f / 10000.0f;

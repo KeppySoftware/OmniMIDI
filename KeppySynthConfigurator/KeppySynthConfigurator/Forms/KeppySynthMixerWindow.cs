@@ -440,5 +440,10 @@ namespace KeppySynthConfigurator
         {
             VolumeToolTip("Channel 1", CH1VOL);
         }
+
+        private void MainVol_Scroll(object sender, EventArgs e)
+        {
+            CH1VOL.Value = CH2VOL.Value = CH3VOL.Value = CH4VOL.Value = CH5VOL.Value = CH6VOL.Value = CH7VOL.Value = CH8VOL.Value = CH9VOL.Value = CH10VOL.Value = CH11VOL.Value = CH12VOL.Value = CH13VOL.Value = CH14VOL.Value = CH15VOL.Value = CH16VOL.Value = MainVol.Value;
+        }
     }
 }
