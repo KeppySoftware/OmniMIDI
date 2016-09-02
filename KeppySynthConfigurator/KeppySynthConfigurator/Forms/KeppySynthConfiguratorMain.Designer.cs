@@ -211,7 +211,7 @@
             this.BankPresetOverride.AutoSize = true;
             this.BankPresetOverride.Location = new System.Drawing.Point(165, 11);
             this.BankPresetOverride.Name = "BankPresetOverride";
-            this.BankPresetOverride.Size = new System.Drawing.Size(328, 17);
+            this.BankPresetOverride.Size = new System.Drawing.Size(322, 17);
             this.BankPresetOverride.TabIndex = 35;
             this.BankPresetOverride.Text = "Import specific bank/preset from SF2 file and assign it manually";
             this.BankPresetOverride.UseVisualStyleBackColor = true;
@@ -241,7 +241,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.Size = new System.Drawing.Size(87, 13);
             this.label1.TabIndex = 34;
             this.label1.Text = "Select list to edit:";
             // 
@@ -274,7 +274,7 @@
             this.List1Override.Enabled = false;
             this.List1Override.Location = new System.Drawing.Point(6, 382);
             this.List1Override.Name = "List1Override";
-            this.List1Override.Size = new System.Drawing.Size(250, 13);
+            this.List1Override.Size = new System.Drawing.Size(243, 13);
             this.List1Override.TabIndex = 31;
             this.List1Override.Text = "The last soundfont will override the previous ones.";
             // 
@@ -475,15 +475,13 @@
             // SPFSecondaryBut
             // 
             this.SPFSecondaryBut.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.SPFSecondaryBut.AutoSize = true;
             this.SPFSecondaryBut.BackColor = System.Drawing.Color.Transparent;
-            this.SPFSecondaryBut.Location = new System.Drawing.Point(243, 57);
+            this.SPFSecondaryBut.Location = new System.Drawing.Point(231, 57);
             this.SPFSecondaryBut.Name = "SPFSecondaryBut";
-            this.SPFSecondaryBut.Size = new System.Drawing.Size(39, 18);
+            this.SPFSecondaryBut.Size = new System.Drawing.Size(37, 18);
             this.SPFSecondaryBut.TabIndex = 28;
             this.SPFSecondaryBut.TabStop = true;
-            this.SPFSecondaryBut.Text = "More...";
-            this.SPFSecondaryBut.UseCompatibleTextRendering = true;
+            this.SPFSecondaryBut.Text = "More..";
             this.SPFSecondaryBut.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SPFSecondaryBut_LinkClicked);
             // 
             // VMSEmu
@@ -492,9 +490,9 @@
             this.VMSEmu.AutoSize = true;
             this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
             this.VMSEmu.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VMSEmu.Location = new System.Drawing.Point(399, 55);
+            this.VMSEmu.Location = new System.Drawing.Point(407, 55);
             this.VMSEmu.Name = "VMSEmu";
-            this.VMSEmu.Size = new System.Drawing.Size(149, 17);
+            this.VMSEmu.Size = new System.Drawing.Size(141, 17);
             this.VMSEmu.TabIndex = 27;
             this.VMSEmu.Text = "Alternative buffer system";
             this.VMSEmu.UseVisualStyleBackColor = true;
@@ -508,7 +506,7 @@
             this.SincInter.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SincInter.Location = new System.Drawing.Point(7, 16);
             this.SincInter.Name = "SincInter";
-            this.SincInter.Size = new System.Drawing.Size(526, 17);
+            this.SincInter.Size = new System.Drawing.Size(517, 17);
             this.SincInter.TabIndex = 8;
             this.SincInter.Text = "Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the" +
     " audio with Black MIDIs.)";
@@ -529,7 +527,7 @@
             0,
             0});
             this.TracksLimit.Name = "TracksLimit";
-            this.TracksLimit.Size = new System.Drawing.Size(64, 21);
+            this.TracksLimit.Size = new System.Drawing.Size(64, 20);
             this.TracksLimit.TabIndex = 11;
             this.TracksLimit.Value = new decimal(new int[] {
             16,
@@ -544,7 +542,7 @@
             this.Label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label4.Location = new System.Drawing.Point(4, 80);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(528, 13);
+            this.Label4.Size = new System.Drawing.Size(514, 13);
             this.Label4.TabIndex = 26;
             this.Label4.Text = "Set the channels the driver is allowed to use (Different values from 16 will set " +
     "the drums channel to melodic):";
@@ -556,7 +554,7 @@
             this.BufferText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BufferText.Location = new System.Drawing.Point(4, 57);
             this.BufferText.Name = "BufferText";
-            this.BufferText.Size = new System.Drawing.Size(291, 13);
+            this.BufferText.Size = new System.Drawing.Size(275, 13);
             this.BufferText.TabIndex = 23;
             this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
             // 
@@ -567,7 +565,7 @@
             this.SysResetIgnore.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SysResetIgnore.Location = new System.Drawing.Point(7, 34);
             this.SysResetIgnore.Name = "SysResetIgnore";
-            this.SysResetIgnore.Size = new System.Drawing.Size(343, 17);
+            this.SysResetIgnore.Size = new System.Drawing.Size(333, 17);
             this.SysResetIgnore.TabIndex = 9;
             this.SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged.";
             this.SysResetIgnore.UseVisualStyleBackColor = true;
@@ -583,7 +581,7 @@
             0});
             this.bufsize.Name = "bufsize";
             this.bufsize.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.bufsize.Size = new System.Drawing.Size(64, 21);
+            this.bufsize.Size = new System.Drawing.Size(64, 20);
             this.bufsize.TabIndex = 10;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.bufsize.Value = new decimal(new int[] {
@@ -618,7 +616,7 @@
             this.MaxCPU.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.MaxCPU.Location = new System.Drawing.Point(552, 104);
             this.MaxCPU.Name = "MaxCPU";
-            this.MaxCPU.Size = new System.Drawing.Size(64, 21);
+            this.MaxCPU.Size = new System.Drawing.Size(64, 20);
             this.MaxCPU.TabIndex = 25;
             this.MaxCPU.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MaxCPU.Value = new decimal(new int[] {
@@ -634,7 +632,7 @@
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label6.Location = new System.Drawing.Point(6, 133);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(229, 13);
+            this.Label6.Size = new System.Drawing.Size(218, 13);
             this.Label6.TabIndex = 24;
             this.Label6.Text = "Set the audio frequency for the driver output:";
             // 
@@ -678,7 +676,7 @@
             this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label5.Location = new System.Drawing.Point(6, 108);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(494, 13);
+            this.Label5.Size = new System.Drawing.Size(491, 13);
             this.Label5.TabIndex = 22;
             this.Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI (Di" +
     "sabled = 0):";
@@ -690,7 +688,7 @@
             this.Label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label3.Location = new System.Drawing.Point(6, 82);
             this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(252, 13);
+            this.Label3.Size = new System.Drawing.Size(241, 13);
             this.Label3.TabIndex = 20;
             this.Label3.Text = "Set the voice limit for the driver, from 1 to 100000:";
             // 
@@ -709,7 +707,7 @@
             0,
             0});
             this.PolyphonyLimit.Name = "PolyphonyLimit";
-            this.PolyphonyLimit.Size = new System.Drawing.Size(64, 21);
+            this.PolyphonyLimit.Size = new System.Drawing.Size(64, 20);
             this.PolyphonyLimit.TabIndex = 5;
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PolyphonyLimit.ThousandsSeparator = true;
@@ -726,7 +724,7 @@
             this.DisableSFX.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.DisableSFX.Location = new System.Drawing.Point(8, 37);
             this.DisableSFX.Name = "DisableSFX";
-            this.DisableSFX.Size = new System.Drawing.Size(585, 17);
+            this.DisableSFX.Size = new System.Drawing.Size(575, 17);
             this.DisableSFX.TabIndex = 3;
             this.DisableSFX.Text = "Disable sound effects. (Disable the sound effects, such as reverb and chorus. Als" +
     "o, this can reduce the CPU usage.)";
@@ -736,7 +734,6 @@
             // 
             this.Preload.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Preload.AutoSize = true;
-            this.Preload.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Preload.Location = new System.Drawing.Point(8, 17);
             this.Preload.Name = "Preload";
@@ -752,7 +749,7 @@
             this.NoteOffCheck.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.NoteOffCheck.Location = new System.Drawing.Point(8, 57);
             this.NoteOffCheck.Name = "NoteOffCheck";
-            this.NoteOffCheck.Size = new System.Drawing.Size(534, 17);
+            this.NoteOffCheck.Size = new System.Drawing.Size(518, 17);
             this.NoteOffCheck.TabIndex = 4;
             this.NoteOffCheck.Text = "Only release the oldest instance upon a note off event when there are overlapping" +
     " instances of the note.";
@@ -762,9 +759,9 @@
             // 
             this.VolIntView.AutoSize = true;
             this.VolIntView.Enabled = false;
-            this.VolIntView.Location = new System.Drawing.Point(14, 27);
+            this.VolIntView.Location = new System.Drawing.Point(13, 28);
             this.VolIntView.Name = "VolIntView";
-            this.VolIntView.Size = new System.Drawing.Size(70, 13);
+            this.VolIntView.Size = new System.Drawing.Size(71, 13);
             this.VolIntView.TabIndex = 3;
             this.VolIntView.Text = "Real value: X";
             // 
@@ -811,7 +808,7 @@
             this.SettingsButtons.AutoSize = false;
             this.SettingsButtons.BackColor = System.Drawing.Color.Transparent;
             this.SettingsButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.SettingsButtons.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsButtons.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SettingsButtons.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applySettingsToolStripMenuItem,
             this.resetToDefaultToolStripMenuItem,
@@ -828,14 +825,14 @@
             // applySettingsToolStripMenuItem
             // 
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
-            this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(87, 27);
+            this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(84, 27);
             this.applySettingsToolStripMenuItem.Text = "Apply settings";
             this.applySettingsToolStripMenuItem.Click += new System.EventHandler(this.applySettingsToolStripMenuItem_Click);
             // 
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
-            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
+            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(94, 27);
             this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
             this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
             // 
@@ -845,7 +842,7 @@
             this.lowLatencyPresetToolStripMenuItem,
             this.blackMIDIsPresetToolStripMenuItem});
             this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
-            this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(97, 27);
+            this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(94, 27);
             this.settingsPresetsToolStripMenuItem.Text = "Settings presets";
             // 
             // lowLatencyPresetToolStripMenuItem
@@ -865,14 +862,14 @@
             // assignSoundfontListToAppToolStripMenuItem
             // 
             this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
-            this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(152, 27);
+            this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(148, 27);
             this.assignSoundfontListToAppToolStripMenuItem.Text = "Assign soundfont list to app";
             this.assignSoundfontListToAppToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem
             // 
             this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
-            this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(161, 27);
+            this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(156, 27);
             this.changeDefaultSoundfontListToolStripMenuItem.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
@@ -1372,7 +1369,7 @@
             this.ClientSize = new System.Drawing.Size(649, 423);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.SettingsButtons;

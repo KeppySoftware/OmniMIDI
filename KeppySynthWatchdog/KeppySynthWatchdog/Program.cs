@@ -14,9 +14,12 @@ namespace KeppySynthWatchdog
 {
     static class Program
     {
+        static ProcessIcon pi = new ProcessIcon();
+
         [STAThread]
         static void Main()
         {
+            Application.ApplicationExit += new EventHandler(OnApplicationExit);
             RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
             if (Convert.ToInt32(Watchdog.GetValue("watchdog")) == 1)
             {
@@ -27,27 +30,25 @@ namespace KeppySynthWatchdog
                     Mutex m = new Mutex(true, "KeppySynthWatchdog", out ok);
                     if (!ok)
                     {
-                        return;
+                        Environment.Exit(0);
                     }
                     NotifyIcon ni;
                     ni = new NotifyIcon();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
 
-                    using (ProcessIcon pi = new ProcessIcon())
-                    {
-                        pi.Display();
-                        Application.Run();
-                    }
-
+                    pi.Display();
                     GC.KeepAlive(m);
+                    Application.Run();
+                    
+                    Environment.Exit(0);
                 }
                 else
                 {
                     Watchdog.Close();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Exit();
+                    Environment.Exit(0);
                 }
             }
             else
@@ -55,8 +56,25 @@ namespace KeppySynthWatchdog
                 Watchdog.Close();
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Exit();
+                Environment.Exit(0);
             }
+        }
+
+        private static void OnApplicationExit(object sender, EventArgs e)
+        {
+
+            try
+            {
+                if (pi != null)
+                {
+                    pi.Dispose();
+                    pi = null;
+                    Application.Exit();
+                    Environment.Exit(0);
+                }
+
+            }
+            catch { }
         }
     }
 
@@ -135,14 +153,18 @@ namespace KeppySynthWatchdog
         public void Dispose()
         {
             ni.Icon = null;
+            ni.Visible = false;
             ni.Dispose();
             System.Windows.Forms.Application.DoEvents();
+            Application.Exit();
+            Environment.Exit(0);
         }
 
         public void Exit(object sender, EventArgs e)
         {
             ni.Visible = false;
-            Environment.Exit(-1);
+            Application.Exit();
+            Environment.Exit(0);
         }
 
         void ni_MouseClick(object sender, MouseEventArgs e)

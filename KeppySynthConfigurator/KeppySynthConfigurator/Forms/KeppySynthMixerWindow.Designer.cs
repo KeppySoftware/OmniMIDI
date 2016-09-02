@@ -333,7 +333,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(609, 122);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 13);
+            this.label1.Size = new System.Drawing.Size(28, 13);
             this.label1.TabIndex = 20;
             this.label1.Text = "Left:";
             // 
@@ -343,7 +343,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(603, 151);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 21;
             this.label2.Text = "Right:";
             // 
@@ -518,9 +518,9 @@
             this.VolumeMonitor.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.VolumeMonitor.AutoSize = true;
             this.VolumeMonitor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VolumeMonitor.Location = new System.Drawing.Point(642, 94);
+            this.VolumeMonitor.Location = new System.Drawing.Point(643, 94);
             this.VolumeMonitor.Name = "VolumeMonitor";
-            this.VolumeMonitor.Size = new System.Drawing.Size(148, 17);
+            this.VolumeMonitor.Size = new System.Drawing.Size(147, 17);
             this.VolumeMonitor.TabIndex = 25;
             this.VolumeMonitor.Text = "Enable volume monitoring";
             this.VolumeMonitor.UseVisualStyleBackColor = true;
@@ -528,6 +528,7 @@
             // 
             // Main
             // 
+            this.Main.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showTheConfiguratorWindowToolStripMenuItem,
             this.resetToDefaultToolStripMenuItem,
@@ -544,7 +545,7 @@
             // showTheConfiguratorWindowToolStripMenuItem
             // 
             this.showTheConfiguratorWindowToolStripMenuItem.Name = "showTheConfiguratorWindowToolStripMenuItem";
-            this.showTheConfiguratorWindowToolStripMenuItem.Size = new System.Drawing.Size(182, 20);
+            this.showTheConfiguratorWindowToolStripMenuItem.Size = new System.Drawing.Size(162, 20);
             this.showTheConfiguratorWindowToolStripMenuItem.Text = "Show the configurator window";
             this.showTheConfiguratorWindowToolStripMenuItem.Visible = false;
             this.showTheConfiguratorWindowToolStripMenuItem.Click += new System.EventHandler(this.showTheConfiguratorWindowToolStripMenuItem_Click);
@@ -552,28 +553,28 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
-            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(101, 20);
+            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
             this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
             this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
             // 
             // muteToolStripMenuItem
             // 
             this.muteToolStripMenuItem.Name = "muteToolStripMenuItem";
-            this.muteToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.muteToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.muteToolStripMenuItem.Text = "Mute";
             this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
             // 
             // fullVolumeToolStripMenuItem
             // 
             this.fullVolumeToolStripMenuItem.Name = "fullVolumeToolStripMenuItem";
-            this.fullVolumeToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.fullVolumeToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.fullVolumeToolStripMenuItem.Text = "Full volume";
             this.fullVolumeToolStripMenuItem.Click += new System.EventHandler(this.fullVolumeToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -586,9 +587,9 @@
             this.MIDIVolumeOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.MIDIVolumeOverride.AutoSize = true;
             this.MIDIVolumeOverride.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.MIDIVolumeOverride.Location = new System.Drawing.Point(595, 76);
+            this.MIDIVolumeOverride.Location = new System.Drawing.Point(597, 76);
             this.MIDIVolumeOverride.Name = "MIDIVolumeOverride";
-            this.MIDIVolumeOverride.Size = new System.Drawing.Size(195, 17);
+            this.MIDIVolumeOverride.Size = new System.Drawing.Size(193, 17);
             this.MIDIVolumeOverride.TabIndex = 27;
             this.MIDIVolumeOverride.Text = "Enable MIDI volume event override";
             this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
@@ -665,7 +666,7 @@
             this.Controls.Add(this.CH1VOL);
             this.Controls.Add(this.RightChannel);
             this.Controls.Add(this.Main);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.Main;
             this.MaximizeBox = false;

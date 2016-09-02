@@ -4,7 +4,7 @@
 #define use_vc2010
 #define use_vc2013
 
-#define Version '4.0.1.10'
+#define Version '4.0.1.11'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -20,6 +20,7 @@ AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
 AppVersion={#Version}
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
+CloseApplications=yes
 Compression=bzip
 CompressionThreads=2
 CreateAppDir=False
@@ -63,8 +64,8 @@ Source: "output\midioutsetter32.exe"; DestDir: "{syswow64}\keppysynth"; DestName
 Source: "output\midioutsetter64.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "midioutsetter64.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppysynth"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-; 32-bit OS
 
+; 32-bit OS
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthWatchdog.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -72,6 +73,7 @@ Source: "output\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysy
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{sys}\keppysynth"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+
 ; 64-bit libs
 Source: "external_packages\lib64\bass.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib64\bass_mpc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -89,6 +91,7 @@ Source: "external_packages\lib\bassflac.dll"; DestDir: "{syswow64}\keppysynth"; 
 Source: "external_packages\lib\bassmidi.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+
 ; 32-bit libs
 Source: "external_packages\lib\bass.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\bass_mpc.dll"; DestDir: "{sys}\keppysynth"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -98,6 +101,7 @@ Source: "external_packages\lib\bassflac.dll"; DestDir: "{sys}\keppysynth"; DestN
 Source: "external_packages\lib\bassmidi.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppysynth"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+
 ; Generic for all the OSes
 Source: "dxwebsetup.exe"; DestDir: "{tmp}"; DestName: "dxwebsetup.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3
 Source: "output\keppymididrv.defaultblacklist"; DestDir: "{win}"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3
@@ -247,3 +251,12 @@ Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; 
 #ifdef use_vc2013
 #include "scripts\products\vcredist2013.iss"
 #endif
+
+[Code]
+function InitializeUninstall(): Boolean;
+  var ErrorCode: Integer;
+begin
+  ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
+  ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
+  result := True;
+end;

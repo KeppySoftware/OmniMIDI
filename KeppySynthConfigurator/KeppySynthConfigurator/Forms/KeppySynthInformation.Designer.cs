@@ -155,7 +155,7 @@
             this.u4sforum.AutoSize = true;
             this.u4sforum.Location = new System.Drawing.Point(274, 158);
             this.u4sforum.Name = "u4sforum";
-            this.u4sforum.Size = new System.Drawing.Size(200, 13);
+            this.u4sforum.Size = new System.Drawing.Size(197, 13);
             this.u4sforum.TabIndex = 7;
             this.u4sforum.TabStop = true;
             this.u4sforum.Text = "Un4seen\'s Official Forum (un4seen.com)";
@@ -192,11 +192,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.Crimson;
             this.label3.Location = new System.Drawing.Point(6, 257);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(278, 13);
+            this.label3.Size = new System.Drawing.Size(325, 13);
             this.label3.TabIndex = 3;
             this.label3.Text = "AKP, BNK, DLS, ECW, EXB, FXP, GIG, NKI, STH, XRNI";
             // 
@@ -205,18 +205,18 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 243);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(113, 13);
+            this.label4.Size = new System.Drawing.Size(108, 13);
             this.label4.TabIndex = 2;
             this.label4.Text = "Unsupported formats:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.Green;
             this.label2.Location = new System.Drawing.Point(6, 213);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(169, 13);
+            this.label2.Size = new System.Drawing.Size(193, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "SF1, SF2, SFARK, SFPACK, SFZ";
             // 
@@ -225,7 +225,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 199);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 13);
+            this.label1.Size = new System.Drawing.Size(96, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Supported formats:";
             // 
@@ -250,7 +250,7 @@
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.Button1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;

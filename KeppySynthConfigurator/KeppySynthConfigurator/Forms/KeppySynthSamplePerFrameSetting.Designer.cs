@@ -50,7 +50,7 @@
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.Red;
             this.label2.Location = new System.Drawing.Point(12, 36);
             this.label2.Name = "label2";
@@ -75,7 +75,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(147, 77);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(146, 13);
+            this.label3.Size = new System.Drawing.Size(142, 13);
             this.label3.TabIndex = 3;
             this.label3.Text = "Maximum samples per frame:";
             // 
@@ -93,7 +93,7 @@
             0,
             0});
             this.LeSetting.Name = "LeSetting";
-            this.LeSetting.Size = new System.Drawing.Size(45, 21);
+            this.LeSetting.Size = new System.Drawing.Size(45, 20);
             this.LeSetting.TabIndex = 4;
             this.LeSetting.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.LeSetting.Value = new decimal(new int[] {
@@ -122,7 +122,7 @@
     "increase the buffer size)";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // KeppyDriverSamplePerFrameSetting
+            // KeppySynthSamplePerFrameSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -135,11 +135,11 @@
             this.Controls.Add(this.Confirm);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppyDriverSamplePerFrameSetting";
+            this.Name = "KeppySynthSamplePerFrameSetting";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

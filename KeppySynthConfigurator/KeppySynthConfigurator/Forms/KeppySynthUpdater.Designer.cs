@@ -51,7 +51,7 @@
             this.LatestVersion.AutoSize = true;
             this.LatestVersion.Location = new System.Drawing.Point(14, 67);
             this.LatestVersion.Name = "LatestVersion";
-            this.LatestVersion.Size = new System.Drawing.Size(356, 13);
+            this.LatestVersion.Size = new System.Drawing.Size(350, 13);
             this.LatestVersion.TabIndex = 7;
             this.LatestVersion.Text = "Click on \"Check for updates\" to check for the latest version of the driver.";
             // 
@@ -60,7 +60,7 @@
             this.ThisVersion.AutoSize = true;
             this.ThisVersion.Location = new System.Drawing.Point(14, 51);
             this.ThisVersion.Name = "ThisVersion";
-            this.ThisVersion.Size = new System.Drawing.Size(325, 13);
+            this.ThisVersion.Size = new System.Drawing.Size(312, 13);
             this.ThisVersion.TabIndex = 6;
             this.ThisVersion.Text = "The current version of the driver, installed on your system, is: IDK";
             // 
@@ -95,7 +95,7 @@
             this.Controls.Add(this.LatestVersion);
             this.Controls.Add(this.ThisVersion);
             this.Controls.Add(this.UpdateCheck);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
