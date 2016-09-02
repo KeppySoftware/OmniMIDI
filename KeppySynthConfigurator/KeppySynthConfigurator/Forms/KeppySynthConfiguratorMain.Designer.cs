@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List = new System.Windows.Forms.TabPage();
+            this.LoadToApp = new System.Windows.Forms.Button();
             this.BankPresetOverride = new System.Windows.Forms.CheckBox();
             this.SelectedListBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -185,6 +186,7 @@
             // List
             // 
             this.List.BackColor = System.Drawing.Color.White;
+            this.List.Controls.Add(this.LoadToApp);
             this.List.Controls.Add(this.BankPresetOverride);
             this.List.Controls.Add(this.SelectedListBox);
             this.List.Controls.Add(this.label1);
@@ -205,6 +207,17 @@
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             this.List.UseVisualStyleBackColor = true;
+            // 
+            // LoadToApp
+            // 
+            this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoadToApp.Location = new System.Drawing.Point(545, 186);
+            this.LoadToApp.Name = "LoadToApp";
+            this.LoadToApp.Size = new System.Drawing.Size(89, 23);
+            this.LoadToApp.TabIndex = 36;
+            this.LoadToApp.Text = "Load to app";
+            this.LoadToApp.UseVisualStyleBackColor = true;
+            this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
             // 
             // BankPresetOverride
             // 
@@ -325,7 +338,7 @@
             // MvD
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MvD.Location = new System.Drawing.Point(545, 163);
+            this.MvD.Location = new System.Drawing.Point(545, 139);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(89, 23);
             this.MvD.TabIndex = 7;
@@ -336,7 +349,7 @@
             // MvU
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MvU.Location = new System.Drawing.Point(545, 134);
+            this.MvU.Location = new System.Drawing.Point(545, 110);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(89, 23);
             this.MvU.TabIndex = 6;
@@ -1529,6 +1542,7 @@
         private System.Windows.Forms.MenuItem menuItem14;
         private System.Windows.Forms.MenuItem VMSSimulatorEnabled;
         private System.Windows.Forms.MenuItem VMSSimulatorDisabled;
+        private System.Windows.Forms.Button LoadToApp;
     }
 }
 

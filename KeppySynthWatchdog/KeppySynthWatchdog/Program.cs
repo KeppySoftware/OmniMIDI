@@ -14,8 +14,6 @@ namespace KeppySynthWatchdog
 {
     static class Program
     {
-        static ProcessIcon pi = new ProcessIcon();
-
         [STAThread]
         static void Main()
         {
@@ -30,25 +28,28 @@ namespace KeppySynthWatchdog
                     Mutex m = new Mutex(true, "KeppySynthWatchdog", out ok);
                     if (!ok)
                     {
-                        Environment.Exit(0);
+                        return;
                     }
                     NotifyIcon ni;
                     ni = new NotifyIcon();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
 
-                    pi.Display();
-                    GC.KeepAlive(m);
-                    Application.Run();
-                    
-                    Environment.Exit(0);
+                    using (ProcessIcon pi = new ProcessIcon())
+                    {
+                        pi.Display();
+                        GC.KeepAlive(m);
+                        Application.Run();
+                    }
+
+                    return;
                 }
                 else
                 {
                     Watchdog.Close();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    Environment.Exit(0);
+                    return;
                 }
             }
             else
@@ -56,25 +57,14 @@ namespace KeppySynthWatchdog
                 Watchdog.Close();
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Environment.Exit(0);
+                return;
             }
         }
 
         private static void OnApplicationExit(object sender, EventArgs e)
         {
-
-            try
-            {
-                if (pi != null)
-                {
-                    pi.Dispose();
-                    pi = null;
-                    Application.Exit();
-                    Environment.Exit(0);
-                }
-
-            }
-            catch { }
+            Application.Exit();
+            Application.ExitThread();
         }
     }
 
@@ -83,15 +73,11 @@ namespace KeppySynthWatchdog
         [DllImport("kernel32.dll")]
         public static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
 
-        NotifyIcon ni;
-
-        public ProcessIcon()
-        {
-            ni = new NotifyIcon();
-        }
+        public static NotifyIcon ni;
 
         public void Display()
         {
+            ni = new NotifyIcon();
             RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
             if (Convert.ToInt32(Watchdog.GetValue("watchdognotify", 1)) == 1)
             {

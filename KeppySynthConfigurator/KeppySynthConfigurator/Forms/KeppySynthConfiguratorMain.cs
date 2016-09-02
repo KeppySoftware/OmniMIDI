@@ -952,6 +952,12 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void LoadToApp_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("currentsflist", whichone, RegistryValueKind.DWord);
+            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+        }
+
         private void EnableSF_Click(object sender, EventArgs e)
         {
             try
@@ -1605,12 +1611,12 @@ namespace KeppySynthConfigurator
 
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
-            Environment.Exit(0);
+            Application.ExitThread();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            Application.ExitThread();
         }
 
         // Guide part

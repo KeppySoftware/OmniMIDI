@@ -566,8 +566,16 @@ public sealed class KeyboardHook : IDisposable
         _currentId = _currentId + 1;
 
         // register the hot key.
-        if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
-            throw new InvalidOperationException("Couldn’t register the hot key.");
+        try
+        {
+            RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key);
+        }
+        catch
+        {
+            KeppySynthWatchdog.ProcessIcon.ni.BalloonTipIcon = ToolTipIcon.Warning;
+            KeppySynthWatchdog.ProcessIcon.ni.BalloonTipTitle = "Keppy's Synthesizer encountered an issue";
+            KeppySynthWatchdog.ProcessIcon.ni.BalloonTipText = "Can not register hotkeys. They've been disabled.";
+        }
     }
 
     /// <summary>
