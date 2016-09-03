@@ -60,16 +60,16 @@ namespace KeppySynthConfigurator
             {
                 foreach (String s in args)
                 {
-                    switch (s.Substring(0, 3).ToUpper())
+                    switch (s.Substring(0, 4).ToUpper())
                     {
-                        case "/AS":
+                        case "/ASP":
                             UserProfileMigration();
                             Environment.Exit(0);
-                            break;
-                        case "/AT":
+                            return;
+                        case "/AST":
                             openadvanced = 1;
                             break;
-                        case "/NL":
+                        case "/NUL":
                             break;
                         default:
                             // do other stuff...
