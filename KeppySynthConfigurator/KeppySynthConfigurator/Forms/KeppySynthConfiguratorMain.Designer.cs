@@ -87,7 +87,6 @@
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
-            this.VolumeHotkeysCheck = new System.Windows.Forms.Timer(this.components);
             this.RightClickMenu = new System.Windows.Forms.ContextMenu();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
@@ -127,7 +126,6 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.watchdogEnabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.watchdogDisabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
@@ -156,6 +154,27 @@
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem16 = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.sendAMIDIResetEventToAllTheChannelsStrip = new System.Windows.Forms.MenuItem();
+            this.menuItem22 = new System.Windows.Forms.MenuItem();
+            this.ReloadList1 = new System.Windows.Forms.MenuItem();
+            this.ReloadList2 = new System.Windows.Forms.MenuItem();
+            this.ReloadList3 = new System.Windows.Forms.MenuItem();
+            this.ReloadList4 = new System.Windows.Forms.MenuItem();
+            this.ReloadList5 = new System.Windows.Forms.MenuItem();
+            this.ReloadList6 = new System.Windows.Forms.MenuItem();
+            this.ReloadList7 = new System.Windows.Forms.MenuItem();
+            this.ReloadList8 = new System.Windows.Forms.MenuItem();
+            this.MoreLists = new System.Windows.Forms.MenuItem();
+            this.ReloadList9 = new System.Windows.Forms.MenuItem();
+            this.ReloadList10 = new System.Windows.Forms.MenuItem();
+            this.ReloadList11 = new System.Windows.Forms.MenuItem();
+            this.ReloadList12 = new System.Windows.Forms.MenuItem();
+            this.ReloadList13 = new System.Windows.Forms.MenuItem();
+            this.ReloadList14 = new System.Windows.Forms.MenuItem();
+            this.ReloadList15 = new System.Windows.Forms.MenuItem();
+            this.ReloadList16 = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.IELPan1.SuspendLayout();
@@ -902,11 +921,6 @@
             // 
             this.ExternalListExport.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
             // 
-            // VolumeHotkeysCheck
-            // 
-            this.VolumeHotkeysCheck.Interval = 1;
-            this.VolumeHotkeysCheck.Tick += new System.EventHandler(this.VolumeHotkeysCheck_Tick);
-            // 
             // RightClickMenu
             // 
             this.RightClickMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -1073,13 +1087,13 @@
             // 
             // runTheWatchdogToolStripMenuItem
             // 
-            this.runTheWatchdogToolStripMenuItem.Index = 13;
+            this.runTheWatchdogToolStripMenuItem.Index = 1;
             this.runTheWatchdogToolStripMenuItem.Text = "Force run the Watchdog (Useful when it doesn\'t start automatically)";
             this.runTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.runTheWatchdogToolStripMenuItem_Click);
             // 
             // killTheWatchdogToolStripMenuItem
             // 
-            this.killTheWatchdogToolStripMenuItem.Index = 14;
+            this.killTheWatchdogToolStripMenuItem.Index = 2;
             this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
             this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
             // 
@@ -1163,11 +1177,6 @@
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
-            // menuItem26
-            // 
-            this.menuItem26.Index = 11;
-            this.menuItem26.Text = "-";
-            // 
             // watchdogEnabledToolStripMenuItem
             // 
             this.watchdogEnabledToolStripMenuItem.Index = 0;
@@ -1186,7 +1195,7 @@
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.watchdogEnabledToolStripMenuItem,
             this.watchdogDisabledToolStripMenuItem});
-            this.menuItem11.Text = "Enable the Watchdog";
+            this.menuItem11.Text = "Indipendent Watchdog";
             // 
             // MIDIAppNotifyEnabledToolStripMenuItem
             // 
@@ -1210,7 +1219,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 12;
+            this.menuItem28.Index = 0;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem11,
             this.menuItem12});
@@ -1230,11 +1239,7 @@
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
-            this.changeDefaultSoundfontListToolStripMenuItem1,
-            this.menuItem26,
-            this.menuItem28,
-            this.runTheWatchdogToolStripMenuItem,
-            this.killTheWatchdogToolStripMenuItem});
+            this.changeDefaultSoundfontListToolStripMenuItem1});
             this.menuItem2.Text = "Advanced settings";
             // 
             // menuItem14
@@ -1351,7 +1356,7 @@
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 2;
+            this.menuItem3.Index = 3;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
@@ -1372,7 +1377,156 @@
             this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
             this.menuItem2,
+            this.menuItem16,
             this.menuItem3});
+            // 
+            // menuItem16
+            // 
+            this.menuItem16.Index = 2;
+            this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem28,
+            this.runTheWatchdogToolStripMenuItem,
+            this.killTheWatchdogToolStripMenuItem,
+            this.menuItem18,
+            this.sendAMIDIResetEventToAllTheChannelsStrip,
+            this.menuItem22,
+            this.ReloadList1,
+            this.ReloadList2,
+            this.ReloadList3,
+            this.ReloadList4,
+            this.ReloadList5,
+            this.ReloadList6,
+            this.ReloadList7,
+            this.ReloadList8,
+            this.MoreLists});
+            this.menuItem16.Text = "Watchdog";
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 3;
+            this.menuItem18.Text = "-";
+            // 
+            // sendAMIDIResetEventToAllTheChannelsStrip
+            // 
+            this.sendAMIDIResetEventToAllTheChannelsStrip.Index = 4;
+            this.sendAMIDIResetEventToAllTheChannelsStrip.Text = "Send a MIDI reset event to all the channels";
+            this.sendAMIDIResetEventToAllTheChannelsStrip.Click += new System.EventHandler(this.sendAMIDIResetEventToAllTheChannelsStrip_Click);
+            // 
+            // menuItem22
+            // 
+            this.menuItem22.Index = 5;
+            this.menuItem22.Text = "-";
+            // 
+            // ReloadList1
+            // 
+            this.ReloadList1.Index = 6;
+            this.ReloadList1.Text = "(Re)load list 1";
+            this.ReloadList1.Click += new System.EventHandler(this.ReloadList1_Click);
+            // 
+            // ReloadList2
+            // 
+            this.ReloadList2.Index = 7;
+            this.ReloadList2.Text = "(Re)load list 2";
+            this.ReloadList2.Click += new System.EventHandler(this.ReloadList2_Click);
+            // 
+            // ReloadList3
+            // 
+            this.ReloadList3.Index = 8;
+            this.ReloadList3.Text = "(Re)load list 3";
+            this.ReloadList3.Click += new System.EventHandler(this.ReloadList3_Click);
+            // 
+            // ReloadList4
+            // 
+            this.ReloadList4.Index = 9;
+            this.ReloadList4.Text = "(Re)load list 4";
+            this.ReloadList4.Click += new System.EventHandler(this.ReloadList4_Click);
+            // 
+            // ReloadList5
+            // 
+            this.ReloadList5.Index = 10;
+            this.ReloadList5.Text = "(Re)load list 5";
+            this.ReloadList5.Click += new System.EventHandler(this.ReloadList5_Click);
+            // 
+            // ReloadList6
+            // 
+            this.ReloadList6.Index = 11;
+            this.ReloadList6.Text = "(Re)load list 6";
+            this.ReloadList6.Click += new System.EventHandler(this.ReloadList6_Click);
+            // 
+            // ReloadList7
+            // 
+            this.ReloadList7.Index = 12;
+            this.ReloadList7.Text = "(Re)load list 7";
+            this.ReloadList7.Click += new System.EventHandler(this.ReloadList7_Click);
+            // 
+            // ReloadList8
+            // 
+            this.ReloadList8.Index = 13;
+            this.ReloadList8.Text = "(Re)load list 8";
+            this.ReloadList8.Click += new System.EventHandler(this.ReloadList8_Click);
+            // 
+            // MoreLists
+            // 
+            this.MoreLists.Index = 14;
+            this.MoreLists.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.ReloadList9,
+            this.ReloadList10,
+            this.ReloadList11,
+            this.ReloadList12,
+            this.ReloadList13,
+            this.ReloadList14,
+            this.ReloadList15,
+            this.ReloadList16});
+            this.MoreLists.Text = "More";
+            this.MoreLists.Visible = false;
+            // 
+            // ReloadList9
+            // 
+            this.ReloadList9.Index = 0;
+            this.ReloadList9.Text = "(Re)load list 9";
+            this.ReloadList9.Click += new System.EventHandler(this.ReloadList9_Click);
+            // 
+            // ReloadList10
+            // 
+            this.ReloadList10.Index = 1;
+            this.ReloadList10.Text = "(Re)load list 10";
+            this.ReloadList10.Click += new System.EventHandler(this.ReloadList10_Click);
+            // 
+            // ReloadList11
+            // 
+            this.ReloadList11.Index = 2;
+            this.ReloadList11.Text = "(Re)load list 11";
+            this.ReloadList11.Click += new System.EventHandler(this.ReloadList11_Click);
+            // 
+            // ReloadList12
+            // 
+            this.ReloadList12.Index = 3;
+            this.ReloadList12.Text = "(Re)load list 12";
+            this.ReloadList12.Click += new System.EventHandler(this.ReloadList12_Click);
+            // 
+            // ReloadList13
+            // 
+            this.ReloadList13.Index = 4;
+            this.ReloadList13.Text = "(Re)load list 13";
+            this.ReloadList13.Click += new System.EventHandler(this.ReloadList13_Click);
+            // 
+            // ReloadList14
+            // 
+            this.ReloadList14.Index = 5;
+            this.ReloadList14.Text = "(Re)load list 14";
+            this.ReloadList14.Click += new System.EventHandler(this.ReloadList14_Click);
+            // 
+            // ReloadList15
+            // 
+            this.ReloadList15.Index = 6;
+            this.ReloadList15.Text = "(Re)load list 15";
+            this.ReloadList15.Click += new System.EventHandler(this.ReloadList15_Click);
+            // 
+            // ReloadList16
+            // 
+            this.ReloadList16.Index = 7;
+            this.ReloadList16.Text = "(Re)load list 16";
+            this.ReloadList16.Click += new System.EventHandler(this.ReloadList16_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1456,7 +1610,6 @@
         private System.Windows.Forms.ToolStripMenuItem lowLatencyPresetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blackMIDIsPresetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem;
-        private System.Windows.Forms.Timer VolumeHotkeysCheck;
         private System.Windows.Forms.ToolStripMenuItem assignSoundfontListToAppToolStripMenuItem;
         private System.Windows.Forms.ComboBox SelectedListBox;
         private System.Windows.Forms.Label label1;
@@ -1513,7 +1666,6 @@
         private System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeDefaultSoundfontListToolStripMenuItem1;
-        private System.Windows.Forms.MenuItem menuItem26;
         private System.Windows.Forms.MenuItem watchdogEnabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem watchdogDisabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem11;
@@ -1543,6 +1695,27 @@
         private System.Windows.Forms.MenuItem VMSSimulatorEnabled;
         private System.Windows.Forms.MenuItem VMSSimulatorDisabled;
         private System.Windows.Forms.Button LoadToApp;
+        private System.Windows.Forms.MenuItem menuItem16;
+        private System.Windows.Forms.MenuItem menuItem18;
+        private System.Windows.Forms.MenuItem sendAMIDIResetEventToAllTheChannelsStrip;
+        private System.Windows.Forms.MenuItem menuItem22;
+        private System.Windows.Forms.MenuItem ReloadList1;
+        private System.Windows.Forms.MenuItem ReloadList2;
+        private System.Windows.Forms.MenuItem ReloadList3;
+        private System.Windows.Forms.MenuItem ReloadList4;
+        private System.Windows.Forms.MenuItem ReloadList5;
+        private System.Windows.Forms.MenuItem ReloadList6;
+        private System.Windows.Forms.MenuItem ReloadList7;
+        private System.Windows.Forms.MenuItem ReloadList8;
+        private System.Windows.Forms.MenuItem MoreLists;
+        private System.Windows.Forms.MenuItem ReloadList9;
+        private System.Windows.Forms.MenuItem ReloadList10;
+        private System.Windows.Forms.MenuItem ReloadList11;
+        private System.Windows.Forms.MenuItem ReloadList12;
+        private System.Windows.Forms.MenuItem ReloadList13;
+        private System.Windows.Forms.MenuItem ReloadList14;
+        private System.Windows.Forms.MenuItem ReloadList15;
+        private System.Windows.Forms.MenuItem ReloadList16;
     }
 }
 

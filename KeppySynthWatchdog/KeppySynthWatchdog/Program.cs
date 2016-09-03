@@ -38,18 +38,16 @@ namespace KeppySynthWatchdog
                     using (ProcessIcon pi = new ProcessIcon())
                     {
                         pi.Display();
-                        GC.KeepAlive(m);
                         Application.Run();
                     }
-
-                    return;
+                    GC.KeepAlive(m);
                 }
                 else
                 {
                     Watchdog.Close();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    return;
+                    Application.ExitThread();
                 }
             }
             else
@@ -57,7 +55,7 @@ namespace KeppySynthWatchdog
                 Watchdog.Close();
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                return;
+                Application.ExitThread();
             }
         }
 

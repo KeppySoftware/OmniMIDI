@@ -550,6 +550,7 @@ namespace KeppySynthConfigurator
                     disabledToolStripMenuItem2.Checked = false;
                     enabledToolStripMenuItem2.Enabled = false;
                     disabledToolStripMenuItem2.Enabled = true;
+                    MoreLists.Visible = true;
                     SelectedListBox.Items.Add("List 9");
                     SelectedListBox.Items.Add("List 10");
                     SelectedListBox.Items.Add("List 11");
@@ -565,6 +566,7 @@ namespace KeppySynthConfigurator
                     disabledToolStripMenuItem2.Checked = true;
                     enabledToolStripMenuItem2.Enabled = true;
                     disabledToolStripMenuItem2.Enabled = false;
+                    MoreLists.Visible = false;
                 }
                 if (Convert.ToInt32(Watchdog.GetValue("watchdog", 1)) == 1)
                 {
@@ -1267,22 +1269,6 @@ namespace KeppySynthConfigurator
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void VolumeHotkeysCheck_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
-                double x = VolTrackBar.Value / 100;
-                int VolumeValue = Convert.ToInt32(x);
-                VolSimView.Text = VolumeValue.ToString("000\\%");
-                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
-            }
-            catch
-            {
-
-            }
-        }
-
         // Now, menustrip functions here
 
         private void openDebugWindowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1438,6 +1424,18 @@ namespace KeppySynthConfigurator
             watchdogDisabledToolStripMenuItem.Checked = false;
             watchdogEnabledToolStripMenuItem.Enabled = false;
             watchdogDisabledToolStripMenuItem.Enabled = true;
+            menuItem18.Visible = false;
+            sendAMIDIResetEventToAllTheChannelsStrip.Visible = false;
+            menuItem22.Visible = false;
+            ReloadList1.Visible = false;
+            ReloadList2.Visible = false;
+            ReloadList3.Visible = false;
+            ReloadList4.Visible = false;
+            ReloadList5.Visible = false;
+            ReloadList6.Visible = false;
+            ReloadList7.Visible = false;
+            ReloadList8.Visible = false;
+            MoreLists.Visible = false;
         }
 
         private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1447,6 +1445,21 @@ namespace KeppySynthConfigurator
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;
             watchdogDisabledToolStripMenuItem.Enabled = false;
+            menuItem18.Visible = true;
+            sendAMIDIResetEventToAllTheChannelsStrip.Visible = true;
+            menuItem22.Visible = true;
+            ReloadList1.Visible = true;
+            ReloadList2.Visible = true;
+            ReloadList3.Visible = true;
+            ReloadList4.Visible = true;
+            ReloadList5.Visible = true;
+            ReloadList6.Visible = true;
+            ReloadList7.Visible = true;
+            ReloadList8.Visible = true;
+            if (enabledToolStripMenuItem2.Checked == true)
+            {
+                MoreLists.Visible = true;
+            }
         }
 
 
@@ -1547,6 +1560,7 @@ namespace KeppySynthConfigurator
             disabledToolStripMenuItem2.Checked = false;
             enabledToolStripMenuItem2.Enabled = false;
             disabledToolStripMenuItem2.Enabled = true;
+            MoreLists.Visible = true;
             SelectedListBox.Items.Add("List 9");
             SelectedListBox.Items.Add("List 10");
             SelectedListBox.Items.Add("List 11");
@@ -1564,6 +1578,7 @@ namespace KeppySynthConfigurator
             disabledToolStripMenuItem2.Checked = true;
             enabledToolStripMenuItem2.Enabled = true;
             disabledToolStripMenuItem2.Enabled = false;
+            MoreLists.Visible = false;
             SelectedListBox.Items.RemoveAt(8);
             SelectedListBox.Items.RemoveAt(8);
             SelectedListBox.Items.RemoveAt(8);
@@ -1737,6 +1752,99 @@ namespace KeppySynthConfigurator
             {
                 bufsize.Enabled = false;
             } 
+        }
+
+        // Watchdog features in the configurator
+
+        void LoadSoundfont(int whichone)
+        {
+            Watchdog.SetValue("currentsflist", whichone, RegistryValueKind.DWord);
+            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+        }
+
+        private void ReloadList1_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(1);
+        }
+
+        private void ReloadList2_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(2);
+        }
+
+        private void ReloadList3_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(3);
+        }
+
+        private void ReloadList4_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(4);
+        }
+
+        private void ReloadList5_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(5);
+        }
+
+        private void ReloadList6_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(6);
+        }
+
+        private void ReloadList7_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(7);
+        }
+
+        private void ReloadList8_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(8);
+        }
+
+        private void ReloadList9_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(9);
+        }
+
+        private void ReloadList10_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(10);
+        }
+
+        private void ReloadList11_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(11);
+        }
+
+        private void ReloadList12_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(12);
+        }
+
+        private void ReloadList13_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(13);
+        }
+
+        private void ReloadList14_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(14);
+        }
+
+        private void ReloadList15_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(15);
+        }
+
+        private void ReloadList16_Click(object sender, EventArgs e)
+        {
+            LoadSoundfont(16);
+        }
+
+        private void sendAMIDIResetEventToAllTheChannelsStrip_Click(object sender, EventArgs e)
+        {
+            Watchdog.SetValue("resetchannels", 1, RegistryValueKind.DWord);
         }
     }
 }
