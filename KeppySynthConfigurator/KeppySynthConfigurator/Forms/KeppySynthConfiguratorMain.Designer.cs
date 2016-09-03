@@ -134,6 +134,9 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem23 = new System.Windows.Forms.MenuItem();
+            this.hLSEnabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.hLSDisabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.VMSSimulatorEnabled = new System.Windows.Forms.MenuItem();
             this.VMSSimulatorDisabled = new System.Windows.Forms.MenuItem();
@@ -1099,18 +1102,18 @@
             // 
             // menuItem17
             // 
-            this.menuItem17.Index = 1;
+            this.menuItem17.Index = 2;
             this.menuItem17.Text = "-";
             // 
             // manageFolderFavouritesToolStripMenuItem
             // 
-            this.manageFolderFavouritesToolStripMenuItem.Index = 2;
+            this.manageFolderFavouritesToolStripMenuItem.Index = 3;
             this.manageFolderFavouritesToolStripMenuItem.Text = "Manage folder favourites";
             this.manageFolderFavouritesToolStripMenuItem.Click += new System.EventHandler(this.manageFolderFavouritesToolStripMenuItem_Click);
             // 
             // menuItem19
             // 
-            this.menuItem19.Index = 3;
+            this.menuItem19.Index = 4;
             this.menuItem19.Text = "-";
             // 
             // enabledToolStripMenuItem2
@@ -1127,7 +1130,7 @@
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 4;
+            this.menuItem20.Index = 5;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.enabledToolStripMenuItem2,
             this.disabledToolStripMenuItem2});
@@ -1147,7 +1150,7 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 5;
+            this.menuItem21.Index = 6;
             this.menuItem21.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.enabledToolStripMenuItem3,
             this.disabledToolStripMenuItem3});
@@ -1155,25 +1158,25 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 7;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 8;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 8;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 9;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 9;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 10;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 10;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 11;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
@@ -1230,6 +1233,7 @@
             this.menuItem2.Index = 1;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem38,
+            this.menuItem23,
             this.menuItem17,
             this.manageFolderFavouritesToolStripMenuItem,
             this.menuItem19,
@@ -1242,9 +1246,29 @@
             this.changeDefaultSoundfontListToolStripMenuItem1});
             this.menuItem2.Text = "Advanced settings";
             // 
+            // menuItem23
+            // 
+            this.menuItem23.Index = 1;
+            this.menuItem23.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.hLSEnabledToolStripMenuItem,
+            this.hLSDisabledToolStripMenuItem});
+            this.menuItem23.Text = "Hotkeys in the MIDI application";
+            // 
+            // hLSEnabledToolStripMenuItem
+            // 
+            this.hLSEnabledToolStripMenuItem.Index = 0;
+            this.hLSEnabledToolStripMenuItem.Text = "Enabled";
+            this.hLSEnabledToolStripMenuItem.Click += new System.EventHandler(this.hLSEnabledToolStripMenuItem_Click);
+            // 
+            // hLSDisabledToolStripMenuItem
+            // 
+            this.hLSDisabledToolStripMenuItem.Index = 1;
+            this.hLSDisabledToolStripMenuItem.Text = "Disabled";
+            this.hLSDisabledToolStripMenuItem.Click += new System.EventHandler(this.hLSDisabledToolStripMenuItem_Click);
+            // 
             // menuItem14
             // 
-            this.menuItem14.Index = 6;
+            this.menuItem14.Index = 7;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.VMSSimulatorEnabled,
             this.VMSSimulatorDisabled});
@@ -1716,6 +1740,9 @@
         private System.Windows.Forms.MenuItem ReloadList14;
         private System.Windows.Forms.MenuItem ReloadList15;
         private System.Windows.Forms.MenuItem ReloadList16;
+        private System.Windows.Forms.MenuItem menuItem23;
+        private System.Windows.Forms.MenuItem hLSEnabledToolStripMenuItem;
+        private System.Windows.Forms.MenuItem hLSDisabledToolStripMenuItem;
     }
 }
 

@@ -214,7 +214,7 @@ namespace KeppySynthConfigurator
                 e.Effect = DragDropEffects.None;
         }
 
-        private void UserProfileMigration()
+        public void UserProfileMigration()
         {
             try
             {
@@ -501,6 +501,20 @@ namespace KeppySynthConfigurator
                     DefaultOut810enabledToolStripMenuItem.Enabled = false;
                     DefaultOut810disabledToolStripMenuItem.Checked = false;
                     DefaultOut810disabledToolStripMenuItem.Enabled = true;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys", 0)) == 1)
+                {
+                    hLSEnabledToolStripMenuItem.Checked = true;
+                    hLSDisabledToolStripMenuItem.Checked = false;
+                    hLSEnabledToolStripMenuItem.Enabled = false;
+                    hLSDisabledToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    hLSEnabledToolStripMenuItem.Checked = false;
+                    hLSDisabledToolStripMenuItem.Checked = true;
+                    hLSEnabledToolStripMenuItem.Enabled = true;
+                    hLSDisabledToolStripMenuItem.Enabled = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
@@ -1754,7 +1768,7 @@ namespace KeppySynthConfigurator
             } 
         }
 
-        // Watchdog features in the configurator
+        // Watchdog features in the configurator and hotkeys
 
         void LoadSoundfont(int whichone)
         {
@@ -1845,6 +1859,24 @@ namespace KeppySynthConfigurator
         private void sendAMIDIResetEventToAllTheChannelsStrip_Click(object sender, EventArgs e)
         {
             Watchdog.SetValue("resetchannels", 1, RegistryValueKind.DWord);
+        }
+
+        private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+            hLSEnabledToolStripMenuItem.Checked = true;
+            hLSDisabledToolStripMenuItem.Checked = false;
+            hLSEnabledToolStripMenuItem.Enabled = false;
+            hLSDisabledToolStripMenuItem.Enabled = true;
+        }
+
+        private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+            hLSEnabledToolStripMenuItem.Checked = false;
+            hLSDisabledToolStripMenuItem.Checked = true;
+            hLSEnabledToolStripMenuItem.Enabled = true;
+            hLSDisabledToolStripMenuItem.Enabled = false;
         }
     }
 }

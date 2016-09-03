@@ -93,7 +93,7 @@ static int sound_out_volume_int = 0x1000;
 
 // Variables
 static float *sndbf;
-static int allhotkeys = 1; // Enable/Disable all the hotkeys
+static int allhotkeys = 0; // Enable/Disable all the hotkeys
 static int bassoutputfinal = 0; // DO NOT TOUCH
 static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
@@ -111,7 +111,6 @@ static int nofx = 0; // Enable or disable FXs
 static int noteoff1 = 0; // Note cut INT
 static int preload = 0; // Soundfont preloading
 static int defaultmidiout = 0; // Set as default MIDI out device for 8.x or newer
-static int sfdisableconf = 0; // Enable/Disable that annoying confirmation popup that asks you if you want to change the sf list
 static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
@@ -569,6 +568,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				Sleep(1);
 				realtime_load_settings();
 				debug_info();
+				keybindings();
 				WatchdogCheck();
 				mixervoid();
 			}

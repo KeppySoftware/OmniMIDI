@@ -618,7 +618,6 @@ void load_settings()
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
 		RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
@@ -673,7 +672,6 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		RegQueryValueEx(hKey, L"sfdisableconf", NULL, &dwType, (LPBYTE)&sfdisableconf, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 		RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
@@ -993,30 +991,154 @@ void ReloadSFList(DWORD whichsflist){
 		else {
 			sound_out_volume_float = 0.0f / 10000.0f;
 		}
-		std::wstringstream ss;
-		ss << "Do you want to (re)load list n°" << whichsflist << "?";
-		std::wstring s = ss.str();
 		ResetSynth();
 		Sleep(100);
-		if (sfdisableconf == 1) {
-			LoadSoundfont(whichsflist);
-		}
-		else {
-			const int result = MessageBox(NULL, s.c_str(), L"Keppy's Synthesizer", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
-			switch (result)
-			{
-			case IDYES:
-				LoadSoundfont(whichsflist);
-				break;
-			case IDNO:
-				break;
-			}
-		}
+		LoadSoundfont(whichsflist);
 		if (xaudiodisabled == 1) {
-			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_VOL, (float)volume / 10000.0f);
+			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
 		}
 		else {
 			sound_out_volume_float = (float)volume / 10000.0f;
+		}
+	}
+	catch (int e) {
+		crashhandler(e);
+	}
+}
+
+void keybindings()
+{
+	try {
+		if (allhotkeys == 1) {
+			if (extra8lists == 1) {
+				BOOL ControlPressed = (GetAsyncKeyState(VK_CONTROL) & (1 << 15));
+				if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
+					ReloadSFList(1);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
+					ReloadSFList(2);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
+					ReloadSFList(3);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
+					ReloadSFList(4);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+					ReloadSFList(5);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+					ReloadSFList(6);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+					ReloadSFList(7);
+					return;
+				}
+				else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+					ReloadSFList(8);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
+					ReloadSFList(9);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
+					ReloadSFList(10);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
+					ReloadSFList(11);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
+					ReloadSFList(12);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+					ReloadSFList(13);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+					ReloadSFList(14);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+					ReloadSFList(15);
+					return;
+				}
+				else if (GetAsyncKeyState(VK_CONTROL) & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+					ReloadSFList(16);
+					return;
+				}
+			}
+			else {
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
+					ReloadSFList(1);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
+					ReloadSFList(2);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
+					ReloadSFList(3);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
+					ReloadSFList(4);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
+					ReloadSFList(5);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
+					ReloadSFList(6);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
+					ReloadSFList(7);
+					return;
+				}
+				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
+					ReloadSFList(8);
+					return;
+				}
+			}
+			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
+				TCHAR configuratorapp[MAX_PATH];
+				BOOL run = TRUE;
+				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+				{
+					PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthConfigurator.exe"));
+					ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
+					Sleep(10);
+					return;
+				}
+			}
+			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x30) & 0x8000) {
+				TCHAR debugwindowapp[MAX_PATH];
+				BOOL run = TRUE;
+				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, debugwindowapp)))
+				{
+					PathAppend(debugwindowapp, _T("\\keppysynth\\KeppySynthDebugWindow.exe"));
+					ShellExecute(NULL, L"open", debugwindowapp, NULL, NULL, SW_SHOWNORMAL);
+					Sleep(10);
+					return;
+				}
+			}
+			if (GetAsyncKeyState(VK_INSERT) & 1) {
+				ResetSynth();
+			}
+			else {
+				// Nothing lel
+			}
 		}
 	}
 	catch (int e) {
