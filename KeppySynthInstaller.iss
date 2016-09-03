@@ -116,11 +116,11 @@ Name: "{sys}\keppydrv"; Attribs: system; Check: not Is64BitInstallMode
 [Icons]
 ; 64-bit OS
 Name: "{group}\Configure Keppy's Synthesizer"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
-Name: "{group}\Change advanced settings"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AT"; WorkingDir: "{app}"; Check: Is64BitInstallMode
+Name: "{group}\Change advanced settings"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AST"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{syswow64}\keppysynth\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 ; 32-bit OS
 Name: "{group}\Configure Keppy's Synthesizer"; Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
-Name: "{group}\Change advanced settings"; Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AT"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
+Name: "{group}\Change advanced settings"; Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AST"; WorkingDir: "{app}"; Check: not Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\keppysynth\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode   
 ; Generic for all the OSes
 Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"
@@ -212,17 +212,23 @@ Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; 
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
 
 [Run]
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
-Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AS"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
-Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AS"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
+Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
+Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
 
