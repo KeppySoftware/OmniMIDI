@@ -485,9 +485,9 @@ namespace KeppySynthConfigurator
             try
             {
                 // First, the most important settings
-                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume"));
-                PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony"));
-                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu")); 
+                VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume", 10000));
+                PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony", 512));
+                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu", 75)); 
                 if (Convert.ToInt32(SynthSettings.GetValue("defaultmidiout", 0)) == 0)
                 {
                     DefaultOut810enabledToolStripMenuItem.Checked = false;
@@ -610,11 +610,11 @@ namespace KeppySynthConfigurator
                     MIDIAppNotifyEnabledToolStripMenuItem.Enabled = true;
                     MIDIAppNotifyDisabledToolStripMenuItem.Enabled = false;
                 }
-                Frequency.Text = SynthSettings.GetValue("frequency").ToString();
-                TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks"));
+                Frequency.Text = SynthSettings.GetValue("frequency", 44100).ToString();
+                TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks", 16));
 
                 // Then the filthy checkboxes
-                if (Convert.ToInt32(SynthSettings.GetValue("preload")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("preload", 1)) == 1)
                 {
                     Preload.Checked = true;
                 }
@@ -622,7 +622,7 @@ namespace KeppySynthConfigurator
                 {
                     Preload.Checked = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("nofx")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("nofx", 0)) == 1)
                 {
                     DisableSFX.Checked = true;
                 }
@@ -630,7 +630,7 @@ namespace KeppySynthConfigurator
                 {
                     DisableSFX.Checked = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("noteoff")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("noteoff", 0)) == 1)
                 {
                     NoteOffCheck.Checked = true;
                 }
@@ -638,15 +638,7 @@ namespace KeppySynthConfigurator
                 {
                     NoteOffCheck.Checked = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("sinc")) == 1)
-                {
-                    SincInter.Checked = true;
-                }
-                else
-                {
-                    SincInter.Checked = false;
-                }
-                if (Convert.ToInt32(SynthSettings.GetValue("sysresetignore")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("sysresetignore", 0)) == 1)
                 {
                     SysResetIgnore.Checked = true;
                 }
@@ -654,7 +646,7 @@ namespace KeppySynthConfigurator
                 {
                     SysResetIgnore.Checked = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("encmode")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("encmode", 0)) == 1)
                 {
                     OutputWAV.Checked = true;
                 }
@@ -662,12 +654,20 @@ namespace KeppySynthConfigurator
                 {
                     OutputWAV.Checked = false;
                 }
-                if (Convert.ToInt32(SynthSettings.GetValue("xaudiodisabled")) == 1)
+                if (Convert.ToInt32(SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
                     XAudioDisable.Checked = true;
                     VMSEmu.Visible = true;
                     SPFSecondaryBut.Visible = false;
-                    if (Convert.ToInt32(SynthSettings.GetValue("vmsemu")) == 1)
+                    if (Convert.ToInt32(SynthSettings.GetValue("sinc", 0)) == 1)
+                    {
+                        SincInter.Checked = true;
+                    }
+                    else
+                    {
+                        SincInter.Checked = false;
+                    }
+                    if (Convert.ToInt32(SynthSettings.GetValue("vmsemu", 0)) == 1)
                     {
                         VMSEmu.Checked = true;
                         bufsize.Enabled = true;
@@ -685,6 +685,9 @@ namespace KeppySynthConfigurator
                     VMSEmu.Visible = false;
                     SPFSecondaryBut.Visible = true;
                     bufsize.Enabled = true;
+                    SincInter.Checked = true;
+                    SincInter.Enabled = false;
+                    SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
                 }
 
                 // LEL
@@ -1701,6 +1704,9 @@ namespace KeppySynthConfigurator
                 VMSEmu.Visible = true;
                 SPFSecondaryBut.Visible = false;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
+                SincInter.Checked = false;
+                SincInter.Enabled = true;
+                SincInter.Text = "Enable sinc interpolation. (Improves audio quality with cheap soundfont, but increases CPU usage.)";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
                 bufsize.Enabled = false;
@@ -1720,6 +1726,9 @@ namespace KeppySynthConfigurator
                 VMSEmu.Visible = false;
                 SPFSecondaryBut.Visible = true;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
+                SincInter.Checked = true;
+                SincInter.Enabled = false;
+                SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;

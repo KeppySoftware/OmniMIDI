@@ -541,10 +541,10 @@
             this.SincInter.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SincInter.Location = new System.Drawing.Point(7, 16);
             this.SincInter.Name = "SincInter";
-            this.SincInter.Size = new System.Drawing.Size(517, 17);
+            this.SincInter.Size = new System.Drawing.Size(492, 17);
             this.SincInter.TabIndex = 8;
-            this.SincInter.Text = "Enable sinc interpolation. (Avoids audio corruptions, but can completely ruin the" +
-    " audio with Black MIDIs.)";
+            this.SincInter.Text = "Enable sinc interpolation. (Improves audio quality with cheap soundfont, but incr" +
+    "eases CPU usage.)";
             this.SincInter.UseVisualStyleBackColor = true;
             // 
             // TracksLimit
