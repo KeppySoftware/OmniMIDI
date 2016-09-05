@@ -4,7 +4,7 @@
 #define use_vc2010
 #define use_vc2013
 
-#define Version '4.0.1.15'
+#define Version '4.0.1.16'
 
 [Setup]
 AllowCancelDuringInstall=False

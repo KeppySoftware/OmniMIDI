@@ -42,7 +42,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(461, 16);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Change the default soundfont list that Keppy\'s Driver will load at startup.";
+            this.label1.Text = "Change the default soundfont list that Keppy\'s Synthesizer will load at startup.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label2
@@ -102,7 +102,7 @@
             this.Default.UseVisualStyleBackColor = true;
             this.Default.Click += new System.EventHandler(this.Default_Click);
             // 
-            // KeppyDriverDefaultSFList
+            // KeppySynthDefaultSFList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -116,7 +116,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppyDriverDefaultSFList";
+            this.Name = "KeppySynthDefaultSFList";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

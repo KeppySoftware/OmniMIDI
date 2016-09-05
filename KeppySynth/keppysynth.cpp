@@ -483,12 +483,15 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						continue;
 					}
 					// LoudMax stuff lel
-					if (PathFileExists(loudmaxdll)) {
-						BASS_VST_ChannelSetDSP(hStream, LMDLL, 0, 1);
-					}
+					#if defined(_WIN64)
 					if (PathFileExists(loudmaxdll64)) {
 						BASS_VST_ChannelSetDSP(hStream, LMDLL64, 0, 1);
 					}
+					#elif defined(_WIN32)
+					if (PathFileExists(loudmaxdll)) {
+						BASS_VST_ChannelSetDSP(hStream, LMDLL, 0, 1);
+					}
+					#endif
 					// Encoder code
 					if (encmode == 1) {
 						typedef std::basic_string<TCHAR> tstring;
