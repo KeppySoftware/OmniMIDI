@@ -306,6 +306,7 @@
             // 
             this.List1Override.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.List1Override.AutoSize = true;
+            this.List1Override.BackColor = System.Drawing.Color.Transparent;
             this.List1Override.Enabled = false;
             this.List1Override.Location = new System.Drawing.Point(6, 382);
             this.List1Override.Name = "List1Override";
@@ -436,7 +437,6 @@
             this.Settings.Size = new System.Drawing.Size(641, 397);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
-            this.Settings.UseVisualStyleBackColor = true;
             // 
             // WhatIsXAudio
             // 
@@ -455,12 +455,13 @@
             // XAudioDisable
             // 
             this.XAudioDisable.AutoSize = true;
+            this.XAudioDisable.BackColor = System.Drawing.Color.Transparent;
             this.XAudioDisable.Location = new System.Drawing.Point(242, 9);
             this.XAudioDisable.Name = "XAudioDisable";
             this.XAudioDisable.Size = new System.Drawing.Size(154, 17);
             this.XAudioDisable.TabIndex = 36;
             this.XAudioDisable.Text = "Disable the XAudio engine.";
-            this.XAudioDisable.UseVisualStyleBackColor = true;
+            this.XAudioDisable.UseVisualStyleBackColor = false;
             this.XAudioDisable.CheckedChanged += new System.EventHandler(this.XAudioDisable_CheckedChanged);
             // 
             // WhatIsOutput
@@ -480,18 +481,20 @@
             // OutputWAV
             // 
             this.OutputWAV.AutoSize = true;
+            this.OutputWAV.BackColor = System.Drawing.Color.Transparent;
             this.OutputWAV.Location = new System.Drawing.Point(15, 9);
             this.OutputWAV.Name = "OutputWAV";
             this.OutputWAV.Size = new System.Drawing.Size(194, 17);
             this.OutputWAV.TabIndex = 27;
             this.OutputWAV.Text = "Enable the \"Output to WAV\" mode.";
-            this.OutputWAV.UseVisualStyleBackColor = true;
+            this.OutputWAV.UseVisualStyleBackColor = false;
             this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
             // 
             // GroupBox5
             // 
             this.GroupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.GroupBox5.BackColor = System.Drawing.Color.Transparent;
             this.GroupBox5.Controls.Add(this.SPFSecondaryBut);
             this.GroupBox5.Controls.Add(this.VMSEmu);
             this.GroupBox5.Controls.Add(this.SincInter);
@@ -793,6 +796,7 @@
             // VolIntView
             // 
             this.VolIntView.AutoSize = true;
+            this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
             this.VolIntView.Location = new System.Drawing.Point(13, 28);
             this.VolIntView.Name = "VolIntView";
@@ -803,6 +807,7 @@
             // VolSimView
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolSimView.BackColor = System.Drawing.Color.Transparent;
             this.VolSimView.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.DarkOrchid;
             this.VolSimView.Location = new System.Drawing.Point(554, 4);
@@ -816,6 +821,7 @@
             // VolStaticLab
             // 
             this.VolStaticLab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolStaticLab.BackColor = System.Drawing.Color.Transparent;
             this.VolStaticLab.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolStaticLab.Location = new System.Drawing.Point(450, 4);
             this.VolStaticLab.Name = "VolStaticLab";

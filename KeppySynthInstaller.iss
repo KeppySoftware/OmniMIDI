@@ -1,10 +1,10 @@
-#define use_msiproduct
+#define use_ie6
 #define use_dotnetfx40
 #define use_wic
-#define use_vc2010
-#define use_vc2013
+#define use_msiproduct
+#define vc
 
-#define Version '4.0.1.16'
+#define Version '4.0.1.17'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -127,10 +127,7 @@ Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"
 
 [Languages]
 Name: en; MessagesFile: "compiler:Default.isl"
-Name: it; MessagesFile: "compiler:Languages\Italian.isl"
-Name: nl; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: de; MessagesFile: "compiler:Languages\German.isl"
-Name: jp; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: de; MessagesFile: "compiler:Default.isl"
 
 [Registry]
 ; Normal settings
@@ -231,7 +228,7 @@ Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runa
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
-Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
+Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
 
 [Code]
 // shared code for installing the products
@@ -242,28 +239,69 @@ Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q"; Flags: waituntilterminated; 
 #include "scripts\products\fileversion.iss"
 #include "scripts\products\dotnetfxversion.iss"
 
-#ifdef use_msiproduct
-#include "scripts\products\msiproduct.iss"
-#endif
-#ifdef use_wic
-#include "scripts\products\wic.iss"
-#endif
+
 #ifdef use_dotnetfx40
 #include "scripts\products\dotnetfx40client.iss"
 #include "scripts\products\dotnetfx40full.iss"
 #endif
-#ifdef use_vc2010
-#include "scripts\products\vcredist2010.iss"
-#endif
-#ifdef use_vc2013
-#include "scripts\products\vcredist2013.iss"
+
+#ifdef use_wic
+#include "scripts\products\wic.iss"
 #endif
 
-[Code]
-function InitializeUninstall(): Boolean;
+#ifdef use_msiproduct
+#include "scripts\products\msiproduct.iss"
+#endif
+
+#ifdef vc
+#include "scripts\products\vcredist.iss"
+#endif
+
+
+function InitializeSetup(): boolean;
+
   var ErrorCode: Integer;
+
 begin
+
+  // Kill the watchdog before installing
   ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
   ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
-  result := True;
+
+	// initialize windows version
+	initwinversion();
+
+#ifdef use_msi40
+	msi45('4.0'); // min allowed version is 4.0
+#endif
+
+#ifdef use_wic
+	wic();
+#endif
+
+	// if no .netfx 4.0 is found, install the client (smallest)
+#ifdef use_dotnetfx40
+	if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '')) then
+		dotnetfx40client();
+#endif
+
+#ifdef vc
+	vcredist2010();
+	vcredist2013();
+#endif
+
+	Result := true;
+end;
+
+function InitializeUninstall(): Boolean;
+
+  var ErrorCode: Integer;
+
+begin
+
+  // Kill the watchdog before uninstalling
+  ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
+  ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
+ 	Result := true;
+
 end;

@@ -82,6 +82,7 @@ namespace KeppySynthConfigurator
 
             }
             InitializeComponent();
+            VolTrackBar.BackColor = Color.Empty;
             this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
         }
 
@@ -100,9 +101,8 @@ namespace KeppySynthConfigurator
 
         static bool IsWindowsXP()
         {
-            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            string productName = (string)reg.GetValue("ProductName");
-            return productName.StartsWith("Windows XP");
+            OperatingSystem OS = Environment.OSVersion;
+            return (OS.Version.Major == 5) || ((OS.Version.Major == 5) && (OS.Version.Minor == 1));
         }
 
         // Just stuff to reduce code's length
@@ -463,14 +463,18 @@ namespace KeppySynthConfigurator
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 SetSynthDefault.Visible = true;
             }
-
+            if (IsWindowsXP() == true)
+            {
+                menuItem17.Visible = false;
+                manageFolderFavouritesToolStripMenuItem.Visible = false;
+            }
             if (Environment.Is64BitOperatingSystem == false)
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             }
-            else if (Environment.Is64BitOperatingSystem == true)
+            else
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
@@ -588,6 +592,8 @@ namespace KeppySynthConfigurator
                     watchdogDisabledToolStripMenuItem.Checked = false;
                     watchdogEnabledToolStripMenuItem.Enabled = false;
                     watchdogDisabledToolStripMenuItem.Enabled = true;
+                    runTheWatchdogToolStripMenuItem.Enabled = true;
+                    killTheWatchdogToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
@@ -595,6 +601,8 @@ namespace KeppySynthConfigurator
                     watchdogDisabledToolStripMenuItem.Checked = true;
                     watchdogEnabledToolStripMenuItem.Enabled = true;
                     watchdogDisabledToolStripMenuItem.Enabled = false;
+                    runTheWatchdogToolStripMenuItem.Enabled = false;
+                    killTheWatchdogToolStripMenuItem.Enabled = false;
                 }
                 if (Convert.ToInt32(Watchdog.GetValue("watchdognotify", 1)) == 1)
                 {
@@ -987,20 +995,27 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    string result = Lis.SelectedItem.ToString().Substring(0, 1);
-                    if (result == "@")
+                    if (Lis.SelectedIndices.Count > 1)
                     {
-                        string newvalue = Lis.SelectedItem.ToString().Remove(0, 1);
-                        int index = Lis.Items.IndexOf(Lis.SelectedItem);
-                        Lis.Items.RemoveAt(index);
-                        Lis.Items.Insert(index, newvalue);
+                        MessageBox.Show("You can only enable one soundfont at the time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
-                        MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        string result = Lis.SelectedItem.ToString().Substring(0, 1);
+                        if (result == "@")
+                        {
+                            string newvalue = Lis.SelectedItem.ToString().Remove(0, 1);
+                            int index = Lis.Items.IndexOf(Lis.SelectedItem);
+                            Lis.Items.RemoveAt(index);
+                            Lis.Items.Insert(index, newvalue);
+                        }
+                        else
+                        {
+                            MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        SaveList(CurrentList);
+                        TriggerReload();
                     }
-                    SaveList(CurrentList);
-                    TriggerReload();
                 }
             }
             catch (Exception ex)
@@ -1019,20 +1034,27 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    string result = Lis.SelectedItem.ToString().Substring(0, 1);
-                    if (result != "@")
+                    if (Lis.SelectedIndices.Count > 1)
                     {
-                        string newvalue = "@" + Lis.SelectedItem.ToString();
-                        int index = Lis.Items.IndexOf(Lis.SelectedItem);
-                        Lis.Items.RemoveAt(index);
-                        Lis.Items.Insert(index, newvalue);
+                        MessageBox.Show("You can only disable one soundfont at the time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
-                        MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        string result = Lis.SelectedItem.ToString().Substring(0, 1);
+                        if (result != "@")
+                        {
+                            string newvalue = "@" + Lis.SelectedItem.ToString();
+                            int index = Lis.Items.IndexOf(Lis.SelectedItem);
+                            Lis.Items.RemoveAt(index);
+                            Lis.Items.Insert(index, newvalue);
+                        }
+                        else
+                        {
+                            MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        SaveList(CurrentList);
+                        TriggerReload();
                     }
-                    SaveList(CurrentList);
-                    TriggerReload();
                 }
             }
             catch (Exception ex)
@@ -1319,12 +1341,38 @@ namespace KeppySynthConfigurator
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
+            if (IsWindowsXP() == false)
+            {
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
+            }
+            else
+            {
+                Process MIDIPanelXP = new Process();
+                MIDIPanelXP.StartInfo.FileName = "rundll32.exe";
+                MIDIPanelXP.StartInfo.Arguments = "MMSYS.CPL,ShowAudioPropertySheet";
+                MIDIPanelXP.Start();
+                this.Enabled = false;
+                MIDIPanelXP.WaitForExit();
+                this.Enabled = true;
+            }
         }
 
         private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
+            if (IsWindowsXP() == false)
+            {
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
+            }
+            else
+            {
+                Process MIDIPanelXP = new Process();
+                MIDIPanelXP.StartInfo.FileName = "rundll32.exe";
+                MIDIPanelXP.StartInfo.Arguments = "MMSYS.CPL,ShowAudioPropertySheet";
+                MIDIPanelXP.Start();
+                this.Enabled = false;
+                MIDIPanelXP.WaitForExit();
+                this.Enabled = true;
+            }
         }
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1441,6 +1489,8 @@ namespace KeppySynthConfigurator
             watchdogDisabledToolStripMenuItem.Checked = false;
             watchdogEnabledToolStripMenuItem.Enabled = false;
             watchdogDisabledToolStripMenuItem.Enabled = true;
+            runTheWatchdogToolStripMenuItem.Enabled = true;
+            killTheWatchdogToolStripMenuItem.Enabled = true;
             menuItem18.Visible = false;
             sendAMIDIResetEventToAllTheChannelsStrip.Visible = false;
             menuItem22.Visible = false;
@@ -1462,6 +1512,8 @@ namespace KeppySynthConfigurator
             watchdogDisabledToolStripMenuItem.Checked = true;
             watchdogEnabledToolStripMenuItem.Enabled = true;
             watchdogDisabledToolStripMenuItem.Enabled = false;
+            runTheWatchdogToolStripMenuItem.Enabled = false;
+            killTheWatchdogToolStripMenuItem.Enabled = false;
             menuItem18.Visible = true;
             sendAMIDIResetEventToAllTheChannelsStrip.Visible = true;
             menuItem22.Visible = true;
