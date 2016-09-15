@@ -4,7 +4,7 @@
 #define use_msiproduct
 #define vc
 
-#define Version '4.0.1.17'
+#define Version '4.0.1.18'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -108,10 +108,10 @@ Source: "output\keppymididrv.defaultblacklist"; DestDir: "{win}"; Flags: replace
 
 [Dirs]
 ; 64-bit OS
-Name: "{sys}\keppydrv"; Attribs: system; Check: Is64BitInstallMode
-Name: "{syswow64}\keppydrv"; Attribs: system; Check: Is64BitInstallMode
+Name: "{sys}\keppysynth"; Attribs: system; Check: Is64BitInstallMode
+Name: "{syswow64}\keppysynth"; Attribs: system; Check: Is64BitInstallMode
 ; 32-bit OS
-Name: "{sys}\keppydrv"; Attribs: system; Check: not Is64BitInstallMode    
+Name: "{sys}\keppysynth"; Attribs: system; Check: not Is64BitInstallMode    
 
 [Icons]
 ; 64-bit OS
@@ -227,7 +227,7 @@ Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
-Filename: "http://frozensnowy.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
+Filename: "http://frozensnowproductions.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
 
 [Code]

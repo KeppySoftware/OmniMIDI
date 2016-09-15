@@ -1,6 +1,7 @@
 acrotray.exe
 adobe audition cc.exe
 adobe premiere pro.exe
+adobeupdateservice.exe
 aertsr64.exe
 afterfx.exe
 agr32svc.exe
@@ -10,11 +11,14 @@ agrsvc.exe
 agsservice.exe
 alg.exe
 ambspie.exe
+apsdaemon.exe
 armsvc.exe
 battle.net launcher.exe
 camtasiastudio.exe
 ccc.exe
-chrome.exe
+cemu.exe
+citra.exe
+citraqt.exe
 conhost.exe
 console 1 on-screen display (x64).exe
 console 1 on-screen display.exe
@@ -25,7 +29,7 @@ devenv.exe
 devenv_2.exe
 discord.exe
 discordptb.exe
-dllost.exe
+dllhost.exe
 dreamweaver.exe
 explorer.exe
 firefox.exe
@@ -35,14 +39,21 @@ gamepanel.exe
 gfexperienceservice.exe
 gitter.exe
 googleupdate.exe
+gta_sa.exe
 gui.exe
 hl2.exe
+iclouddrive.exe
+icloudphotos.exe
+icloudservices.exe
+ipodservice.exe
 ipoverusbsvc.exe
+ituneshelper.exe
 kakaotalk.exe
 keppymidiconverter.exe
 khalmnpr.exe
 ldsvc.exe
 lightshot.exe
+livecomm.exe
 loopmidi.exe
 lsass.exe
 lsm.exe
@@ -78,6 +89,8 @@ puush.exe
 ravbg64.exe
 ravcpl64.exe
 rthdcpl.exe
+samp.exe
+secd.exe
 setpoint.exe
 settingssynchost.exe
 sharex.exe
@@ -98,11 +111,11 @@ steamservice.exe
 steamwebhelper.exe
 svchost.exe
 sxgtkbar.exe
-system
-taskmgr.exe
+taskeng.exe
 taskhost.exe
 taskhostex.exe
 taskhostw.exe
+taskmgr.exe
 teamviewer.exe
 teamviewer_desktop.exe
 teamviewer_service.exe
@@ -119,6 +132,7 @@ volumouse.exe
 volumouse32.exe
 vsc32cnf.exe
 vscvol.exe
+vsetwservice.exe
 wininit.exe
 winlogon.exe
 wudfhost.exe
