@@ -140,6 +140,8 @@
     <Compile Include="Forms\KeppySynthUpdater.Designer.cs">
       <DependentUpon>KeppySynthUpdater.cs</DependentUpon>
     </Compile>
+    <Compile Include="Functions\BasicFunc.cs" />
+    <Compile Include="Functions\WatchdogFunc.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\KeppySynthFavouritesManager.resx">

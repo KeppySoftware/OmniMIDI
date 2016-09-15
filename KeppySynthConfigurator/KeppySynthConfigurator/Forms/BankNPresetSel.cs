@@ -42,11 +42,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void PresetSel_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void ConfirmBut_Click(object sender, EventArgs e)
         {
             BankValueReturn = BankVal.Value.ToString();

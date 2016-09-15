@@ -14,7 +14,7 @@ namespace KeppySynthConfigurator
 {
     public partial class KeppySynthMixerWindow : Form
     {
-        uint CurrentClock, MaxStockClock;
+        uint MaxStockClock;
         private static KeppySynthMixerWindow inst;
         public static KeppySynthMixerWindow GetForm
         {
@@ -62,11 +62,12 @@ namespace KeppySynthConfigurator
 
         public void CPUSpeed()
         {
-            using (ManagementObject Mo = new ManagementObject("Win32_Processor.DeviceID='CPU0'"))
-            {
-                CurrentClock = (uint)(Mo["CurrentClockSpeed"]);
-                MaxStockClock = (uint)(Mo["MaxClockSpeed"]);
-            }
+            RegistryKey registrykeyHKLM = Registry.LocalMachine;
+            string keyPath = @"HARDWARE\DESCRIPTION\System\CentralProcessor\0";
+            RegistryKey registrykeyCPU = registrykeyHKLM.OpenSubKey(keyPath, false);
+            MaxStockClock = Convert.ToUInt32(registrykeyCPU.GetValue("~MHz").ToString());
+            registrykeyCPU.Close();
+            registrykeyHKLM.Close();
         }
 
         private void LeftChannelText(string text)
@@ -187,6 +188,8 @@ namespace KeppySynthConfigurator
                 LeftChannelText("N/A");
                 RightChannelText("N/A");
             }
+
+            System.Threading.Thread.Sleep(1);
         }
 
         private void ChannelVolume_Tick(object sender, EventArgs e)
@@ -218,6 +221,8 @@ namespace KeppySynthConfigurator
             {
                 MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
+
+            System.Threading.Thread.Sleep(1);
         }
 
         private void KeppyDriverMixerWindow_Load(object sender, EventArgs e)
@@ -282,7 +287,7 @@ namespace KeppySynthConfigurator
                 if (VolumeMonitor.Checked == true)
                 {
 
-                    if (CurrentClock < 1100)
+                    if (MaxStockClock < 1100)
                     {
                         DialogResult dialogResult = MessageBox.Show("Enabling a mixer on a computer with poor specs could make the driver stutter.\n\nAre you sure you want to enable it?", "Weak processor detected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (dialogResult == DialogResult.Yes)
@@ -297,7 +302,7 @@ namespace KeppySynthConfigurator
                             VolumeMonitor.Checked = false;
                         }
                     }
-                    else if (CurrentClock >= 1100)
+                    else if (MaxStockClock >= 1100)
                     {
                         Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
                         VolumeCheck.Enabled = true;

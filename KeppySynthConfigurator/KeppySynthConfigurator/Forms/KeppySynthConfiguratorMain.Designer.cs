@@ -1440,7 +1440,6 @@
             // 
             this.sendAMIDIResetEventToAllTheChannelsStrip.Index = 4;
             this.sendAMIDIResetEventToAllTheChannelsStrip.Text = "Send a MIDI reset event to all the channels";
-            this.sendAMIDIResetEventToAllTheChannelsStrip.Click += new System.EventHandler(this.sendAMIDIResetEventToAllTheChannelsStrip_Click);
             // 
             // menuItem22
             // 
@@ -1451,49 +1450,41 @@
             // 
             this.ReloadList1.Index = 6;
             this.ReloadList1.Text = "(Re)load list 1";
-            this.ReloadList1.Click += new System.EventHandler(this.ReloadList1_Click);
             // 
             // ReloadList2
             // 
             this.ReloadList2.Index = 7;
             this.ReloadList2.Text = "(Re)load list 2";
-            this.ReloadList2.Click += new System.EventHandler(this.ReloadList2_Click);
             // 
             // ReloadList3
             // 
             this.ReloadList3.Index = 8;
             this.ReloadList3.Text = "(Re)load list 3";
-            this.ReloadList3.Click += new System.EventHandler(this.ReloadList3_Click);
             // 
             // ReloadList4
             // 
             this.ReloadList4.Index = 9;
             this.ReloadList4.Text = "(Re)load list 4";
-            this.ReloadList4.Click += new System.EventHandler(this.ReloadList4_Click);
             // 
             // ReloadList5
             // 
             this.ReloadList5.Index = 10;
             this.ReloadList5.Text = "(Re)load list 5";
-            this.ReloadList5.Click += new System.EventHandler(this.ReloadList5_Click);
             // 
             // ReloadList6
             // 
             this.ReloadList6.Index = 11;
             this.ReloadList6.Text = "(Re)load list 6";
-            this.ReloadList6.Click += new System.EventHandler(this.ReloadList6_Click);
             // 
             // ReloadList7
             // 
             this.ReloadList7.Index = 12;
             this.ReloadList7.Text = "(Re)load list 7";
-            this.ReloadList7.Click += new System.EventHandler(this.ReloadList7_Click);
             // 
             // ReloadList8
             // 
             this.ReloadList8.Index = 13;
             this.ReloadList8.Text = "(Re)load list 8";
-            this.ReloadList8.Click += new System.EventHandler(this.ReloadList8_Click);
             // 
             // MoreLists
             // 
@@ -1514,49 +1505,41 @@
             // 
             this.ReloadList9.Index = 0;
             this.ReloadList9.Text = "(Re)load list 9";
-            this.ReloadList9.Click += new System.EventHandler(this.ReloadList9_Click);
             // 
             // ReloadList10
             // 
             this.ReloadList10.Index = 1;
             this.ReloadList10.Text = "(Re)load list 10";
-            this.ReloadList10.Click += new System.EventHandler(this.ReloadList10_Click);
             // 
             // ReloadList11
             // 
             this.ReloadList11.Index = 2;
             this.ReloadList11.Text = "(Re)load list 11";
-            this.ReloadList11.Click += new System.EventHandler(this.ReloadList11_Click);
             // 
             // ReloadList12
             // 
             this.ReloadList12.Index = 3;
             this.ReloadList12.Text = "(Re)load list 12";
-            this.ReloadList12.Click += new System.EventHandler(this.ReloadList12_Click);
             // 
             // ReloadList13
             // 
             this.ReloadList13.Index = 4;
             this.ReloadList13.Text = "(Re)load list 13";
-            this.ReloadList13.Click += new System.EventHandler(this.ReloadList13_Click);
             // 
             // ReloadList14
             // 
             this.ReloadList14.Index = 5;
             this.ReloadList14.Text = "(Re)load list 14";
-            this.ReloadList14.Click += new System.EventHandler(this.ReloadList14_Click);
             // 
             // ReloadList15
             // 
             this.ReloadList15.Index = 6;
             this.ReloadList15.Text = "(Re)load list 15";
-            this.ReloadList15.Click += new System.EventHandler(this.ReloadList15_Click);
             // 
             // ReloadList16
             // 
             this.ReloadList16.Index = 7;
             this.ReloadList16.Text = "(Re)load list 16";
-            this.ReloadList16.Click += new System.EventHandler(this.ReloadList16_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1604,34 +1587,15 @@
         private System.Windows.Forms.TabControl TabsForTheControls;
         private System.Windows.Forms.TabPage List;
         private System.Windows.Forms.TabPage Settings;
-        private System.Windows.Forms.Label VolIntView;
-        private System.Windows.Forms.Label VolSimView;
-        private System.Windows.Forms.Label VolStaticLab;
-        private System.Windows.Forms.TrackBar VolTrackBar;
         internal System.Windows.Forms.GroupBox GroupBox5;
-        internal System.Windows.Forms.CheckBox SincInter;
-        internal System.Windows.Forms.NumericUpDown TracksLimit;
         internal System.Windows.Forms.Label Label4;
         internal System.Windows.Forms.Label BufferText;
-        internal System.Windows.Forms.CheckBox SysResetIgnore;
-        internal System.Windows.Forms.NumericUpDown bufsize;
         private System.Windows.Forms.GroupBox groupBox1;
         internal System.Windows.Forms.Label Label6;
-        internal System.Windows.Forms.ComboBox Frequency;
         internal System.Windows.Forms.Label Label5;
         internal System.Windows.Forms.Label Label3;
-        internal System.Windows.Forms.NumericUpDown PolyphonyLimit;
-        internal System.Windows.Forms.CheckBox DisableSFX;
-        internal System.Windows.Forms.CheckBox Preload;
-        internal System.Windows.Forms.CheckBox NoteOffCheck;
-        private System.Windows.Forms.OpenFileDialog SoundfontImport;
-        private System.Windows.Forms.OpenFileDialog ExternalListImport;
-        private System.Windows.Forms.CheckBox OutputWAV;
         private System.Windows.Forms.PictureBox WhatIsOutput;
-        private System.Windows.Forms.CheckBox XAudioDisable;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
-        private System.Windows.Forms.CheckBox VMSEmu;
-        private System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.Windows.Forms.LinkLabel SPFSecondaryBut;
         private System.Windows.Forms.MenuStrip SettingsButtons;
         private System.Windows.Forms.ToolStripMenuItem applySettingsToolStripMenuItem;
@@ -1654,14 +1618,12 @@
         private System.Windows.Forms.Button MvU;
         private System.Windows.Forms.Button RmvSF;
         private System.Windows.Forms.Button AddSF;
-        private System.Windows.Forms.ListBox Lis;
         private System.Windows.Forms.ContextMenu RightClickMenu;
         private System.Windows.Forms.MenuItem menuItem4;
         private System.Windows.Forms.MenuItem menuItem5;
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem menuItem10;
-        internal System.Windows.Forms.NumericUpDown MaxCPU;
         private System.Windows.Forms.CheckBox BankPresetOverride;
         private System.Windows.Forms.MenuItem openDebugWindowToolStripMenuItem;
         private System.Windows.Forms.MenuItem openTheMixerToolStripMenuItem;
@@ -1727,26 +1689,47 @@
         private System.Windows.Forms.Button LoadToApp;
         private System.Windows.Forms.MenuItem menuItem16;
         private System.Windows.Forms.MenuItem menuItem18;
-        private System.Windows.Forms.MenuItem sendAMIDIResetEventToAllTheChannelsStrip;
         private System.Windows.Forms.MenuItem menuItem22;
-        private System.Windows.Forms.MenuItem ReloadList1;
-        private System.Windows.Forms.MenuItem ReloadList2;
-        private System.Windows.Forms.MenuItem ReloadList3;
-        private System.Windows.Forms.MenuItem ReloadList4;
-        private System.Windows.Forms.MenuItem ReloadList5;
-        private System.Windows.Forms.MenuItem ReloadList6;
-        private System.Windows.Forms.MenuItem ReloadList7;
-        private System.Windows.Forms.MenuItem ReloadList8;
         private System.Windows.Forms.MenuItem MoreLists;
-        private System.Windows.Forms.MenuItem ReloadList9;
-        private System.Windows.Forms.MenuItem ReloadList10;
-        private System.Windows.Forms.MenuItem ReloadList11;
-        private System.Windows.Forms.MenuItem ReloadList12;
-        private System.Windows.Forms.MenuItem ReloadList13;
-        private System.Windows.Forms.MenuItem ReloadList14;
-        private System.Windows.Forms.MenuItem ReloadList15;
-        private System.Windows.Forms.MenuItem ReloadList16;
         private System.Windows.Forms.MenuItem menuItem23;
+        public System.Windows.Forms.MenuItem sendAMIDIResetEventToAllTheChannelsStrip;
+        public System.Windows.Forms.MenuItem ReloadList1;
+        public System.Windows.Forms.MenuItem ReloadList2;
+        public System.Windows.Forms.MenuItem ReloadList3;
+        public System.Windows.Forms.MenuItem ReloadList4;
+        public System.Windows.Forms.MenuItem ReloadList5;
+        public System.Windows.Forms.MenuItem ReloadList6;
+        public System.Windows.Forms.MenuItem ReloadList7;
+        public System.Windows.Forms.MenuItem ReloadList8;
+        public System.Windows.Forms.MenuItem ReloadList9;
+        public System.Windows.Forms.MenuItem ReloadList10;
+        public System.Windows.Forms.MenuItem ReloadList11;
+        public System.Windows.Forms.MenuItem ReloadList12;
+        public System.Windows.Forms.MenuItem ReloadList13;
+        public System.Windows.Forms.MenuItem ReloadList14;
+        public System.Windows.Forms.MenuItem ReloadList15;
+        public System.Windows.Forms.MenuItem ReloadList16;
+        public System.Windows.Forms.Label VolIntView;
+        public System.Windows.Forms.Label VolSimView;
+        public System.Windows.Forms.Label VolStaticLab;
+        public System.Windows.Forms.TrackBar VolTrackBar;
+        public System.Windows.Forms.CheckBox SincInter;
+        public System.Windows.Forms.NumericUpDown TracksLimit;
+        public System.Windows.Forms.CheckBox SysResetIgnore;
+        public System.Windows.Forms.NumericUpDown bufsize;
+        public System.Windows.Forms.ComboBox Frequency;
+        public System.Windows.Forms.NumericUpDown PolyphonyLimit;
+        public System.Windows.Forms.CheckBox DisableSFX;
+        public System.Windows.Forms.CheckBox Preload;
+        public System.Windows.Forms.CheckBox NoteOffCheck;
+        public System.Windows.Forms.CheckBox OutputWAV;
+        public System.Windows.Forms.CheckBox XAudioDisable;
+        public System.Windows.Forms.CheckBox VMSEmu;
+        public System.Windows.Forms.NumericUpDown MaxCPU;
+        public System.Windows.Forms.ListBox Lis;
+        public System.Windows.Forms.OpenFileDialog SoundfontImport;
+        public System.Windows.Forms.OpenFileDialog ExternalListImport;
+        public System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.Windows.Forms.MenuItem hLSEnabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem hLSDisabledToolStripMenuItem;
     }

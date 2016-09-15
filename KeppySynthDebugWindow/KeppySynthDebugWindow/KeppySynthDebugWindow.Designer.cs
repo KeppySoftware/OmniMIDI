@@ -17,7 +17,14 @@
             {
                 components.Dispose();
             }
-            base.Dispose(disposing);
+            try
+            {
+                base.Dispose(disposing);
+            }
+            catch
+            {
+                System.Windows.Forms.Application.Exit();
+            }
         }
 
         #region Codice generato da Progettazione Windows Form
@@ -28,8 +35,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Timer DebugCheck;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthDebugWindow));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.MainCont = new System.Windows.Forms.ContextMenu();
@@ -37,24 +42,20 @@
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
-            DebugCheck = new System.Windows.Forms.Timer(this.components);
+            this.DebugWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
-            // 
-            // DebugCheck
-            // 
-            DebugCheck.Enabled = true;
-            DebugCheck.Interval = 50;
-            DebugCheck.Tick += new System.EventHandler(this.DebugRefresh_Tick);
             // 
             // richTextBox1
             // 
+            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.richTextBox1.DetectUrls = false;
             this.richTextBox1.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox1.Location = new System.Drawing.Point(8, 9);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(405, 180);
             this.richTextBox1.TabIndex = 7;
-            this.richTextBox1.Text = "a";
+            this.richTextBox1.Text = "Loading...";
             // 
             // MainCont
             // 
@@ -87,6 +88,10 @@
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
             // 
+            // DebugWorker
+            // 
+            this.DebugWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DebugWorker_DoWork);
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -112,6 +117,7 @@
         private System.Windows.Forms.MenuItem CopyToClipboard;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem ExitMenu;
+        private System.ComponentModel.BackgroundWorker DebugWorker;
     }
 }
 

@@ -13,46 +13,48 @@ namespace KeppySynthConfigurator
 {
     public partial class KeppySynthConfiguratorMain : Form
     {
-        public string LastBrowserPath { get; set; }
-        public string LastImportExportPath { get; set; }
+        public static string LastBrowserPath { get; set; }
+        public static string LastImportExportPath { get; set; }
 
-        public string List1PathOld { get; set; }
-        public string List2PathOld { get; set; }
-        public string List3PathOld { get; set; }
-        public string List4PathOld { get; set; }
-        public string List5PathOld { get; set; }
-        public string List6PathOld { get; set; }
-        public string List7PathOld { get; set; }
-        public string List8PathOld { get; set; }
+        public static string List1PathOld { get; set; }
+        public static string List2PathOld { get; set; }
+        public static string List3PathOld { get; set; }
+        public static string List4PathOld { get; set; }
+        public static string List5PathOld { get; set; }
+        public static string List6PathOld { get; set; }
+        public static string List7PathOld { get; set; }
+        public static string List8PathOld { get; set; }
 
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
 
-        public string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
-        public string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
-        public string List1Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidi.sflist";
-        public string List2Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidib.sflist";
-        public string List3Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidic.sflist";
-        public string List4Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidid.sflist";
-        public string List5Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidie.sflist";
-        public string List6Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidif.sflist";
-        public string List7Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidig.sflist";
-        public string List8Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidih.sflist";
-        public string List9Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidii.sflist";
-        public string List10Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidij.sflist";
-        public string List11Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidik.sflist";
-        public string List12Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidil.sflist";
-        public string List13Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidim.sflist";
-        public string List14Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidin.sflist";
-        public string List15Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidio.sflist";
-        public string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist";
+        public static KeppySynthConfiguratorMain Delegate;
 
-        public int openadvanced { get; set; }
-        public int whichone { get; set; }
-        public string CurrentList { get; set; }
+        public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
+        public static string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
+        public static string List1Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidi.sflist";
+        public static string List2Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidib.sflist";
+        public static string List3Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidic.sflist";
+        public static string List4Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidid.sflist";
+        public static string List5Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidie.sflist";
+        public static string List6Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidif.sflist";
+        public static string List7Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidig.sflist";
+        public static string List8Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidih.sflist";
+        public static string List9Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidii.sflist";
+        public static string List10Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidij.sflist";
+        public static string List11Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidik.sflist";
+        public static string List12Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidil.sflist";
+        public static string List13Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidim.sflist";
+        public static string List14Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidin.sflist";
+        public static string List15Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidio.sflist";
+        public static string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist";
 
-        public RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-        public RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
-        public RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+        public static int openadvanced { get; set; }
+        public static int whichone { get; set; }
+        public static string CurrentList { get; set; }
+
+        public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+        public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
+        public static RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
 
         public KeppySynthConfiguratorMain(String[] args)
         {
@@ -63,7 +65,7 @@ namespace KeppySynthConfigurator
                     switch (s.Substring(0, 4).ToUpper())
                     {
                         case "/ASP":
-                            UserProfileMigration();
+                            Functions.UserProfileMigration();
                             Environment.Exit(0);
                             return;
                         case "/AST":
@@ -82,6 +84,7 @@ namespace KeppySynthConfigurator
 
             }
             InitializeComponent();
+            Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
             this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
         }
@@ -92,56 +95,10 @@ namespace KeppySynthConfigurator
             Watchdog.Close();
         }
 
-        static bool IsWindows8OrNewer()
-        {
-            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            string productName = (string)reg.GetValue("ProductName");
-            return productName.StartsWith("Windows 8") | productName.StartsWith("Windows 10");
-        }
-
-        static bool IsWindowsXP()
-        {
-            OperatingSystem OS = Environment.OSVersion;
-            return (OS.Version.Major == 5) || ((OS.Version.Major == 5) && (OS.Version.Minor == 1));
-        }
-
         // Just stuff to reduce code's length
         private void SFZCompliant()
         {
             MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void SaveList(String SelectedList)
-        {
-            using (StreamWriter sw = new StreamWriter(SelectedList))
-            {
-                foreach (var item in Lis.Items)
-                {
-                    sw.WriteLine(item.ToString());
-                }
-            }
-        }
-
-        private void ReinitializeList(Exception ex, String selectedlistpath)
-        {
-            try
-            {
-                MessageBox.Show("Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath + "\n\n.NET error:\n" + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Lis.Items.Clear();
-                using (StreamReader r = new StreamReader(selectedlistpath))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        Lis.Items.Add(line);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Environment.Exit(-1);
-            }
         }
 
         private void AddSoundfontDragNDrop(String SelectedList, DragEventArgs e)
@@ -171,8 +128,8 @@ namespace KeppySynthConfigurator
                     {
                         Lis.Items.Add(s[i]);
                     }
-                    SaveList(CurrentList);
-                    TriggerReload();
+                    Functions.SaveList(CurrentList);
+                    Functions.TriggerReload();
                 }
                 else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
                 {
@@ -188,8 +145,8 @@ namespace KeppySynthConfigurator
                             Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + s[i]);
                         }
                     }
-                    SaveList(CurrentList);
-                    TriggerReload();
+                    Functions.SaveList(CurrentList);
+                    Functions.TriggerReload();
                 }
                 else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
                 {
@@ -214,247 +171,11 @@ namespace KeppySynthConfigurator
                 e.Effect = DragDropEffects.None;
         }
 
-        public void UserProfileMigration()
-        {
-            try
-            {
-                string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Synthesizer\\";
-                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
-                if (IsWindowsXP() == false)
-                {
-                    Directory.Move(oldlocation, newlocation);
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void DriverToSynthMigration()
-        {
-            try
-            {
-                string oldlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Driver\\";
-                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
-                Directory.Move(oldlocation, newlocation);
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void ChangeList(string WhichList)
-        {
-            try
-            {
-                if (!System.IO.Directory.Exists(AbsolutePath))
-                {
-                    Directory.CreateDirectory(AbsolutePath);
-                    Directory.CreateDirectory(ListsPath);
-                    File.Create(WhichList).Dispose();
-                    Lis.Items.Clear();
-                }
-                if (!System.IO.Directory.Exists(ListsPath))
-                {
-                    Directory.CreateDirectory(ListsPath);
-                    File.Create(WhichList).Dispose();
-                    Lis.Items.Clear();
-                }
-                if (!System.IO.File.Exists(WhichList))
-                {
-                    File.Create(WhichList).Dispose();
-                    Lis.Items.Clear();
-                }
-                try
-                {
-                    using (StreamReader r = new StreamReader(WhichList))
-                    {
-                        string line;
-                        Lis.Items.Clear();
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Lis.Items.Add(line);
-                        }
-                    }
-                }
-                catch
-                {
-                    File.Create(WhichList).Dispose();
-                    MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-        }
-
-        private void SaveSettings()
-        {
-            try
-            {
-                // Normal settings
-                SynthSettings.SetValue("polyphony", PolyphonyLimit.Value.ToString(), RegistryValueKind.DWord);
-                SynthSettings.SetValue("cpu", MaxCPU.Value, RegistryValueKind.DWord);
-                if (string.IsNullOrWhiteSpace(Frequency.Text))
-                {
-                    Frequency.Text = "48000";
-                    SynthSettings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("frequency", Frequency.Text, RegistryValueKind.DWord);
-                }
-
-                // Advanced SynthSettings
-                SynthSettings.SetValue("buflen", bufsize.Value.ToString(), RegistryValueKind.DWord);
-                SynthSettings.SetValue("tracks", TracksLimit.Value.ToString(), RegistryValueKind.DWord);
-
-                // Let's not forget about the volume!
-                int VolumeValue = 0;
-                double x = VolTrackBar.Value / 100;
-                VolumeValue = Convert.ToInt32(x);
-                VolSimView.Text = VolumeValue.ToString("000\\%");
-                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
-                SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
-                
-                // Checkbox stuff yay
-                if (Preload.Checked == true)
-                {
-                    SynthSettings.SetValue("preload", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("preload", "0", RegistryValueKind.DWord);
-                }
-                if (DisableSFX.Checked == true)
-                {
-                    SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
-                }
-                if (VMSEmu.Checked == true)
-                {
-                    SynthSettings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
-                }
-                if (NoteOffCheck.Checked == true)
-                {
-                    SynthSettings.SetValue("noteoff", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("noteoff", "0", RegistryValueKind.DWord);
-                }
-                if (SincInter.Checked == true)
-                {
-                    SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
-                }
-                if (SysResetIgnore.Checked == true)
-                {
-                    SynthSettings.SetValue("sysresetignore", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
-                }
-                if (OutputWAV.Checked == true)
-                {
-                    SynthSettings.SetValue("encmode", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
-                }
-                if (XAudioDisable.Checked == true)
-                {
-                    SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Application.Exit();
-            }
-        }
-
-        private void InitializeLastPath()
-        {
-            try
-            {
-                if (SynthPaths.GetValue("lastpathsfimport", null) == null)
-                {
-                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
-                    SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                    SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                    SoundfontImport.InitialDirectory = LastBrowserPath;
-                }
-                else if (SynthPaths.GetValue("lastpathlistimpexp", null) == null)
-                {
-                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
-                    SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                    SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                    ExternalListImport.InitialDirectory = LastImportExportPath;
-                    ExternalListExport.InitialDirectory = LastImportExportPath;
-                }
-                else if (SynthPaths.GetValue("lastpathsfimport", null) == null && SynthPaths.GetValue("lastpathlistimpexp", null) == null)
-                {
-                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
-                    SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                    SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                    SoundfontImport.InitialDirectory = LastBrowserPath;
-                    ExternalListImport.InitialDirectory = LastImportExportPath;
-                    ExternalListExport.InitialDirectory = LastImportExportPath;
-                }
-                else
-                {
-                    LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                    LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                    SoundfontImport.InitialDirectory = LastBrowserPath;
-                    ExternalListImport.InitialDirectory = LastImportExportPath;
-                    ExternalListExport.InitialDirectory = LastImportExportPath;
-                }
-            }
-            catch
-            {
-                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
-                SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                SynthPaths.SetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                SynthPaths.SetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
-                LastBrowserPath = SynthPaths.GetValue("lastpathsfimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                LastImportExportPath = SynthPaths.GetValue("lastpathlistimpexp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
-                SoundfontImport.InitialDirectory = LastBrowserPath;
-                ExternalListImport.InitialDirectory = LastImportExportPath;
-                ExternalListExport.InitialDirectory = LastImportExportPath;
-                SoundfontImport.InitialDirectory = LastBrowserPath;
-            }
-        }
-
         // Here we go!
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
             // MIDI out selector disabler
-            if (IsWindows8OrNewer() == true)
+            if (Functions.IsWindows8OrNewer() == true)
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
@@ -463,7 +184,7 @@ namespace KeppySynthConfigurator
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 SetSynthDefault.Visible = true;
             }
-            if (IsWindowsXP() == true)
+            if (Functions.IsWindowsXP() == true)
             {
                 menuItem17.Visible = false;
                 manageFolderFavouritesToolStripMenuItem.Visible = false;
@@ -482,7 +203,7 @@ namespace KeppySynthConfigurator
             }
 
             Lis.ContextMenu = RightClickMenu;
-            InitializeLastPath();
+            Functions.InitializeLastPath();
             SelectedListBox.Text = "List 1";
 
             // ======= Load settings from the registry
@@ -491,7 +212,7 @@ namespace KeppySynthConfigurator
                 // First, the most important settings
                 VolTrackBar.Value = Convert.ToInt32(SynthSettings.GetValue("volume", 10000));
                 PolyphonyLimit.Value = Convert.ToInt32(SynthSettings.GetValue("polyphony", 512));
-                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu", 75)); 
+                MaxCPU.Value = Convert.ToInt32(SynthSettings.GetValue("cpu", 75));
                 if (Convert.ToInt32(SynthSettings.GetValue("defaultmidiout", 0)) == 0)
                 {
                     DefaultOut810enabledToolStripMenuItem.Checked = false;
@@ -742,69 +463,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        // -------------------------
-        // Soundfont lists functions
-
-        private void TriggerReload() {
-            try
-            {
-                if (Convert.ToInt32(Watchdog.GetValue("currentsflist")) == whichone)
-                {
-                    Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-                }
-            }
-            catch
-            {
-                InitializeLastPath();
-            }
-        }
-
-        private void SetLastPath(string path)
-        {
-            try
-            {
-                SynthPaths.SetValue("lastpathsfimport", path);
-            }
-            catch
-            {
-                InitializeLastPath();
-            }
-        }
-
-        private void SetLastImportExportPath(string path)
-        {
-            try
-            {
-                SynthPaths.SetValue("lastpathlistimpexp", path);
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void OpenFileDialogAddCustomPaths(FileDialog dialog)
-        {
-            try
-            {
-                // Import the blacklist file
-                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\keppymididrv.favlist"))
-                {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        dialog.CustomPlaces.Add(line);
-                    }
-                    return;
-                }
-            }
-            catch
-            {
-                return;
-            }
-        }
-
-
         private void CLi_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to clear the list?", "Keppy's Synthesizer Configurator ~ Clear list " + whichone.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -823,7 +481,7 @@ namespace KeppySynthConfigurator
                 }
                 catch (Exception ex)
                 {
-                    ReinitializeList(ex, CurrentList);
+                    Functions.ReinitializeList(ex, CurrentList);
                 }
             }
             else if (dialogResult == DialogResult.No)
@@ -838,7 +496,7 @@ namespace KeppySynthConfigurator
             {
                 SoundfontImport.InitialDirectory = LastBrowserPath;
                 SoundfontImport.FileName = "";
-                OpenFileDialogAddCustomPaths(SoundfontImport);
+                Functions.OpenFileDialogAddCustomPaths(SoundfontImport);
                 if (SoundfontImport.ShowDialog() == DialogResult.OK)
                 {
                     foreach (string str in SoundfontImport.FileNames)
@@ -885,15 +543,15 @@ namespace KeppySynthConfigurator
                             MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         LastBrowserPath = Path.GetDirectoryName(str);
-                        SetLastPath(LastBrowserPath);
+                        Functions.SetLastPath(LastBrowserPath);
                     }
-                    SaveList(CurrentList);
-                    TriggerReload();
+                    Functions.SaveList(CurrentList);
+                    Functions.TriggerReload();
                 }
             }
             catch (Exception ex)
             {
-                ReinitializeList(ex, CurrentList);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -905,12 +563,12 @@ namespace KeppySynthConfigurator
                 {
                     Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                 }
-                TriggerReload();
-                SaveList(CurrentList);
+                Functions.SaveList(CurrentList);
+                Functions.TriggerReload();
             }
             catch (Exception ex)
             {
-                ReinitializeList(ex, CurrentList);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -937,12 +595,12 @@ namespace KeppySynthConfigurator
                         Lis.SetSelected(indx - 1, true);
                     }
                 }
-                SaveList(CurrentList);
-                TriggerReload();
+                Functions.SaveList(CurrentList);
+                Functions.TriggerReload();
             }
             catch (Exception ex)
             {
-                ReinitializeList(ex, CurrentList);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -970,12 +628,12 @@ namespace KeppySynthConfigurator
                     }
 
                 }
-                SaveList(CurrentList);
-                TriggerReload();
+                Functions.SaveList(CurrentList);
+                Functions.TriggerReload();
             }
             catch (Exception ex)
             {
-                ReinitializeList(ex, CurrentList);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -1013,14 +671,14 @@ namespace KeppySynthConfigurator
                         {
                             MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
-                        SaveList(CurrentList);
-                        TriggerReload();
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
                     }
                 }
             }
             catch (Exception ex)
             {
-                ReinitializeList(ex, CurrentList);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -1052,14 +710,14 @@ namespace KeppySynthConfigurator
                         {
                             MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
-                        SaveList(CurrentList);
-                        TriggerReload();
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
                     }
                 }
             }
             catch (Exception ex)
             {
-                ReinitializeList(ex, CurrentList);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -1074,7 +732,7 @@ namespace KeppySynthConfigurator
                     foreach (string file in ExternalListImport.FileNames)
                     {
                         LastImportExportPath = Path.GetDirectoryName(file);
-                        SetLastPath(LastImportExportPath);
+                        Functions.SetLastPath(LastBrowserPath);
                         using (StreamReader r = new StreamReader(file))
                         {
                             string line;
@@ -1083,8 +741,8 @@ namespace KeppySynthConfigurator
                                 Lis.Items.Add(line); // Read the external list and add the items to the selected list
                             }
                         }
-                        SaveList(CurrentList);
-                        TriggerReload();
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
                     }
                 }
             }
@@ -1101,7 +759,7 @@ namespace KeppySynthConfigurator
             if (ExternalListExport.ShowDialog() == DialogResult.OK)
             {
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
-                SetLastPath(LastImportExportPath);
+                Functions.SetLastPath(LastBrowserPath);
                 foreach (var item in Lis.Items)
                 {
                     SaveFile.WriteLine(item.ToString());
@@ -1111,103 +769,108 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private string ListRelativePathSystem(string originalpath)
+        {
+            return "a";
+        }
+
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (SelectedListBox.Text == "List 1")
             {
                 CurrentList = List1Path;
                 whichone = 1;
-                ChangeList(List1Path);
+                Functions.ChangeList(List1Path);
             }
             else if (SelectedListBox.Text == "List 2")
             {
                 CurrentList = List2Path;
                 whichone = 2;
-                ChangeList(List2Path);
+                Functions.ChangeList(List2Path);
             }
             else if (SelectedListBox.Text == "List 3")
             {
                 CurrentList = List3Path;
                 whichone = 3;
-                ChangeList(List3Path);
+                Functions.ChangeList(List3Path);
             }
             else if (SelectedListBox.Text == "List 4")
             {
                 CurrentList = List4Path;
                 whichone = 4;
-                ChangeList(List4Path);
+                Functions.ChangeList(List4Path);
             }
             else if (SelectedListBox.Text == "List 5")
             {
                 CurrentList = List5Path;
                 whichone = 5;
-                ChangeList(List5Path);
+                Functions.ChangeList(List5Path);
             }
             else if (SelectedListBox.Text == "List 6")
             {
                 CurrentList = List6Path;
                 whichone = 6;
-                ChangeList(List6Path);
+                Functions.ChangeList(List6Path);
             }
             else if (SelectedListBox.Text == "List 7")
             {
                 CurrentList = List7Path;
                 whichone = 7;
-                ChangeList(List7Path);
+                Functions.ChangeList(List7Path);
             }
             else if (SelectedListBox.Text == "List 8")
             {
                 CurrentList = List8Path;
                 whichone = 8;
-                ChangeList(List8Path);
+                Functions.ChangeList(List8Path);
             }
             else if (SelectedListBox.Text == "List 9")
             {
                 CurrentList = List9Path;
                 whichone = 9;
-                ChangeList(List9Path);
+                Functions.ChangeList(List9Path);
             }
             else if (SelectedListBox.Text == "List 10")
             {
                 CurrentList = List10Path;
                 whichone = 10;
-                ChangeList(List10Path);
+                Functions.ChangeList(List10Path);
             }
             else if (SelectedListBox.Text == "List 11")
             {
                 CurrentList = List11Path;
                 whichone = 11;
-                ChangeList(List11Path);
+                Functions.ChangeList(List11Path);
             }
             else if (SelectedListBox.Text == "List 12")
             {
                 CurrentList = List12Path;
                 whichone = 12;
-                ChangeList(List12Path);
+                Functions.ChangeList(List12Path);
             }
             else if (SelectedListBox.Text == "List 13")
             {
                 CurrentList = List13Path;
                 whichone = 13;
-                ChangeList(List13Path);
+                Functions.ChangeList(List13Path);
             }
             else if (SelectedListBox.Text == "List 14")
             {
                 CurrentList = List14Path;
                 whichone = 14;
-                ChangeList(List14Path);
+                Functions.ChangeList(List14Path);
             }
             else if (SelectedListBox.Text == "List 15")
             {
                 CurrentList = List15Path;
                 whichone = 15;
-                ChangeList(List15Path);
+                Functions.ChangeList(List15Path);
             }
             else if (SelectedListBox.Text == "List 16")
             {
                 CurrentList = List16Path;
                 whichone = 16;
-                ChangeList(List16Path);
+                Functions.ChangeList(List16Path);
             }
         }
 
@@ -1243,7 +906,7 @@ namespace KeppySynthConfigurator
             VMSEmu.Checked = false;
 
             // And then...
-            SaveSettings();
+            Functions.SaveSettings();
 
             // Messagebox here
             MessageBox.Show("Settings restored to the default values!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1252,7 +915,7 @@ namespace KeppySynthConfigurator
         private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Just save the Settings
-            SaveSettings();
+            Functions.SaveSettings();
 
             // Messagebox here
             MessageBox.Show("Settings saved to the registry!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1277,7 +940,7 @@ namespace KeppySynthConfigurator
             VMSEmu.Checked = false;
 
             // And then...
-            SaveSettings();
+            Functions.SaveSettings();
 
             // Messagebox here
             MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1302,7 +965,7 @@ namespace KeppySynthConfigurator
             VMSEmu.Checked = false;
 
             // And then...
-            SaveSettings();
+            Functions.SaveSettings();
 
             // Messagebox here
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1341,7 +1004,7 @@ namespace KeppySynthConfigurator
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (IsWindowsXP() == false)
+            if (Functions.IsWindowsXP() == false)
             {
                 Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
             }
@@ -1359,7 +1022,7 @@ namespace KeppySynthConfigurator
 
         private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (IsWindowsXP() == false)
+            if (Functions.IsWindowsXP() == false)
             {
                 Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
             }
@@ -1390,7 +1053,7 @@ namespace KeppySynthConfigurator
             }
             else if (dialogResult == DialogResult.No)
             {
-                
+
             }
         }
 
@@ -1736,8 +1399,8 @@ namespace KeppySynthConfigurator
         // Brand new output mode
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" + 
-                "You can change the output directory by clicking \"Settings > Change directory of the \"Output to WAV\" mode\".\n\n" + 
+            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" +
+                "You can change the output directory by clicking \"Settings > Change directory of the \"Output to WAV\" mode\".\n\n" +
                 "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1826,118 +1489,26 @@ namespace KeppySynthConfigurator
             else
             {
                 bufsize.Enabled = false;
-            } 
+            }
         }
 
-        // Watchdog features in the configurator and hotkeys
-
-        void LoadSoundfont(int whichone)
-        {
-            Watchdog.SetValue("currentsflist", whichone, RegistryValueKind.DWord);
-            Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
-        }
-
-        private void ReloadList1_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(1);
-        }
-
-        private void ReloadList2_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(2);
-        }
-
-        private void ReloadList3_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(3);
-        }
-
-        private void ReloadList4_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(4);
-        }
-
-        private void ReloadList5_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(5);
-        }
-
-        private void ReloadList6_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(6);
-        }
-
-        private void ReloadList7_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(7);
-        }
-
-        private void ReloadList8_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(8);
-        }
-
-        private void ReloadList9_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(9);
-        }
-
-        private void ReloadList10_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(10);
-        }
-
-        private void ReloadList11_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(11);
-        }
-
-        private void ReloadList12_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(12);
-        }
-
-        private void ReloadList13_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(13);
-        }
-
-        private void ReloadList14_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(14);
-        }
-
-        private void ReloadList15_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(15);
-        }
-
-        private void ReloadList16_Click(object sender, EventArgs e)
-        {
-            LoadSoundfont(16);
-        }
-
-        private void sendAMIDIResetEventToAllTheChannelsStrip_Click(object sender, EventArgs e)
-        {
-            Watchdog.SetValue("resetchannels", 1, RegistryValueKind.DWord);
-        }
 
         private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
-            hLSEnabledToolStripMenuItem.Checked = true;
-            hLSDisabledToolStripMenuItem.Checked = false;
-            hLSEnabledToolStripMenuItem.Enabled = false;
-            hLSDisabledToolStripMenuItem.Enabled = true;
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Checked = true;
+            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Enabled = false;
+            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Enabled = true;
         }
 
         private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
-            hLSEnabledToolStripMenuItem.Checked = false;
-            hLSDisabledToolStripMenuItem.Checked = true;
-            hLSEnabledToolStripMenuItem.Enabled = true;
-            hLSDisabledToolStripMenuItem.Enabled = false;
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Checked = true;
+            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Enabled = true;
+            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Enabled = false;
         }
     }
 }

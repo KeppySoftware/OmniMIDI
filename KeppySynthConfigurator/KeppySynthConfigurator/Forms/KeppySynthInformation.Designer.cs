@@ -46,6 +46,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.CFU = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.Info.SuspendLayout();
@@ -60,7 +61,7 @@
             this.Button1.AutoSize = true;
             this.Button1.BackColor = System.Drawing.Color.Transparent;
             this.Button1.ForeColor = System.Drawing.Color.Black;
-            this.Button1.Location = new System.Drawing.Point(541, 307);
+            this.Button1.Location = new System.Drawing.Point(542, 308);
             this.Button1.Name = "Button1";
             this.Button1.Size = new System.Drawing.Size(75, 23);
             this.Button1.TabIndex = 25;
@@ -241,12 +242,26 @@
             this.pictureBox4.TabStop = false;
             this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
+            // CFU
+            // 
+            this.CFU.AutoSize = true;
+            this.CFU.BackColor = System.Drawing.Color.Transparent;
+            this.CFU.ForeColor = System.Drawing.Color.Black;
+            this.CFU.Location = new System.Drawing.Point(432, 308);
+            this.CFU.Name = "CFU";
+            this.CFU.Size = new System.Drawing.Size(104, 23);
+            this.CFU.TabIndex = 28;
+            this.CFU.Text = "Check for updates";
+            this.CFU.UseVisualStyleBackColor = false;
+            this.CFU.Click += new System.EventHandler(this.CFU_Click);
+            // 
             // KeppySynthInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(621, 335);
+            this.Controls.Add(this.CFU);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.Button1);
@@ -293,5 +308,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Label label7;
+        internal System.Windows.Forms.Button CFU;
     }
 }

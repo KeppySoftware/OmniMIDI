@@ -103,7 +103,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Keppy\'s Driver Update Checker";
+            this.Text = "Keppy\'s Synthesizer Update Checker";
             this.Load += new System.EventHandler(this.KeppyDriverUpdater_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

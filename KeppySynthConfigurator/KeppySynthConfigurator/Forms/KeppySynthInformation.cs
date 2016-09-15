@@ -22,6 +22,12 @@ namespace KeppySynthConfigurator
             Label8.Text = "Keppy's Synthesizer\nVersion " + Driver.FileVersion.ToString();
         }
 
+        private void CFU_Click(object sender, EventArgs e)
+        {
+            KeppySynthUpdater frm = new KeppySynthUpdater();
+            frm.ShowDialog();
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
             Close();
