@@ -1117,19 +1117,19 @@ void keybindings()
 				BOOL run = TRUE;
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 				{
-					PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthConfigurator.exe"));
+					PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthMixerWindow.exe"));
 					ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
 					Sleep(10);
 					return;
 				}
 			}
 			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x30) & 0x8000) {
-				TCHAR debugwindowapp[MAX_PATH];
+				TCHAR configuratorapp[MAX_PATH];
 				BOOL run = TRUE;
-				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, debugwindowapp)))
+				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 				{
-					PathAppend(debugwindowapp, _T("\\keppysynth\\KeppySynthDebugWindow.exe"));
-					ShellExecute(NULL, L"open", debugwindowapp, NULL, NULL, SW_SHOWNORMAL);
+					PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthDebugWindow.exe"));
+					ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
 					Sleep(10);
 					return;
 				}

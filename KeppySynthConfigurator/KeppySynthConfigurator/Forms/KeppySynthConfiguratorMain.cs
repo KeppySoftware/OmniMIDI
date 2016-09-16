@@ -62,6 +62,10 @@ namespace KeppySynthConfigurator
 
         public KeppySynthConfiguratorMain(String[] args)
         {
+            InitializeComponent();
+            Delegate = this;
+            VolTrackBar.BackColor = Color.Empty;
+            this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
             try
             {
                 foreach (String s in args)
@@ -77,6 +81,9 @@ namespace KeppySynthConfigurator
                             break;
                         case "/NUL":
                             break;
+                        case "/MIX":
+                            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
+                            return;
                         default:
                             // do other stuff...
                             break;
@@ -87,10 +94,6 @@ namespace KeppySynthConfigurator
             {
 
             }
-            InitializeComponent();
-            Delegate = this;
-            VolTrackBar.BackColor = Color.Empty;
-            this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
         }
 
         private void KeppySynthConfiguratorMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -392,6 +395,8 @@ namespace KeppySynthConfigurator
                     XAudioDisable.Checked = true;
                     VMSEmu.Visible = true;
                     SPFSecondaryBut.Visible = false;
+                    changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
+                    changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                     if (Convert.ToInt32(SynthSettings.GetValue("sinc", 0)) == 1)
                     {
                         SincInter.Checked = true;
@@ -773,6 +778,22 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void IEL_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle rect = IEL.ClientRectangle;
+            rect.Width--;
+            rect.Height--;
+            e.Graphics.DrawRectangle(Pens.Green, rect);
+        }
+
+        private void EL_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle rect = EL.ClientRectangle;
+            rect.Width--;
+            rect.Height--;
+            e.Graphics.DrawRectangle(Pens.Red, rect);
+        }
+
         private string ListRelativePathSystem(string originalpath)
         {
             return "a";
@@ -991,7 +1012,14 @@ namespace KeppySynthConfigurator
 
         private void openTheMixerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthMixerWindow.GetForm.Show();
+            if (Process.GetProcessesByName("KeppySynthMixerWindow").Length > 0)
+            {
+                MessageBox.Show("The mixer window is already opened!", "Keppy's Synthesizer Configurator - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
+            }
         }
 
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1422,6 +1450,8 @@ namespace KeppySynthConfigurator
                 OutputWAV.Checked = false;
                 VMSEmu.Visible = true;
                 SPFSecondaryBut.Visible = false;
+                changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
+                changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 SincInter.Checked = false;
                 SincInter.Enabled = true;
@@ -1444,6 +1474,8 @@ namespace KeppySynthConfigurator
                 OutputWAV.Enabled = true;
                 VMSEmu.Visible = false;
                 SPFSecondaryBut.Visible = true;
+                changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
+                changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
                 SincInter.Checked = true;
                 SincInter.Enabled = false;

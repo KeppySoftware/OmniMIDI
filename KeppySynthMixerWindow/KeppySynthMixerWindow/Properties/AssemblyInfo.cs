@@ -9,7 +9,7 @@ using System.Resources;
 [assembly: AssemblyTitle("Keppy's Synthesizer ~ Configurator")]
 [assembly: AssemblyDescription("Keppy's Synthesizer New Configurator (C#)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("KaleidonKep99")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Keppy's Synthesizer")]
 [assembly: AssemblyCopyright("Copyright © KaleidonKep99 2017")]
 [assembly: AssemblyTrademark("")]
@@ -21,7 +21,7 @@ using System.Resources;
 [assembly: ComVisible(false)]
 
 // Se il progetto viene esposto a COM, il GUID che segue verrà utilizzato per creare l'ID della libreria dei tipi
-[assembly: Guid("75fdbef5-8e91-452f-a66a-3f860bb0cf71")]
+[assembly: Guid("1f377744-9b9c-4694-9e56-b78d7cd1083f")]
 
 // Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
 //

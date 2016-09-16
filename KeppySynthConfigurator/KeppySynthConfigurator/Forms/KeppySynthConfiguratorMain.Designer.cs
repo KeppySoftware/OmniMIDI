@@ -32,16 +32,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthConfiguratorMain));
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.List = new System.Windows.Forms.TabPage();
+            this.EL = new System.Windows.Forms.Button();
             this.LoadToApp = new System.Windows.Forms.Button();
+            this.IEL = new System.Windows.Forms.Button();
             this.BankPresetOverride = new System.Windows.Forms.CheckBox();
             this.SelectedListBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.DisableSF = new System.Windows.Forms.Button();
             this.EnableSF = new System.Windows.Forms.Button();
             this.List1Override = new System.Windows.Forms.Label();
-            this.IELPan1 = new System.Windows.Forms.Panel();
-            this.EL = new System.Windows.Forms.Button();
-            this.IEL = new System.Windows.Forms.Button();
             this.CLi = new System.Windows.Forms.Button();
             this.MvD = new System.Windows.Forms.Button();
             this.MvU = new System.Windows.Forms.Button();
@@ -180,7 +179,6 @@
             this.ReloadList16 = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
-            this.IELPan1.SuspendLayout();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -208,14 +206,15 @@
             // List
             // 
             this.List.BackColor = System.Drawing.Color.White;
+            this.List.Controls.Add(this.EL);
             this.List.Controls.Add(this.LoadToApp);
+            this.List.Controls.Add(this.IEL);
             this.List.Controls.Add(this.BankPresetOverride);
             this.List.Controls.Add(this.SelectedListBox);
             this.List.Controls.Add(this.label1);
             this.List.Controls.Add(this.DisableSF);
             this.List.Controls.Add(this.EnableSF);
             this.List.Controls.Add(this.List1Override);
-            this.List.Controls.Add(this.IELPan1);
             this.List.Controls.Add(this.CLi);
             this.List.Controls.Add(this.MvD);
             this.List.Controls.Add(this.MvU);
@@ -230,6 +229,17 @@
             this.List.Text = "Lists editor";
             this.List.UseVisualStyleBackColor = true;
             // 
+            // EL
+            // 
+            this.EL.Location = new System.Drawing.Point(545, 348);
+            this.EL.Name = "EL";
+            this.EL.Size = new System.Drawing.Size(89, 30);
+            this.EL.TabIndex = 11;
+            this.EL.Text = "Export list";
+            this.EL.UseVisualStyleBackColor = true;
+            this.EL.Click += new System.EventHandler(this.EL_Click);
+            this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.EL_Paint);
+            // 
             // LoadToApp
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -240,6 +250,17 @@
             this.LoadToApp.Text = "Load to app";
             this.LoadToApp.UseVisualStyleBackColor = true;
             this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
+            // 
+            // IEL
+            // 
+            this.IEL.Location = new System.Drawing.Point(545, 315);
+            this.IEL.Name = "IEL";
+            this.IEL.Size = new System.Drawing.Size(89, 30);
+            this.IEL.TabIndex = 10;
+            this.IEL.Text = "Import list";
+            this.IEL.UseVisualStyleBackColor = true;
+            this.IEL.Click += new System.EventHandler(this.IEL_Click);
+            this.IEL.Paint += new System.Windows.Forms.PaintEventHandler(this.IEL_Paint);
             // 
             // BankPresetOverride
             // 
@@ -313,39 +334,6 @@
             this.List1Override.Size = new System.Drawing.Size(243, 13);
             this.List1Override.TabIndex = 31;
             this.List1Override.Text = "The last soundfont will override the previous ones.";
-            // 
-            // IELPan1
-            // 
-            this.IELPan1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.IELPan1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.IELPan1.Controls.Add(this.EL);
-            this.IELPan1.Controls.Add(this.IEL);
-            this.IELPan1.Location = new System.Drawing.Point(545, 316);
-            this.IELPan1.Name = "IELPan1";
-            this.IELPan1.Size = new System.Drawing.Size(89, 63);
-            this.IELPan1.TabIndex = 30;
-            // 
-            // EL
-            // 
-            this.EL.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.EL.Location = new System.Drawing.Point(0, 29);
-            this.EL.Name = "EL";
-            this.EL.Size = new System.Drawing.Size(85, 30);
-            this.EL.TabIndex = 11;
-            this.EL.Text = "Export list";
-            this.EL.UseVisualStyleBackColor = true;
-            this.EL.Click += new System.EventHandler(this.EL_Click);
-            // 
-            // IEL
-            // 
-            this.IEL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.IEL.Location = new System.Drawing.Point(0, 0);
-            this.IEL.Name = "IEL";
-            this.IEL.Size = new System.Drawing.Size(85, 30);
-            this.IEL.TabIndex = 10;
-            this.IEL.Text = "Import list";
-            this.IEL.UseVisualStyleBackColor = true;
-            this.IEL.Click += new System.EventHandler(this.IEL_Click);
             // 
             // CLi
             // 
@@ -1562,7 +1550,6 @@
             this.TabsForTheControls.ResumeLayout(false);
             this.List.ResumeLayout(false);
             this.List.PerformLayout();
-            this.IELPan1.ResumeLayout(false);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
@@ -1610,7 +1597,6 @@
         private System.Windows.Forms.Button DisableSF;
         private System.Windows.Forms.Button EnableSF;
         private System.Windows.Forms.Label List1Override;
-        private System.Windows.Forms.Panel IELPan1;
         private System.Windows.Forms.Button EL;
         private System.Windows.Forms.Button IEL;
         private System.Windows.Forms.Button CLi;

@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.1.19'
+#define Version '4.0.1.20'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -59,6 +59,7 @@ WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
 Source: "output\64\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "output\KeppySynthMixerWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthMixerWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthWatchdog.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppysynth.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -69,6 +70,7 @@ Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppysynth"; DestName: "sfzg
 ; 32-bit OS
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "output\KeppySynthMixerWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthMixerWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthWatchdog.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode

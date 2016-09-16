@@ -38,10 +38,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthDebugWindow));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.MainCont = new System.Windows.Forms.ContextMenu();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.OpenAppLocat = new System.Windows.Forms.MenuItem();
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.DebugWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
@@ -60,33 +62,46 @@
             // MainCont
             // 
             this.MainCont.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem2,
+            this.menuItem3,
             this.OpenAppLocat,
             this.CopyToClipboard,
             this.menuItem1,
             this.ExitMenu});
             // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 0;
+            this.menuItem2.Text = "Open the configurator";
+            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            // 
             // OpenAppLocat
             // 
-            this.OpenAppLocat.Index = 0;
+            this.OpenAppLocat.Index = 2;
             this.OpenAppLocat.Text = "Open app location";
             this.OpenAppLocat.Click += new System.EventHandler(this.OpenAppLocat_Click);
             // 
             // CopyToClipboard
             // 
-            this.CopyToClipboard.Index = 1;
+            this.CopyToClipboard.Index = 3;
             this.CopyToClipboard.Text = "Copy debug info to clipboard";
             this.CopyToClipboard.Click += new System.EventHandler(this.CopyToClipboard_Click);
             // 
             // menuItem1
             // 
-            this.menuItem1.Index = 2;
+            this.menuItem1.Index = 4;
             this.menuItem1.Text = "-";
             // 
             // ExitMenu
             // 
-            this.ExitMenu.Index = 3;
+            this.ExitMenu.Index = 5;
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
             // 
             // DebugWorker
             // 
@@ -118,6 +133,8 @@
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem ExitMenu;
         private System.ComponentModel.BackgroundWorker DebugWorker;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
     }
 }
 

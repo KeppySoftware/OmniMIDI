@@ -12,6 +12,8 @@
 /Debug
 /KeppySynthConfigurator/KeppySynthConfigurator/bin
 /KeppySynthConfigurator/KeppySynthConfigurator/obj
+/KeppySynthMixerWindow/KeppySynthMixerWindow/bin
+/KeppySynthMixerWindow/KeppySynthMixerWindow/obj
 /KeppySynth/*.dll
 /KeppySynth/*.exe
 /KeppySynth/*.exp

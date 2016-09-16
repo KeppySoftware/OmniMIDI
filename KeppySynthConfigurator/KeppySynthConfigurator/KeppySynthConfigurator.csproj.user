@@ -10,4 +10,7 @@
     <FallbackCulture>it-IT</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <StartArguments>/MIX</StartArguments>
+  </PropertyGroup>
 </Project>

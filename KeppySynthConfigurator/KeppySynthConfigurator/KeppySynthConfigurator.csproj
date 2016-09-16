@@ -40,6 +40,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -110,12 +111,6 @@
     <Compile Include="Forms\KeppySynthInformation.Designer.cs">
       <DependentUpon>KeppySynthInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\KeppySynthMixerWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\KeppySynthMixerWindow.Designer.cs">
-      <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\KeppySynthOutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,9 +159,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthInformation.resx">
       <DependentUpon>KeppySynthInformation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\KeppySynthMixerWindow.resx">
-      <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthOutputWAVDir.resx">
       <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>

@@ -5,59 +5,21 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
-using System.Runtime.InteropServices; 
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Management;
 using Microsoft.Win32;
 
-namespace KeppySynthConfigurator
+namespace KeppySynthMixerWindow
 {
     public partial class KeppySynthMixerWindow : Form
     {
         uint MaxStockClock;
-        private static KeppySynthMixerWindow inst;
-        public static KeppySynthMixerWindow GetForm
-        {
-            get
-            {
-                if (inst == null || inst.IsDisposed)
-                {
-                    List<string> nothing = new List<string>();
-                    nothing.Add("/NUL");
-                    inst = new KeppySynthMixerWindow(nothing.ToArray());
-                }
-                else
-                {
-                    System.Media.SystemSounds.Asterisk.Play();
-                    Application.OpenForms["KeppyDriverMixerWindow"].BringToFront();
-                }
-                return inst;
-            }
-        }
 
-        public KeppySynthMixerWindow(string[] args)
+        public KeppySynthMixerWindow()
         {
             InitializeComponent();
-            try
-            {
-                foreach (String s in args)
-                {
-                    switch (s.Substring(0, 4).ToUpper())
-                    {
-                        case "/MIX":
-                            showTheConfiguratorWindowToolStripMenuItem.Visible = true;
-                            break;
-                        case "/NUL":
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            catch
-            {
-
-            }
         }
 
         public void CPUSpeed()
@@ -160,7 +122,12 @@ namespace KeppySynthConfigurator
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
+        }
+
+        void CloseMixer(object sender, CancelEventArgs e)
+        {
+            Close();
         }
 
         private void VolumeCheck_Tick(object sender, EventArgs e)
@@ -168,7 +135,8 @@ namespace KeppySynthConfigurator
             RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
             RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
 
-            if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1) {
+            if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+            {
                 LeftChannel.Value = Convert.ToInt32(Debug.GetValue("leftvol"));
                 if (LeftChannel.Value == 32768)
                 {
@@ -192,40 +160,7 @@ namespace KeppySynthConfigurator
             System.Threading.Thread.Sleep(1);
         }
 
-        private void ChannelVolume_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
-                if (Channels == null) {
-                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels");
-                }     
-                Channels.SetValue("ch1", CH1VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch2", CH2VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch3", CH3VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch4", CH4VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch5", CH5VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch6", CH6VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch7", CH7VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch8", CH8VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch9", CH9VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch10", CH10VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch11", CH11VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch12", CH12VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch13", CH13VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch14", CH14VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch15", CH15VOL.Value.ToString(), RegistryValueKind.DWord);
-                Channels.SetValue("ch16", CH16VOL.Value.ToString(), RegistryValueKind.DWord);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-
-            System.Threading.Thread.Sleep(1);
-        }
-
-        private void KeppyDriverMixerWindow_Load(object sender, EventArgs e)
+        private void KeppySynthMixerWindow_Load(object sender, EventArgs e)
         {
             try
             {
@@ -295,7 +230,7 @@ namespace KeppySynthConfigurator
                             Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
                             VolumeCheck.Enabled = true;
                             LeftChannel.Value = 0;
-                            RightChannel.Value = 0;   
+                            RightChannel.Value = 0;
                         }
                         else if (dialogResult == DialogResult.No)
                         {
@@ -307,7 +242,7 @@ namespace KeppySynthConfigurator
                         Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
                         VolumeCheck.Enabled = true;
                         LeftChannel.Value = 0;
-                        RightChannel.Value = 0;   
+                        RightChannel.Value = 0;
                     }
                 }
                 else
@@ -315,13 +250,47 @@ namespace KeppySynthConfigurator
                     Settings.SetValue("volumemon", "0", RegistryValueKind.DWord);
                     VolumeCheck.Enabled = false;
                     LeftChannel.Value = 0;
-                    RightChannel.Value = 0;     
+                    RightChannel.Value = 0;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
+        }
+
+        private void ChannelVolume_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
+                if (Channels == null)
+                {
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels");
+                }
+                Channels.SetValue("ch1", CH1VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch2", CH2VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch3", CH3VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch4", CH4VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch5", CH5VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch6", CH6VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch7", CH7VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch8", CH8VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch9", CH9VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch10", CH10VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch11", CH11VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch12", CH12VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch13", CH13VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch14", CH14VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch15", CH15VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("ch16", CH16VOL.Value.ToString(), RegistryValueKind.DWord);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+
+            System.Threading.Thread.Sleep(1);
         }
 
         private void MIDIVolumeOverride_CheckedChanged(object sender, EventArgs e)
@@ -346,18 +315,14 @@ namespace KeppySynthConfigurator
 
         private void showTheConfiguratorWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            List<string> nothing = new List<string>();
-            nothing.Add("/NL");
-            showTheConfiguratorWindowToolStripMenuItem.Visible = false;
-            this.FormClosing += new FormClosingEventHandler(CloseMixer);
-            KeppySynthConfiguratorMain frm = new KeppySynthConfiguratorMain(nothing.ToArray());
-            frm.Show();
-        }
-
-        void CloseMixer(object sender, CancelEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
+            if (Process.GetProcessesByName("KeppySynthConfigurator").Length > 0)
+            {
+                MessageBox.Show("The configurator is already opened!", "Keppy's Synthesizer Mixer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
+            }
         }
 
         private void VolumeToolTip(string channel, TrackBar trackbar)

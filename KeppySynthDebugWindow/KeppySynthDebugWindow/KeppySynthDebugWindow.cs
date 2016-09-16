@@ -163,6 +163,18 @@ namespace KeppySynthDebugWindow
                 }
             }
         }
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            if (Process.GetProcessesByName("KeppySynthMixerWindow").Length > 0)
+            {
+                MessageBox.Show("The configurator is already opened!", "Keppy's Synthesizer Debug Window - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
+            }
+        }
     }
 }
 

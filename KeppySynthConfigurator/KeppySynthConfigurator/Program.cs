@@ -61,9 +61,6 @@ namespace KeppySynthConfigurator
                 {
                     switch (s.Substring(0, 4).ToUpper())
                     {
-                        case "/MIX":
-                            runmode = 1;
-                            break;
                         default:
                             runmode = 0;
                             break;
@@ -97,10 +94,7 @@ namespace KeppySynthConfigurator
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 SynthSettings.Close();
-                if (runmode == 0)
-                    Application.Run(new KeppySynthConfiguratorMain(args));
-                if (runmode == 1)
-                    Application.Run(new KeppySynthMixerWindow(args));
+                Application.Run(new KeppySynthConfiguratorMain(args));
                 GC.KeepAlive(m);
             }
             catch (Exception ex)
