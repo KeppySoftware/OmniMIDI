@@ -4,7 +4,8 @@
 #define use_msiproduct
 #define vc
 
-#define Version '4.0.1.18'
+#define ProductName "Keppy's Synthesizer"
+#define Version '4.0.1.19'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -103,7 +104,10 @@ Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppysynth"; DestN
 Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 
 ; Generic for all the OSes
-Source: "dxwebsetup.exe"; DestDir: "{tmp}"; DestName: "dxwebsetup.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3
+Source: "external_packages\lib\LoudMax.dll"; DestDir: "{%USERPROFILE}\Keppy's Synthesizer"; Flags: replacesameversion ignoreversion; Tasks: loudmaxinstall
+Source: "external_packages\lib64\LoudMax64.dll"; DestDir: "{%USERPROFILE}\Keppy's Synthesizer"; Flags: replacesameversion ignoreversion; Tasks: loudmaxinstall
+Source: "LICENSE.TXT"; DestDir: "{%USERPROFILE}\Keppy's Synthesizer"; Flags: replacesameversion ignoreversion;
+Source: "dxwebsetup.exe"; DestDir: "{tmp}"; DestName: "dxwebsetup.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Tasks: dx9redist
 Source: "output\keppymididrv.defaultblacklist"; DestDir: "{win}"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3
 
 [Dirs]
@@ -115,7 +119,7 @@ Name: "{sys}\keppysynth"; Attribs: system; Check: not Is64BitInstallMode
 
 [Icons]
 ; 64-bit OS
-Name: "{group}\Configure Keppy's Synthesizer"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
+Name: "{group}\Configure Keppy's Synthesizer"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Check: Is64BitInstallMode
 Name: "{group}\Change advanced settings"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/AST"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{syswow64}\keppysynth\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 ; 32-bit OS
@@ -124,10 +128,22 @@ Name: "{group}\Change advanced settings"; Filename: "{sys}\keppysynth\KeppySynth
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\keppysynth\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode   
 ; Generic for all the OSes
 Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"
+; Other
+Name: "{userdesktop}\Keppy's Synthesizer Configurator"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; IconFilename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Check: Is64BitInstallMode; Tasks: desktopicon
+Name: "{userdesktop}\Keppy's Synthesizer Configurator"; Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; IconFilename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Check: not Is64BitInstallMode; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Keppy's Synthesizer Configurator"; Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; IconFilename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Check: Is64BitInstallMode; Tasks: quicklaunchicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Keppy's Synthesizer Configurator"; Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; IconFilename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Check: not Is64BitInstallMode; Tasks: quicklaunchicon
 
 [Languages]
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: de; MessagesFile: "compiler:Default.isl"
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "dx9redist"; Description: "Install DirectX 9.0c Redistributable (June 2010)"; GroupDescription: "Required runtimes"; Flags: checkedonce
+Name: "loudmaxinstall"; Description: "Install LoudMax, to remove clipping from audio"; GroupDescription: "Extensions"; Flags: unchecked checkedonce
+Name: "loudmaxuninstall"; Description: "Uninstall LoudMax"; GroupDescription: "Extensions"; Flags: unchecked checkedonce
 
 [Registry]
 ; Normal settings
@@ -213,6 +229,8 @@ Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
 Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
+Type: files; Name: "{%USERPROFILE}\Keppy's Synthesizer\LoudMax.dll"; Tasks: loudmaxuninstall
+Type: files; Name: "{%USERPROFILE}\Keppy's Synthesizer\LoudMax64.dll"; Tasks: loudmaxuninstall
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
@@ -228,7 +246,7 @@ Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runa
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowproductions.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
-Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."
+Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
 
 [Code]
 // shared code for installing the products
@@ -256,7 +274,6 @@ Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntiltermina
 #ifdef vc
 #include "scripts\products\vcredist.iss"
 #endif
-
 
 function InitializeSetup(): boolean;
 

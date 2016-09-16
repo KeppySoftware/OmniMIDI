@@ -47,6 +47,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.CFU = new System.Windows.Forms.Button();
+            this.LicenseButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.Info.SuspendLayout();
@@ -255,12 +256,26 @@
             this.CFU.UseVisualStyleBackColor = false;
             this.CFU.Click += new System.EventHandler(this.CFU_Click);
             // 
+            // LicenseButton
+            // 
+            this.LicenseButton.AutoSize = true;
+            this.LicenseButton.BackColor = System.Drawing.Color.Transparent;
+            this.LicenseButton.ForeColor = System.Drawing.Color.Black;
+            this.LicenseButton.Location = new System.Drawing.Point(352, 308);
+            this.LicenseButton.Name = "LicenseButton";
+            this.LicenseButton.Size = new System.Drawing.Size(74, 23);
+            this.LicenseButton.TabIndex = 29;
+            this.LicenseButton.Text = "License";
+            this.LicenseButton.UseVisualStyleBackColor = false;
+            this.LicenseButton.Click += new System.EventHandler(this.LicenseButton_Click);
+            // 
             // KeppySynthInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(621, 335);
+            this.Controls.Add(this.LicenseButton);
             this.Controls.Add(this.CFU);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.tabControl1);
@@ -309,5 +324,6 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Label label7;
         internal System.Windows.Forms.Button CFU;
+        internal System.Windows.Forms.Button LicenseButton;
     }
 }

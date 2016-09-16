@@ -17,9 +17,6 @@ namespace KeppySynthDebugWindow
 {
     static class Program
     {
-        /// <summary>
-        /// Punto di ingresso principale dell'applicazione.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -27,7 +24,7 @@ namespace KeppySynthDebugWindow
             Mutex m = new Mutex(true, "KeppySynthDebugWindow", out ok);
             if (!ok)
             {
-                return;
+                return; // If there's already another instance running, it'll just quit.
             }
             Process thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.Idle;

@@ -33,6 +33,12 @@ namespace KeppySynthConfigurator
             Close();
         }
 
+
+        private void LicenseButton_Click(object sender, EventArgs e)
+        {
+            Process.Start(System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\license.txt");
+        }
+
         private void u4sforum_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://www.un4seen.com/forum/?board=1.0");

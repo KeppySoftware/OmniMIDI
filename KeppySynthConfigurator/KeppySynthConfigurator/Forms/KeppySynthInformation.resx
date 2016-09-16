@@ -122,14 +122,14 @@
 
 Keppy's Synthesizer is a direct for of the original BASSMIDI Driver by
 Brad Miller and Chris Moeller.
-Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi
+Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi
 All rights reserved.
 
 Credits:
 Ian Luck - BASS\BASSMIDI libraries
 Frozen Snow - For being such an awesome friend! (And supporter)
 Dave Meadowcroft - For the MIDI out selector
-Black MIDI Team (Especially Gingeas) - "Official" testers of the driver
+Thomas Mundt - For allowing me to redistribute LoudMax!
 
 And many thanks to other people who gave me feedback about the quality of the driver!
 </value>

@@ -374,7 +374,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 			BASS_MIDI_StreamLoadSamples(hStream);
 		}
 		if (xaudiodisabled == 1) {
-			BASS_ChannelUpdate(hStream, 32768);
+			BASS_ChannelUpdate(hStream, 0);
 			Sleep(1);
 		}
 		else {
@@ -396,7 +396,7 @@ unsigned __stdcall oldbuffersystemforaldotarving(LPVOID lpV){
 		}
 		bmsyn_play_some_data();
 		if (xaudiodisabled == 1) {
-			BASS_ChannelUpdate(hStream, 32768);
+			BASS_ChannelUpdate(hStream, 0);
 			Sleep(1);
 		}
 		else {

@@ -13,20 +13,20 @@ namespace KeppySynthConfigurator
 {
     class Functions
     {
-        public static bool IsWindows8OrNewer()
+        public static bool IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             string productName = (string)reg.GetValue("ProductName");
             return productName.StartsWith("Windows 8") | productName.StartsWith("Windows 10");
         }
 
-        public static bool IsWindowsXP()
+        public static bool IsWindowsXP() // Checks if you're using Windows XP
         {
             OperatingSystem OS = Environment.OSVersion;
             return (OS.Version.Major == 5) || ((OS.Version.Major == 5) && (OS.Version.Minor == 1));
         }
 
-        public static void UserProfileMigration()
+        public static void UserProfileMigration() // Migrates the Keppy's Synthesizer folder from %localappdata% (Unsupported on XP) to %userprofile% (Supported on XP, now used on Vista+ too)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void DriverToSynthMigration()
+        public static void DriverToSynthMigration() // Basically changes the directory's name
         {
             try
             {
@@ -57,7 +57,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void SaveList(String SelectedList)
+        public static void SaveList(String SelectedList) // Saves the selected list to the hard drive
         {
             using (StreamWriter sw = new StreamWriter(SelectedList))
             {
@@ -68,8 +68,11 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void SaveSettings()
+        public static void SaveSettings() // Saves the settings to the registry 
         {
+            /*
+             * Key: HKEY_CURRENT_USER\Software\Keppy's Synthesizer\Settings\
+             */
             try
             {
                 // Normal settings
@@ -165,6 +168,7 @@ namespace KeppySynthConfigurator
             }
             catch
             {
+                // Something bad happened hehe
                 MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 Application.Exit();
             }
@@ -173,7 +177,7 @@ namespace KeppySynthConfigurator
         // -------------------------
         // Soundfont lists functions
 
-        public static void TriggerReload()
+        public static void TriggerReload() // Tells Keppy's Synthesizer to load a specific list
         {
             try
             {
@@ -188,7 +192,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void SetLastPath(string path)
+        public static void SetLastPath(string path) // Saves the last path from the SoundfontImport dialog to the registry 
         {
             try
             {
@@ -200,7 +204,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void SetLastImportExportPath(string path)
+        public static void SetLastImportExportPath(string path) // Saves the last path from the ExternalListImport/ExternalListExport dialog to the registry 
         {
             try
             {
@@ -209,7 +213,8 @@ namespace KeppySynthConfigurator
             catch { }
         }
 
-        public static void OpenFileDialogAddCustomPaths(FileDialog dialog)
+        // NOT SUPPORTED ON XP
+        public static void OpenFileDialogAddCustomPaths(FileDialog dialog) // Allows you to add favorites to the SoundfontImport dialog
         {
             try
             {
@@ -229,8 +234,9 @@ namespace KeppySynthConfigurator
                 return;
             }
         }
+        // NOT SUPPORTED ON XP
 
-        public static void ChangeList(string WhichList)
+        public static void ChangeList(string WhichList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
             try
             {
@@ -266,17 +272,20 @@ namespace KeppySynthConfigurator
                 }
                 catch
                 {
+                    // Oops, list is missing
                     File.Create(WhichList).Dispose();
                     MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
+                // Oops, something went wrong
                 MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.ExitThread();
             }
         }
 
-        public static void InitializeLastPath()
+        public static void InitializeLastPath() // Initialize the paths the app saved before (SetLastPath() and SetLastImportExportPath())
         {
             try
             {
@@ -333,7 +342,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void ReinitializeList(Exception ex, String selectedlistpath)
+        public static void ReinitializeList(Exception ex, String selectedlistpath) // The app encountered an error, so it'll restore the original soundfont list back
         {
             try
             {

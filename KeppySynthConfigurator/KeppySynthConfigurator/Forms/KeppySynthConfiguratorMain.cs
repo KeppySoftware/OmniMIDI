@@ -13,9 +13,13 @@ namespace KeppySynthConfigurator
 {
     public partial class KeppySynthConfiguratorMain : Form
     {
+        // Delegate for BasicFunc and WatchdogFunc
+        public static KeppySynthConfiguratorMain Delegate;
+
         public static string LastBrowserPath { get; set; }
         public static string LastImportExportPath { get; set; }
 
+        // Lists
         public static string List1PathOld { get; set; }
         public static string List2PathOld { get; set; }
         public static string List3PathOld { get; set; }
@@ -26,8 +30,6 @@ namespace KeppySynthConfigurator
         public static string List8PathOld { get; set; }
 
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-
-        public static KeppySynthConfiguratorMain Delegate;
 
         public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
         public static string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
@@ -47,7 +49,9 @@ namespace KeppySynthConfigurator
         public static string List14Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidin.sflist";
         public static string List15Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidio.sflist";
         public static string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist";
+        // Lists
 
+        // Work
         public static int openadvanced { get; set; }
         public static int whichone { get; set; }
         public static string CurrentList { get; set; }
