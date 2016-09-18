@@ -11,6 +11,7 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartArguments>/MIX</StartArguments>
+    <StartArguments>
+    </StartArguments>
   </PropertyGroup>
 </Project>

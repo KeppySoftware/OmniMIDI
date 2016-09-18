@@ -13,7 +13,7 @@ namespace KeppySynthConfigurator
 {
     public partial class KeppySynthConfiguratorMain : Form
     {
-        // Delegate for BasicFunc and WatchdogFunc
+        // Delegate for BasicFunc
         public static KeppySynthConfiguratorMain Delegate;
 
         public static string LastBrowserPath { get; set; }
@@ -313,38 +313,6 @@ namespace KeppySynthConfigurator
                     enabledToolStripMenuItem2.Enabled = true;
                     disabledToolStripMenuItem2.Enabled = false;
                     MoreLists.Visible = false;
-                }
-                if (Convert.ToInt32(Watchdog.GetValue("watchdog", 1)) == 1)
-                {
-                    watchdogEnabledToolStripMenuItem.Checked = true;
-                    watchdogDisabledToolStripMenuItem.Checked = false;
-                    watchdogEnabledToolStripMenuItem.Enabled = false;
-                    watchdogDisabledToolStripMenuItem.Enabled = true;
-                    runTheWatchdogToolStripMenuItem.Enabled = true;
-                    killTheWatchdogToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    watchdogEnabledToolStripMenuItem.Checked = false;
-                    watchdogDisabledToolStripMenuItem.Checked = true;
-                    watchdogEnabledToolStripMenuItem.Enabled = true;
-                    watchdogDisabledToolStripMenuItem.Enabled = false;
-                    runTheWatchdogToolStripMenuItem.Enabled = false;
-                    killTheWatchdogToolStripMenuItem.Enabled = false;
-                }
-                if (Convert.ToInt32(Watchdog.GetValue("watchdognotify", 1)) == 1)
-                {
-                    MIDIAppNotifyEnabledToolStripMenuItem.Checked = true;
-                    MIDIAppNotifyDisabledToolStripMenuItem.Checked = false;
-                    MIDIAppNotifyEnabledToolStripMenuItem.Enabled = false;
-                    MIDIAppNotifyDisabledToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    MIDIAppNotifyEnabledToolStripMenuItem.Checked = false;
-                    MIDIAppNotifyDisabledToolStripMenuItem.Checked = true;
-                    MIDIAppNotifyEnabledToolStripMenuItem.Enabled = true;
-                    MIDIAppNotifyDisabledToolStripMenuItem.Enabled = false;
                 }
                 Frequency.Text = SynthSettings.GetValue("frequency", 44100).ToString();
                 TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks", 16));
@@ -981,7 +949,7 @@ namespace KeppySynthConfigurator
             bufsize.Value = 10;
             TracksLimit.Value = 16;
             Preload.Checked = true;
-            NoteOffCheck.Checked = true;
+            NoteOffCheck.Checked = false;
             SincInter.Checked = true;
             DisableSFX.Checked = false;
             SysResetIgnore.Checked = true;
@@ -994,6 +962,32 @@ namespace KeppySynthConfigurator
 
             // Messagebox here
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        private void keppysSteinwayPianoRealismToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 800;
+            MaxCPU.Value = 85;
+            Frequency.Text = "66150";
+            bufsize.Value = 25;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = true;
+            SincInter.Checked = true;
+            DisableSFX.Checked = false;
+            SysResetIgnore.Checked = true;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            VMSEmu.Checked = false;
+
+            // And then...
+            Functions.SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("\"Keppy's Steinway Piano (Realism)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Now, menustrip functions here
@@ -1177,74 +1171,6 @@ namespace KeppySynthConfigurator
             frm.ShowDialog();
         }
 
-        private void watchdogEnabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Watchdog.SetValue("watchdog", "1", RegistryValueKind.DWord);
-            watchdogEnabledToolStripMenuItem.Checked = true;
-            watchdogDisabledToolStripMenuItem.Checked = false;
-            watchdogEnabledToolStripMenuItem.Enabled = false;
-            watchdogDisabledToolStripMenuItem.Enabled = true;
-            runTheWatchdogToolStripMenuItem.Enabled = true;
-            killTheWatchdogToolStripMenuItem.Enabled = true;
-            menuItem18.Visible = false;
-            sendAMIDIResetEventToAllTheChannelsStrip.Visible = false;
-            menuItem22.Visible = false;
-            ReloadList1.Visible = false;
-            ReloadList2.Visible = false;
-            ReloadList3.Visible = false;
-            ReloadList4.Visible = false;
-            ReloadList5.Visible = false;
-            ReloadList6.Visible = false;
-            ReloadList7.Visible = false;
-            ReloadList8.Visible = false;
-            MoreLists.Visible = false;
-        }
-
-        private void watchdogDisabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Watchdog.SetValue("watchdog", "0", RegistryValueKind.DWord);
-            watchdogEnabledToolStripMenuItem.Checked = false;
-            watchdogDisabledToolStripMenuItem.Checked = true;
-            watchdogEnabledToolStripMenuItem.Enabled = true;
-            watchdogDisabledToolStripMenuItem.Enabled = false;
-            runTheWatchdogToolStripMenuItem.Enabled = false;
-            killTheWatchdogToolStripMenuItem.Enabled = false;
-            menuItem18.Visible = true;
-            sendAMIDIResetEventToAllTheChannelsStrip.Visible = true;
-            menuItem22.Visible = true;
-            ReloadList1.Visible = true;
-            ReloadList2.Visible = true;
-            ReloadList3.Visible = true;
-            ReloadList4.Visible = true;
-            ReloadList5.Visible = true;
-            ReloadList6.Visible = true;
-            ReloadList7.Visible = true;
-            ReloadList8.Visible = true;
-            if (enabledToolStripMenuItem2.Checked == true)
-            {
-                MoreLists.Visible = true;
-            }
-        }
-
-
-        private void MIDIAppNotifyEnabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Watchdog.SetValue("watchdognotify", "1", RegistryValueKind.DWord);
-            MIDIAppNotifyEnabledToolStripMenuItem.Checked = true;
-            MIDIAppNotifyDisabledToolStripMenuItem.Checked = false;
-            MIDIAppNotifyEnabledToolStripMenuItem.Enabled = false;
-            MIDIAppNotifyDisabledToolStripMenuItem.Enabled = true;
-        }
-
-        private void MIDIAppNotifyDisabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Watchdog.SetValue("watchdognotify", "0", RegistryValueKind.DWord);
-            MIDIAppNotifyEnabledToolStripMenuItem.Checked = false;
-            MIDIAppNotifyDisabledToolStripMenuItem.Checked = true;
-            MIDIAppNotifyEnabledToolStripMenuItem.Enabled = true;
-            MIDIAppNotifyDisabledToolStripMenuItem.Enabled = false;
-        }
-
         private void checkEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("autoupdatecheck", "1", RegistryValueKind.DWord);
@@ -1351,36 +1277,6 @@ namespace KeppySynthConfigurator
             SelectedListBox.Items.RemoveAt(8);
             SelectedListBox.Items.RemoveAt(8);
             SelectedListBox.Items.RemoveAt(8);
-        }
-
-        private void runTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            Watchdog.SetValue("closewatchdog", "0", RegistryValueKind.DWord);
-            Watchdog.SetValue("watchdog", "1", RegistryValueKind.DWord);
-            Watchdog.SetValue("wdrun", "1", RegistryValueKind.DWord);
-            watchdogEnabledToolStripMenuItem.Checked = true;
-            watchdogDisabledToolStripMenuItem.Checked = false;
-            watchdogEnabledToolStripMenuItem.Enabled = false;
-            watchdogDisabledToolStripMenuItem.Enabled = true;
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthWatchdog.exe");
-        }
-
-        private void killTheWatchdogToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                foreach (Process proc in Process.GetProcessesByName("KeppySynthWatchdog"))
-                {
-                    proc.Kill();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            Watchdog.SetValue("closewatchdog", "1", RegistryValueKind.DWord);
-            Watchdog.SetValue("wdrun", "0", RegistryValueKind.DWord);
         }
 
         private void FLStudioLicenseDiscount_Click(object sender, EventArgs e)
@@ -1528,7 +1424,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-
         private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
@@ -1545,6 +1440,26 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Checked = true;
             KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Enabled = true;
             KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        // Snap feature
+
+        private const int SnapDist = 25;
+
+        private bool DoSnap(int pos, int edge)
+        {
+            int delta = pos - edge;
+            return delta > 0 && delta <= SnapDist;
+        }
+
+        protected override void OnResizeEnd(EventArgs e)
+        {
+            base.OnResizeEnd(e);
+            Screen scn = Screen.FromPoint(this.Location);
+            if (DoSnap(this.Left, scn.WorkingArea.Left)) this.Left = scn.WorkingArea.Left;
+            if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
+            if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
+            if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
         }
     }
 }

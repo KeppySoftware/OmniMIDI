@@ -26,7 +26,6 @@ namespace KeppySynthDebugWindow
 {
     public partial class KeppySynthDebugWindow : Form
     {
-        private static KeppySynthDebugWindow inst;
         public static FileVersionInfo Driver { get; set; }
 
         public KeppySynthDebugWindow()
@@ -118,7 +117,7 @@ namespace KeppySynthDebugWindow
                         sb.Append(Environment.NewLine);
                         sb.Append("---------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUS
                         sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Operating system: {0} ({1}, {2})", (string)WinVer.GetValue("ProductName"), FullVersion, bit));
+                        sb.Append(String.Format("O.S.: {0} ({1}, {2})", (string)WinVer.GetValue("ProductName"), FullVersion, bit));
                         sb.Append(Environment.NewLine);
                         sb.Append(String.Format("Total memory: {0}", (tlmem / (1024 * 1024) + "MB").ToString()));
                         sb.Append(Environment.NewLine);
@@ -174,6 +173,26 @@ namespace KeppySynthDebugWindow
             {
                 System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
             }
+        }
+
+        // Snap feature
+
+        private const int SnapDist = 25;
+
+        private bool DoSnap(int pos, int edge)
+        {
+            int delta = pos - edge;
+            return delta > 0 && delta <= SnapDist;
+        }
+
+        protected override void OnResizeEnd(EventArgs e)
+        {
+            base.OnResizeEnd(e);
+            Screen scn = Screen.FromPoint(this.Location);
+            if (DoSnap(this.Left, scn.WorkingArea.Left)) this.Left = scn.WorkingArea.Left;
+            if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
+            if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
+            if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
         }
     }
 }

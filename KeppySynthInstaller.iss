@@ -5,12 +5,12 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.1.20'
+#define Version '4.0.2.0'
 
 [Setup]
 AllowCancelDuringInstall=False
 AppContact=kaleidonkep99@outlook.com
-AppCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
+AppCopyright=Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
 AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
 AppName=Keppy's Synthesizer
 AppPublisher=KaleidonKep99
@@ -41,11 +41,11 @@ UninstallDisplayName=Keppy's Synthesizer (Uninstall only)
 UninstallDisplaySize=5
 UninstallFilesDir={sys}\keppysynth\
 VersionInfoCompany=KaleidonKep99
-VersionInfoCopyright=Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
-VersionInfoDescription=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
+VersionInfoCopyright=Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
+VersionInfoDescription=User-Mode MIDI driver based around the BASS libraries
 VersionInfoProductName=Keppy's Synthesizer
 VersionInfoProductTextVersion={#Version}
-VersionInfoTextVersion=User-mode MIDI driver for Windows XP SP3 (SP2 for x64) and newer
+VersionInfoTextVersion=User-Mode MIDI driver based around the BASS libraries
 VersionInfoVersion={#Version}
 UsePreviousSetupType=False
 FlatComponentsList=False
@@ -60,7 +60,6 @@ Source: "output\64\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "kepp
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthMixerWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthMixerWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "output\KeppySynthWatchdog.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppysynth.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter64.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "midioutsetter64.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -70,8 +69,6 @@ Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppysynth"; DestName: "sfzg
 ; 32-bit OS
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "output\KeppySynthMixerWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthMixerWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "output\KeppySynthWatchdog.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthWatchdog.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -243,8 +240,8 @@ Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
 
 [Run]
-Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
-Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser nowait; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
+Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
+Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: postinstall runascurrentuser; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: runascurrentuser nowait; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowproductions.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"

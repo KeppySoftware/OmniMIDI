@@ -198,8 +198,6 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 
 void LoadFonts(UINT uDeviceID, const TCHAR * name)
 {
-	KillWatchdog();
-
 	FreeFonts(uDeviceID);
 
 	if (name && *name)
@@ -230,6 +228,4 @@ void LoadFonts(UINT uDeviceID, const TCHAR * name)
 		}
 		BASS_MIDI_StreamSetFonts(hStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 	}
-
-	RunWatchdog();
 }

@@ -110,8 +110,6 @@
             this.checkEnabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.checkDisabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem38 = new System.Windows.Forms.MenuItem();
-            this.runTheWatchdogToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.killTheWatchdogToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem19 = new System.Windows.Forms.MenuItem();
@@ -125,13 +123,6 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
-            this.watchdogEnabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.watchdogDisabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.MIDIAppNotifyEnabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.MIDIAppNotifyDisabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem12 = new System.Windows.Forms.MenuItem();
-            this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem23 = new System.Windows.Forms.MenuItem();
             this.hLSEnabledToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -157,7 +148,6 @@
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem16 = new System.Windows.Forms.MenuItem();
-            this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.sendAMIDIResetEventToAllTheChannelsStrip = new System.Windows.Forms.MenuItem();
             this.menuItem22 = new System.Windows.Forms.MenuItem();
             this.ReloadList1 = new System.Windows.Forms.MenuItem();
@@ -177,6 +167,7 @@
             this.ReloadList14 = new System.Windows.Forms.MenuItem();
             this.ReloadList15 = new System.Windows.Forms.MenuItem();
             this.ReloadList16 = new System.Windows.Forms.MenuItem();
+            this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -253,7 +244,7 @@
             // 
             // IEL
             // 
-            this.IEL.Location = new System.Drawing.Point(545, 315);
+            this.IEL.Location = new System.Drawing.Point(545, 319);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -869,7 +860,8 @@
             // 
             this.settingsPresetsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lowLatencyPresetToolStripMenuItem,
-            this.blackMIDIsPresetToolStripMenuItem});
+            this.blackMIDIsPresetToolStripMenuItem,
+            this.keppysSteinwayPianoRealismToolStripMenuItem});
             this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
             this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(94, 27);
             this.settingsPresetsToolStripMenuItem.Text = "Settings presets";
@@ -877,15 +869,19 @@
             // lowLatencyPresetToolStripMenuItem
             // 
             this.lowLatencyPresetToolStripMenuItem.Name = "lowLatencyPresetToolStripMenuItem";
-            this.lowLatencyPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.lowLatencyPresetToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lowLatencyPresetToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
             this.lowLatencyPresetToolStripMenuItem.Text = "Low Latency Preset";
+            this.lowLatencyPresetToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lowLatencyPresetToolStripMenuItem.Click += new System.EventHandler(this.lowLatencyPresetToolStripMenuItem_Click);
             // 
             // blackMIDIsPresetToolStripMenuItem
             // 
             this.blackMIDIsPresetToolStripMenuItem.Name = "blackMIDIsPresetToolStripMenuItem";
-            this.blackMIDIsPresetToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.blackMIDIsPresetToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.blackMIDIsPresetToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
             this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
+            this.blackMIDIsPresetToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
             // 
             // assignSoundfontListToAppToolStripMenuItem
@@ -1082,18 +1078,6 @@
             this.checkDisabledToolStripMenuItem});
             this.menuItem38.Text = "Automatically check for updates when starting the configurator";
             // 
-            // runTheWatchdogToolStripMenuItem
-            // 
-            this.runTheWatchdogToolStripMenuItem.Index = 1;
-            this.runTheWatchdogToolStripMenuItem.Text = "Force run the Watchdog (Useful when it doesn\'t start automatically)";
-            this.runTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.runTheWatchdogToolStripMenuItem_Click);
-            // 
-            // killTheWatchdogToolStripMenuItem
-            // 
-            this.killTheWatchdogToolStripMenuItem.Index = 2;
-            this.killTheWatchdogToolStripMenuItem.Text = "Kill the Watchdog (Useful when it gets stuck)";
-            this.killTheWatchdogToolStripMenuItem.Click += new System.EventHandler(this.killTheWatchdogToolStripMenuItem_Click);
-            // 
             // menuItem17
             // 
             this.menuItem17.Index = 2;
@@ -1173,54 +1157,6 @@
             this.changeDefaultSoundfontListToolStripMenuItem1.Index = 11;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
-            // 
-            // watchdogEnabledToolStripMenuItem
-            // 
-            this.watchdogEnabledToolStripMenuItem.Index = 0;
-            this.watchdogEnabledToolStripMenuItem.Text = "Enabled";
-            this.watchdogEnabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogEnabledToolStripMenuItem_Click);
-            // 
-            // watchdogDisabledToolStripMenuItem
-            // 
-            this.watchdogDisabledToolStripMenuItem.Index = 1;
-            this.watchdogDisabledToolStripMenuItem.Text = "Disabled";
-            this.watchdogDisabledToolStripMenuItem.Click += new System.EventHandler(this.watchdogDisabledToolStripMenuItem_Click);
-            // 
-            // menuItem11
-            // 
-            this.menuItem11.Index = 0;
-            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.watchdogEnabledToolStripMenuItem,
-            this.watchdogDisabledToolStripMenuItem});
-            this.menuItem11.Text = "Indipendent Watchdog";
-            // 
-            // MIDIAppNotifyEnabledToolStripMenuItem
-            // 
-            this.MIDIAppNotifyEnabledToolStripMenuItem.Index = 0;
-            this.MIDIAppNotifyEnabledToolStripMenuItem.Text = "Enabled";
-            this.MIDIAppNotifyEnabledToolStripMenuItem.Click += new System.EventHandler(this.MIDIAppNotifyEnabledToolStripMenuItem_Click);
-            // 
-            // MIDIAppNotifyDisabledToolStripMenuItem
-            // 
-            this.MIDIAppNotifyDisabledToolStripMenuItem.Index = 1;
-            this.MIDIAppNotifyDisabledToolStripMenuItem.Text = "Disabled";
-            this.MIDIAppNotifyDisabledToolStripMenuItem.Click += new System.EventHandler(this.MIDIAppNotifyDisabledToolStripMenuItem_Click);
-            // 
-            // menuItem12
-            // 
-            this.menuItem12.Index = 1;
-            this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.MIDIAppNotifyEnabledToolStripMenuItem,
-            this.MIDIAppNotifyDisabledToolStripMenuItem});
-            this.menuItem12.Text = "Enable MIDI app notification";
-            // 
-            // menuItem28
-            // 
-            this.menuItem28.Index = 0;
-            this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem11,
-            this.menuItem12});
-            this.menuItem28.Text = "Watchdog settings";
             // 
             // menuItem2
             // 
@@ -1402,10 +1338,6 @@
             // 
             this.menuItem16.Index = 2;
             this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem28,
-            this.runTheWatchdogToolStripMenuItem,
-            this.killTheWatchdogToolStripMenuItem,
-            this.menuItem18,
             this.sendAMIDIResetEventToAllTheChannelsStrip,
             this.menuItem22,
             this.ReloadList1,
@@ -1419,64 +1351,59 @@
             this.MoreLists});
             this.menuItem16.Text = "Watchdog";
             // 
-            // menuItem18
-            // 
-            this.menuItem18.Index = 3;
-            this.menuItem18.Text = "-";
-            // 
             // sendAMIDIResetEventToAllTheChannelsStrip
             // 
-            this.sendAMIDIResetEventToAllTheChannelsStrip.Index = 4;
+            this.sendAMIDIResetEventToAllTheChannelsStrip.Index = 0;
             this.sendAMIDIResetEventToAllTheChannelsStrip.Text = "Send a MIDI reset event to all the channels";
             // 
             // menuItem22
             // 
-            this.menuItem22.Index = 5;
+            this.menuItem22.Index = 1;
             this.menuItem22.Text = "-";
             // 
             // ReloadList1
             // 
-            this.ReloadList1.Index = 6;
+            this.ReloadList1.Index = 2;
             this.ReloadList1.Text = "(Re)load list 1";
             // 
             // ReloadList2
             // 
-            this.ReloadList2.Index = 7;
+            this.ReloadList2.Index = 3;
             this.ReloadList2.Text = "(Re)load list 2";
             // 
             // ReloadList3
             // 
-            this.ReloadList3.Index = 8;
+            this.ReloadList3.Index = 4;
             this.ReloadList3.Text = "(Re)load list 3";
             // 
             // ReloadList4
             // 
-            this.ReloadList4.Index = 9;
+            this.ReloadList4.Index = 5;
             this.ReloadList4.Text = "(Re)load list 4";
             // 
             // ReloadList5
             // 
-            this.ReloadList5.Index = 10;
+            this.ReloadList5.Index = 6;
             this.ReloadList5.Text = "(Re)load list 5";
             // 
             // ReloadList6
             // 
-            this.ReloadList6.Index = 11;
+            this.ReloadList6.Index = 7;
             this.ReloadList6.Text = "(Re)load list 6";
             // 
             // ReloadList7
             // 
-            this.ReloadList7.Index = 12;
+            this.ReloadList7.Index = 8;
             this.ReloadList7.Text = "(Re)load list 7";
             // 
             // ReloadList8
             // 
-            this.ReloadList8.Index = 13;
+            this.ReloadList8.Index = 9;
             this.ReloadList8.Text = "(Re)load list 8";
             // 
             // MoreLists
             // 
-            this.MoreLists.Index = 14;
+            this.MoreLists.Index = 10;
             this.MoreLists.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ReloadList9,
             this.ReloadList10,
@@ -1528,6 +1455,15 @@
             // 
             this.ReloadList16.Index = 7;
             this.ReloadList16.Text = "(Re)load list 16";
+            // 
+            // keppysSteinwayPianoRealismToolStripMenuItem
+            // 
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Name = "keppysSteinwayPianoRealismToolStripMenuItem";
+            this.keppysSteinwayPianoRealismToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "Keppy\'s Steinway Piano (Realism) ";
+            this.keppysSteinwayPianoRealismToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1629,8 +1565,6 @@
         private System.Windows.Forms.MenuItem checkEnabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem checkDisabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem38;
-        private System.Windows.Forms.MenuItem runTheWatchdogToolStripMenuItem;
-        private System.Windows.Forms.MenuItem killTheWatchdogToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem17;
         private System.Windows.Forms.MenuItem manageFolderFavouritesToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem19;
@@ -1644,13 +1578,6 @@
         private System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeDefaultSoundfontListToolStripMenuItem1;
-        private System.Windows.Forms.MenuItem watchdogEnabledToolStripMenuItem;
-        private System.Windows.Forms.MenuItem watchdogDisabledToolStripMenuItem;
-        private System.Windows.Forms.MenuItem menuItem11;
-        private System.Windows.Forms.MenuItem MIDIAppNotifyEnabledToolStripMenuItem;
-        private System.Windows.Forms.MenuItem MIDIAppNotifyDisabledToolStripMenuItem;
-        private System.Windows.Forms.MenuItem menuItem12;
-        private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem informationAboutTheDriverToolStripMenuItem;
         private System.Windows.Forms.MenuItem openUpdaterToolStripMenuItem;
@@ -1674,7 +1601,6 @@
         private System.Windows.Forms.MenuItem VMSSimulatorDisabled;
         private System.Windows.Forms.Button LoadToApp;
         private System.Windows.Forms.MenuItem menuItem16;
-        private System.Windows.Forms.MenuItem menuItem18;
         private System.Windows.Forms.MenuItem menuItem22;
         private System.Windows.Forms.MenuItem MoreLists;
         private System.Windows.Forms.MenuItem menuItem23;
@@ -1718,6 +1644,7 @@
         public System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.Windows.Forms.MenuItem hLSEnabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem hLSDisabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keppysSteinwayPianoRealismToolStripMenuItem;
     }
 }
 

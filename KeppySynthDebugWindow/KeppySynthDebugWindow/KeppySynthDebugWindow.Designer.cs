@@ -39,16 +39,17 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.MainCont = new System.Windows.Forms.ContextMenu();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.OpenAppLocat = new System.Windows.Forms.MenuItem();
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.DebugWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // richTextBox1
             // 
+            this.richTextBox1.BackColor = System.Drawing.Color.White;
             this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
             this.richTextBox1.DetectUrls = false;
             this.richTextBox1.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -75,6 +76,11 @@
             this.menuItem2.Text = "Open the configurator";
             this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
             // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
+            // 
             // OpenAppLocat
             // 
             this.OpenAppLocat.Index = 2;
@@ -97,11 +103,6 @@
             this.ExitMenu.Index = 5;
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
-            // 
-            // menuItem3
-            // 
-            this.menuItem3.Index = 1;
-            this.menuItem3.Text = "-";
             // 
             // DebugWorker
             // 

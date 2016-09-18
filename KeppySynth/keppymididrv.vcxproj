@@ -30,7 +30,6 @@
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />
     <ClInclude Include="sound_out.h" />
-    <ClInclude Include="watchdog.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
@@ -40,7 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\KeppySynthConfigurator\KeppySynthConfigurator\Resources\gear.ico" />
-    <Image Include="icon1.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>keppysynth</ProjectName>

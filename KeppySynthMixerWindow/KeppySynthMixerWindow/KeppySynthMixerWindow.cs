@@ -415,5 +415,25 @@ namespace KeppySynthMixerWindow
         {
             CH1VOL.Value = CH2VOL.Value = CH3VOL.Value = CH4VOL.Value = CH5VOL.Value = CH6VOL.Value = CH7VOL.Value = CH8VOL.Value = CH9VOL.Value = CH10VOL.Value = CH11VOL.Value = CH12VOL.Value = CH13VOL.Value = CH14VOL.Value = CH15VOL.Value = CH16VOL.Value = MainVol.Value;
         }
+
+        // Snap feature
+
+        private const int SnapDist = 25;
+
+        private bool DoSnap(int pos, int edge)
+        {
+            int delta = pos - edge;
+            return delta > 0 && delta <= SnapDist;
+        }
+
+        protected override void OnResizeEnd(EventArgs e)
+        {
+            base.OnResizeEnd(e);
+            Screen scn = Screen.FromPoint(this.Location);
+            if (DoSnap(this.Left, scn.WorkingArea.Left)) this.Left = scn.WorkingArea.Left;
+            if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
+            if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
+            if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
+        }
     }
 }

@@ -45,9 +45,6 @@
     <ClInclude Include="sound_out.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="watchdog.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\XAudio2.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -81,9 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\KeppySynthConfigurator\KeppySynthConfigurator\Resources\gear.ico">
-      <Filter>Resource files</Filter>
-    </Image>
-    <Image Include="icon1.ico">
       <Filter>Resource files</Filter>
     </Image>
   </ItemGroup>

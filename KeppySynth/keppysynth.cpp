@@ -167,7 +167,6 @@ static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
 
 // Keppy's Synthesizer vital parts
-#include "watchdog.h"
 #include "sfsystem.h"
 #include "settings.h"
 #include "bufsystem.h"
@@ -639,7 +638,6 @@ void DoStartClient() {
 			CloseHandle(load_sfevent);
 		}
 		modm_closed = 0;
-		RunWatchdog();
 	}
 }
 
@@ -655,11 +653,6 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
 	RegCloseKey(hKey);
-	dwType = REG_SZ;
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-	RegSetValueEx(hKey, L"currentapp", 0, dwType, NULL, NULL);
-	RegSetValueEx(hKey, L"bit", 0, dwType, NULL, NULL);
-	RegCloseKey(hKey);
 	if (modm_closed == 0){
 		stop_thread = 1;
 		WaitForSingleObject(hCalcThread, INFINITE);
@@ -668,13 +661,10 @@ void DoStopClient() {
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
 	DeleteCriticalSection(&mim_section);
-	KillWatchdog();
 }
 
 void DoResetClient(UINT uDeviceID) {
 	ResetSynth();
-	KillWatchdog();
-	RunWatchdog();
 	reset_synth = 1;
 }
 
@@ -708,7 +698,6 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	driver->clientCount++;
 	SetPriorityClass(GetCurrentProcess(), processPriority);
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
-	RunWatchdog();
 	return MMSYSERR_NOERROR;
 }
 
@@ -724,7 +713,6 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 		driver->clientCount = 0;
 	}
 	DoCallback(uDeviceID, dwUser, MOM_CLOSE, 0, 0);
-	KillWatchdog();
 	return MMSYSERR_NOERROR;
 }
 
