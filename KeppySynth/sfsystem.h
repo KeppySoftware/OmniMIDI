@@ -2,11 +2,8 @@
 Keppy's Synthesizer soundfont lists loading system
 */
 
-static unsigned int font_count[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-static HSOUNDFONT * hFonts[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-
-std::vector<HSOUNDFONT> _soundFonts[8];
-std::vector<BASS_MIDI_FONTEX> presetList[8];
+std::vector<HSOUNDFONT> _soundFonts[16];
+std::vector<BASS_MIDI_FONTEX> presetList[16];
 
 static void FreeFonts(UINT uDeviceID)
 {

@@ -81,6 +81,7 @@
             this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
@@ -167,7 +168,7 @@
             this.ReloadList14 = new System.Windows.Forms.MenuItem();
             this.ReloadList15 = new System.Windows.Forms.MenuItem();
             this.ReloadList16 = new System.Windows.Forms.MenuItem();
-            this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -191,12 +192,12 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 423);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 422);
             this.TabsForTheControls.TabIndex = 1;
             // 
             // List
             // 
-            this.List.BackColor = System.Drawing.Color.White;
+            this.List.BackColor = System.Drawing.Color.Transparent;
             this.List.Controls.Add(this.EL);
             this.List.Controls.Add(this.LoadToApp);
             this.List.Controls.Add(this.IEL);
@@ -215,41 +216,43 @@
             this.List.Location = new System.Drawing.Point(4, 22);
             this.List.Name = "List";
             this.List.Padding = new System.Windows.Forms.Padding(3);
-            this.List.Size = new System.Drawing.Size(641, 397);
+            this.List.Size = new System.Drawing.Size(641, 396);
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
-            this.List.UseVisualStyleBackColor = true;
             // 
             // EL
             // 
+            this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.Location = new System.Drawing.Point(545, 348);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
             this.EL.Text = "Export list";
-            this.EL.UseVisualStyleBackColor = true;
+            this.EL.UseVisualStyleBackColor = false;
             this.EL.Click += new System.EventHandler(this.EL_Click);
             this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.EL_Paint);
             // 
             // LoadToApp
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
             this.LoadToApp.Location = new System.Drawing.Point(545, 186);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(89, 23);
             this.LoadToApp.TabIndex = 36;
             this.LoadToApp.Text = "Load to app";
-            this.LoadToApp.UseVisualStyleBackColor = true;
+            this.LoadToApp.UseVisualStyleBackColor = false;
             this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
             // 
             // IEL
             // 
+            this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.Location = new System.Drawing.Point(545, 319);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
             this.IEL.Text = "Import list";
-            this.IEL.UseVisualStyleBackColor = true;
+            this.IEL.UseVisualStyleBackColor = false;
             this.IEL.Click += new System.EventHandler(this.IEL_Click);
             this.IEL.Paint += new System.Windows.Forms.PaintEventHandler(this.IEL_Paint);
             // 
@@ -265,6 +268,7 @@
             // 
             // SelectedListBox
             // 
+            this.SelectedListBox.BackColor = System.Drawing.SystemColors.Control;
             this.SelectedListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedListBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SelectedListBox.FormattingEnabled = true;
@@ -295,23 +299,25 @@
             // DisableSF
             // 
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DisableSF.BackColor = System.Drawing.Color.Transparent;
             this.DisableSF.Location = new System.Drawing.Point(545, 262);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(89, 23);
             this.DisableSF.TabIndex = 9;
             this.DisableSF.Text = "Disable SF";
-            this.DisableSF.UseVisualStyleBackColor = true;
+            this.DisableSF.UseVisualStyleBackColor = false;
             this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
             // 
             // EnableSF
             // 
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.EnableSF.BackColor = System.Drawing.Color.Transparent;
             this.EnableSF.Location = new System.Drawing.Point(545, 233);
             this.EnableSF.Name = "EnableSF";
             this.EnableSF.Size = new System.Drawing.Size(89, 23);
             this.EnableSF.TabIndex = 8;
             this.EnableSF.Text = "Enable SF";
-            this.EnableSF.UseVisualStyleBackColor = true;
+            this.EnableSF.UseVisualStyleBackColor = false;
             this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
             // 
             // List1Override
@@ -320,7 +326,7 @@
             this.List1Override.AutoSize = true;
             this.List1Override.BackColor = System.Drawing.Color.Transparent;
             this.List1Override.Enabled = false;
-            this.List1Override.Location = new System.Drawing.Point(6, 382);
+            this.List1Override.Location = new System.Drawing.Point(4, 381);
             this.List1Override.Name = "List1Override";
             this.List1Override.Size = new System.Drawing.Size(243, 13);
             this.List1Override.TabIndex = 31;
@@ -329,56 +335,61 @@
             // CLi
             // 
             this.CLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CLi.BackColor = System.Drawing.Color.Transparent;
             this.CLi.Location = new System.Drawing.Point(545, 7);
             this.CLi.Name = "CLi";
             this.CLi.Size = new System.Drawing.Size(89, 23);
             this.CLi.TabIndex = 3;
             this.CLi.Text = "Clear list";
-            this.CLi.UseVisualStyleBackColor = true;
+            this.CLi.UseVisualStyleBackColor = false;
             this.CLi.Click += new System.EventHandler(this.CLi_Click);
             // 
             // MvD
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MvD.BackColor = System.Drawing.Color.Transparent;
             this.MvD.Location = new System.Drawing.Point(545, 139);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(89, 23);
             this.MvD.TabIndex = 7;
             this.MvD.Text = "Move ▼";
-            this.MvD.UseVisualStyleBackColor = true;
+            this.MvD.UseVisualStyleBackColor = false;
             this.MvD.Click += new System.EventHandler(this.MvD_Click);
             // 
             // MvU
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MvU.BackColor = System.Drawing.Color.Transparent;
             this.MvU.Location = new System.Drawing.Point(545, 110);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(89, 23);
             this.MvU.TabIndex = 6;
             this.MvU.Text = "Move ▲";
-            this.MvU.UseVisualStyleBackColor = true;
+            this.MvU.UseVisualStyleBackColor = false;
             this.MvU.Click += new System.EventHandler(this.MvU_Click);
             // 
             // RmvSF
             // 
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RmvSF.BackColor = System.Drawing.Color.Transparent;
             this.RmvSF.Location = new System.Drawing.Point(545, 65);
             this.RmvSF.Name = "RmvSF";
             this.RmvSF.Size = new System.Drawing.Size(89, 23);
             this.RmvSF.TabIndex = 5;
             this.RmvSF.Text = "Remove -";
-            this.RmvSF.UseVisualStyleBackColor = true;
+            this.RmvSF.UseVisualStyleBackColor = false;
             this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
             // 
             // AddSF
             // 
             this.AddSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddSF.BackColor = System.Drawing.Color.Transparent;
             this.AddSF.Location = new System.Drawing.Point(545, 36);
             this.AddSF.Name = "AddSF";
             this.AddSF.Size = new System.Drawing.Size(89, 23);
             this.AddSF.TabIndex = 4;
             this.AddSF.Text = "Add +";
-            this.AddSF.UseVisualStyleBackColor = true;
+            this.AddSF.UseVisualStyleBackColor = false;
             this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
             // 
             // Lis
@@ -399,7 +410,7 @@
             // 
             // Settings
             // 
-            this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.BackColor = System.Drawing.Color.Transparent;
             this.Settings.Controls.Add(this.WhatIsXAudio);
             this.Settings.Controls.Add(this.XAudioDisable);
             this.Settings.Controls.Add(this.WhatIsOutput);
@@ -413,7 +424,7 @@
             this.Settings.Controls.Add(this.SettingsButtons);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 397);
+            this.Settings.Size = new System.Drawing.Size(641, 396);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -835,7 +846,7 @@
             this.settingsPresetsToolStripMenuItem,
             this.assignSoundfontListToAppToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem});
-            this.SettingsButtons.Location = new System.Drawing.Point(0, 366);
+            this.SettingsButtons.Location = new System.Drawing.Point(0, 365);
             this.SettingsButtons.Name = "SettingsButtons";
             this.SettingsButtons.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.SettingsButtons.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -883,6 +894,15 @@
             this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
             this.blackMIDIsPresetToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
+            // 
+            // keppysSteinwayPianoRealismToolStripMenuItem
+            // 
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Name = "keppysSteinwayPianoRealismToolStripMenuItem";
+            this.keppysSteinwayPianoRealismToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "Keppy\'s Steinway Piano (Realism) ";
+            this.keppysSteinwayPianoRealismToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
             // 
             // assignSoundfontListToAppToolStripMenuItem
             // 
@@ -1456,27 +1476,23 @@
             this.ReloadList16.Index = 7;
             this.ReloadList16.Text = "(Re)load list 16";
             // 
-            // keppysSteinwayPianoRealismToolStripMenuItem
+            // ThemeCheck
             // 
-            this.keppysSteinwayPianoRealismToolStripMenuItem.Name = "keppysSteinwayPianoRealismToolStripMenuItem";
-            this.keppysSteinwayPianoRealismToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.keppysSteinwayPianoRealismToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "Keppy\'s Steinway Piano (Realism) ";
-            this.keppysSteinwayPianoRealismToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
+            this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
             // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(649, 423);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(649, 422);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.SettingsButtons;
+            this.MaximizeBox = false;
             this.Menu = this.MainMenu;
             this.Name = "KeppySynthConfiguratorMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
@@ -1645,6 +1661,7 @@
         private System.Windows.Forms.MenuItem hLSEnabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem hLSDisabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keppysSteinwayPianoRealismToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker ThemeCheck;
     }
 }
 

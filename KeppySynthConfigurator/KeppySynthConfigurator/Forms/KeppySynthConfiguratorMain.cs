@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Win32;
 
 namespace KeppySynthConfigurator
@@ -18,6 +19,9 @@ namespace KeppySynthConfigurator
 
         public static string LastBrowserPath { get; set; }
         public static string LastImportExportPath { get; set; }
+
+        // Themes handler
+        public static int CurrentTheme = 0;
 
         // Lists
         public static string List1PathOld { get; set; }
@@ -181,6 +185,8 @@ namespace KeppySynthConfigurator
         // Here we go!
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
+            // SAS THEME HANDLER
+            this.ThemeCheck.RunWorkerAsync();
             // MIDI out selector disabler
             if (Functions.IsWindows8OrNewer() == true)
             {
@@ -1460,6 +1466,34 @@ namespace KeppySynthConfigurator
             if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
             if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
             if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
+        }
+
+        private void ThemeCheck_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                if (VisualStyleInformation.IsEnabledByUser == true)
+                {
+                    if (CurrentTheme == 0)
+                    {
+                        CurrentTheme = 1;
+                        this.Invoke(new MethodInvoker(delegate { List.BackColor = Color.White; }));
+                        this.Invoke(new MethodInvoker(delegate { Settings.BackColor = Color.White; }));
+                        this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
+                    }
+                }
+                else
+                {
+                    if (CurrentTheme == 1)
+                    {
+                        CurrentTheme = 0;
+                        this.Invoke(new MethodInvoker(delegate { List.BackColor = SystemColors.Control; }));
+                        this.Invoke(new MethodInvoker(delegate { Settings.BackColor = SystemColors.Control; }));
+                        this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
+                    }
+                }
+                System.Threading.Thread.Sleep(1);
+            }
         }
     }
 }
