@@ -607,6 +607,7 @@ void load_settings()
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"autopanic", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
@@ -666,6 +667,7 @@ void realtime_load_settings()
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"autopanic", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 		RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
@@ -851,6 +853,11 @@ void debug_info() {
 				right = HIWORD(level); // the right level
 				RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
 				RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+			}
+		}
+		if (autopanic == 1) {
+			if (currentcpuusage0 >= 100.0f) {
+				ResetSynth();
 			}
 		}
 		int currentvoicesint0 = int(currentvoices0);

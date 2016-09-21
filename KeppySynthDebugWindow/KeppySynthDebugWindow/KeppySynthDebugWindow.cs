@@ -135,13 +135,16 @@ namespace KeppySynthDebugWindow
                         }
                         else
                         {
-                            sb.Append(String.Format("Rendering time: {0}%", Debug.GetValue("currentcpuusage0").ToString())); // Else, it'll give you the info about how many cycles it needs to work.
+                            if (Convert.ToInt32(Debug.GetValue("currentcpuusage0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
+                                sb.Append(String.Format("Rendering time: {0}% (Beyond limit: {1}%)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString()));
+                            else
+                                sb.Append(String.Format("Rendering time: {0}%", Debug.GetValue("currentcpuusage0").ToString())); // Else, it'll give you the info about how many cycles it needs to work.
                         }
                         if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 0)
                         {
                             // If you're using XAudio, it'll show you the size of a frame.
                             sb.Append(Environment.NewLine);
-                            sb.Append(String.Format("Decoded data size (bytes): {0}", Debug.GetValue("int").ToString()));
+                            sb.Append(String.Format("Decoded data size (bytes): {0} ({1} x 4)", Debug.GetValue("int").ToString(), (Convert.ToInt32(Debug.GetValue("int").ToString()) / 4).ToString()));
                         }
                     }
                     finally

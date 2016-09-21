@@ -254,6 +254,20 @@ namespace KeppySynthConfigurator
                     hLSEnabledToolStripMenuItem.Enabled = true;
                     hLSDisabledToolStripMenuItem.Enabled = false;
                 }
+                if (Convert.ToInt32(SynthSettings.GetValue("autopanic", 1)) == 1)
+                {
+                    MIDIPanicEnabled.Checked = true;
+                    MIDIPanicDisabled.Checked = false;
+                    MIDIPanicEnabled.Enabled = false;
+                    MIDIPanicDisabled.Enabled = true;
+                }
+                else
+                {
+                    MIDIPanicEnabled.Checked = false;
+                    MIDIPanicDisabled.Checked = true;
+                    MIDIPanicEnabled.Enabled = true;
+                    MIDIPanicDisabled.Enabled = false;
+                }
                 if (Convert.ToInt32(SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
                     VMSSimulatorEnabled.Checked = true;
@@ -1195,6 +1209,24 @@ namespace KeppySynthConfigurator
             checkDisabledToolStripMenuItem.Enabled = false;
         }
 
+        private void MIDIPanicEnabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("autopanic", "1", RegistryValueKind.DWord);
+            MIDIPanicEnabled.Checked = true;
+            MIDIPanicDisabled.Checked = false;
+            MIDIPanicEnabled.Enabled = false;
+            MIDIPanicDisabled.Enabled = true;
+        }
+
+        private void MIDIPanicDisabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("autopanic", "0", RegistryValueKind.DWord);
+            MIDIPanicEnabled.Checked = false;
+            MIDIPanicDisabled.Checked = true;
+            MIDIPanicEnabled.Enabled = true;
+            MIDIPanicDisabled.Enabled = false;
+        }
+
         private void DefaultOut810enabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
@@ -1328,6 +1360,11 @@ namespace KeppySynthConfigurator
         private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15-20.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 25-35.\nFor all the AC'97 audio cards, it's 35.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
+        }
+
+        private void WhatsAutoPanic_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("\"Automatic panic mode\" will tell the driver to kill all the active notes, when the CPU usage is equal or higher than 100%.", "What's the automatic panic mode?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Brand new output mode

@@ -131,6 +131,11 @@
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.VMSSimulatorEnabled = new System.Windows.Forms.MenuItem();
             this.VMSSimulatorDisabled = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.MIDIPanicEnabled = new System.Windows.Forms.MenuItem();
+            this.MIDIPanicDisabled = new System.Windows.Forms.MenuItem();
+            this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.WhatsAutoPanic = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -1156,25 +1161,25 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 8;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 9;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 9;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 11;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 10;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 12;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 11;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 10;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
@@ -1190,10 +1195,11 @@
             this.menuItem20,
             this.menuItem21,
             this.menuItem14,
+            this.menuItem11,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
+            this.changeDefaultSoundfontListToolStripMenuItem1,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
-            this.changeDefaultSoundfontListToolStripMenuItem1});
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem});
             this.menuItem2.Text = "Advanced settings";
             // 
             // menuItem23
@@ -1235,6 +1241,39 @@
             this.VMSSimulatorDisabled.Index = 1;
             this.VMSSimulatorDisabled.Text = "Disabled";
             this.VMSSimulatorDisabled.Click += new System.EventHandler(this.VMSSimulatorDisabled_Click);
+            // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 8;
+            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MIDIPanicEnabled,
+            this.MIDIPanicDisabled,
+            this.menuItem12,
+            this.WhatsAutoPanic});
+            this.menuItem11.Text = "Automatic MIDI panic";
+            // 
+            // MIDIPanicEnabled
+            // 
+            this.MIDIPanicEnabled.Index = 0;
+            this.MIDIPanicEnabled.Text = "Enabled";
+            this.MIDIPanicEnabled.Click += new System.EventHandler(this.MIDIPanicEnabled_Click);
+            // 
+            // MIDIPanicDisabled
+            // 
+            this.MIDIPanicDisabled.Index = 1;
+            this.MIDIPanicDisabled.Text = "Disabled";
+            this.MIDIPanicDisabled.Click += new System.EventHandler(this.MIDIPanicDisabled_Click);
+            // 
+            // menuItem12
+            // 
+            this.menuItem12.Index = 2;
+            this.menuItem12.Text = "-";
+            // 
+            // WhatsAutoPanic
+            // 
+            this.WhatsAutoPanic.Index = 3;
+            this.WhatsAutoPanic.Text = "What\'s this?";
+            this.WhatsAutoPanic.Click += new System.EventHandler(this.WhatsAutoPanic_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -1662,6 +1701,11 @@
         private System.Windows.Forms.MenuItem hLSDisabledToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keppysSteinwayPianoRealismToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker ThemeCheck;
+        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem MIDIPanicEnabled;
+        private System.Windows.Forms.MenuItem MIDIPanicDisabled;
+        private System.Windows.Forms.MenuItem menuItem12;
+        private System.Windows.Forms.MenuItem WhatsAutoPanic;
     }
 }
 

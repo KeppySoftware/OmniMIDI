@@ -94,6 +94,7 @@ static int sound_out_volume_int = 0x1000;
 // Variables
 static float *sndbf;
 static int allhotkeys = 0; // Enable/Disable all the hotkeys
+static int autopanic = 1; // Autopanic switch
 static int bassoutputfinal = 0; // DO NOT TOUCH
 static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode

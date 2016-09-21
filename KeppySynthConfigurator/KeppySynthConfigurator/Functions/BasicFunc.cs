@@ -133,14 +133,6 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("noteoff", "0", RegistryValueKind.DWord);
                 }
-                if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
-                }
                 if (KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked == true)
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sysresetignore", "1", RegistryValueKind.DWord);
@@ -159,10 +151,19 @@ namespace KeppySynthConfigurator
                 }
                 if (KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked == true)
                 {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
                 }
                 else
                 {
+                    if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
+                    {
+                        KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
+                    }
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
                 }
             }

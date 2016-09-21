@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.2.1'
+#define Version '4.0.2.2'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -151,6 +151,7 @@ Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer"; ValueType: dword; ValueNam
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer"; ValueType: dword; ValueName: "currentvoices0"; ValueData: "0"; Flags: uninsdeletekey; Permissions: everyone-full
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer"; ValueType: dword; ValueName: "int"; ValueData: "0"; Flags: uninsdeletekey; Permissions: everyone-full
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "allhotkeys"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
+Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "autopanic"; ValueData: "1"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "autoupdatecheck"; ValueData: "1"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "buflen"; ValueData: "30"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "cpu"; ValueData: "75"; Flags: uninsdeletekey createvalueifdoesntexist
