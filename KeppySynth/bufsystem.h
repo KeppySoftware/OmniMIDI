@@ -166,20 +166,9 @@ void AudioRender() {
 
 	}
 	else if (encmode == 0) {
-		if (decoded < 0) {
-
+		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+			sndbf[i] *= sound_out_volume_float;
 		}
-		if (evbrpoint >= newevbuffvalue | evbwpoint >= newevbuffvalue) {
-			for (unsigned i = 0, j = 0.0f / sizeof(float); i < j; i++) {
-				sndbf[i] *= sound_out_volume_float;
-			}
-			sound_driver->write_frame(sndbf, 0.0f / sizeof(float), true);
-		}
-		else {
-			for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-				sndbf[i] *= sound_out_volume_float;
-			}
-			sound_driver->write_frame(sndbf, decoded / sizeof(float), true);
-		}
+		sound_driver->write_frame(sndbf, decoded / sizeof(float), false);
 	}
 }

@@ -24,8 +24,7 @@ namespace KeppySynthConfigurator
 
         private void CFU_Click(object sender, EventArgs e)
         {
-            KeppySynthUpdater frm = new KeppySynthUpdater();
-            frm.ShowDialog();
+            Functions.CheckForUpdates();
         }
 
         private void Button1_Click(object sender, EventArgs e)

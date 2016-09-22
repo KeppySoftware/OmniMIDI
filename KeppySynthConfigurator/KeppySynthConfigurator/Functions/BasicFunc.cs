@@ -4,8 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Net.NetworkInformation;
 using System.Diagnostics;
 using Microsoft.Win32;
 
@@ -13,6 +17,9 @@ namespace KeppySynthConfigurator
 {
     class Functions
     {
+        [DllImport("wininet.dll")]
+        private extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
+
         public static bool IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
@@ -54,6 +61,53 @@ namespace KeppySynthConfigurator
             catch
             {
 
+            }
+        }
+
+        public static bool IsInternetAvailable()
+        {
+            int Desc;
+            return InternetGetConnectedState(out Desc, 0);
+        }
+
+        public static void CheckForUpdates()
+        {
+            if (IsInternetAvailable() == false)
+            {
+                MessageBox.Show("The configurator can not connect to the GitHub servers.\n\nCheck your network connection, or contact your system administrator or network service provider.\n\nPress OK to continue and open the configurator's window.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                try
+                {
+                    WebClient client = new WebClient();
+                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/keppydriverupdate.txt");
+                    StreamReader reader = new StreamReader(stream);
+                    String newestversion = reader.ReadToEnd();
+                    FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppysynth\\keppysynth.dll");
+                    Version x = null;
+                    Version.TryParse(newestversion.ToString(), out x);
+                    Version y = null;
+                    Version.TryParse(Driver.FileVersion.ToString(), out y);
+                    if (x > y)
+                    {
+                        DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Forms.KeppySynthUpdateDL frm = new Forms.KeppySynthUpdateDL(newestversion);
+                            frm.StartPosition = FormStartPosition.CenterScreen;
+                            frm.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("No updates have been found.\n\nPlease try again later.", "Keppy's Synthesizer - No updates found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Unknown error.\n\nPress OK to continue and open the configurator's window.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 

@@ -1086,8 +1086,7 @@ namespace KeppySynthConfigurator
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthUpdater frm = new KeppySynthUpdater();
-            frm.ShowDialog();
+            Functions.CheckForUpdates();
         }
 
         private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
