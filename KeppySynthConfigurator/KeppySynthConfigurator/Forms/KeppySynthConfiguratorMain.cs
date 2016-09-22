@@ -268,6 +268,50 @@ namespace KeppySynthConfigurator
                     MIDIPanicEnabled.Enabled = true;
                     MIDIPanicDisabled.Enabled = false;
                 }
+                if (Convert.ToInt32(SynthSettings.GetValue("rco", 1)) == 0)
+                {
+                    RCOEnabledXA.Checked = false;
+                    RCOEnabledDS.Checked = false;
+                    RCOEnabledBH.Checked = false;
+                    RCODisabled.Checked = true;
+                    RCOEnabledXA.Enabled = true;
+                    RCOEnabledDS.Enabled = true;
+                    RCOEnabledBH.Enabled = true;
+                    RCODisabled.Enabled = false;
+                }
+                else if (Convert.ToInt32(SynthSettings.GetValue("rco", 1)) == 1)
+                {
+                    RCOEnabledXA.Checked = false;
+                    RCOEnabledDS.Checked = false;
+                    RCOEnabledBH.Checked = true;
+                    RCODisabled.Checked = false;
+                    RCOEnabledXA.Enabled = true;
+                    RCOEnabledDS.Enabled = true;
+                    RCOEnabledBH.Enabled = false;
+                    RCODisabled.Enabled = true;
+                }
+                else if (Convert.ToInt32(SynthSettings.GetValue("rco", 1)) == 2)
+                {
+                    RCOEnabledXA.Checked = false;
+                    RCOEnabledDS.Checked = true;
+                    RCOEnabledBH.Checked = false;
+                    RCODisabled.Checked = false;
+                    RCOEnabledXA.Enabled = true;
+                    RCOEnabledDS.Enabled = false;
+                    RCOEnabledBH.Enabled = true;
+                    RCODisabled.Enabled = true;
+                }
+                else
+                {
+                    RCOEnabledXA.Checked = true;
+                    RCOEnabledDS.Checked = false;
+                    RCOEnabledBH.Checked = false;
+                    RCODisabled.Checked = false;
+                    RCOEnabledXA.Enabled = false;
+                    RCOEnabledDS.Enabled = true;
+                    RCOEnabledBH.Enabled = true;
+                    RCODisabled.Enabled = true;
+                }
                 if (Convert.ToInt32(SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
                     VMSSimulatorEnabled.Checked = true;
@@ -1226,6 +1270,58 @@ namespace KeppySynthConfigurator
             MIDIPanicDisabled.Enabled = false;
         }
 
+        private void RCOEnabledXA_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("rco", "3", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = true;
+            RCOEnabledDS.Checked = false;
+            RCOEnabledBH.Checked = false;
+            RCODisabled.Checked = false;
+            RCOEnabledXA.Enabled = false;
+            RCOEnabledDS.Enabled = true;
+            RCOEnabledBH.Enabled = true;
+            RCODisabled.Enabled = true;
+        }
+
+        private void RCOEnabledDS_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("rco", "2", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = true;
+            RCOEnabledBH.Checked = false;
+            RCODisabled.Checked = false;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = false;
+            RCOEnabledBH.Enabled = true;
+            RCODisabled.Enabled = true;
+        }
+
+        private void RCOEnabledBH_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = false;
+            RCOEnabledBH.Checked = true;
+            RCODisabled.Checked = false;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = true;
+            RCOEnabledBH.Enabled = false;
+            RCODisabled.Enabled = true;
+        }
+
+        private void RCODisabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = false;
+            RCOEnabledBH.Checked = false;
+            RCODisabled.Checked = true;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = true;
+            RCOEnabledBH.Enabled = true;
+            RCODisabled.Enabled = false;
+        }
+
         private void DefaultOut810enabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
@@ -1363,7 +1459,12 @@ namespace KeppySynthConfigurator
 
         private void WhatsAutoPanic_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("\"Automatic panic mode\" will tell the driver to kill all the active notes, when the CPU usage is equal or higher than 100%.", "What's the automatic panic mode?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("\"Automatic MIDI panic\" will tell the driver to kill all the active notes, when the CPU usage is equal or higher than 100%.", "What's the automatic MIDI panic?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void WhatsCPUOH_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("By enabling this, you'll reduce the CPU overhead caused by the audio threads.\n\nWarning: Enabling it could cause issues with audio, if the Windows Multimedia API patch for Windows 10 is applied to the app.", "What does this function do? (Reduce CPU overhead)", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Brand new output mode

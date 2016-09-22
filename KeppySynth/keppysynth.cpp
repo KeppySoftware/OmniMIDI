@@ -109,6 +109,7 @@ static int newevbuffvalue = 64; // DO NOT TOUCH
 static int oldbuffermode = 0; // For old-ass PCs
 static int nofloat = 1; // Enable or disable the float engine
 static int nofx = 0; // Enable or disable FXs
+static int rco = 0; // Reduce CPU overhead
 static int noteoff1 = 0; // Note cut INT
 static int preload = 0; // Soundfont preloading
 static int defaultmidiout = 0; // Set as default MIDI out device for 8.x or newer
@@ -367,19 +368,18 @@ unsigned _stdcall notescatcher(LPVOID lpV){
 
 unsigned __stdcall audioengine(LPVOID lpV){
 	while (stop_thread == 0){
+		if (rco == 1) { Sleep(1); }
 		if (reset_synth != 0){
 			reset_synth = 0;
-			load_settings();
 			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-			BASS_MIDI_StreamLoadSamples(hStream);
 		}
 		if (xaudiodisabled == 1) {
+			if (rco == 2) { Sleep(1); }
 			BASS_ChannelUpdate(hStream, 0);
-			Sleep(1);
 		}
 		else {
+			if (rco == 3) { Sleep(1); }
 			AudioRender();
-			Sleep(1);
 		}
 	}
 	stop_thread = 0;
@@ -389,20 +389,19 @@ unsigned __stdcall audioengine(LPVOID lpV){
 
 unsigned __stdcall oldbuffersystemforaldotarving(LPVOID lpV){
 	while (stop_thread == 0){
+		if (rco == 1) { Sleep(1); }
 		if (reset_synth != 0){
 			reset_synth = 0;
-			load_settings();
 			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-			BASS_MIDI_StreamLoadSamples(hStream);
 		}
 		bmsyn_play_some_data();
 		if (xaudiodisabled == 1) {
+			if (rco == 2) { Sleep(1); }
 			BASS_ChannelUpdate(hStream, 0);
-			Sleep(1);
 		}
 		else {
+			if (rco == 3) { Sleep(1); }
 			AudioRender();
-			Sleep(1);
 		}
 	}
 	stop_thread = 0;
