@@ -379,6 +379,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 		}
 		else {
 			AudioRender();
+			Sleep(1);
 		}
 	}
 	stop_thread = 0;
@@ -401,6 +402,7 @@ unsigned __stdcall oldbuffersystemforaldotarving(LPVOID lpV){
 		}
 		else {
 			AudioRender();
+			Sleep(1);
 		}
 	}
 	stop_thread = 0;
