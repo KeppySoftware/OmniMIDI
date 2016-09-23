@@ -81,6 +81,7 @@
             this.settingsPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -884,6 +885,7 @@
             this.settingsPresetsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lowLatencyPresetToolStripMenuItem,
             this.blackMIDIsPresetToolStripMenuItem,
+            this.chiptunesRetrogamingToolStripMenuItem,
             this.keppysSteinwayPianoRealismToolStripMenuItem});
             this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
             this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(94, 27);
@@ -892,27 +894,35 @@
             // lowLatencyPresetToolStripMenuItem
             // 
             this.lowLatencyPresetToolStripMenuItem.Name = "lowLatencyPresetToolStripMenuItem";
-            this.lowLatencyPresetToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lowLatencyPresetToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.lowLatencyPresetToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.lowLatencyPresetToolStripMenuItem.Text = "Low Latency Preset";
+            this.lowLatencyPresetToolStripMenuItem.Text = "Low Latency";
             this.lowLatencyPresetToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lowLatencyPresetToolStripMenuItem.Click += new System.EventHandler(this.lowLatencyPresetToolStripMenuItem_Click);
             // 
             // blackMIDIsPresetToolStripMenuItem
             // 
             this.blackMIDIsPresetToolStripMenuItem.Name = "blackMIDIsPresetToolStripMenuItem";
-            this.blackMIDIsPresetToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.blackMIDIsPresetToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.blackMIDIsPresetToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs Preset";
+            this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs";
             this.blackMIDIsPresetToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
+            // 
+            // chiptunesRetrogamingToolStripMenuItem
+            // 
+            this.chiptunesRetrogamingToolStripMenuItem.Name = "chiptunesRetrogamingToolStripMenuItem";
+            this.chiptunesRetrogamingToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chiptunesRetrogamingToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.chiptunesRetrogamingToolStripMenuItem.Text = "Chiptunes/Retrogaming";
+            this.chiptunesRetrogamingToolStripMenuItem.Click += new System.EventHandler(this.chiptunesRetrogamingToolStripMenuItem_Click);
             // 
             // keppysSteinwayPianoRealismToolStripMenuItem
             // 
             this.keppysSteinwayPianoRealismToolStripMenuItem.Name = "keppysSteinwayPianoRealismToolStripMenuItem";
-            this.keppysSteinwayPianoRealismToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.keppysSteinwayPianoRealismToolStripMenuItem.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.keppysSteinwayPianoRealismToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "Keppy\'s Steinway Piano (Realism) ";
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "Keppy\'s Steinway Piano - Realism ";
             this.keppysSteinwayPianoRealismToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
             // 
@@ -1768,6 +1778,7 @@
         private System.Windows.Forms.MenuItem WhatsCPUOH;
         private System.Windows.Forms.MenuItem RCOEnabledDS;
         private System.Windows.Forms.MenuItem RCOEnabledBH;
+        private System.Windows.Forms.ToolStripMenuItem chiptunesRetrogamingToolStripMenuItem;
     }
 }
 

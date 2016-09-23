@@ -996,6 +996,17 @@ namespace KeppySynthConfigurator
             XAudioDisable.Checked = false;
             VMSEmu.Checked = false;
 
+            // Additional settings
+            SynthSettings.SetValue("rco", "2", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = true;
+            RCOEnabledBH.Checked = false;
+            RCODisabled.Checked = false;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = false;
+            RCOEnabledBH.Enabled = true;
+            RCODisabled.Enabled = true;
+
             // And then...
             Functions.SaveSettings();
 
@@ -1021,6 +1032,17 @@ namespace KeppySynthConfigurator
             XAudioDisable.Checked = false;
             VMSEmu.Checked = false;
 
+            // Additional settings
+            SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = false;
+            RCOEnabledBH.Checked = true;
+            RCODisabled.Checked = false;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = true;
+            RCOEnabledBH.Enabled = false;
+            RCODisabled.Enabled = true;
+
             // And then...
             Functions.SaveSettings();
 
@@ -1028,15 +1050,50 @@ namespace KeppySynthConfigurator
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void chiptunesRetrogamingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 64;
+            MaxCPU.Value = 0;
+            Frequency.Text = "22050";
+            bufsize.Value = 0;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = false;
+            SincInter.Checked = false;
+            DisableSFX.Checked = false;
+            SysResetIgnore.Checked = false;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = true;
+            VMSEmu.Checked = false;
+
+            // Additional settings
+            SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = false;
+            RCOEnabledBH.Checked = true;
+            RCODisabled.Checked = false;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = true;
+            RCOEnabledBH.Enabled = false;
+            RCODisabled.Enabled = true;
+
+            // And then...
+            Functions.SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("The chiptunes/retrogaming preset has been applied!\n\n\"The NES soundfont\" is recommended for chiptunes.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
         private void keppysSteinwayPianoRealismToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
             VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 800;
+            PolyphonyLimit.Value = 850;
             MaxCPU.Value = 85;
             Frequency.Text = "66150";
-            bufsize.Value = 25;
+            bufsize.Value = 20;
             TracksLimit.Value = 16;
             Preload.Checked = true;
             NoteOffCheck.Checked = true;
@@ -1046,6 +1103,17 @@ namespace KeppySynthConfigurator
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
             VMSEmu.Checked = false;
+
+            // Additional settings
+            SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
+            RCOEnabledXA.Checked = false;
+            RCOEnabledDS.Checked = false;
+            RCOEnabledBH.Checked = false;
+            RCODisabled.Checked = true;
+            RCOEnabledXA.Enabled = true;
+            RCOEnabledDS.Enabled = true;
+            RCOEnabledBH.Enabled = true;
+            RCODisabled.Enabled = false;
 
             // And then...
             Functions.SaveSettings();

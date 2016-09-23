@@ -91,6 +91,11 @@ static BOOL sound_out_float = FALSE;
 static float sound_out_volume_float = 1.0;
 static int sound_out_volume_int = 0x1000;
 
+// Threads
+static HANDLE hThread = NULL;
+static HANDLE hThread2 = NULL;
+static unsigned int thrdaddr;
+
 // Variables
 static float *sndbf;
 static int allhotkeys = 0; // Enable/Disable all the hotkeys
@@ -360,41 +365,38 @@ unsigned _stdcall notescatcher(LPVOID lpV){
 	while (stop_thread == 0){
 		Sleep(1);
 		bmsyn_play_some_data();
+		if (oldbuffermode == 1) {
+			stop_thread = 1;
+		}
 	}
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
+}
+
+void separatethreadfordata() {
+	if (hThread2 == NULL) {
+		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
+		SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
+		SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
+	}
 }
 
 unsigned __stdcall audioengine(LPVOID lpV){
 	while (stop_thread == 0){
-		if (rco == 1) { Sleep(1); }
-		if (reset_synth != 0){
-			reset_synth = 0;
-			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-		}
-		if (xaudiodisabled == 1) {
-			if (rco == 2) { Sleep(1); }
-			BASS_ChannelUpdate(hStream, 0);
-		}
-		else {
-			if (rco == 3) { Sleep(1); }
-			AudioRender();
-		}
-	}
-	stop_thread = 0;
-	_endthreadex(0);
-	return 0;
-}
+		if (rco == 1) Sleep(1);
 
-unsigned __stdcall oldbuffersystemforaldotarving(LPVOID lpV){
-	while (stop_thread == 0){
-		if (rco == 1) { Sleep(1); }
 		if (reset_synth != 0){
 			reset_synth = 0;
 			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 		}
-		bmsyn_play_some_data();
+
+		if (oldbuffermode == 1) { 
+			hThread2 = NULL;
+			bmsyn_play_some_data(); 
+		}
+		else separatethreadfordata();
+
 		if (xaudiodisabled == 1) {
 			if (rco == 2) { Sleep(1); }
 			BASS_ChannelUpdate(hStream, 0);
@@ -417,9 +419,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			return 0;
 		}
 		else {
-			HANDLE hThread = NULL;
-			HANDLE hThread2 = NULL;
-			unsigned int thrdaddr;
 			unsigned i;
 			int opend = 0;
 			BASS_MIDI_FONT * mf;
@@ -553,19 +552,9 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
-					if (oldbuffermode == 1) {
-						hThread = (HANDLE)_beginthreadex(NULL, 0, oldbuffersystemforaldotarving, 0, 0, &thrdaddr);
-						SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
-						SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
-					}
-					else {
-						hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
-						hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
-						SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
-						SetPriorityClass(hThread2, REALTIME_PRIORITY_CLASS);
-						SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
-						SetThreadPriority(hThread2, THREAD_PRIORITY_TIME_CRITICAL);
-					}
+					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
+					SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
+					SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
 				}
 			}
 			while (stop_rtthread == 0){
