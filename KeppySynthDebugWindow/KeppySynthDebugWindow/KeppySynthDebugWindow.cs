@@ -197,6 +197,20 @@ namespace KeppySynthDebugWindow
             if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
             if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
         }
+
+        private void debugwintop_Click(object sender, EventArgs e)
+        {
+            if (debugwintop.Checked)
+            {
+                debugwintop.Checked = false;
+                TopMost = false;
+            }
+            else
+            {
+                debugwintop.Checked = true;
+                TopMost = true;
+            }
+        }
     }
 }
 

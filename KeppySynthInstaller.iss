@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.2.7'
+#define Version '4.0.2.8'
 
 [Setup]
 AllowCancelDuringInstall=False

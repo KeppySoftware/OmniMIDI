@@ -45,6 +45,7 @@
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.DebugWorker = new System.ComponentModel.BackgroundWorker();
+            this.debugwintop = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -66,6 +67,7 @@
             this.menuItem2,
             this.menuItem3,
             this.OpenAppLocat,
+            this.debugwintop,
             this.CopyToClipboard,
             this.menuItem1,
             this.ExitMenu});
@@ -89,24 +91,30 @@
             // 
             // CopyToClipboard
             // 
-            this.CopyToClipboard.Index = 3;
+            this.CopyToClipboard.Index = 4;
             this.CopyToClipboard.Text = "Copy debug info to clipboard";
             this.CopyToClipboard.Click += new System.EventHandler(this.CopyToClipboard_Click);
             // 
             // menuItem1
             // 
-            this.menuItem1.Index = 4;
+            this.menuItem1.Index = 5;
             this.menuItem1.Text = "-";
             // 
             // ExitMenu
             // 
-            this.ExitMenu.Index = 5;
+            this.ExitMenu.Index = 6;
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
             // 
             // DebugWorker
             // 
             this.DebugWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DebugWorker_DoWork);
+            // 
+            // debugwintop
+            // 
+            this.debugwintop.Index = 3;
+            this.debugwintop.Text = "Keep debug window on top";
+            this.debugwintop.Click += new System.EventHandler(this.debugwintop_Click);
             // 
             // KeppySynthDebugWindow
             // 
@@ -136,6 +144,7 @@
         private System.ComponentModel.BackgroundWorker DebugWorker;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem debugwintop;
     }
 }
 

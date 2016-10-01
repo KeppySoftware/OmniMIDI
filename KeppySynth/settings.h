@@ -181,7 +181,6 @@ int check_sinc()
 	return sinc;
 }
 
-
 void LoadSoundfont(int whichsf){
 	try {
 		TCHAR config[MAX_PATH];
@@ -736,7 +735,9 @@ void realtime_load_settings()
 		//another cake
 		int maxmidivoices = static_cast <int> (midivoices);
 		float trackslimit = static_cast <int> (tracks);
-		BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
+		if (tracks > 15) { 
+			BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
+		}
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);

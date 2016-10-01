@@ -144,6 +144,14 @@
             this.RCODisabled = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.WhatsCPUOH = new System.Windows.Forms.MenuItem();
+            this.menuItem24 = new System.Windows.Forms.MenuItem();
+            this.clipEnabled = new System.Windows.Forms.MenuItem();
+            this.clipDisabled = new System.Windows.Forms.MenuItem();
+            this.menuItem25 = new System.Windows.Forms.MenuItem();
+            this.srEnabled = new System.Windows.Forms.MenuItem();
+            this.srDisabled = new System.Windows.Forms.MenuItem();
+            this.SFMark = new System.Windows.Forms.MenuItem();
+            this.whyCanNotDisableSoftwareRendering = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -182,14 +190,6 @@
             this.ReloadList15 = new System.Windows.Forms.MenuItem();
             this.ReloadList16 = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
-            this.menuItem24 = new System.Windows.Forms.MenuItem();
-            this.clipEnabled = new System.Windows.Forms.MenuItem();
-            this.clipDisabled = new System.Windows.Forms.MenuItem();
-            this.menuItem25 = new System.Windows.Forms.MenuItem();
-            this.srEnabled = new System.Windows.Forms.MenuItem();
-            this.srDisabled = new System.Windows.Forms.MenuItem();
-            this.SFMark = new System.Windows.Forms.MenuItem();
-            this.whyCanNotDisableSoftwareRendering = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1353,6 +1353,59 @@
             this.WhatsCPUOH.Text = "What\'s this?";
             this.WhatsCPUOH.Click += new System.EventHandler(this.WhatsCPUOH_Click);
             // 
+            // menuItem24
+            // 
+            this.menuItem24.Index = 10;
+            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.clipEnabled,
+            this.clipDisabled});
+            this.menuItem24.Text = "Use floating point audio rendering";
+            // 
+            // clipEnabled
+            // 
+            this.clipEnabled.Index = 0;
+            this.clipEnabled.Text = "Enabled";
+            this.clipEnabled.Click += new System.EventHandler(this.clipEnabled_Click);
+            // 
+            // clipDisabled
+            // 
+            this.clipDisabled.Index = 1;
+            this.clipDisabled.Text = "Disabled";
+            this.clipDisabled.Click += new System.EventHandler(this.clipDisabled_Click);
+            // 
+            // menuItem25
+            // 
+            this.menuItem25.Index = 11;
+            this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.srEnabled,
+            this.srDisabled,
+            this.SFMark,
+            this.whyCanNotDisableSoftwareRendering});
+            this.menuItem25.Text = "Use software rendering";
+            // 
+            // srEnabled
+            // 
+            this.srEnabled.Index = 0;
+            this.srEnabled.Text = "Enabled";
+            this.srEnabled.Click += new System.EventHandler(this.srEnabled_Click);
+            // 
+            // srDisabled
+            // 
+            this.srDisabled.Index = 1;
+            this.srDisabled.Text = "Disabled";
+            this.srDisabled.Click += new System.EventHandler(this.srDisabled_Click);
+            // 
+            // SFMark
+            // 
+            this.SFMark.Index = 2;
+            this.SFMark.Text = "-";
+            // 
+            // whyCanNotDisableSoftwareRendering
+            // 
+            this.whyCanNotDisableSoftwareRendering.Index = 3;
+            this.whyCanNotDisableSoftwareRendering.Text = "Why can\'t I disable it?";
+            this.whyCanNotDisableSoftwareRendering.Click += new System.EventHandler(this.whyCanNotDisableSoftwareRendering_Click);
+            // 
             // informationAboutTheDriverToolStripMenuItem
             // 
             this.informationAboutTheDriverToolStripMenuItem.Index = 0;
@@ -1596,59 +1649,6 @@
             // ThemeCheck
             // 
             this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
-            // 
-            // menuItem24
-            // 
-            this.menuItem24.Index = 10;
-            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.clipEnabled,
-            this.clipDisabled});
-            this.menuItem24.Text = "Use floating point audio rendering";
-            // 
-            // clipEnabled
-            // 
-            this.clipEnabled.Index = 0;
-            this.clipEnabled.Text = "Enabled";
-            this.clipEnabled.Click += new System.EventHandler(this.clipEnabled_Click);
-            // 
-            // clipDisabled
-            // 
-            this.clipDisabled.Index = 1;
-            this.clipDisabled.Text = "Disabled";
-            this.clipDisabled.Click += new System.EventHandler(this.clipDisabled_Click);
-            // 
-            // menuItem25
-            // 
-            this.menuItem25.Index = 11;
-            this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.srEnabled,
-            this.srDisabled,
-            this.SFMark,
-            this.whyCanNotDisableSoftwareRendering});
-            this.menuItem25.Text = "Use software rendering";
-            // 
-            // srEnabled
-            // 
-            this.srEnabled.Index = 0;
-            this.srEnabled.Text = "Enabled";
-            this.srEnabled.Click += new System.EventHandler(this.srEnabled_Click);
-            // 
-            // srDisabled
-            // 
-            this.srDisabled.Index = 1;
-            this.srDisabled.Text = "Disabled";
-            this.srDisabled.Click += new System.EventHandler(this.srDisabled_Click);
-            // 
-            // SFMark
-            // 
-            this.SFMark.Index = 2;
-            this.SFMark.Text = "-";
-            // 
-            // whyCanNotDisableSoftwareRendering
-            // 
-            this.whyCanNotDisableSoftwareRendering.Index = 3;
-            this.whyCanNotDisableSoftwareRendering.Text = "Why can\'t I disable it?";
-            this.whyCanNotDisableSoftwareRendering.Click += new System.EventHandler(this.whyCanNotDisableSoftwareRendering_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
