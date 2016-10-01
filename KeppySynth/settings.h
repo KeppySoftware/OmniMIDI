@@ -145,6 +145,30 @@ int IgnoreSystemReset()
 	return sysresetignore;
 }
 
+int IsFloatRenderEnabled()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
+	RegCloseKey(hKey);
+	return floatrendering;
+}
+
+int IsSoftwareRenderingEnabled()
+{
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"softwarerendering", NULL, &dwType, (LPBYTE)&softwarerendering, &dwSize);
+	RegCloseKey(hKey);
+	return softwarerendering;
+}
+
 int check_sinc()
 {
 	HKEY hKey;

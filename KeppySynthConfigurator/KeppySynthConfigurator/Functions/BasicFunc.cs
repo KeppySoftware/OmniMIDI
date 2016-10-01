@@ -33,6 +33,12 @@ namespace KeppySynthConfigurator
             return (OS.Version.Major == 5) || ((OS.Version.Major == 5) && (OS.Version.Minor == 1));
         }
 
+        public static bool IsWindowsVistaOrNewer() // Checks if you're using Windows Vista or newer
+        {
+            OperatingSystem OS = Environment.OSVersion;
+            return (OS.Version.Major >= 6);
+        }
+
         public static void UserProfileMigration() // Migrates the Keppy's Synthesizer folder from %localappdata% (Unsupported on XP) to %userprofile% (Supported on XP, now used on Vista+ too)
         {
             try
@@ -205,11 +211,6 @@ namespace KeppySynthConfigurator
                 }
                 if (KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked == true)
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
                     if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
                     {
                         KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
@@ -218,6 +219,11 @@ namespace KeppySynthConfigurator
                     {
                         KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     }
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
                 }
             }

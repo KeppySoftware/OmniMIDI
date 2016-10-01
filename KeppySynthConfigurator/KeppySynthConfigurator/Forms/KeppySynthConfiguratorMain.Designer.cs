@@ -182,6 +182,14 @@
             this.ReloadList15 = new System.Windows.Forms.MenuItem();
             this.ReloadList16 = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
+            this.menuItem24 = new System.Windows.Forms.MenuItem();
+            this.clipEnabled = new System.Windows.Forms.MenuItem();
+            this.clipDisabled = new System.Windows.Forms.MenuItem();
+            this.menuItem25 = new System.Windows.Forms.MenuItem();
+            this.srEnabled = new System.Windows.Forms.MenuItem();
+            this.srDisabled = new System.Windows.Forms.MenuItem();
+            this.SFMark = new System.Windows.Forms.MenuItem();
+            this.whyCanNotDisableSoftwareRendering = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -205,7 +213,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 422);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 443);
             this.TabsForTheControls.TabIndex = 1;
             // 
             // List
@@ -229,14 +237,15 @@
             this.List.Location = new System.Drawing.Point(4, 22);
             this.List.Name = "List";
             this.List.Padding = new System.Windows.Forms.Padding(3);
-            this.List.Size = new System.Drawing.Size(641, 396);
+            this.List.Size = new System.Drawing.Size(641, 417);
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             // 
             // EL
             // 
+            this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(545, 348);
+            this.EL.Location = new System.Drawing.Point(545, 369);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -259,8 +268,9 @@
             // 
             // IEL
             // 
+            this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(545, 319);
+            this.IEL.Location = new System.Drawing.Point(545, 340);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -339,7 +349,7 @@
             this.List1Override.AutoSize = true;
             this.List1Override.BackColor = System.Drawing.Color.Transparent;
             this.List1Override.Enabled = false;
-            this.List1Override.Location = new System.Drawing.Point(4, 381);
+            this.List1Override.Location = new System.Drawing.Point(4, 402);
             this.List1Override.Name = "List1Override";
             this.List1Override.Size = new System.Drawing.Size(243, 13);
             this.List1Override.TabIndex = 31;
@@ -413,10 +423,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Lis.FormattingEnabled = true;
             this.Lis.HorizontalScrollbar = true;
+            this.Lis.IntegralHeight = false;
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.Lis.Size = new System.Drawing.Size(532, 342);
+            this.Lis.Size = new System.Drawing.Size(532, 363);
             this.Lis.TabIndex = 12;
             this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
             this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
@@ -437,7 +448,7 @@
             this.Settings.Controls.Add(this.SettingsButtons);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 396);
+            this.Settings.Size = new System.Drawing.Size(641, 417);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -859,7 +870,7 @@
             this.settingsPresetsToolStripMenuItem,
             this.assignSoundfontListToAppToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem});
-            this.SettingsButtons.Location = new System.Drawing.Point(0, 365);
+            this.SettingsButtons.Location = new System.Drawing.Point(0, 386);
             this.SettingsButtons.Name = "SettingsButtons";
             this.SettingsButtons.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.SettingsButtons.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1178,25 +1189,25 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 10;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 12;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 12;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 14;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 13;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 15;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 11;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 13;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
@@ -1214,6 +1225,8 @@
             this.menuItem14,
             this.menuItem11,
             this.menuItem18,
+            this.menuItem24,
+            this.menuItem25,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
@@ -1584,20 +1597,72 @@
             // 
             this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
             // 
+            // menuItem24
+            // 
+            this.menuItem24.Index = 10;
+            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.clipEnabled,
+            this.clipDisabled});
+            this.menuItem24.Text = "Use floating point audio rendering";
+            // 
+            // clipEnabled
+            // 
+            this.clipEnabled.Index = 0;
+            this.clipEnabled.Text = "Enabled";
+            this.clipEnabled.Click += new System.EventHandler(this.clipEnabled_Click);
+            // 
+            // clipDisabled
+            // 
+            this.clipDisabled.Index = 1;
+            this.clipDisabled.Text = "Disabled";
+            this.clipDisabled.Click += new System.EventHandler(this.clipDisabled_Click);
+            // 
+            // menuItem25
+            // 
+            this.menuItem25.Index = 11;
+            this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.srEnabled,
+            this.srDisabled,
+            this.SFMark,
+            this.whyCanNotDisableSoftwareRendering});
+            this.menuItem25.Text = "Use software rendering";
+            // 
+            // srEnabled
+            // 
+            this.srEnabled.Index = 0;
+            this.srEnabled.Text = "Enabled";
+            this.srEnabled.Click += new System.EventHandler(this.srEnabled_Click);
+            // 
+            // srDisabled
+            // 
+            this.srDisabled.Index = 1;
+            this.srDisabled.Text = "Disabled";
+            this.srDisabled.Click += new System.EventHandler(this.srDisabled_Click);
+            // 
+            // SFMark
+            // 
+            this.SFMark.Index = 2;
+            this.SFMark.Text = "-";
+            // 
+            // whyCanNotDisableSoftwareRendering
+            // 
+            this.whyCanNotDisableSoftwareRendering.Index = 3;
+            this.whyCanNotDisableSoftwareRendering.Text = "Why can\'t I disable it?";
+            this.whyCanNotDisableSoftwareRendering.Click += new System.EventHandler(this.whyCanNotDisableSoftwareRendering_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(649, 422);
+            this.ClientSize = new System.Drawing.Size(649, 443);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.SettingsButtons;
-            this.MaximizeBox = false;
             this.Menu = this.MainMenu;
+            this.MinimumSize = new System.Drawing.Size(665, 481);
             this.Name = "KeppySynthConfiguratorMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1779,6 +1844,14 @@
         private System.Windows.Forms.MenuItem RCOEnabledDS;
         private System.Windows.Forms.MenuItem RCOEnabledBH;
         private System.Windows.Forms.ToolStripMenuItem chiptunesRetrogamingToolStripMenuItem;
+        private System.Windows.Forms.MenuItem menuItem24;
+        private System.Windows.Forms.MenuItem clipEnabled;
+        private System.Windows.Forms.MenuItem clipDisabled;
+        private System.Windows.Forms.MenuItem menuItem25;
+        private System.Windows.Forms.MenuItem srEnabled;
+        private System.Windows.Forms.MenuItem srDisabled;
+        private System.Windows.Forms.MenuItem SFMark;
+        private System.Windows.Forms.MenuItem whyCanNotDisableSoftwareRendering;
     }
 }
 

@@ -103,6 +103,7 @@ static int autopanic = 1; // Autopanic switch
 static int bassoutputfinal = 0; // DO NOT TOUCH
 static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
+static int floatrendering = 0; // 16-bit rendering mode
 static int frames = 0; // Default
 static int frequency = 0; // Audio frequency
 static int frequencynew = 0; // Audio frequency
@@ -122,6 +123,7 @@ static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
 static int vmsemu = 0; // VirtualMIDISynth buffer emulation
+static int softwarerendering = 1; // Software rendering instead of hardware rendering (ONLY EFFECTIVE ON WINDOWS XP)
 static int vms2emu = 0; // VirtualMIDISynth 2.x buffer emulation
 static int volume = 0; // Volume limit
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
@@ -453,34 +455,31 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				load_bassfuncs();
 				OutputDebugString(L"Initializing the stream...");
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
+					BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 100000);
+					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 					if (bassoutputfinal == -1) {
 						BASS_GetInfo(&info);
 						if (vmsemu == 1) {
-							BASS_SetConfig(BASS_CONFIG_BUFFER, 11 + info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
+							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 						}
 						else {
-							BASS_SetConfig(BASS_CONFIG_BUFFER, 11 + info.minbuf); // default buffer size
+							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
-						BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 100000);
-						BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-						BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-						hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), frequency);
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+						hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareRenderingEnabled() ? BASS_SAMPLE_SOFTWARE : softwarerendering) | (IsFloatRenderEnabled() ? BASS_SAMPLE_FLOAT : floatrendering) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), frequency);
 						BASS_ChannelPlay(hStream, false);
 					}
 					else {
-						BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 100000);
-						BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-						BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | BASS_SAMPLE_FLOAT | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), frequency);
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | (IsFloatRenderEnabled() ? BASS_SAMPLE_FLOAT : floatrendering) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), frequency);
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);
 						hStream = 0;
 						continue;
+					}
+					else {
+						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 					}
 					// LoudMax stuff lel
 					#if defined(_WIN64)

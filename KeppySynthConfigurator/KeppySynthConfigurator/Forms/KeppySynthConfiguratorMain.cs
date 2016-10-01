@@ -187,6 +187,7 @@ namespace KeppySynthConfigurator
         {
             // SAS THEME HANDLER
             this.ThemeCheck.RunWorkerAsync();
+            this.Size = new Size(665, 481);
             // MIDI out selector disabler
             if (Functions.IsWindows8OrNewer() == true)
             {
@@ -353,6 +354,49 @@ namespace KeppySynthConfigurator
                     checkDisabledToolStripMenuItem.Checked = true;
                     checkEnabledToolStripMenuItem.Enabled = true;
                     checkDisabledToolStripMenuItem.Enabled = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("32bit", 1)) == 1)
+                {
+                    clipEnabled.Checked = true;
+                    clipDisabled.Checked = false;
+                    clipEnabled.Enabled = false;
+                    clipDisabled.Enabled = true;
+                }
+                else
+                {
+                    clipEnabled.Checked = false;
+                    clipDisabled.Checked = true;
+                    clipEnabled.Enabled = true;
+                    clipDisabled.Enabled = false;
+                }
+                if (Functions.IsWindowsVistaOrNewer())
+                {
+                    srEnabled.Checked = true;
+                    srDisabled.Checked = false;
+                    srEnabled.Enabled = false;
+                    srDisabled.Enabled = false;
+                    SynthSettings.SetValue("softwarerendering", 1, RegistryValueKind.DWord);
+                    SFMark.Visible = true;
+                    whyCanNotDisableSoftwareRendering.Visible = true;
+                }
+                else
+                {
+                    if (Convert.ToInt32(SynthSettings.GetValue("softwarerendering", 1)) == 1)
+                    {
+                        srEnabled.Checked = true;
+                        srDisabled.Checked = false;
+                        srEnabled.Enabled = false;
+                        srDisabled.Enabled = true;
+                    }
+                    else
+                    {
+                        srEnabled.Checked = false;
+                        srDisabled.Checked = true;
+                        srEnabled.Enabled = true;
+                        srDisabled.Enabled = false;
+                    }
+                    SFMark.Visible = false;
+                    whyCanNotDisableSoftwareRendering.Visible = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
                 {
@@ -1057,6 +1101,8 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 64;
             MaxCPU.Value = 0;
             Frequency.Text = "22050";
+            XAudioDisable.Checked = true;
+            XAudioDisable_CheckedChanged(null, null);
             bufsize.Value = 0;
             TracksLimit.Value = 16;
             Preload.Checked = true;
@@ -1065,7 +1111,6 @@ namespace KeppySynthConfigurator
             DisableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = true;
             VMSEmu.Checked = false;
 
             // Additional settings
@@ -1535,6 +1580,11 @@ namespace KeppySynthConfigurator
             MessageBox.Show("By enabling this, you'll reduce the CPU overhead caused by the audio threads.\n\nWarning: Enabling it could cause issues with audio, if the Windows Multimedia API patch for Windows 10 is applied to the app.", "What does this function do? (Reduce CPU overhead)", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void whyCanNotDisableSoftwareRendering_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Since Windows Vista, DirectSound is emulated through the \"Windows Audio Session API\".\n\nIt's not hardware rendered anymore, so the function is set to \"Enabled\" by default.\n\nWindows XP is the last O.S. to support native hardware rendering.", "Why can't I disable software rendering?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         // Brand new output mode
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
@@ -1637,20 +1687,56 @@ namespace KeppySynthConfigurator
 
         private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
-            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Checked = true;
-            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Enabled = false;
-            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Enabled = true;
+            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+            hLSEnabledToolStripMenuItem.Checked = true;
+            hLSDisabledToolStripMenuItem.Checked = false;
+            hLSEnabledToolStripMenuItem.Enabled = false;
+            hLSDisabledToolStripMenuItem.Enabled = true;
         }
 
         private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
-            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Checked = true;
-            KeppySynthConfiguratorMain.Delegate.hLSEnabledToolStripMenuItem.Enabled = true;
-            KeppySynthConfiguratorMain.Delegate.hLSDisabledToolStripMenuItem.Enabled = false;
+            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+            hLSEnabledToolStripMenuItem.Checked = false;
+            hLSDisabledToolStripMenuItem.Checked = true;
+            hLSEnabledToolStripMenuItem.Enabled = true;
+            Delegate.hLSDisabledToolStripMenuItem.Enabled = false;
+        }
+
+        private void clipEnabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("32bit", "1", RegistryValueKind.DWord);
+            clipEnabled.Checked = true;
+            clipDisabled.Checked = false;
+            clipEnabled.Enabled = false;
+            clipDisabled.Enabled = true;
+        }
+
+        private void clipDisabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("32bit", "0", RegistryValueKind.DWord);
+            clipEnabled.Checked = false;
+            clipDisabled.Checked = true;
+            clipEnabled.Enabled = true;
+            clipDisabled.Enabled = false;
+        }
+
+        private void srEnabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("softwarerendering", "1", RegistryValueKind.DWord);
+            srEnabled.Checked = true;
+            srDisabled.Checked = false;
+            srEnabled.Enabled = false;
+            srDisabled.Enabled = true;
+        }
+
+        private void srDisabled_Click(object sender, EventArgs e)
+        {
+            SynthSettings.SetValue("softwarerendering", "0", RegistryValueKind.DWord);
+            srEnabled.Checked = false;
+            srDisabled.Checked = true;
+            srEnabled.Enabled = true;
+            srDisabled.Enabled = false;
         }
 
         // Snap feature

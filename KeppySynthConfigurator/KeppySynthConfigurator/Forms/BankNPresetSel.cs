@@ -32,6 +32,13 @@ namespace KeppySynthConfigurator
                 BankVal.Minimum = -1;
                 PresetVal.Minimum = -1;
             }
+            else
+            {
+                DesBankVal.Enabled = false;
+                DesPresetVal.Enabled = false;
+                DesBankVal.Value = 0;
+                DesPresetVal.Value = 0;
+            }
             if (WindowMode == 1)
             {
                 this.StartPosition = FormStartPosition.CenterScreen;
@@ -63,7 +70,5 @@ namespace KeppySynthConfigurator
             File.WriteAllText(helpFile, KeppySynthConfigurator.Properties.Resources.gmlist);
             Process.Start(helpFile);
         }
-
-
     }
 }
