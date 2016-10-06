@@ -243,31 +243,35 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("allhotkeys", 0)) == 1)
                 {
-                    hLSEnabledToolStripMenuItem.Checked = true;
-                    hLSDisabledToolStripMenuItem.Checked = false;
-                    hLSEnabledToolStripMenuItem.Enabled = false;
-                    hLSDisabledToolStripMenuItem.Enabled = true;
+                    hotkeys.Checked = true;
                 }
                 else
                 {
-                    hLSEnabledToolStripMenuItem.Checked = false;
-                    hLSDisabledToolStripMenuItem.Checked = true;
-                    hLSEnabledToolStripMenuItem.Enabled = true;
-                    hLSDisabledToolStripMenuItem.Enabled = false;
+                    hotkeys.Checked = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("autopanic", 1)) == 1)
                 {
-                    MIDIPanicEnabled.Checked = true;
-                    MIDIPanicDisabled.Checked = false;
-                    MIDIPanicEnabled.Enabled = false;
-                    MIDIPanicDisabled.Enabled = true;
+                    autopanicmode.Checked = true;
                 }
                 else
                 {
-                    MIDIPanicEnabled.Checked = false;
-                    MIDIPanicDisabled.Checked = true;
-                    MIDIPanicEnabled.Enabled = true;
-                    MIDIPanicDisabled.Enabled = false;
+                    autopanicmode.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("shortname", 0)) == 1)
+                {
+                    MIDINameNoSpace.Checked = true;
+                }
+                else
+                {
+                    MIDINameNoSpace.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("sysexignore", 0)) == 1)
+                {
+                    SysExIgnore.Checked = true;
+                }
+                else
+                {
+                    SysExIgnore.Checked = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("rco", 1)) == 0)
                 {
@@ -315,95 +319,56 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
-                    VMSSimulatorEnabled.Checked = true;
-                    VMSSimulatorDisabled.Checked = false;
-                    VMSSimulatorEnabled.Enabled = false;
-                    VMSSimulatorDisabled.Enabled = true;
+                    slowdownnoskip.Checked = true;
                 }
                 else
                 {
-                    VMSSimulatorEnabled.Checked = false;
-                    VMSSimulatorDisabled.Checked = true;
-                    VMSSimulatorEnabled.Enabled = true;
-                    VMSSimulatorDisabled.Enabled = false;
+                    slowdownnoskip.Checked = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
                 {
-                    enabledToolStripMenuItem3.Checked = true;
-                    disabledToolStripMenuItem3.Checked = false;
-                    enabledToolStripMenuItem3.Enabled = false;
-                    disabledToolStripMenuItem3.Enabled = true;
+                    useoldbuffersystem.Checked = true;
                 }
                 else
                 {
-                    enabledToolStripMenuItem3.Checked = false;
-                    disabledToolStripMenuItem3.Checked = true;
-                    enabledToolStripMenuItem3.Enabled = true;
-                    disabledToolStripMenuItem3.Enabled = false;
+                    useoldbuffersystem.Checked = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
                 {
-                    checkEnabledToolStripMenuItem.Checked = true;
-                    checkDisabledToolStripMenuItem.Checked = false;
-                    checkEnabledToolStripMenuItem.Enabled = false;
-                    checkDisabledToolStripMenuItem.Enabled = true;
+                    autoupdate.Checked = true;
                 }
                 else
                 {
-                    checkEnabledToolStripMenuItem.Checked = false;
-                    checkDisabledToolStripMenuItem.Checked = true;
-                    checkEnabledToolStripMenuItem.Enabled = true;
-                    checkDisabledToolStripMenuItem.Enabled = false;
+                    autoupdate.Checked = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("32bit", 1)) == 1)
                 {
-                    clipEnabled.Checked = true;
-                    clipDisabled.Checked = false;
-                    clipEnabled.Enabled = false;
-                    clipDisabled.Enabled = true;
+                    floatingpointaudio.Checked = true;
                 }
                 else
                 {
-                    clipEnabled.Checked = false;
-                    clipDisabled.Checked = true;
-                    clipEnabled.Enabled = true;
-                    clipDisabled.Enabled = false;
+                    floatingpointaudio.Checked = false;
                 }
                 if (Functions.IsWindowsVistaOrNewer())
                 {
-                    srEnabled.Checked = true;
-                    srDisabled.Checked = false;
-                    srEnabled.Enabled = false;
-                    srDisabled.Enabled = false;
+                    useSWrendering.Enabled = false;
+                    useSWrendering.Checked = true;
                     SynthSettings.SetValue("softwarerendering", 1, RegistryValueKind.DWord);
-                    SFMark.Visible = true;
-                    whyCanNotDisableSoftwareRendering.Visible = true;
                 }
                 else
                 {
                     if (Convert.ToInt32(SynthSettings.GetValue("softwarerendering", 1)) == 1)
                     {
-                        srEnabled.Checked = true;
-                        srDisabled.Checked = false;
-                        srEnabled.Enabled = false;
-                        srDisabled.Enabled = true;
+                        useSWrendering.Checked = true;
                     }
                     else
                     {
-                        srEnabled.Checked = false;
-                        srDisabled.Checked = true;
-                        srEnabled.Enabled = true;
-                        srDisabled.Enabled = false;
+                        useSWrendering.Checked = false;
                     }
-                    SFMark.Visible = false;
-                    whyCanNotDisableSoftwareRendering.Visible = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
                 {
-                    enabledToolStripMenuItem2.Checked = true;
-                    disabledToolStripMenuItem2.Checked = false;
-                    enabledToolStripMenuItem2.Enabled = false;
-                    disabledToolStripMenuItem2.Enabled = true;
+                    enableextra8sf.Checked = true;
                     MoreLists.Visible = true;
                     SelectedListBox.Items.Add("List 9");
                     SelectedListBox.Items.Add("List 10");
@@ -416,10 +381,7 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    enabledToolStripMenuItem2.Checked = false;
-                    disabledToolStripMenuItem2.Checked = true;
-                    enabledToolStripMenuItem2.Enabled = true;
-                    disabledToolStripMenuItem2.Enabled = false;
+                    enableextra8sf.Checked = false;
                     MoreLists.Visible = false;
                 }
                 Frequency.Text = SynthSettings.GetValue("frequency", 44100).ToString();
@@ -522,7 +484,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
                 {
                     this.Hide();
@@ -1347,42 +1309,6 @@ namespace KeppySynthConfigurator
             frm.ShowDialog();
         }
 
-        private void checkEnabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("autoupdatecheck", "1", RegistryValueKind.DWord);
-            checkEnabledToolStripMenuItem.Checked = true;
-            checkDisabledToolStripMenuItem.Checked = false;
-            checkEnabledToolStripMenuItem.Enabled = false;
-            checkDisabledToolStripMenuItem.Enabled = true;
-        }
-
-        private void checkDisabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
-            checkEnabledToolStripMenuItem.Checked = false;
-            checkDisabledToolStripMenuItem.Checked = true;
-            checkEnabledToolStripMenuItem.Enabled = true;
-            checkDisabledToolStripMenuItem.Enabled = false;
-        }
-
-        private void MIDIPanicEnabled_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("autopanic", "1", RegistryValueKind.DWord);
-            MIDIPanicEnabled.Checked = true;
-            MIDIPanicDisabled.Checked = false;
-            MIDIPanicEnabled.Enabled = false;
-            MIDIPanicDisabled.Enabled = true;
-        }
-
-        private void MIDIPanicDisabled_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("autopanic", "0", RegistryValueKind.DWord);
-            MIDIPanicEnabled.Checked = false;
-            MIDIPanicDisabled.Checked = true;
-            MIDIPanicEnabled.Enabled = true;
-            MIDIPanicDisabled.Enabled = false;
-        }
-
         private void RCOEnabledXA_Click(object sender, EventArgs e)
         {
             SynthSettings.SetValue("rco", "3", RegistryValueKind.DWord);
@@ -1451,78 +1377,6 @@ namespace KeppySynthConfigurator
             DefaultOut810disabledToolStripMenuItem.Checked = true;
             DefaultOut810enabledToolStripMenuItem.Enabled = true;
             DefaultOut810disabledToolStripMenuItem.Enabled = false;
-        }
-
-        private void enabledToolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
-            enabledToolStripMenuItem3.Checked = true;
-            disabledToolStripMenuItem3.Checked = false;
-            enabledToolStripMenuItem3.Enabled = false;
-            disabledToolStripMenuItem3.Enabled = true;
-        }
-
-        private void disabledToolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("oldbuffersystem", "0", RegistryValueKind.DWord);
-            enabledToolStripMenuItem3.Checked = false;
-            disabledToolStripMenuItem3.Checked = true;
-            enabledToolStripMenuItem3.Enabled = true;
-            disabledToolStripMenuItem3.Enabled = false;
-        }
-
-        private void VMSSimulatorEnabled_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("vms2emu", "1", RegistryValueKind.DWord);
-            VMSSimulatorEnabled.Checked = true;
-            VMSSimulatorDisabled.Checked = false;
-            VMSSimulatorEnabled.Enabled = false;
-            VMSSimulatorDisabled.Enabled = true;
-        }
-
-        private void VMSSimulatorDisabled_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("vms2emu", "0", RegistryValueKind.DWord);
-            VMSSimulatorEnabled.Checked = false;
-            VMSSimulatorDisabled.Checked = true;
-            VMSSimulatorEnabled.Enabled = true;
-            VMSSimulatorDisabled.Enabled = false;
-        }
-
-        private void enabledToolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("extra8lists", "1", RegistryValueKind.DWord);
-            enabledToolStripMenuItem2.Checked = true;
-            disabledToolStripMenuItem2.Checked = false;
-            enabledToolStripMenuItem2.Enabled = false;
-            disabledToolStripMenuItem2.Enabled = true;
-            MoreLists.Visible = true;
-            SelectedListBox.Items.Add("List 9");
-            SelectedListBox.Items.Add("List 10");
-            SelectedListBox.Items.Add("List 11");
-            SelectedListBox.Items.Add("List 12");
-            SelectedListBox.Items.Add("List 13");
-            SelectedListBox.Items.Add("List 14");
-            SelectedListBox.Items.Add("List 15");
-            SelectedListBox.Items.Add("List 16");
-        }
-
-        private void disabledToolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("extra8lists", "0", RegistryValueKind.DWord);
-            enabledToolStripMenuItem2.Checked = false;
-            disabledToolStripMenuItem2.Checked = true;
-            enabledToolStripMenuItem2.Enabled = true;
-            disabledToolStripMenuItem2.Enabled = false;
-            MoreLists.Visible = false;
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
-            SelectedListBox.Items.RemoveAt(8);
         }
 
         private void FLStudioLicenseDiscount_Click(object sender, EventArgs e)
@@ -1685,58 +1539,162 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void hLSEnabledToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MIDINameNoSpace_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
-            hLSEnabledToolStripMenuItem.Checked = true;
-            hLSDisabledToolStripMenuItem.Checked = false;
-            hLSEnabledToolStripMenuItem.Enabled = false;
-            hLSDisabledToolStripMenuItem.Enabled = true;
+            if (MIDINameNoSpace.Checked == false)
+            {
+                SynthSettings.SetValue("shortname", "1", RegistryValueKind.DWord);
+                MIDINameNoSpace.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("shortname", "0", RegistryValueKind.DWord);
+                MIDINameNoSpace.Checked = false;
+            }
         }
 
-        private void hLSDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        private void useoldbuffersystem_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
-            hLSEnabledToolStripMenuItem.Checked = false;
-            hLSDisabledToolStripMenuItem.Checked = true;
-            hLSEnabledToolStripMenuItem.Enabled = true;
-            Delegate.hLSDisabledToolStripMenuItem.Enabled = false;
+            if (useoldbuffersystem.Checked == false)
+            {
+                SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
+                useoldbuffersystem.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("oldbuffersystem", "0", RegistryValueKind.DWord);
+                useoldbuffersystem.Checked = false;
+            }
         }
 
-        private void clipEnabled_Click(object sender, EventArgs e)
+        private void slowdownnoskip_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("32bit", "1", RegistryValueKind.DWord);
-            clipEnabled.Checked = true;
-            clipDisabled.Checked = false;
-            clipEnabled.Enabled = false;
-            clipDisabled.Enabled = true;
+            if (slowdownnoskip.Checked == false)
+            {
+                SynthSettings.SetValue("vms2emu", "1", RegistryValueKind.DWord);
+                slowdownnoskip.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("vms2emu", "0", RegistryValueKind.DWord);
+                slowdownnoskip.Checked = false;
+            }
         }
 
-        private void clipDisabled_Click(object sender, EventArgs e)
+        private void autopanicmode_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("32bit", "0", RegistryValueKind.DWord);
-            clipEnabled.Checked = false;
-            clipDisabled.Checked = true;
-            clipEnabled.Enabled = true;
-            clipDisabled.Enabled = false;
+            if (autopanicmode.Checked == false)
+            {
+                SynthSettings.SetValue("autopanic", "1", RegistryValueKind.DWord);
+                autopanicmode.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("autopanic", "0", RegistryValueKind.DWord);
+                autopanicmode.Checked = false;
+            }
         }
 
-        private void srEnabled_Click(object sender, EventArgs e)
+        private void useSWrendering_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("softwarerendering", "1", RegistryValueKind.DWord);
-            srEnabled.Checked = true;
-            srDisabled.Checked = false;
-            srEnabled.Enabled = false;
-            srDisabled.Enabled = true;
+            if (useSWrendering.Checked == false)
+            {
+                SynthSettings.SetValue("softwarerendering", "1", RegistryValueKind.DWord);
+                useSWrendering.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("softwarerendering", "0", RegistryValueKind.DWord);
+                useSWrendering.Checked = false;
+            }
         }
 
-        private void srDisabled_Click(object sender, EventArgs e)
+        private void hotkeys_Click(object sender, EventArgs e)
         {
-            SynthSettings.SetValue("softwarerendering", "0", RegistryValueKind.DWord);
-            srEnabled.Checked = false;
-            srDisabled.Checked = true;
-            srEnabled.Enabled = true;
-            srDisabled.Enabled = false;
+            if (hotkeys.Checked == false)
+            {
+                SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+                hotkeys.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+                hotkeys.Checked = false;
+            }
+        }
+
+        private void autoupdate_Click(object sender, EventArgs e)
+        {
+            if (autoupdate.Checked == false)
+            {
+                SynthSettings.SetValue("autoupdatecheck", "1", RegistryValueKind.DWord);
+                autoupdate.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
+                autoupdate.Checked = false;
+            }
+        }
+
+        private void enableextra8sf_Click(object sender, EventArgs e)
+        {
+            if (enableextra8sf.Checked == false)
+            {
+                SynthSettings.SetValue("extra8lists", "1", RegistryValueKind.DWord);
+                enableextra8sf.Checked = true;
+                MoreLists.Visible = true;
+                SelectedListBox.Items.Add("List 9");
+                SelectedListBox.Items.Add("List 10");
+                SelectedListBox.Items.Add("List 11");
+                SelectedListBox.Items.Add("List 12");
+                SelectedListBox.Items.Add("List 13");
+                SelectedListBox.Items.Add("List 14");
+                SelectedListBox.Items.Add("List 15");
+                SelectedListBox.Items.Add("List 16");
+            }
+            else
+            {
+                SynthSettings.SetValue("extra8lists", "0", RegistryValueKind.DWord);
+                enableextra8sf.Checked = false;
+                MoreLists.Visible = false;
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+                SelectedListBox.Items.RemoveAt(8);
+            }
+        }
+
+        private void floatingpointaudio_Click(object sender, EventArgs e)
+        {
+            if (floatingpointaudio.Checked == false)
+            {
+                SynthSettings.SetValue("32bit", "1", RegistryValueKind.DWord);
+                floatingpointaudio.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("32bit", "0", RegistryValueKind.DWord);
+                floatingpointaudio.Checked = false;
+            }
+        }
+
+        private void SysExIgnore_Click(object sender, EventArgs e)
+        {
+            if (SysExIgnore.Checked == false)
+            {
+                SynthSettings.SetValue("sysexignore", "1", RegistryValueKind.DWord);
+                SysExIgnore.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("sysexignore", "1", RegistryValueKind.DWord);
+                SysExIgnore.Checked = false;
+            }
         }
 
         // Snap feature

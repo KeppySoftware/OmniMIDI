@@ -76,9 +76,4 @@
       <Filter>Resource files</Filter>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\KeppySynthConfigurator\KeppySynthConfigurator\Resources\gear.ico">
-      <Filter>Resource files</Filter>
-    </Image>
-  </ItemGroup>
 </Project>

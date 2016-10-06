@@ -94,6 +94,7 @@ static int sound_out_volume_int = 0x1000;
 // Threads
 static HANDLE hThread = NULL;
 static HANDLE hThread2 = NULL;
+static HANDLE hTremolio = NULL;
 static unsigned int thrdaddr;
 
 // Variables
@@ -103,9 +104,10 @@ static int autopanic = 1; // Autopanic switch
 static int bassoutputfinal = 0; // DO NOT TOUCH
 static int defaultsflist = 1; // Default soundfont list
 static int encmode = 0; // Encoder mode
-static int floatrendering = 0; // 16-bit rendering mode
+static int floatrendering = 1; // Floating point audio
 static int frames = 0; // Default
 static int frequency = 0; // Audio frequency
+static int tremoliov = 0; // Yes
 static int frequencynew = 0; // Audio frequency
 static int maxcpu = 0; // CPU usage INT
 static int midivoices = 0; // Max voices INT
@@ -116,8 +118,10 @@ static int oldbuffermode = 0; // For old-ass PCs
 static int nofloat = 1; // Enable or disable the float engine
 static int nofx = 0; // Enable or disable FXs
 static int rco = 0; // Reduce CPU overhead
+static int shortname = 0; // Use short name or nah
 static int noteoff1 = 0; // Note cut INT
 static int preload = 0; // Soundfont preloading
+static int sysexignore = 0; // Ignore SysEx events
 static int defaultmidiout = 0; // Set as default MIDI out device for 8.x or newer
 static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
@@ -266,6 +270,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
 	RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
 	RegCloseKey(hKey);
 
@@ -283,13 +288,16 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	
 	CHAR synthName[] = "Keppy's Synthesizer\0";
 	WCHAR synthNameW[] = L"Keppy's Synthesizer\0";
+	CHAR synthNameSH[] = "KEPSYNTH\0";
+	WCHAR synthNameSHW[] = L"KEPSYNTH\0";
 
 	switch (capsSize) {
 	case (sizeof(MIDIOUTCAPSA)) :
 		myCapsA = (MIDIOUTCAPSA *)capsPtr;
 		myCapsA->wMid = 0xffff; //MM_UNMAPPED
 		myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
-		memcpy(myCapsA->szPname, synthName, sizeof(synthName));
+		if (shortname) { memcpy(myCapsA->szPname, synthNameSH, sizeof(synthNameSH)); }
+		else { memcpy(myCapsA->szPname, synthName, sizeof(synthName)); }
 		myCapsA->wTechnology = defaultmode;
 		myCapsA->vDriverVersion = 0x022;
 		myCapsA->wVoices = 100000;
@@ -303,7 +311,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW = (MIDIOUTCAPSW *)capsPtr;
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
-		memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW));
+		if (shortname) { memcpy(myCapsW->szPname, synthNameSHW, sizeof(synthNameSHW)); }
+		else { memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW)); }
 		myCapsW->wTechnology = defaultmode;
 		myCapsW->vDriverVersion = 0x022;
 		myCapsW->wVoices = 100000;
@@ -317,7 +326,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
 		myCaps2A->wMid = 0xffff;
 		myCaps2A->wPid = 0xffff;
-		memcpy(myCaps2A->szPname, synthName, sizeof(synthName));
+		if (shortname) { memcpy(myCaps2A->szPname, synthNameSH, sizeof(synthNameSH)); }
+		else { memcpy(myCaps2A->szPname, synthName, sizeof(synthName)); }
 		myCaps2A->wTechnology = defaultmode;
 		myCaps2A->vDriverVersion = 0x022;
 		myCaps2A->wVoices = 100000;
@@ -333,7 +343,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
-		memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW));
+		if (shortname) { memcpy(myCaps2W->szPname, synthNameSHW, sizeof(synthNameSHW)); }
+		else { memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW)); }
 		myCaps2W->wTechnology = defaultmode;
 		myCaps2W->vDriverVersion = 0x022;
 		myCaps2W->wVoices = 100000;
@@ -371,6 +382,18 @@ unsigned _stdcall notescatcher(LPVOID lpV){
 			stop_thread = 1;
 		}
 	}
+	stop_thread = 0;
+	_endthreadex(0);
+	return 0;
+}
+
+unsigned _stdcall tremolio(LPVOID lpV){
+	while (stop_thread == 0){
+		int tremolio = rand() % ((frequency + 100) - (frequency - 100)) + (frequency - 100);
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, tremolio);
+		Sleep(1);
+	}
+	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
@@ -455,7 +478,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				load_bassfuncs();
 				OutputDebugString(L"Initializing the stream...");
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
-					BASS_SetConfig(BASS_CONFIG_MIDI_VOICES, 100000);
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 					if (bassoutputfinal == -1) {
@@ -466,11 +488,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						else {
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
-						hStream = BASS_MIDI_StreamCreate(tracks, (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | (IsSoftwareRenderingEnabled() ? BASS_SAMPLE_SOFTWARE : softwarerendering) | (IsFloatRenderEnabled() ? BASS_SAMPLE_FLOAT : floatrendering) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), frequency);
+						hStream = BASS_MIDI_StreamCreate(tracks, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						BASS_ChannelPlay(hStream, false);
 					}
 					else {
-						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (IgnoreSystemReset() ? BASS_MIDI_NOSYSRESET : sysresetignore) | BASS_SAMPLE_SOFTWARE | (IsFloatRenderEnabled() ? BASS_SAMPLE_FLOAT : floatrendering) | (IsNoteOff1TurnedOn() ? BASS_MIDI_NOTEOFF1 : noteoff1) | (AreEffectsDisabled() ? BASS_MIDI_NOFX : nofx) | (check_sinc() ? BASS_MIDI_SINCINTER : sinc), frequency);
+						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);
@@ -554,10 +576,15 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
 					SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
 					SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
+					if (tremoliov) {
+						hTremolio = (HANDLE)_beginthreadex(NULL, 0, tremolio, 0, 0, &thrdaddr);
+						SetPriorityClass(hTremolio, NORMAL_PRIORITY_CLASS);
+						SetThreadPriority(hTremolio, THREAD_PRIORITY_NORMAL);
+					}
 				}
 			}
 			while (stop_rtthread == 0){
-				Sleep(1);
+				Sleep(10);
 				realtime_load_settings();
 				debug_info();
 				keybindings();

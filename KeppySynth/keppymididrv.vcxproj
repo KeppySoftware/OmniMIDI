@@ -37,9 +37,6 @@
   <ItemGroup>
     <None Include="keppysynth.def" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\KeppySynthConfigurator\KeppySynthConfigurator\Resources\gear.ico" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>keppysynth</ProjectName>
     <ProjectGuid>{BD7491C1-986F-4D48-99E6-018AB4ACF801}</ProjectGuid>

@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.2.8'
+#define Version '4.0.2.9'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -31,7 +31,6 @@ InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
 MinVersion=0,5.01.2600sp3
 OutputBaseFilename=KeppysSynthSetup
-OutputDir=..\Keppy-s-Driver
 SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
 SolidCompression=yes
@@ -177,6 +176,7 @@ Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword;
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "sndbfvalue"; ValueData: "100"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "softwaremode"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "sysresetignore"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "sysexignore"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "tracks"; ValueData: "16"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "vmsemu"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Settings"; ValueType: dword; ValueName: "volume"; ValueData: "10000"; Flags: createvalueifdoesntexist uninsdeletekey

@@ -111,76 +111,6 @@ BOOL IsRunningXP(){
 	return FALSE;
 }
 
-int AreEffectsDisabled(){
-	long lResult;
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
-	RegCloseKey(hKey);
-	return nofx;
-}
-
-int IsNoteOff1TurnedOn(){
-	long lResult;
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
-	RegCloseKey(hKey);
-	return noteoff1;
-}
-
-int IgnoreSystemReset()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
-	RegCloseKey(hKey);
-	return sysresetignore;
-}
-
-int IsFloatRenderEnabled()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
-	RegCloseKey(hKey);
-	return floatrendering;
-}
-
-int IsSoftwareRenderingEnabled()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"softwarerendering", NULL, &dwType, (LPBYTE)&softwarerendering, &dwSize);
-	RegCloseKey(hKey);
-	return softwarerendering;
-}
-
-int check_sinc()
-{
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-	RegCloseKey(hKey);
-	return sinc;
-}
-
 void LoadSoundfont(int whichsf){
 	try {
 		TCHAR config[MAX_PATH];
@@ -641,6 +571,7 @@ void load_settings()
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 		RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
+		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
 		RegQueryValueEx(hKey, L"extra8lists", NULL, &dwType, (LPBYTE)&extra8lists, &dwSize);
@@ -649,15 +580,19 @@ void load_settings()
 		RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
-		if (xaudiodisabled == 1) { RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize); }
-		else { sinc = 0; }
 		RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
 		RegQueryValueEx(hKey, L"tracks", NULL, &dwType, (LPBYTE)&tracks, &dwSize);
 		RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
 		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
 		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
+		RegQueryValueEx(hKey, L"tremolio", NULL, &dwType, (LPBYTE)&tremoliov, &dwSize);
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
+		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
+
+		if (xaudiodisabled == 1) { RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize); }
+		else { sinc = 0; }
+
 		RegCloseKey(hKey);
 
 	    dwType = REG_SZ;
@@ -698,7 +633,10 @@ void realtime_load_settings()
 		DWORD dwSize = sizeof(DWORD);
 		int vms2emutemp = vms2emu;
 		int oldbuffermodetemp = oldbuffermode;
+		int frequencyttemp = frequency;
+		int potato;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"autopanic", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
@@ -720,8 +658,15 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"volumemon", NULL, &dwType, (LPBYTE)&volumemon, &dwSize);
 		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
+		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
+		RegQueryValueEx(hKey, L"potato", NULL, &dwType, (LPBYTE)&potato, &dwSize);
 		if (vms2emutemp != vms2emu) {
 			ResetSynth();
+		}
+		if (potato) {
+			if (frequencyttemp != frequency) {
+				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
+			}
 		}
 		RegCloseKey(hKey);
 		//cake
