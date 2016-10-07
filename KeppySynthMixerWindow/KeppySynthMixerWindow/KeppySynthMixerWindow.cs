@@ -214,6 +214,16 @@ namespace KeppySynthMixerWindow
             }
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == (int)Program.BringToFrontMessage)
+            {
+                WinAPI.ShowWindow(Handle, WinAPI.SW_RESTORE);
+                WinAPI.SetForegroundWindow(Handle);
+            }
+            base.WndProc(ref m);
+        }
+
         private void VolumeMonitor_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -315,14 +325,7 @@ namespace KeppySynthMixerWindow
 
         private void showTheConfiguratorWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Process.GetProcessesByName("KeppySynthConfigurator").Length > 0)
-            {
-                MessageBox.Show("The configurator is already opened!", "Keppy's Synthesizer Mixer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
-            }
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
         }
 
         private void VolumeToolTip(string channel, TrackBar trackbar)

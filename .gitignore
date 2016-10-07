@@ -1,6 +1,4 @@
 *.suo
-*.suo
-*.suo
 *.tmp
 /*.dll
 /*.exe
@@ -71,4 +69,5 @@ output/KeppySynthWatchdog.vshost.exe
 output/KeppySynthDebugWindow.exe
 output/KeppySynthDebugWindow.vshost.exe
 output/KeppySynthMixerWindow.exe
+output/KeppySynthMixerWindow.vshost.exe
 output/KeppysSynthSetup.exe

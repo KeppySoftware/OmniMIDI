@@ -100,6 +100,16 @@ namespace KeppySynthConfigurator
             }
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == (int)Program.BringToFrontMessage)
+            {
+                WinAPI.ShowWindow(Handle, WinAPI.SW_RESTORE);
+                WinAPI.SetForegroundWindow(Handle);
+            }
+            base.WndProc(ref m);
+        }
+
         private void KeppySynthConfiguratorMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SynthSettings.Close();
@@ -369,7 +379,6 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
                 {
                     enableextra8sf.Checked = true;
-                    MoreLists.Visible = true;
                     SelectedListBox.Items.Add("List 9");
                     SelectedListBox.Items.Add("List 10");
                     SelectedListBox.Items.Add("List 11");
@@ -382,7 +391,6 @@ namespace KeppySynthConfigurator
                 else
                 {
                     enableextra8sf.Checked = false;
-                    MoreLists.Visible = false;
                 }
                 Frequency.Text = SynthSettings.GetValue("frequency", 44100).ToString();
                 TracksLimit.Value = Convert.ToInt32(SynthSettings.GetValue("tracks", 16));
@@ -1133,26 +1141,12 @@ namespace KeppySynthConfigurator
 
         private void openDebugWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Process.GetProcessesByName("KeppySynthDebugWindow").Length > 0)
-            {
-                MessageBox.Show("The debug window is already opened!", "Keppy's Synthesizer Configurator - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthDebugWindow.exe");
-            }
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthDebugWindow.exe");
         }
 
         private void openTheMixerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Process.GetProcessesByName("KeppySynthMixerWindow").Length > 0)
-            {
-                MessageBox.Show("The mixer window is already opened!", "Keppy's Synthesizer Configurator - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
-            }
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
         }
 
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1643,7 +1637,6 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("extra8lists", "1", RegistryValueKind.DWord);
                 enableextra8sf.Checked = true;
-                MoreLists.Visible = true;
                 SelectedListBox.Items.Add("List 9");
                 SelectedListBox.Items.Add("List 10");
                 SelectedListBox.Items.Add("List 11");
@@ -1657,7 +1650,6 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("extra8lists", "0", RegistryValueKind.DWord);
                 enableextra8sf.Checked = false;
-                MoreLists.Visible = false;
                 SelectedListBox.Items.RemoveAt(8);
                 SelectedListBox.Items.RemoveAt(8);
                 SelectedListBox.Items.RemoveAt(8);

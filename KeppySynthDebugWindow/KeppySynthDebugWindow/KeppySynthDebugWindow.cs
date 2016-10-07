@@ -43,6 +43,16 @@ namespace KeppySynthDebugWindow
             DebugWorker.RunWorkerAsync(); // Creates a thread to show the info
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == (int)Program.BringToFrontMessage)
+            {
+                WinAPI.ShowWindow(Handle, WinAPI.SW_RESTORE);
+                WinAPI.SetForegroundWindow(Handle);
+            }
+            base.WndProc(ref m);
+        }
+
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using Keppy's Synthesizer
         {
             RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
@@ -168,14 +178,7 @@ namespace KeppySynthDebugWindow
 
         private void menuItem2_Click(object sender, EventArgs e)
         {
-            if (Process.GetProcessesByName("KeppySynthConfigurator").Length > 0)
-            {
-                MessageBox.Show("The configurator is already opened!", "Keppy's Synthesizer Debug Window - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
-            }
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
         }
 
         // Snap feature

@@ -55,7 +55,6 @@ static int rel13 = 0;
 static int rel14 = 0;
 static int rel15 = 0;
 static int rel16 = 0;
-static int resetchannels = 0;
 
 // Other
 static int buffull = 0;
@@ -741,7 +740,6 @@ void WatchdogCheck()
 		RegQueryValueEx(hKey, L"rel14", NULL, &dwType, (LPBYTE)&rel14, &dwSize);
 		RegQueryValueEx(hKey, L"rel15", NULL, &dwType, (LPBYTE)&rel15, &dwSize);
 		RegQueryValueEx(hKey, L"rel16", NULL, &dwType, (LPBYTE)&rel16, &dwSize);
-		RegQueryValueEx(hKey, L"resetchannels", NULL, &dwType, (LPBYTE)&resetchannels, &dwSize);
 		if (rel1 == 1) {
 			LoadSoundfont(1);
 			RegSetValueEx(hKey, L"rel1", 0, dwType, (LPBYTE)&zero, sizeof(zero));
@@ -805,10 +803,6 @@ void WatchdogCheck()
 		if (rel16 == 1) {
 			LoadSoundfont(8);
 			RegSetValueEx(hKey, L"rel16", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (resetchannels == 1) {
-			ResetSynth();
-			RegSetValueEx(hKey, L"resetchannels", 0, dwType, (LPBYTE)&zero, sizeof(zero));
 		}
 		RegCloseKey(hKey);
 	}
