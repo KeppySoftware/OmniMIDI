@@ -85,7 +85,11 @@ int bmsyn_play_some_data(void){
 		case MODM_DATA:
 			dwParam2 = dwParam1 & 0xF0;
 			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-			BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+		    BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+			if (debugmode == 1) {
+				SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+				std::cout << "(" << uMsg << ") " << dwParam1 << " | " << dwParam2 << " - Normal MIDI data, sending to BASSMIDI..." << std::endl;
+			}
 			break;
 		case MODM_LONGDATA:
 			if (!sysexignore) {
@@ -115,6 +119,10 @@ int bmsyn_play_some_data(void){
 						}
 					}
 				}
+				if (debugmode == 1) {
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+					std::cout << "(" << uMsg << ") " << dwParam1 << " | " << dwParam2 << " - SysEx MIDI data, sending to BASSMIDI..." << std::endl;
+				}
 			}
 			free(sysexbuffer);
 			break;
@@ -139,6 +147,9 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 		if (InterlockedIncrement(&evbcount) >= newevbuffvalue) {
 			do
 			{
+				if (debugmode == 1) {
+					std::cout << "Buffer is full, slowing down..." << std::endl << std::flush;;
+				}
 				Sleep(1);
 			} while (evbcount >= newevbuffvalue);
 		}

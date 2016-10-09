@@ -133,6 +133,8 @@ static int volume = 0; // Volume limit
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
 static int volumemon = 1; // Volume monitoring
 static int xaudiodisabled = 0; // Override the default engine
+static int debugmode = 0; // Debug console
+static HANDLE hConsole;
 
 // Other stuff
 static int decoded;
@@ -272,12 +274,21 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
 	RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
+	RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
 	RegCloseKey(hKey);
 
 	if (defaultmidiout == 1)
 		defaultmode = MOD_SWSYNTH;
 	else
 		defaultmode = MOD_MIDIPORT;
+
+	if (debugmode == 1) {
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(0)" << " - Sharing MIDI caps with application..." << std::endl;
+	}
 
 	MIDIOUTCAPSA * myCapsA;
 	MIDIOUTCAPSW * myCapsW;
@@ -304,6 +315,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wNotes = 2147483647;
 		myCapsA->wChannelMask = 0xffff;
 		myCapsA->dwSupport = MIDICAPS_VOLUME;
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(0)" << " - Sharing MIDIOUTCAPSA..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -319,6 +332,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wNotes = 2147483647;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(0)" << " - Sharing MIDIOUTCAPSW..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -337,6 +352,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->ManufacturerGuid = CLSID_bassmidi_synth;
 		myCaps2A->ProductGuid = CLSID_bassmidi_synth;
 		myCaps2A->NameGuid = CLSID_bassmidi_synth;
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(0)" << " - Sharing MIDIOUTCAPS2A..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 	case (sizeof(MIDIOUTCAPS2W)) :
@@ -354,9 +371,13 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->ManufacturerGuid = CLSID_bassmidi_synth;
 		myCaps2W->ProductGuid = CLSID_bassmidi_synth;
 		myCaps2W->NameGuid = CLSID_bassmidi_synth;
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(0)" << " - Sharing MIDIOUTCAPS2W..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 	default:
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(0)" << " - Error" << std::endl;
 		return MMSYSERR_ERROR;
 		break;
 	}
@@ -375,24 +396,32 @@ bool compare_nocase(const std::string& first, const std::string& second)
 }
 
 unsigned _stdcall notescatcher(LPVOID lpV){
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(1)" << " - Initializing notes catcher thread..." << std::endl;
 	while (stop_thread == 0){
 		Sleep(1);
 		bmsyn_play_some_data();
 		if (oldbuffermode == 1) {
-			stop_thread = 1;
+			break;
 		}
 	}
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(1)" << " - Closing notes catcher thread..." << std::endl;
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
 }
 
 unsigned _stdcall tremolio(LPVOID lpV){
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(1)" << " - Initializing tremolio thread..." << std::endl;
 	while (stop_thread == 0){
 		int tremolio = rand() % ((frequency + 100) - (frequency - 100)) + (frequency - 100);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, tremolio);
 		Sleep(1);
 	}
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(1)" << " - Closing tremolio thread..." << std::endl;
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
 	stop_thread = 0;
 	_endthreadex(0);
@@ -401,6 +430,8 @@ unsigned _stdcall tremolio(LPVOID lpV){
 
 void separatethreadfordata() {
 	if (hThread2 == NULL) {
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		std::cout << "(1)" << " - Creating thread for the note catcher..." << std::endl;
 		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
 		SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
@@ -408,29 +439,36 @@ void separatethreadfordata() {
 }
 
 unsigned __stdcall audioengine(LPVOID lpV){
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(1)" << " - Initializing audio rendering thread..." << std::endl;
 	while (stop_thread == 0){
-		if (rco == 1) Sleep(1);
+		try {
+			if (reset_synth != 0){
+				reset_synth = 0;
+				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+			}
 
-		if (reset_synth != 0){
-			reset_synth = 0;
-			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+			if (oldbuffermode == 1) {
+				hThread2 = NULL;
+				bmsyn_play_some_data();
+			}
+			else separatethreadfordata();
+
+			if (xaudiodisabled == 1) {
+				if (rco == 1) { Sleep(1); }
+				BASS_ChannelUpdate(hStream, 0);
+			}
+			else {
+				AudioRender();
+			}
+		}
+		catch (int e) {
+			std::cout << "Error while writing audio frame." << std::endl << std::flush;
 		}
 
-		if (oldbuffermode == 1) { 
-			hThread2 = NULL;
-			bmsyn_play_some_data(); 
-		}
-		else separatethreadfordata();
-
-		if (xaudiodisabled == 1) {
-			if (rco == 2) { Sleep(1); }
-			BASS_ChannelUpdate(hStream, 0);
-		}
-		else {
-			if (rco == 3) { Sleep(1); }
-			AudioRender();
-		}
 	}
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(1)" << " - Closing audio rendering thread..." << std::endl;
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
@@ -464,19 +502,25 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				load_settings();
 				if (xaudiodisabled == 1) {
-					bassoutputfinal = -1;
-					// Do nothing, since now the driver is going to use DirectSound.
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+					std::cout << "(1)" << " - Opening DirectSound stream..." << std::endl;
+					std::cout << "(1)" << " - DirectSound ready." << std::endl;
 				}
 				else {
 					if (sound_driver == NULL) {
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - Opening XAudio stream..." << std::endl;
 						sound_driver = create_sound_out_xaudio2();
 						sound_out_float = TRUE;
 						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
 						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
+						SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+						std::cout << "(1)" << " - " << sound_driver << " - XAudio ready." << std::endl;
 					}
 				}
 				load_bassfuncs();
-				OutputDebugString(L"Initializing the stream...");
+				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+				std::cout << "(1)" << " - Opening stream..." << std::endl;
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
@@ -490,13 +534,19 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						}
 						hStream = BASS_MIDI_StreamCreate(tracks, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						BASS_ChannelPlay(hStream, false);
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1) " << " - Done." << std::endl;
 					}
 					else {
 						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - Done." << std::endl;
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);
 						hStream = 0;
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - Failed." << std::endl;
 						continue;
 					}
 					else {
@@ -570,6 +620,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					else {
 						LoadSoundfont(defaultsflist);
 					}
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+					std::cout << "(1)" << " - Creating threads..." << std::endl;
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
@@ -581,6 +633,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						SetPriorityClass(hTremolio, NORMAL_PRIORITY_CLASS);
 						SetThreadPriority(hTremolio, THREAD_PRIORITY_NORMAL);
 					}
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+					std::cout << "(1)" << " - Threads are now active." << std::endl;
 				}
 			}
 			while (stop_rtthread == 0){
@@ -619,6 +673,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				CoUninitialize();
 				com_initialized = FALSE;
 			}
+			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+			std::cout << "(1)" << " - Closing main thread..." << std::endl;
 			_endthreadex(0);
 			return 0;
 		}

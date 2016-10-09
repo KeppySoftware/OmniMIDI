@@ -121,19 +121,14 @@
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
+            this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
             this.useSWrendering = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
             this.autopanicmode = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
-            this.menuItem18 = new System.Windows.Forms.MenuItem();
-            this.RCOEnabledXA = new System.Windows.Forms.MenuItem();
-            this.RCOEnabledDS = new System.Windows.Forms.MenuItem();
-            this.RCOEnabledBH = new System.Windows.Forms.MenuItem();
-            this.RCODisabled = new System.Windows.Forms.MenuItem();
-            this.menuItem26 = new System.Windows.Forms.MenuItem();
-            this.WhatsCPUOH = new System.Windows.Forms.MenuItem();
+            this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -1096,37 +1091,37 @@
             // 
             // enableextra8sf
             // 
-            this.enableextra8sf.Index = 6;
+            this.enableextra8sf.Index = 7;
             this.enableextra8sf.Text = "Enable extra 8 soundfont lists";
             this.enableextra8sf.Click += new System.EventHandler(this.enableextra8sf_Click);
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 7;
+            this.useoldbuffersystem.Index = 8;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 14;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 15;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 16;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 17;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 17;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 18;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 15;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 16;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
@@ -1139,6 +1134,7 @@
             this.menuItem17,
             this.manageFolderFavouritesToolStripMenuItem,
             this.menuItem19,
+            this.DebugModePls,
             this.MIDINameNoSpace,
             this.enableextra8sf,
             this.useoldbuffersystem,
@@ -1147,7 +1143,7 @@
             this.floatingpointaudio,
             this.autopanicmode,
             this.SysExIgnore,
-            this.menuItem18,
+            this.ReduceCPUOver,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
@@ -1160,88 +1156,53 @@
             this.hotkeys.Text = "Hotkeys in the MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
+            // DebugModePls
+            // 
+            this.DebugModePls.Index = 5;
+            this.DebugModePls.Text = "Enable debug mode";
+            this.DebugModePls.Click += new System.EventHandler(this.DebugModePls_Click);
+            // 
             // MIDINameNoSpace
             // 
-            this.MIDINameNoSpace.Index = 5;
+            this.MIDINameNoSpace.Index = 6;
             this.MIDINameNoSpace.Text = "Use MIDI device name without spaces";
             this.MIDINameNoSpace.Click += new System.EventHandler(this.MIDINameNoSpace_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 8;
+            this.slowdownnoskip.Index = 9;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
             // useSWrendering
             // 
-            this.useSWrendering.Index = 9;
+            this.useSWrendering.Index = 10;
             this.useSWrendering.Text = "Use software rendering";
             this.useSWrendering.Click += new System.EventHandler(this.useSWrendering_Click);
             // 
             // floatingpointaudio
             // 
-            this.floatingpointaudio.Index = 10;
+            this.floatingpointaudio.Index = 11;
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
             // autopanicmode
             // 
-            this.autopanicmode.Index = 11;
+            this.autopanicmode.Index = 12;
             this.autopanicmode.Text = "Automatic MIDI panic";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 12;
+            this.SysExIgnore.Index = 13;
             this.SysExIgnore.Text = "Ignore SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
-            // menuItem18
+            // ReduceCPUOver
             // 
-            this.menuItem18.Index = 13;
-            this.menuItem18.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.RCOEnabledXA,
-            this.RCOEnabledDS,
-            this.RCOEnabledBH,
-            this.RCODisabled,
-            this.menuItem26,
-            this.WhatsCPUOH});
-            this.menuItem18.Text = "Reduce CPU overhead";
-            // 
-            // RCOEnabledXA
-            // 
-            this.RCOEnabledXA.Index = 0;
-            this.RCOEnabledXA.Text = "Enabled (For XAudio)";
-            this.RCOEnabledXA.Click += new System.EventHandler(this.RCOEnabledXA_Click);
-            // 
-            // RCOEnabledDS
-            // 
-            this.RCOEnabledDS.Index = 1;
-            this.RCOEnabledDS.Text = "Enabled (For DirectSound)";
-            this.RCOEnabledDS.Click += new System.EventHandler(this.RCOEnabledDS_Click);
-            // 
-            // RCOEnabledBH
-            // 
-            this.RCOEnabledBH.Index = 2;
-            this.RCOEnabledBH.Text = "Enabled (For both)";
-            this.RCOEnabledBH.Click += new System.EventHandler(this.RCOEnabledBH_Click);
-            // 
-            // RCODisabled
-            // 
-            this.RCODisabled.Index = 3;
-            this.RCODisabled.Text = "Disabled";
-            this.RCODisabled.Click += new System.EventHandler(this.RCODisabled_Click);
-            // 
-            // menuItem26
-            // 
-            this.menuItem26.Index = 4;
-            this.menuItem26.Text = "-";
-            // 
-            // WhatsCPUOH
-            // 
-            this.WhatsCPUOH.Index = 5;
-            this.WhatsCPUOH.Text = "What\'s this?";
-            this.WhatsCPUOH.Click += new System.EventHandler(this.WhatsCPUOH_Click);
+            this.ReduceCPUOver.Index = 14;
+            this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
+            this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -1516,18 +1477,13 @@
         private System.Windows.Forms.ToolStripMenuItem keppysSteinwayPianoRealismToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker ThemeCheck;
         private System.Windows.Forms.MenuItem autopanicmode;
-        private System.Windows.Forms.MenuItem menuItem18;
-        private System.Windows.Forms.MenuItem RCOEnabledXA;
-        private System.Windows.Forms.MenuItem RCODisabled;
-        private System.Windows.Forms.MenuItem menuItem26;
-        private System.Windows.Forms.MenuItem WhatsCPUOH;
-        private System.Windows.Forms.MenuItem RCOEnabledDS;
-        private System.Windows.Forms.MenuItem RCOEnabledBH;
+        private System.Windows.Forms.MenuItem ReduceCPUOver;
         private System.Windows.Forms.ToolStripMenuItem chiptunesRetrogamingToolStripMenuItem;
         private System.Windows.Forms.MenuItem floatingpointaudio;
         private System.Windows.Forms.MenuItem useSWrendering;
         private System.Windows.Forms.MenuItem MIDINameNoSpace;
         private System.Windows.Forms.MenuItem SysExIgnore;
+        private System.Windows.Forms.MenuItem DebugModePls;
     }
 }
 

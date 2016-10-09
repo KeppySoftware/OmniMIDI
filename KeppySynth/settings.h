@@ -79,6 +79,8 @@ void crashhandler(int e) {
 	std::wstring s = std::to_wstring(e);
 	std::wstring stemp = L"Fatal error during the execution of the driver!\n\nError code: " + s;
 	const WCHAR * text = stemp.c_str();
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(Error " << e << ") " << " - Fatal error during the execution of the converter." << std::endl;
 	MessageBox(NULL, text, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 	exit(0);
 }
@@ -88,6 +90,7 @@ void DLLLoadError(LPCWSTR dll) {
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
+	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
 	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
 }
 
@@ -96,6 +99,7 @@ void DLLLoadError2(LPCWSTR dll) {
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
+	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
 	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONASTERISK | MB_SYSTEMMODAL);
 }
 
@@ -480,6 +484,9 @@ BOOL load_bassfuncs()
 	GetModuleFileName(hinst, installpath, MAX_PATH);
 	PathRemoveFileSpec(installpath);
 
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(0)" << " - Allocating memory for DLLs..." << std::endl;
+
 	lstrcat(basspath, installpath);
 	lstrcat(basspath, L"\\bass.dll");
 	if (!(bass = LoadLibrary(basspath))) {
@@ -504,8 +511,13 @@ BOOL load_bassfuncs()
 		DLLLoadError2(bassvstpath);
 		exit(0);
 	}
+
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(0)" << " - Done." << std::endl;
+
 	/* "load" all the BASS functions that are to be used */
-	OutputDebugString(L"Loading BASS functions....");
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(0)" << " - Loading BASS functions..." << std::endl;
 	LOADBASSENCFUNCTION(BASS_Encode_Start);
 	LOADBASSENCFUNCTION(BASS_Encode_Stop);
 	LOADBASSFUNCTION(BASS_ChannelFlags);
@@ -538,7 +550,8 @@ BOOL load_bassfuncs()
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 	LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
-	OutputDebugString(L"Done.");
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(0)" << " - Done." << std::endl;
 
 	installpathlength = lstrlen(installpath) + 1;
 	lstrcat(pluginpath, installpath);
@@ -559,6 +572,8 @@ BOOL load_bassfuncs()
 void load_settings()
 {
 	try {
+		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+		std::cout << "(0)" << " - Loading settings from registry..." << std::endl;
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -617,6 +632,9 @@ void load_settings()
 
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+
+		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+		std::cout << "(0)" << " - Done." << std::endl;
 	}
 	catch (int e) {
 		crashhandler(e);
