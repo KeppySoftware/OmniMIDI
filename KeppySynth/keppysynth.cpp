@@ -502,9 +502,9 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				load_settings();
 				if (xaudiodisabled == 1) {
+					bassoutputfinal = -1;
 					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 					std::cout << "(1)" << " - Opening DirectSound stream..." << std::endl;
-					std::cout << "(1)" << " - DirectSound ready." << std::endl;
 				}
 				else {
 					if (sound_driver == NULL) {
@@ -520,7 +520,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				load_bassfuncs();
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-				std::cout << "(1)" << " - Opening stream..." << std::endl;
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
@@ -535,12 +534,12 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						hStream = BASS_MIDI_StreamCreate(tracks, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						BASS_ChannelPlay(hStream, false);
 						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1) " << " - Done." << std::endl;
+						std::cout << "(1)" << " - DirectSound stream enabled and running." << std::endl;
 					}
 					else {
 						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - Done." << std::endl;
+						std::cout << "(1)" << " - XAudio stream enabled." << std::endl;
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);
@@ -565,6 +564,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					#endif
 					// Encoder code
 					if (encmode == 1) {
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - Opening BASSenc stream..." << std::endl;
 						typedef std::basic_string<TCHAR> tstring;
 						TCHAR encpath[MAX_PATH];
 						TCHAR poop[MAX_PATH];
@@ -608,17 +609,24 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 								break;
 							}
 						}
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - BASSenc ready." << std::endl;
 					}
 					// Cake.
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+					std::cout << "(1)" << " - Preparing stream..." << std::endl;
 					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
 					if (LoadSoundfontStartup() == TRUE) {
-						// Wew
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - Default list for app loaded." << std::endl;
 					}
 					else {
 						LoadSoundfont(defaultsflist);
+						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+						std::cout << "(1)" << " - Default global list loaded." << std::endl;
 					}
 					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 					std::cout << "(1)" << " - Creating threads..." << std::endl;
@@ -637,6 +645,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					std::cout << "(1)" << " - Threads are now active." << std::endl;
 				}
 			}
+			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+			std::cout << "(1)" << " - Checking for settings changes or hotkeys..." << std::endl;
 			while (stop_rtthread == 0){
 				Sleep(10);
 				realtime_load_settings();
