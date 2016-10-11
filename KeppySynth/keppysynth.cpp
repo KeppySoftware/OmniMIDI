@@ -181,6 +181,28 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
 
+void CreateConsole() {
+	DWORD version = GetVersion();
+	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
+	DWORD minor = (DWORD)(HIBYTE(LOWORD(version)));
+	if (major >= 6) {
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTitle(L"Keppy's Synthesizer Debug");
+	}
+}
+
+void PrintToConsole(int color, int stage, const char* text) {
+	DWORD version = GetVersion();
+	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
+	DWORD minor = (DWORD)(HIBYTE(LOWORD(version)));
+	if (major >= 6) {
+		SetConsoleTextAttribute(hConsole, color);
+		std::cout << std::endl << "(" << stage << ") - " << text;
+	}
+}
+
 // Keppy's Synthesizer vital parts
 #include "sfsystem.h"
 #include "settings.h"
@@ -283,12 +305,10 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		defaultmode = MOD_MIDIPORT;
 
 	if (debugmode == 1) {
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(0)" << " - Sharing MIDI caps with application..." << std::endl;
+		CreateConsole();
 	}
+
+	PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
 
 	MIDIOUTCAPSA * myCapsA;
 	MIDIOUTCAPSW * myCapsW;
@@ -315,8 +335,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wNotes = 2147483647;
 		myCapsA->wChannelMask = 0xffff;
 		myCapsA->dwSupport = MIDICAPS_VOLUME;
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(0)" << " - Sharing MIDIOUTCAPSA..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -332,8 +350,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wNotes = 2147483647;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(0)" << " - Sharing MIDIOUTCAPSW..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -352,8 +368,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->ManufacturerGuid = CLSID_bassmidi_synth;
 		myCaps2A->ProductGuid = CLSID_bassmidi_synth;
 		myCaps2A->NameGuid = CLSID_bassmidi_synth;
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(0)" << " - Sharing MIDIOUTCAPS2A..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 	case (sizeof(MIDIOUTCAPS2W)) :
@@ -372,12 +386,10 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->ProductGuid = CLSID_bassmidi_synth;
 		myCaps2W->NameGuid = CLSID_bassmidi_synth;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(0)" << " - Sharing MIDIOUTCAPS2W..." << std::endl;
 		return MMSYSERR_NOERROR;
 
 	default:
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(0)" << " - Error" << std::endl;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
 		return MMSYSERR_ERROR;
 		break;
 	}
@@ -396,8 +408,7 @@ bool compare_nocase(const std::string& first, const std::string& second)
 }
 
 unsigned _stdcall notescatcher(LPVOID lpV){
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(1)" << " - Initializing notes catcher thread..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 	while (stop_thread == 0){
 		Sleep(1);
 		bmsyn_play_some_data();
@@ -405,23 +416,20 @@ unsigned _stdcall notescatcher(LPVOID lpV){
 			break;
 		}
 	}
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(1)" << " - Closing notes catcher thread..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
 }
 
 unsigned _stdcall tremolio(LPVOID lpV){
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(1)" << " - Initializing tremolio thread..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing tremolio thread...");
 	while (stop_thread == 0){
 		int tremolio = rand() % ((frequency + 100) - (frequency - 100)) + (frequency - 100);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, tremolio);
 		Sleep(1);
 	}
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(1)" << " - Closing tremolio thread..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Closing tremolio thread...");
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
 	stop_thread = 0;
 	_endthreadex(0);
@@ -430,8 +438,7 @@ unsigned _stdcall tremolio(LPVOID lpV){
 
 void separatethreadfordata() {
 	if (hThread2 == NULL) {
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		std::cout << "(1)" << " - Creating thread for the note catcher..." << std::endl;
+		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
 		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
 		SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
@@ -439,8 +446,7 @@ void separatethreadfordata() {
 }
 
 unsigned __stdcall audioengine(LPVOID lpV){
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(1)" << " - Initializing audio rendering thread..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread...");
 	while (stop_thread == 0){
 		try {
 			if (reset_synth != 0){
@@ -463,12 +469,11 @@ unsigned __stdcall audioengine(LPVOID lpV){
 			}
 		}
 		catch (int e) {
-			std::cout << "Error while writing audio frame." << std::endl << std::flush;
+			PrintToConsole(FOREGROUND_BLUE, 1, "Error while writing frame");
 		}
 
 	}
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(1)" << " - Closing audio rendering thread..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread...");
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
@@ -503,19 +508,16 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				load_settings();
 				if (xaudiodisabled == 1) {
 					bassoutputfinal = -1;
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-					std::cout << "(1)" << " - Opening DirectSound stream..." << std::endl;
+					PrintToConsole(FOREGROUND_RED, 1, "Opening DirectSound stream...");
 				}
 				else {
 					if (sound_driver == NULL) {
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - Opening XAudio stream..." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "XAudio stream...");
 						sound_driver = create_sound_out_xaudio2();
 						sound_out_float = TRUE;
 						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
 						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
-						SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
-						std::cout << "(1)" << " - " << sound_driver << " - XAudio ready." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}
 				}
 				load_bassfuncs();
@@ -533,19 +535,16 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						}
 						hStream = BASS_MIDI_StreamCreate(tracks, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						BASS_ChannelPlay(hStream, false);
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - DirectSound stream enabled and running." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 					}
 					else {
 						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - XAudio stream enabled." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);
 						hStream = 0;
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - Failed." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
 						continue;
 					}
 					else {
@@ -564,8 +563,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					#endif
 					// Encoder code
 					if (encmode == 1) {
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - Opening BASSenc stream..." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");
 						typedef std::basic_string<TCHAR> tstring;
 						TCHAR encpath[MAX_PATH];
 						TCHAR poop[MAX_PATH];
@@ -609,27 +607,22 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 								break;
 							}
 						}
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - BASSenc ready." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
 					}
 					// Cake.
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-					std::cout << "(1)" << " - Preparing stream..." << std::endl;
+					PrintToConsole(FOREGROUND_RED, 1, "Preparing stream...");
 					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
 					if (LoadSoundfontStartup() == TRUE) {
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - Default list for app loaded." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "Default list for app loaded.");
 					}
 					else {
 						LoadSoundfont(defaultsflist);
-						SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-						std::cout << "(1)" << " - Default global list loaded." << std::endl;
+						PrintToConsole(FOREGROUND_RED, 1, "Default global list loaded.");
 					}
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-					std::cout << "(1)" << " - Creating threads..." << std::endl;
+					PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
@@ -641,12 +634,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						SetPriorityClass(hTremolio, NORMAL_PRIORITY_CLASS);
 						SetThreadPriority(hTremolio, THREAD_PRIORITY_NORMAL);
 					}
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-					std::cout << "(1)" << " - Threads are now active." << std::endl;
+					PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 				}
 			}
-			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-			std::cout << "(1)" << " - Checking for settings changes or hotkeys..." << std::endl;
+			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == 0){
 				Sleep(10);
 				realtime_load_settings();
@@ -683,8 +674,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				CoUninitialize();
 				com_initialized = FALSE;
 			}
-			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-			std::cout << "(1)" << " - Closing main thread..." << std::endl;
+			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
 			_endthreadex(0);
 			return 0;
 		}

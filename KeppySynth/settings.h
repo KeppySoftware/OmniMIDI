@@ -485,7 +485,7 @@ BOOL load_bassfuncs()
 	PathRemoveFileSpec(installpath);
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(0)" << " - Allocating memory for DLLs..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Allocating memory for BASS DLLs...");
 
 	lstrcat(basspath, installpath);
 	lstrcat(basspath, L"\\bass.dll");
@@ -512,16 +512,15 @@ BOOL load_bassfuncs()
 		exit(0);
 	}
 
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(0)" << " - Done." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");
 
 	/* "load" all the BASS functions that are to be used */
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(0)" << " - Loading BASS functions..." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "Loading BASS functions...");
 	LOADBASSENCFUNCTION(BASS_Encode_Start);
 	LOADBASSENCFUNCTION(BASS_Encode_Stop);
 	LOADBASSFUNCTION(BASS_ChannelFlags);
 	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+	LOADBASSFUNCTION(BASS_ChannelSetDevice);
 	LOADBASSFUNCTION(BASS_ChannelGetData);
 	LOADBASSFUNCTION(BASS_ChannelGetLevel);
 	LOADBASSFUNCTION(BASS_ChannelPlay);
@@ -550,8 +549,7 @@ BOOL load_bassfuncs()
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 	LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(0)" << " - Done." << std::endl;
+	PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
 
 	installpathlength = lstrlen(installpath) + 1;
 	lstrcat(pluginpath, installpath);
@@ -572,8 +570,7 @@ BOOL load_bassfuncs()
 void load_settings()
 {
 	try {
-		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
-		std::cout << "(0)" << " - Loading settings from registry..." << std::endl;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -633,8 +630,7 @@ void load_settings()
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 
-		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
-		std::cout << "(0)" << " - Done." << std::endl;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
 	}
 	catch (int e) {
 		crashhandler(e);

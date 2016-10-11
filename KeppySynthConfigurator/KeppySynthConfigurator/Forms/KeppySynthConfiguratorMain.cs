@@ -335,7 +335,10 @@ namespace KeppySynthConfigurator
                 {
                     useSWrendering.Enabled = false;
                     useSWrendering.Checked = true;
+                    DebugModePls.Enabled = false;
+                    DebugModePls.Checked = false;
                     SynthSettings.SetValue("softwarerendering", 1, RegistryValueKind.DWord);
+                    SynthSettings.SetValue("debugmode", 0, RegistryValueKind.DWord);
                 }
                 else
                 {
@@ -346,6 +349,14 @@ namespace KeppySynthConfigurator
                     else
                     {
                         useSWrendering.Checked = false;
+                    }
+                    if (Convert.ToInt32(SynthSettings.GetValue("debugmode", 0)) == 1)
+                    {
+                        DebugModePls.Checked = true;
+                    }
+                    else
+                    {
+                        DebugModePls.Checked = false;
                     }
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
