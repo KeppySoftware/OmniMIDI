@@ -53,80 +53,85 @@ bool depends() {
 }
 
 int bmsyn_play_some_data(void){
-	UINT uDeviceID;
-	UINT uMsg;
-	DWORD_PTR	dwParam1;
-	DWORD_PTR   dwParam2;
-
-	UINT evbpoint;
-	int exlen;
-	unsigned char *sysexbuffer;
-
-	if (!bmsyn_buf_check()){
-		return ~0;
+	if (allnotesignore) {
+		return 0;
 	}
-	do{
-		EnterCriticalSection(&mim_section);
-		evbpoint = evbrpoint;
+	else {
+		UINT uDeviceID;
+		UINT uMsg;
+		DWORD_PTR	dwParam1;
+		DWORD_PTR   dwParam2;
 
-		if (++evbrpoint >= newevbuffvalue) {
-			evbrpoint -= newevbuffvalue;
+		UINT evbpoint;
+		int exlen;
+		unsigned char *sysexbuffer;
+
+		if (!bmsyn_buf_check()){
+			return ~0;
 		}
+		do{
+			EnterCriticalSection(&mim_section);
+			evbpoint = evbrpoint;
 
-		uDeviceID = evbuf[evbpoint].uDeviceID;
-		uMsg = evbuf[evbpoint].uMsg;
-		dwParam1 = evbuf[evbpoint].dwParam1;
-		dwParam2 = evbuf[evbpoint].dwParam2;
-		exlen = evbuf[evbpoint].exlen;
-		sysexbuffer = evbuf[evbpoint].sysexbuffer;
-
-		LeaveCriticalSection(&mim_section);
-		switch (uMsg) {
-		case MODM_DATA:
-			dwParam2 = dwParam1 & 0xF0;
-			exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-		    BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
-			if (debugmode == 1) {
-				PrintToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.");
+			if (++evbrpoint >= newevbuffvalue) {
+				evbrpoint -= newevbuffvalue;
 			}
-			break;
-		case MODM_LONGDATA:
-			if (!sysexignore) {
-				BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
-				if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
-					(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
-					(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
-					ResetDrumChannels();
+
+			uDeviceID = evbuf[evbpoint].uDeviceID;
+			uMsg = evbuf[evbpoint].uMsg;
+			dwParam1 = evbuf[evbpoint].dwParam1;
+			dwParam2 = evbuf[evbpoint].dwParam2;
+			exlen = evbuf[evbpoint].exlen;
+			sysexbuffer = evbuf[evbpoint].sysexbuffer;
+
+			LeaveCriticalSection(&mim_section);
+			switch (uMsg) {
+			case MODM_DATA:
+				dwParam2 = dwParam1 & 0xF0;
+				exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
+				BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+				if (debugmode == 1) {
+					PrintToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.");
 				}
-				else if (exlen == 11 &&
-					sysexbuffer[0] == (char)0xF0 && sysexbuffer[1] == 0x41 && sysexbuffer[3] == 0x42 &&
-					sysexbuffer[4] == 0x12 && sysexbuffer[5] == 0x40 && (sysexbuffer[6] & 0xF0) == 0x10 &&
-					sysexbuffer[10] == (char)0xF7)
-				{
-					if (sysexbuffer[7] == 2)
-					{
-						// GS MIDI channel to part assign
-						gs_part_to_ch[sysexbuffer[6] & 15] = sysexbuffer[8];
+				break;
+			case MODM_LONGDATA:
+				if (!sysexignore) {
+					BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+					if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
+						(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
+						(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
+						ResetDrumChannels();
 					}
-					else if (sysexbuffer[7] == 0x15)
+					else if (exlen == 11 &&
+						sysexbuffer[0] == (char)0xF0 && sysexbuffer[1] == 0x41 && sysexbuffer[3] == 0x42 &&
+						sysexbuffer[4] == 0x12 && sysexbuffer[5] == 0x40 && (sysexbuffer[6] & 0xF0) == 0x10 &&
+						sysexbuffer[10] == (char)0xF7)
 					{
-						// GS part to rhythm allocation
-						unsigned int drum_channel = gs_part_to_ch[sysexbuffer[6] & 15];
-						if (drum_channel < 16)
+						if (sysexbuffer[7] == 2)
 						{
-							drum_channels[drum_channel] = sysexbuffer[8];
+							// GS MIDI channel to part assign
+							gs_part_to_ch[sysexbuffer[6] & 15] = sysexbuffer[8];
+						}
+						else if (sysexbuffer[7] == 0x15)
+						{
+							// GS part to rhythm allocation
+							unsigned int drum_channel = gs_part_to_ch[sysexbuffer[6] & 15];
+							if (drum_channel < 16)
+							{
+								drum_channels[drum_channel] = sysexbuffer[8];
+							}
 						}
 					}
+					if (debugmode == 1) {
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
+					}
 				}
-				if (debugmode == 1) {
-					PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
-				}
+				free(sysexbuffer);
+				break;
 			}
-			free(sysexbuffer);
-			break;
-		}
-	} while (depends());
-	return 0;
+		} while (depends());
+		return 0;
+	}
 }
 
 bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {

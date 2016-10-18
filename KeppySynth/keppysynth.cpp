@@ -122,6 +122,7 @@ static int shortname = 0; // Use short name or nah
 static int noteoff1 = 0; // Note cut INT
 static int preload = 0; // Soundfont preloading
 static int sysexignore = 0; // Ignore SysEx events
+static int allnotesignore = 0; // Ignore all MIDI events
 static int defaultmidiout = 0; // Set as default MIDI out device for 8.x or newer
 static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages

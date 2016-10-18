@@ -195,7 +195,7 @@ namespace KeppySynthConfigurator
         // Here we go!
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
-            // SAS THEME HANDLER
+            // SAS THEME HANDLER        
             this.ThemeCheck.RunWorkerAsync();
             this.Size = new Size(665, 481);
             // MIDI out selector disabler
@@ -282,6 +282,15 @@ namespace KeppySynthConfigurator
                 else
                 {
                     SysExIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(SynthSettings.GetValue("allnotesignore", 0)) == 1)
+                {
+                    AllNotesIgnore.Checked = true;
+                    SysExIgnore.Checked = true;
+                }
+                else
+                {
+                    AllNotesIgnore.Checked = false;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("rco", 1)) == 1)
                 {
@@ -1601,6 +1610,21 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void AllNotesIgnore_Click(object sender, EventArgs e)
+        {
+            if (AllNotesIgnore.Checked == false)
+            {
+                SynthSettings.SetValue("allnotesignore", "1", RegistryValueKind.DWord);
+                AllNotesIgnore.Checked = true;
+                SysExIgnore.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("allnotesignore", "0", RegistryValueKind.DWord);
+                AllNotesIgnore.Checked = false;
+            }
+        }
+
         private void DebugModePls_Click(object sender, EventArgs e)
         {
             if (DebugModePls.Checked == false)
@@ -1637,29 +1661,37 @@ namespace KeppySynthConfigurator
 
         private void ThemeCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (true)
+            try
             {
-                if (VisualStyleInformation.IsEnabledByUser == true)
+                while (true)
                 {
-                    if (CurrentTheme == 0)
+                    if (VisualStyleInformation.IsEnabledByUser == true)
                     {
-                        CurrentTheme = 1;
-                        this.Invoke(new MethodInvoker(delegate { List.BackColor = Color.White; }));
-                        this.Invoke(new MethodInvoker(delegate { Settings.BackColor = Color.White; }));
-                        this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
+                        if (CurrentTheme == 0)
+                        {
+                            CurrentTheme = 1;
+                            this.Invoke(new MethodInvoker(delegate { List.BackColor = Color.White; }));
+                            this.Invoke(new MethodInvoker(delegate { Settings.BackColor = Color.White; }));
+                            this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
+                        }
                     }
-                }
-                else
-                {
-                    if (CurrentTheme == 1)
+                    else
                     {
-                        CurrentTheme = 0;
-                        this.Invoke(new MethodInvoker(delegate { List.BackColor = SystemColors.Control; }));
-                        this.Invoke(new MethodInvoker(delegate { Settings.BackColor = SystemColors.Control; }));
-                        this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
+                        if (CurrentTheme == 1)
+                        {
+                            CurrentTheme = 0;
+                            this.Invoke(new MethodInvoker(delegate { List.BackColor = SystemColors.Control; }));
+                            this.Invoke(new MethodInvoker(delegate { Settings.BackColor = SystemColors.Control; }));
+                            this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
+                        }
                     }
+                    this.Invoke(new MethodInvoker(delegate { Program.UpdateTextPosition(this); }));
+                    System.Threading.Thread.Sleep(1);
                 }
-                System.Threading.Thread.Sleep(1);
+            }
+            catch
+            {
+
             }
         }
     }

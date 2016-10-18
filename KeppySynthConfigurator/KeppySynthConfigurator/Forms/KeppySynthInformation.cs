@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace KeppySynthConfigurator
 {
@@ -16,9 +18,34 @@ namespace KeppySynthConfigurator
             InitializeComponent();
         }
 
+        private DateTime GetLinkerTime(Assembly assembly, TimeZoneInfo target = null)
+        {
+            var filePath = assembly.Location;
+            const int c_PeHeaderOffset = 60;
+            const int c_LinkerTimestampOffset = 8;
+
+            var buffer = new byte[2048];
+
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                stream.Read(buffer, 0, 2048);
+
+            var offset = BitConverter.ToInt32(buffer, c_PeHeaderOffset);
+            var secondsSince1970 = BitConverter.ToInt32(buffer, offset + c_LinkerTimestampOffset);
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
+
+            var tz = target ?? TimeZoneInfo.Local;
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
+
+            return localTime;
+        }
+
         private void KeppyDriverInformation_Load(object sender, EventArgs e)
         {
-            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
+            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); 
+            Text = "Keppy's Synthesizer " + Driver.FileVersion.ToString() + " (Build time: " + GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Local) + ")";
+            Program.UpdateTextPosition(this);
             Label8.Text = "Keppy's Synthesizer\nVersion " + Driver.FileVersion.ToString();
         }
 
@@ -31,7 +58,6 @@ namespace KeppySynthConfigurator
         {
             Close();
         }
-
 
         private void LicenseButton_Click(object sender, EventArgs e)
         {

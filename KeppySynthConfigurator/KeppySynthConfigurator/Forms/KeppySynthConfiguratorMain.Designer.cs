@@ -147,6 +147,7 @@
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
+            this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1103,25 +1104,25 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 15;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 16;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 17;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 18;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 18;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 19;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 16;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 17;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
@@ -1142,6 +1143,7 @@
             this.useSWrendering,
             this.floatingpointaudio,
             this.autopanicmode,
+            this.AllNotesIgnore,
             this.SysExIgnore,
             this.ReduceCPUOver,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
@@ -1194,13 +1196,13 @@
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 13;
+            this.SysExIgnore.Index = 14;
             this.SysExIgnore.Text = "Ignore SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
             // ReduceCPUOver
             // 
-            this.ReduceCPUOver.Index = 14;
+            this.ReduceCPUOver.Index = 15;
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
@@ -1324,6 +1326,12 @@
             // ThemeCheck
             // 
             this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
+            // 
+            // AllNotesIgnore
+            // 
+            this.AllNotesIgnore.Index = 13;
+            this.AllNotesIgnore.Text = "Ignore all MIDI events";
+            this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1484,6 +1492,7 @@
         private System.Windows.Forms.MenuItem MIDINameNoSpace;
         private System.Windows.Forms.MenuItem SysExIgnore;
         private System.Windows.Forms.MenuItem DebugModePls;
+        private System.Windows.Forms.MenuItem AllNotesIgnore;
     }
 }
 
