@@ -1367,7 +1367,7 @@ namespace KeppySynthConfigurator
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 SincInter.Checked = false;
                 SincInter.Enabled = true;
-                SincInter.Text = "Enable sinc interpolation. (Improves audio quality with cheap soundfont, but increases CPU usage.)";
+                SincInter.Text = "Enable sinc interpolation. (Improves sample rate conversion and overall audio quality, but increases rendering time.)";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
                 bufsize.Enabled = false;
