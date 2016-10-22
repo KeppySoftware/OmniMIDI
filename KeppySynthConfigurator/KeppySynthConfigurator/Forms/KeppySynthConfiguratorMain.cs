@@ -431,7 +431,7 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
                     XAudioDisable.Checked = true;
-                    VMSEmu.Visible = true;
+                    ManualAddBuffer.Visible = true;
                     SPFSecondaryBut.Visible = false;
                     changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                     changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
@@ -445,12 +445,12 @@ namespace KeppySynthConfigurator
                     }
                     if (Convert.ToInt32(SynthSettings.GetValue("vmsemu", 0)) == 1)
                     {
-                        VMSEmu.Checked = true;
+                        ManualAddBuffer.Checked = true;
                         bufsize.Enabled = true;
                     }
                     else
                     {
-                        VMSEmu.Checked = false;
+                        ManualAddBuffer.Checked = false;
                         bufsize.Enabled = false;
                         bufsize.Value = 0;
                     }
@@ -458,7 +458,7 @@ namespace KeppySynthConfigurator
                 else
                 {
                     XAudioDisable.Checked = false;
-                    VMSEmu.Visible = false;
+                    ManualAddBuffer.Visible = false;
                     SPFSecondaryBut.Visible = true;
                     bufsize.Enabled = true;
                     SincInter.Checked = true;
@@ -839,102 +839,7 @@ namespace KeppySynthConfigurator
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SelectedListBox.Text == "List 1")
-            {
-                CurrentList = List1Path;
-                whichone = 1;
-                Functions.ChangeList(List1Path);
-            }
-            else if (SelectedListBox.Text == "List 2")
-            {
-                CurrentList = List2Path;
-                whichone = 2;
-                Functions.ChangeList(List2Path);
-            }
-            else if (SelectedListBox.Text == "List 3")
-            {
-                CurrentList = List3Path;
-                whichone = 3;
-                Functions.ChangeList(List3Path);
-            }
-            else if (SelectedListBox.Text == "List 4")
-            {
-                CurrentList = List4Path;
-                whichone = 4;
-                Functions.ChangeList(List4Path);
-            }
-            else if (SelectedListBox.Text == "List 5")
-            {
-                CurrentList = List5Path;
-                whichone = 5;
-                Functions.ChangeList(List5Path);
-            }
-            else if (SelectedListBox.Text == "List 6")
-            {
-                CurrentList = List6Path;
-                whichone = 6;
-                Functions.ChangeList(List6Path);
-            }
-            else if (SelectedListBox.Text == "List 7")
-            {
-                CurrentList = List7Path;
-                whichone = 7;
-                Functions.ChangeList(List7Path);
-            }
-            else if (SelectedListBox.Text == "List 8")
-            {
-                CurrentList = List8Path;
-                whichone = 8;
-                Functions.ChangeList(List8Path);
-            }
-            else if (SelectedListBox.Text == "List 9")
-            {
-                CurrentList = List9Path;
-                whichone = 9;
-                Functions.ChangeList(List9Path);
-            }
-            else if (SelectedListBox.Text == "List 10")
-            {
-                CurrentList = List10Path;
-                whichone = 10;
-                Functions.ChangeList(List10Path);
-            }
-            else if (SelectedListBox.Text == "List 11")
-            {
-                CurrentList = List11Path;
-                whichone = 11;
-                Functions.ChangeList(List11Path);
-            }
-            else if (SelectedListBox.Text == "List 12")
-            {
-                CurrentList = List12Path;
-                whichone = 12;
-                Functions.ChangeList(List12Path);
-            }
-            else if (SelectedListBox.Text == "List 13")
-            {
-                CurrentList = List13Path;
-                whichone = 13;
-                Functions.ChangeList(List13Path);
-            }
-            else if (SelectedListBox.Text == "List 14")
-            {
-                CurrentList = List14Path;
-                whichone = 14;
-                Functions.ChangeList(List14Path);
-            }
-            else if (SelectedListBox.Text == "List 15")
-            {
-                CurrentList = List15Path;
-                whichone = 15;
-                Functions.ChangeList(List15Path);
-            }
-            else if (SelectedListBox.Text == "List 16")
-            {
-                CurrentList = List16Path;
-                whichone = 16;
-                Functions.ChangeList(List16Path);
-            }
+            Functions.ChangeList(SelectedListBox.SelectedIndex + 1);
         }
 
         private void Lis_DragDrop(object sender, DragEventArgs e)
@@ -966,7 +871,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
-            VMSEmu.Checked = false;
+            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -1000,7 +905,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
-            VMSEmu.Checked = false;
+            ManualAddBuffer.Checked = false;
 
             // Additional settings
             SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
@@ -1029,7 +934,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
-            VMSEmu.Checked = false;
+            ManualAddBuffer.Checked = false;
 
             // Additional settings
             SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
@@ -1059,7 +964,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            VMSEmu.Checked = false;
+            ManualAddBuffer.Checked = false;
 
             // Additional settings
             SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
@@ -1088,7 +993,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
-            VMSEmu.Checked = false;
+            ManualAddBuffer.Checked = false;
 
             // Additional settings
             SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
@@ -1285,11 +1190,6 @@ namespace KeppySynthConfigurator
             DefaultOut810disabledToolStripMenuItem.Enabled = false;
         }
 
-        private void FLStudioLicenseDiscount_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://affiliate.image-line.com/BFHHCGAE552");
-        }
-
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
             Application.ExitThread();
@@ -1360,7 +1260,7 @@ namespace KeppySynthConfigurator
             {
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
-                VMSEmu.Visible = true;
+                ManualAddBuffer.Visible = true;
                 SPFSecondaryBut.Visible = false;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
@@ -1371,7 +1271,7 @@ namespace KeppySynthConfigurator
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
                 bufsize.Enabled = false;
-                if (VMSEmu.Checked == true)
+                if (ManualAddBuffer.Checked == true)
                 {
                     bufsize.Enabled = true;
                 }
@@ -1384,7 +1284,7 @@ namespace KeppySynthConfigurator
             else if (XAudioDisable.Checked == false)
             {
                 OutputWAV.Enabled = true;
-                VMSEmu.Visible = false;
+                ManualAddBuffer.Visible = false;
                 SPFSecondaryBut.Visible = true;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
@@ -1430,7 +1330,7 @@ namespace KeppySynthConfigurator
 
         private void VMSEmu_CheckedChanged(object sender, EventArgs e)
         {
-            if (VMSEmu.Checked == true)
+            if (ManualAddBuffer.Checked == true)
             {
                 bufsize.Enabled = true;
             }

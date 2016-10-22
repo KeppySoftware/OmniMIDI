@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.3.5'
+#define Version '4.0.3.6'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -19,6 +19,7 @@ AppSupportPhone=+393511888475
 AppSupportURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/issues
 AppUpdatesURL=https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases
 AppVersion={#Version}
+AppComments=User-mode MIDI driver based on the BASS libraries
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 CloseApplications=yes
@@ -35,16 +36,16 @@ SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
 SolidCompression=yes
 TimeStampsInUTC=True
-UninstallDisplayIcon={sys}\keppysynth\KeppySynthConfigurator.exe
-UninstallDisplayName=Keppy's Synthesizer (Uninstall only)
-UninstallDisplaySize=5
+UninstallDisplayIcon={syswow64}\keppysynth\KeppySynthConfigurator.exe
+UninstallDisplayName=Keppy's Synthesizer {#Version} (Uninstall only)
+UninstallDisplaySize=3241947
 UninstallFilesDir={sys}\keppysynth\
 VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
-VersionInfoDescription=User-Mode MIDI driver based around the BASS libraries
+VersionInfoDescription=User-mode MIDI driver based on the BASS libraries
 VersionInfoProductName=Keppy's Synthesizer
 VersionInfoProductTextVersion={#Version}
-VersionInfoTextVersion=User-Mode MIDI driver based around the BASS libraries
+VersionInfoTextVersion=User-mode MIDI driver based on the BASS libraries
 VersionInfoVersion={#Version}
 UsePreviousSetupType=False
 FlatComponentsList=False

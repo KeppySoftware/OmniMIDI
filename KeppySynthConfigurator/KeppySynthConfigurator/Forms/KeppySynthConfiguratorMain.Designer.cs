@@ -54,7 +54,7 @@
             this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
             this.SPFSecondaryBut = new System.Windows.Forms.LinkLabel();
-            this.VMSEmu = new System.Windows.Forms.CheckBox();
+            this.ManualAddBuffer = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
             this.TracksLimit = new System.Windows.Forms.NumericUpDown();
             this.Label4 = new System.Windows.Forms.Label();
@@ -138,7 +138,6 @@
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
-            this.FLStudioLicenseDiscount = new System.Windows.Forms.MenuItem();
             this.reportABugToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.getTheMIDIMapperForWindows8xToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.getTheMIDIMapperForWindows10ToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -472,7 +471,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox5.BackColor = System.Drawing.Color.Transparent;
             this.GroupBox5.Controls.Add(this.SPFSecondaryBut);
-            this.GroupBox5.Controls.Add(this.VMSEmu);
+            this.GroupBox5.Controls.Add(this.ManualAddBuffer);
             this.GroupBox5.Controls.Add(this.SincInter);
             this.GroupBox5.Controls.Add(this.TracksLimit);
             this.GroupBox5.Controls.Add(this.Label4);
@@ -498,20 +497,20 @@
             this.SPFSecondaryBut.Text = "More..";
             this.SPFSecondaryBut.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SPFSecondaryBut_LinkClicked);
             // 
-            // VMSEmu
+            // ManualAddBuffer
             // 
-            this.VMSEmu.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.VMSEmu.AutoSize = true;
-            this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.VMSEmu.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VMSEmu.Location = new System.Drawing.Point(384, 55);
-            this.VMSEmu.Name = "VMSEmu";
-            this.VMSEmu.Size = new System.Drawing.Size(164, 17);
-            this.VMSEmu.TabIndex = 39;
-            this.VMSEmu.Text = "Set additional buffer manually";
-            this.VMSEmu.UseVisualStyleBackColor = true;
-            this.VMSEmu.Visible = false;
-            this.VMSEmu.CheckedChanged += new System.EventHandler(this.VMSEmu_CheckedChanged);
+            this.ManualAddBuffer.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.ManualAddBuffer.AutoSize = true;
+            this.ManualAddBuffer.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.ManualAddBuffer.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ManualAddBuffer.Location = new System.Drawing.Point(384, 55);
+            this.ManualAddBuffer.Name = "ManualAddBuffer";
+            this.ManualAddBuffer.Size = new System.Drawing.Size(164, 17);
+            this.ManualAddBuffer.TabIndex = 39;
+            this.ManualAddBuffer.Text = "Set additional buffer manually";
+            this.ManualAddBuffer.UseVisualStyleBackColor = true;
+            this.ManualAddBuffer.Visible = false;
+            this.ManualAddBuffer.CheckedChanged += new System.EventHandler(this.VMSEmu_CheckedChanged);
             // 
             // SincInter
             // 
@@ -690,10 +689,9 @@
             this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label5.Location = new System.Drawing.Point(6, 108);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(491, 13);
+            this.Label5.Size = new System.Drawing.Size(332, 13);
             this.Label5.TabIndex = 22;
-            this.Label5.Text = "Set the maximum rendering time percentage/maximum CPU usage for BASS/BASSMIDI (Di" +
-    "sabled = 0):";
+            this.Label5.Text = "Set the maximum limit for the rendering time (In percent, disabled = 0):";
             // 
             // Label3
             // 
@@ -751,10 +749,10 @@
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Preload.Location = new System.Drawing.Point(8, 17);
             this.Preload.Name = "Preload";
-            this.Preload.Size = new System.Drawing.Size(420, 17);
+            this.Preload.Size = new System.Drawing.Size(530, 17);
             this.Preload.TabIndex = 30;
-            this.Preload.Text = "Enable soundfont preload. (Useful to reduce delay when starting a MIDI applicatio" +
-    "n)";
+            this.Preload.Text = "Enable soundfont preload. (It might introduce delay when starting a MIDI applicat" +
+    "ion on low-end computers)";
             this.Preload.UseVisualStyleBackColor = true;
             // 
             // NoteOffCheck
@@ -786,7 +784,7 @@
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
             this.VolSimView.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolSimView.ForeColor = System.Drawing.Color.DarkOrchid;
+            this.VolSimView.ForeColor = System.Drawing.Color.Blue;
             this.VolSimView.Location = new System.Drawing.Point(554, 4);
             this.VolSimView.Name = "VolSimView";
             this.VolSimView.Size = new System.Drawing.Size(77, 38);
@@ -1052,7 +1050,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Index = 11;
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Text = "Close the configurator";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // menuItem1
@@ -1268,12 +1266,6 @@
             this.menuItem15.Index = 3;
             this.menuItem15.Text = "-";
             // 
-            // FLStudioLicenseDiscount
-            // 
-            this.FLStudioLicenseDiscount.Index = 4;
-            this.FLStudioLicenseDiscount.Text = "Get a discount on a FL Studio license";
-            this.FLStudioLicenseDiscount.Click += new System.EventHandler(this.FLStudioLicenseDiscount_Click);
-            // 
             // reportABugToolStripMenuItem
             // 
             this.reportABugToolStripMenuItem.Index = 2;
@@ -1282,21 +1274,21 @@
             // 
             // getTheMIDIMapperForWindows8xToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 5;
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 4;
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 8.x";
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows8xToolStripMenuItem_Click);
             // 
             // getTheMIDIMapperForWindows10ToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 6;
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 5;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 7;
+            this.menuItem42.Index = 6;
             this.menuItem42.Text = "-";
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
@@ -1319,7 +1311,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 8;
+            this.guidesToolStripMenuItem.Index = 7;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -1328,18 +1320,18 @@
             // 
             // menuItem44
             // 
-            this.menuItem44.Index = 9;
+            this.menuItem44.Index = 8;
             this.menuItem44.Text = "-";
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 10;
-            this.donateToSupportUsToolStripMenuItem.Text = "Donate to support us";
+            this.donateToSupportUsToolStripMenuItem.Index = 9;
+            this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 11;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 10;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -1351,7 +1343,6 @@
             this.openUpdaterToolStripMenuItem,
             this.reportABugToolStripMenuItem,
             this.menuItem15,
-            this.FLStudioLicenseDiscount,
             this.getTheMIDIMapperForWindows8xToolStripMenuItem,
             this.getTheMIDIMapperForWindows10ToolStripMenuItem,
             this.menuItem42,
@@ -1482,7 +1473,6 @@
         private System.Windows.Forms.MenuItem informationAboutTheDriverToolStripMenuItem;
         private System.Windows.Forms.MenuItem openUpdaterToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem15;
-        private System.Windows.Forms.MenuItem FLStudioLicenseDiscount;
         private System.Windows.Forms.MenuItem reportABugToolStripMenuItem;
         private System.Windows.Forms.MenuItem getTheMIDIMapperForWindows8xToolStripMenuItem;
         private System.Windows.Forms.MenuItem getTheMIDIMapperForWindows10ToolStripMenuItem;
@@ -1513,7 +1503,7 @@
         public System.Windows.Forms.CheckBox NoteOffCheck;
         public System.Windows.Forms.CheckBox OutputWAV;
         public System.Windows.Forms.CheckBox XAudioDisable;
-        public System.Windows.Forms.CheckBox VMSEmu;
+        public System.Windows.Forms.CheckBox ManualAddBuffer;
         public System.Windows.Forms.NumericUpDown MaxCPU;
         public System.Windows.Forms.ListBox Lis;
         public System.Windows.Forms.OpenFileDialog SoundfontImport;

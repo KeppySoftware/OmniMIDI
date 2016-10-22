@@ -177,7 +177,7 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
                 }
-                if (KeppySynthConfiguratorMain.Delegate.VMSEmu.Checked == true)
+                if (KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Checked == true)
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
                 }
@@ -297,8 +297,43 @@ namespace KeppySynthConfigurator
         }
         // NOT SUPPORTED ON XP
 
-        public static void ChangeList(string WhichList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
+        public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
+            String WhichList;
+            if (SelectedList == 1)
+                WhichList = KeppySynthConfiguratorMain.List1Path;
+            else if (SelectedList == 2)
+                WhichList = KeppySynthConfiguratorMain.List2Path;
+            else if (SelectedList == 3)
+                WhichList = KeppySynthConfiguratorMain.List3Path;
+            else if (SelectedList == 4)
+                WhichList = KeppySynthConfiguratorMain.List4Path;
+            else if (SelectedList == 5)
+                WhichList = KeppySynthConfiguratorMain.List5Path;
+            else if (SelectedList == 6)
+                WhichList = KeppySynthConfiguratorMain.List6Path;
+            else if (SelectedList == 7)
+                WhichList = KeppySynthConfiguratorMain.List7Path;
+            else if (SelectedList == 8)
+                WhichList = KeppySynthConfiguratorMain.List8Path;
+            else if (SelectedList == 9)
+                WhichList = KeppySynthConfiguratorMain.List9Path;
+            else if (SelectedList == 10)
+                WhichList = KeppySynthConfiguratorMain.List10Path;
+            else if (SelectedList == 11)
+                WhichList = KeppySynthConfiguratorMain.List11Path;
+            else if (SelectedList == 12)
+                WhichList = KeppySynthConfiguratorMain.List12Path;
+            else if (SelectedList == 13)
+                WhichList = KeppySynthConfiguratorMain.List13Path;
+            else if (SelectedList == 14)
+                WhichList = KeppySynthConfiguratorMain.List14Path;
+            else if (SelectedList == 15)
+                WhichList = KeppySynthConfiguratorMain.List15Path;
+            else if (SelectedList == 16)
+                WhichList = KeppySynthConfiguratorMain.List16Path;
+            else
+                WhichList = KeppySynthConfiguratorMain.List1Path;
             try
             {
                 if (!System.IO.Directory.Exists(KeppySynthConfiguratorMain.AbsolutePath))
