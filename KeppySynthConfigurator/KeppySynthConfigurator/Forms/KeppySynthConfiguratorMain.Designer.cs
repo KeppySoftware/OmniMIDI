@@ -68,7 +68,7 @@
             this.Label5 = new System.Windows.Forms.Label();
             this.Label3 = new System.Windows.Forms.Label();
             this.PolyphonyLimit = new System.Windows.Forms.NumericUpDown();
-            this.DisableSFX = new System.Windows.Forms.CheckBox();
+            this.EnableSFX = new System.Windows.Forms.CheckBox();
             this.Preload = new System.Windows.Forms.CheckBox();
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.VolIntView = new System.Windows.Forms.Label();
@@ -114,21 +114,27 @@
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem19 = new System.Windows.Forms.MenuItem();
             this.enableextra8sf = new System.Windows.Forms.MenuItem();
-            this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
             this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
-            this.DebugModePls = new System.Windows.Forms.MenuItem();
-            this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
-            this.slowdownnoskip = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.useSWrendering = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
-            this.autopanicmode = new System.Windows.Forms.MenuItem();
-            this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
+            this.menuItem16 = new System.Windows.Forms.MenuItem();
+            this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
+            this.slowdownnoskip = new System.Windows.Forms.MenuItem();
+            this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.DebugModePls = new System.Windows.Forms.MenuItem();
+            this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.autopanicmode = new System.Windows.Forms.MenuItem();
+            this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
+            this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -147,7 +153,6 @@
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
-            this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -499,11 +504,11 @@
             this.VMSEmu.AutoSize = true;
             this.VMSEmu.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
             this.VMSEmu.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VMSEmu.Location = new System.Drawing.Point(407, 55);
+            this.VMSEmu.Location = new System.Drawing.Point(384, 55);
             this.VMSEmu.Name = "VMSEmu";
-            this.VMSEmu.Size = new System.Drawing.Size(141, 17);
+            this.VMSEmu.Size = new System.Drawing.Size(164, 17);
             this.VMSEmu.TabIndex = 39;
-            this.VMSEmu.Text = "Alternative buffer system";
+            this.VMSEmu.Text = "Set additional buffer manually";
             this.VMSEmu.UseVisualStyleBackColor = true;
             this.VMSEmu.Visible = false;
             this.VMSEmu.CheckedChanged += new System.EventHandler(this.VMSEmu_CheckedChanged);
@@ -515,10 +520,10 @@
             this.SincInter.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SincInter.Location = new System.Drawing.Point(7, 16);
             this.SincInter.Name = "SincInter";
-            this.SincInter.Size = new System.Drawing.Size(492, 17);
+            this.SincInter.Size = new System.Drawing.Size(566, 17);
             this.SincInter.TabIndex = 36;
-            this.SincInter.Text = "Enable sinc interpolation. (Improves audio quality with cheap soundfont, but incr" +
-    "eases CPU usage.)";
+            this.SincInter.Text = "Enable sinc interpolation. (Improves sample rate conversion and overall audio qua" +
+    "lity, but increases rendering time.)";
             this.SincInter.UseVisualStyleBackColor = true;
             // 
             // TracksLimit
@@ -610,7 +615,7 @@
             this.groupBox1.Controls.Add(this.Label5);
             this.groupBox1.Controls.Add(this.Label3);
             this.groupBox1.Controls.Add(this.PolyphonyLimit);
-            this.groupBox1.Controls.Add(this.DisableSFX);
+            this.groupBox1.Controls.Add(this.EnableSFX);
             this.groupBox1.Controls.Add(this.Preload);
             this.groupBox1.Controls.Add(this.NoteOffCheck);
             this.groupBox1.Location = new System.Drawing.Point(8, 93);
@@ -641,9 +646,9 @@
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label6.Location = new System.Drawing.Point(6, 133);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(218, 13);
+            this.Label6.Size = new System.Drawing.Size(252, 13);
             this.Label6.TabIndex = 24;
-            this.Label6.Text = "Set the audio frequency for the driver output:";
+            this.Label6.Text = "Set the audio frequency for the driver output (In Hz):";
             // 
             // Frequency
             // 
@@ -697,9 +702,9 @@
             this.Label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label3.Location = new System.Drawing.Point(6, 82);
             this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(241, 13);
+            this.Label3.Size = new System.Drawing.Size(278, 13);
             this.Label3.TabIndex = 20;
-            this.Label3.Text = "Set the voice limit for the driver, from 1 to 100000:";
+            this.Label3.Text = "Set the voice limit for the driver, from 1 to 100.000 voices:";
             // 
             // PolyphonyLimit
             // 
@@ -726,18 +731,18 @@
             0,
             0});
             // 
-            // DisableSFX
+            // EnableSFX
             // 
-            this.DisableSFX.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DisableSFX.AutoSize = true;
-            this.DisableSFX.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.DisableSFX.Location = new System.Drawing.Point(8, 37);
-            this.DisableSFX.Name = "DisableSFX";
-            this.DisableSFX.Size = new System.Drawing.Size(575, 17);
-            this.DisableSFX.TabIndex = 31;
-            this.DisableSFX.Text = "Disable sound effects. (Disable the sound effects, such as reverb and chorus. Als" +
-    "o, this can reduce the CPU usage.)";
-            this.DisableSFX.UseVisualStyleBackColor = true;
+            this.EnableSFX.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.EnableSFX.AutoSize = true;
+            this.EnableSFX.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.EnableSFX.Location = new System.Drawing.Point(8, 37);
+            this.EnableSFX.Name = "EnableSFX";
+            this.EnableSFX.Size = new System.Drawing.Size(439, 17);
+            this.EnableSFX.TabIndex = 31;
+            this.EnableSFX.Text = "Enable sound effects. (Reverb and chorus, disabling this can reduce the rendering" +
+    " time)";
+            this.EnableSFX.UseVisualStyleBackColor = true;
             // 
             // Preload
             // 
@@ -746,9 +751,10 @@
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Preload.Location = new System.Drawing.Point(8, 17);
             this.Preload.Name = "Preload";
-            this.Preload.Size = new System.Drawing.Size(410, 17);
+            this.Preload.Size = new System.Drawing.Size(420, 17);
             this.Preload.TabIndex = 30;
-            this.Preload.Text = "Enable soundfont preload. (Useful with systems that have limited RAM resources.)";
+            this.Preload.Text = "Enable soundfont preload. (Useful to reduce delay when starting a MIDI applicatio" +
+    "n)";
             this.Preload.UseVisualStyleBackColor = true;
             // 
             // NoteOffCheck
@@ -1087,42 +1093,36 @@
             // 
             // menuItem19
             // 
-            this.menuItem19.Index = 4;
+            this.menuItem19.Index = 7;
             this.menuItem19.Text = "-";
             // 
             // enableextra8sf
             // 
-            this.enableextra8sf.Index = 7;
+            this.enableextra8sf.Index = 1;
             this.enableextra8sf.Text = "Enable extra 8 soundfont lists";
             this.enableextra8sf.Click += new System.EventHandler(this.enableextra8sf_Click);
             // 
-            // useoldbuffersystem
-            // 
-            this.useoldbuffersystem.Index = 8;
-            this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
-            this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
-            // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 16;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 2;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 18;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 4;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeTheMaximumSamplesPerFrameToolStripMenuItem
             // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 19;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 5;
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 17;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 6;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
             // 
@@ -1134,22 +1134,13 @@
             this.hotkeys,
             this.menuItem17,
             this.manageFolderFavouritesToolStripMenuItem,
-            this.menuItem19,
-            this.DebugModePls,
-            this.MIDINameNoSpace,
-            this.enableextra8sf,
-            this.useoldbuffersystem,
-            this.slowdownnoskip,
-            this.useSWrendering,
-            this.floatingpointaudio,
-            this.autopanicmode,
-            this.AllNotesIgnore,
-            this.SysExIgnore,
-            this.ReduceCPUOver,
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem,
-            this.changeDefaultSoundfontListToolStripMenuItem1,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem});
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
+            this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.menuItem19,
+            this.menuItem11,
+            this.menuItem14,
+            this.menuItem12});
             this.menuItem2.Text = "Additional settings";
             // 
             // hotkeys
@@ -1158,53 +1149,107 @@
             this.hotkeys.Text = "Hotkeys in the MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
-            // DebugModePls
+            // menuItem11
             // 
-            this.DebugModePls.Index = 5;
-            this.DebugModePls.Text = "Enable debug mode";
-            this.DebugModePls.Click += new System.EventHandler(this.DebugModePls_Click);
-            // 
-            // MIDINameNoSpace
-            // 
-            this.MIDINameNoSpace.Index = 6;
-            this.MIDINameNoSpace.Text = "Use MIDI device name without spaces";
-            this.MIDINameNoSpace.Click += new System.EventHandler(this.MIDINameNoSpace_Click);
-            // 
-            // slowdownnoskip
-            // 
-            this.slowdownnoskip.Index = 9;
-            this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
-            this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
+            this.menuItem11.Index = 8;
+            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.useSWrendering,
+            this.floatingpointaudio,
+            this.ReduceCPUOver,
+            this.menuItem16,
+            this.useoldbuffersystem,
+            this.slowdownnoskip});
+            this.menuItem11.Text = "Advanced audio settings";
             // 
             // useSWrendering
             // 
-            this.useSWrendering.Index = 10;
+            this.useSWrendering.Index = 0;
             this.useSWrendering.Text = "Use software rendering";
             this.useSWrendering.Click += new System.EventHandler(this.useSWrendering_Click);
             // 
             // floatingpointaudio
             // 
-            this.floatingpointaudio.Index = 11;
+            this.floatingpointaudio.Index = 1;
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
+            // ReduceCPUOver
+            // 
+            this.ReduceCPUOver.Index = 2;
+            this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
+            this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
+            // 
+            // menuItem16
+            // 
+            this.menuItem16.Index = 3;
+            this.menuItem16.Text = "-";
+            // 
+            // useoldbuffersystem
+            // 
+            this.useoldbuffersystem.Index = 4;
+            this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
+            this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
+            // 
+            // slowdownnoskip
+            // 
+            this.slowdownnoskip.Index = 5;
+            this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
+            this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
+            // 
+            // menuItem14
+            // 
+            this.menuItem14.Index = 9;
+            this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DebugModePls,
+            this.enableextra8sf,
+            this.MIDINameNoSpace,
+            this.menuItem18,
+            this.autopanicmode});
+            this.menuItem14.Text = "Advanced driver settings";
+            // 
+            // DebugModePls
+            // 
+            this.DebugModePls.Index = 0;
+            this.DebugModePls.Text = "Enable debug mode";
+            this.DebugModePls.Click += new System.EventHandler(this.DebugModePls_Click);
+            // 
+            // MIDINameNoSpace
+            // 
+            this.MIDINameNoSpace.Index = 2;
+            this.MIDINameNoSpace.Text = "Use MIDI device name without spaces";
+            this.MIDINameNoSpace.Click += new System.EventHandler(this.MIDINameNoSpace_Click);
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 3;
+            this.menuItem18.Text = "-";
+            // 
             // autopanicmode
             // 
-            this.autopanicmode.Index = 12;
+            this.autopanicmode.Index = 4;
             this.autopanicmode.Text = "Automatic MIDI panic";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
+            // menuItem12
+            // 
+            this.menuItem12.Index = 10;
+            this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.AllNotesIgnore,
+            this.SysExIgnore,
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem});
+            this.menuItem12.Text = "MIDI events parser settings";
+            // 
+            // AllNotesIgnore
+            // 
+            this.AllNotesIgnore.Index = 0;
+            this.AllNotesIgnore.Text = "Ignore all MIDI events";
+            this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
+            // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 14;
+            this.SysExIgnore.Index = 1;
             this.SysExIgnore.Text = "Ignore SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
-            // 
-            // ReduceCPUOver
-            // 
-            this.ReduceCPUOver.Index = 15;
-            this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
-            this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -1327,12 +1372,6 @@
             // 
             this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
             // 
-            // AllNotesIgnore
-            // 
-            this.AllNotesIgnore.Index = 13;
-            this.AllNotesIgnore.Text = "Ignore all MIDI events";
-            this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
-            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1435,7 +1474,6 @@
         private System.Windows.Forms.MenuItem manageFolderFavouritesToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem19;
         private System.Windows.Forms.MenuItem enableextra8sf;
-        private System.Windows.Forms.MenuItem useoldbuffersystem;
         private System.Windows.Forms.MenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
@@ -1458,7 +1496,6 @@
         private System.Windows.Forms.MenuItem downloadTheSourceCodeToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MainMenu MainMenu;
-        private System.Windows.Forms.MenuItem slowdownnoskip;
         private System.Windows.Forms.Button LoadToApp;
         private System.Windows.Forms.MenuItem hotkeys;
         public System.Windows.Forms.Label VolIntView;
@@ -1471,7 +1508,7 @@
         public System.Windows.Forms.NumericUpDown bufsize;
         public System.Windows.Forms.ComboBox Frequency;
         public System.Windows.Forms.NumericUpDown PolyphonyLimit;
-        public System.Windows.Forms.CheckBox DisableSFX;
+        public System.Windows.Forms.CheckBox EnableSFX;
         public System.Windows.Forms.CheckBox Preload;
         public System.Windows.Forms.CheckBox NoteOffCheck;
         public System.Windows.Forms.CheckBox OutputWAV;
@@ -1485,14 +1522,21 @@
         private System.Windows.Forms.ToolStripMenuItem keppysSteinwayPianoRealismToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker ThemeCheck;
         private System.Windows.Forms.MenuItem autopanicmode;
-        private System.Windows.Forms.MenuItem ReduceCPUOver;
         private System.Windows.Forms.ToolStripMenuItem chiptunesRetrogamingToolStripMenuItem;
-        private System.Windows.Forms.MenuItem floatingpointaudio;
-        private System.Windows.Forms.MenuItem useSWrendering;
         private System.Windows.Forms.MenuItem MIDINameNoSpace;
         private System.Windows.Forms.MenuItem SysExIgnore;
         private System.Windows.Forms.MenuItem DebugModePls;
         private System.Windows.Forms.MenuItem AllNotesIgnore;
+        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem useSWrendering;
+        private System.Windows.Forms.MenuItem floatingpointaudio;
+        private System.Windows.Forms.MenuItem ReduceCPUOver;
+        private System.Windows.Forms.MenuItem menuItem16;
+        private System.Windows.Forms.MenuItem useoldbuffersystem;
+        private System.Windows.Forms.MenuItem slowdownnoskip;
+        private System.Windows.Forms.MenuItem menuItem14;
+        private System.Windows.Forms.MenuItem menuItem18;
+        private System.Windows.Forms.MenuItem menuItem12;
     }
 }
 

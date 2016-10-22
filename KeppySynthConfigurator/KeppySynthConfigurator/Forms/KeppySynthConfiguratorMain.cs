@@ -344,21 +344,8 @@ namespace KeppySynthConfigurator
                 {
                     useSWrendering.Enabled = false;
                     useSWrendering.Checked = true;
-                    DebugModePls.Enabled = false;
-                    DebugModePls.Checked = false;
                     SynthSettings.SetValue("softwarerendering", 1, RegistryValueKind.DWord);
                     SynthSettings.SetValue("debugmode", 0, RegistryValueKind.DWord);
-                }
-                else
-                {
-                    if (Convert.ToInt32(SynthSettings.GetValue("softwarerendering", 1)) == 1)
-                    {
-                        useSWrendering.Checked = true;
-                    }
-                    else
-                    {
-                        useSWrendering.Checked = false;
-                    }
                     if (Convert.ToInt32(SynthSettings.GetValue("debugmode", 0)) == 1)
                     {
                         DebugModePls.Checked = true;
@@ -366,6 +353,19 @@ namespace KeppySynthConfigurator
                     else
                     {
                         DebugModePls.Checked = false;
+                    }
+                }
+                else
+                {
+                    DebugModePls.Enabled = false;
+                    DebugModePls.Checked = false;
+                    if (Convert.ToInt32(SynthSettings.GetValue("softwarerendering", 1)) == 1)
+                    {
+                        useSWrendering.Checked = true;
+                    }
+                    else
+                    {
+                        useSWrendering.Checked = false;
                     }
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
@@ -398,11 +398,11 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("nofx", 0)) == 1)
                 {
-                    DisableSFX.Checked = true;
+                    EnableSFX.Checked = false;
                 }
                 else
                 {
-                    DisableSFX.Checked = false;
+                    EnableSFX.Checked = true;
                 }
                 if (Convert.ToInt32(SynthSettings.GetValue("noteoff", 0)) == 1)
                 {
@@ -962,7 +962,7 @@ namespace KeppySynthConfigurator
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
-            DisableSFX.Checked = false;
+            EnableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
@@ -996,7 +996,7 @@ namespace KeppySynthConfigurator
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
-            DisableSFX.Checked = true;
+            EnableSFX.Checked = false;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
@@ -1025,7 +1025,7 @@ namespace KeppySynthConfigurator
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = true;
-            DisableSFX.Checked = false;
+            EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
@@ -1056,7 +1056,7 @@ namespace KeppySynthConfigurator
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
-            DisableSFX.Checked = false;
+            EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             VMSEmu.Checked = false;
@@ -1084,7 +1084,7 @@ namespace KeppySynthConfigurator
             Preload.Checked = true;
             NoteOffCheck.Checked = true;
             SincInter.Checked = true;
-            DisableSFX.Checked = false;
+            EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             XAudioDisable.Checked = false;
@@ -1685,7 +1685,6 @@ namespace KeppySynthConfigurator
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
                     }
-                    this.Invoke(new MethodInvoker(delegate { Program.UpdateTextPosition(this); }));
                     System.Threading.Thread.Sleep(1);
                 }
             }

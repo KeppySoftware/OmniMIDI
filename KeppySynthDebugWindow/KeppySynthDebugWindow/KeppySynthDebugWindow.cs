@@ -93,7 +93,15 @@ namespace KeppySynthDebugWindow
                     RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
                     RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
                     RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
-                    string FullVersion = Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + "." + Environment.OSVersion.Version.Build.ToString();
+                    string FullVersion;
+                    if (WinVer.GetValue("ProductName").ToString().Contains("Windows 10"))
+                    {
+                        FullVersion = Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + "." + Environment.OSVersion.Version.Build.ToString() + "." + WinVer.GetValue("UBR").ToString();
+                    }
+                    else
+                    {
+                        FullVersion = Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + "." + Environment.OSVersion.Version.Build.ToString();
+                    }
                     string bit;
 
                     string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"

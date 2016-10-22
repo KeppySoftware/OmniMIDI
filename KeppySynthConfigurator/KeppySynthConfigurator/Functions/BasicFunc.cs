@@ -169,13 +169,13 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("preload", "0", RegistryValueKind.DWord);
                 }
-                if (KeppySynthConfiguratorMain.Delegate.DisableSFX.Checked == true)
+                if (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked == true)
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
                 }
                 else
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
                 }
                 if (KeppySynthConfiguratorMain.Delegate.VMSEmu.Checked == true)
                 {
