@@ -334,6 +334,7 @@ namespace KeppySynthConfigurator
             else
                 KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List1Path;
 
+            KeppySynthConfiguratorMain.whichone = SelectedList;
             String WhichList = KeppySynthConfiguratorMain.CurrentList;
 
             try

@@ -229,6 +229,7 @@ namespace KeppySynthConfigurator
             Lis.ContextMenu = RightClickMenu;
             Functions.InitializeLastPath();
             SelectedListBox.Text = "List 1";
+            KeppySynthConfiguratorMain.whichone = 1;
 
             // ======= Load settings from the registry
             try
