@@ -1,5 +1,7 @@
 ﻿/*
 Keppy's Synthesizer, a fork of BASSMIDI Driver
+
+Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \

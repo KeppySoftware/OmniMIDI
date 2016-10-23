@@ -299,41 +299,43 @@ namespace KeppySynthConfigurator
 
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
-            String WhichList;
             if (SelectedList == 1)
-                WhichList = KeppySynthConfiguratorMain.List1Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List1Path;
             else if (SelectedList == 2)
-                WhichList = KeppySynthConfiguratorMain.List2Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List2Path;
             else if (SelectedList == 3)
-                WhichList = KeppySynthConfiguratorMain.List3Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List3Path;
             else if (SelectedList == 4)
-                WhichList = KeppySynthConfiguratorMain.List4Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List4Path;
             else if (SelectedList == 5)
-                WhichList = KeppySynthConfiguratorMain.List5Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List5Path;
             else if (SelectedList == 6)
-                WhichList = KeppySynthConfiguratorMain.List6Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List6Path;
             else if (SelectedList == 7)
-                WhichList = KeppySynthConfiguratorMain.List7Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List7Path;
             else if (SelectedList == 8)
-                WhichList = KeppySynthConfiguratorMain.List8Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List8Path;
             else if (SelectedList == 9)
-                WhichList = KeppySynthConfiguratorMain.List9Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List9Path;
             else if (SelectedList == 10)
-                WhichList = KeppySynthConfiguratorMain.List10Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List10Path;
             else if (SelectedList == 11)
-                WhichList = KeppySynthConfiguratorMain.List11Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List11Path;
             else if (SelectedList == 12)
-                WhichList = KeppySynthConfiguratorMain.List12Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List12Path;
             else if (SelectedList == 13)
-                WhichList = KeppySynthConfiguratorMain.List13Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List13Path;
             else if (SelectedList == 14)
-                WhichList = KeppySynthConfiguratorMain.List14Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List14Path;
             else if (SelectedList == 15)
-                WhichList = KeppySynthConfiguratorMain.List15Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List15Path;
             else if (SelectedList == 16)
-                WhichList = KeppySynthConfiguratorMain.List16Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List16Path;
             else
-                WhichList = KeppySynthConfiguratorMain.List1Path;
+                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List1Path;
+
+            String WhichList = KeppySynthConfiguratorMain.CurrentList;
+
             try
             {
                 if (!System.IO.Directory.Exists(KeppySynthConfiguratorMain.AbsolutePath))
