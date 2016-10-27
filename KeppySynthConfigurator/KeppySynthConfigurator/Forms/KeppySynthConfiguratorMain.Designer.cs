@@ -120,6 +120,9 @@
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
+            this.menuItem21 = new System.Windows.Forms.MenuItem();
+            this.ImportSettings = new System.Windows.Forms.MenuItem();
+            this.ExportSettings = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.useSWrendering = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
@@ -152,6 +155,8 @@
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
+            this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
+            this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -926,7 +931,7 @@
             // 
             // ExternalListExport
             // 
-            this.ExternalListExport.Filter = "Soundfont list (.sflist)|*.sflist|Text file (.txt)|*.txt";
+            this.ExternalListExport.Filter = "Soundfont lists|*.txt;*.sflist;";
             // 
             // RightClickMenu
             // 
@@ -969,12 +974,14 @@
             // openDebugWindowToolStripMenuItem
             // 
             this.openDebugWindowToolStripMenuItem.Index = 0;
+            this.openDebugWindowToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
             this.openDebugWindowToolStripMenuItem.Text = "Open debug window";
             this.openDebugWindowToolStripMenuItem.Click += new System.EventHandler(this.openDebugWindowToolStripMenuItem_Click);
             // 
             // openTheMixerToolStripMenuItem
             // 
             this.openTheMixerToolStripMenuItem.Index = 1;
+            this.openTheMixerToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlM;
             this.openTheMixerToolStripMenuItem.Text = "Open the mixer";
             this.openTheMixerToolStripMenuItem.Click += new System.EventHandler(this.openTheMixerToolStripMenuItem_Click);
             // 
@@ -1050,6 +1057,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Index = 11;
+            this.exitToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.AltF4;
             this.exitToolStripMenuItem.Text = "Close the configurator";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1091,7 +1099,7 @@
             // 
             // menuItem19
             // 
-            this.menuItem19.Index = 7;
+            this.menuItem19.Index = 10;
             this.menuItem19.Text = "-";
             // 
             // enableextra8sf
@@ -1135,6 +1143,9 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeTheMaximumSamplesPerFrameToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.menuItem21,
+            this.ImportSettings,
+            this.ExportSettings,
             this.menuItem19,
             this.menuItem11,
             this.menuItem14,
@@ -1147,9 +1158,26 @@
             this.hotkeys.Text = "Hotkeys in the MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
+            // menuItem21
+            // 
+            this.menuItem21.Index = 7;
+            this.menuItem21.Text = "-";
+            // 
+            // ImportSettings
+            // 
+            this.ImportSettings.Index = 8;
+            this.ImportSettings.Text = "Import driver settings";
+            this.ImportSettings.Click += new System.EventHandler(this.ImportSettings_Click);
+            // 
+            // ExportSettings
+            // 
+            this.ExportSettings.Index = 9;
+            this.ExportSettings.Text = "Export driver settings";
+            this.ExportSettings.Click += new System.EventHandler(this.ExportSettings_Click);
+            // 
             // menuItem11
             // 
-            this.menuItem11.Index = 8;
+            this.menuItem11.Index = 11;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.useSWrendering,
             this.floatingpointaudio,
@@ -1196,7 +1224,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 9;
+            this.menuItem14.Index = 12;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.enableextra8sf,
@@ -1230,7 +1258,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 10;
+            this.menuItem12.Index = 13;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AllNotesIgnore,
             this.SysExIgnore,
@@ -1252,12 +1280,14 @@
             // informationAboutTheDriverToolStripMenuItem
             // 
             this.informationAboutTheDriverToolStripMenuItem.Index = 0;
+            this.informationAboutTheDriverToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.F1;
             this.informationAboutTheDriverToolStripMenuItem.Text = "Information about the driver";
             this.informationAboutTheDriverToolStripMenuItem.Click += new System.EventHandler(this.informationAboutTheDriverToolStripMenuItem_Click);
             // 
             // openUpdaterToolStripMenuItem
             // 
             this.openUpdaterToolStripMenuItem.Index = 1;
+            this.openUpdaterToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.F2;
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
             // 
@@ -1363,6 +1393,14 @@
             // 
             this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
             // 
+            // ExportSettingsDialog
+            // 
+            this.ExportSettingsDialog.Filter = "Registry files|*.reg";
+            // 
+            // ImportSettingsDialog
+            // 
+            this.ImportSettingsDialog.Filter = "Registry files|*.reg";
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1417,7 +1455,6 @@
         internal System.Windows.Forms.Label Label3;
         private System.Windows.Forms.PictureBox WhatIsOutput;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
-        private System.Windows.Forms.LinkLabel SPFSecondaryBut;
         private System.Windows.Forms.MenuStrip SettingsButtons;
         private System.Windows.Forms.ToolStripMenuItem applySettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToDefaultToolStripMenuItem;
@@ -1426,7 +1463,6 @@
         private System.Windows.Forms.ToolStripMenuItem blackMIDIsPresetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeDefaultSoundfontListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assignSoundfontListToAppToolStripMenuItem;
-        private System.Windows.Forms.ComboBox SelectedListBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button DisableSF;
         private System.Windows.Forms.Button EnableSF;
@@ -1451,23 +1487,13 @@
         private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem9;
-        private System.Windows.Forms.MenuItem DefaultOut810enabledToolStripMenuItem;
-        private System.Windows.Forms.MenuItem DefaultOut810disabledToolStripMenuItem;
         private System.Windows.Forms.MenuItem SetSynthDefault;
-        private System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
-        private System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
-        private System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem13;
         private System.Windows.Forms.MenuItem exitToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem autoupdate;
         private System.Windows.Forms.MenuItem menuItem17;
         private System.Windows.Forms.MenuItem manageFolderFavouritesToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem19;
-        private System.Windows.Forms.MenuItem enableextra8sf;
-        private System.Windows.Forms.MenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
-        private System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
-        private System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeDefaultSoundfontListToolStripMenuItem1;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem informationAboutTheDriverToolStripMenuItem;
@@ -1487,7 +1513,6 @@
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MainMenu MainMenu;
         private System.Windows.Forms.Button LoadToApp;
-        private System.Windows.Forms.MenuItem hotkeys;
         public System.Windows.Forms.Label VolIntView;
         public System.Windows.Forms.Label VolSimView;
         public System.Windows.Forms.Label VolStaticLab;
@@ -1511,22 +1536,40 @@
         public System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.Windows.Forms.ToolStripMenuItem keppysSteinwayPianoRealismToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker ThemeCheck;
-        private System.Windows.Forms.MenuItem autopanicmode;
         private System.Windows.Forms.ToolStripMenuItem chiptunesRetrogamingToolStripMenuItem;
-        private System.Windows.Forms.MenuItem MIDINameNoSpace;
-        private System.Windows.Forms.MenuItem SysExIgnore;
-        private System.Windows.Forms.MenuItem DebugModePls;
-        private System.Windows.Forms.MenuItem AllNotesIgnore;
         private System.Windows.Forms.MenuItem menuItem11;
-        private System.Windows.Forms.MenuItem useSWrendering;
-        private System.Windows.Forms.MenuItem floatingpointaudio;
-        private System.Windows.Forms.MenuItem ReduceCPUOver;
         private System.Windows.Forms.MenuItem menuItem16;
-        private System.Windows.Forms.MenuItem useoldbuffersystem;
-        private System.Windows.Forms.MenuItem slowdownnoskip;
         private System.Windows.Forms.MenuItem menuItem14;
         private System.Windows.Forms.MenuItem menuItem18;
         private System.Windows.Forms.MenuItem menuItem12;
+        public System.Windows.Forms.LinkLabel SPFSecondaryBut;
+        public System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
+        public System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
+        public System.Windows.Forms.ComboBox SelectedListBox;
+        public System.Windows.Forms.MenuItem enableextra8sf;
+        public System.Windows.Forms.MenuItem DebugModePls;
+        public System.Windows.Forms.MenuItem useSWrendering;
+        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
+        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
+        public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
+        public System.Windows.Forms.MenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
+        public System.Windows.Forms.MenuItem autopanicmode;
+        public System.Windows.Forms.MenuItem MIDINameNoSpace;
+        public System.Windows.Forms.MenuItem SysExIgnore;
+        public System.Windows.Forms.MenuItem AllNotesIgnore;
+        public System.Windows.Forms.MenuItem floatingpointaudio;
+        public System.Windows.Forms.MenuItem ReduceCPUOver;
+        public System.Windows.Forms.MenuItem useoldbuffersystem;
+        public System.Windows.Forms.MenuItem slowdownnoskip;
+        public System.Windows.Forms.MenuItem autoupdate;
+        public System.Windows.Forms.MenuItem hotkeys;
+        public System.Windows.Forms.MenuItem DefaultOut810enabledToolStripMenuItem;
+        public System.Windows.Forms.MenuItem DefaultOut810disabledToolStripMenuItem;
+        private System.Windows.Forms.MenuItem menuItem21;
+        private System.Windows.Forms.MenuItem ImportSettings;
+        private System.Windows.Forms.MenuItem ExportSettings;
+        public System.Windows.Forms.SaveFileDialog ExportSettingsDialog;
+        public System.Windows.Forms.OpenFileDialog ImportSettingsDialog;
     }
 }
 

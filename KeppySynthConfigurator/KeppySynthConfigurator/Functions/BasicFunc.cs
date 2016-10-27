@@ -128,6 +128,327 @@ namespace KeppySynthConfigurator
             }
         }
 
+        // -------------------------
+        // Soundfont lists functions
+
+        public static void TriggerReload() // Tells Keppy's Synthesizer to load a specific list
+        {
+            try
+            {
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.Watchdog.GetValue("currentsflist")) == KeppySynthConfiguratorMain.whichone)
+                {
+                    KeppySynthConfiguratorMain.Watchdog.SetValue("rel" + KeppySynthConfiguratorMain.whichone.ToString(), "1", RegistryValueKind.DWord);
+                }
+            }
+            catch
+            {
+                Functions.InitializeLastPath();
+            }
+        }
+
+        public static void SetLastPath(string path) // Saves the last path from the SoundfontImport dialog to the registry 
+        {
+            try
+            {
+                KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathsfimport", path);
+            }
+            catch
+            {
+                Functions.InitializeLastPath();
+            }
+        }
+
+        public static void SetLastImportExportPath(string path) // Saves the last path from the ExternalListImport/ExternalListExport dialog to the registry 
+        {
+            try
+            {
+                KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathlistimpexp", path);
+            }
+            catch { }
+        }
+
+        // NOT SUPPORTED ON XP
+        public static void OpenFileDialogAddCustomPaths(FileDialog dialog) // Allows you to add favorites to the SoundfontImport dialog
+        {
+            try
+            {
+                // Import the blacklist file
+                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\keppymididrv.favlist"))
+                {
+                    string line;
+                    while ((line = r.ReadLine()) != null)
+                    {
+                        dialog.CustomPlaces.Add(line);
+                    }
+                    return;
+                }
+            }
+            catch
+            {
+                return;
+            }
+        }
+        // NOT SUPPORTED ON XP
+
+        public static void LoadSettings() // Loads the settings from the registry
+        {
+            // ======= Load settings from the registry
+            try
+            {
+                // First, the most important settings
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
+                KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
+                KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 0)
+                {
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Enabled = false;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Enabled = true;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allhotkeys", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.hotkeys.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.hotkeys.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autopanic", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("shortname", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allnotesignore", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.AllNotesIgnore.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.AllNotesIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.ReduceCPUOver.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.ReduceCPUOver.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.slowdownnoskip.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.slowdownnoskip.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.useoldbuffersystem.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.useoldbuffersystem.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
+                }
+                if (Functions.IsWindowsVistaOrNewer())
+                {
+                    KeppySynthConfiguratorMain.Delegate.useSWrendering.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.useSWrendering.Checked = true;
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("softwarerendering", 1, RegistryValueKind.DWord);
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("debugmode", 0, RegistryValueKind.DWord);
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
+                    {
+                        KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
+                    }
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("softwarerendering", 1)) == 1)
+                    {
+                        KeppySynthConfiguratorMain.Delegate.useSWrendering.Checked = true;
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.Delegate.useSWrendering.Checked = false;
+                    }
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("extra8lists", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.enableextra8sf.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 9");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 10");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 11");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 12");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 13");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 14");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 15");
+                    KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 16");
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.enableextra8sf.Checked = false;
+                }
+                KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100).ToString();
+                KeppySynthConfiguratorMain.Delegate.TracksLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("tracks", 16));
+
+                // Then the filthy checkboxes
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("preload", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.Preload.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.Preload.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("nofx", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = false;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = true;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("noteoff", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysresetignore", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("encmode", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.SPFSecondaryBut.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
+                    {
+                        KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.Delegate.SincInter.Checked = false;
+                    }
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vmsemu", 0)) == 1)
+                    {
+                        KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Checked = true;
+                        KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Checked = false;
+                        KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
+                        KeppySynthConfiguratorMain.Delegate.bufsize.Value = 0;
+                    }
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.SPFSecondaryBut.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.SincInter.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
+                }
+
+                // LEL
+                KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+
+                // And finally, the volume!
+                int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume"));
+                double x = VolumeValue / 100;
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = x.ToString("000\\%");
+                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
+                {
+                    KeppySynthConfiguratorMain.ActiveForm.Hide();
+                    throw new Exception();
+                }));
+            }
+        }
+
         public static void SaveSettings() // Saves the settings to the registry 
         {
             /*
@@ -235,67 +556,48 @@ namespace KeppySynthConfigurator
             }
         }
 
-        // -------------------------
-        // Soundfont lists functions
-
-        public static void TriggerReload() // Tells Keppy's Synthesizer to load a specific list
+        public static void ExportSettings(String filename)
         {
             try
             {
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.Watchdog.GetValue("currentsflist")) == KeppySynthConfiguratorMain.whichone)
+                RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Windows Registry Editor Version 5.00");
+
+                sb.AppendLine("");
+                sb.AppendLine("; Keppy's Synthesizer Settings File");
+                sb.AppendLine("");
+
+                sb.AppendLine(@"[HKEY_CURRENT_USER\SOFTWARE\Keppy's Synthesizer\Settings]");
+                foreach (var keyname in KeppySynthConfiguratorMain.SynthSettings.GetValueNames())
                 {
-                    KeppySynthConfiguratorMain.Watchdog.SetValue("rel" + KeppySynthConfiguratorMain.whichone.ToString(), "1", RegistryValueKind.DWord);
+                    sb.AppendLine(String.Format("\"{0}\"={1}:{2}", keyname, SynthSettings.GetValueKind(keyname).ToString().ToLower(), Convert.ToInt32(SynthSettings.GetValue(keyname)).ToString("X")));
                 }
-            }
-            catch
-            {
-                Functions.InitializeLastPath();
-            }
-        }
 
-        public static void SetLastPath(string path) // Saves the last path from the SoundfontImport dialog to the registry 
-        {
-            try
-            {
-                KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathsfimport", path);
-            }
-            catch
-            {
-                Functions.InitializeLastPath();
-            }
-        }
+                sb.AppendLine("");
 
-        public static void SetLastImportExportPath(string path) // Saves the last path from the ExternalListImport/ExternalListExport dialog to the registry 
-        {
-            try
-            {
-                KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathlistimpexp", path);
-            }
-            catch { }
-        }
-
-        // NOT SUPPORTED ON XP
-        public static void OpenFileDialogAddCustomPaths(FileDialog dialog) // Allows you to add favorites to the SoundfontImport dialog
-        {
-            try
-            {
-                // Import the blacklist file
-                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\keppymididrv.favlist"))
+                sb.AppendLine(@"[HKEY_CURRENT_USER\SOFTWARE\Keppy's Synthesizer\Paths]");
+                foreach (var keyname in KeppySynthConfiguratorMain.SynthPaths.GetValueNames())
                 {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        dialog.CustomPlaces.Add(line);
-                    }
-                    return;
+                    sb.AppendLine(String.Format("\"{0}\"=\"{1}\"", keyname, SynthPaths.GetValue(keyname).ToString()));
                 }
+
+                sb.AppendLine(Environment.NewLine);
+
+                File.WriteAllText(filename, sb.ToString());
+
+                SynthSettings.Close();
+                SynthPaths.Close();
             }
             catch
             {
-                return;
+                // Something bad happened hehe
+                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.Exit();
             }
         }
-        // NOT SUPPORTED ON XP
 
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
