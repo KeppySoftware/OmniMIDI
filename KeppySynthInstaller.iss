@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.3.8'
+#define Version '4.0.3.10'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -61,6 +61,7 @@ Source: "output\KeppySynthConfigurator.exe"; DestDir: "{syswow64}\keppysynth"; D
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\KeppySynthMixerWindow.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KeppySynthMixerWindow.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppysynth.dll"; DestDir: "{syswow64}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "output\KSDriverRegister.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "KSDriverRegister.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\midioutsetter64.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "midioutsetter64.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{syswow64}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -70,6 +71,7 @@ Source: "output\sfzguide.txt"; DestDir: "{syswow64}\keppysynth"; DestName: "sfzg
 Source: "output\KeppySynthConfigurator.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\KeppySynthDebugWindow.exe"; DestDir: "{sys}\keppysynth"; DestName: "KeppySynthDebugWindow.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\keppysynth.dll"; DestDir: "{sys}\keppysynth"; DestName: "keppysynth.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "output\KSDriverRegister.exe"; DestDir: "{sys}\keppysynth"; DestName: "KSDriverRegister.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\midioutsetter32.exe"; DestDir: "{sys}\keppysynth"; DestName: "midioutsetter32.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfpacker.exe"; DestDir: "{sys}\keppysynth"; DestName: "sfpacker.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\sfzguide.txt"; DestDir: "{sys}\keppysynth"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -103,8 +105,6 @@ Source: "external_packages\lib\bassopus.dll"; DestDir: "{sys}\keppysynth"; DestN
 Source: "external_packages\lib\basswv.dll"; DestDir: "{sys}\keppysynth"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 
 ; Generic for all the OSes
-Source: "external_packages\lib\LoudMax.dll"; DestDir: "{%USERPROFILE}\Keppy's Synthesizer"; Flags: replacesameversion ignoreversion; Tasks: loudmaxinstall
-Source: "external_packages\lib64\LoudMax64.dll"; DestDir: "{%USERPROFILE}\Keppy's Synthesizer"; Flags: replacesameversion ignoreversion; Tasks: loudmaxinstall
 Source: "LICENSE.TXT"; DestDir: "{%USERPROFILE}\Keppy's Synthesizer"; Flags: replacesameversion ignoreversion;
 Source: "dxwebsetup.exe"; DestDir: "{tmp}"; DestName: "dxwebsetup.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Tasks: dx9redist
 Source: "output\keppymididrv.defaultblacklist"; DestDir: "{win}"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3
@@ -141,8 +141,6 @@ Name: de; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "dx9redist"; Description: "Install DirectX 9.0c Redistributable (June 2010)"; GroupDescription: "Required runtimes"; Flags: checkedonce
-Name: "loudmaxinstall"; Description: "Install LoudMax, to remove clipping from audio"; GroupDescription: "Extensions"; Flags: unchecked checkedonce
-Name: "loudmaxuninstall"; Description: "Uninstall LoudMax"; GroupDescription: "Extensions"; Flags: unchecked checkedonce
 
 [Registry]
 ; Normal settings
@@ -220,11 +218,11 @@ Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: dword;
 Root: "HKCU"; Subkey: "Software\Keppy's Synthesizer\Watchdog"; ValueType: dword; ValueName: "watchdog"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey
 
 ; 64-bit OS
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppysynth\keppysynth.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
-Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppysynth\keppysynth.dll"; Flags: uninsdeletevalue dontcreatekey; Check: Is64BitInstallMode
+Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: Is64BitInstallMode
+Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: Is64BitInstallMode
 
 ; 32-bit OS
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: string; ValueName: "midi9"; ValueData: "keppysynth\keppysynth.dll"; Flags: uninsdeletevalue dontcreatekey; Check: not Is64BitInstallMode
+Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: not Is64BitInstallMode
 
 [InstallDelete]
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
@@ -233,8 +231,6 @@ Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
 Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
-Type: files; Name: "{%USERPROFILE}\Keppy's Synthesizer\LoudMax.dll"; Tasks: loudmaxuninstall
-Type: files; Name: "{%USERPROFILE}\Keppy's Synthesizer\LoudMax64.dll"; Tasks: loudmaxuninstall
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
@@ -249,8 +245,14 @@ Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: runascurren
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
+Filename: "{syswow64}\keppysynth\KSDriverRegister.exe"; Parameters: "/register"; Flags: waituntilterminated; Description: "AREDRV"; StatusMsg: "Registering driver..."; Check: Is64BitInstallMode
+Filename: "{sys}\keppysynth\KSDriverRegister.exe"; Parameters: "/register"; Flags: waituntilterminated; Description: "AREDRV"; StatusMsg: "Registering driver..."; Check: not Is64BitInstallMode
 Filename: "http://frozensnowproductions.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
+
+[UninstallRun]
+Filename: "{syswow64}\keppysynth\KSDriverRegister.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: Is64BitInstallMode
+Filename: "{sys}\keppysynth\KSDriverRegister.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: not Is64BitInstallMode
 
 [Code]
 // shared code for installing the products

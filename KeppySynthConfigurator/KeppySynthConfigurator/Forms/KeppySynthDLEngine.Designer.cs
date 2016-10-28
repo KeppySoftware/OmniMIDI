@@ -1,6 +1,6 @@
 ﻿namespace KeppySynthConfigurator.Forms
 {
-    partial class KeppySynthUpdateDL
+    partial class KeppySynthDLEngine
     {
         /// <summary>
         /// Required designer variable.
@@ -40,7 +40,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(271, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Downloading the update, please wait...";
+            this.label1.Text = "Downloading potatoes, please wait...";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // progressBar1
@@ -50,7 +50,7 @@
             this.progressBar1.Size = new System.Drawing.Size(271, 23);
             this.progressBar1.TabIndex = 1;
             // 
-            // KeppySynthUpdateDL
+            // KeppySynthDLEngine
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -61,7 +61,7 @@
             this.Controls.Add(this.label1);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "KeppySynthUpdateDL";
+            this.Name = "KeppySynthDLEngine";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

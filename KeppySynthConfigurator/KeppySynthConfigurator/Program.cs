@@ -117,7 +117,7 @@ namespace KeppySynthConfigurator
                                     DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                                     if (dialogResult == DialogResult.Yes)
                                     {
-                                        Forms.KeppySynthUpdateDL frm = new Forms.KeppySynthUpdateDL(newestversion);
+                                        Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait...", newestversion), null, 0);
                                         frm.StartPosition = FormStartPosition.CenterScreen;
                                         frm.ShowDialog();
                                     }

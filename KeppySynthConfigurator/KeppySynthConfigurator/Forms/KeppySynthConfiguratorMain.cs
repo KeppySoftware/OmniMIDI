@@ -34,7 +34,7 @@ namespace KeppySynthConfigurator
         public static string List7PathOld { get; set; }
         public static string List8PathOld { get; set; }
 
-        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
+        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE");
 
         public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
         public static string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
@@ -211,6 +211,7 @@ namespace KeppySynthConfigurator
             }
             if (Functions.IsWindowsXP() == true)
             {
+                MessageBox.Show("This release of Keppy's Synthesizer will be the last one to support Windows XP.\n\nPlease upgrade to a newer OS, like Vista or 7, in order to get further updates to the driver.", "Keppy's Synthesizer - Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 menuItem17.Visible = false;
                 manageFolderFavouritesToolStripMenuItem.Visible = false;
             }
@@ -985,6 +986,16 @@ namespace KeppySynthConfigurator
             DefaultOut810disabledToolStripMenuItem.Enabled = false;
         }
 
+        private void RegDriver_Click(object sender, EventArgs e)
+        {
+            Functions.DriverRegistry(0);
+        }
+
+        private void UnregDriver_Click(object sender, EventArgs e)
+        {
+            Functions.DriverRegistry(1);
+        }
+
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
             Application.ExitThread();
@@ -1387,6 +1398,16 @@ namespace KeppySynthConfigurator
             {
 
             }
+        }
+
+        private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.LoudMaxInstall();
+        }
+
+        private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.LoudMaxUninstall();
         }
     }
 }

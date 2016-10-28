@@ -129,11 +129,11 @@
     <Compile Include="Forms\KeppySynthSFListAssign.Designer.cs">
       <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\KeppySynthUpdateDL.cs">
+    <Compile Include="Forms\KeppySynthDLEngine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\KeppySynthUpdateDL.Designer.cs">
-      <DependentUpon>KeppySynthUpdateDL.cs</DependentUpon>
+    <Compile Include="Forms\KeppySynthDLEngine.Designer.cs">
+      <DependentUpon>KeppySynthDLEngine.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
     <Compile Include="Functions\WatchdogFunc.cs" />
@@ -169,8 +169,8 @@
     <EmbeddedResource Include="Forms\KeppySynthSFListAssign.resx">
       <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\KeppySynthUpdateDL.resx">
-      <DependentUpon>KeppySynthUpdateDL.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\KeppySynthDLEngine.resx">
+      <DependentUpon>KeppySynthDLEngine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

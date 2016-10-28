@@ -123,6 +123,9 @@
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.ImportSettings = new System.Windows.Forms.MenuItem();
             this.ExportSettings = new System.Windows.Forms.MenuItem();
+            this.menuItem22 = new System.Windows.Forms.MenuItem();
+            this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
+            this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.useSWrendering = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
@@ -138,6 +141,9 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
+            this.menuItem20 = new System.Windows.Forms.MenuItem();
+            this.RegDriver = new System.Windows.Forms.MenuItem();
+            this.UnregDriver = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -1147,9 +1153,11 @@
             this.ImportSettings,
             this.ExportSettings,
             this.menuItem19,
+            this.menuItem22,
             this.menuItem11,
             this.menuItem14,
-            this.menuItem12});
+            this.menuItem12,
+            this.menuItem20});
             this.menuItem2.Text = "Additional settings";
             // 
             // hotkeys
@@ -1175,9 +1183,29 @@
             this.ExportSettings.Text = "Export driver settings";
             this.ExportSettings.Click += new System.EventHandler(this.ExportSettings_Click);
             // 
+            // menuItem22
+            // 
+            this.menuItem22.Index = 11;
+            this.menuItem22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.LoudMaxInstallMenu,
+            this.LoudMaxUninstallMenu});
+            this.menuItem22.Text = "LoudMax installation";
+            // 
+            // LoudMaxInstallMenu
+            // 
+            this.LoudMaxInstallMenu.Index = 0;
+            this.LoudMaxInstallMenu.Text = "(Re)Install LoudMax";
+            this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
+            // 
+            // LoudMaxUninstallMenu
+            // 
+            this.LoudMaxUninstallMenu.Index = 1;
+            this.LoudMaxUninstallMenu.Text = "Uninstall LoudMax";
+            this.LoudMaxUninstallMenu.Click += new System.EventHandler(this.LoudMaxUninstallMenu_Click);
+            // 
             // menuItem11
             // 
-            this.menuItem11.Index = 11;
+            this.menuItem11.Index = 12;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.useSWrendering,
             this.floatingpointaudio,
@@ -1224,7 +1252,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 12;
+            this.menuItem14.Index = 13;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.enableextra8sf,
@@ -1258,7 +1286,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 13;
+            this.menuItem12.Index = 14;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AllNotesIgnore,
             this.SysExIgnore,
@@ -1276,6 +1304,26 @@
             this.SysExIgnore.Index = 1;
             this.SysExIgnore.Text = "Ignore SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
+            // 
+            // menuItem20
+            // 
+            this.menuItem20.Index = 15;
+            this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.RegDriver,
+            this.UnregDriver});
+            this.menuItem20.Text = "Troubleshooting";
+            // 
+            // RegDriver
+            // 
+            this.RegDriver.Index = 0;
+            this.RegDriver.Text = "Register the driver";
+            this.RegDriver.Click += new System.EventHandler(this.RegDriver_Click);
+            // 
+            // UnregDriver
+            // 
+            this.UnregDriver.Index = 1;
+            this.UnregDriver.Text = "Unregister the driver";
+            this.UnregDriver.Click += new System.EventHandler(this.UnregDriver_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -1570,6 +1618,12 @@
         private System.Windows.Forms.MenuItem ExportSettings;
         public System.Windows.Forms.SaveFileDialog ExportSettingsDialog;
         public System.Windows.Forms.OpenFileDialog ImportSettingsDialog;
+        private System.Windows.Forms.MenuItem menuItem20;
+        private System.Windows.Forms.MenuItem RegDriver;
+        private System.Windows.Forms.MenuItem UnregDriver;
+        private System.Windows.Forms.MenuItem menuItem22;
+        private System.Windows.Forms.MenuItem LoudMaxInstallMenu;
+        private System.Windows.Forms.MenuItem LoudMaxUninstallMenu;
     }
 }
 
