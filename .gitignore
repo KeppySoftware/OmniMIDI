@@ -48,7 +48,6 @@
 /output/*.pdb
 /output/*.xml
 /output/64
-/scripts
 /sfpacker/*.dll
 /sfpacker/*.exe
 /sfpacker/*.opensdf

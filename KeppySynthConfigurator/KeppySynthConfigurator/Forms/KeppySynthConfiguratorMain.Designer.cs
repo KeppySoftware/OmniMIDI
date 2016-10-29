@@ -143,6 +143,8 @@
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
             this.UnregDriver = new System.Windows.Forms.MenuItem();
+            this.menuItem23 = new System.Windows.Forms.MenuItem();
+            this.DLLOverrideFolder = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -430,7 +432,7 @@
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Hand;
             this.WhatIsXAudio.ErrorImage = global::KeppySynthConfigurator.Properties.Resources.what;
             this.WhatIsXAudio.Image = global::KeppySynthConfigurator.Properties.Resources.what;
-            this.WhatIsXAudio.Location = new System.Drawing.Point(393, 9);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(393, 8);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(21, 17);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -456,7 +458,7 @@
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Hand;
             this.WhatIsOutput.ErrorImage = global::KeppySynthConfigurator.Properties.Resources.what;
             this.WhatIsOutput.Image = global::KeppySynthConfigurator.Properties.Resources.what;
-            this.WhatIsOutput.Location = new System.Drawing.Point(205, 9);
+            this.WhatIsOutput.Location = new System.Drawing.Point(205, 8);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(21, 17);
             this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1302,7 +1304,9 @@
             this.menuItem20.Index = 15;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
-            this.UnregDriver});
+            this.UnregDriver,
+            this.menuItem23,
+            this.DLLOverrideFolder});
             this.menuItem20.Text = "Troubleshooting";
             // 
             // RegDriver
@@ -1316,6 +1320,17 @@
             this.UnregDriver.Index = 1;
             this.UnregDriver.Text = "Unregister the driver";
             this.UnregDriver.Click += new System.EventHandler(this.UnregDriver_Click);
+            // 
+            // menuItem23
+            // 
+            this.menuItem23.Index = 2;
+            this.menuItem23.Text = "-";
+            // 
+            // DLLOverrideFolder
+            // 
+            this.DLLOverrideFolder.Index = 3;
+            this.DLLOverrideFolder.Text = "Open folder for DLL override";
+            this.DLLOverrideFolder.Click += new System.EventHandler(this.DLLOverrideFolder_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -1615,6 +1630,8 @@
         private System.Windows.Forms.MenuItem menuItem22;
         private System.Windows.Forms.MenuItem LoudMaxInstallMenu;
         private System.Windows.Forms.MenuItem LoudMaxUninstallMenu;
+        private System.Windows.Forms.MenuItem menuItem23;
+        private System.Windows.Forms.MenuItem DLLOverrideFolder;
     }
 }
 

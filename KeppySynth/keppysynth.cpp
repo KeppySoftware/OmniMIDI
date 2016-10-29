@@ -100,50 +100,7 @@ static HANDLE hTremolio = NULL;
 static unsigned int thrdaddr;
 
 // Variables
-static float *sndbf;
-static int allhotkeys = 0; // Enable/Disable all the hotkeys
-static int autopanic = 1; // Autopanic switch
-static int bassoutputfinal = 0; // DO NOT TOUCH
-static int defaultsflist = 1; // Default soundfont list
-static int encmode = 0; // Encoder mode
-static int floatrendering = 1; // Floating point audio
-static int frames = 0; // Default
-static int frequency = 0; // Audio frequency
-static int tremoliov = 0; // Yes
-static int frequencynew = 0; // Audio frequency
-static int maxcpu = 0; // CPU usage INT
-static int midivoices = 0; // Max voices INT
-static int midivolumeoverride = 0; // MIDI track volume override
-static int newsndbfvalue; // DO NOT TOUCH
-static int newevbuffvalue = 64; // DO NOT TOUCH
-static int oldbuffermode = 0; // For old-ass PCs
-static int nofloat = 1; // Enable or disable the float engine
-static int nofx = 0; // Enable or disable FXs
-static int rco = 0; // Reduce CPU overhead
-static int shortname = 0; // Use short name or nah
-static int noteoff1 = 0; // Note cut INT
-static int preload = 0; // Soundfont preloading
-static int sysexignore = 0; // Ignore SysEx events
-static int allnotesignore = 0; // Ignore all MIDI events
-static int defaultmidiout = 0; // Set as default MIDI out device for 8.x or newer
-static int sinc = 0; // Sinc
-static int sysresetignore = 0; //Ignore sysex messages
-static int tracks = 0; // Tracks limit
-static int vmsemu = 0; // VirtualMIDISynth buffer emulation
-static int vms2emu = 0; // VirtualMIDISynth 2.x buffer emulation
-static int volume = 0; // Volume limit
-static int volumehotkeys = 1; // Enable/Disable volume hotkeys
-static int volumemon = 1; // Volume monitoring
-static int xaudiodisabled = 0; // Override the default engine
-static int debugmode = 0; // Debug console
-static HANDLE hConsole;
-
-// Other stuff
-static int decoded;
-
-static sound_out * sound_driver = NULL;
-
-static HINSTANCE hinst = NULL;             //main DLL handle
+#include "val.h"
 
 class message_window
 {
@@ -160,7 +117,7 @@ public:
 		cls.lpszClassName = class_name;
 		class_atom = RegisterClassEx(&cls);
 		if (class_atom) {
-			m_hWnd = CreateWindowEx(0, (LPCTSTR)class_atom, _T("keppydrv"), 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hinst, NULL);
+			m_hWnd = CreateWindowEx(0, (LPCTSTR)class_atom, _T("keppysynth"), 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hinst, NULL);
 		}
 		else {
 			m_hWnd = NULL;
@@ -178,11 +135,6 @@ public:
 
 message_window * g_msgwnd = NULL;
 
-static HINSTANCE bass = 0;			// bass handle
-static HINSTANCE bassmidi = 0;			// bassmidi handle
-static HINSTANCE bassenc = 0;			// bassenc handle
-static HINSTANCE bass_vst = 0;			// bass_vst handle
-
 void CreateConsole() {
 	DWORD version = GetVersion();
 	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
@@ -191,7 +143,7 @@ void CreateConsole() {
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTitle(L"Keppy's Synthesizer Debug");
+		SetConsoleTitle(L"Keppy's Synthesizer Debug Console");
 	}
 }
 
@@ -209,7 +161,6 @@ void PrintToConsole(int color, int stage, const char* text) {
 #include "bansystem.h"
 
 static void DoStopClient();
-
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 
@@ -266,13 +217,24 @@ LRESULT DoDriverClose(DWORD_PTR dwDriverId, HDRVR hdrvr, LONG lParam1, LONG lPar
 	return DRV_CANCEL;
 }
 
+LRESULT DoDriverConfiguration() {
+	TCHAR configuratorapp[MAX_PATH];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+	{
+		PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+		ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
+		return DRVCNF_OK;
+	}
+	return DRVCNF_CANCEL;
+}
+
 STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
 	switch (uMsg) {
 	case DRV_QUERYCONFIGURE:
 		return DRV_CANCEL;
 	case DRV_CONFIGURE:
-		return DRV_CANCEL;
+		return DoDriverConfiguration();
 	case DRV_LOAD:
 		return DoDriverLoad();
 	case DRV_FREE:
@@ -614,6 +576,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
+					PrintToConsole(FOREGROUND_RED, 1, "Loading soundfonts...");
 					if (LoadSoundfontStartup() == TRUE) {
 						PrintToConsole(FOREGROUND_RED, 1, "Default list for app loaded.");
 					}

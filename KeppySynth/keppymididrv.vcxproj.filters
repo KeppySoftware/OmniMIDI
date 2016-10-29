@@ -54,6 +54,9 @@
     <ClInclude Include="..\external_packages\audiodefs.h">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="val.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header files">

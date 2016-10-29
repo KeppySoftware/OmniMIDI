@@ -20,11 +20,11 @@ namespace KeppySynthConfigurator
         [DllImport("wininet.dll")]
         private extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
 
-        public static bool IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
+        public static string IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             string productName = (string)reg.GetValue("ProductName");
-            return productName.StartsWith("Windows 8") | productName.StartsWith("Windows 10");
+            return productName;
         }
 
         public static bool IsWindowsVistaOrNewer() // Checks if you're using Windows Vista or newer
@@ -88,6 +88,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                int isalreadyinstalled = 0;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
                 string loudmax32 = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/external_packages/lib/LoudMax.dll";
                 string loudmax64 = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/external_packages/lib64/LoudMax64.dll";
@@ -95,13 +96,14 @@ namespace KeppySynthConfigurator
                 // 32-bit DLL
                 if (!File.Exists(userfolder + "\\LoudMax.dll"))
                 {
-                    Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(null, "Downloading LoudMax 32-bit...", loudmax32, 1);
+                    Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(null, "Downloading LoudMax 32-bit... {0}%", loudmax32, 1);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
                 else
                 {
                     MessageBox.Show("LoudMax 32-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    isalreadyinstalled++;
                 }
 
                 // 64-bit DLL
@@ -109,17 +111,21 @@ namespace KeppySynthConfigurator
                 {
                     if (!File.Exists(userfolder + "\\LoudMax64.dll"))
                     {
-                        Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(null, "Downloading LoudMax 64-bit...", loudmax64, 1);
+                        Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(null, "Downloading LoudMax 64-bit... {0}%", loudmax64, 1);
                         frm.StartPosition = FormStartPosition.CenterScreen;
                         frm.ShowDialog();
                     }
                     else
                     {
                         MessageBox.Show("LoudMax 64-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        isalreadyinstalled++;
                     }
                 }
 
-                MessageBox.Show("LoudMax successfully installed!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (isalreadyinstalled != 2)
+                {
+                    MessageBox.Show("LoudMax successfully installed!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
@@ -131,6 +137,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                int isalreadyuninstalled = 0;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
 
                 // 32-bit DLL
@@ -141,6 +148,7 @@ namespace KeppySynthConfigurator
                 else
                 {
                     MessageBox.Show("LoudMax 32-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    isalreadyuninstalled++;
                 }
 
                 // 64-bit DLL
@@ -151,9 +159,13 @@ namespace KeppySynthConfigurator
                 else
                 {
                     MessageBox.Show("LoudMax 64-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    isalreadyuninstalled++;
                 }
 
-                MessageBox.Show("LoudMax successfully uninstalled!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (isalreadyuninstalled != 2)
+                {
+                    MessageBox.Show("LoudMax successfully uninstalled!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
@@ -191,7 +203,7 @@ namespace KeppySynthConfigurator
                         DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (dialogResult == DialogResult.Yes)
                         {
-                            Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait...", newestversion), null, 0);
+                            Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
                             frm.StartPosition = FormStartPosition.CenterScreen;
                             frm.ShowDialog();
                         }

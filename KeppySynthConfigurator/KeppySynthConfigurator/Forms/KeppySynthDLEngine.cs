@@ -17,13 +17,15 @@ namespace KeppySynthConfigurator.Forms
         WebClient webClient;
         String VersionToDownload;
         String FullURL;
+        String thestring;
         Uri URL;
         int test;
 
         public KeppySynthDLEngine(String text, String MessageText, String toDL, int what)
         {
             InitializeComponent();
-            label1.Text = MessageText;
+            thestring = MessageText;
+            label1.Text = String.Format(thestring, 0);
             VersionToDownload = text;
             FullURL = toDL;
             test = what;
@@ -68,6 +70,7 @@ namespace KeppySynthConfigurator.Forms
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
+            label1.Text = String.Format(thestring, e.ProgressPercentage);
         }
 
         private void Completed(object sender, AsyncCompletedEventArgs e)

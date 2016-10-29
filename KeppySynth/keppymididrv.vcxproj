@@ -30,6 +30,7 @@
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />
     <ClInclude Include="sound_out.h" />
+    <ClInclude Include="val.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

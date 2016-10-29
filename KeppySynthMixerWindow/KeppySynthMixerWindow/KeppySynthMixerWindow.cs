@@ -32,34 +32,6 @@ namespace KeppySynthMixerWindow
             registrykeyHKLM.Close();
         }
 
-        private void LeftChannelText(string text)
-        {
-            using (Graphics gr = LeftChannel.CreateGraphics())
-            {
-                gr.DrawString(text,
-                    SystemFonts.DefaultFont,
-                    Brushes.Black,
-                    new PointF(LeftChannel.Width / 2 - (gr.MeasureString(text,
-                        SystemFonts.DefaultFont).Width / 2.0F),
-                    LeftChannel.Height / 2 - (gr.MeasureString(text,
-                        SystemFonts.DefaultFont).Height / 2.0F)));
-            }
-        }
-
-        private void RightChannelText(string text)
-        {
-            using (Graphics gr = RightChannel.CreateGraphics())
-            {
-                gr.DrawString(text,
-                    SystemFonts.DefaultFont,
-                    Brushes.Black,
-                    new PointF(RightChannel.Width / 2 - (gr.MeasureString(text,
-                        SystemFonts.DefaultFont).Width / 2.0F),
-                    RightChannel.Height / 2 - (gr.MeasureString(text,
-                        SystemFonts.DefaultFont).Height / 2.0F)));
-            }
-        }
-
         private void fullVolumeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CH1VOL.Value = 127;
@@ -138,23 +110,38 @@ namespace KeppySynthMixerWindow
             if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
             {
                 LeftChannel.Value = Convert.ToInt32(Debug.GetValue("leftvol"));
-                if (LeftChannel.Value == 32768)
-                {
-                    LeftChannelText("Clipping!");
-                }
-
                 RightChannel.Value = Convert.ToInt32(Debug.GetValue("rightvol"));
-                if (RightChannel.Value == 32768)
+                if (LeftChannel.Value >= 32768)
                 {
-                    RightChannelText("Clipping!");
+                    label1.Text = "╬ Left:";
+                }
+                else if (LeftChannel.Value <= 0)
+                {
+                    label1.Text = "■ Left:";
+                }
+                else
+                {
+                    label1.Text = "Left:";
+                }
+                if (RightChannel.Value >= 32768)
+                {
+                    label2.Text = "╬ Right:";
+                }
+                else if (RightChannel.Value <= 0)
+                {
+                    label2.Text = "■ Right:";
+                }
+                else
+                {
+                    label2.Text = "Right:";
                 }
             }
             else
             {
                 LeftChannel.Value = 0;
                 RightChannel.Value = 0;
-                LeftChannelText("N/A");
-                RightChannelText("N/A");
+                label1.Text = "█ Left:";
+                label2.Text = "█ Right:";
             }
 
             System.Threading.Thread.Sleep(1);

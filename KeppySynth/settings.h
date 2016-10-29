@@ -4,62 +4,6 @@ Keppy's Synthesizer settings loading system
 
 
 
-// Channels volume
-static int ch1 = 16383;
-static int ch2 = 16383;
-static int ch3 = 16383;
-static int ch4 = 16383;
-static int ch5 = 16383;
-static int ch6 = 16383;
-static int ch7 = 16383;
-static int ch8 = 16383;
-static int ch9 = 16383;
-static int ch10 = 16383;
-static int ch11 = 16383;
-static int ch12 = 16383;
-static int ch13 = 16383;
-static int ch14 = 16383;
-static int ch15 = 16383;
-static int ch16 = 16383;
-static int tch1 = 16383;
-static int tch2 = 16383;
-static int tch3 = 16383;
-static int tch4 = 16383;
-static int tch5 = 16383;
-static int tch6 = 16383;
-static int tch7 = 16383;
-static int tch8 = 16383;
-static int tch9 = 16383;
-static int tch10 = 16383;
-static int tch11 = 16383;
-static int tch12 = 16383;
-static int tch13 = 16383;
-static int tch14 = 16383;
-static int tch15 = 16383;
-static int tch16 = 16383;
-
-// Watchdog
-static int rel1 = 0;
-static int rel2 = 0;
-static int rel3 = 0;
-static int rel4 = 0;
-static int rel5 = 0;
-static int rel6 = 0;
-static int rel7 = 0;
-static int rel8 = 0;
-static int rel9 = 0;
-static int rel10 = 0;
-static int rel11 = 0;
-static int rel12 = 0;
-static int rel13 = 0;
-static int rel14 = 0;
-static int rel15 = 0;
-static int rel16 = 0;
-
-// Other
-static int buffull = 0;
-static int extra8lists = 0;
-
 struct evbuf_t{
 	UINT   uDeviceID;
 	UINT   uMsg;
@@ -186,30 +130,6 @@ void LoadSoundfont(int whichsf){
 }
 
 bool LoadSoundfontStartup() {
-	TCHAR defaultstring[MAX_PATH];
-	TCHAR listanalyze1[MAX_PATH];
-	TCHAR listanalyze2[MAX_PATH];
-	TCHAR listanalyze3[MAX_PATH];
-	TCHAR listanalyze4[MAX_PATH];
-	TCHAR listanalyze5[MAX_PATH];
-	TCHAR listanalyze6[MAX_PATH];
-	TCHAR listanalyze7[MAX_PATH];
-	TCHAR listanalyze8[MAX_PATH];
-	TCHAR listanalyze9[MAX_PATH];
-	TCHAR listanalyze10[MAX_PATH];
-	TCHAR listanalyze11[MAX_PATH];
-	TCHAR listanalyze12[MAX_PATH];
-	TCHAR listanalyze13[MAX_PATH];
-	TCHAR listanalyze14[MAX_PATH];
-	TCHAR listanalyze15[MAX_PATH];
-	TCHAR listanalyze16[MAX_PATH];
-
-	TCHAR * listsanalyze[16] =
-	{
-		listanalyze1, listanalyze2, listanalyze3, listanalyze4, listanalyze5, listanalyze6, listanalyze7, listanalyze8,
-		listanalyze9, listanalyze10, listanalyze11, listanalyze12, listanalyze13, listanalyze14, listanalyze15, listanalyze16
-	};
-
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
 	GetModuleFileName(NULL, modulename, MAX_PATH);
@@ -241,44 +161,101 @@ bool LoadSoundfontStartup() {
 BOOL load_bassfuncs()
 {
 	TCHAR installpath[MAX_PATH] = { 0 };
-	TCHAR basspath[MAX_PATH] = { 0 };
-	TCHAR bassmidipath[MAX_PATH] = { 0 };
 	TCHAR bassencpath[MAX_PATH] = { 0 };
+	TCHAR bassencpathalt[MAX_PATH] = { 0 };
+	TCHAR bassmidipath[MAX_PATH] = { 0 };
+	TCHAR bassmidipathalt[MAX_PATH] = { 0 };
+	TCHAR basspath[MAX_PATH] = { 0 };
+	TCHAR basspathalt[MAX_PATH] = { 0 };
 	TCHAR bassvstpath[MAX_PATH] = { 0 };
-	TCHAR pluginpath[MAX_PATH] = { 0 };
-	WIN32_FIND_DATA fd;
-	HANDLE fh;
+	TCHAR bassvstpathalt[MAX_PATH] = { 0 };
 	int installpathlength;
 
 	GetModuleFileName(hinst, installpath, MAX_PATH);
 	PathRemoveFileSpec(installpath);
 
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, basspathalt);
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
+
+	#if defined(_WIN64)
+		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
+		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmidi.dll"));
+		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
+		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
+	#elif defined(_WIN32)
+		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
+		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
+		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
+		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
+	#endif
+
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	PrintToConsole(FOREGROUND_RED, 1, "Allocating memory for BASS DLLs...");
 
-	lstrcat(basspath, installpath);
-	lstrcat(basspath, L"\\bass.dll");
-	if (!(bass = LoadLibrary(basspath))) {
-		DLLLoadError(basspath);
-		exit(0);
+	// BASS
+	if (PathFileExists(basspathalt)) {
+		if (!(bass = LoadLibrary(basspathalt))) {
+			DLLLoadError(basspathalt);
+			exit(0);
+		}
 	}
-	lstrcat(bassmidipath, installpath);
-	lstrcat(bassmidipath, L"\\bassmidi.dll");
-	if (!(bassmidi = LoadLibrary(bassmidipath))) {
-		DLLLoadError(bassmidipath);
-		exit(0);
+	else {
+		lstrcat(basspath, installpath);
+		lstrcat(basspath, L"\\bass.dll");
+		if (!(bass = LoadLibrary(basspath))) {
+			DLLLoadError(basspath);
+			exit(0);
+		}
 	}
-	lstrcat(bassencpath, installpath);
-	lstrcat(bassencpath, L"\\bassenc.dll");
-	if (!(bassenc = LoadLibrary(bassencpath))) {
-		DLLLoadError(bassencpath);
-		exit(0);
+
+	// BASSMIDI
+	if (PathFileExists(bassmidipathalt)) {
+		if (!(bassmidi = LoadLibrary(bassmidipathalt))) {
+			DLLLoadError(bassmidipathalt);
+			exit(0);
+		}
 	}
-	lstrcat(bassvstpath, installpath);
-	lstrcat(bassvstpath, L"\\bass_vst.dll");
-	if (!(bass_vst = LoadLibrary(bassvstpath))) {
-		DLLLoadError2(bassvstpath);
-		exit(0);
+	else {
+		lstrcat(bassmidipath, installpath);
+		lstrcat(bassmidipath, L"\\bassmidi.dll");
+		if (!(bassmidi = LoadLibrary(bassmidipath))) {
+			DLLLoadError(bassmidipath);
+			exit(0);
+		}
+	}
+
+	// BASSenc
+	if (PathFileExists(bassencpathalt)) {
+		if (!(bassenc = LoadLibrary(bassencpathalt))) {
+			DLLLoadError(bassencpathalt);
+			exit(0);
+		}
+	}
+	else {
+		lstrcat(bassencpath, installpath);
+		lstrcat(bassencpath, L"\\bassenc.dll");
+		if (!(bassenc = LoadLibrary(bassencpath))) {
+			DLLLoadError(bassencpath);
+			exit(0);
+		}
+	}
+
+	// BASS_VST
+	if (PathFileExists(bassvstpathalt)) {
+		if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
+			DLLLoadError(bassvstpathalt);
+			exit(0);
+		}
+	}
+	else {
+		lstrcat(bassvstpath, installpath);
+		lstrcat(bassvstpath, L"\\bass_vst.dll");
+		if (!(bass_vst = LoadLibrary(bassvstpath))) {
+			DLLLoadError(bassvstpath);
+			exit(0);
+		}
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");
@@ -319,20 +296,6 @@ BOOL load_bassfuncs()
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 	LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
 	PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
-
-	installpathlength = lstrlen(installpath) + 1;
-	lstrcat(pluginpath, installpath);
-	lstrcat(pluginpath, L"\\bass*.dll");
-	fh = FindFirstFile(pluginpath, &fd);
-	if (fh != INVALID_HANDLE_VALUE) {
-		do {
-			HPLUGIN plug;
-			pluginpath[installpathlength] = 0;
-			lstrcat(pluginpath, fd.cFileName);
-			plug = BASS_PluginLoad((char*)pluginpath, BASS_UNICODE);
-		} while (FindNextFile(fh, &fd));
-		FindClose(fh);
-	}
 	return TRUE;
 }
 
@@ -462,13 +425,11 @@ void realtime_load_settings()
 			sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 		}
 		//another cake
-		int maxmidivoices = static_cast <int> (midivoices);
-		float trackslimit = static_cast <int> (tracks);
-		if (tracks > 15) { 
+		if (tracks != 16) { 
 			BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 		}
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, trackslimit);
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, maxmidivoices);
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 		if (noteoff1) {
 			BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
@@ -509,39 +470,12 @@ void WatchdogCheck()
 		DWORD dwSize = sizeof(DWORD);
 		DWORD zero = 0;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"rel1", NULL, &dwType, (LPBYTE)&rel1, &dwSize);
-		RegQueryValueEx(hKey, L"rel2", NULL, &dwType, (LPBYTE)&rel2, &dwSize);
-		RegQueryValueEx(hKey, L"rel3", NULL, &dwType, (LPBYTE)&rel3, &dwSize);
-		RegQueryValueEx(hKey, L"rel4", NULL, &dwType, (LPBYTE)&rel4, &dwSize);
-		RegQueryValueEx(hKey, L"rel5", NULL, &dwType, (LPBYTE)&rel5, &dwSize);
-		RegQueryValueEx(hKey, L"rel6", NULL, &dwType, (LPBYTE)&rel6, &dwSize);
-		RegQueryValueEx(hKey, L"rel7", NULL, &dwType, (LPBYTE)&rel7, &dwSize);
-		RegQueryValueEx(hKey, L"rel8", NULL, &dwType, (LPBYTE)&rel8, &dwSize);
-		RegQueryValueEx(hKey, L"rel9", NULL, &dwType, (LPBYTE)&rel9, &dwSize);
-		RegQueryValueEx(hKey, L"rel10", NULL, &dwType, (LPBYTE)&rel10, &dwSize);
-		RegQueryValueEx(hKey, L"rel11", NULL, &dwType, (LPBYTE)&rel11, &dwSize);
-		RegQueryValueEx(hKey, L"rel12", NULL, &dwType, (LPBYTE)&rel12, &dwSize);
-		RegQueryValueEx(hKey, L"rel13", NULL, &dwType, (LPBYTE)&rel13, &dwSize);
-		RegQueryValueEx(hKey, L"rel14", NULL, &dwType, (LPBYTE)&rel14, &dwSize);
-		RegQueryValueEx(hKey, L"rel15", NULL, &dwType, (LPBYTE)&rel15, &dwSize);
-		RegQueryValueEx(hKey, L"rel16", NULL, &dwType, (LPBYTE)&rel16, &dwSize);
-
-		LPCWSTR names[16] =
-		{
-			L"rel1", L"rel2", L"rel3", L"rel4", L"rel5", L"rel6", L"rel7", L"rel8",
-			L"rel9", L"rel10", L"rel11", L"rel2", L"rel13", L"rel14", L"rel15", L"rel16"
-		};
-
-		int values[16] =
-		{
-			rel1, rel2, rel3, rel4, rel5, rel6, rel7, rel8,
-			rel9, rel10, rel11, rel12, rel13, rel14, rel15, rel16
-		};
 
 		for (int i = 0; i <= 15; ++i) {
-			if (values[i] == 1) {
+			RegQueryValueEx(hKey, rnames[i], NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
+			if (rvalues[i] == 1) {
 				LoadSoundfont(i + 1);
-				RegSetValueEx(hKey, names[i], 0, dwType, (LPBYTE)&zero, sizeof(zero));
+				RegSetValueEx(hKey, rnames[i], 0, dwType, (LPBYTE)&zero, sizeof(zero));
 			}
 		}
 
@@ -603,45 +537,16 @@ void mixervoid() {
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Channels", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"ch1", NULL, &dwType, (LPBYTE)&ch1, &dwSize);
-		RegQueryValueEx(hKey, L"ch2", NULL, &dwType, (LPBYTE)&ch2, &dwSize);
-		RegQueryValueEx(hKey, L"ch3", NULL, &dwType, (LPBYTE)&ch3, &dwSize);
-		RegQueryValueEx(hKey, L"ch4", NULL, &dwType, (LPBYTE)&ch4, &dwSize);
-		RegQueryValueEx(hKey, L"ch5", NULL, &dwType, (LPBYTE)&ch5, &dwSize);
-		RegQueryValueEx(hKey, L"ch6", NULL, &dwType, (LPBYTE)&ch6, &dwSize);
-		RegQueryValueEx(hKey, L"ch7", NULL, &dwType, (LPBYTE)&ch7, &dwSize);
-		RegQueryValueEx(hKey, L"ch8", NULL, &dwType, (LPBYTE)&ch8, &dwSize);
-		RegQueryValueEx(hKey, L"ch9", NULL, &dwType, (LPBYTE)&ch9, &dwSize);
-		RegQueryValueEx(hKey, L"ch10", NULL, &dwType, (LPBYTE)&ch10, &dwSize);
-		RegQueryValueEx(hKey, L"ch11", NULL, &dwType, (LPBYTE)&ch11, &dwSize);
-		RegQueryValueEx(hKey, L"ch12", NULL, &dwType, (LPBYTE)&ch12, &dwSize);
-		RegQueryValueEx(hKey, L"ch13", NULL, &dwType, (LPBYTE)&ch13, &dwSize);
-		RegQueryValueEx(hKey, L"ch14", NULL, &dwType, (LPBYTE)&ch14, &dwSize);
-		RegQueryValueEx(hKey, L"ch15", NULL, &dwType, (LPBYTE)&ch15, &dwSize);
-		RegQueryValueEx(hKey, L"ch16", NULL, &dwType, (LPBYTE)&ch16, &dwSize);
 
-		int values[16] =
-		{
-			ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8,
-			ch9, ch10, ch11, ch12, ch13, ch14, ch15, ch16
-		};
-
-		int tvalues[16] =
-		{
-			tch1, tch2, tch3, tch4, tch5, tch6, tch7, tch8,
-			tch9, tch10, tch11, tch12, tch13, tch14, tch15, tch16
-		};
-
-		if (midivolumeoverride == 1) {
-			for (int i = 0; i <= 15; ++i) {
-				BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, values[i]);
+		for (int i = 0; i <= 15; ++i) {
+			RegQueryValueEx(hKey, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
+			if (midivolumeoverride == 1) {
+				BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
 			}
-		}
-		else {
-			for (int i = 0; i <= 15; ++i) {
-				if (ch1 != tch1) {
-					BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, values[i]);
-					tvalues[i] = values[i];
+			else {
+				if (cvalues[i] != tcvalues[i]) {
+					BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
+					tcvalues[i] = cvalues[i];
 				}
 			}
 		}

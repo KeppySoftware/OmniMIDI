@@ -205,12 +205,20 @@ namespace KeppySynthConfigurator
             this.ThemeCheck.RunWorkerAsync();
             this.Size = new Size(665, 481);
             // MIDI out selector disabler
-            if (Functions.IsWindows8OrNewer() == true)
+            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
             {
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
                 getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = true;
+                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
+                SetSynthDefault.Visible = true;
+            }
+            else if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
+            {
+                changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 SetSynthDefault.Visible = true;
             }
@@ -840,6 +848,42 @@ namespace KeppySynthConfigurator
             Functions.CheckForUpdates();
         }
 
+        private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.LoudMaxInstall();
+        }
+
+        private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.LoudMaxUninstall();
+        }
+
+        private void DLLOverrideFolder_Click(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride"))
+            {
+                Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride");
+                File.WriteAllText(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\What's DLL override.txt", KeppySynthConfigurator.Properties.Resources.whatoverride);
+            }
+            if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\32"))
+            {
+                Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\32");
+                File.Create(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\32\\PUT 32-BIT DLLs HERE").Dispose();
+            }
+            if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\64"))
+            {
+                Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\64");
+                File.Create(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\64\\PUT 64-BIT DLLs HERE").Dispose();
+            }
+
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride",
+                UseShellExecute = true,
+                Verb = "open"
+            });
+        }
+
         private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Synthesizer?\n\nWARNING: Only use this function to report serious bugs, like memory leaks and security flaws.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -1357,16 +1401,6 @@ namespace KeppySynthConfigurator
             {
 
             }
-        }
-
-        private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
-        {
-            Functions.LoudMaxInstall();
-        }
-
-        private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)
-        {
-            Functions.LoudMaxUninstall();
         }
     }
 }

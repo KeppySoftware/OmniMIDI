@@ -197,17 +197,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\whatoverride.txt" />
     <None Include="Resources\KSynthLogo.png" />
     <None Include="Resources\wi.png" />
     <None Include="Resources\logo_bass.gif" />
-    <None Include="Resources\bk.jpg" />
     <None Include="Resources\donatebtn.png" />
     <Content Include="Resources\gear.ico" />
     <None Include="Resources\what.png" />
     <None Include="Resources\sfzcomp.png" />
     <None Include="Resources\gmlist.txt" />
     <None Include="Resources\updatebk.png" />
-    <None Include="Resources\keppydriverlogobyfrozennotrasparency2.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

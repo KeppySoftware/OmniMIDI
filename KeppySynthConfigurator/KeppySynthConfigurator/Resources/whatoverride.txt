@@ -1,0 +1,3 @@
+This folder allows you to override the default BASS libraries shipped with the Keppy's Synthesizer setup.
+
+Useful when you want to try old DLLs, or the latest DLLs from the Un4seen forums. (Ian updates them frequently)

@@ -63,16 +63,6 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bk {
-            get {
-                object obj = ResourceManager.GetObject("bk", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap donatebtn {
             get {
                 object obj = ResourceManager.GetObject("donatebtn", resourceCulture);
@@ -169,6 +159,17 @@ namespace KeppySynthConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("what", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a This folder allows you to override the default BASS libraries shipped with the Keppy&apos;s Synthesizer setup.
+        ///
+        ///Useful when you want to try old DLLs, or the latest DLLs from the Un4seen forums. (Ian updates them frequently).
+        /// </summary>
+        internal static string whatoverride {
+            get {
+                return ResourceManager.GetString("whatoverride", resourceCulture);
             }
         }
         
