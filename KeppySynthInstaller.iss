@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.3.10'
+#define Version '4.0.4.0'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -30,7 +30,7 @@ DefaultGroupName=Keppy's Synthesizer
 ExtraDiskSpaceRequired=6
 InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
-MinVersion=0,5.01.2600sp3
+MinVersion=0,6.0.6001sp1
 OutputBaseFilename=KeppysSynthSetup
 SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
@@ -253,6 +253,9 @@ Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntiltermina
 [UninstallRun]
 Filename: "{syswow64}\keppysynth\KSDriverRegister.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KSDriverRegister.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: not Is64BitInstallMode
+
+[Messages]
+WindowsVersionNotSupported=Keppy's Synthesizer support for Windows XP ended on October 29th, 2010.%n%nIf you want to get further updates, please update to Windows Vista or newer.
 
 [Code]
 // shared code for installing the products

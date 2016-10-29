@@ -130,7 +130,6 @@ static int sinc = 0; // Sinc
 static int sysresetignore = 0; //Ignore sysex messages
 static int tracks = 0; // Tracks limit
 static int vmsemu = 0; // VirtualMIDISynth buffer emulation
-static int softwarerendering = 1; // Software rendering instead of hardware rendering (ONLY EFFECTIVE ON WINDOWS XP)
 static int vms2emu = 0; // VirtualMIDISynth 2.x buffer emulation
 static int volume = 0; // Volume limit
 static int volumehotkeys = 1; // Enable/Disable volume hotkeys
@@ -197,10 +196,7 @@ void CreateConsole() {
 }
 
 void PrintToConsole(int color, int stage, const char* text) {
-	DWORD version = GetVersion();
-	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
-	DWORD minor = (DWORD)(HIBYTE(LOWORD(version)));
-	if (major >= 6) {
+	if (debugmode == 1) {
 		SetConsoleTextAttribute(hConsole, color);
 		std::cout << std::endl << "(" << stage << ") - " << text;
 	}

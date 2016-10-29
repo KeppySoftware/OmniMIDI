@@ -29,7 +29,7 @@ The DirectX Web Installer is already included with the driver setup, so there's 
 To use the driver, you need at least:
 - A dual-core CPU (Hyper-Threading) running at 1.0GHz (With MMX instruction set support)
 - 256MB of RAM
-- Windows XP SP3 [SP2 for 64-bit] or greater (Server versions are supported too)
+- Windows Vista SP1 or greater (Server versions are supported too)
 
 ## Recommended system requirements for smooth Black MIDIs playback
 To use the driver, you need at least:

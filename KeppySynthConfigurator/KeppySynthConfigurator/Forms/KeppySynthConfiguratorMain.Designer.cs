@@ -127,7 +127,6 @@
             this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
             this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.useSWrendering = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
@@ -264,8 +263,9 @@
             // 
             // SelectedListBox
             // 
-            this.SelectedListBox.BackColor = System.Drawing.SystemColors.Control;
+            this.SelectedListBox.BackColor = System.Drawing.Color.Black;
             this.SelectedListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SelectedListBox.ForeColor = System.Drawing.Color.White;
             this.SelectedListBox.FormattingEnabled = true;
             this.SelectedListBox.Items.AddRange(new object[] {
             "List 1",
@@ -665,7 +665,6 @@
             this.Frequency.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Frequency.FormattingEnabled = true;
             this.Frequency.Items.AddRange(new object[] {
-            "352800",
             "192000",
             "176400",
             "142180",
@@ -1207,7 +1206,6 @@
             // 
             this.menuItem11.Index = 12;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.useSWrendering,
             this.floatingpointaudio,
             this.ReduceCPUOver,
             this.menuItem16,
@@ -1215,38 +1213,32 @@
             this.slowdownnoskip});
             this.menuItem11.Text = "Advanced audio settings";
             // 
-            // useSWrendering
-            // 
-            this.useSWrendering.Index = 0;
-            this.useSWrendering.Text = "Use software rendering";
-            this.useSWrendering.Click += new System.EventHandler(this.useSWrendering_Click);
-            // 
             // floatingpointaudio
             // 
-            this.floatingpointaudio.Index = 1;
+            this.floatingpointaudio.Index = 0;
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
             // ReduceCPUOver
             // 
-            this.ReduceCPUOver.Index = 2;
+            this.ReduceCPUOver.Index = 1;
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // menuItem16
             // 
-            this.menuItem16.Index = 3;
+            this.menuItem16.Index = 2;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 4;
+            this.useoldbuffersystem.Index = 3;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 5;
+            this.slowdownnoskip.Index = 4;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1596,7 +1588,6 @@
         public System.Windows.Forms.ComboBox SelectedListBox;
         public System.Windows.Forms.MenuItem enableextra8sf;
         public System.Windows.Forms.MenuItem DebugModePls;
-        public System.Windows.Forms.MenuItem useSWrendering;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;

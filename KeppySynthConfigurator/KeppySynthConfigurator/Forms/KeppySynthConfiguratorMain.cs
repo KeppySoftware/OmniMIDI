@@ -68,6 +68,11 @@ namespace KeppySynthConfigurator
         public KeppySynthConfiguratorMain(String[] args)
         {
             InitializeComponent();
+            if (!Functions.IsWindowsVistaOrNewer())
+            {
+                MessageBox.Show("Windows XP is not supported.", "Keppy's Synthesizer Configurator - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.ExitThread();
+            }
             Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
             this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
@@ -208,12 +213,6 @@ namespace KeppySynthConfigurator
                 getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = true;
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 SetSynthDefault.Visible = true;
-            }
-            if (Functions.IsWindowsXP() == true)
-            {
-                MessageBox.Show("This release of Keppy's Synthesizer will be the last one to support Windows XP.\n\nPlease upgrade to a newer OS, like Vista or 7, in order to get further updates to the driver.", "Keppy's Synthesizer - Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                menuItem17.Visible = false;
-                manageFolderFavouritesToolStripMenuItem.Visible = false;
             }
             if (Environment.Is64BitOperatingSystem == false)
             {
@@ -828,38 +827,12 @@ namespace KeppySynthConfigurator
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (Functions.IsWindowsXP() == false)
-            {
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
-            }
-            else
-            {
-                Process MIDIPanelXP = new Process();
-                MIDIPanelXP.StartInfo.FileName = "rundll32.exe";
-                MIDIPanelXP.StartInfo.Arguments = "MMSYS.CPL,ShowAudioPropertySheet";
-                MIDIPanelXP.Start();
-                this.Enabled = false;
-                MIDIPanelXP.WaitForExit();
-                this.Enabled = true;
-            }
+            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
         }
 
         private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Functions.IsWindowsXP() == false)
-            {
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
-            }
-            else
-            {
-                Process MIDIPanelXP = new Process();
-                MIDIPanelXP.StartInfo.FileName = "rundll32.exe";
-                MIDIPanelXP.StartInfo.Arguments = "MMSYS.CPL,ShowAudioPropertySheet";
-                MIDIPanelXP.Start();
-                this.Enabled = false;
-                MIDIPanelXP.WaitForExit();
-                this.Enabled = true;
-            }
+            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
         }
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1199,20 +1172,6 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("autopanic", "0", RegistryValueKind.DWord);
                 autopanicmode.Checked = false;
-            }
-        }
-
-        private void useSWrendering_Click(object sender, EventArgs e)
-        {
-            if (useSWrendering.Checked == false)
-            {
-                SynthSettings.SetValue("softwarerendering", "1", RegistryValueKind.DWord);
-                useSWrendering.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("softwarerendering", "0", RegistryValueKind.DWord);
-                useSWrendering.Checked = false;
             }
         }
 

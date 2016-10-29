@@ -27,12 +27,6 @@ namespace KeppySynthConfigurator
             return productName.StartsWith("Windows 8") | productName.StartsWith("Windows 10");
         }
 
-        public static bool IsWindowsXP() // Checks if you're using Windows XP
-        {
-            OperatingSystem OS = Environment.OSVersion;
-            return (OS.Version.Major == 5) || ((OS.Version.Major == 5) && (OS.Version.Minor == 1));
-        }
-
         public static bool IsWindowsVistaOrNewer() // Checks if you're using Windows Vista or newer
         {
             OperatingSystem OS = Environment.OSVersion;
@@ -45,10 +39,7 @@ namespace KeppySynthConfigurator
             {
                 string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Synthesizer\\";
                 string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
-                if (IsWindowsXP() == false)
-                {
-                    Directory.Move(oldlocation, newlocation);
-                }
+                Directory.Move(oldlocation, newlocation);
             }
             catch
             {
@@ -132,7 +123,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Crap, an error!\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Crap, an error!\nAre you sure you have a working Internet connection?\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -166,7 +157,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Crap, an error!\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Crap, an error!\nAre you sure you closed all the apps using the driver? They might have locked LoudMax.\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -402,33 +393,13 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
                 }
-                if (Functions.IsWindowsVistaOrNewer())
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
                 {
-                    KeppySynthConfiguratorMain.Delegate.useSWrendering.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.useSWrendering.Checked = true;
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("softwarerendering", 1, RegistryValueKind.DWord);
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("debugmode", 0, RegistryValueKind.DWord);
-                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
-                    {
-                        KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
-                    }
-                    else
-                    {
-                        KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
-                    }
+                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
                 }
                 else
                 {
-                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
-                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("softwarerendering", 1)) == 1)
-                    {
-                        KeppySynthConfiguratorMain.Delegate.useSWrendering.Checked = true;
-                    }
-                    else
-                    {
-                        KeppySynthConfiguratorMain.Delegate.useSWrendering.Checked = false;
-                    }
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("extra8lists", 0)) == 1)
                 {

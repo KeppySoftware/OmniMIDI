@@ -203,260 +203,28 @@ bool LoadSoundfontStartup() {
 	TCHAR listanalyze14[MAX_PATH];
 	TCHAR listanalyze15[MAX_PATH];
 	TCHAR listanalyze16[MAX_PATH];
+
+	TCHAR * listsanalyze[16] =
+	{
+		listanalyze1, listanalyze2, listanalyze3, listanalyze4, listanalyze5, listanalyze6, listanalyze7, listanalyze8,
+		listanalyze9, listanalyze10, listanalyze11, listanalyze12, listanalyze13, listanalyze14, listanalyze15, listanalyze16
+	};
+
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
 	PathStripPath(modulename);
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze1))) {
-		_tcscat(listanalyze1, L"\\Keppy's Synthesizer\\applists\\keppymidi.applist");
-		std::wifstream file(listanalyze1);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(1);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze2))) {
-		_tcscat(listanalyze2, L"\\Keppy's Synthesizer\\applists\\keppymidib.applist");
-		std::wifstream file(listanalyze2);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(2);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze3))) {
-		_tcscat(listanalyze3, L"\\Keppy's Synthesizer\\applists\\keppymidic.applist");
-		std::wifstream file(listanalyze3);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(3);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze4))) {
-		_tcscat(listanalyze4, L"\\Keppy's Synthesizer\\applists\\keppymidid.applist");
-		std::wifstream file(listanalyze4);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(4);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze5))) {
-		_tcscat(listanalyze5, L"\\Keppy's Synthesizer\\applists\\keppymidie.applist");
-		std::wifstream file(listanalyze5);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(5);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze6))) {
-		_tcscat(listanalyze6, L"\\Keppy's Synthesizer\\applists\\keppymidif.applist");
-		std::wifstream file(listanalyze6);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(6);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze7))) {
-		_tcscat(listanalyze7, L"\\Keppy's Synthesizer\\applists\\keppymidig.applist");
-		std::wifstream file(listanalyze7);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(7);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze8))) {
-		_tcscat(listanalyze8, L"\\Keppy's Synthesizer\\applists\\keppymidih.applist");
-		std::wifstream file(listanalyze8);
-		if (file) {
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(8);
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-		}
-	}
-	if (extra8lists == 1) {
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze9))) {
-			_tcscat(listanalyze9, L"\\Keppy's Synthesizer\\applists\\keppymidii.applist");
-			std::wifstream file(listanalyze9);
+
+	for (int i = 0; i <= 15; ++i) {
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsanalyze[i]))) {
+			_tcscat(listsanalyze[i], L"\\Keppy's Synthesizer\\applists\\keppymidi.applist");
+			std::wifstream file(listsanalyze[i]);
 			if (file) {
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
 					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(9);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze10))) {
-			_tcscat(listanalyze10, L"\\Keppy's Synthesizer\\applists\\keppymidij.applist");
-			std::wifstream file(listanalyze10);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(10);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze11))) {
-			_tcscat(listanalyze11, L"\\Keppy's Synthesizer\\applists\\keppymidik.applist");
-			std::wifstream file(listanalyze11);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(11);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze12))) {
-			_tcscat(listanalyze12, L"\\Keppy's Synthesizer\\applists\\keppymidil.applist");
-			std::wifstream file(listanalyze12);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(12);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze13))) {
-			_tcscat(listanalyze13, L"\\Keppy's Synthesizer\\applists\\keppymidim.applist");
-			std::wifstream file(listanalyze13);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(13);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze13))) {
-			_tcscat(listanalyze13, L"\\Keppy's Synthesizer\\applists\\keppymidin.applist");
-			std::wifstream file(listanalyze13);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(13);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze15))) {
-			_tcscat(listanalyze15, L"\\Keppy's Synthesizer\\applists\\keppymidio.applist");
-			std::wifstream file(listanalyze15);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(15);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
-				}
-			}
-		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listanalyze16))) {
-			_tcscat(listanalyze16, L"\\Keppy's Synthesizer\\applists\\keppymidip.applist");
-			std::wifstream file(listanalyze16);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(16);
+						LoadSoundfont(i + 1);
 						return TRUE;
 					}
 					else {
@@ -466,6 +234,7 @@ bool LoadSoundfontStartup() {
 			}
 		}
 	}
+
 	return FALSE;
 }
 
@@ -756,70 +525,26 @@ void WatchdogCheck()
 		RegQueryValueEx(hKey, L"rel14", NULL, &dwType, (LPBYTE)&rel14, &dwSize);
 		RegQueryValueEx(hKey, L"rel15", NULL, &dwType, (LPBYTE)&rel15, &dwSize);
 		RegQueryValueEx(hKey, L"rel16", NULL, &dwType, (LPBYTE)&rel16, &dwSize);
-		if (rel1 == 1) {
-			LoadSoundfont(1);
-			RegSetValueEx(hKey, L"rel1", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+
+		LPCWSTR names[16] =
+		{
+			L"rel1", L"rel2", L"rel3", L"rel4", L"rel5", L"rel6", L"rel7", L"rel8",
+			L"rel9", L"rel10", L"rel11", L"rel2", L"rel13", L"rel14", L"rel15", L"rel16"
+		};
+
+		int values[16] =
+		{
+			rel1, rel2, rel3, rel4, rel5, rel6, rel7, rel8,
+			rel9, rel10, rel11, rel12, rel13, rel14, rel15, rel16
+		};
+
+		for (int i = 0; i <= 15; ++i) {
+			if (values[i] == 1) {
+				LoadSoundfont(i + 1);
+				RegSetValueEx(hKey, names[i], 0, dwType, (LPBYTE)&zero, sizeof(zero));
+			}
 		}
-		if (rel2 == 1) {
-			LoadSoundfont(2);
-			RegSetValueEx(hKey, L"rel2", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel3 == 1) {
-			LoadSoundfont(3);
-			RegSetValueEx(hKey, L"rel3", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel4 == 1) {
-			LoadSoundfont(4);
-			RegSetValueEx(hKey, L"rel4", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel5 == 1) {
-			LoadSoundfont(5);
-			RegSetValueEx(hKey, L"rel5", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel6 == 1) {
-			LoadSoundfont(6);
-			RegSetValueEx(hKey, L"rel6", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel7 == 1) {
-			LoadSoundfont(7);
-			RegSetValueEx(hKey, L"rel7", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel8 == 1) {
-			LoadSoundfont(8);
-			RegSetValueEx(hKey, L"rel8", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel9 == 1) {
-			LoadSoundfont(9);
-			RegSetValueEx(hKey, L"rel9", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel10 == 1) {
-			LoadSoundfont(10);
-			RegSetValueEx(hKey, L"rel10", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel11 == 1) {
-			LoadSoundfont(11);
-			RegSetValueEx(hKey, L"rel11", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel12 == 1) {
-			LoadSoundfont(12);
-			RegSetValueEx(hKey, L"rel12", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel13 == 1) {
-			LoadSoundfont(13);
-			RegSetValueEx(hKey, L"rel13", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel14 == 1) {
-			LoadSoundfont(14);
-			RegSetValueEx(hKey, L"rel14", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel15 == 1) {
-			LoadSoundfont(8);
-			RegSetValueEx(hKey, L"rel15", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
-		if (rel16 == 1) {
-			LoadSoundfont(8);
-			RegSetValueEx(hKey, L"rel16", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-		}
+
 		RegCloseKey(hKey);
 	}
 	catch (int e) {
@@ -894,90 +619,33 @@ void mixervoid() {
 		RegQueryValueEx(hKey, L"ch14", NULL, &dwType, (LPBYTE)&ch14, &dwSize);
 		RegQueryValueEx(hKey, L"ch15", NULL, &dwType, (LPBYTE)&ch15, &dwSize);
 		RegQueryValueEx(hKey, L"ch16", NULL, &dwType, (LPBYTE)&ch16, &dwSize);
+
+		int values[16] =
+		{
+			ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8,
+			ch9, ch10, ch11, ch12, ch13, ch14, ch15, ch16
+		};
+
+		int tvalues[16] =
+		{
+			tch1, tch2, tch3, tch4, tch5, tch6, tch7, tch8,
+			tch9, tch10, tch11, tch12, tch13, tch14, tch15, tch16
+		};
+
 		if (midivolumeoverride == 1) {
-			BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_VOLUME, ch1);
-			BASS_MIDI_StreamEvent(hStream, 1, MIDI_EVENT_VOLUME, ch2);
-			BASS_MIDI_StreamEvent(hStream, 2, MIDI_EVENT_VOLUME, ch3);
-			BASS_MIDI_StreamEvent(hStream, 3, MIDI_EVENT_VOLUME, ch4);
-			BASS_MIDI_StreamEvent(hStream, 4, MIDI_EVENT_VOLUME, ch5);
-			BASS_MIDI_StreamEvent(hStream, 5, MIDI_EVENT_VOLUME, ch6);
-			BASS_MIDI_StreamEvent(hStream, 6, MIDI_EVENT_VOLUME, ch7);
-			BASS_MIDI_StreamEvent(hStream, 7, MIDI_EVENT_VOLUME, ch8);
-			BASS_MIDI_StreamEvent(hStream, 8, MIDI_EVENT_VOLUME, ch9);
-			BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_VOLUME, ch10);
-			BASS_MIDI_StreamEvent(hStream, 10, MIDI_EVENT_VOLUME, ch11);
-			BASS_MIDI_StreamEvent(hStream, 11, MIDI_EVENT_VOLUME, ch12);
-			BASS_MIDI_StreamEvent(hStream, 12, MIDI_EVENT_VOLUME, ch13);
-			BASS_MIDI_StreamEvent(hStream, 13, MIDI_EVENT_VOLUME, ch14);
-			BASS_MIDI_StreamEvent(hStream, 14, MIDI_EVENT_VOLUME, ch15);
-			BASS_MIDI_StreamEvent(hStream, 15, MIDI_EVENT_VOLUME, ch16);
+			for (int i = 0; i <= 15; ++i) {
+				BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, values[i]);
+			}
 		}
 		else {
-			if (ch1 != tch1) {
-				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_VOLUME, ch1);
-				tch1 = ch1;
-			}
-			if (ch2 != tch2) {
-				BASS_MIDI_StreamEvent(hStream, 1, MIDI_EVENT_VOLUME, ch2);
-				tch2 = ch2;
-			}
-			if (ch3 != tch3) {
-				BASS_MIDI_StreamEvent(hStream, 2, MIDI_EVENT_VOLUME, ch3);
-				tch3 = ch3;
-			}
-			if (ch4 != tch4) {
-				BASS_MIDI_StreamEvent(hStream, 3, MIDI_EVENT_VOLUME, ch4);
-				tch4 = ch4;
-			}
-			if (ch5 != tch5) {
-				BASS_MIDI_StreamEvent(hStream, 4, MIDI_EVENT_VOLUME, ch5);
-				tch5 = ch5;
-			}
-			if (ch6 != tch6) {
-				BASS_MIDI_StreamEvent(hStream, 5, MIDI_EVENT_VOLUME, ch6);
-				tch6 = ch6;
-			}
-			if (ch7 != tch7) {
-				BASS_MIDI_StreamEvent(hStream, 6, MIDI_EVENT_VOLUME, ch7);
-				tch7 = ch7;
-			}
-			if (ch8 != tch8) {
-				BASS_MIDI_StreamEvent(hStream, 7, MIDI_EVENT_VOLUME, ch8);
-				tch8 = ch8;
-			}
-			if (ch9 != tch9) {
-				BASS_MIDI_StreamEvent(hStream, 8, MIDI_EVENT_VOLUME, ch9);
-				tch9 = ch9;
-			}
-			if (ch10 != tch10) {
-				BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_VOLUME, ch10);
-				tch10 = ch10;
-			}
-			if (ch11 != tch11) {
-				BASS_MIDI_StreamEvent(hStream, 10, MIDI_EVENT_VOLUME, ch11);
-				tch11 = ch11;
-			}
-			if (ch12 != tch12) {
-				BASS_MIDI_StreamEvent(hStream, 11, MIDI_EVENT_VOLUME, ch12);
-				tch12 = ch12;
-			}
-			if (ch13 != tch13) {
-				BASS_MIDI_StreamEvent(hStream, 12, MIDI_EVENT_VOLUME, ch13);
-				tch13 = ch13;
-			}
-			if (ch14 != tch14) {
-				BASS_MIDI_StreamEvent(hStream, 13, MIDI_EVENT_VOLUME, ch14);
-				tch14 = ch14;
-			}
-			if (ch15 != tch15) {
-				BASS_MIDI_StreamEvent(hStream, 14, MIDI_EVENT_VOLUME, ch15);
-				tch15 = ch15;
-			}
-			if (ch16 != tch16) {
-				BASS_MIDI_StreamEvent(hStream, 15, MIDI_EVENT_VOLUME, ch16);
-				tch16 = ch16;
+			for (int i = 0; i <= 15; ++i) {
+				if (ch1 != tch1) {
+					BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, values[i]);
+					tvalues[i] = values[i];
+				}
 			}
 		}
+
 		RegCloseKey(hKey);
 	}
 	catch (int e) {

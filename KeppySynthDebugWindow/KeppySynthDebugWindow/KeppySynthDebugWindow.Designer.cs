@@ -41,11 +41,11 @@
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.OpenAppLocat = new System.Windows.Forms.MenuItem();
+            this.debugwintop = new System.Windows.Forms.MenuItem();
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.DebugWorker = new System.ComponentModel.BackgroundWorker();
-            this.debugwintop = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -89,6 +89,12 @@
             this.OpenAppLocat.Text = "Open app location";
             this.OpenAppLocat.Click += new System.EventHandler(this.OpenAppLocat_Click);
             // 
+            // debugwintop
+            // 
+            this.debugwintop.Index = 3;
+            this.debugwintop.Text = "Keep debug window on top";
+            this.debugwintop.Click += new System.EventHandler(this.debugwintop_Click);
+            // 
             // CopyToClipboard
             // 
             this.CopyToClipboard.Index = 4;
@@ -109,12 +115,6 @@
             // DebugWorker
             // 
             this.DebugWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DebugWorker_DoWork);
-            // 
-            // debugwintop
-            // 
-            this.debugwintop.Index = 3;
-            this.debugwintop.Text = "Keep debug window on top";
-            this.debugwintop.Click += new System.EventHandler(this.debugwintop_Click);
             // 
             // KeppySynthDebugWindow
             // 
