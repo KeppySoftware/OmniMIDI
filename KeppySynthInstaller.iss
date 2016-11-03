@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.4.0'
+#define Version '4.0.4.1'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -23,11 +23,9 @@ AppComments=User-mode MIDI driver based on the BASS libraries
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 CloseApplications=yes
-Compression=bzip
 CompressionThreads=2
 CreateAppDir=False
 DefaultGroupName=Keppy's Synthesizer
-ExtraDiskSpaceRequired=6
 InternalCompressLevel=ultra64
 LicenseFile=nsislicense.txt
 MinVersion=0,6.0.6001sp1
@@ -38,7 +36,7 @@ SolidCompression=yes
 TimeStampsInUTC=True
 UninstallDisplayIcon={syswow64}\keppysynth\KeppySynthConfigurator.exe
 UninstallDisplayName=Keppy's Synthesizer {#Version} (Uninstall only)
-UninstallDisplaySize=3241947
+UninstallDisplaySize=8241947
 UninstallFilesDir={sys}\keppysynth\
 VersionInfoCompany=KaleidonKep99
 VersionInfoCopyright=Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.
@@ -53,6 +51,8 @@ AlwaysShowGroupOnReadyPage=True
 AlwaysShowDirOnReadyPage=True
 WizardImageFile=compiler:WizModernImage-IS.bmp
 WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
+LanguageDetectionMethod=none
+Compression=lzma2/ultra64
 
 [Files]
 ; 64-bit OS
@@ -226,27 +226,26 @@ Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; 
 
 [InstallDelete]
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"
 Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv\"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"
 Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppysynth\"; Check: not Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"
 
 [Run]
 Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
-Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
-Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
+
 Filename: "{syswow64}\keppysynth\KSDriverRegister.exe"; Parameters: "/register"; Flags: waituntilterminated; Description: "AREDRV"; StatusMsg: "Registering driver..."; Check: Is64BitInstallMode
 Filename: "{sys}\keppysynth\KSDriverRegister.exe"; Parameters: "/register"; Flags: waituntilterminated; Description: "AREDRV"; StatusMsg: "Registering driver..."; Check: not Is64BitInstallMode
+
+Filename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
+Filename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; Description: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
+
 Filename: "http://frozensnowproductions.com/"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Visit Frozen Snow Productions"; StatusMsg: "Visit Frozen Snow Productions"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; Description: "DXINSTALL"; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
 
@@ -255,7 +254,7 @@ Filename: "{syswow64}\keppysynth\KSDriverRegister.exe"; Parameters: "/unregister
 Filename: "{sys}\keppysynth\KSDriverRegister.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: not Is64BitInstallMode
 
 [Messages]
-WindowsVersionNotSupported=Keppy's Synthesizer support for Windows XP ended on October 29th, 2010.%n%nIf you want to get further updates, please update to Windows Vista or newer.
+WindowsVersionNotSupported=Keppy's Synthesizer support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
 
 [Code]
 // shared code for installing the products

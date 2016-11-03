@@ -2,8 +2,6 @@
 Keppy's Synthesizer settings loading system
 */
 
-
-
 struct evbuf_t{
 	UINT   uDeviceID;
 	UINT   uMsg;
@@ -39,9 +37,8 @@ void DLLLoadError(LPCWSTR dll) {
 }
 
 void DLLLoadError2(LPCWSTR dll) {
-	TCHAR errormessage[MAX_PATH] = L"The following DLL hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nPlease install the required libraries, and restart the application.\n\nDLL: ";
-	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
-	lstrcat(errormessage, dll);
+	TCHAR errormessage[MAX_PATH] = L"BASS VST hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nIt's not mandatory, but you'll not be able to use LoudMax.";
+	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to continue.";
 	lstrcat(errormessage, clickokmsg);
 	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
 	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONASTERISK | MB_SYSTEMMODAL);
@@ -60,6 +57,7 @@ BOOL IsRunningXP(){
 
 void LoadSoundfont(int whichsf){
 	try {
+		PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
 		TCHAR config[MAX_PATH];
 		BASS_MIDI_FONT * mf;
 		HKEY hKey;
@@ -68,61 +66,11 @@ void LoadSoundfont(int whichsf){
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 		FreeFonts(0);
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, config)))
-		{
-			if (whichsf == 1) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidi.sflist"));
-			}
-			else if (whichsf == 2) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidib.sflist"));
-			}
-			else if (whichsf == 3) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidic.sflist"));
-			}
-			else if (whichsf == 4) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidid.sflist"));
-			}
-			else if (whichsf == 5) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidie.sflist"));
-			}
-			else if (whichsf == 6) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidif.sflist"));
-			}
-			else if (whichsf == 7) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidig.sflist"));
-			}
-			else if (whichsf == 8) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidih.sflist"));
-			}
-			else if (whichsf == 9) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidii.sflist"));
-			}
-			else if (whichsf == 10) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidij.sflist"));
-			}
-			else if (whichsf == 11) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidik.sflist"));
-			}
-			else if (whichsf == 12) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidil.sflist"));
-			}
-			else if (whichsf == 13) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidim.sflist"));
-			}
-			else if (whichsf == 14) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidin.sflist"));
-			}
-			else if (whichsf == 15) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidio.sflist"));
-			}
-			else if (whichsf == 16) {
-				PathAppend(config, _T("\\Keppy's Synthesizer\\lists\\keppymidip.sflist"));
-			}
-			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
-		}
+		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
 		RegCloseKey(hKey);
-		LoadFonts(0, config);
+		LoadFonts(0, sflistloadme[whichsf - 1]);
 		BASS_MIDI_StreamLoadSamples(hStream);
+		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
 	catch (int e) {
 		crashhandler(e);
@@ -130,6 +78,7 @@ void LoadSoundfont(int whichsf){
 }
 
 bool LoadSoundfontStartup() {
+	int done = 0;
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
 	GetModuleFileName(NULL, modulename, MAX_PATH);
@@ -137,25 +86,31 @@ bool LoadSoundfontStartup() {
 	PathStripPath(modulename);
 
 	for (int i = 0; i <= 15; ++i) {
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsanalyze[i]))) {
-			_tcscat(listsanalyze[i], L"\\Keppy's Synthesizer\\applists\\keppymidi.applist");
-			std::wifstream file(listsanalyze[i]);
-			if (file) {
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(i + 1);
-						return TRUE;
-					}
-					else {
-						return FALSE;
-					}
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
+		_tcscat(sflistloadme[i], sfdirs[i]);
+		_tcscat(listsloadme[i], listsanalyze[i]);
+		std::wifstream file(listsloadme[i]);
+		if (file) {
+			TCHAR defaultstring[MAX_PATH];
+			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			{
+				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+					LoadSoundfont(i + 1);
+					done = 1;
+					PrintToConsole(FOREGROUND_RED, i, "Found it");
 				}
 			}
 		}
 	}
 
-	return FALSE;
+	if (done == 1) {
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
+
 }
 
 BOOL load_bassfuncs()
@@ -245,16 +200,21 @@ BOOL load_bassfuncs()
 	// BASS_VST
 	if (PathFileExists(bassvstpathalt)) {
 		if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
-			DLLLoadError(bassvstpathalt);
-			exit(0);
+			isbassvstloaded = 0;
+		}
+		else {
+			isbassvstloaded = 1;
 		}
 	}
 	else {
 		lstrcat(bassvstpath, installpath);
 		lstrcat(bassvstpath, L"\\bass_vst.dll");
 		if (!(bass_vst = LoadLibrary(bassvstpath))) {
-			DLLLoadError(bassvstpath);
-			exit(0);
+			isbassvstloaded = 0;
+			DLLLoadError2(bassvstpath);
+		}
+		else {
+			isbassvstloaded = 1;
 		}
 	}
 
@@ -294,7 +254,9 @@ BOOL load_bassfuncs()
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-	LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
+	if (isbassvstloaded == 1) {
+		LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
+	}
 	PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
 	return TRUE;
 }
