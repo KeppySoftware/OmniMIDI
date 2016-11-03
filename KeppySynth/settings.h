@@ -201,6 +201,7 @@ BOOL load_bassfuncs()
 	if (PathFileExists(bassvstpathalt)) {
 		if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
 			isbassvstloaded = 0;
+			DLLLoadError2(bassvstpath);
 		}
 		else {
 			isbassvstloaded = 1;

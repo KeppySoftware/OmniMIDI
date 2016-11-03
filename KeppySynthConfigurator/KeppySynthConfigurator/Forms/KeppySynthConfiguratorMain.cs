@@ -1015,12 +1015,12 @@ namespace KeppySynthConfigurator
 
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
-            Application.ExitThread();
+            Application.Exit();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.ExitThread();
+            Application.Exit();
         }
 
         // Guide part
