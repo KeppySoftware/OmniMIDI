@@ -164,6 +164,7 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
+            this.PanicButton = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1405,18 +1406,18 @@
             // 
             // menuItem44
             // 
-            this.menuItem44.Index = 8;
+            this.menuItem44.Index = 9;
             this.menuItem44.Text = "-";
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 9;
+            this.donateToSupportUsToolStripMenuItem.Index = 10;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 10;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 11;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -1432,6 +1433,7 @@
             this.getTheMIDIMapperForWindows10ToolStripMenuItem,
             this.menuItem42,
             this.guidesToolStripMenuItem,
+            this.PanicButton,
             this.menuItem44,
             this.donateToSupportUsToolStripMenuItem,
             this.downloadTheSourceCodeToolStripMenuItem});
@@ -1455,6 +1457,12 @@
             // ImportSettingsDialog
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
+            // 
+            // PanicButton
+            // 
+            this.PanicButton.Index = 8;
+            this.PanicButton.Text = "The driver isn\'t working anymore, help?";
+            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1632,6 +1640,7 @@
         private System.Windows.Forms.MenuItem LoudMaxUninstallMenu;
         private System.Windows.Forms.MenuItem menuItem23;
         private System.Windows.Forms.MenuItem DLLOverrideFolder;
+        private System.Windows.Forms.MenuItem PanicButton;
     }
 }
 

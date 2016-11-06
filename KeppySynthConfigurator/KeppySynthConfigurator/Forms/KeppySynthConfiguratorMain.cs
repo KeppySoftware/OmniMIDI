@@ -699,7 +699,7 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 1000;
             MaxCPU.Value = 75;
             Frequency.Text = "44100";
-            bufsize.Value = 15;
+            bufsize.Value = 20;
             TracksLimit.Value = 16;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
@@ -1400,6 +1400,109 @@ namespace KeppySynthConfigurator
             catch
             {
 
+            }
+        }
+
+        // Troubleshooter
+        private void PanicButton_Click(object sender, EventArgs e)
+        {
+            TabsForTheControls.SelectedIndex = 1;
+
+            String title = "Keppy's Synthesizer - Troubleshooting";
+
+            String isitworking = "Now test the driver with a MIDI application.\n\nIs it working now?";
+            String isitworking2 = "Try again now.\n\nTest the driver with a MIDI application.\n\nIs it working now?";     
+            String weak = "Maybe your PC is too weak.\n\nReport your computer specifications to KaleidonKep99, on GitHub, by filling an issue.";
+            String uhoh = "Your PC is too weak for real-time MIDI playback.\n\nPlease report your computer specifications to KaleidonKep99, on GitHub, by filling an issue.";
+            String panic1 = "Don't panic.\nKeppy's Synthesizer is a pretty sensitive software, and heavy changes to the settings could make it unusable.\n\n" +
+                "Before you think about uninstalling it and moving to another synth, let's try analizying the issue.\n\n" +
+                "We'll first try resetting the normal settings to default. Press OK to reset the settings.";
+            String panic2 = "We'll now try resetting the advanced settings.\n\n" +
+                "Changing the advanced settings without knowing what they do could cause Keppy's Synthesizer to behave abnormally.\n\n" +
+                "We'll now try resetting the advanced settings to default. Press OK to reset the settings.";
+            String panic3 = "We'll now try reducing the workload on your computer by adjusting the settings.\n\n" +
+                "The configurator will reduce the maximum voices, increase the buffer etc.\n\n" +
+                "Press OK to start.";
+
+            // Troubleshoot part 1
+            MessageBox.Show(panic1, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 512;
+            MaxCPU.Value = 65;
+            Frequency.Text = "48000";
+            bufsize.Value = 30;
+            TracksLimit.Value = 16;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = false;
+            SincInter.Checked = false;
+            EnableSFX.Checked = false;
+            SysResetIgnore.Checked = false;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            ManualAddBuffer.Checked = false;
+
+            // And then...
+            Functions.SaveSettings();
+
+            DialogResult dialogResult = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
+            {
+                return;
+            }
+
+            // Troubleshoot part 2
+            MessageBox.Show(panic2, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Set some values...
+            SynthSettings.SetValue("sndbfvalue", 100, RegistryValueKind.DWord);
+            SynthSettings.SetValue("newevbuffvalue", 16384, RegistryValueKind.DWord);
+
+            DialogResult dialogResult2 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult2 == DialogResult.Yes)
+            {
+                return;
+            }
+
+            // Troubleshoot part 3
+            MessageBox.Show(panic3, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Set some values...
+            PolyphonyLimit.Value = 350;
+            MaxCPU.Value = 75;
+            Frequency.Text = "44100";
+            bufsize.Value = 40;
+
+            // And then...
+            Functions.SaveSettings();
+
+            DialogResult dialogResult3 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult3 == DialogResult.Yes)
+            {
+                MessageBox.Show(weak, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Set some values...
+            PolyphonyLimit.Value = 250;
+            MaxCPU.Value = 80;
+            Frequency.Text = "32000";
+            bufsize.Value = 50;
+
+            // And then...
+            Functions.SaveSettings();
+
+            DialogResult dialogResult4 = MessageBox.Show(isitworking2, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult4 == DialogResult.Yes)
+            {
+                MessageBox.Show(weak, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else
+            {
+                MessageBox.Show(uhoh, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
         }
     }

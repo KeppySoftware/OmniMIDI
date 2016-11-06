@@ -17,13 +17,14 @@ static UINT  evbrpoint = 0;
 static volatile LONG evbcount = 0;
 static UINT evbsysexpoint;
 
-void crashhandler(int e) {
-	std::wstring s = std::to_wstring(e);
-	std::wstring stemp = L"Fatal error during the execution of the driver!\n\nError code: " + s;
-	const WCHAR * text = stemp.c_str();
+void crashmessage(LPCWSTR part) {
+	TCHAR errormessage[MAX_PATH] = L"The driver encountered a serious error at this point: ";
+	TCHAR clickokmsg[MAX_PATH] = L"\n\nPlease take a screenshot of this messagebox (ALT+PRINT) and send it to KaleidonKep99 through an issue on GitHub.\nClick OK to close the program.";
+	lstrcat(errormessage, part);
+	lstrcat(errormessage, clickokmsg);
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Error " << e << ") " << " - Fatal error during the execution of the converter." << std::endl;
-	MessageBox(NULL, text, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	std::cout << "(Error at \"" << part << "\") - Fatal error during the execution of the driver." << std::endl;
+	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 	exit(0);
 }
 
@@ -32,19 +33,26 @@ void DLLLoadError(LPCWSTR dll) {
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
 	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
+	exit(0);
 }
 
 void DLLLoadError2(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"BASS VST hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nIt's not mandatory, but you'll not be able to use LoudMax.";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to continue.";
 	lstrcat(errormessage, clickokmsg);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
 	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONASTERISK | MB_SYSTEMMODAL);
+	exit(0);
 }
 
 void ResetSynth(){
+	evbwpoint = 0;
+	evbrpoint = 0;
+	evbcount = 0;
 	BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 	reset_synth = 0;
 }
@@ -72,194 +80,203 @@ void LoadSoundfont(int whichsf){
 		BASS_MIDI_StreamLoadSamples(hStream);
 		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"SFLoad");
 	}
 }
 
 bool LoadSoundfontStartup() {
-	int done = 0;
-	TCHAR modulename[MAX_PATH];
-	TCHAR fullmodulename[MAX_PATH];
-	GetModuleFileName(NULL, modulename, MAX_PATH);
-	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-	PathStripPath(modulename);
+	try {
+		int done = 0;
+		TCHAR modulename[MAX_PATH];
+		TCHAR fullmodulename[MAX_PATH];
+		GetModuleFileName(NULL, modulename, MAX_PATH);
+		GetModuleFileName(NULL, fullmodulename, MAX_PATH);
+		PathStripPath(modulename);
 
-	for (int i = 0; i <= 15; ++i) {
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
-		_tcscat(sflistloadme[i], sfdirs[i]);
-		_tcscat(listsloadme[i], listsanalyze[i]);
-		std::wifstream file(listsloadme[i]);
-		if (file) {
-			TCHAR defaultstring[MAX_PATH];
-			while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-			{
-				if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-					LoadSoundfont(i + 1);
-					done = 1;
-					PrintToConsole(FOREGROUND_RED, i, "Found it");
+		for (int i = 0; i <= 15; ++i) {
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
+			_tcscat(sflistloadme[i], sfdirs[i]);
+			_tcscat(listsloadme[i], listsanalyze[i]);
+			std::wifstream file(listsloadme[i]);
+			if (file) {
+				TCHAR defaultstring[MAX_PATH];
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(i + 1);
+						done = 1;
+						PrintToConsole(FOREGROUND_RED, i, "Found it");
+					}
 				}
 			}
 		}
-	}
 
-	if (done == 1) {
-		return TRUE;
+		if (done == 1) {
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
 	}
-	else {
-		return FALSE;
+	catch (...) {
+		crashmessage(L"SFLoadStartup");
 	}
-
 }
 
 BOOL load_bassfuncs()
 {
-	TCHAR installpath[MAX_PATH] = { 0 };
-	TCHAR bassencpath[MAX_PATH] = { 0 };
-	TCHAR bassencpathalt[MAX_PATH] = { 0 };
-	TCHAR bassmidipath[MAX_PATH] = { 0 };
-	TCHAR bassmidipathalt[MAX_PATH] = { 0 };
-	TCHAR basspath[MAX_PATH] = { 0 };
-	TCHAR basspathalt[MAX_PATH] = { 0 };
-	TCHAR bassvstpath[MAX_PATH] = { 0 };
-	TCHAR bassvstpathalt[MAX_PATH] = { 0 };
-	int installpathlength;
+	try {
+		TCHAR installpath[MAX_PATH] = { 0 };
+		TCHAR bassencpath[MAX_PATH] = { 0 };
+		TCHAR bassencpathalt[MAX_PATH] = { 0 };
+		TCHAR bassmidipath[MAX_PATH] = { 0 };
+		TCHAR bassmidipathalt[MAX_PATH] = { 0 };
+		TCHAR basspath[MAX_PATH] = { 0 };
+		TCHAR basspathalt[MAX_PATH] = { 0 };
+		TCHAR bassvstpath[MAX_PATH] = { 0 };
+		TCHAR bassvstpathalt[MAX_PATH] = { 0 };
+		int installpathlength;
 
-	GetModuleFileName(hinst, installpath, MAX_PATH);
-	PathRemoveFileSpec(installpath);
+		GetModuleFileName(hinst, installpath, MAX_PATH);
+		PathRemoveFileSpec(installpath);
 
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, basspathalt);
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, basspathalt);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
 
-	#if defined(_WIN64)
+#if defined(_WIN64)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmidi.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
-	#elif defined(_WIN32)
+#elif defined(_WIN32)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
-	#endif
+#endif
 
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	PrintToConsole(FOREGROUND_RED, 1, "Allocating memory for BASS DLLs...");
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		PrintToConsole(FOREGROUND_RED, 1, "Allocating memory for BASS DLLs...");
 
-	// BASS
-	if (PathFileExists(basspathalt)) {
-		if (!(bass = LoadLibrary(basspathalt))) {
-			DLLLoadError(basspathalt);
-			exit(0);
-		}
-	}
-	else {
-		lstrcat(basspath, installpath);
-		lstrcat(basspath, L"\\bass.dll");
-		if (!(bass = LoadLibrary(basspath))) {
-			DLLLoadError(basspath);
-			exit(0);
-		}
-	}
-
-	// BASSMIDI
-	if (PathFileExists(bassmidipathalt)) {
-		if (!(bassmidi = LoadLibrary(bassmidipathalt))) {
-			DLLLoadError(bassmidipathalt);
-			exit(0);
-		}
-	}
-	else {
-		lstrcat(bassmidipath, installpath);
-		lstrcat(bassmidipath, L"\\bassmidi.dll");
-		if (!(bassmidi = LoadLibrary(bassmidipath))) {
-			DLLLoadError(bassmidipath);
-			exit(0);
-		}
-	}
-
-	// BASSenc
-	if (PathFileExists(bassencpathalt)) {
-		if (!(bassenc = LoadLibrary(bassencpathalt))) {
-			DLLLoadError(bassencpathalt);
-			exit(0);
-		}
-	}
-	else {
-		lstrcat(bassencpath, installpath);
-		lstrcat(bassencpath, L"\\bassenc.dll");
-		if (!(bassenc = LoadLibrary(bassencpath))) {
-			DLLLoadError(bassencpath);
-			exit(0);
-		}
-	}
-
-	// BASS_VST
-	if (PathFileExists(bassvstpathalt)) {
-		if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
-			isbassvstloaded = 0;
-			DLLLoadError2(bassvstpath);
+		// BASS
+		if (PathFileExists(basspathalt)) {
+			if (!(bass = LoadLibrary(basspathalt))) {
+				DLLLoadError(basspathalt);
+				exit(0);
+			}
 		}
 		else {
-			isbassvstloaded = 1;
+			lstrcat(basspath, installpath);
+			lstrcat(basspath, L"\\bass.dll");
+			if (!(bass = LoadLibrary(basspath))) {
+				DLLLoadError(basspath);
+				exit(0);
+			}
 		}
-	}
-	else {
-		lstrcat(bassvstpath, installpath);
-		lstrcat(bassvstpath, L"\\bass_vst.dll");
-		if (!(bass_vst = LoadLibrary(bassvstpath))) {
-			isbassvstloaded = 0;
-			DLLLoadError2(bassvstpath);
+
+		// BASSMIDI
+		if (PathFileExists(bassmidipathalt)) {
+			if (!(bassmidi = LoadLibrary(bassmidipathalt))) {
+				DLLLoadError(bassmidipathalt);
+				exit(0);
+			}
 		}
 		else {
-			isbassvstloaded = 1;
+			lstrcat(bassmidipath, installpath);
+			lstrcat(bassmidipath, L"\\bassmidi.dll");
+			if (!(bassmidi = LoadLibrary(bassmidipath))) {
+				DLLLoadError(bassmidipath);
+				exit(0);
+			}
 		}
-	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");
+		// BASSenc
+		if (PathFileExists(bassencpathalt)) {
+			if (!(bassenc = LoadLibrary(bassencpathalt))) {
+				DLLLoadError(bassencpathalt);
+				exit(0);
+			}
+		}
+		else {
+			lstrcat(bassencpath, installpath);
+			lstrcat(bassencpath, L"\\bassenc.dll");
+			if (!(bassenc = LoadLibrary(bassencpath))) {
+				DLLLoadError(bassencpath);
+				exit(0);
+			}
+		}
 
-	/* "load" all the BASS functions that are to be used */
-	PrintToConsole(FOREGROUND_RED, 1, "Loading BASS functions...");
-	LOADBASSENCFUNCTION(BASS_Encode_Start);
-	LOADBASSENCFUNCTION(BASS_Encode_Stop);
-	LOADBASSFUNCTION(BASS_ChannelFlags);
-	LOADBASSFUNCTION(BASS_ChannelGetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelSetDevice);
-	LOADBASSFUNCTION(BASS_ChannelGetData);
-	LOADBASSFUNCTION(BASS_ChannelGetLevel);
-	LOADBASSFUNCTION(BASS_ChannelPlay);
-	LOADBASSFUNCTION(BASS_ChannelStop);
-	LOADBASSFUNCTION(BASS_ChannelRemoveFX);
-	LOADBASSFUNCTION(BASS_ChannelSetAttribute);
-	LOADBASSFUNCTION(BASS_ChannelSetFX);
-	LOADBASSFUNCTION(BASS_ChannelUpdate);
-	LOADBASSFUNCTION(BASS_ErrorGetCode);
-	LOADBASSFUNCTION(BASS_Free);
-	LOADBASSFUNCTION(BASS_GetInfo);
-	LOADBASSFUNCTION(BASS_Init);
-	LOADBASSFUNCTION(BASS_PluginLoad);
-	LOADBASSFUNCTION(BASS_SetConfig);
-	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_SetVolume);
-	LOADBASSFUNCTION(BASS_StreamFree);
-	LOADBASSFUNCTION(BASS_Update);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
-	LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-	if (isbassvstloaded == 1) {
-		LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
+		// BASS_VST
+		if (PathFileExists(bassvstpathalt)) {
+			if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
+				isbassvstloaded = 0;
+				DLLLoadError2(bassvstpath);
+			}
+			else {
+				isbassvstloaded = 1;
+			}
+		}
+		else {
+			lstrcat(bassvstpath, installpath);
+			lstrcat(bassvstpath, L"\\bass_vst.dll");
+			if (!(bass_vst = LoadLibrary(bassvstpath))) {
+				isbassvstloaded = 0;
+				DLLLoadError2(bassvstpath);
+			}
+			else {
+				isbassvstloaded = 1;
+			}
+		}
+
+		PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");
+
+		/* "load" all the BASS functions that are to be used */
+		PrintToConsole(FOREGROUND_RED, 1, "Loading BASS functions...");
+		LOADBASSENCFUNCTION(BASS_Encode_Start);
+		LOADBASSENCFUNCTION(BASS_Encode_Stop);
+		LOADBASSFUNCTION(BASS_ChannelFlags);
+		LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+		LOADBASSFUNCTION(BASS_ChannelSetDevice);
+		LOADBASSFUNCTION(BASS_ChannelGetData);
+		LOADBASSFUNCTION(BASS_ChannelGetLevel);
+		LOADBASSFUNCTION(BASS_ChannelPlay);
+		LOADBASSFUNCTION(BASS_ChannelStop);
+		LOADBASSFUNCTION(BASS_ChannelRemoveFX);
+		LOADBASSFUNCTION(BASS_ChannelSetAttribute);
+		LOADBASSFUNCTION(BASS_ChannelSetFX);
+		LOADBASSFUNCTION(BASS_ChannelUpdate);
+		LOADBASSFUNCTION(BASS_ErrorGetCode);
+		LOADBASSFUNCTION(BASS_Free);
+		LOADBASSFUNCTION(BASS_GetInfo);
+		LOADBASSFUNCTION(BASS_Init);
+		LOADBASSFUNCTION(BASS_PluginLoad);
+		LOADBASSFUNCTION(BASS_SetConfig);
+		LOADBASSFUNCTION(BASS_SetVolume);
+		LOADBASSFUNCTION(BASS_SetVolume);
+		LOADBASSFUNCTION(BASS_StreamFree);
+		LOADBASSFUNCTION(BASS_Update);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+		if (isbassvstloaded == 1) {
+			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
+		}
+		PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
+		return TRUE;
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
-	return TRUE;
+	catch (...) {
+		crashmessage(L"BASSDefLoad");
+	}
 }
 
 void load_settings()
@@ -328,8 +345,8 @@ void load_settings()
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"RegSetLoad");
 	}
 }
 
@@ -419,8 +436,8 @@ void realtime_load_settings()
 			BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
 		}
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"RTSetLoad");
 	}
 }
 
@@ -444,8 +461,8 @@ void WatchdogCheck()
 
 		RegCloseKey(hKey);
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"WDCheck");
 	}
 }
 
@@ -488,8 +505,8 @@ void debug_info() {
 		RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&decoded, sizeof(decoded));
 		RegCloseKey(hKey);
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"DebugRead");
 	}
 }
 
@@ -516,8 +533,8 @@ void mixervoid() {
 
 		RegCloseKey(hKey);
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"MixerCheck");
 	}
 }
 
@@ -539,8 +556,8 @@ void ReloadSFList(DWORD whichsflist){
 			sound_out_volume_float = (float)volume / 10000.0f;
 		}
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"ReloadSFList");
 	}
 }
 
@@ -679,7 +696,7 @@ void keybindings()
 			}
 		}
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"HotKeysCheck");
 	}
 }

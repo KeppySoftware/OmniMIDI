@@ -429,10 +429,9 @@ unsigned __stdcall audioengine(LPVOID lpV){
 				AudioRender();
 			}
 		}
-		catch (int e) {
-			PrintToConsole(FOREGROUND_BLUE, 1, "Error while writing frame");
+		catch (...) {
+			crashmessage(L"AudioEngine");
 		}
-
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread...");
 	stop_thread = 0;
@@ -645,8 +644,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			return 0;
 		}
 	}
-	catch (int e) {
-		crashhandler(e);
+	catch (...) {
+		crashmessage(L"DrvInit");
 	}
 }
 
@@ -778,16 +777,16 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 		}
-		catch (int e) {
-			crashhandler(e);
+		catch (...) {
+			crashmessage(L"LongMODMData");
 		}
 	case MODM_DATA:
 		try {
 			modmdata(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			break;
 		}
-		catch (int e) {
-			crashhandler(e);
+		catch (...) {
+			crashmessage(L"MODMData");
 		}
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
