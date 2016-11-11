@@ -511,6 +511,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 					}
+					// Error handling
+					if (BASS_ErrorGetCode() != 0) {
+						MessageBox(NULL, _T("Something went wrong while trying to open the audio stream.\n\nPlease restart the MIDI application."), _T("Keppy's Synthesizer - Soundfont error"), MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+					}
 					// LoudMax stuff lel
 					#if defined(_WIN64)
 					if (PathFileExists(loudmaxdll64)) {
@@ -560,6 +564,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						{
 						case IDYES:
 							BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
+							// Error handling
+							if (BASS_ErrorGetCode() != 0) {
+								MessageBox(NULL, _T("Something went wrong while trying to initialize the encoding stream.\n\nPlease restart the MIDI application."), _T("Keppy's Synthesizer - Soundfont error"), MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+							}
 							break;
 						case IDNO:
 							TCHAR configuratorapp[MAX_PATH];

@@ -13,8 +13,8 @@ alg.exe
 ambspie.exe
 apsdaemon.exe
 armsvc.exe
-beservice_ark.exe
 battle.net launcher.exe
+beservice_ark.exe
 camtasiastudio.exe
 ccc.exe
 cemu.exe
@@ -140,3 +140,5 @@ wininit.exe
 winlogon.exe
 wudfhost.exe
 xmousebuttoncontrol.exe
+xsplit.core.exe
+xsplit.exe

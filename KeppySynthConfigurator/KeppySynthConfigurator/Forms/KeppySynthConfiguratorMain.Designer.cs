@@ -160,11 +160,11 @@
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.PanicButton = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
-            this.PanicButton = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1439,6 +1439,12 @@
             this.downloadTheSourceCodeToolStripMenuItem});
             this.menuItem3.Text = "Help";
             // 
+            // PanicButton
+            // 
+            this.PanicButton.Index = 8;
+            this.PanicButton.Text = "The driver isn\'t working anymore, help?";
+            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
+            // 
             // MainMenu
             // 
             this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -1457,12 +1463,6 @@
             // ImportSettingsDialog
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
-            // 
-            // PanicButton
-            // 
-            this.PanicButton.Index = 8;
-            this.PanicButton.Text = "The driver isn\'t working anymore, help?";
-            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // KeppySynthConfiguratorMain
             // 

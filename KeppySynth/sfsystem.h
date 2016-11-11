@@ -2,6 +2,18 @@
 Keppy's Synthesizer soundfont lists loading system
 */
 
+char * tocharpls(const TCHAR * widechar)
+{
+	int size = 0;
+	while ((const char *)widechar[size] != ""){
+		size++;
+	}
+	size++;
+	char * charpointer = new char[size];
+	wcstombs(charpointer, widechar, size);
+	return charpointer;
+}
+
 static void FreeFonts(UINT uDeviceID)
 {
 	unsigned i;
@@ -178,6 +190,14 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 						presetList[uDeviceID].push_back(*it);
 					}
 					_soundFonts[uDeviceID].push_back(font);
+
+					if (BASS_ErrorGetCode() != 0) {
+						TCHAR errormessage[MAX_PATH] = L"Could not load soundfont \"";
+						TCHAR clickokmsg[420] = L"\".\n\nThe soundfont might be of an unknown format, its functions might be unsupported by BASSMIDI, or it might not exist in memory.\nPlease check if the path to the soundfont is correct, and ultimately check if the functions (If using a SFZ soundfont) are supported by BASSMIDI.\nIf they're not, contact Ian Luck about the issue at Un4seen forums.\n\nThe soundfont will be disabled. Press OK to continue the loading process.";
+						lstrcat(errormessage, name);
+						lstrcat(errormessage, clickokmsg);
+						MessageBox(NULL, errormessage, _T("Keppy's Synthesizer - Soundfont error"), MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+					}
 				}
 				else {
 					continue;
