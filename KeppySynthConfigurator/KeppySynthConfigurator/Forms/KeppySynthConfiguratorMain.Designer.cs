@@ -406,6 +406,7 @@
             this.Lis.TabIndex = 12;
             this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
             this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
+            this.Lis.DoubleClick += new System.EventHandler(this.SelectedSFInfo);
             // 
             // Settings
             // 
