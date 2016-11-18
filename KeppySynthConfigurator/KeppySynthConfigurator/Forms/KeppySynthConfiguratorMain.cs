@@ -134,63 +134,7 @@ namespace KeppySynthConfigurator
         private void AddSoundfontDragNDrop(String SelectedList, DragEventArgs e)
         {
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            int i;
-            for (i = 0; i < s.Length; i++)
-            {
-                if (Path.GetExtension(s[i]) == ".sf2" | Path.GetExtension(s[i]) == ".SF2" | Path.GetExtension(s[i]) == ".sf3" | Path.GetExtension(s[i]) == ".SF3" | Path.GetExtension(s[i]) == ".sfpack" | Path.GetExtension(s[i]) == ".SFPACK")
-                {
-                    if (BankPresetOverride.Checked == true)
-                    {
-                        using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 0, 1))
-                        {
-                            var result = form.ShowDialog();
-                            if (result == DialogResult.OK)
-                            {
-                                string sbank = form.BankValueReturn;
-                                string spreset = form.PresetValueReturn;
-                                string dbank = form.DesBankValueReturn;
-                                string dpreset = form.DesPresetValueReturn;
-                                Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + s[i]);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Lis.Items.Add(s[i]);
-                    }
-                    Functions.SaveList(CurrentList);
-                    Functions.TriggerReload();
-                }
-                else if (Path.GetExtension(s[i]) == ".sfz" | Path.GetExtension(s[i]) == ".SFZ")
-                {
-                    using (var form = new BankNPresetSel(Path.GetFileName(s[i]), 1, 0))
-                    {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            string sbank = form.BankValueReturn;
-                            string spreset = form.PresetValueReturn;
-                            string dbank = form.DesBankValueReturn;
-                            string dpreset = form.DesPresetValueReturn;
-                            Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + s[i]);
-                        }
-                    }
-                    Functions.SaveList(CurrentList);
-                    Functions.TriggerReload();
-                }
-                else if (Path.GetExtension(s[i]) == ".dls" | Path.GetExtension(s[i]) == ".DLS")
-                {
-                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else if (Path.GetExtension(s[i]) == ".exe" | Path.GetExtension(s[i]) == ".EXE" | Path.GetExtension(s[i]) == ".dll" | Path.GetExtension(s[i]) == ".DLL")
-                {
-                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            Functions.AddSoundfontsToSelectedList(CurrentList, s);
         }
 
         public void AddSoundfontDragNDropTriv(DragEventArgs e)
@@ -204,7 +148,9 @@ namespace KeppySynthConfigurator
         // Here we go!
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
-            // SAS THEME HANDLER        
+            // SAS THEME HANDLER   
+            BassNet.Registration("kaleidonkep99@outlook.com", "2X203132524822");
+            Bass.LoadMe();
             this.ThemeCheck.RunWorkerAsync();
             this.Size = new Size(665, 481);
             // MIDI out selector disabler
@@ -352,54 +298,7 @@ namespace KeppySynthConfigurator
                 Functions.OpenFileDialogAddCustomPaths(SoundfontImport);
                 if (SoundfontImport.ShowDialog() == DialogResult.OK)
                 {
-                    foreach (string str in SoundfontImport.FileNames)
-                    {
-                        if (Path.GetExtension(str).ToLower() == ".sf2" | Path.GetExtension(str).ToLower() == ".sfpack")
-                        {
-                            if (BankPresetOverride.Checked == true)
-                            {
-                                using (var form = new BankNPresetSel(Path.GetFileName(str), 0, 1))
-                                {
-                                    var result = form.ShowDialog();
-                                    if (result == DialogResult.OK)
-                                    {
-                                        string sbank = form.BankValueReturn;
-                                        string spreset = form.PresetValueReturn;
-                                        string dbank = form.DesBankValueReturn;
-                                        string dpreset = form.DesPresetValueReturn;
-                                        Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + str);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Lis.Items.Add(str);
-                            }
-                        }
-                        else if (Path.GetExtension(str).ToLower() == ".sfz")
-                        {
-                            using (var form = new BankNPresetSel(Path.GetFileName(str), 0, 0))
-                            {
-                                var result = form.ShowDialog();
-                                if (result == DialogResult.OK)
-                                {
-                                    string sbank = form.BankValueReturn;
-                                    string spreset = form.PresetValueReturn;
-                                    string dbank = form.DesBankValueReturn;
-                                    string dpreset = form.DesPresetValueReturn;
-                                    Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + str);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show(Path.GetFileName(str) + " is not a valid soundfont file!", "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        LastBrowserPath = Path.GetDirectoryName(str);
-                        Functions.SetLastPath(LastBrowserPath);
-                    }
-                    Functions.SaveList(CurrentList);
-                    Functions.TriggerReload();
+                    Functions.AddSoundfontsToSelectedList(CurrentList, SoundfontImport.FileNames);
                 }
             }
             catch (Exception ex)
@@ -429,7 +328,6 @@ namespace KeppySynthConfigurator
         {
             if (Lis.SelectedItem != null)
             {
-                BassNet.Registration("kaleidonkep99@outlook.com", "2X203132524822");
                 String s = Lis.SelectedItem.ToString();
                 String next;
                 Int32 fonthandle;
@@ -458,7 +356,7 @@ namespace KeppySynthConfigurator
                 {
                     BASS_MIDI_FONTINFO fontinfo = BassMidi.BASS_MIDI_FontGetInfo(fonthandle);
                     StringBuilder info = new StringBuilder();
-                    info.Append("Informations about the soundfont.");
+                    info.Append("Information about the soundfont.");
                     info.Append(Environment.NewLine);
                     info.Append(Environment.NewLine);
                     info.Append("-----------------------------------------");
@@ -487,12 +385,12 @@ namespace KeppySynthConfigurator
                     info.Append(Environment.NewLine);
                     info.Append(Environment.NewLine);
                     info.Append("Press OK to close the messagebox.");
-                    MessageBox.Show(info.ToString(), "Keppy's Synthesizer - Informations about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(info.ToString(), "Keppy's Synthesizer - Information about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
             {
-                MessageBox.Show("It appears there's no soundfont selected.\n\nHow weird...", "Keppy's Synthesizer - Informations about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("It appears there's no soundfont selected.\n\nHow weird...", "Keppy's Synthesizer - Information about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -699,11 +597,13 @@ namespace KeppySynthConfigurator
                         Functions.SetLastPath(LastBrowserPath);
                         using (StreamReader r = new StreamReader(file))
                         {
+                            List<string> SFList = new List<string>();
                             string line;
                             while ((line = r.ReadLine()) != null)
                             {
-                                Lis.Items.Add(line); // Read the external list and add the items to the selected list
+                                SFList.Add(line); // Read the external list and add the items to the selected list
                             }
+                            Functions.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
                         }
                         Functions.SaveList(CurrentList);
                         Functions.TriggerReload();
@@ -1201,6 +1101,13 @@ namespace KeppySynthConfigurator
                 SPFSecondaryBut.Visible = false;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
+                if (VolTrackBar.Value > 10000)
+                {
+                    VolTrackBar.Value = 10000;
+                }
+                VolTrackBar.Maximum = 10000;
+                VolumeBoost.Checked = false;
+                VolumeBoost.Enabled = false;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 SincInter.Checked = false;
                 SincInter.Enabled = true;
@@ -1225,6 +1132,7 @@ namespace KeppySynthConfigurator
                 SPFSecondaryBut.Visible = true;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
+                VolumeBoost.Enabled = true;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
                 SincInter.Checked = true;
                 SincInter.Enabled = false;
@@ -1416,6 +1324,26 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("32bit", "0", RegistryValueKind.DWord);
                 floatingpointaudio.Checked = false;
+            }
+        }
+
+        private void VolumeBoost_Click(object sender, EventArgs e)
+        {
+            if (VolumeBoost.Checked == false)
+            {
+                SynthSettings.SetValue("volumeboost", "1", RegistryValueKind.DWord);
+                VolTrackBar.Maximum = 20000;
+                VolumeBoost.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("volumeboost", "0", RegistryValueKind.DWord);
+                if (VolTrackBar.Value > 10000)
+                {
+                    VolTrackBar.Value = 10000;
+                }
+                VolTrackBar.Maximum = 10000;
+                VolumeBoost.Checked = false;
             }
         }
 

@@ -12,6 +12,9 @@ using System.Runtime.InteropServices;
 using System.Net.NetworkInformation;
 using System.Diagnostics;
 using Microsoft.Win32;
+// For SF info
+using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Midi;
 
 namespace KeppySynthConfigurator
 {
@@ -299,7 +302,6 @@ namespace KeppySynthConfigurator
             try
             {
                 // First, the most important settings
-                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
                 KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 0)
@@ -480,6 +482,8 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.SPFSecondaryBut.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.VolumeBoost.Enabled = false;
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
                     {
                         KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
@@ -509,17 +513,41 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost", 0)) == 1)
+                    {
+                        KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = true;
+                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 20000;
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
+                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 10000;
+                    }
                 }
 
                 // LEL
                 KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
 
                 // And finally, the volume!
-                int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume"));
+                int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
                 double x = VolumeValue / 100;
+                if (KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked == true)
+                {
+                    KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
+                }
+                else
+                {
+                    if (VolumeValue > 10000)
+                    {
+                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = 10000;
+                    }
+                    else
+                    {
+                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
+                    }
+                }
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = x.ToString("000\\%");
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
-                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
             }
             catch (Exception ex)
             {
@@ -766,6 +794,82 @@ namespace KeppySynthConfigurator
                 // Oops, something went wrong
                 MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 Application.ExitThread();
+            }
+        }
+
+        public static void AddSoundfontsToSelectedList(String CurrentList, String[] Soundfonts)
+        {
+            for (int i = 0; i < Soundfonts.Length; i++)
+            {
+                if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sf1" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sf2" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sfark" | Path.GetExtension(Soundfonts[i]) == ".sfpack".ToLowerInvariant())
+                {
+                    int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i]);
+                    if (Bass.BASS_ErrorGetCode() != 0)
+                    {
+                        MessageBox.Show(String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        if (KeppySynthConfiguratorMain.Delegate.BankPresetOverride.Checked == true)
+                        {
+                            using (var form = new BankNPresetSel(Path.GetFileName(Soundfonts[i]), 0, 1))
+                            {
+                                var result = form.ShowDialog();
+                                if (result == DialogResult.OK)
+                                {
+                                    string sbank = form.BankValueReturn;
+                                    string spreset = form.PresetValueReturn;
+                                    string dbank = form.DesBankValueReturn;
+                                    string dpreset = form.DesPresetValueReturn;
+                                    KeppySynthConfiguratorMain.Delegate.Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(Soundfonts[i]);
+                        }
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
+                    }
+                }
+                else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sfz")
+                {
+                    int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i]);
+                    if (Bass.BASS_ErrorGetCode() != 0)
+                    {
+                        MessageBox.Show(String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        using (var form = new BankNPresetSel(Path.GetFileName(Soundfonts[i]), 1, 0))
+                        {
+                            var result = form.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                string sbank = form.BankValueReturn;
+                                string spreset = form.PresetValueReturn;
+                                string dbank = form.DesBankValueReturn;
+                                string dpreset = form.DesPresetValueReturn;
+                                KeppySynthConfiguratorMain.Delegate.Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i]);
+                            }
+                        }
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
+                    }
+                }
+                else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dls")
+                {
+                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".exe" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dll")
+                {
+                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

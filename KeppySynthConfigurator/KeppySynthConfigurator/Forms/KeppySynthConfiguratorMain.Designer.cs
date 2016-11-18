@@ -129,6 +129,7 @@
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
+            this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
@@ -1212,6 +1213,7 @@
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.floatingpointaudio,
             this.ReduceCPUOver,
+            this.VolumeBoost,
             this.menuItem16,
             this.useoldbuffersystem,
             this.slowdownnoskip});
@@ -1229,20 +1231,26 @@
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
+            // VolumeBoost
+            // 
+            this.VolumeBoost.Index = 2;
+            this.VolumeBoost.Text = "Enable volume boost";
+            this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
+            // 
             // menuItem16
             // 
-            this.menuItem16.Index = 2;
+            this.menuItem16.Index = 3;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 3;
+            this.useoldbuffersystem.Index = 4;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 4;
+            this.slowdownnoskip.Index = 5;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1544,7 +1552,7 @@
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem menuItem10;
-        private System.Windows.Forms.CheckBox BankPresetOverride;
+        public System.Windows.Forms.CheckBox BankPresetOverride;
         private System.Windows.Forms.MenuItem openDebugWindowToolStripMenuItem;
         private System.Windows.Forms.MenuItem openTheMixerToolStripMenuItem;
         private System.Windows.Forms.MenuItem openTheBlacklistManagerToolStripMenuItem;
@@ -1642,6 +1650,7 @@
         private System.Windows.Forms.MenuItem menuItem23;
         private System.Windows.Forms.MenuItem DLLOverrideFolder;
         private System.Windows.Forms.MenuItem PanicButton;
+        public System.Windows.Forms.MenuItem VolumeBoost;
     }
 }
 

@@ -106,16 +106,8 @@ namespace KeppySynthDebugWindow
                     string bit;
                     string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
                     string bitapp = Watchdog.GetValue("bit", "Unknown").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
-
-                    // This happens when there's no app using the driver
-                    if (currentapp == "")
-                    {
-                        OpenAppLocat.Enabled = false;
-                        currentapp = "Not loaded yet";
-                    }
-                    else { OpenAppLocat.Enabled = true; }
-                    if (bitapp == "") { bitapp = "N/A"; }
-                    // This happens when there's no app using the driver
+                    string currentappreturn;
+                    string bitappreturn;
 
                     if (Environment.Is64BitOperatingSystem == true) { bit = "x64"; } else {  bit = "x86"; }  // Gets Windows architecture              
 
@@ -137,13 +129,30 @@ namespace KeppySynthDebugWindow
                         sb.Append(Environment.NewLine);
                         sb.Append(String.Format("O.S.: {0} ({1}, {2})", (string)WinVer.GetValue("ProductName"), FullVersion, bit));
                         sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Total memory: {0}", (tlmem / (1024 * 1024) + "MB").ToString()));
+                        sb.Append(String.Format("Total memory: {0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
                         sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Available memory: {0} ({1}% available)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString()));
+                        sb.Append(String.Format("Available memory: {0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
                         sb.Append(Environment.NewLine);
                         sb.Append("---------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUSx2
                         sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Current MIDI app: {0} ({1})", System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters()), bitapp.RemoveGarbageCharacters())); // Removes garbage characters
+                        if (System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters()) == "0")
+                        {
+                            OpenAppLocat.Enabled = false;
+                            currentappreturn = "None";
+                        }
+                        else
+                        {
+                            currentappreturn = System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters());
+                        }
+                        if (bitapp.RemoveGarbageCharacters() == "0")
+                        {
+                            bitappreturn = "...";
+                        }
+                        else
+                        {
+                            bitappreturn = bitapp.RemoveGarbageCharacters();
+                        }
+                        sb.Append(String.Format("Current MIDI app: {0} ({1})", currentappreturn, bitappreturn)); // Removes garbage characters
                         sb.Append(Environment.NewLine);
                         sb.Append(String.Format("Active voices: {0}", Debug.GetValue("currentvoices0").ToString())); // Get current active voices
                         sb.Append(Environment.NewLine);

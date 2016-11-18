@@ -5,7 +5,7 @@
 #define vc
 
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.4.4'
+#define Version '4.0.4.5'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -111,10 +111,10 @@ Source: "output\keppymididrv.defaultblacklist"; DestDir: "{win}"; Flags: replace
 
 [Dirs]
 ; 64-bit OS
-Name: "{sys}\keppysynth"; Attribs: system; Check: Is64BitInstallMode
-Name: "{syswow64}\keppysynth"; Attribs: system; Check: Is64BitInstallMode
+Name: "{sys}\keppysynth"; Attribs: system; Permissions: everyone-full; Check: Is64BitInstallMode
+Name: "{syswow64}\keppysynth"; Attribs: system; Permissions: everyone-full; Check: Is64BitInstallMode
 ; 32-bit OS
-Name: "{sys}\keppysynth"; Attribs: system; Check: not Is64BitInstallMode    
+Name: "{sys}\keppysynth"; Attribs: system; Permissions: everyone-full; Check: not Is64BitInstallMode
 
 [Icons]
 ; 64-bit OS

@@ -8,6 +8,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
+#pragma comment(lib,"Version.lib")
+
 #include "stdafx.h"
 #include <Shlwapi.h>
 #include <Tlhelp32.h>
@@ -135,7 +137,58 @@ public:
 
 message_window * g_msgwnd = NULL;
 
+
+bool GetVersionInfo(
+	LPCTSTR filename,
+	int &major,
+	int &minor,
+	int &build,
+	int &revision)
+{
+	DWORD   verBufferSize;
+	char    verBuffer[2048];
+
+	//  Get the size of the version info block in the file
+	verBufferSize = GetFileVersionInfoSize(filename, NULL);
+	if (verBufferSize > 0 && verBufferSize <= sizeof(verBuffer))
+	{
+		//  get the version block from the file
+		if (TRUE == GetFileVersionInfo(filename, NULL, verBufferSize, verBuffer))
+		{
+			UINT length;
+			VS_FIXEDFILEINFO *verInfo = NULL;
+
+			//  Query the version information for neutral language
+			if (TRUE == VerQueryValue(
+				verBuffer,
+				_T("\\"),
+				reinterpret_cast<LPVOID*>(&verInfo),
+				&length))
+			{
+				//  Pull the version values.
+				major = HIWORD(verInfo->dwProductVersionMS);
+				minor = LOWORD(verInfo->dwProductVersionMS);
+				build = HIWORD(verInfo->dwProductVersionLS);
+				revision = LOWORD(verInfo->dwProductVersionLS);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void CreateConsole() {
+	TCHAR installpath[MAX_PATH] = { 0 };
+	GetModuleFileName(hinst, installpath, MAX_PATH);
+	PathRemoveFileSpec(installpath);
+	lstrcat(installpath, L"\\keppysynth.dll");
+	int major2;
+	int minor2;
+	int build;
+	int revision;
+	GetVersionInfo(installpath, major2, minor2, build, revision);
+	//
 	DWORD version = GetVersion();
 	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
 	DWORD minor = (DWORD)(HIBYTE(LOWORD(version)));
@@ -144,6 +197,9 @@ void CreateConsole() {
 		freopen("CONOUT$", "w", stdout);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTitle(L"Keppy's Synthesizer Debug Console");
+		std::cout << "Keppy's Synthesizer Version " << major2 << "." << minor2 << "." << build << "." << revision;
+		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
+		std::cout << std::endl;
 	}
 }
 
@@ -698,6 +754,10 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
+	RegCloseKey(hKey);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&One, 1);
 	RegCloseKey(hKey);
 	if (modm_closed == 0){
 		stop_thread = 1;
