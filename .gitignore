@@ -68,6 +68,5 @@ output/*.vshost.exe
 output/KeppySynthConfigurator.exe
 output/KeppySynthDebugWindow.exe
 output/KeppySynthMixerWindow.exe
+output/KeppySynthSetup.exe
 output/KeppySynthWatchdog.exe
-output/KeppysSynthSetup.exe
-KeppySynthConfigurator/KeppySynthConfigurator/Bass.Net.dll

@@ -256,6 +256,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                KeppySynthConfiguratorMain.LastBrowserPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathsfimport", path);
             }
             catch
@@ -268,9 +269,13 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                KeppySynthConfiguratorMain.LastImportExportPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathlistimpexp", path);
             }
-            catch { }
+            catch
+            {
+                Functions.InitializeLastPath();
+            }
         }
 
         // NOT SUPPORTED ON XP

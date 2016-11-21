@@ -191,7 +191,7 @@ namespace KeppySynthConfigurator
 
             Functions.LoadSettings();
 
-            // Jakuberino
+            // If /AS is specified, switch to the Settings tab automatically
             if (openadvanced == 1)
             {
                 TabsForTheControls.SelectedIndex = 1;
@@ -298,6 +298,7 @@ namespace KeppySynthConfigurator
                 Functions.OpenFileDialogAddCustomPaths(SoundfontImport);
                 if (SoundfontImport.ShowDialog() == DialogResult.OK)
                 {
+                    Functions.SetLastPath(Path.GetDirectoryName(SoundfontImport.FileNames[0]));
                     Functions.AddSoundfontsToSelectedList(CurrentList, SoundfontImport.FileNames);
                 }
             }
@@ -591,17 +592,29 @@ namespace KeppySynthConfigurator
                 ExternalListImport.InitialDirectory = LastImportExportPath;
                 if (ExternalListImport.ShowDialog() == DialogResult.OK)
                 {
+                    Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListImport.FileNames[0]));
                     foreach (string file in ExternalListImport.FileNames)
                     {
-                        LastImportExportPath = Path.GetDirectoryName(file);
-                        Functions.SetLastPath(LastBrowserPath);
                         using (StreamReader r = new StreamReader(file))
                         {
                             List<string> SFList = new List<string>();
                             string line;
-                            while ((line = r.ReadLine()) != null)
+                            while ((line = r.ReadLine()) != null) // Read the external list and add the items to the selected list
                             {
-                                SFList.Add(line); // Read the external list and add the items to the selected list
+
+                                bool isabsolute = Path.IsPathRooted(line);  // Check if the path to the soundfont is absolute or relative
+                                string relativepath;
+                                string absolutepath;
+                                if (isabsolute == false) // Not absolute, let's convert it
+                                {
+                                    relativepath = String.Format("{0}{1}", Path.GetDirectoryName(file), String.Format("\\{0}", line));
+                                    absolutepath = new Uri(relativepath).LocalPath;
+                                    SFList.Add(absolutepath);
+                                }
+                                else // Absolute, let's just add it straight away
+                                {
+                                    SFList.Add(line);
+                                }                           
                             }
                             Functions.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
                         }
@@ -610,9 +623,9 @@ namespace KeppySynthConfigurator
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Error during the import process of the list!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(String.Format("Error during the import process of the list!\n\nError: {0}", ex.ToString()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 
@@ -622,6 +635,7 @@ namespace KeppySynthConfigurator
             ExternalListExport.InitialDirectory = LastImportExportPath;
             if (ExternalListExport.ShowDialog() == DialogResult.OK)
             {
+                Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListExport.FileNames[0]));
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
                 Functions.SetLastPath(LastBrowserPath);
                 foreach (var item in Lis.Items)
@@ -1546,6 +1560,23 @@ namespace KeppySynthConfigurator
                 MessageBox.Show(uhoh, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+        }
+
+        // Links
+
+        private void SoftpediaPage_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml");
+        }
+
+        private void KepChannel_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRnA");
+        }
+
+        private void FrzChannel_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.youtube.com/channel/UC4j9sfyzKvpVpog32haQ_Nw");
         }
     }
 }

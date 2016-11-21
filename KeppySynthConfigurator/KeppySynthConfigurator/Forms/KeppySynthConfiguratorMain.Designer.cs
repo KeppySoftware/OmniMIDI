@@ -166,6 +166,11 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
+            this.menuItem24 = new System.Windows.Forms.MenuItem();
+            this.SoftpediaPage = new System.Windows.Forms.MenuItem();
+            this.menuItem26 = new System.Windows.Forms.MenuItem();
+            this.KepChannel = new System.Windows.Forms.MenuItem();
+            this.FrzChannel = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1415,18 +1420,18 @@
             // 
             // menuItem44
             // 
-            this.menuItem44.Index = 9;
+            this.menuItem44.Index = 10;
             this.menuItem44.Text = "-";
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 10;
+            this.donateToSupportUsToolStripMenuItem.Index = 11;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 11;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 12;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -1442,6 +1447,7 @@
             this.getTheMIDIMapperForWindows10ToolStripMenuItem,
             this.menuItem42,
             this.guidesToolStripMenuItem,
+            this.menuItem24,
             this.PanicButton,
             this.menuItem44,
             this.donateToSupportUsToolStripMenuItem,
@@ -1450,7 +1456,7 @@
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 8;
+            this.PanicButton.Index = 9;
             this.PanicButton.Text = "The driver isn\'t working anymore, help?";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
@@ -1472,6 +1478,39 @@
             // ImportSettingsDialog
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
+            // 
+            // menuItem24
+            // 
+            this.menuItem24.Index = 8;
+            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.SoftpediaPage,
+            this.menuItem26,
+            this.KepChannel,
+            this.FrzChannel});
+            this.menuItem24.Text = "Useful links";
+            // 
+            // SoftpediaPage
+            // 
+            this.SoftpediaPage.Index = 0;
+            this.SoftpediaPage.Text = "Keppy\'s Synthesizer Softpedia Page";
+            this.SoftpediaPage.Click += new System.EventHandler(this.SoftpediaPage_Click);
+            // 
+            // menuItem26
+            // 
+            this.menuItem26.Index = 1;
+            this.menuItem26.Text = "-";
+            // 
+            // KepChannel
+            // 
+            this.KepChannel.Index = 2;
+            this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
+            this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
+            // 
+            // FrzChannel
+            // 
+            this.FrzChannel.Index = 3;
+            this.FrzChannel.Text = "KaleidonKep99\'s best friend YouTube channel";
+            this.FrzChannel.Click += new System.EventHandler(this.FrzChannel_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1651,6 +1690,11 @@
         private System.Windows.Forms.MenuItem DLLOverrideFolder;
         private System.Windows.Forms.MenuItem PanicButton;
         public System.Windows.Forms.MenuItem VolumeBoost;
+        private System.Windows.Forms.MenuItem menuItem24;
+        private System.Windows.Forms.MenuItem SoftpediaPage;
+        private System.Windows.Forms.MenuItem menuItem26;
+        private System.Windows.Forms.MenuItem KepChannel;
+        private System.Windows.Forms.MenuItem FrzChannel;
     }
 }
 
