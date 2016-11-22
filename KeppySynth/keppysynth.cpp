@@ -321,7 +321,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	else
 		defaultmode = MOD_MIDIPORT;
 
-	if (debugmode == 1 && !BannedSystemProcess() | !BlackListSystem()) {
+	if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
 		CreateConsole();
 	}
 

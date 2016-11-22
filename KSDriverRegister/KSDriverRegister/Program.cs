@@ -14,6 +14,15 @@ namespace KSDriverRegister
 
         static void Main(string[] args)
         {
+            if (IsWindowsXP())
+            {
+                Console.Write("Keppy's Synthesizer Register/Unregister Tool");
+                Console.Write(Environment.NewLine);
+                Console.Write(Environment.NewLine);
+                Console.Write("Windows XP is not supported.");
+                Console.Read();
+            }
+
             List<string> copyme = new List<string>();
             if (args.Length != 0)
             {
@@ -34,6 +43,7 @@ namespace KSDriverRegister
             {
                 using (RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true))
                 {
+                    clsid32.SetValue("midi", "wdmaud.drv");
                     try
                     {
                         if (clsid32.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
@@ -50,7 +60,13 @@ namespace KSDriverRegister
                     {
                         try
                         {
-                            if (clsid32.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
+                            if (clsid32.GetValue(String.Format("midi{0}", i), null) == null)
+                            {
+                                clsid32.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
+                                Console.Write("Succesfully registered.");
+                                break;
+                            }
+                            else if (clsid32.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
                             {
                                 clsid32.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
                                 Console.Write("Succesfully registered.");
@@ -69,6 +85,7 @@ namespace KSDriverRegister
                         catch
                         {
                             Console.Write("No MIDI driver values available.");
+                            Console.Read();
                             break;
                         }
                     }
@@ -77,9 +94,10 @@ namespace KSDriverRegister
                 {
                     using (RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true))
                     {
+                        clsid64.SetValue("midi", "wdmaud.drv");
                         try
                         {
-                            if (clsid64.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
+                            if (clsid64.GetValue("midi9", null).ToString() == "keppysynth\\keppysynth.dll")
                             {
                                 clsid64.DeleteValue("midi9");
                             }
@@ -93,7 +111,13 @@ namespace KSDriverRegister
                         {
                             try
                             {
-                                if (clsid64.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
+                                if (clsid64.GetValue(String.Format("midi{0}", i), null) == null)
+                                {
+                                    clsid64.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
+                                    Console.Write("Succesfully registered.");
+                                    break;
+                                }
+                                else if (clsid64.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
                                 {
                                     clsid64.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
                                     Console.Write("Succesfully registered.");
@@ -112,6 +136,7 @@ namespace KSDriverRegister
                             catch
                             {
                                 Console.Write("No MIDI driver values available.");
+                                Console.Read();
                                 break;
                             }
                         }
@@ -213,6 +238,12 @@ namespace KSDriverRegister
                 Console.Write("Invalid argument. Type \"KSDriverRegister.exe /help\" to see the available commands.");
                 Console.Read();
             }
+        }
+
+        static bool IsWindowsXP()
+        {
+            OperatingSystem OS = Environment.OSVersion;
+            return (OS.Version.Major == 5);
         }
     }
 }

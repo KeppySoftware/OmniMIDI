@@ -2,17 +2,23 @@
 Keppy's Synthesizer blacklist system
 */
 
+BOOL CheckXP(){
+	DWORD version = GetVersion();
+	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
+	return (major == 5);
+}
+
 BOOL BlackListSystem(){
+	// If the user tries to run the driver on XP, immediately return 0 and quit
+	if (CheckXP()) {
+		return 0x0;
+	}
 	// Blacklist system init
 	TCHAR defaultstring[MAX_PATH];
 	TCHAR userstring[MAX_PATH];
 	TCHAR defaultblacklistdirectory[MAX_PATH];
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
-	// VirtualMIDISynth 1.x ban init
-	TCHAR vmidisynthpath[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthpath);
-	PathAppend(vmidisynthpath, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
 	try {

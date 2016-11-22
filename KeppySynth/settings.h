@@ -57,12 +57,6 @@ void ResetSynth(){
 	reset_synth = 0;
 }
 
-BOOL IsRunningXP(){
-	if (xaudiodisabled == 1)
-		return TRUE;
-	return FALSE;
-}
-
 void LoadSoundfont(int whichsf){
 	try {
 		PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
