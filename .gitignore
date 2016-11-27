@@ -68,5 +68,5 @@ output/*.vshost.exe
 output/KeppySynthConfigurator.exe
 output/KeppySynthDebugWindow.exe
 output/KeppySynthMixerWindow.exe
-output/KeppySynthSetup.exe
+output/KeppysSynthSetup.exe
 output/KeppySynthWatchdog.exe

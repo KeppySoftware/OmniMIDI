@@ -516,19 +516,22 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			const char *LMDLL = T2A(loudmaxdll);
 			const char *LMDLL64 = T2A(loudmaxdll64);
 			while (opend == 0) {
-				Sleep(100);
+				load_settings();
+				load_bassfuncs();
 				if (!com_initialized) {
 					if (FAILED(CoInitialize(NULL))) continue;
 					com_initialized = TRUE;
 				}
-				load_settings();
 				if (xaudiodisabled == 1) {
-					bassoutputfinal = -1;
+					bassoutputfinal = (defaultoutput - 1);
+					BASS_DEVICEINFO dinfo;
+					BASS_GetDeviceInfo(bassoutputfinal, &dinfo);
+					PrintToConsole(FOREGROUND_RED, bassoutputfinal, "<-- Default output device");
 					PrintToConsole(FOREGROUND_RED, 1, "Opening DirectSound stream...");
 				}
 				else {
 					if (sound_driver == NULL) {
-						PrintToConsole(FOREGROUND_RED, 1, "XAudio stream...");
+						PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
 						sound_driver = create_sound_out_xaudio2();
 						sound_out_float = TRUE;
 						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
@@ -536,13 +539,15 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}
 				}
-				load_bassfuncs();
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
+					PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-					if (bassoutputfinal == -1) {
+					if (bassoutputfinal != 0) {
+						PrintToConsole(FOREGROUND_RED, 1, "Working...");
 						BASS_GetInfo(&info);
+						PrintToConsole(FOREGROUND_RED, 1, "Got info about the output device...");
 						if (vmsemu == 1) {
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
 						}
@@ -554,6 +559,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 					}
 					else {
+						PrintToConsole(FOREGROUND_RED, 1, "Working...");
 						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
 					}

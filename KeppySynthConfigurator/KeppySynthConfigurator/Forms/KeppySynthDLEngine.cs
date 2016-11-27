@@ -77,8 +77,16 @@ namespace KeppySynthConfigurator.Forms
         {
             if (test == 0)
             {
-                Process.Start(Path.GetTempPath() + "KeppySynthSetup.exe");
-                Application.ExitThread();
+                try
+                {
+                    Process.Start(Path.GetTempPath() + "KeppySynthSetup.exe");
+                    Application.ExitThread();
+                }
+                catch
+                {
+                    MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, its missing the Win32PE header, or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Close();
+                }
             }
             else
             {

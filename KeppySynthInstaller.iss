@@ -5,14 +5,14 @@
 #define vc
 
 #define Author "KaleidonKep99"
-#define OutputName "KeppySynthSetup"
+#define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
 #define Configurator "KeppySynthConfigurator"
 #define DebugWindow "KeppySynthDebugWindow"
 #define MixerWindow "KeppySynthMixerWindow"
 #define DriverRegister "KSDriverRegister"
 #define InstallDir "keppysynth"
-#define Version '4.0.4.7'
+#define Version '4.0.4.8'
 
 [Setup]
 AllowCancelDuringInstall=False
@@ -235,10 +235,13 @@ Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; 
 [InstallDelete]
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\"
+Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\{#InstallDir}\"
+Type: filesandordirs; Name: "{sys}\{#InstallDir}\"Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppydrv\"
 
 [Run]
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode

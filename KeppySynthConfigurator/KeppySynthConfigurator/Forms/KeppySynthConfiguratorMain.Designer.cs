@@ -127,6 +127,7 @@
             this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
             this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.ChangeDefaultOutput = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
@@ -161,16 +162,16 @@
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.PanicButton = new System.Windows.Forms.MenuItem();
-            this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
-            this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
-            this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
-            this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuItem24 = new System.Windows.Forms.MenuItem();
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
             this.FrzChannel = new System.Windows.Forms.MenuItem();
+            this.PanicButton = new System.Windows.Forms.MenuItem();
+            this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
+            this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
+            this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
+            this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1216,6 +1217,7 @@
             // 
             this.menuItem11.Index = 12;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.ChangeDefaultOutput,
             this.floatingpointaudio,
             this.ReduceCPUOver,
             this.VolumeBoost,
@@ -1224,38 +1226,44 @@
             this.slowdownnoskip});
             this.menuItem11.Text = "Advanced audio settings";
             // 
+            // ChangeDefaultOutput
+            // 
+            this.ChangeDefaultOutput.Index = 0;
+            this.ChangeDefaultOutput.Text = "Change default audio output";
+            this.ChangeDefaultOutput.Click += new System.EventHandler(this.ChangeDefaultOutput_Click);
+            // 
             // floatingpointaudio
             // 
-            this.floatingpointaudio.Index = 0;
+            this.floatingpointaudio.Index = 1;
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
             // ReduceCPUOver
             // 
-            this.ReduceCPUOver.Index = 1;
+            this.ReduceCPUOver.Index = 2;
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // VolumeBoost
             // 
-            this.VolumeBoost.Index = 2;
+            this.VolumeBoost.Index = 3;
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
             // menuItem16
             // 
-            this.menuItem16.Index = 3;
+            this.menuItem16.Index = 4;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 4;
+            this.useoldbuffersystem.Index = 5;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 5;
+            this.slowdownnoskip.Index = 6;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1454,31 +1462,6 @@
             this.downloadTheSourceCodeToolStripMenuItem});
             this.menuItem3.Text = "Help";
             // 
-            // PanicButton
-            // 
-            this.PanicButton.Index = 9;
-            this.PanicButton.Text = "The driver isn\'t working anymore, help?";
-            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
-            // 
-            // MainMenu
-            // 
-            this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem1,
-            this.menuItem2,
-            this.menuItem3});
-            // 
-            // ThemeCheck
-            // 
-            this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
-            // 
-            // ExportSettingsDialog
-            // 
-            this.ExportSettingsDialog.Filter = "Registry files|*.reg";
-            // 
-            // ImportSettingsDialog
-            // 
-            this.ImportSettingsDialog.Filter = "Registry files|*.reg";
-            // 
             // menuItem24
             // 
             this.menuItem24.Index = 8;
@@ -1511,6 +1494,31 @@
             this.FrzChannel.Index = 3;
             this.FrzChannel.Text = "KaleidonKep99\'s best friend YouTube channel";
             this.FrzChannel.Click += new System.EventHandler(this.FrzChannel_Click);
+            // 
+            // PanicButton
+            // 
+            this.PanicButton.Index = 9;
+            this.PanicButton.Text = "The driver isn\'t working anymore, help?";
+            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
+            // 
+            // MainMenu
+            // 
+            this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem2,
+            this.menuItem3});
+            // 
+            // ThemeCheck
+            // 
+            this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
+            // 
+            // ExportSettingsDialog
+            // 
+            this.ExportSettingsDialog.Filter = "Registry files|*.reg";
+            // 
+            // ImportSettingsDialog
+            // 
+            this.ImportSettingsDialog.Filter = "Registry files|*.reg";
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1695,6 +1703,7 @@
         private System.Windows.Forms.MenuItem menuItem26;
         private System.Windows.Forms.MenuItem KepChannel;
         private System.Windows.Forms.MenuItem FrzChannel;
+        public System.Windows.Forms.MenuItem ChangeDefaultOutput;
     }
 }
 

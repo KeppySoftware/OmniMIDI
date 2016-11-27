@@ -182,7 +182,7 @@ namespace KeppySynthConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void CheckForUpdates()
+        public static void CheckForUpdates(bool forced)
         {
             if (IsInternetAvailable() == false)
             {
@@ -201,19 +201,28 @@ namespace KeppySynthConfigurator
                     Version.TryParse(newestversion.ToString(), out x);
                     Version y = null;
                     Version.TryParse(Driver.FileVersion.ToString(), out y);
-                    if (x > y)
+                    if (forced)
                     {
-                        DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
-                            frm.StartPosition = FormStartPosition.CenterScreen;
-                            frm.ShowDialog();
-                        }
+                        Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
+                        frm.StartPosition = FormStartPosition.CenterScreen;
+                        frm.ShowDialog();
                     }
                     else
                     {
-                        MessageBox.Show("No updates have been found.\n\nPlease try again later.", "Keppy's Synthesizer - No updates found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (x > y)
+                        {
+                            DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (dialogResult == DialogResult.Yes)
+                            {
+                                Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
+                                frm.StartPosition = FormStartPosition.CenterScreen;
+                                frm.ShowDialog();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("No updates have been found.\n\nPlease try again later.", "Keppy's Synthesizer - No updates found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                 }
                 catch
@@ -300,6 +309,11 @@ namespace KeppySynthConfigurator
             }
         }
         // NOT SUPPORTED ON XP
+
+        public static void SetDefaultDevice(int dev)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultdev", dev, RegistryValueKind.DWord);
+        }
 
         public static void LoadSettings() // Loads the settings from the registry
         {
@@ -489,6 +503,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
                     {
                         KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
@@ -517,6 +532,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost", 0)) == 1)
                     {

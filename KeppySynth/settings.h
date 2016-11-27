@@ -246,9 +246,11 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_ErrorGetCode);
 		LOADBASSFUNCTION(BASS_Free);
 		LOADBASSFUNCTION(BASS_GetInfo);
+		LOADBASSFUNCTION(BASS_GetDeviceInfo);
 		LOADBASSFUNCTION(BASS_Init);
 		LOADBASSFUNCTION(BASS_PluginLoad);
 		LOADBASSFUNCTION(BASS_SetConfig);
+		LOADBASSFUNCTION(BASS_SetDevice);
 		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_StreamFree);
@@ -287,6 +289,7 @@ void load_settings()
 		RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 		RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
+		RegQueryValueEx(hKey, L"defaultdev", NULL, &dwType, (LPBYTE)&defaultoutput, &dwSize);
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
@@ -473,6 +476,7 @@ void debug_info() {
 		int tempo;
 		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_CPU, &currentcpuusage0);
+
 		if (xaudiodisabled == 1) {
 			if (volumemon == 1) {
 				level = BASS_ChannelGetLevel(hStream);

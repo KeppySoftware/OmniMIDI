@@ -51,7 +51,14 @@ namespace KeppySynthConfigurator
 
         private void CFU_Click(object sender, EventArgs e)
         {
-            Functions.CheckForUpdates();
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                Functions.CheckForUpdates(true);
+            }
+            else
+            {
+                Functions.CheckForUpdates(false);
+            }
         }
 
         private void Button1_Click(object sender, EventArgs e)

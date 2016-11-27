@@ -873,7 +873,14 @@ namespace KeppySynthConfigurator
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Functions.CheckForUpdates();
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                Functions.CheckForUpdates(true);
+            }
+            else
+            {
+                Functions.CheckForUpdates(false);
+            }
         }
 
         private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
@@ -1113,6 +1120,7 @@ namespace KeppySynthConfigurator
                 OutputWAV.Checked = false;
                 ManualAddBuffer.Visible = true;
                 SPFSecondaryBut.Visible = false;
+                ChangeDefaultOutput.Enabled = true;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                 if (VolTrackBar.Value > 10000)
@@ -1144,6 +1152,7 @@ namespace KeppySynthConfigurator
                 OutputWAV.Enabled = true;
                 ManualAddBuffer.Visible = false;
                 SPFSecondaryBut.Visible = true;
+                ChangeDefaultOutput.Enabled = false;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 VolumeBoost.Enabled = true;
@@ -1577,6 +1586,12 @@ namespace KeppySynthConfigurator
         private void FrzChannel_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.youtube.com/channel/UC4j9sfyzKvpVpog32haQ_Nw");
+        }
+
+        private void ChangeDefaultOutput_Click(object sender, EventArgs e)
+        {
+            KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
+            frm.ShowDialog();
         }
     }
 }

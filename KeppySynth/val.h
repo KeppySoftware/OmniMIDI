@@ -19,6 +19,7 @@ static int autopanic = 1;				// Autopanic switch
 static int bassoutputfinal = 0;			// DO NOT TOUCH
 static int debugmode = 0;				// Debug console
 static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
+static int defaultoutput = 0;			// Default audio output (DSound)
 static int defaultsflist = 1;			// Default soundfont list
 static int encmode = 0;					// Encoder mode
 static int floatrendering = 1;			// Floating point audio
