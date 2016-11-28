@@ -12,7 +12,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define DriverRegister "KSDriverRegister"
 #define InstallDir "keppysynth"
-#define Version '4.0.4.8'
+#define Version '4.0.4.9'
 
 [Setup]
 AllowCancelDuringInstall=False

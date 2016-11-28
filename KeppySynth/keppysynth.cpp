@@ -189,10 +189,7 @@ void CreateConsole() {
 	int revision;
 	GetVersionInfo(installpath, major2, minor2, build, revision);
 	//
-	DWORD version = GetVersion();
-	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
-	DWORD minor = (DWORD)(HIBYTE(LOWORD(version)));
-	if (major >= 6) {
+	if (alreadyshown != 1) {
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -200,6 +197,7 @@ void CreateConsole() {
 		std::cout << "Keppy's Synthesizer Version " << major2 << "." << minor2 << "." << build << "." << revision;
 		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
 		std::cout << std::endl;
+		alreadyshown = 1;
 	}
 }
 
@@ -523,11 +521,25 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					com_initialized = TRUE;
 				}
 				if (xaudiodisabled == 1) {
+					int check;
 					bassoutputfinal = (defaultoutput - 1);
+					if (defaultoutput == 0) {
+						check = 1;
+					}
+					else {
+						check = bassoutputfinal;
+					}
 					BASS_DEVICEINFO dinfo;
-					BASS_GetDeviceInfo(bassoutputfinal, &dinfo);
-					PrintToConsole(FOREGROUND_RED, bassoutputfinal, "<-- Default output device");
-					PrintToConsole(FOREGROUND_RED, 1, "Opening DirectSound stream...");
+					BASS_GetDeviceInfo(check, &dinfo);
+					if (dinfo.name == NULL || defaultoutput == 1) {
+						bassoutputfinal = 0;
+						noaudiodevices = 1;					
+						PrintToConsole(FOREGROUND_RED, 1, "Can not open DirectSound device. Switching to \"No sound\"...");
+					}
+					else {
+						PrintToConsole(FOREGROUND_RED, bassoutputfinal, "<-- Default output device");
+						PrintToConsole(FOREGROUND_RED, 1, "Opening DirectSound stream...");
+					}
 				}
 				else {
 					if (sound_driver == NULL) {
@@ -561,7 +573,12 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					else {
 						PrintToConsole(FOREGROUND_RED, 1, "Working...");
 						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
-						PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
+						if (noaudiodevices != 1) {
+							PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
+						}
+						else {
+							PrintToConsole(FOREGROUND_RED, 1, "Dummy stream enabled.");
+						}
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);

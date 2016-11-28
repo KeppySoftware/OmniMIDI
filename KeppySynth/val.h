@@ -15,6 +15,7 @@ static HANDLE hConsole;					// Debug console
 static float *sndbf;
 static int allhotkeys = 0;				// Enable/Disable all the hotkeys
 static int allnotesignore = 0;			// Ignore all MIDI events
+static int alreadyshown = 0;			// Check if the info about the drivers have been already shown.
 static int autopanic = 1;				// Autopanic switch
 static int bassoutputfinal = 0;			// DO NOT TOUCH
 static int debugmode = 0;				// Debug console
@@ -31,6 +32,7 @@ static int midivoices = 0;				// Max voices INT
 static int midivolumeoverride = 0;		// MIDI track volume override
 static int newevbuffvalue = 64;			// DO NOT TOUCH
 static int newsndbfvalue;				// DO NOT TOUCH
+static int noaudiodevices = 0;			// No audio devices flag
 static int nofloat = 1;					// Enable or disable the float engine
 static int nofx = 0;					// Enable or disable FXs
 static int noteoff1 = 0;				// Note cut INT

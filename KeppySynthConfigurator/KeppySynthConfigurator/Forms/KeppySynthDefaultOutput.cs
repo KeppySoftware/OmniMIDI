@@ -26,7 +26,14 @@ namespace KeppySynthConfigurator
             int curdev = Bass.BASS_GetDevice();
             Bass.BASS_Free();
             Bass.BASS_GetDeviceInfo(curdev, info);
-            DefOut.Text = String.Format("Default Windows output: {0}", info.ToString());
+            if (info.ToString() == "")
+            {
+                DefOut.Text = String.Format("Default Windows output: No devices have been found", info.ToString());
+            }
+            else
+            {
+                DefOut.Text = String.Format("Default Windows output: {0}", info.ToString());
+            }
             for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
             {
                 DevicesList.Items.Add(info.ToString());
