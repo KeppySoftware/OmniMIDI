@@ -28,11 +28,11 @@ namespace KeppySynthConfigurator
             Bass.BASS_GetDeviceInfo(curdev, info);
             if (info.ToString() == "")
             {
-                DefOut.Text = String.Format("Default Windows output: No devices have been found", info.ToString());
+                DefOut.Text = String.Format("Def. Windows audio output: No devices have been found", info.ToString());
             }
             else
             {
-                DefOut.Text = String.Format("Default Windows output: {0}", info.ToString());
+                DefOut.Text = String.Format("Def. Windows audio output: {0}", info.ToString());
             }
             for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
             {

@@ -124,6 +124,8 @@ teamviewer_desktop.exe
 teamviewer_service.exe
 telegram.exe
 trustedinstaller.exe
+ts3client_win32.exe
+ts3client_win64.exe
 tv_w32.exe
 tv_w64.exe
 vcpkgsrv.exe
