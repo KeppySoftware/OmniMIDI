@@ -102,6 +102,7 @@ static HANDLE hTremolio = NULL;
 static unsigned int thrdaddr;
 
 // Variables
+#include "basserr.h"
 #include "val.h"
 
 class message_window
@@ -137,6 +138,23 @@ public:
 
 message_window * g_msgwnd = NULL;
 
+void basserr(int error) {
+	TCHAR part1[MAX_PATH] = L"BASS encountered the error \"";
+	TCHAR part2[MAX_PATH] = L"\".\n\nExplanation: ";
+	TCHAR part3[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
+	lstrcat(part1, errname[error]);
+	lstrcat(part2, errdesc[error]);
+	lstrcat(part1, part2);
+	lstrcat(part1, part3);
+	MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+}
+
+void CheckUp() {
+	int error = BASS_ErrorGetCode();
+	if (error != 0) {
+		basserr(error);
+	}
+}
 
 bool GetVersionInfo(
 	LPCTSTR filename,
@@ -442,10 +460,12 @@ unsigned _stdcall tremolio(LPVOID lpV){
 	while (stop_thread == 0){
 		int tremolio = rand() % ((frequency + 100) - (frequency - 100)) + (frequency - 100);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, tremolio);
+		CheckUp();
 		Sleep(1);
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing tremolio thread...");
 	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
+	CheckUp();
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
@@ -467,6 +487,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 			if (reset_synth != 0){
 				reset_synth = 0;
 				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+				CheckUp();
 			}
 
 			if (oldbuffermode == 1) {
@@ -478,6 +499,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 			if (xaudiodisabled == 1) {
 				if (rco == 1) { Sleep(1); }
 				BASS_ChannelUpdate(hStream, 0);
+				CheckUp();
 			}
 			else {
 				AudioRender();
@@ -553,7 +575,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
-					PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");
+					CheckUp();
+					PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");				
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 					if (bassoutputfinal != 0) {
@@ -567,12 +590,16 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
 						hStream = BASS_MIDI_StreamCreate(tracks, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						CheckUp();
+						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 						BASS_ChannelPlay(hStream, false);
+						CheckUp();
 						PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 					}
 					else {
 						PrintToConsole(FOREGROUND_RED, 1, "Working...");
 						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						CheckUp();
 						if (noaudiodevices != 1) {
 							PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
 						}
@@ -582,6 +609,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					if (!hStream) {
 						BASS_StreamFree(hStream);
+						CheckUp();
 						hStream = 0;
 						PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
 						continue;
@@ -589,11 +617,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					else {
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+						CheckUp();
 					}
 					// Error handling
-					if (BASS_ErrorGetCode() != 0) {
-						MessageBox(NULL, _T("Something went wrong while trying to open the audio stream.\n\nPlease restart the MIDI application."), _T("Keppy's Synthesizer - Soundfont error"), MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-					}
+					CheckUp();
 					// LoudMax stuff lel
 					#if defined(_WIN64)
 					if (PathFileExists(loudmaxdll64)) {
@@ -644,9 +671,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						case IDYES:
 							BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 							// Error handling
-							if (BASS_ErrorGetCode() != 0) {
-								MessageBox(NULL, _T("Something went wrong while trying to initialize the encoding stream.\n\nPlease restart the MIDI application."), _T("Keppy's Synthesizer - Soundfont error"), MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-							}
+							CheckUp();
 							break;
 						case IDNO:
 							TCHAR configuratorapp[MAX_PATH];
@@ -662,10 +687,9 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					// Cake.
 					PrintToConsole(FOREGROUND_RED, 1, "Preparing stream...");
+					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
 					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
-					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
-					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
 					PrintToConsole(FOREGROUND_RED, 1, "Loading soundfonts...");
 					if (LoadSoundfontStartup() == TRUE) {
 						PrintToConsole(FOREGROUND_RED, 1, "Default list for app loaded.");

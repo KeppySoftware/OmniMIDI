@@ -142,6 +142,7 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
+            this.menuItem25 = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
             this.UnregDriver = new System.Windows.Forms.MenuItem();
@@ -273,9 +274,9 @@
             // 
             // SelectedListBox
             // 
-            this.SelectedListBox.BackColor = System.Drawing.Color.Black;
+            this.SelectedListBox.BackColor = System.Drawing.Color.White;
             this.SelectedListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SelectedListBox.ForeColor = System.Drawing.Color.White;
+            this.SelectedListBox.ForeColor = System.Drawing.Color.Black;
             this.SelectedListBox.FormattingEnabled = true;
             this.SelectedListBox.Items.AddRange(new object[] {
             "List 1",
@@ -1126,7 +1127,7 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 2;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 3;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
@@ -1307,6 +1308,7 @@
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AllNotesIgnore,
             this.SysExIgnore,
+            this.menuItem25,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem});
             this.menuItem12.Text = "MIDI events parser settings";
             // 
@@ -1319,8 +1321,13 @@
             // SysExIgnore
             // 
             this.SysExIgnore.Index = 1;
-            this.SysExIgnore.Text = "Ignore SysEx messages";
+            this.SysExIgnore.Text = "Ignore all SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
+            // 
+            // menuItem25
+            // 
+            this.menuItem25.Index = 2;
+            this.menuItem25.Text = "-";
             // 
             // menuItem20
             // 
@@ -1704,6 +1711,7 @@
         private System.Windows.Forms.MenuItem KepChannel;
         private System.Windows.Forms.MenuItem FrzChannel;
         public System.Windows.Forms.MenuItem ChangeDefaultOutput;
+        private System.Windows.Forms.MenuItem menuItem25;
     }
 }
 

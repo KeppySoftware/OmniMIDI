@@ -84,13 +84,15 @@ int bmsyn_play_some_data(void){
 				dwParam2 = dwParam1 & 0xF0;
 				exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 				BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+				CheckUp();
 				if (debugmode == 1) {
 					PrintToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.");
 				}
 				break;
 			case MODM_LONGDATA:
-				if (!sysexignore) {
+				if (sysresetignore == 1) {
 					BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+					CheckUp();
 					if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
 						(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
 						(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
