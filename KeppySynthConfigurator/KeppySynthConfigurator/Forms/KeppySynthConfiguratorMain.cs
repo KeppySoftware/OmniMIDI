@@ -1583,11 +1583,6 @@ namespace KeppySynthConfigurator
             Process.Start("https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRnA");
         }
 
-        private void FrzChannel_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://www.youtube.com/channel/UC4j9sfyzKvpVpog32haQ_Nw");
-        }
-
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();

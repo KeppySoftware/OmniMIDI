@@ -167,7 +167,6 @@
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
-            this.FrzChannel = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
@@ -1475,8 +1474,7 @@
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
-            this.KepChannel,
-            this.FrzChannel});
+            this.KepChannel});
             this.menuItem24.Text = "Useful links";
             // 
             // SoftpediaPage
@@ -1495,12 +1493,6 @@
             this.KepChannel.Index = 2;
             this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
             this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
-            // 
-            // FrzChannel
-            // 
-            this.FrzChannel.Index = 3;
-            this.FrzChannel.Text = "KaleidonKep99\'s best friend YouTube channel";
-            this.FrzChannel.Click += new System.EventHandler(this.FrzChannel_Click);
             // 
             // PanicButton
             // 
@@ -1709,7 +1701,6 @@
         private System.Windows.Forms.MenuItem SoftpediaPage;
         private System.Windows.Forms.MenuItem menuItem26;
         private System.Windows.Forms.MenuItem KepChannel;
-        private System.Windows.Forms.MenuItem FrzChannel;
         public System.Windows.Forms.MenuItem ChangeDefaultOutput;
         private System.Windows.Forms.MenuItem menuItem25;
     }

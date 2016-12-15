@@ -19,7 +19,9 @@ BOOL BlackListSystem(){
 	TCHAR defaultblacklistdirectory[MAX_PATH];
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
+	TCHAR fullmodulename[MAX_PATH];
 	GetModuleFileName(NULL, modulename, MAX_PATH);
+	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
 	PathStripPath(modulename);
 	try {
 		if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
@@ -46,7 +48,7 @@ BOOL BlackListSystem(){
 			OutputDebugString(userblacklistdirectory);
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
-				if (_tcsicmp(modulename, userstring) == 0) {
+				if (_tcsicmp(modulename, userstring) | _tcsicmp(fullmodulename, userstring) == 0) {
 					std::wstring modulenamelpcwstr(modulename);
 					std::wstring concatted_stdstr = L"Keppy's Synthesizer - " + modulenamelpcwstr + L" is blacklisted";
 					LPCWSTR messageboxtitle = concatted_stdstr.c_str();
@@ -69,7 +71,6 @@ BOOL VMSBlackList(){
 	TCHAR sndvol[MAX_PATH];
 	TCHAR vmidisynthdll[MAX_PATH];
 	TCHAR vmidisynth2exe[MAX_PATH];
-	BOOL result = BlackListSystem();
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
 	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
 	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
@@ -81,7 +82,7 @@ BOOL VMSBlackList(){
 	try {
 		if (PathFileExists(vmidisynthdll)) {
 			if (PathFileExists(vmidisynth2exe)) {
-				return result;
+				return BlackListSystem();
 			}
 			else {
 				if (!_tcsicmp(modulename, sndvol)) {
@@ -93,13 +94,13 @@ BOOL VMSBlackList(){
 						return 0x0;
 					}
 					else {
-						return result;
+						return BlackListSystem();
 					}
 				}
 			}
 		}
 		else {
-			return result;
+			return BlackListSystem();
 		}
 		return 0x0;
 	}

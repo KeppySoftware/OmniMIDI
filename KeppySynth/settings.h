@@ -673,6 +673,23 @@ void keybindings()
 					ReloadSFList(8);
 					return;
 				}
+				if (debugmode == 1) {
+					if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(VK_CANCEL) & 0x8000) {
+						COORD topLeft = { 0, 0 };
+						CONSOLE_SCREEN_BUFFER_INFO screen;
+						DWORD written;
+
+						GetConsoleScreenBufferInfo(hConsole, &screen);
+						FillConsoleOutputCharacterA(
+							hConsole, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written
+							);
+						FillConsoleOutputAttribute(
+							hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
+							screen.dwSize.X * screen.dwSize.Y, topLeft, &written
+							);
+						SetConsoleCursorPosition(hConsole, topLeft);
+					}
+				}
 			}
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
 				TCHAR configuratorapp[MAX_PATH];
