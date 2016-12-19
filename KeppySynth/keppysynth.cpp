@@ -337,12 +337,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	else
 		defaultmode = MOD_MIDIPORT;
 
-	if (!BannedSystemProcess()) {
-		if (debugmode == 1) {
-			if (!BlackListSystem()) {
-				CreateConsole();
-			}
-		}
+	if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
+		CreateConsole();
 	}
 
 	PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");

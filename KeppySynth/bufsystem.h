@@ -2,6 +2,8 @@
 Keppy's Synthesizer buffer system
 */
 
+#define Between(value, min, max) (value < max && value > min)
+
 static void ResetDrumChannels()
 {
 	static const BYTE part_to_ch[16] = { 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15 };
@@ -46,6 +48,17 @@ bool depends() {
 	}
 }
 
+void playnotes(DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
+	int x = (dwParam1 >> (8 * 1)) & 0xFF;
+	dwParam2 = dwParam1 & 0xF0;
+	exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
+	BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+	CheckUp();
+	if (debugmode == 1) {
+		PrintToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.");
+	}
+}
+
 int bmsyn_play_some_data(void){
 	if (allnotesignore) {
 		return 0;
@@ -81,12 +94,16 @@ int bmsyn_play_some_data(void){
 			LeaveCriticalSection(&mim_section);
 			switch (uMsg) {
 			case MODM_DATA:
-				dwParam2 = dwParam1 & 0xF0;
-				exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-				BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
-				CheckUp();
-				if (debugmode == 1) {
-					PrintToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.");
+				if (ignorenotes1 == 1) {	
+					if (HIWORD(dwParam1) == 0x01) {
+						PrintToConsole(FOREGROUND_GREEN, dwParam1, "Ignored normal MIDI event. Velocity value of 1.");
+					}
+					else {
+						playnotes(dwParam1, dwParam2, exlen);
+					}
+				}
+				else {
+					playnotes(dwParam1, dwParam2, exlen);
 				}
 				break;
 			case MODM_LONGDATA:

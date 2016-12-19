@@ -27,6 +27,7 @@ static int floatrendering = 1;			// Floating point audio
 static int frames = 0;					// Default
 static int frequency = 0;				// Audio frequency
 static int frequencynew = 0;			// Audio frequency
+static int ignorenotes1 = 0;			// Ignores notes with velocity of 1
 static int maxcpu = 0;					// CPU usage INT
 static int midivoices = 0;				// Max voices INT
 static int midivolumeoverride = 0;		// MIDI track volume override

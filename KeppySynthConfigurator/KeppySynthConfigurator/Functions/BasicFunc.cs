@@ -402,6 +402,14 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
                 }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = false;
+                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.useoldbuffersystem.Checked = true;

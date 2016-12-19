@@ -139,6 +139,7 @@
             this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.autopanicmode = new System.Windows.Forms.MenuItem();
+            this.IgnoreNotes1 = new System.Windows.Forms.MenuItem();
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
@@ -1275,7 +1276,8 @@
             this.enableextra8sf,
             this.MIDINameNoSpace,
             this.menuItem18,
-            this.autopanicmode});
+            this.autopanicmode,
+            this.IgnoreNotes1});
             this.menuItem14.Text = "Advanced driver settings";
             // 
             // DebugModePls
@@ -1300,6 +1302,12 @@
             this.autopanicmode.Index = 4;
             this.autopanicmode.Text = "Automatic MIDI panic";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
+            // 
+            // IgnoreNotes1
+            // 
+            this.IgnoreNotes1.Index = 5;
+            this.IgnoreNotes1.Text = "Ignore notes with velocity value of 1";
+            this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
             // 
             // menuItem12
             // 
@@ -1703,6 +1711,7 @@
         private System.Windows.Forms.MenuItem KepChannel;
         public System.Windows.Forms.MenuItem ChangeDefaultOutput;
         private System.Windows.Forms.MenuItem menuItem25;
+        public System.Windows.Forms.MenuItem IgnoreNotes1;
     }
 }
 

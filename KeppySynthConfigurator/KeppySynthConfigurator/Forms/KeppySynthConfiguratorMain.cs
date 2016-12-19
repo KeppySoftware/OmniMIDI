@@ -1413,6 +1413,20 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void IgnoreNotes1_Click(object sender, EventArgs e)
+        {
+            if (IgnoreNotes1.Checked == false)
+            {
+                SynthSettings.SetValue("ignorenotes1", "1", RegistryValueKind.DWord);
+                IgnoreNotes1.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("ignorenotes1", "0", RegistryValueKind.DWord);
+                IgnoreNotes1.Checked = false;
+            }
+        }
+
         // Snap feature
 
         private const int SnapDist = 25;
