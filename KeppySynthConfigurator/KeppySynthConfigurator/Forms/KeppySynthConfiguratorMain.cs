@@ -1419,11 +1419,13 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("ignorenotes1", "1", RegistryValueKind.DWord);
                 IgnoreNotes1.Checked = true;
+                IgnoreNotesInterval.Enabled = true;
             }
             else
             {
                 SynthSettings.SetValue("ignorenotes1", "0", RegistryValueKind.DWord);
                 IgnoreNotes1.Checked = false;
+                IgnoreNotesInterval.Enabled = false;
             }
         }
 
@@ -1600,6 +1602,12 @@ namespace KeppySynthConfigurator
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
+            frm.ShowDialog();
+        }
+
+        private void IgnoreNotesInterval_Click(object sender, EventArgs e)
+        {
+            KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
             frm.ShowDialog();
         }
     }

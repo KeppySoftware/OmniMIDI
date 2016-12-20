@@ -92,7 +92,7 @@ namespace KeppySynthConfigurator
 
                 if (runmode == 0)
                 {
-                    if (SynthSettings.GetValue("autoupdatecheck", 1).ToString() == "1")
+                    if (SynthSettings.GetValue("autoupdatecheck", "1").ToString() == "1")
                     {
                         if (Functions.IsInternetAvailable() == false)
                         {
@@ -135,9 +135,8 @@ namespace KeppySynthConfigurator
                 Application.Run(new KeppySynthConfiguratorMain(args));
                 GC.KeepAlive(m);
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("An error as occurred while starting the configurator.\n\nMore informations down below:\n" + ex.ToString() + "\n\nThe configurator can still be used, press OK to continue", "Keppy's Synthesizer ~ Error" , MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new KeppySynthConfiguratorMain(args));

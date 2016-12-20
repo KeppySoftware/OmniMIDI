@@ -91,6 +91,8 @@ static int rvalues[16] =
 // Other
 static int buffull = 0;
 static int extra8lists = 0;
+static int lovel = 1;
+static int hivel = 1;
 
 // Buffer system
 static BYTE gs_part_to_ch[16];

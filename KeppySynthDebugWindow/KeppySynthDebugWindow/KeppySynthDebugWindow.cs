@@ -88,11 +88,13 @@ namespace KeppySynthDebugWindow
                 {
                     StringBuilder sb = new StringBuilder(); // Creates a string builder, because adding lines one by one to the richtextbox is unefficient
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
-                    thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources
+                    thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
+       
                     RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
                     RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
                     RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
                     RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
+
                     string FullVersion;
                     if (WinVer.GetValue("ProductName").ToString().Contains("Windows 10"))
                     {
@@ -154,24 +156,24 @@ namespace KeppySynthDebugWindow
                         }
                         sb.Append(String.Format("Current MIDI app: {0} ({1})", currentappreturn, bitappreturn)); // Removes garbage characters
                         sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Active voices: {0}", Debug.GetValue("currentvoices0").ToString())); // Get current active voices
+                        sb.Append(String.Format("Active voices: {0}", Debug.GetValue("currentvoices0", "0").ToString())); // Get current active voices
                         sb.Append(Environment.NewLine);
-                        if (Convert.ToInt32(Settings.GetValue("encmode")) == 1)
+                        if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
                         {
                             sb.Append("Rendering time: Unavailable"); // If BASS is in encoding mode, BASS usage will stay at constant 100%.
                         }
                         else
                         {
-                            if (Convert.ToInt32(Debug.GetValue("currentcpuusage0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
+                            if (Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
                                 sb.Append(String.Format("Rendering time: {0}% (Beyond limit: {1}%)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString()));
                             else
-                                sb.Append(String.Format("Rendering time: {0}%", Debug.GetValue("currentcpuusage0").ToString())); // Else, it'll give you the info about how many cycles it needs to work.
-                        }                      
-                        if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 0)
+                                sb.Append(String.Format("Rendering time: {0}%", Debug.GetValue("currentcpuusage0", "0").ToString())); // Else, it'll give you the info about how many cycles it needs to work.
+                        }
+                        if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
                         {
                             // If you're using XAudio, it'll show you the size of a frame.
                             sb.Append(Environment.NewLine);
-                            sb.Append(String.Format("Decoded data size (bytes): {0} ({1} x 4)", Debug.GetValue("int").ToString(), (Convert.ToInt32(Debug.GetValue("int").ToString()) / 4).ToString()));
+                            sb.Append(String.Format("Decoded data size (bytes): {0} ({1} x 4)", Debug.GetValue("int", "0").ToString(), (Convert.ToInt32(Debug.GetValue("int", "0").ToString()) / 4).ToString()));
                         }
                     }
                     finally
@@ -187,7 +189,7 @@ namespace KeppySynthDebugWindow
                 catch (Exception ex)
                 {
                     // If something goes wrong, here's an error handler
-                    MessageBox.Show(ex.Message.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.ExitThread();
                 }
             }

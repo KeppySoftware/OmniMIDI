@@ -405,10 +405,12 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.IgnoreNotesInterval.Enabled = true;
                 }
                 else
                 {
                     KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.IgnoreNotesInterval.Enabled = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
                 {
@@ -578,14 +580,9 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = x.ToString("000\\%");
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
-                {
-                    KeppySynthConfiguratorMain.ActiveForm.Hide();
-                    throw new Exception();
-                }));
+                ReinitializeSettings();
             }
         }
 
@@ -691,8 +688,66 @@ namespace KeppySynthConfigurator
             catch
             {
                 // Something bad happened hehe
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Application.Exit();
+                ReinitializeSettings();
+            }
+        }
+
+        public static void ReinitializeSettings() // If the registry is missing, reset it
+        {
+            /*
+             * Key: HKEY_CURRENT_USER\Software\Keppy's Synthesizer\Settings\
+             */
+            try
+            {
+                // Initialize the registry
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings");
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog");
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
+                KeppySynthConfiguratorMain.SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+                KeppySynthConfiguratorMain.Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+                KeppySynthConfiguratorMain.SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+
+                // Normal settings
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("polyphony", "512", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("cpu", "65", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.Delegate.Frequency.Text = "48000";
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("frequency", KeppySynthConfiguratorMain.Delegate.Frequency.Text, RegistryValueKind.DWord);
+
+                // Advanced SynthSettings
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("buflen", "30", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("tracks", "16", RegistryValueKind.DWord);
+
+                // Let's not forget about the volume!
+                int VolumeValue = 0;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = 10000;
+                double x = KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value / 100;
+                VolumeValue = Convert.ToInt32(x);
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = VolumeValue.ToString("000\\%");
+                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("volume", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+
+                // Checkbox stuff yay
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("preload", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("noteoff", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
+
+                // Reload the settings
+                LoadSettings();
+            }
+            catch (Exception ex)
+            {
+                // Something bad happened hehe
+                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
+                {
+                    KeppySynthConfiguratorMain.ActiveForm.Hide();
+                    throw new Exception();
+                }));
             }
         }
 

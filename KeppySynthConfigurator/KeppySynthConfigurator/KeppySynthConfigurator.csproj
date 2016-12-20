@@ -147,6 +147,12 @@
     <Compile Include="Forms\KeppySynthDefaultOutput.Designer.cs">
       <DependentUpon>KeppySynthDefaultOutput.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeppySynthVelocityIntervals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeppySynthVelocityIntervals.Designer.cs">
+      <DependentUpon>KeppySynthVelocityIntervals.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\KeppySynthFavouritesManager.resx">
@@ -184,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthDefaultOutput.resx">
       <DependentUpon>KeppySynthDefaultOutput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeppySynthVelocityIntervals.resx">
+      <DependentUpon>KeppySynthVelocityIntervals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
