@@ -1321,7 +1321,7 @@
             // IgnoreNotesInterval
             // 
             this.IgnoreNotesInterval.Index = 7;
-            this.IgnoreNotesInterval.Text = "Set velocity values to ignore";
+            this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
             this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
             // 
             // menuItem12
@@ -1400,7 +1400,7 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 3;
+            this.menuItem15.Index = 4;
             this.menuItem15.Text = "-";
             // 
             // reportABugToolStripMenuItem
@@ -1411,21 +1411,21 @@
             // 
             // getTheMIDIMapperForWindows8xToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 4;
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 5;
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 8.x";
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows8xToolStripMenuItem_Click);
             // 
             // getTheMIDIMapperForWindows10ToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 5;
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 6;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 6;
+            this.menuItem42.Index = 7;
             this.menuItem42.Text = "-";
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
@@ -1448,7 +1448,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 7;
+            this.guidesToolStripMenuItem.Index = 8;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -1479,13 +1479,13 @@
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
             this.reportABugToolStripMenuItem,
+            this.PanicButton,
             this.menuItem15,
             this.getTheMIDIMapperForWindows8xToolStripMenuItem,
             this.getTheMIDIMapperForWindows10ToolStripMenuItem,
             this.menuItem42,
             this.guidesToolStripMenuItem,
             this.menuItem24,
-            this.PanicButton,
             this.menuItem44,
             this.donateToSupportUsToolStripMenuItem,
             this.downloadTheSourceCodeToolStripMenuItem});
@@ -1493,7 +1493,7 @@
             // 
             // menuItem24
             // 
-            this.menuItem24.Index = 8;
+            this.menuItem24.Index = 9;
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
@@ -1519,8 +1519,8 @@
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 9;
-            this.PanicButton.Text = "The driver isn\'t working anymore, help?";
+            this.PanicButton.Index = 3;
+            this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // MainMenu

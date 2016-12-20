@@ -95,7 +95,7 @@ int bmsyn_play_some_data(void){
 			switch (uMsg) {
 			case MODM_DATA:
 				if (ignorenotes1 == 1) {	
-					if ((LOWORD(dwParam1) & 0xF0) == 144 && (HIWORD(dwParam1) >= lovel && HIWORD(dwParam1) <= hivel)) {
+					if ((LOWORD(dwParam1) & 0xF0) == 144 && ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
 						PrintToConsole(FOREGROUND_GREEN, dwParam1, "Ignored NoteON MIDI event.");
 					}
 					else {

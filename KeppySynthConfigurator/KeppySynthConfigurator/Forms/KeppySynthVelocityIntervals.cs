@@ -12,7 +12,9 @@ namespace KeppySynthConfigurator
 {
     public partial class KeppySynthVelocityIntervals : Form
     {
-        public static RegistryKey Settings;
+        public static int previouslovel;
+        public static int previoushivel;
+        public static bool Confirmed;
 
         public KeppySynthVelocityIntervals()
         {
@@ -21,11 +23,14 @@ namespace KeppySynthConfigurator
 
         private void KeppySynthVelocityIntervals_Load(object sender, EventArgs e)
         {
-            Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+            Confirmed = false;
             LoVel.Value = 1;
             HiVel.Value = 127;
-            LoVel.Value = Convert.ToInt32(Settings.GetValue("lovelign", "1"));
-            HiVel.Value = Convert.ToInt32(Settings.GetValue("hivelign", "1"));
+            previouslovel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("lovelign", "1"));
+            previoushivel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hivelign", "1"));
+            LoVel.Value = previouslovel;
+            HiVel.Value = previoushivel;
+            PrevSett.Text = String.Format("Previous settings: Lo. {0}, Hi. {1}", previouslovel, previoushivel);
         }
 
         private void LoVel_ValueChanged(object sender, EventArgs e)
@@ -43,6 +48,8 @@ namespace KeppySynthConfigurator
                 {
                     // Everything is fine
                 }
+
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", Convert.ToInt32(LoVel.Value), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -65,6 +72,8 @@ namespace KeppySynthConfigurator
                 {
                     // Everything is fine
                 }
+
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", Convert.ToInt32(HiVel.Value), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -74,16 +83,24 @@ namespace KeppySynthConfigurator
 
         private void ApplyBtn_Click(object sender, EventArgs e)
         {
-            Settings.SetValue("lovelign", Convert.ToInt32(LoVel.Value), RegistryValueKind.DWord);
-            Settings.SetValue("hivelign", Convert.ToInt32(HiVel.Value), RegistryValueKind.DWord);
-            Settings.Close();
+            Confirmed = true;
             Close();
         }
 
         private void CancelBtn_Click(object sender, EventArgs e)
         {
-            Settings.Close();
+            Confirmed = false;
             Close();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (Confirmed == false)
+            {
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", previouslovel, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", previoushivel, RegistryValueKind.DWord);
+            }
+            Dispose();
         }
     }
 }

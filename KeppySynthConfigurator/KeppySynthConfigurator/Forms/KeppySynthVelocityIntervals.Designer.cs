@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthVelocityIntervals));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.LoVel = new System.Windows.Forms.NumericUpDown();
@@ -35,6 +36,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.ApplyBtn = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
+            this.PrevSett = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.LoVel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.HiVel)).BeginInit();
             this.SuspendLayout();
@@ -43,16 +45,15 @@
             // 
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(461, 41);
+            this.label1.Size = new System.Drawing.Size(461, 53);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Select the interval at which Keppy\'s Synthesizer should ignore the notes.\r\nAll no" +
-    "tes with velocities equal or in between these two values will be not played.";
+            this.label1.Text = resources.GetString("label1.Text");
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(124, 72);
+            this.label2.Location = new System.Drawing.Point(124, 76);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(44, 13);
             this.label2.TabIndex = 1;
@@ -60,7 +61,7 @@
             // 
             // LoVel
             // 
-            this.LoVel.Location = new System.Drawing.Point(169, 70);
+            this.LoVel.Location = new System.Drawing.Point(169, 74);
             this.LoVel.Maximum = new decimal(new int[] {
             127,
             0,
@@ -83,7 +84,7 @@
             // 
             // HiVel
             // 
-            this.HiVel.Location = new System.Drawing.Point(313, 70);
+            this.HiVel.Location = new System.Drawing.Point(313, 74);
             this.HiVel.Maximum = new decimal(new int[] {
             127,
             0,
@@ -107,7 +108,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(266, 72);
+            this.label3.Location = new System.Drawing.Point(266, 76);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 3;
@@ -115,6 +116,7 @@
             // 
             // ApplyBtn
             // 
+            this.ApplyBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ApplyBtn.Location = new System.Drawing.Point(398, 107);
             this.ApplyBtn.Name = "ApplyBtn";
             this.ApplyBtn.Size = new System.Drawing.Size(75, 23);
@@ -125,6 +127,7 @@
             // 
             // CancelBtn
             // 
+            this.CancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CancelBtn.Location = new System.Drawing.Point(317, 107);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
@@ -133,12 +136,22 @@
             this.CancelBtn.UseVisualStyleBackColor = true;
             this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
             // 
+            // PrevSett
+            // 
+            this.PrevSett.AutoSize = true;
+            this.PrevSett.Location = new System.Drawing.Point(15, 112);
+            this.PrevSett.Name = "PrevSett";
+            this.PrevSett.Size = new System.Drawing.Size(145, 13);
+            this.PrevSett.TabIndex = 7;
+            this.PrevSett.Text = "Previous settings: Lo. 1, Hi. 1";
+            // 
             // KeppySynthVelocityIntervals
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(485, 142);
+            this.Controls.Add(this.PrevSett);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.ApplyBtn);
             this.Controls.Add(this.HiVel);
@@ -171,5 +184,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button ApplyBtn;
         private System.Windows.Forms.Button CancelBtn;
+        private System.Windows.Forms.Label PrevSett;
     }
 }

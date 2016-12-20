@@ -122,8 +122,6 @@ BOOL BannedSystemProcess() {
 	TCHAR bannedsndvol[MAX_PATH];
 	TCHAR bannedvmware[MAX_PATH];
 
-	
-
 	TCHAR modulename[MAX_PATH];
 
 	_tcscpy_s(bannedbattlenet, _countof(bannedbattlenet), _T("Battle.net Launcher.exe"));
