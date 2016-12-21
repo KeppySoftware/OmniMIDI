@@ -20,6 +20,14 @@ BOOL BlackListSystem(){
 	TCHAR userblacklistdirectory[MAX_PATH];
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
+	// Clears all the tchars
+	ZeroMemory(defaultstring, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(userstring, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(defaultblacklistdirectory, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(userblacklistdirectory, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(modulename, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(fullmodulename, sizeof(TCHAR) * MAX_PATH);
+	// Start the system
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
 	PathStripPath(modulename);
@@ -48,11 +56,11 @@ BOOL BlackListSystem(){
 			OutputDebugString(userblacklistdirectory);
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
-				if (_tcsicmp(modulename, userstring) | _tcsicmp(fullmodulename, userstring) == 0) {
+				if (_tcsicmp(modulename, userstring) == 0 || _tcsicmp(fullmodulename, userstring) == 0) {
 					std::wstring modulenamelpcwstr(modulename);
 					std::wstring concatted_stdstr = L"Keppy's Synthesizer - " + modulenamelpcwstr + L" is blacklisted";
 					LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-					MessageBox(NULL, L"This program has been manually blacklisted.\n\nThe driver will be automatically unloaded by WinMM.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+					MessageBox(NULL, L"This program has been manually blacklisted.\nThe driver will be automatically unloaded.\n\nPress OK to continue.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 					return 0x0;
 				}
 			}
@@ -71,6 +79,12 @@ BOOL VMSBlackList(){
 	TCHAR sndvol[MAX_PATH];
 	TCHAR vmidisynthdll[MAX_PATH];
 	TCHAR vmidisynth2exe[MAX_PATH];
+	// Clears all the tchars
+	ZeroMemory(modulename, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(sndvol, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(vmidisynthdll, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(vmidisynth2exe, sizeof(TCHAR) * MAX_PATH);
+	// Here we go
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
 	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
 	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));

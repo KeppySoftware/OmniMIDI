@@ -348,7 +348,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	MIDIOUTCAPS2A * myCaps2A;
 	MIDIOUTCAPS2W * myCaps2W;
 
-	const GUID CLSID_bassmidi_synth = { 0xa675eda2, 0xeb26, 0x4e32, { 0xa3, 0xe7, 0xe4, 0xe6, 0x61, 0xd8, 0xfc, 0x3f } };
+	const GUID CLSIDKEPSYNTH = { 0xa675eda2, 0xeb26, 0x4e32, { 0xa3, 0xe7, 0xe4, 0xe6, 0x61, 0xd8, 0xfc, 0x3f } };
 	
 	CHAR synthName[] = "Keppy's Synthesizer\0";
 	WCHAR synthNameW[] = L"Keppy's Synthesizer\0";
@@ -398,9 +398,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wNotes = 2147483647;
 		myCaps2A->wChannelMask = 0xffff;
 		myCaps2A->dwSupport = MIDICAPS_VOLUME;
-		myCaps2A->ManufacturerGuid = CLSID_bassmidi_synth;
-		myCaps2A->ProductGuid = CLSID_bassmidi_synth;
-		myCaps2A->NameGuid = CLSID_bassmidi_synth;
+		myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
+		myCaps2A->ProductGuid = CLSIDKEPSYNTH;
+		myCaps2A->NameGuid = CLSIDKEPSYNTH;
 		return MMSYSERR_NOERROR;
 
 	case (sizeof(MIDIOUTCAPS2W)) :
@@ -415,9 +415,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wNotes = 2147483647;
 		myCaps2W->wChannelMask = 0xffff;
 		myCaps2W->dwSupport = MIDICAPS_VOLUME;
-		myCaps2W->ManufacturerGuid = CLSID_bassmidi_synth;
-		myCaps2W->ProductGuid = CLSID_bassmidi_synth;
-		myCaps2W->NameGuid = CLSID_bassmidi_synth;
+		myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
+		myCaps2W->ProductGuid = CLSIDKEPSYNTH;
+		myCaps2W->NameGuid = CLSIDKEPSYNTH;
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		return MMSYSERR_NOERROR;
 

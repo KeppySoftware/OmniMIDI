@@ -166,11 +166,11 @@
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.PanicButton = new System.Windows.Forms.MenuItem();
             this.menuItem24 = new System.Windows.Forms.MenuItem();
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
-            this.PanicButton = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
@@ -1491,6 +1491,12 @@
             this.downloadTheSourceCodeToolStripMenuItem});
             this.menuItem3.Text = "Help";
             // 
+            // PanicButton
+            // 
+            this.PanicButton.Index = 3;
+            this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
+            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
+            // 
             // menuItem24
             // 
             this.menuItem24.Index = 9;
@@ -1516,12 +1522,6 @@
             this.KepChannel.Index = 2;
             this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
             this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
-            // 
-            // PanicButton
-            // 
-            this.PanicButton.Index = 3;
-            this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
-            this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // MainMenu
             // 
