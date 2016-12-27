@@ -51,14 +51,17 @@
             // richTextBox1
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.Black;
-            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.richTextBox1.DetectUrls = false;
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Font = new System.Drawing.Font("MS Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.ForeColor = System.Drawing.Color.Lime;
-            this.richTextBox1.Location = new System.Drawing.Point(8, 9);
+            this.richTextBox1.ForeColor = System.Drawing.Color.White;
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(405, 180);
+            this.richTextBox1.ShortcutsEnabled = false;
+            this.richTextBox1.Size = new System.Drawing.Size(422, 198);
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "Loading...";
             // 
@@ -122,7 +125,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(421, 198);
+            this.ClientSize = new System.Drawing.Size(422, 198);
             this.Controls.Add(this.richTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

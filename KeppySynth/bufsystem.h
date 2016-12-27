@@ -115,26 +115,6 @@ int bmsyn_play_some_data(void){
 						(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
 						ResetDrumChannels();
 					}
-					else if (exlen == 11 &&
-						sysexbuffer[0] == (char)0xF0 && sysexbuffer[1] == 0x41 && sysexbuffer[3] == 0x42 &&
-						sysexbuffer[4] == 0x12 && sysexbuffer[5] == 0x40 && (sysexbuffer[6] & 0xF0) == 0x10 &&
-						sysexbuffer[10] == (char)0xF7)
-					{
-						if (sysexbuffer[7] == 2)
-						{
-							// GS MIDI channel to part assign
-							gs_part_to_ch[sysexbuffer[6] & 15] = sysexbuffer[8];
-						}
-						else if (sysexbuffer[7] == 0x15)
-						{
-							// GS part to rhythm allocation
-							unsigned int drum_channel = gs_part_to_ch[sysexbuffer[6] & 15];
-							if (drum_channel < 16)
-							{
-								drum_channels[drum_channel] = sysexbuffer[8];
-							}
-						}
-					}
 					if (debugmode == 1) {
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 					}

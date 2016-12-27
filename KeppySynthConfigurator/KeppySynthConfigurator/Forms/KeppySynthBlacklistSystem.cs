@@ -166,17 +166,22 @@ namespace KeppySynthConfigurator
 
         private void ClearBlacklist_Click(object sender, EventArgs e)
         {
-            try
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to clear the blacklist?", "Keppy's Synthesizer Configurator ~ Clear blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
             {
-                ProgramsBlackList.Items.Clear();
-                File.Delete(BlacklistPath);
-                var TempFile = File.Create(BlacklistPath);
-                TempFile.Close();
+                try
+                {
+                    ProgramsBlackList.Items.Clear();
+                    File.Delete(BlacklistPath);
+                    var TempFile = File.Create(BlacklistPath);
+                    TempFile.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("There was an error while saving the blacklist!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("There was an error while saving the blacklist!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+
         }
 
         private void DefBlackListEdit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

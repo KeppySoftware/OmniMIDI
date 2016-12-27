@@ -102,6 +102,20 @@ namespace KeppySynthMixerWindow
             Close();
         }
 
+        private int LelWorkaround(int potato)
+        {
+            if (potato < 0) {
+                return 0;
+            }
+            else if (potato > 32768) {
+                return 32768;
+            }
+            else
+            {
+                return potato;
+            }
+        }
+
         private void VolumeCheck_Tick(object sender, EventArgs e)
         {
             RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
@@ -109,39 +123,49 @@ namespace KeppySynthMixerWindow
 
             if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
             {
-                LeftChannel.Value = Convert.ToInt32(Debug.GetValue("leftvol"));
-                RightChannel.Value = Convert.ToInt32(Debug.GetValue("rightvol"));
-                if (LeftChannel.Value >= 32768)
+                int left = Convert.ToInt32(Debug.GetValue("leftvol"));
+                int right = Convert.ToInt32(Debug.GetValue("rightvol"));
+
+                LeftChannel.Value = LelWorkaround(left);
+                LeftChannel.Value = LelWorkaround(left - 1);
+                LeftChannel.Value = LelWorkaround(left);
+
+                RightChannel.Value = LelWorkaround(right);
+                RightChannel.Value = LelWorkaround(right - 1);
+                RightChannel.Value = LelWorkaround(right);
+
+                if (left >= 32768)
                 {
-                    label1.Text = "╬ Left:";
+                    label1.Text = "╬ L:";
                 }
-                else if (LeftChannel.Value <= 0)
+                else if (left <= 0)
                 {
-                    label1.Text = "■ Left:";
-                }
-                else
-                {
-                    label1.Text = "Left:";
-                }
-                if (RightChannel.Value >= 32768)
-                {
-                    label2.Text = "╬ Right:";
-                }
-                else if (RightChannel.Value <= 0)
-                {
-                    label2.Text = "■ Right:";
+                    label1.Text = "■ L:";
                 }
                 else
                 {
-                    label2.Text = "Right:";
+                    label1.Text = "L:";
+                }
+
+                if (right >= 32768)
+                {
+                    label2.Text = "╬ R:";
+                }
+                else if (right <= 0)
+                {
+                    label2.Text = "■ R:";
+                }
+                else
+                {
+                    label2.Text = "R:";
                 }
             }
             else
             {
                 LeftChannel.Value = 0;
                 RightChannel.Value = 0;
-                label1.Text = "█ Left:";
-                label2.Text = "█ Right:";
+                label1.Text = "█ L:";
+                label2.Text = "█ R:";
             }
 
             System.Threading.Thread.Sleep(1);

@@ -139,6 +139,12 @@
     <Compile Include="Forms\KeppySynthDLEngine.Designer.cs">
       <DependentUpon>KeppySynthDLEngine.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\KeppySynthSoundFontInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KeppySynthSoundFontInfo.Designer.cs">
+      <DependentUpon>KeppySynthSoundFontInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
     <Compile Include="Functions\WatchdogFunc.cs" />
     <Compile Include="Forms\KeppySynthDefaultOutput.cs">
@@ -190,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthDefaultOutput.resx">
       <DependentUpon>KeppySynthDefaultOutput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\KeppySynthSoundFontInfo.resx">
+      <DependentUpon>KeppySynthSoundFontInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthVelocityIntervals.resx">
       <DependentUpon>KeppySynthVelocityIntervals.cs</DependentUpon>

@@ -138,7 +138,7 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <EnableParallelCodeGeneration>
       </EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <FloatingPointExceptions>
@@ -220,7 +220,7 @@
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <EnableParallelCodeGeneration>
       </EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <OpenMPSupport>true</OpenMPSupport>

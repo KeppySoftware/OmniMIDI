@@ -355,7 +355,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 13);
             this.label2.TabIndex = 49;
-            this.label2.Text = "Right:";
+            this.label2.Text = "R:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label1
@@ -365,7 +365,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 13);
             this.label1.TabIndex = 48;
-            this.label1.Text = "Left:";
+            this.label1.Text = "L:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LeftChannel

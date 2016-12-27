@@ -329,110 +329,22 @@ namespace KeppySynthConfigurator
         {
             if (Lis.SelectedItem != null)
             {
-                String s = Lis.SelectedItem.ToString();
-                String next;
-                Int32 fonthandle;
-                FileInfo f;
-
-                if (s.ToLower().IndexOf('=') != -1)
+                try
                 {
-                    var matches = System.Text.RegularExpressions.Regex.Matches(s, "[0-9]+");
-                    string sf = s.Substring(s.LastIndexOf('|') + 1);
-                    fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
-                    f = new FileInfo(sf);
-                    next = sf;
+                    KeppySynthSoundfontInfo frm = new KeppySynthSoundfontInfo(Lis.SelectedItem.ToString());
+                    frm.ShowDialog();
+                    frm.Dispose();
                 }
-                else
+                catch
                 {
-                    fonthandle = BassMidi.BASS_MIDI_FontInit(s);
-                    f = new FileInfo(s);
-                    next = s;
-                }
-
-                if (Bass.BASS_ErrorGetCode() != 0)
-                {
-                    MessageBox.Show("It appears this soundfont isn't valid.\n\nHow weird...", "Keppy's Synthesizer - Informations about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                {
-                    BASS_MIDI_FONTINFO fontinfo = BassMidi.BASS_MIDI_FontGetInfo(fonthandle);
-                    StringBuilder info = new StringBuilder();
-                    info.Append("Information about the soundfont.");
-                    info.Append(Environment.NewLine);
-                    info.Append(Environment.NewLine);
-                    info.Append("-----------------------------------------");
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Filename: <{0}>", next));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Internal soundfont name: {0}", fontinfo.name));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Copyright info: {0}", ReturnCopyright(fontinfo.copyright)));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Size of the entire soundfont: {0} bytes", f.Length.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Size of samples: {0}", ReturnSamplesSize(fontinfo.samsize)));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Size of the bank/preset info and functions: {0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Number of presets: {0} presets available", fontinfo.presets));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Format: {0}", ReturnFormat(Path.GetExtension(next))));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Last edited on: {0}", f.LastWriteTimeUtc));
-                    info.Append(Environment.NewLine);
-                    info.Append(String.Format("Comment: {0}", ReturnComment(fontinfo.comment)));
-                    info.Append(Environment.NewLine);
-                    info.Append("-----------------------------------------");
-                    info.Append(Environment.NewLine);
-                    info.Append(Environment.NewLine);
-                    info.Append("Press OK to close the messagebox.");
-                    MessageBox.Show(info.ToString(), "Keppy's Synthesizer - Information about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    Environment.Exit(-1);
                 }
             }
             else
             {
-                MessageBox.Show("It appears there's no soundfont selected.\n\nHow weird...", "Keppy's Synthesizer - Information about the soundfont", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               
             }
-        }
-
-        private string ReturnSamplesSize(int size)
-        {
-            if (size != 0)
-                return String.Format("{0} bytes", size.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-            else
-                return "Unavailable with current format.";
-        }
-
-        private string ReturnFormat(string fileext)
-        {
-            if (fileext.ToLowerInvariant() == ".sf1")
-                return "SoundFont 1.x";
-            else if (fileext.ToLowerInvariant() == ".sf2")
-                return "SoundFont 2.x";
-            else if (fileext.ToLowerInvariant() == ".sfz")
-                return "SoundFontZ/Sforzando";
-            else if (fileext.ToLowerInvariant() == ".sfpack")
-                return "Compressed SoundFont 1.x/2.x";
-            else if (fileext.ToLowerInvariant() == ".sfark")
-                return "SfARK Compressed SoundFont 1.x/2.x";
-            else
-                return "Unknown or unsupported format";
-        }
-
-        private string ReturnCopyright(string copyright)
-        {
-            if (copyright == null)
-                return "No copyright info available.";
-            else
-                return copyright;
-        }
-
-        private string ReturnComment(string comment)
-        {
-            if (comment == null)
-                return "No comments available.";
-            else
-                return comment;
         }
 
         private void MvU_Click(object sender, EventArgs e)
@@ -853,12 +765,14 @@ namespace KeppySynthConfigurator
         {
             KeppySynthBlacklistSystem frm = new KeppySynthBlacklistSystem();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthInformation frm = new KeppySynthInformation();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -976,48 +890,56 @@ namespace KeppySynthConfigurator
         {
             KeppySynthEVBuffer frm = new KeppySynthEVBuffer();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthOutputWAVDir frm = new KeppySynthOutputWAVDir();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void changeDefaultSoundfontListToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void changeTheMaximumSamplesPerFrameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void SPFSecondaryBut_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthFavouritesManager frm = new KeppySynthFavouritesManager();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void DefaultOut810enabledToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1603,12 +1525,14 @@ namespace KeppySynthConfigurator
         {
             KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
             frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)
         {
             KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
             frm.ShowDialog();
+            frm.Dispose();
         }
     }
 }

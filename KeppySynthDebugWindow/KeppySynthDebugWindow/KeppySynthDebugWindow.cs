@@ -127,7 +127,7 @@ namespace KeppySynthDebugWindow
                         // Time to write all the stuff to the string builder
                         sb.Append(String.Format("Keppy's Synthesizer Debug Window - Version {0}", Driver.FileVersion.ToString()));
                         sb.Append(Environment.NewLine);
-                        sb.Append("---------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUS
+                        sb.Append("------------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUS
                         sb.Append(Environment.NewLine);
                         sb.Append(String.Format("O.S.: {0} ({1}, {2})", (string)WinVer.GetValue("ProductName"), FullVersion, bit));
                         sb.Append(Environment.NewLine);
@@ -135,7 +135,7 @@ namespace KeppySynthDebugWindow
                         sb.Append(Environment.NewLine);
                         sb.Append(String.Format("Available memory: {0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
                         sb.Append(Environment.NewLine);
-                        sb.Append("---------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUSx2
+                        sb.Append("------------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUSx2
                         sb.Append(Environment.NewLine);
                         if (System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters()) == "0")
                         {

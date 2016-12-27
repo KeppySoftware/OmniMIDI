@@ -598,7 +598,7 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("cpu", KeppySynthConfiguratorMain.Delegate.MaxCPU.Value, RegistryValueKind.DWord);
                 if (string.IsNullOrWhiteSpace(KeppySynthConfiguratorMain.Delegate.Frequency.Text))
                 {
-                    KeppySynthConfiguratorMain.Delegate.Frequency.Text = "48000";
+                    KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", "44100").ToString();
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("frequency", KeppySynthConfiguratorMain.Delegate.Frequency.Text, RegistryValueKind.DWord);
                 }
                 else
