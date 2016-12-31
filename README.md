@@ -1,4 +1,4 @@
-# Keppy's Synthesizer: A MIDI driver for professional use
+﻿# Keppy's Synthesizer: A MIDI driver for professional use
 <p align="center">
   <a href="http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml#status"><img src="http://s1.softpedia-static.com/_img/sp100clean.png" /></a>
   <br>
@@ -20,6 +20,18 @@ Changing one single driver function could break the entire audio stream, and if 
 My advice for such people is to download CoolSoft VirtualMIDISynth driver from there: [Click me] (http://coolsoft.altervista.org/en/virtualmidisynth)
 <br>
 It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanoseconds. (Unlike mine)
+
+## Can I use your program's source code for my program?
+Sure you can, but there are a few "rules" you need to follow.
+
+What you can do:
+- Take parts of the code, and use it on your apps. (As long as you credit me, BASS.NET and Un4seen.)
+- Share the code on websites outside of the GitHub world. (Again, same as before.)
+- Create ports of the driver for other operating systems, such as Linux, Mac OS X, Amiga etc... Any other O.S. other than Windows. (See down below for further explanations.)
+
+What you can't do:
+- Clone the source code of the driver, and change its name to "(Your name)'s Synthesizer", without actually doing any change to its source code. I mean, why would you do that?
+- Create ports of the driver in different programming languages, but with Windows support. There's already a Windows version, which is this one.
 
 ## Required software
 You need this software installed before attempting to run the setup:

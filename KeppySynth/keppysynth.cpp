@@ -363,11 +363,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		if (shortname) { memcpy(myCapsA->szPname, synthNameSH, sizeof(synthNameSH)); }
 		else { memcpy(myCapsA->szPname, synthName, sizeof(synthName)); }
 		myCapsA->wTechnology = defaultmode;
-		myCapsA->vDriverVersion = 0x022;
-		myCapsA->wVoices = 100000;
-		myCapsA->wNotes = 2147483647;
+		myCapsA->wVoices = 65535;
+		myCapsA->wNotes = 65535;
 		myCapsA->wChannelMask = 0xffff;
 		myCapsA->dwSupport = MIDICAPS_VOLUME;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -378,11 +378,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		if (shortname) { memcpy(myCapsW->szPname, synthNameSHW, sizeof(synthNameSHW)); }
 		else { memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW)); }
 		myCapsW->wTechnology = defaultmode;
-		myCapsW->vDriverVersion = 0x022;
-		myCapsW->wVoices = 100000;
-		myCapsW->wNotes = 2147483647;
+		myCapsW->wVoices = 65535;
+		myCapsW->wNotes = 65535;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
 		return MMSYSERR_NOERROR;
 
 		break;
@@ -393,14 +393,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		if (shortname) { memcpy(myCaps2A->szPname, synthNameSH, sizeof(synthNameSH)); }
 		else { memcpy(myCaps2A->szPname, synthName, sizeof(synthName)); }
 		myCaps2A->wTechnology = defaultmode;
-		myCaps2A->vDriverVersion = 0x022;
-		myCaps2A->wVoices = 100000;
-		myCaps2A->wNotes = 2147483647;
+		myCaps2A->wVoices = 65535;
+		myCaps2A->wNotes = 65535;
 		myCaps2A->wChannelMask = 0xffff;
 		myCaps2A->dwSupport = MIDICAPS_VOLUME;
-		myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
-		myCaps2A->ProductGuid = CLSIDKEPSYNTH;
-		myCaps2A->NameGuid = CLSIDKEPSYNTH;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
 		return MMSYSERR_NOERROR;
 
 	case (sizeof(MIDIOUTCAPS2W)) :
@@ -410,15 +407,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		if (shortname) { memcpy(myCaps2W->szPname, synthNameSHW, sizeof(synthNameSHW)); }
 		else { memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW)); }
 		myCaps2W->wTechnology = defaultmode;
-		myCaps2W->vDriverVersion = 0x022;
-		myCaps2W->wVoices = 100000;
-		myCaps2W->wNotes = 2147483647;
+		myCaps2W->wVoices = 65535;
+		myCaps2W->wNotes = 65535;
 		myCaps2W->wChannelMask = 0xffff;
 		myCaps2W->dwSupport = MIDICAPS_VOLUME;
-		myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
-		myCaps2W->ProductGuid = CLSIDKEPSYNTH;
-		myCaps2W->NameGuid = CLSIDKEPSYNTH;
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
 		return MMSYSERR_NOERROR;
 
 	default:

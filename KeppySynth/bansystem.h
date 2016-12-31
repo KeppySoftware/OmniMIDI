@@ -5,7 +5,7 @@ Keppy's Synthesizer blacklist system
 BOOL CheckXP(){
 	DWORD version = GetVersion();
 	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
-	return (major == 5);
+	return (major < 6);
 }
 
 BOOL BlackListSystem(){
