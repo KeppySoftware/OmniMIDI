@@ -14,13 +14,17 @@ namespace KSDriverRegister
 
         static void Main(string[] args)
         {
-            if (IsWindowsXP())
+            if (Environment.OSVersion.Version.Major < 6)
             {
-                Console.Write("Keppy's Synthesizer Register/Unregister Tool");
-                Console.Write(Environment.NewLine);
-                Console.Write(Environment.NewLine);
-                Console.Write("Windows XP is not supported.");
-                Console.Read();
+                try
+                {
+                    System.Media.SystemSounds.Hand.Play();
+                    Environment.Exit(-1);
+                }
+                catch
+                {
+                    Environment.Exit(-1);
+                }
             }
 
             List<string> copyme = new List<string>();
@@ -238,12 +242,6 @@ namespace KSDriverRegister
                 Console.Write("Invalid argument. Type \"KSDriverRegister.exe /help\" to see the available commands.");
                 Console.Read();
             }
-        }
-
-        static bool IsWindowsXP()
-        {
-            OperatingSystem OS = Environment.OSVersion;
-            return (OS.Version.Major == 5);
         }
     }
 }
