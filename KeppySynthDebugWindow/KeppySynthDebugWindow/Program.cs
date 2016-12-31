@@ -37,18 +37,6 @@ namespace KeppySynthDebugWindow
         [STAThread]
         static void Main()
         {
-            if (Environment.OSVersion.Version.Major < 6)
-            {
-                try
-                {
-                    System.Media.SystemSounds.Hand.Play();
-                    Environment.Exit(-1);
-                }
-                catch
-                {
-                    Environment.Exit(-1);
-                }
-            }
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthDebugWindowToFront");
             Mutex m = new Mutex(true, "KeppySynthDebugWindow", out ok);

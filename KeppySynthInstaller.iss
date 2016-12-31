@@ -268,7 +268,7 @@ Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregi
 Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: not Is64BitInstallMode
 
 [Messages]
-WindowsVersionNotSupported=Unsupported operating system.%n%n{#ProductName} requires at least Windows Vista SP2 to work.%nAnd no, there's no benefit on trying to run the setup on old operating systems like Windows ME, it'll NOT work.
+WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
 
 [Code]
 // shared code for installing the products

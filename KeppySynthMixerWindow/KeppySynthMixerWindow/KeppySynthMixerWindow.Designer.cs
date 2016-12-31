@@ -78,8 +78,8 @@
             this.CH2VOL = new System.Windows.Forms.TrackBar();
             this.CH1VOL = new System.Windows.Forms.TrackBar();
             this.Main = new System.Windows.Forms.MenuStrip();
+            this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.RightChannel = new System.Windows.Forms.ProgressBar();
-            this.VolumeCheck = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -171,7 +171,7 @@
             this.MIDIVolumeOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.MIDIVolumeOverride.AutoSize = true;
             this.MIDIVolumeOverride.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.MIDIVolumeOverride.Location = new System.Drawing.Point(600, 102);
+            this.MIDIVolumeOverride.Location = new System.Drawing.Point(599, 78);
             this.MIDIVolumeOverride.Name = "MIDIVolumeOverride";
             this.MIDIVolumeOverride.Size = new System.Drawing.Size(193, 17);
             this.MIDIVolumeOverride.TabIndex = 69;
@@ -184,7 +184,7 @@
             this.VolumeMonitor.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.VolumeMonitor.AutoSize = true;
             this.VolumeMonitor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VolumeMonitor.Location = new System.Drawing.Point(646, 120);
+            this.VolumeMonitor.Location = new System.Drawing.Point(645, 96);
             this.VolumeMonitor.Name = "VolumeMonitor";
             this.VolumeMonitor.Size = new System.Drawing.Size(147, 17);
             this.VolumeMonitor.TabIndex = 67;
@@ -197,7 +197,7 @@
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label3.Location = new System.Drawing.Point(611, 39);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(181, 60);
+            this.label3.Size = new System.Drawing.Size(181, 29);
             this.label3.TabIndex = 66;
             this.label3.Text = "The volume meter only works when the XAudio interface is disabled.";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -351,7 +351,7 @@
             // label2
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label2.Location = new System.Drawing.Point(593, 160);
+            this.label2.Location = new System.Drawing.Point(592, 153);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 13);
             this.label2.TabIndex = 49;
@@ -361,7 +361,7 @@
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label1.Location = new System.Drawing.Point(593, 142);
+            this.label1.Location = new System.Drawing.Point(592, 124);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 13);
             this.label1.TabIndex = 48;
@@ -371,10 +371,10 @@
             // LeftChannel
             // 
             this.LeftChannel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.LeftChannel.Location = new System.Drawing.Point(642, 142);
+            this.LeftChannel.Location = new System.Drawing.Point(641, 119);
             this.LeftChannel.Maximum = 32768;
             this.LeftChannel.Name = "LeftChannel";
-            this.LeftChannel.Size = new System.Drawing.Size(151, 13);
+            this.LeftChannel.Size = new System.Drawing.Size(151, 23);
             this.LeftChannel.Step = 1;
             this.LeftChannel.TabIndex = 47;
             // 
@@ -602,19 +602,21 @@
             this.Main.TabIndex = 68;
             this.Main.Text = "menuStrip1";
             // 
+            // VolumeCheck
+            // 
+            this.VolumeCheck.Enabled = true;
+            this.VolumeCheck.Interval = 17;
+            this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
+            // 
             // RightChannel
             // 
             this.RightChannel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.RightChannel.Location = new System.Drawing.Point(642, 160);
+            this.RightChannel.Location = new System.Drawing.Point(641, 148);
             this.RightChannel.Maximum = 32768;
             this.RightChannel.Name = "RightChannel";
-            this.RightChannel.Size = new System.Drawing.Size(151, 13);
+            this.RightChannel.Size = new System.Drawing.Size(151, 23);
             this.RightChannel.Step = 1;
             this.RightChannel.TabIndex = 30;
-            // 
-            // VolumeCheck
-            // 
-            this.VolumeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.VolumeCheck_DoWork);
             // 
             // KeppySynthMixerWindow
             // 
@@ -745,8 +747,8 @@
         private System.Windows.Forms.TrackBar CH2VOL;
         private System.Windows.Forms.TrackBar CH1VOL;
         private System.Windows.Forms.MenuStrip Main;
+        private System.Windows.Forms.Timer VolumeCheck;
         private System.Windows.Forms.ProgressBar RightChannel;
-        private System.ComponentModel.BackgroundWorker VolumeCheck;
     }
 }
 

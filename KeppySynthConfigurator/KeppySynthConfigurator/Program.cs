@@ -64,18 +64,6 @@ namespace KeppySynthConfigurator
         public static uint BringToFrontMessage;
         static void DoAnyway(String[] args)
         {
-            if (Environment.OSVersion.Version.Major < 6)
-            {
-                try
-                {
-                    System.Media.SystemSounds.Hand.Play();
-                    Environment.Exit(-1);
-                }
-                catch
-                {
-                    Environment.Exit(-1);
-                }
-            }
             RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
             int runmode = 0;
             bool ok;
