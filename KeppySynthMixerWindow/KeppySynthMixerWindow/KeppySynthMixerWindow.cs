@@ -16,6 +16,7 @@ namespace KeppySynthMixerWindow
     public partial class KeppySynthMixerWindow : Form
     {
         uint MaxStockClock;
+        int dostuff = 0;
 
         public KeppySynthMixerWindow()
         {
@@ -102,73 +103,82 @@ namespace KeppySynthMixerWindow
             Close();
         }
 
-        private int LelWorkaround(int potato)
+        private void VolumeCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (potato < 0) {
-                return 0;
-            }
-            else if (potato > 32768) {
-                return 32768;
-            }
-            else
+            try
             {
-                return potato;
+                while (true)
+                {
+                    if (dostuff != 0)
+                    {
+                        RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
+                        RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
+
+                        if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+                        {
+                            int left = Convert.ToInt32(Debug.GetValue("leftvol"));
+                            int right = Convert.ToInt32(Debug.GetValue("rightvol"));
+
+                            LeftChannel.Invoke((MethodInvoker)(() => LeftChannel.SetProgressNoAnimation(left)));
+                            RightChannel.Invoke((MethodInvoker)(() => RightChannel.SetProgressNoAnimation(right)));
+
+                            if (LeftChannel.Value >= 28672)
+                            {
+                                label1.Invoke((MethodInvoker)(() => label1.Text = "╬ L:"));
+                                ModifyProgressBarColor.SetState(LeftChannel, 2);
+                            }
+                            else if (LeftChannel.Value >= 16384 && LeftChannel.Value <= 28671)
+                            {
+                                label1.Invoke((MethodInvoker)(() => label1.Text = "╦ L:"));
+                                ModifyProgressBarColor.SetState(LeftChannel, 3);
+                            }
+                            else if (LeftChannel.Value >= 1 && LeftChannel.Value <= 16383)
+                            {
+                                label1.Invoke((MethodInvoker)(() => label1.Text = "L:"));
+                                ModifyProgressBarColor.SetState(LeftChannel, 1);
+                            }
+                            else if (LeftChannel.Value <= 0)
+                            {
+                                label1.Invoke((MethodInvoker)(() => label1.Text = "■ L:"));
+                                ModifyProgressBarColor.SetState(LeftChannel, 1);
+                            }
+
+                            if (RightChannel.Value >= 28672)
+                            {
+                                label2.Invoke((MethodInvoker)(() => label2.Text = "╬ R:"));
+                                ModifyProgressBarColor.SetState(RightChannel, 2);
+                            }
+                            else if (RightChannel.Value >= 16384 && RightChannel.Value <= 28671)
+                            {
+                                label2.Invoke((MethodInvoker)(() => label2.Text = "╦ R:"));
+                                ModifyProgressBarColor.SetState(RightChannel, 3);
+                            }
+                            else if (RightChannel.Value >= 1 && RightChannel.Value <= 16383)
+                            {
+                                label2.Invoke((MethodInvoker)(() => label2.Text = "R:"));
+                                ModifyProgressBarColor.SetState(RightChannel, 1);
+                            }
+                            else if (RightChannel.Value <= 0)
+                            {
+                                label2.Invoke((MethodInvoker)(() => label2.Text = "■ R:"));
+                                ModifyProgressBarColor.SetState(RightChannel, 1);
+                            }
+                        }
+                        else
+                        {
+                            LeftChannel.Value = 0;
+                            RightChannel.Value = 0;
+                            label1.Text = "█ L:";
+                            label2.Text = "█ R:";
+                        }
+                    }
+                    System.Threading.Thread.Sleep(1);
+                }       
             }
-        }
-
-        private void VolumeCheck_Tick(object sender, EventArgs e)
-        {
-            RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
-            RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
-
-            if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 1)
+            catch (Exception ex)
             {
-                int left = Convert.ToInt32(Debug.GetValue("leftvol"));
-                int right = Convert.ToInt32(Debug.GetValue("rightvol"));
-
-                LeftChannel.Value = LelWorkaround(left);
-                LeftChannel.Value = LelWorkaround(left - 1);
-                LeftChannel.Value = LelWorkaround(left);
-
-                RightChannel.Value = LelWorkaround(right);
-                RightChannel.Value = LelWorkaround(right - 1);
-                RightChannel.Value = LelWorkaround(right);
-
-                if (left >= 32768)
-                {
-                    label1.Text = "╬ L:";
-                }
-                else if (left <= 0)
-                {
-                    label1.Text = "■ L:";
-                }
-                else
-                {
-                    label1.Text = "L:";
-                }
-
-                if (right >= 32768)
-                {
-                    label2.Text = "╬ R:";
-                }
-                else if (right <= 0)
-                {
-                    label2.Text = "■ R:";
-                }
-                else
-                {
-                    label2.Text = "R:";
-                }
-            }
-            else
-            {
-                LeftChannel.Value = 0;
-                RightChannel.Value = 0;
-                label1.Text = "█ L:";
-                label2.Text = "█ R:";
-            }
-
-            System.Threading.Thread.Sleep(1);
+                MessageBox.Show(ex.ToString());
+            }          
         }
 
         private void KeppySynthMixerWindow_Load(object sender, EventArgs e)
@@ -176,6 +186,7 @@ namespace KeppySynthMixerWindow
             try
             {
                 CPUSpeed();
+                VolumeCheck.RunWorkerAsync();
                 RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
                 if (Channels == null)
@@ -202,12 +213,12 @@ namespace KeppySynthMixerWindow
                 if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
                 {
                     VolumeMonitor.Checked = true;
-                    VolumeCheck.Enabled = true;
+                    dostuff = 1;
                 }
                 else
                 {
                     VolumeMonitor.Checked = false;
-                    VolumeCheck.Enabled = false;
+                    dostuff = 0;
                 }
                 if (Convert.ToInt32(Settings.GetValue("midivolumeoverride")) == 1)
                 {
@@ -249,7 +260,7 @@ namespace KeppySynthMixerWindow
                         if (dialogResult == DialogResult.Yes)
                         {
                             Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
-                            VolumeCheck.Enabled = true;
+                            dostuff = 1;
                             LeftChannel.Value = 0;
                             RightChannel.Value = 0;
                         }
@@ -261,7 +272,7 @@ namespace KeppySynthMixerWindow
                     else if (MaxStockClock >= 1100)
                     {
                         Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
-                        VolumeCheck.Enabled = true;
+                        dostuff = 1;
                         LeftChannel.Value = 0;
                         RightChannel.Value = 0;
                     }
@@ -269,7 +280,7 @@ namespace KeppySynthMixerWindow
                 else
                 {
                     Settings.SetValue("volumemon", "0", RegistryValueKind.DWord);
-                    VolumeCheck.Enabled = false;
+                    dostuff = 0;
                     LeftChannel.Value = 0;
                     RightChannel.Value = 0;
                 }
@@ -448,6 +459,47 @@ namespace KeppySynthMixerWindow
             if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
             if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
             if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
+        }
+    }
+
+    public static class ExtensionMethods
+    {
+        /// <summary>
+        /// Sets the progress bar value, without using 'Windows Aero' animation.
+        /// This is to work around a known WinForms issue where the progress bar 
+        /// is slow to update. 
+        /// </summary>
+        public static void SetProgressNoAnimation(this ProgressBar pb, int value)
+        {
+            // To get around the progressive animation, we need to move the 
+            // progress bar backwards.
+            if (value == pb.Maximum)
+            {
+                // Special case as value can't be set greater than Maximum.
+                pb.Maximum = value + 1;     // Temporarily Increase Maximum
+                pb.Value = value + 1;       // Move past
+                pb.Maximum = value;         // Reset maximum
+            }
+            else
+            {
+                pb.Value = value + 1;       // Move past
+            }
+            pb.Value = value;               // Move to correct value
+        }
+    }
+
+    public static class ModifyProgressBarColor
+    {
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+
+        static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
+
+        public static void SetState(this ProgressBar pBar, int state)
+        {
+            pBar.Invoke((MethodInvoker)(() => SendMessage(pBar.Handle, 1040, (IntPtr)state, IntPtr.Zero)));
+            // state 1 = Normal
+            // state 2 = Error
+            // state 3 = Warning
         }
     }
 }

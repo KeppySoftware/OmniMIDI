@@ -30,6 +30,18 @@ namespace KeppySynthMixerWindow
         [STAThread]
         static void Main()
         {
+            if (Environment.OSVersion.Version.Major < 6)
+            {
+                try
+                {
+                    System.Media.SystemSounds.Hand.Play();
+                    Environment.Exit(-1);
+                }
+                catch
+                {
+                    Environment.Exit(-1);
+                }
+            }
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthMixerWindowToFront");
             Mutex m = new Mutex(true, "KeppySynthMixerWindow", out ok);
