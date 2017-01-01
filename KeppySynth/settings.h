@@ -285,6 +285,27 @@ BOOL load_bassfuncs()
 	}
 }
 
+void appname() {
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_SZ;
+	DWORD dwSize = sizeof(DWORD);
+	TCHAR modulename[MAX_PATH];
+	TCHAR bitapp[MAX_PATH];
+	ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
+	ZeroMemory(bitapp, MAX_PATH * sizeof(TCHAR));
+	GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+#if defined(_WIN64)
+	wcscpy(bitapp, L"64-bit");
+#elif defined(_WIN32)
+	wcscpy(bitapp, L"32-bit");
+#endif
+	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&modulename, sizeof(modulename));
+	RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&bitapp, sizeof(bitapp));
+	RegCloseKey(hKey);
+}
+
 void load_settings()
 {
 	try {
@@ -329,21 +350,7 @@ void load_settings()
 
 		RegCloseKey(hKey);
 
-	    dwType = REG_SZ;
-		TCHAR modulename[MAX_PATH];
-		TCHAR bitapp[MAX_PATH];
-		ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
-		ZeroMemory(bitapp, MAX_PATH * sizeof(TCHAR));
-		GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-		#if defined(_WIN64)
-			wcscpy(bitapp, L"64-bit");
-		#elif defined(_WIN32)
-			wcscpy(bitapp, L"32-bit");
-		#endif
-		RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&modulename, sizeof(modulename));
-		RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&bitapp, sizeof(bitapp));
-		RegCloseKey(hKey);
+		appname();
 
 		frequencynew = frequency;
 
@@ -448,6 +455,7 @@ void realtime_load_settings()
 		else {
 			BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
 		}
+		appname();
 	}
 	catch (...) {
 		crashmessage(L"RTSetLoad");

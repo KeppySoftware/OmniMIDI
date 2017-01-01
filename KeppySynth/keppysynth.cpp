@@ -345,8 +345,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 	MIDIOUTCAPSA * myCapsA;
 	MIDIOUTCAPSW * myCapsW;
-	MIDIOUTCAPS2A * myCaps2A;
-	MIDIOUTCAPS2W * myCaps2W;
 
 	const GUID CLSIDKEPSYNTH = { 0xa675eda2, 0xeb26, 0x4e32, { 0xa3, 0xe7, 0xe4, 0xe6, 0x61, 0xd8, 0xfc, 0x3f } };
 	
@@ -363,14 +361,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		if (shortname) { memcpy(myCapsA->szPname, synthNameSH, sizeof(synthNameSH)); }
 		else { memcpy(myCapsA->szPname, synthName, sizeof(synthName)); }
 		myCapsA->wTechnology = defaultmode;
-		myCapsA->wVoices = 65535;
-		myCapsA->wNotes = 65535;
 		myCapsA->wChannelMask = 0xffff;
 		myCapsA->dwSupport = MIDICAPS_VOLUME;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
 		return MMSYSERR_NOERROR;
 
-		break;
 	case (sizeof(MIDIOUTCAPSW)) :
 		myCapsW = (MIDIOUTCAPSW *)capsPtr;
 		myCapsW->wMid = 0xffff;
@@ -378,59 +373,16 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		if (shortname) { memcpy(myCapsW->szPname, synthNameSHW, sizeof(synthNameSHW)); }
 		else { memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW)); }
 		myCapsW->wTechnology = defaultmode;
-		myCapsW->wVoices = 65535;
-		myCapsW->wNotes = 65535;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
 		return MMSYSERR_NOERROR;
 
-		break;
-	case (sizeof(MIDIOUTCAPS2A)) :
-		myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
-		myCaps2A->wMid = 0xffff;
-		myCaps2A->wPid = 0xffff;
-		if (shortname) { memcpy(myCaps2A->szPname, synthNameSH, sizeof(synthNameSH)); }
-		else { memcpy(myCaps2A->szPname, synthName, sizeof(synthName)); }
-		myCaps2A->wTechnology = defaultmode;
-		myCaps2A->wVoices = 65535;
-		myCaps2A->wNotes = 65535;
-		myCaps2A->wChannelMask = 0xffff;
-		myCaps2A->dwSupport = MIDICAPS_VOLUME;
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
-		return MMSYSERR_NOERROR;
-
-	case (sizeof(MIDIOUTCAPS2W)) :
-		myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
-		myCaps2W->wMid = 0xffff;
-		myCaps2W->wPid = 0xffff;
-		if (shortname) { memcpy(myCaps2W->szPname, synthNameSHW, sizeof(synthNameSHW)); }
-		else { memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW)); }
-		myCaps2W->wTechnology = defaultmode;
-		myCaps2W->wVoices = 65535;
-		myCaps2W->wNotes = 65535;
-		myCaps2W->wChannelMask = 0xffff;
-		myCaps2W->dwSupport = MIDICAPS_VOLUME;
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
-		return MMSYSERR_NOERROR;
-
 	default:
 		PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
-		return MMSYSERR_ERROR;
+		return MMSYSERR_NOTSUPPORTED;
 		break;
 	}
-}
-
-bool compare_nocase(const std::string& first, const std::string& second)
-{
-	unsigned int i = 0;
-	while ((i<first.length()) && (i<second.length()))
-	{
-		if (tolower(first[i])<tolower(second[i])) return true;
-		else if (tolower(first[i])>tolower(second[i])) return false;
-		++i;
-	}
-	return (first.length() < second.length());
 }
 
 unsigned _stdcall notescatcher(LPVOID lpV){
