@@ -345,6 +345,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 	MIDIOUTCAPSA * myCapsA;
 	MIDIOUTCAPSW * myCapsW;
+	MIDIOUTCAPS2A * myCaps2A;
+    MIDIOUTCAPS2W * myCaps2W;
 
 	const GUID CLSIDKEPSYNTH = { 0xa675eda2, 0xeb26, 0x4e32, { 0xa3, 0xe7, 0xe4, 0xe6, 0x61, 0xd8, 0xfc, 0x3f } };
 	
@@ -376,6 +378,30 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
+		return MMSYSERR_NOERROR;
+
+	case (sizeof(MIDIOUTCAPS2A)) :
+		myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
+		myCaps2A->wMid = 0xffff; //MM_UNMAPPED
+		myCaps2A->wPid = 0xffff; //MM_PID_UNMAPPED
+		if (shortname) { memcpy(myCaps2A->szPname, synthNameSH, sizeof(synthNameSH)); }
+		else { memcpy(myCaps2A->szPname, synthName, sizeof(synthName)); }
+		myCaps2A->wTechnology = defaultmode;
+		myCaps2A->wChannelMask = 0xffff;
+		myCaps2A->dwSupport = MIDICAPS_VOLUME;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
+		return MMSYSERR_NOERROR;
+
+	case (sizeof(MIDIOUTCAPS2W)) :
+		myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
+		myCaps2W->wMid = 0xffff;
+		myCaps2W->wPid = 0xffff;
+		if (shortname) { memcpy(myCaps2W->szPname, synthNameSHW, sizeof(synthNameSHW)); }
+		else { memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW)); }
+		myCaps2W->wTechnology = defaultmode;
+		myCaps2W->wChannelMask = 0xffff;
+		myCaps2W->dwSupport = MIDICAPS_VOLUME;
+		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
 		return MMSYSERR_NOERROR;
 
 	default:
