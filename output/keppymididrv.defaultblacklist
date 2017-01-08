@@ -30,6 +30,7 @@ ctfmon.exe
 devenv.exe
 devenv_2.exe
 discord.exe
+discordcanary.exe
 discordptb.exe
 dllhost.exe
 dreamweaver.exe
@@ -41,8 +42,8 @@ gamepanel.exe
 gfexperienceservice.exe
 gitter.exe
 googleupdate.exe
-gta_sa.exe
 gta5.exe
+gta_sa.exe
 gui.exe
 hl2.exe
 iclouddrive.exe
