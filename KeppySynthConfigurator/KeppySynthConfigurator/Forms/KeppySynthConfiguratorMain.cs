@@ -1534,5 +1534,12 @@ namespace KeppySynthConfigurator
             frm.ShowDialog();
             frm.Dispose();
         }
+
+        private void ChangePitchShift_Click(object sender, EventArgs e)
+        {
+            KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
     }
 }

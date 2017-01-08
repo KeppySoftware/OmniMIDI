@@ -121,6 +121,12 @@
     <Compile Include="Forms\KeppySynthOutputWAVDir.Designer.cs">
       <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\KeppySynthPitchShifting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KeppySynthPitchShifting.Designer.cs">
+      <DependentUpon>KeppySynthPitchShifting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\KeppySynthSamplePerFrameSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthOutputWAVDir.resx">
       <DependentUpon>KeppySynthOutputWAVDir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\KeppySynthPitchShifting.resx">
+      <DependentUpon>KeppySynthPitchShifting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthSamplePerFrameSetting.resx">
       <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>

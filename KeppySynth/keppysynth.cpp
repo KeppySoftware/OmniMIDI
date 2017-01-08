@@ -50,6 +50,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
+#define Between(value, a, b) (value <= b && value >= a)
 
 #include <bass.h>
 #include <bassmidi.h>
@@ -219,10 +220,25 @@ void CreateConsole() {
 	}
 }
 
+char* StatusType(int status) {
+	if (status == 128) { return "Note Off"; }
+	else if (status == 144) { return "Note On"; }
+	else if (status == 176) { return "Polyphonic Key Pressure"; }
+	else if (Between(status, 177, 191)) { return "Channel Reset"; }
+	else { return "Unknown"; }
+}
+
 void PrintToConsole(int color, int stage, const char* text) {
 	if (debugmode == 1) {
 		SetConsoleTextAttribute(hConsole, color);
 		std::cout << std::endl << "(" << stage << ") - " << text;
+	}
+}
+
+void PrintEventToConsole(int color, int stage, const char* text, int status, int note, int velocity) {
+	if (debugmode == 1) {
+		SetConsoleTextAttribute(hConsole, color);
+		std::cout << std::endl << "(" << stage << ") - " << text << " ~ Type = " << StatusType(status) << " | Note = " << note << " | Velocity = " << velocity;
 	}
 }
 

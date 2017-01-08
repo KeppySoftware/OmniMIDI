@@ -175,6 +175,7 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
+            this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1221,6 +1222,7 @@
             this.menuItem11.Index = 12;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ChangeDefaultOutput,
+            this.ChangePitchShift,
             this.floatingpointaudio,
             this.ReduceCPUOver,
             this.VolumeBoost,
@@ -1237,36 +1239,36 @@
             // 
             // floatingpointaudio
             // 
-            this.floatingpointaudio.Index = 1;
+            this.floatingpointaudio.Index = 2;
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
             // ReduceCPUOver
             // 
-            this.ReduceCPUOver.Index = 2;
+            this.ReduceCPUOver.Index = 3;
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // VolumeBoost
             // 
-            this.VolumeBoost.Index = 3;
+            this.VolumeBoost.Index = 4;
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
             // menuItem16
             // 
-            this.menuItem16.Index = 4;
+            this.menuItem16.Index = 5;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 5;
+            this.useoldbuffersystem.Index = 6;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 6;
+            this.slowdownnoskip.Index = 7;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1542,6 +1544,12 @@
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
             // 
+            // ChangePitchShift
+            // 
+            this.ChangePitchShift.Index = 1;
+            this.ChangePitchShift.Text = "Change pitch shifting";
+            this.ChangePitchShift.Click += new System.EventHandler(this.ChangePitchShift_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1729,6 +1737,7 @@
         public System.Windows.Forms.MenuItem IgnoreNotes1;
         private System.Windows.Forms.MenuItem menuItem27;
         public System.Windows.Forms.MenuItem IgnoreNotesInterval;
+        private System.Windows.Forms.MenuItem ChangePitchShift;
     }
 }
 

@@ -2,7 +2,9 @@
 Keppy's Synthesizer buffer system
 */
 
-#define Between(value, min, max) (value < max && value > min)
+#define SETVELOCITY(evento, newstatus) evento = (DWORD(evento) & 0xFF00FFFF) | ((DWORD(newstatus) & 0xFF) << 16)
+#define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
+#define SETSTATUS(evento, newvelocity) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newvelocity) & 0xFF)
 
 static void ResetDrumChannels()
 {
@@ -48,14 +50,29 @@ bool depends() {
 	}
 }
 
-void playnotes(DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
-	int x = (dwParam1 >> (8 * 1)) & 0xFF;
+void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
+	SETSTATUS(dwParam1, status);
+	if (mainkey != 12) {
+		if (Between(status, 0x80, 0x8f) || Between(status, 0x90, 0x9f)) {
+			int newnote = (note - 12) + mainkey;
+			if (newnote > 127) { newnote = 127; }
+			else if (newnote < 0) { newnote = 0; }
+			SETNOTE(dwParam1, newnote);
+		}
+	}
+	else {
+		SETNOTE(dwParam1, note);
+	}
+	SETVELOCITY(dwParam1, velocity);
+
 	dwParam2 = dwParam1 & 0xF0;
 	exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 	BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+
 	CheckUp();
+
 	if (debugmode == 1) {
-		PrintToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.");
+		PrintEventToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.", status, note, velocity);
 	}
 }
 
@@ -91,19 +108,23 @@ int bmsyn_play_some_data(void){
 			exlen = evbuf[evbpoint].exlen;
 			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 
+			int status = (dwParam1 & 0x000000FF);
+			int note = (dwParam1 & 0x0000FF00) >> 8;
+			int velocity = (dwParam1 & 0x00FF0000) >> 16;
+
 			LeaveCriticalSection(&mim_section);
 			switch (uMsg) {
 			case MODM_DATA:
 				if (ignorenotes1 == 1) {	
 					if ((LOWORD(dwParam1) & 0xF0) == 144 && ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
-						PrintToConsole(FOREGROUND_GREEN, dwParam1, "Ignored NoteON MIDI event.");
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON MIDI event.");
 					}
 					else {
-						playnotes(dwParam1, dwParam2, exlen);
+						playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
 					}
 				}
 				else {
-					playnotes(dwParam1, dwParam2, exlen);
+					playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
 				}
 				break;
 			case MODM_LONGDATA:
