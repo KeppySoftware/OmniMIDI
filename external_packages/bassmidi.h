@@ -219,6 +219,7 @@ typedef struct {
 #define BASS_ATTRIB_MIDI_CHANS		0x12002
 #define BASS_ATTRIB_MIDI_VOICES		0x12003
 #define BASS_ATTRIB_MIDI_VOICES_ACTIVE 0x12004
+#define BASS_ATTRIB_MIDI_KILL		0x12007
 #define BASS_ATTRIB_MIDI_TRACK_VOL	0x12100 // + track #
 
 // Additional tag type

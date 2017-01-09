@@ -176,6 +176,7 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
+            this.FadeoutDisable = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1224,6 +1225,7 @@
             this.ChangeDefaultOutput,
             this.ChangePitchShift,
             this.floatingpointaudio,
+            this.FadeoutDisable,
             this.ReduceCPUOver,
             this.VolumeBoost,
             this.menuItem16,
@@ -1251,30 +1253,30 @@
             // 
             // ReduceCPUOver
             // 
-            this.ReduceCPUOver.Index = 3;
+            this.ReduceCPUOver.Index = 4;
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // VolumeBoost
             // 
-            this.VolumeBoost.Index = 4;
+            this.VolumeBoost.Index = 5;
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
             // menuItem16
             // 
-            this.menuItem16.Index = 5;
+            this.menuItem16.Index = 6;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 6;
+            this.useoldbuffersystem.Index = 7;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 7;
+            this.slowdownnoskip.Index = 8;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1550,6 +1552,12 @@
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
             // 
+            // FadeoutDisable
+            // 
+            this.FadeoutDisable.Index = 3;
+            this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
+            this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1738,6 +1746,7 @@
         private System.Windows.Forms.MenuItem menuItem27;
         public System.Windows.Forms.MenuItem IgnoreNotesInterval;
         private System.Windows.Forms.MenuItem ChangePitchShift;
+        public System.Windows.Forms.MenuItem FadeoutDisable;
     }
 }
 

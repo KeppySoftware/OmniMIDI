@@ -604,6 +604,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					else {
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 						CheckUp();
 					}
 					// Error handling

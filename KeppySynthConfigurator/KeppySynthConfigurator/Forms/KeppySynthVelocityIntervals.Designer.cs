@@ -67,19 +67,10 @@
             0,
             0,
             0});
-            this.LoVel.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.LoVel.Name = "LoVel";
             this.LoVel.Size = new System.Drawing.Size(55, 20);
             this.LoVel.TabIndex = 2;
-            this.LoVel.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.LoVel.UseWaitCursor = true;
             this.LoVel.ValueChanged += new System.EventHandler(this.LoVel_ValueChanged);
             // 
             // HiVel
@@ -90,16 +81,11 @@
             0,
             0,
             0});
-            this.HiVel.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.HiVel.Name = "HiVel";
             this.HiVel.Size = new System.Drawing.Size(55, 20);
             this.HiVel.TabIndex = 4;
             this.HiVel.Value = new decimal(new int[] {
-            127,
+            32,
             0,
             0,
             0});

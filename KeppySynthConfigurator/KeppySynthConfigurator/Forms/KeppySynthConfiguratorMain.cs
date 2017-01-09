@@ -1228,6 +1228,20 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void FadeoutDisable_Click(object sender, EventArgs e)
+        {
+            if (FadeoutDisable.Checked == false)
+            {
+                SynthSettings.SetValue("fadeoutdisable", "1", RegistryValueKind.DWord);
+                FadeoutDisable.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("fadeoutdisable", "0", RegistryValueKind.DWord);
+                FadeoutDisable.Checked = false;
+            }
+        }
+
         private void enableextra8sf_Click(object sender, EventArgs e)
         {
             if (enableextra8sf.Checked == false)

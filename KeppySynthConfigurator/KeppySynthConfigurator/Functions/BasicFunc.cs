@@ -361,6 +361,14 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = false;
                 }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = false;
+                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;

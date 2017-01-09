@@ -30,6 +30,13 @@ namespace KeppySynthConfigurator
                 f = new FileInfo(sf);
                 next = sf;
             }
+            else if (SoundFont.ToLower().IndexOf('@') != -1)
+            {
+                string sf = SoundFont.Substring(SoundFont.LastIndexOf('@') + 1);
+                fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
+                f = new FileInfo(sf);
+                next = sf;
+            }
             else
             {
                 fonthandle = BassMidi.BASS_MIDI_FontInit(SoundFont);
@@ -43,8 +50,8 @@ namespace KeppySynthConfigurator
             ISFBox.Text = ReturnName(fontinfo.name, next);
             CIBox.Text = ReturnCopyright(fontinfo.copyright);
 
-            SofSFLab.Text = String.Format("{0} bytes ({1}Presets: {2})", 
-                f.Length.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")), 
+            SofSFLab.Text = String.Format("{0} bytes ({1}Presets: {2})",
+                f.Length.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")),
                 ReturnSamplesSize(fontinfo.samsize),
                 String.Format("{0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
 
