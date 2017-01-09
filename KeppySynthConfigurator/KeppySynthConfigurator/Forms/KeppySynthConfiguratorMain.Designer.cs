@@ -130,6 +130,7 @@
             this.ChangeDefaultOutput = new System.Windows.Forms.MenuItem();
             this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
+            this.FadeoutDisable = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
@@ -176,7 +177,6 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
-            this.FadeoutDisable = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1251,6 +1251,12 @@
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
+            // FadeoutDisable
+            // 
+            this.FadeoutDisable.Index = 3;
+            this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
+            this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
+            // 
             // ReduceCPUOver
             // 
             this.ReduceCPUOver.Index = 4;
@@ -1551,12 +1557,6 @@
             // ImportSettingsDialog
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
-            // 
-            // FadeoutDisable
-            // 
-            this.FadeoutDisable.Index = 3;
-            this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
-            this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
             // 
             // KeppySynthConfiguratorMain
             // 

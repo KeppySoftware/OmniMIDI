@@ -53,11 +53,11 @@ namespace KeppySynthConfigurator
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                Functions.CheckForUpdates(true);
+                Functions.CheckForUpdates(true, false);
             }
             else
             {
-                Functions.CheckForUpdates(false);
+                Functions.CheckForUpdates(false, false);
             }
         }
 

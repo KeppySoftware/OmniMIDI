@@ -104,7 +104,9 @@ namespace KeppySynthConfigurator.Properties {
         ///22 Harmonica
         ///23 Tango Accordion
         ///
-        ///Guitar        /// [stringa troncata]&quot;;.
+        ///Guitar
+        ///24 Acoustic Guitar (nylon)
+        ///25 Aco [stringa troncata]&quot;;.
         /// </summary>
         internal static string gmlist {
             get {
@@ -135,6 +137,26 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap nointerneticon {
+            get {
+                object obj = ResourceManager.GetObject("nointerneticon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap noupdateicon {
+            get {
+                object obj = ResourceManager.GetObject("noupdateicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap sfzcomp {
             get {
                 object obj = ResourceManager.GetObject("sfzcomp", resourceCulture);
@@ -148,6 +170,16 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap updatebk {
             get {
                 object obj = ResourceManager.GetObject("updatebk", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap updateicon {
+            get {
+                object obj = ResourceManager.GetObject("updateicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

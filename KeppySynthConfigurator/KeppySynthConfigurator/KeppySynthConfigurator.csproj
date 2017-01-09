@@ -151,6 +151,12 @@
     <Compile Include="Forms\KeppySynthSoundFontInfo.Designer.cs">
       <DependentUpon>KeppySynthSoundFontInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UpdateYesNo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateYesNo.Designer.cs">
+      <DependentUpon>UpdateYesNo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
     <Compile Include="Functions\WatchdogFunc.cs" />
     <Compile Include="Forms\KeppySynthDefaultOutput.cs">
@@ -212,6 +218,9 @@
     <EmbeddedResource Include="Forms\KeppySynthVelocityIntervals.resx">
       <DependentUpon>KeppySynthVelocityIntervals.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateYesNo.resx">
+      <DependentUpon>UpdateYesNo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -238,6 +247,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\nointerneticon.png" />
+    <None Include="Resources\noupdateicon.png" />
+    <None Include="Resources\updateicon.png" />
     <None Include="Resources\whatoverride.txt" />
     <None Include="Resources\KSynthLogo.png" />
     <None Include="Resources\wi.png" />

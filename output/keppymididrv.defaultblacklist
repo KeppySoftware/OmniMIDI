@@ -21,6 +21,7 @@ ccc.exe
 cemu.exe
 citra.exe
 citraqt.exe
+compil32.exe
 conhost.exe
 console 1 on-screen display (x64).exe
 console 1 on-screen display.exe
@@ -53,6 +54,7 @@ icloudphotos.exe
 icloudservices.exe
 ipodservice.exe
 ipoverusbsvc.exe
+isstudio.exe
 ituneshelper.exe
 kakaotalk.exe
 keppymidiconverter.exe

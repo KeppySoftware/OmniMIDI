@@ -182,14 +182,44 @@ namespace KeppySynthConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void CheckForUpdates(bool forced)
+        public static void TriggerUpdateWindow(Version x, Version y, String newestversion, bool startup)
         {
-            if (IsInternetAvailable() == false)
+            UpdateYesNo upd = new UpdateYesNo(x, y, true);
+            if (startup)
+                upd.StartPosition = FormStartPosition.CenterScreen;
+            else
+                upd.StartPosition = FormStartPosition.CenterParent;
+            DialogResult dialogResult = upd.ShowDialog();
+            upd.Dispose();
+            if (dialogResult == DialogResult.Yes)
             {
-                MessageBox.Show("The configurator can not connect to the GitHub servers.\n\nCheck your network connection, or contact your system administrator or network service provider.\n\nPress OK to continue and open the configurator's window.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
+                frm.StartPosition = FormStartPosition.CenterScreen;
+                frm.ShowDialog();
+            }
+        }
+
+        public static void NoUpdates(bool startup, bool internetok)
+        {
+            UpdateYesNo upd = new UpdateYesNo(null, null, internetok);
+            if (startup)
+                upd.StartPosition = FormStartPosition.CenterScreen;
+            else
+                upd.StartPosition = FormStartPosition.CenterParent;
+            upd.ShowDialog();
+            upd.Dispose();
+        }
+
+        public static void CheckForUpdates(bool forced, bool startup)
+        {
+            bool internetok = IsInternetAvailable();
+            if (internetok == false)
+            {
+                NoUpdates(startup, false);
             }
             else
             {
+
                 try
                 {
                     WebClient client = new WebClient();
@@ -203,25 +233,20 @@ namespace KeppySynthConfigurator
                     Version.TryParse(Driver.FileVersion.ToString(), out y);
                     if (forced)
                     {
-                        Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
-                        frm.StartPosition = FormStartPosition.CenterScreen;
-                        frm.ShowDialog();
+                        TriggerUpdateWindow(x, y, newestversion, startup);
                     }
                     else
                     {
                         if (x > y)
                         {
-                            DialogResult dialogResult = MessageBox.Show("A new update for Keppy's Synthesizer has been found.\n\nVersion installed: " + Driver.FileVersion.ToString() + "\nVersion available online: " + newestversion.ToString() + "\n\nWould you like to update now?\nIf you choose \"Yes\", the configurator will be automatically closed.\n\n(You can disable the automatic update check through the advanced settings.)", "New version of Keppy's Synthesizer found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            if (dialogResult == DialogResult.Yes)
-                            {
-                                Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
-                                frm.StartPosition = FormStartPosition.CenterScreen;
-                                frm.ShowDialog();
-                            }
+                            TriggerUpdateWindow(x, y, newestversion, startup);
                         }
                         else
                         {
-                            MessageBox.Show("No updates have been found.\n\nPlease try again later.", "Keppy's Synthesizer - No updates found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            if (!startup)
+                            {
+                                NoUpdates(startup, true);
+                            }
                         }
                     }
                 }

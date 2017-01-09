@@ -16,7 +16,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.5.13'
+#define Version '4.0.6.0'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -269,6 +269,8 @@ Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"
 
 [Messages]
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
+ExitSetupMessage=The MIDI driver hasn't been installed yet.%n%nAre you sure you want to quit?
+SetupWindowTitle=Setup - %1 {#Version}
 
 [Code]
 // shared code for installing the products
