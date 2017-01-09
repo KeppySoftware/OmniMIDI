@@ -43,20 +43,20 @@
             this.label1.Size = new System.Drawing.Size(461, 53);
             this.label1.TabIndex = 1;
             this.label1.Text = "Change the root key of the notes by using the numeric box down below.\r\nValid valu" +
-    "es are in between -12 and (+)12.\r\n\r\n(It is recommended to do a channel reset whe" +
-    "n changing the pitch)";
+    "es are in between -127 and (+)127.\r\n\r\n(It is recommended to do a channel reset w" +
+    "hen changing the pitch)";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // NewPitch
             // 
             this.NewPitch.Location = new System.Drawing.Point(234, 74);
             this.NewPitch.Maximum = new decimal(new int[] {
-            12,
+            127,
             0,
             0,
             0});
             this.NewPitch.Minimum = new decimal(new int[] {
-            12,
+            127,
             0,
             0,
             -2147483648});

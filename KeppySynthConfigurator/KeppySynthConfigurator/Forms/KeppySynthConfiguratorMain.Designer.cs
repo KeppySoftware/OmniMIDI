@@ -128,6 +128,7 @@
             this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.ChangeDefaultOutput = new System.Windows.Forms.MenuItem();
+            this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
@@ -175,7 +176,6 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
-            this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -1237,6 +1237,12 @@
             this.ChangeDefaultOutput.Text = "Change default audio output";
             this.ChangeDefaultOutput.Click += new System.EventHandler(this.ChangeDefaultOutput_Click);
             // 
+            // ChangePitchShift
+            // 
+            this.ChangePitchShift.Index = 1;
+            this.ChangePitchShift.Text = "Change pitch shifting";
+            this.ChangePitchShift.Click += new System.EventHandler(this.ChangePitchShift_Click);
+            // 
             // floatingpointaudio
             // 
             this.floatingpointaudio.Index = 2;
@@ -1543,12 +1549,6 @@
             // ImportSettingsDialog
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
-            // 
-            // ChangePitchShift
-            // 
-            this.ChangePitchShift.Index = 1;
-            this.ChangePitchShift.Text = "Change pitch shifting";
-            this.ChangePitchShift.Click += new System.EventHandler(this.ChangePitchShift_Click);
             // 
             // KeppySynthConfiguratorMain
             // 

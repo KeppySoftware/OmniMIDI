@@ -24,13 +24,13 @@ namespace KeppySynthConfigurator
 
         private void ApplyBtn_Click(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("mainkey", (NewPitch.Value + 12), RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("pitchshift", (NewPitch.Value + 127), RegistryValueKind.DWord);
             Dispose();
         }
 
         private void KeppySynthPitchShifting_Load(object sender, EventArgs e)
         {
-            NewPitch.Value = (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("mainkey", "12")) - 12);
+            NewPitch.Value = (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("pitchshift", "127")) - 127);
         }
     }
 }
