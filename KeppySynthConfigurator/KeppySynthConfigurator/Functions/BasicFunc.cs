@@ -210,6 +210,30 @@ namespace KeppySynthConfigurator
             upd.Dispose();
         }
 
+        public static void CheckChangelog()
+        {
+            bool internetok = IsInternetAvailable();
+            if (internetok == false)
+            {
+                MessageBox.Show("There's no Internet connection.\n\nYou can't see the changelog without one.", "Keppy's Synthesizer - No Internet connection available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                try
+                {
+                    WebClient client = new WebClient();
+                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/keppydriverupdate.txt");
+                    StreamReader reader = new StreamReader(stream);
+                    String newestversion = reader.ReadToEnd();
+                    Process.Start(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", newestversion));
+                }
+                catch
+                {
+                    MessageBox.Show("An error has occurred while trying to show you the latest changelog.\nPlease try again later.\n\nPress OK to continue.", "Keppy's Synthesizer - Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
         public static void CheckForUpdates(bool forced, bool startup)
         {
             bool internetok = IsInternetAvailable();

@@ -160,6 +160,7 @@ namespace KeppySynthConfigurator
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                menuItem15.Visible = true;
                 getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = true;
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 SetSynthDefault.Visible = true;
@@ -169,6 +170,7 @@ namespace KeppySynthConfigurator
                 changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
                 changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
                 changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                menuItem15.Visible = true;
                 getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
                 SetSynthDefault.Visible = true;
             }
@@ -774,6 +776,11 @@ namespace KeppySynthConfigurator
             KeppySynthInformation frm = new KeppySynthInformation();
             frm.ShowDialog();
             frm.Dispose();
+        }
+
+        private void SeeChangelog_Click(object sender, EventArgs e)
+        {
+            Functions.CheckChangelog();
         }
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
