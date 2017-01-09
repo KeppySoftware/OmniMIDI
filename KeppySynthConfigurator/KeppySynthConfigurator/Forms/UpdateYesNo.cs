@@ -35,18 +35,22 @@ namespace KeppySynthConfigurator
                     FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
                     OnlineVersion = x.ToString();
                     CurrentVersion = y.ToString();
-                    CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.updateicon;
-                    Text = String.Format("Keppy's Synthesizer - Update found ({0})", OnlineVersion);
                     if (x == y)
                     {
+                        CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.refreshicon;
+                        Text = String.Format("Keppy's Synthesizer - Reinstall version ({0})", OnlineVersion);
                         MessageText.Text = String.Format("Would you like to reinstall Keppy's Synthesizer?\nCurrent version online is {0}, the same as yours.\n\nPress Yes to confirm, or No to close the window.", CurrentVersion);
                     }
                     else if (x < y)
                     {
+                        CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.rollbackicon;
+                        Text = String.Format("Keppy's Synthesizer - Downgrade to version {0}", OnlineVersion);
                         MessageText.Text = String.Format("Are you sure you want to downgrade Keppy's Synthesizer?\nCurrent version online is {0}, you have {1}.\n\nPress Yes to confirm, or No to close the window.", OnlineVersion, CurrentVersion);
                     }
                     else
                     {
+                        CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.updateicon;
+                        Text = String.Format("Keppy's Synthesizer - Update found ({0})", OnlineVersion);
                         MessageText.Text = String.Format("A new update for Keppy's Synthesizer has been found.\nCurrent version online is {0}, you have {1}.\n\nWould you like to update now?", OnlineVersion, CurrentVersion);
                     }
                 }
