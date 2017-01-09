@@ -219,7 +219,6 @@ namespace KeppySynthConfigurator
             }
             else
             {
-
                 try
                 {
                     WebClient client = new WebClient();
@@ -252,7 +251,7 @@ namespace KeppySynthConfigurator
                 }
                 catch
                 {
-                    MessageBox.Show("Unknown error.\n\nPress OK to continue and open the configurator's window.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    NoUpdates(startup, false);
                 }
             }
         }
@@ -494,7 +493,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.enableextra8sf.Checked = false;
                 }
                 KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100).ToString();
-                KeppySynthConfiguratorMain.Delegate.TracksLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("tracks", 16));
+                KeppySynthConfiguratorMain.Delegate.SPFRate.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sndbfvalue", 16));
 
                 // Then the filthy checkboxes
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("preload", 1)) == 1)
@@ -541,7 +540,6 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = true;
-                    KeppySynthConfiguratorMain.Delegate.SPFSecondaryBut.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
@@ -571,7 +569,6 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
-                    KeppySynthConfiguratorMain.Delegate.SPFSecondaryBut.Visible = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.SincInter.Enabled = false;
@@ -641,7 +638,7 @@ namespace KeppySynthConfigurator
 
                 // Advanced SynthSettings
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("buflen", KeppySynthConfiguratorMain.Delegate.bufsize.Value.ToString(), RegistryValueKind.DWord);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("tracks", KeppySynthConfiguratorMain.Delegate.TracksLimit.Value.ToString(), RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("sndbfvalue", KeppySynthConfiguratorMain.Delegate.SPFRate.Value.ToString(), RegistryValueKind.DWord);
 
                 // Let's not forget about the volume!
                 int VolumeValue = 0;

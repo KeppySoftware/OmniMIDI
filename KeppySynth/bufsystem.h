@@ -54,10 +54,14 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 	SETSTATUS(dwParam1, status);
 	if (pitchshift != 12) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-			int newnote = (note - 127) + pitchshift;
-			if (newnote > 127) { newnote = 127; }
-			else if (newnote < 0) { newnote = 0; }
-			SETNOTE(dwParam1, newnote);
+			for (int i = 0; i <= 15; ++i) {
+				if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
+					int newnote = (note - 127) + pitchshift;
+					if (newnote > 127) { newnote = 127; }
+					else if (newnote < 0) { newnote = 0; }
+					SETNOTE(dwParam1, newnote);
+				}
+			}
 		}
 	}
 	else {

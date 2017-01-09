@@ -65,6 +65,7 @@ namespace KeppySynthConfigurator
         public static string CurrentList { get; set; }
 
         public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+        public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
         public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
         public static RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
 
@@ -606,7 +607,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 65;
             Frequency.Text = "48000";
             bufsize.Value = 30;
-            TracksLimit.Value = 16;
+            SPFRate.Value = 16;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
@@ -640,7 +641,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 75;
             Frequency.Text = "44100";
             bufsize.Value = 20;
-            TracksLimit.Value = 16;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
@@ -669,7 +670,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 80;
             Frequency.Text = "44100";
             bufsize.Value = 10;
-            TracksLimit.Value = 16;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = true;
@@ -700,7 +701,7 @@ namespace KeppySynthConfigurator
             XAudioDisable.Checked = true;
             XAudioDisable_CheckedChanged(null, null);
             bufsize.Value = 0;
-            TracksLimit.Value = 16;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
@@ -728,7 +729,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 85;
             Frequency.Text = "66150";
             bufsize.Value = 20;
-            TracksLimit.Value = 16;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = true;
             SincInter.Checked = true;
@@ -916,16 +917,7 @@ namespace KeppySynthConfigurator
 
         private void changeTheMaximumSamplesPerFrameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
-            frm.ShowDialog();
-            frm.Dispose();
-        }
-
-        private void SPFSecondaryBut_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            KeppySynthSamplePerFrameSetting frm = new KeppySynthSamplePerFrameSetting();
-            frm.ShowDialog();
-            frm.Dispose();
+            TabsForTheControls.SelectedIndex = 1;
         }
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1040,8 +1032,9 @@ namespace KeppySynthConfigurator
             {
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
+                Label4.Enabled = false;
+                SPFRate.Enabled = false;
                 ManualAddBuffer.Visible = true;
-                SPFSecondaryBut.Visible = false;
                 ChangeDefaultOutput.Enabled = true;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
@@ -1072,13 +1065,14 @@ namespace KeppySynthConfigurator
             else if (XAudioDisable.Checked == false)
             {
                 OutputWAV.Enabled = true;
+                Label4.Enabled = true;
+                SPFRate.Enabled = true;
                 ManualAddBuffer.Visible = false;
-                SPFSecondaryBut.Visible = true;
                 ChangeDefaultOutput.Enabled = false;
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 VolumeBoost.Enabled = true;
-                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Increase it on slow PCs):";
                 SincInter.Checked = true;
                 SincInter.Enabled = false;
                 SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
@@ -1450,7 +1444,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 65;
             Frequency.Text = "48000";
             bufsize.Value = 30;
-            TracksLimit.Value = 16;
+            SPFRate.Value = 16;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;

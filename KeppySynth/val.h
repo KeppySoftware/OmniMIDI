@@ -46,7 +46,6 @@ static int shortname = 0;				// Use short name or nah
 static int sinc = 0;					// Sinc
 static int sysexignore = 0;				// Ignore SysEx events
 static int sysresetignore = 0;			// Ignore sysex messages
-static int tracks = 0;					// Tracks limit
 static int tremoliov = 0;				// Yes
 static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
 static int vmsemu = 0;					// VirtualMIDISynth buffer emulation
@@ -200,3 +199,14 @@ static TCHAR * listsanalyze[16] =
 
 std::vector<HSOUNDFONT> _soundFonts[16];
 std::vector<BASS_MIDI_FONTEX> presetList[16];
+
+// -----------------------------------------------------------------------
+
+static int pitchshiftchan[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static LPCWSTR pitchshiftname[16] =
+{
+	L"ch1pshift", L"ch2pshift", L"ch3pshift", L"ch4pshift", L"ch5pshift",
+	L"ch6pshift", L"ch7pshift", L"ch8pshift", L"ch9pshift", L"ch10pshift",
+	L"ch11pshift", L"ch12pshift", L"ch13pshift", L"ch14pshift", L"ch15pshift", 
+	L"ch16pshift"
+};

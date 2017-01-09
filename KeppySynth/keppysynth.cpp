@@ -576,7 +576,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						else {
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
-						hStream = BASS_MIDI_StreamCreate(tracks, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						hStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 						BASS_ChannelPlay(hStream, false);
@@ -585,7 +585,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					else {
 						PrintToConsole(FOREGROUND_RED, 1, "Working...");
-						hStream = BASS_MIDI_StreamCreate(tracks, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						hStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
 						if (noaudiodevices != 1) {
 							PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
@@ -675,7 +675,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					// Cake.
 					PrintToConsole(FOREGROUND_RED, 1, "Preparing stream...");
-					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, tracks);
+					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, 16);
 					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
 					PrintToConsole(FOREGROUND_RED, 1, "Loading soundfonts...");

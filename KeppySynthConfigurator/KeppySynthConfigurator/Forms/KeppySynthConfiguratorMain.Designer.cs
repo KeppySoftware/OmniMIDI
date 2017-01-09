@@ -53,10 +53,9 @@
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
             this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
-            this.SPFSecondaryBut = new System.Windows.Forms.LinkLabel();
             this.ManualAddBuffer = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
-            this.TracksLimit = new System.Windows.Forms.NumericUpDown();
+            this.SPFRate = new System.Windows.Forms.NumericUpDown();
             this.Label4 = new System.Windows.Forms.Label();
             this.BufferText = new System.Windows.Forms.Label();
             this.SysResetIgnore = new System.Windows.Forms.CheckBox();
@@ -116,10 +115,10 @@
             this.enableextra8sf = new System.Windows.Forms.MenuItem();
             this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.ImportSettings = new System.Windows.Forms.MenuItem();
             this.ExportSettings = new System.Windows.Forms.MenuItem();
@@ -183,7 +182,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
             this.GroupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TracksLimit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SPFRate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).BeginInit();
@@ -497,10 +496,9 @@
             this.GroupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox5.BackColor = System.Drawing.Color.Transparent;
-            this.GroupBox5.Controls.Add(this.SPFSecondaryBut);
             this.GroupBox5.Controls.Add(this.ManualAddBuffer);
             this.GroupBox5.Controls.Add(this.SincInter);
-            this.GroupBox5.Controls.Add(this.TracksLimit);
+            this.GroupBox5.Controls.Add(this.SPFRate);
             this.GroupBox5.Controls.Add(this.Label4);
             this.GroupBox5.Controls.Add(this.BufferText);
             this.GroupBox5.Controls.Add(this.SysResetIgnore);
@@ -511,18 +509,6 @@
             this.GroupBox5.TabIndex = 31;
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Advanced audio settings";
-            // 
-            // SPFSecondaryBut
-            // 
-            this.SPFSecondaryBut.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.SPFSecondaryBut.BackColor = System.Drawing.Color.Transparent;
-            this.SPFSecondaryBut.Location = new System.Drawing.Point(231, 57);
-            this.SPFSecondaryBut.Name = "SPFSecondaryBut";
-            this.SPFSecondaryBut.Size = new System.Drawing.Size(37, 18);
-            this.SPFSecondaryBut.TabIndex = 38;
-            this.SPFSecondaryBut.TabStop = true;
-            this.SPFSecondaryBut.Text = "More..";
-            this.SPFSecondaryBut.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SPFSecondaryBut_LinkClicked);
             // 
             // ManualAddBuffer
             // 
@@ -552,25 +538,21 @@
     "lity, but increases rendering time.)";
             this.SincInter.UseVisualStyleBackColor = true;
             // 
-            // TracksLimit
+            // SPFRate
             // 
-            this.TracksLimit.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.TracksLimit.Location = new System.Drawing.Point(552, 77);
-            this.TracksLimit.Maximum = new decimal(new int[] {
-            128,
+            this.SPFRate.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.SPFRate.Location = new System.Drawing.Point(552, 77);
+            this.SPFRate.Maximum = new decimal(new int[] {
+            1000,
             0,
             0,
             0});
-            this.TracksLimit.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.TracksLimit.Name = "TracksLimit";
-            this.TracksLimit.Size = new System.Drawing.Size(64, 20);
-            this.TracksLimit.TabIndex = 41;
-            this.TracksLimit.Value = new decimal(new int[] {
-            16,
+            this.SPFRate.Name = "SPFRate";
+            this.SPFRate.Size = new System.Drawing.Size(64, 20);
+            this.SPFRate.TabIndex = 41;
+            this.SPFRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.SPFRate.Value = new decimal(new int[] {
+            100,
             0,
             0,
             0});
@@ -582,10 +564,10 @@
             this.Label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label4.Location = new System.Drawing.Point(4, 80);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(514, 13);
+            this.Label4.Size = new System.Drawing.Size(455, 13);
             this.Label4.TabIndex = 26;
-            this.Label4.Text = "Set the channels the driver is allowed to use (Different values from 16 will set " +
-    "the drums channel to melodic):";
+            this.Label4.Text = "Set the samples per frame rate for XAudio (Useful to reduce latency, or to remove" +
+    " static noises):";
             // 
             // BufferText
             // 
@@ -594,9 +576,9 @@
             this.BufferText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BufferText.Location = new System.Drawing.Point(4, 57);
             this.BufferText.Name = "BufferText";
-            this.BufferText.Size = new System.Drawing.Size(275, 13);
+            this.BufferText.Size = new System.Drawing.Size(346, 13);
             this.BufferText.TabIndex = 23;
-            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (             ):";
+            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Increase it on slow PCs):";
             // 
             // SysResetIgnore
             // 
@@ -1141,12 +1123,6 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change directory of the \"Output to WAV\" mode";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
-            // changeTheMaximumSamplesPerFrameToolStripMenuItem
-            // 
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 5;
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
-            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
-            // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
             this.changeDefaultSoundfontListToolStripMenuItem1.Index = 6;
@@ -1180,6 +1156,12 @@
             this.hotkeys.Index = 1;
             this.hotkeys.Text = "Hotkeys in the MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
+            // 
+            // changeTheMaximumSamplesPerFrameToolStripMenuItem
+            // 
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Index = 5;
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Text = "Change the maximum samples per frame";
+            this.changeTheMaximumSamplesPerFrameToolStripMenuItem.Click += new System.EventHandler(this.changeTheMaximumSamplesPerFrameToolStripMenuItem_Click);
             // 
             // menuItem21
             // 
@@ -1585,7 +1567,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).EndInit();
             this.GroupBox5.ResumeLayout(false);
             this.GroupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TracksLimit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SPFRate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -1675,7 +1657,7 @@
         public System.Windows.Forms.Label VolStaticLab;
         public System.Windows.Forms.TrackBar VolTrackBar;
         public System.Windows.Forms.CheckBox SincInter;
-        public System.Windows.Forms.NumericUpDown TracksLimit;
+        public System.Windows.Forms.NumericUpDown SPFRate;
         public System.Windows.Forms.CheckBox SysResetIgnore;
         public System.Windows.Forms.NumericUpDown bufsize;
         public System.Windows.Forms.ComboBox Frequency;
@@ -1699,9 +1681,7 @@
         private System.Windows.Forms.MenuItem menuItem14;
         private System.Windows.Forms.MenuItem menuItem18;
         private System.Windows.Forms.MenuItem menuItem12;
-        public System.Windows.Forms.LinkLabel SPFSecondaryBut;
         public System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
-        public System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
         public System.Windows.Forms.ComboBox SelectedListBox;
         public System.Windows.Forms.MenuItem enableextra8sf;
         public System.Windows.Forms.MenuItem DebugModePls;
@@ -1747,6 +1727,7 @@
         public System.Windows.Forms.MenuItem IgnoreNotesInterval;
         private System.Windows.Forms.MenuItem ChangePitchShift;
         public System.Windows.Forms.MenuItem FadeoutDisable;
+        public System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
     }
 }
 

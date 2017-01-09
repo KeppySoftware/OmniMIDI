@@ -127,12 +127,6 @@
     <Compile Include="Forms\KeppySynthPitchShifting.Designer.cs">
       <DependentUpon>KeppySynthPitchShifting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\KeppySynthSamplePerFrameSetting.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\KeppySynthSamplePerFrameSetting.Designer.cs">
-      <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\KeppySynthSFListAssign.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,9 +194,6 @@
     <EmbeddedResource Include="Forms\KeppySynthPitchShifting.resx">
       <DependentUpon>KeppySynthPitchShifting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\KeppySynthSamplePerFrameSetting.resx">
-      <DependentUpon>KeppySynthSamplePerFrameSetting.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\KeppySynthSFListAssign.resx">
       <DependentUpon>KeppySynthSFListAssign.cs</DependentUpon>
     </EmbeddedResource>
@@ -247,6 +238,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\refreshicon.png" />
+    <None Include="Resources\rollbackicon.png" />
     <None Include="Resources\nointerneticon.png" />
     <None Include="Resources\noupdateicon.png" />
     <None Include="Resources\updateicon.png" />
