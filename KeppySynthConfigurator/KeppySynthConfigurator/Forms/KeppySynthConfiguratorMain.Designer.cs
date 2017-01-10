@@ -166,6 +166,8 @@
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.SeeChangelog = new System.Windows.Forms.MenuItem();
+            this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
             this.menuItem24 = new System.Windows.Forms.MenuItem();
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
@@ -175,8 +177,6 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
-            this.SeeChangelog = new System.Windows.Forms.MenuItem();
-            this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -443,7 +443,7 @@
             // WhatIsXAudio
             // 
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
-            this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = global::KeppySynthConfigurator.Properties.Resources.what;
             this.WhatIsXAudio.Image = global::KeppySynthConfigurator.Properties.Resources.what;
             this.WhatIsXAudio.Location = new System.Drawing.Point(393, 8);
@@ -469,7 +469,7 @@
             // WhatIsOutput
             // 
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
-            this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsOutput.ErrorImage = global::KeppySynthConfigurator.Properties.Resources.what;
             this.WhatIsOutput.Image = global::KeppySynthConfigurator.Properties.Resources.what;
             this.WhatIsOutput.Location = new System.Drawing.Point(205, 8);
@@ -792,27 +792,29 @@
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.Blue;
-            this.VolSimView.Location = new System.Drawing.Point(554, 4);
+            this.VolSimView.Location = new System.Drawing.Point(554, 6);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(77, 38);
+            this.VolSimView.Size = new System.Drawing.Size(82, 38);
             this.VolSimView.TabIndex = 2;
             this.VolSimView.Text = "100%";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.VolSimView.UseCompatibleTextRendering = true;
+            this.VolSimView.UseMnemonic = false;
             // 
             // VolStaticLab
             // 
             this.VolStaticLab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolStaticLab.BackColor = System.Drawing.Color.Transparent;
-            this.VolStaticLab.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolStaticLab.Location = new System.Drawing.Point(450, 4);
+            this.VolStaticLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolStaticLab.Location = new System.Drawing.Point(452, 6);
             this.VolStaticLab.Name = "VolStaticLab";
-            this.VolStaticLab.Size = new System.Drawing.Size(110, 38);
+            this.VolStaticLab.Size = new System.Drawing.Size(112, 38);
             this.VolStaticLab.TabIndex = 1;
             this.VolStaticLab.Text = "Volume:";
             this.VolStaticLab.UseCompatibleTextRendering = true;
+            this.VolStaticLab.UseMnemonic = false;
             // 
             // VolTrackBar
             // 
@@ -1487,6 +1489,17 @@
             this.downloadTheSourceCodeToolStripMenuItem});
             this.menuItem3.Text = "Help";
             // 
+            // SeeChangelog
+            // 
+            this.SeeChangelog.Index = 2;
+            this.SeeChangelog.Text = "Changelog of the latest release of the synthesizer";
+            this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
+            // 
+            // menuItem29
+            // 
+            this.menuItem29.Index = 3;
+            this.menuItem29.Text = "-";
+            // 
             // PanicButton
             // 
             this.PanicButton.Index = 5;
@@ -1537,17 +1550,6 @@
             // ImportSettingsDialog
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
-            // 
-            // SeeChangelog
-            // 
-            this.SeeChangelog.Index = 2;
-            this.SeeChangelog.Text = "Changelog of the latest release of the synthesizer";
-            this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
-            // 
-            // menuItem29
-            // 
-            this.menuItem29.Index = 3;
-            this.menuItem29.Text = "-";
             // 
             // KeppySynthConfiguratorMain
             // 

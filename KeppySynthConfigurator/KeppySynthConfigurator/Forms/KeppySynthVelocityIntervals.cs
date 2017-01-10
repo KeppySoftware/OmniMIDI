@@ -24,8 +24,6 @@ namespace KeppySynthConfigurator
         private void KeppySynthVelocityIntervals_Load(object sender, EventArgs e)
         {
             Confirmed = false;
-            LoVel.Value = 0;
-            HiVel.Value = 127;
             previouslovel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("lovelign", "0"));
             previoushivel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hivelign", "1"));
             LoVel.Value = previouslovel;

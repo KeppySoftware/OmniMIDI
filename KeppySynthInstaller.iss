@@ -16,7 +16,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.6.1'
+#define Version '4.0.6.2'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -70,6 +70,10 @@ LanguageDetectionMethod=none
 Compression=lzma2/ultra64
 
 [Files]
+; Themes
+Source: "scripts\VclStylesinno.dll"; DestDir: {app}; Flags: dontcopy
+Source: "scripts\theme.vsf"; DestDir: {app}; Flags: dontcopy
+
 ; 64-bit OS
 Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "KeppySynthConfigurator.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -299,6 +303,11 @@ SetupWindowTitle=Setup - %1 {#Version}
 #include "scripts\products\vcredist.iss"
 #endif
 
+// Import the LoadVCLStyle function from VclStylesInno.DLL
+procedure LoadVCLStyle(VClStyleFile: String); external 'LoadVCLStyleA@files:VclStylesInno.dll stdcall';
+// Import the UnLoadVCLStyles function from VclStylesInno.DLL
+procedure UnLoadVCLStyles; external 'UnLoadVCLStyles@files:VclStylesInno.dll stdcall';
+
 function InitializeSetup(): boolean;
 
   var ErrorCode: Integer;
@@ -331,7 +340,15 @@ begin
 	vcredist2013();
 #endif
 
+  ExtractTemporaryFile('theme.vsf');
+  LoadVCLStyle(ExpandConstant('{tmp}\theme.vsf'));
+
 	Result := true;
+end;
+
+procedure DeinitializeSetup();
+begin
+  UnLoadVCLStyles;
 end;
 
 function InitializeUninstall(): Boolean;
@@ -340,9 +357,17 @@ function InitializeUninstall(): Boolean;
 
 begin
 
+  ExtractTemporaryFile('Amakrits.vsf');
+  LoadVCLStyle(ExpandConstant('{tmp}\Amakrits.vsf'));
+
   // Kill the watchdog before uninstalling
   ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
   ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
  	Result := true;
 
+end;
+
+procedure DeinitializeUninstall();
+begin
+  UnLoadVCLStyles;
 end;

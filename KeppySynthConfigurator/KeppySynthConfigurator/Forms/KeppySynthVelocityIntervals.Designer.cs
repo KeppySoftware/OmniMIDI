@@ -31,14 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthVelocityIntervals));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.LoVel = new System.Windows.Forms.NumericUpDown();
             this.HiVel = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.ApplyBtn = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
             this.PrevSett = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.LoVel)).BeginInit();
+            this.LoVel = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.HiVel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LoVel)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -59,22 +59,9 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Lowest:";
             // 
-            // LoVel
-            // 
-            this.LoVel.Location = new System.Drawing.Point(169, 74);
-            this.LoVel.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
-            this.LoVel.Name = "LoVel";
-            this.LoVel.Size = new System.Drawing.Size(55, 20);
-            this.LoVel.TabIndex = 2;
-            this.LoVel.UseWaitCursor = true;
-            this.LoVel.ValueChanged += new System.EventHandler(this.LoVel_ValueChanged);
-            // 
             // HiVel
             // 
+            this.HiVel.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.HiVel.Location = new System.Drawing.Point(313, 74);
             this.HiVel.Maximum = new decimal(new int[] {
             127,
@@ -85,7 +72,7 @@
             this.HiVel.Size = new System.Drawing.Size(55, 20);
             this.HiVel.TabIndex = 4;
             this.HiVel.Value = new decimal(new int[] {
-            32,
+            127,
             0,
             0,
             0});
@@ -131,18 +118,32 @@
             this.PrevSett.TabIndex = 7;
             this.PrevSett.Text = "Previous settings: Lo. 1, Hi. 1";
             // 
+            // LoVel
+            // 
+            this.LoVel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.LoVel.Location = new System.Drawing.Point(169, 74);
+            this.LoVel.Maximum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            0});
+            this.LoVel.Name = "LoVel";
+            this.LoVel.Size = new System.Drawing.Size(55, 20);
+            this.LoVel.TabIndex = 8;
+            this.LoVel.ValueChanged += new System.EventHandler(this.LoVel_ValueChanged);
+            // 
             // KeppySynthVelocityIntervals
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(485, 142);
+            this.Controls.Add(this.LoVel);
             this.Controls.Add(this.PrevSett);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.ApplyBtn);
             this.Controls.Add(this.HiVel);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.LoVel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -154,8 +155,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Set velocity values to ignore";
             this.Load += new System.EventHandler(this.KeppySynthVelocityIntervals_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.LoVel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.HiVel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LoVel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,11 +166,11 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown LoVel;
         private System.Windows.Forms.NumericUpDown HiVel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button ApplyBtn;
         private System.Windows.Forms.Button CancelBtn;
         private System.Windows.Forms.Label PrevSett;
+        private System.Windows.Forms.NumericUpDown LoVel;
     }
 }

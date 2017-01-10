@@ -85,7 +85,7 @@
             // 
             // CurrentIcon
             // 
-            this.CurrentIcon.Image = global::KeppySynthConfigurator.Properties.Resources.updateicon;
+            this.CurrentIcon.Image = global::KeppySynthConfigurator.Properties.Resources.wi;
             this.CurrentIcon.Location = new System.Drawing.Point(19, 17);
             this.CurrentIcon.Name = "CurrentIcon";
             this.CurrentIcon.Size = new System.Drawing.Size(50, 50);
