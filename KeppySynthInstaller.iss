@@ -71,8 +71,9 @@ Compression=lzma2/ultra64
 
 [Files]
 ; Themes
-Source: "scripts\VclStylesinno.dll"; DestDir: {app}; Flags: dontcopy
-Source: "scripts\theme.vsf"; DestDir: {app}; Flags: dontcopy
+Source: "scripts\VclStylesinno.dll"; Flags: dontcopy
+Source: "scripts\theme.vsf"; Flags: dontcopy
+Source: "scripts\voteme.bmp"; Flags: dontcopy
 
 ; 64-bit OS
 Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -264,7 +265,6 @@ Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; 
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser;StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 
-Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml"; Flags: shellexec postinstall runasoriginaluser nowait unchecked; Description: "Vote Keppy's Synthesizer on Softpedia"; StatusMsg: "Vote Keppy's Synthesizer on Softpedia"
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
 
 [UninstallRun]
@@ -307,6 +307,44 @@ SetupWindowTitle=Setup - %1 {#Version}
 procedure LoadVCLStyle(VClStyleFile: String); external 'LoadVCLStyleA@files:VclStylesInno.dll stdcall';
 // Import the UnLoadVCLStyles function from VclStylesInno.DLL
 procedure UnLoadVCLStyles; external 'UnLoadVCLStyles@files:VclStylesInno.dll stdcall';
+
+	procedure OpenSoftpediaLink(Sender: TObject);
+var
+  ErrorCode : Integer;
+begin
+  ShellExec('open', 'http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;
+
+procedure CreateWizardPages;
+var
+  Page: TWizardPage;
+  BitmapImage: TBitmapImage;
+  BitmapFileName: String;
+begin
+  ExtractTemporaryFile('voteme.bmp');
+  BitmapFileName := ExpandConstant('{tmp}\voteme.bmp');
+  ExtractTemporaryFile(ExtractFileName(BitmapFileName));
+
+  { TBitmapImage }
+  Page := CreateCustomPage(wpInstalling, 'Increase Keppy''s Synthesizer''s popularity by voting it on Softpedia',
+  'You can also vote it later by going to "Help > Useful links > Keppy''s Synthesizer''s Softpedia Page".');
+
+  BitmapImage := TBitmapImage.Create(Page);
+  BitmapImage.AutoSize := True;
+  BitmapImage.Left := 0;
+  BitmapImage.Top  := 0;
+  BitmapImage.Bitmap.LoadFromFile(BitmapFileName);
+  BitmapImage.Cursor := crHand;
+  BitmapImage.OnClick := @OpenSoftpediaLink;
+  BitmapImage.Parent := Page.Surface;
+  BitmapImage.Align:=alCLient;
+  BitmapImage.Stretch:=True;
+end;
+
+procedure InitializeWizard();
+begin
+  CreateWizardPages;
+end;
 
 function InitializeSetup(): boolean;
 
