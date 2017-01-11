@@ -51,8 +51,8 @@ bool depends() {
 }
 
 void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
-	SETSTATUS(dwParam1, status);
-	if (pitchshift != 12) {
+	//SETSTATUS(dwParam1, status);
+	if (pitchshift != 127) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
 			for (int i = 0; i <= 15; ++i) {
 				if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
@@ -64,10 +64,7 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 			}
 		}
 	}
-	else {
-		SETNOTE(dwParam1, note);
-	}
-	SETVELOCITY(dwParam1, velocity);
+	//SETVELOCITY(dwParam1, velocity);
 
 	dwParam2 = dwParam1 & 0xF0;
 	exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);

@@ -127,9 +127,19 @@
             0,
             0,
             0});
+            this.LoVel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.LoVel.Name = "LoVel";
             this.LoVel.Size = new System.Drawing.Size(55, 20);
             this.LoVel.TabIndex = 8;
+            this.LoVel.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.LoVel.ValueChanged += new System.EventHandler(this.LoVel_ValueChanged);
             // 
             // KeppySynthVelocityIntervals

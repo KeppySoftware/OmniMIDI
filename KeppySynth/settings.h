@@ -348,6 +348,7 @@ void load_settings()
 
 		if (xaudiodisabled == 1) { RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize); }
 		else { sinc = 0; }
+		if (lovel < 1) { lovel = 1; }
 
 		RegCloseKey(hKey);
 
@@ -417,6 +418,7 @@ void realtime_load_settings()
 				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
 			}
 		}
+		if (lovel < 1) { lovel = 1; }
 		RegCloseKey(hKey);
 		//cake
 		if (xaudiodisabled == 1) {

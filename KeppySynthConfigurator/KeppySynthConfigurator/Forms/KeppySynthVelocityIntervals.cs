@@ -14,7 +14,7 @@ namespace KeppySynthConfigurator
     {
         public static int previouslovel;
         public static int previoushivel;
-        public static bool Confirmed;
+        public static bool Confirmed = false;
 
         public KeppySynthVelocityIntervals()
         {
@@ -23,12 +23,22 @@ namespace KeppySynthConfigurator
 
         private void KeppySynthVelocityIntervals_Load(object sender, EventArgs e)
         {
-            Confirmed = false;
-            previouslovel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("lovelign", "0"));
-            previoushivel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hivelign", "1"));
-            LoVel.Value = previouslovel;
-            HiVel.Value = previoushivel;
-            PrevSett.Text = String.Format("Previous settings: Lo. {0}, Hi. {1}", previouslovel, previoushivel);
+            try
+            {
+                previouslovel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("lovelign", "0"));
+                previoushivel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hivelign", "1"));
+                LoVel.Value = previouslovel;
+                HiVel.Value = previoushivel;
+                PrevSett.Text = String.Format("Previous settings: Lo. {0}, Hi. {1}", previouslovel, previoushivel);
+            }
+            catch
+            {
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", "1", RegistryValueKind.DWord);
+                LoVel.Value = previouslovel = 1;
+                HiVel.Value = previoushivel = 1;
+                PrevSett.Text = String.Format("Previous settings: Lo. {0}, Hi. {1}", previouslovel, previoushivel);
+            }
         }
 
         private void LoVel_ValueChanged(object sender, EventArgs e)
@@ -41,10 +51,6 @@ namespace KeppySynthConfigurator
                 if (x > y)
                 {
                     LoVel.Value = x - 1;
-                }
-                else
-                {
-                    // Everything is fine
                 }
 
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", Convert.ToInt32(LoVel.Value), RegistryValueKind.DWord);
@@ -65,10 +71,6 @@ namespace KeppySynthConfigurator
                 if (x > y)
                 {
                     HiVel.Value = x;
-                }
-                else
-                {
-                    // Everything is fine
                 }
 
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", Convert.ToInt32(HiVel.Value), RegistryValueKind.DWord);
