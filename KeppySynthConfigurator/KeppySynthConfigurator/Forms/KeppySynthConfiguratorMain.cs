@@ -74,7 +74,7 @@ namespace KeppySynthConfigurator
             InitializeComponent();
             if (!Functions.IsWindowsVistaOrNewer())
             {
-                MessageBox.Show("Windows XP is not supported.", "Keppy's Synthesizer Configurator - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
                 Application.ExitThread();
             }
             Delegate = this;
@@ -214,7 +214,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Crap, an error!\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Functions.ShowErrorDialog(null, System.Media.SystemSounds.Asterisk, "Error", "Error during the import process of the list!", true, ex);
             }
         }
 
@@ -317,7 +317,9 @@ namespace KeppySynthConfigurator
             {
                 for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                 {
+                    String name = Lis.Items[i + 1].ToString();
                     Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
+                    Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
                 }
                 Functions.SaveList(CurrentList);
                 Functions.TriggerReload();
@@ -334,6 +336,7 @@ namespace KeppySynthConfigurator
             {
                 try
                 {
+                    Program.DebugToConsole(false, String.Format("Currently showing info for soundfont: {0}", Lis.SelectedItem.ToString()), null);
                     KeppySynthSoundfontInfo frm = new KeppySynthSoundfontInfo(Lis.SelectedItem.ToString());
                     frm.ShowDialog();
                     frm.Dispose();
@@ -372,6 +375,7 @@ namespace KeppySynthConfigurator
                         Lis.Items.Insert(indx - 1, selected);
                         Lis.SetSelected(indx - 1, true);
                     }
+                    Program.DebugToConsole(false, String.Format("Moved down soundfont: {0}", selected.ToString()), null);
                 }
                 Functions.SaveList(CurrentList);
                 Functions.TriggerReload();
@@ -404,7 +408,7 @@ namespace KeppySynthConfigurator
                         Lis.Items.Insert(indx + 1, selected);
                         Lis.SetSelected(indx + 1, true);
                     }
-
+                    Program.DebugToConsole(false, String.Format("Moved up soundfont: {0}", selected.ToString()), null);
                 }
                 Functions.SaveList(CurrentList);
                 Functions.TriggerReload();
@@ -419,6 +423,7 @@ namespace KeppySynthConfigurator
         {
             Watchdog.SetValue("currentsflist", whichone, RegistryValueKind.DWord);
             Watchdog.SetValue("rel" + whichone.ToString(), "1", RegistryValueKind.DWord);
+            Program.DebugToConsole(false, String.Format("(Re)Loaded soundfont list {0}.", whichone), null);
         }
 
         private void EnableSF_Click(object sender, EventArgs e)
@@ -453,6 +458,7 @@ namespace KeppySynthConfigurator
                         }
                     }
                 }
+                Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItem.ToString()), null);
             }
             catch (Exception ex)
             {
@@ -492,6 +498,7 @@ namespace KeppySynthConfigurator
                         }
                     }
                 }
+                Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItem.ToString()), null);
             }
             catch (Exception ex)
             {
@@ -540,7 +547,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("Error during the import process of the list!\n\nError: {0}", ex.ToString()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Error", "Error during the import process of the list!", true, ex);
             }
         }
 
@@ -558,7 +565,8 @@ namespace KeppySynthConfigurator
                     SaveFile.WriteLine(item.ToString());
                 }
                 SaveFile.Close();
-                MessageBox.Show("Soundfont list exported succesfully to \"" + Path.GetDirectoryName(ExternalListExport.FileName) + "\\\"", "Soundfont list exported!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Program.DebugToConsole(false, String.Format("Exported list {0} to {1}.", CurrentList, ExternalListExport.FileName), null);
+                Functions.ShowErrorDialog(Properties.Resources.infoicon, System.Media.SystemSounds.Question, "Soundfont list exported!", String.Format("Soundfont list exported succesfully to \"{0}\\\"", Path.GetDirectoryName(ExternalListExport.FileName)), false, null);               
             }
         }
 
@@ -576,11 +584,6 @@ namespace KeppySynthConfigurator
             rect.Width--;
             rect.Height--;
             e.Graphics.DrawRectangle(Pens.Red, rect);
-        }
-
-        private string ListRelativePathSystem(string originalpath)
-        {
-            return "a";
         }
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -623,6 +626,7 @@ namespace KeppySynthConfigurator
             Functions.SaveSettings();
 
             // Messagebox here
+            Program.DebugToConsole(false, "Settings restored.", null);
             MessageBox.Show("Settings restored to the default values!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -632,6 +636,7 @@ namespace KeppySynthConfigurator
             Functions.SaveSettings();
 
             // Messagebox here
+            Program.DebugToConsole(false, "Applied new settings.", null);
             MessageBox.Show("Settings saved to the registry!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -843,7 +848,7 @@ namespace KeppySynthConfigurator
 
         private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Synthesizer?\n\nWARNING: Only use this function to report serious bugs, like memory leaks and security flaws.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Synthesizer?\n\nHere are the requisites for a report:\n1) Make a video of the issue.\n2) Describe all the steps to reproduce the bug.\n3) Please give as much information as you can, to allow me (KaleidonKep99) to fix it as soon as possible.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
                 Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
@@ -1053,9 +1058,6 @@ namespace KeppySynthConfigurator
                 VolumeBoost.Checked = false;
                 VolumeBoost.Enabled = false;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
-                SincInter.Checked = false;
-                SincInter.Enabled = true;
-                SincInter.Text = "Enable sinc interpolation. (Improves sample rate conversion and overall audio quality, but increases rendering time.)";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
                 bufsize.Enabled = false;
@@ -1080,9 +1082,6 @@ namespace KeppySynthConfigurator
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 VolumeBoost.Enabled = true;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Increase it on slow PCs):";
-                SincInter.Checked = true;
-                SincInter.Enabled = false;
-                SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;

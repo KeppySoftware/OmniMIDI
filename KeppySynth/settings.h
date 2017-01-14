@@ -345,10 +345,10 @@ void load_settings()
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"allnotesignore", NULL, &dwType, (LPBYTE)&allnotesignore, &dwSize);
 		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
+		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 
-		if (xaudiodisabled == 1) { RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize); }
-		else { sinc = 0; }
 		if (lovel < 1) { lovel = 1; }
+		if (hivel > 127) { hivel = 127; }
 
 		RegCloseKey(hKey);
 
@@ -398,8 +398,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
-		if (xaudiodisabled == 1) { RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize); }
-		else { sinc = 0; }
+		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
 		RegQueryValueEx(hKey, L"lovelign", NULL, &dwType, (LPBYTE)&lovel, &dwSize);
@@ -419,6 +418,7 @@ void realtime_load_settings()
 			}
 		}
 		if (lovel < 1) { lovel = 1; }
+		if (hivel > 127) { hivel = 127; }
 		RegCloseKey(hKey);
 		//cake
 		if (xaudiodisabled == 1) {

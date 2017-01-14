@@ -444,8 +444,8 @@
             // 
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WhatIsXAudio.ErrorImage = global::KeppySynthConfigurator.Properties.Resources.what;
-            this.WhatIsXAudio.Image = global::KeppySynthConfigurator.Properties.Resources.what;
+            this.WhatIsXAudio.ErrorImage = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.ErrorImage")));
+            this.WhatIsXAudio.Image = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.Image")));
             this.WhatIsXAudio.Location = new System.Drawing.Point(393, 8);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(21, 17);
@@ -470,8 +470,8 @@
             // 
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WhatIsOutput.ErrorImage = global::KeppySynthConfigurator.Properties.Resources.what;
-            this.WhatIsOutput.Image = global::KeppySynthConfigurator.Properties.Resources.what;
+            this.WhatIsOutput.ErrorImage = ((System.Drawing.Image)(resources.GetObject("WhatIsOutput.ErrorImage")));
+            this.WhatIsOutput.Image = ((System.Drawing.Image)(resources.GetObject("WhatIsOutput.Image")));
             this.WhatIsOutput.Location = new System.Drawing.Point(205, 8);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(21, 17);

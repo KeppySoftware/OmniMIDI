@@ -1,3 +1,4 @@
+// Ignore non-mandatory files
 *.suo
 *.tmp
 /*.dll
@@ -42,12 +43,8 @@
 /KeppySynthconfig
 /Release
 /ipch
-/output/*.config
-/output/*.dll
-/output/*.manifest
-/output/*.pdb
-/output/*.xml
-/output/64
+
+// Ignore SoundFont Packer output
 /sfpacker/*.dll
 /sfpacker/*.exe
 /sfpacker/*.opensdf
@@ -58,16 +55,20 @@
 /sfpacker/Debug
 /sfpacker/Release
 /sfpacker/ipch
-KeppySynth.exe
-KeppySynthcfg2.v12.suo
-KeppySynthcfg2.v12.suo
-KeppySynthcfg2/
 README.txt
-git_ver.h
+
+// Ignore some output files
+output/*.config
+output/*.dll
+output/*.manifest
+output/*.pdb
 output/*.vshost.exe
+output/*.xml
+output/64
+output/Copy 64-bit test library.bat
 output/KeppySynthConfigurator.exe
 output/KeppySynthDebugWindow.exe
 output/KeppySynthMixerWindow.exe
-output/KeppysSynthSetup.exe
 output/KeppySynthWatchdog.exe
-output/Copy 64-bit test library.bat
+output/KeppysSynthSetup.exe
+output/Test Keppy's Synthesizer Configurator.bat

@@ -21,7 +21,7 @@ namespace KeppySynthConfigurator
             try
             {
                 InitializeComponent();
-                if (internetok)
+                if (Functions.IsInternetAvailable())
                 {
                     if (x == null || y == null)
                     {
@@ -59,7 +59,7 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.nointerneticon;
+                    CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.erroricon;
                     Text = "Keppy's Synthesizer - Can not check for updates";
                     MessageText.Text = "The configurator can not connect to the GitHub servers.\nCheck your network connection, or contact your system administrator or network service provider.\n\nPress OK to close this window.";
                     YesBtn.Visible = false;

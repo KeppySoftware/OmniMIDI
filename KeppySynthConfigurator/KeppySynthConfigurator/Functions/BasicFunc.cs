@@ -72,6 +72,7 @@ namespace KeppySynthConfigurator
                 {
                     var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/register");
                     process.WaitForExit();
+
                     MessageBox.Show("The driver has been registered on the Windows registry.", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -83,8 +84,16 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("There was an error while trying to register/unregister the driver.\n\n{0}", ex.ToString()), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
             }
+        }
+
+        public static void ShowErrorDialog(Image icon, System.Media.SystemSound sound, String title, String message, bool IsException, Exception ex)
+        {
+            SecretDialog frm = new SecretDialog(icon, sound, title, message);
+            Program.DebugToConsole(IsException, null, ex);
+            frm.ShowDialog();
+            frm.Dispose();
         }
 
         public static void LoudMaxInstall()
@@ -132,7 +141,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Crap, an error!\nAre you sure you have a working Internet connection?\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "LoudMax Installation", "Crap, an error!\nAre you sure you have a working Internet connection?", true, ex);
             }
         }
 
@@ -172,7 +181,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Crap, an error!\nAre you sure you closed all the apps using the driver? They might have locked LoudMax.\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "LoudMax Installation", "Crap, an error!\nAre you sure you closed all the apps using the driver? They might have locked LoudMax.", true, ex);
             }
         }
 
@@ -201,13 +210,13 @@ namespace KeppySynthConfigurator
 
         public static void NoUpdates(bool startup, bool internetok)
         {
-            UpdateYesNo upd = new UpdateYesNo(null, null, internetok);
-            if (startup)
-                upd.StartPosition = FormStartPosition.CenterScreen;
-            else
+            if (!startup)
+            {
+                UpdateYesNo upd = new UpdateYesNo(null, null, internetok);
                 upd.StartPosition = FormStartPosition.CenterParent;
-            upd.ShowDialog();
-            upd.Dispose();
+                upd.ShowDialog();
+                upd.Dispose();
+            }
         }
 
         public static void CheckChangelog()
@@ -227,9 +236,9 @@ namespace KeppySynthConfigurator
                     String newestversion = reader.ReadToEnd();
                     Process.Start(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", newestversion));
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("An error has occurred while trying to show you the latest changelog.\nPlease try again later.\n\nPress OK to continue.", "Keppy's Synthesizer - Unknown error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Unknown error", "An error has occurred while trying to show you the latest changelog.\nPlease try again later.\n\nPress OK to continue.", true, ex);
                 }
             }
         }
@@ -256,26 +265,27 @@ namespace KeppySynthConfigurator
                     Version.TryParse(Driver.FileVersion.ToString(), out y);
                     if (forced)
                     {
+                        Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the driver. ({0})", newestversion), null);
                         TriggerUpdateWindow(x, y, newestversion, startup);
                     }
                     else
                     {
                         if (x > y)
                         {
+                            Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
                             TriggerUpdateWindow(x, y, newestversion, startup);
                         }
                         else
                         {
-                            if (!startup)
-                            {
-                                NoUpdates(startup, true);
-                            }
+                            Program.DebugToConsole(false, String.Format("No updates have been found. ({0})", newestversion), null);
+                            NoUpdates(startup, internetok);
                         }
                     }
                 }
                 catch
                 {
-                    NoUpdates(startup, false);
+                    Program.DebugToConsole(false, "An error has occurred while checking for updates.", null);
+                    NoUpdates(startup, internetok);
                 }
             }
         }
@@ -287,8 +297,10 @@ namespace KeppySynthConfigurator
                 foreach (var item in KeppySynthConfiguratorMain.Delegate.Lis.Items)
                 {
                     sw.WriteLine(item.ToString());
+                    Program.DebugToConsole(false, String.Format("Adding soundfont to stream writer: {0}", item.ToString()), null);
                 }
             }
+            Program.DebugToConsole(false, String.Format("Soundfont list saved: {0}", SelectedList), null);
         }
 
         // -------------------------
@@ -302,6 +314,7 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Watchdog.SetValue("rel" + KeppySynthConfiguratorMain.whichone.ToString(), "1", RegistryValueKind.DWord);
                 }
+                Program.DebugToConsole(false, String.Format("(Re)Loaded soundfont list {0}.", KeppySynthConfiguratorMain.whichone), null);
             }
             catch
             {
@@ -315,6 +328,7 @@ namespace KeppySynthConfigurator
             {
                 KeppySynthConfiguratorMain.LastBrowserPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathsfimport", path);
+                Program.DebugToConsole(false, String.Format("Last Explorer path is: ", path), null);
             }
             catch
             {
@@ -328,6 +342,7 @@ namespace KeppySynthConfigurator
             {
                 KeppySynthConfiguratorMain.LastImportExportPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathlistimpexp", path);
+                Program.DebugToConsole(false, String.Format("Last Import/Export path is: ", path), null);
             }
             catch
             {
@@ -569,14 +584,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
-                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
-                    {
-                        KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
-                    }
-                    else
-                    {
-                        KeppySynthConfiguratorMain.Delegate.SincInter.Checked = false;
-                    }
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vmsemu", 0)) == 1)
                     {
                         KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Checked = true;
@@ -594,10 +601,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.SincInter.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.SincInter.Text = "Enable sinc interpolation. (Already applied by XAudio itself, it doesn't cause CPU overhead.)";
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost", 0)) == 1)
                     {
                         KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = true;
@@ -608,6 +612,14 @@ namespace KeppySynthConfigurator
                         KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
                         KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 10000;
                     }
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.SincInter.Checked = false;
                 }
 
                 // LEL
@@ -633,9 +645,11 @@ namespace KeppySynthConfigurator
                 }
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = x.ToString("000\\%");
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
+                Program.DebugToConsole(false, "Done loading settings.", null);
             }
-            catch
+            catch (Exception ex)
             {
+                Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
             }
         }
@@ -738,10 +752,12 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
                 }
+                Program.DebugToConsole(false, "Done saving settings.", null);
             }
-            catch
+            catch (Exception ex)
             {
                 // Something bad happened hehe
+                Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
             }
         }
@@ -796,7 +812,8 @@ namespace KeppySynthConfigurator
             catch (Exception ex)
             {
                 // Something bad happened hehe
-                MessageBox.Show("Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.\n\n.NET error:\n" + ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Program.DebugToConsole(true, null, ex);
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Hand, "Fatal error", "Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.", true, ex);
                 System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
                 {
                     KeppySynthConfiguratorMain.ActiveForm.Hide();
@@ -839,11 +856,14 @@ namespace KeppySynthConfigurator
 
                 SynthSettings.Close();
                 SynthPaths.Close();
+
+                Program.DebugToConsole(false, String.Format("Settings exported to: {0}", filename), null);
             }
-            catch
+            catch (Exception ex)
             {
                 // Something bad happened hehe
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Program.DebugToConsole(true, null, ex);
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
                 Application.Exit();
             }
         }
@@ -924,13 +944,15 @@ namespace KeppySynthConfigurator
                 {
                     // Oops, list is missing
                     File.Create(WhichList).Dispose();
-                    MessageBox.Show("The soundfont list was missing, so the configurator automatically created it for you.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Functions.ShowErrorDialog(Properties.Resources.infoicon, System.Media.SystemSounds.Question, "Information", "The soundfont list was missing, so the configurator automatically created it for you.", false, null); 
                 }
+                Program.DebugToConsole(false, String.Format("Switched to soundfont list {0}.", SelectedList), null);
             }
             catch (Exception ex)
             {
                 // Oops, something went wrong
-                MessageBox.Show("Fatal error during the execution of the program.\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Program.DebugToConsole(true, null, ex);
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit.", true, ex);
                 Application.ExitThread();
             }
         }
@@ -944,7 +966,7 @@ namespace KeppySynthConfigurator
                     int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i]);
                     if (Bass.BASS_ErrorGetCode() != 0)
                     {
-                        MessageBox.Show(String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
                     }
                     else
                     {
@@ -976,7 +998,7 @@ namespace KeppySynthConfigurator
                     int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i]);
                     if (Bass.BASS_ErrorGetCode() != 0)
                     {
-                        MessageBox.Show(String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), "Error while adding soundfont", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
                     }
                     else
                     {
@@ -998,16 +1020,17 @@ namespace KeppySynthConfigurator
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dls")
                 {
-                    MessageBox.Show("BASSMIDI does NOT support the downloadable sounds (DLS) format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "BASSMIDI does NOT support the downloadable sounds (DLS) format!", false, null);
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".exe" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dll")
                 {
-                    MessageBox.Show("Are you really trying to add executables to the soundfonts list?", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "Are you really trying to add executables to the soundfonts list?", false, null);
                 }
                 else
                 {
-                    MessageBox.Show("Invalid soundfont!\n\nPlease select a valid soundfont and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "Invalid soundfont!\n\nPlease select a valid soundfont and try again!", false, null);
                 }
+                Program.DebugToConsole(false, String.Format("Added soundfont to list: {0}", Soundfonts[i]), null);
             }
         }
 
@@ -1072,7 +1095,8 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                MessageBox.Show("Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath + "\n\n.NET error:\n" + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Program.DebugToConsole(true, null, ex);
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath, true, ex);
                 KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {
@@ -1083,9 +1107,10 @@ namespace KeppySynthConfigurator
                     }
                 }
             }
-            catch
+            catch (Exception ex2)
             {
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Program.DebugToConsole(true, null, ex2);
+                Functions.ShowErrorDialog(null, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex2);
                 Environment.Exit(-1);
             }
         }

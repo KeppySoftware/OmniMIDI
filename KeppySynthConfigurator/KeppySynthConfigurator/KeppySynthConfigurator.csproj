@@ -145,6 +145,12 @@
     <Compile Include="Forms\KeppySynthSoundFontInfo.Designer.cs">
       <DependentUpon>KeppySynthSoundFontInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SecretDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SecretDialog.Designer.cs">
+      <DependentUpon>SecretDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UpdateYesNo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -209,6 +215,9 @@
     <EmbeddedResource Include="Forms\KeppySynthVelocityIntervals.resx">
       <DependentUpon>KeppySynthVelocityIntervals.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SecretDialog.resx">
+      <DependentUpon>SecretDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateYesNo.resx">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>
     </EmbeddedResource>
@@ -238,6 +247,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\infoicon.png" />
     <None Include="Resources\refreshicon.png" />
     <None Include="Resources\rollbackicon.png" />
     <None Include="Resources\nointerneticon.png" />
@@ -249,6 +259,7 @@
     <None Include="Resources\logo_bass.gif" />
     <None Include="Resources\donatebtn.png" />
     <Content Include="FodyWeavers.xml" />
+    <None Include="Resources\erroricon.png" />
     <Content Include="Resources\gear.ico" />
     <None Include="Resources\what.png" />
     <None Include="Resources\sfzcomp.png" />

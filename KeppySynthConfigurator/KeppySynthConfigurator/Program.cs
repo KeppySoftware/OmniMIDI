@@ -32,6 +32,9 @@ namespace KeppySynthConfigurator
 
     static class Program
     {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
         /// <summary>
         /// Punto di ingresso principale dell'applicazione.
         /// </summary>
@@ -61,62 +64,104 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static uint BringToFrontMessage;
-        static void DoAnyway(String[] args)
+        public static void DebugToConsole(bool isException, String message, Exception ex)
         {
-            if (Environment.OSVersion.Version.Major < 6)
-            {
-                try
-                {
-                    System.Media.SystemSounds.Hand.Play();
-                    Environment.Exit(-1);
-                }
-                catch
-                {
-                    Environment.Exit(-1);
-                }
-            }
-            RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-            int runmode = 0;
-            bool ok;
-            BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthConfiguratorToFront");
-            Mutex m = new Mutex(true, "KeppySynthConfigurator", out ok);
-            if (!ok)
-            {
-                WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage,IntPtr.Zero,IntPtr.Zero);
-                return;
-            }
-            Application.SetCompatibleTextRenderingDefault(false);
+            String CurrentTime = DateTime.Now.ToString("HH:mm:ss.fff");
             try
             {
-                foreach (String s in args)
+                if (isException)
                 {
-                    switch (s.Substring(0, 4).ToUpper())
-                    {
-                        case "/ASP":
-                            runmode = 1;
-                            break;
-                        default:
-                            runmode = 0;
-                            break;
-                    }
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(String.Format("{0}", CurrentTime));
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(String.Format(" - Exception {0}", ex));
+                    Console.Write(Environment.NewLine);
                 }
-
-                if (runmode == 0)
+                else
                 {
-                   Functions.CheckForUpdates(false, true);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(String.Format("{0}", CurrentTime));
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(String.Format(" - {0}", message));
+                    Console.Write(Environment.NewLine);
                 }
-                Application.EnableVisualStyles();
-                SynthSettings.Close();
-                Application.Run(new KeppySynthConfiguratorMain(args));
-                GC.KeepAlive(m);
             }
             catch
             {
-                Application.EnableVisualStyles();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(" - Something went wrong while displaying the exception.");
+                Console.Write(Environment.NewLine);
+            }
+        }
+
+        public static uint BringToFrontMessage;
+        static void DoAnyway(String[] args)
+        {
+            try
+            {
+                if (Environment.OSVersion.Version.Major < 6)
+                {
+                    try
+                    {
+                        System.Media.SystemSounds.Hand.Play();
+                        Environment.Exit(-1);
+                    }
+                    catch
+                    {
+                        Environment.Exit(-1);
+                    }
+                }
+                RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+                int runmode = 0;
+                bool ok;
+                BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthConfiguratorToFront");
+                Mutex m = new Mutex(true, "KeppySynthConfigurator", out ok);
+                if (!ok)
+                {
+                    WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
+                    return;
+                }
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new KeppySynthConfiguratorMain(args));
-                GC.KeepAlive(m);
+                try
+                {
+                    foreach (String s in args)
+                    {
+                        switch (s.Substring(0, 4).ToUpper())
+                        {
+                            case "/ASP":
+                                runmode = 1;
+                                break;
+                            case "/DBG":
+                                runmode = 0;
+                                AllocConsole();
+                                DebugToConsole(false, "Started configurator.", null);
+                                break;
+                            default:
+                                runmode = 0;
+                                break;
+                        }
+                    }
+
+                    if (runmode == 0)
+                    {
+                        Functions.CheckForUpdates(false, true);
+                    }
+                    Application.EnableVisualStyles();
+                    SynthSettings.Close();
+                    Application.Run(new KeppySynthConfiguratorMain(args));
+                    GC.KeepAlive(m);
+                }
+                catch
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new KeppySynthConfiguratorMain(args));
+                    GC.KeepAlive(m);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 

@@ -71,6 +71,16 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap erroricon {
+            get {
+                object obj = ResourceManager.GetObject("erroricon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a The bank ID is 0.
         ///For the presets, here&apos;s the list:
         ///
@@ -111,6 +121,16 @@ namespace KeppySynthConfigurator.Properties {
         internal static string gmlist {
             get {
                 return ResourceManager.GetString("gmlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap infoicon {
+            get {
+                object obj = ResourceManager.GetObject("infoicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

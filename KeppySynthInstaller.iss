@@ -16,7 +16,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.6.3'
+#define Version '4.0.6.4'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -395,8 +395,8 @@ function InitializeUninstall(): Boolean;
 
 begin
 
-  ExtractTemporaryFile('Amakrits.vsf');
-  LoadVCLStyle(ExpandConstant('{tmp}\Amakrits.vsf'));
+  ExtractTemporaryFile('theme.vsf');
+  LoadVCLStyle(ExpandConstant('{tmp}\theme.vsf'));
 
   // Kill the watchdog before uninstalling
   ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);

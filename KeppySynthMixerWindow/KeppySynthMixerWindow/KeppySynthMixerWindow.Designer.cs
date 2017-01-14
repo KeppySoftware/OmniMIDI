@@ -80,6 +80,7 @@
             this.Main = new System.Windows.Forms.MenuStrip();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.RightChannel = new System.Windows.Forms.ProgressBar();
+            this.WhatIsThis = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -147,6 +148,7 @@
             this.MainVol.Size = new System.Drawing.Size(27, 123);
             this.MainVol.TabIndex = 70;
             this.MainVol.TickFrequency = 16;
+            this.WhatIsThis.SetToolTip(this.MainVol, "Control the volume of all the channels through this slider.");
             this.MainVol.Value = 127;
             this.MainVol.Scroll += new System.EventHandler(this.MainVol_Scroll);
             // 
@@ -171,11 +173,13 @@
             this.MIDIVolumeOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.MIDIVolumeOverride.AutoSize = true;
             this.MIDIVolumeOverride.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.MIDIVolumeOverride.Location = new System.Drawing.Point(599, 78);
+            this.MIDIVolumeOverride.Location = new System.Drawing.Point(614, 78);
             this.MIDIVolumeOverride.Name = "MIDIVolumeOverride";
-            this.MIDIVolumeOverride.Size = new System.Drawing.Size(193, 17);
+            this.MIDIVolumeOverride.Size = new System.Drawing.Size(178, 17);
             this.MIDIVolumeOverride.TabIndex = 69;
-            this.MIDIVolumeOverride.Text = "Enable MIDI volume event override";
+            this.MIDIVolumeOverride.Text = "Enable channel volume override";
+            this.WhatIsThis.SetToolTip(this.MIDIVolumeOverride, "It overrides the default volume of a channel.\r\nWARNING: It will make the driver i" +
+        "gnore channel volume events,\r\nwhich can break the audio with some MIDIs.");
             this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
             this.MIDIVolumeOverride.CheckedChanged += new System.EventHandler(this.MIDIVolumeOverride_CheckedChanged);
             // 
@@ -189,6 +193,8 @@
             this.VolumeMonitor.Size = new System.Drawing.Size(147, 17);
             this.VolumeMonitor.TabIndex = 67;
             this.VolumeMonitor.Text = "Enable volume monitoring";
+            this.WhatIsThis.SetToolTip(this.VolumeMonitor, "Enable the volume monitoring.\r\nYou\'ll see the current volume in the two progress " +
+        "bars down below.");
             this.VolumeMonitor.UseVisualStyleBackColor = true;
             this.VolumeMonitor.CheckedChanged += new System.EventHandler(this.VolumeMonitor_CheckedChanged);
             // 
@@ -377,6 +383,7 @@
             this.LeftChannel.Size = new System.Drawing.Size(151, 23);
             this.LeftChannel.Step = 1;
             this.LeftChannel.TabIndex = 47;
+            this.WhatIsThis.SetToolTip(this.LeftChannel, "Left audio channel.");
             // 
             // CH16VOL
             // 
@@ -388,7 +395,7 @@
             this.CH16VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH16VOL.Size = new System.Drawing.Size(27, 123);
             this.CH16VOL.TabIndex = 46;
-            this.CH16VOL.TickFrequency = 16;
+            this.CH16VOL.TickFrequency = 64;
             this.CH16VOL.Scroll += new System.EventHandler(this.CH16VOL_Scroll);
             // 
             // CH15VOL
@@ -401,7 +408,7 @@
             this.CH15VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH15VOL.Size = new System.Drawing.Size(27, 123);
             this.CH15VOL.TabIndex = 45;
-            this.CH15VOL.TickFrequency = 16;
+            this.CH15VOL.TickFrequency = 64;
             this.CH15VOL.Scroll += new System.EventHandler(this.CH15VOL_Scroll);
             // 
             // CH14VOL
@@ -414,7 +421,7 @@
             this.CH14VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH14VOL.Size = new System.Drawing.Size(27, 123);
             this.CH14VOL.TabIndex = 44;
-            this.CH14VOL.TickFrequency = 16;
+            this.CH14VOL.TickFrequency = 64;
             this.CH14VOL.Scroll += new System.EventHandler(this.CH14VOL_Scroll);
             // 
             // CH13VOL
@@ -427,7 +434,7 @@
             this.CH13VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH13VOL.Size = new System.Drawing.Size(27, 123);
             this.CH13VOL.TabIndex = 43;
-            this.CH13VOL.TickFrequency = 16;
+            this.CH13VOL.TickFrequency = 64;
             this.CH13VOL.Scroll += new System.EventHandler(this.CH13VOL_Scroll);
             // 
             // CH12VOL
@@ -440,7 +447,7 @@
             this.CH12VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH12VOL.Size = new System.Drawing.Size(27, 123);
             this.CH12VOL.TabIndex = 42;
-            this.CH12VOL.TickFrequency = 16;
+            this.CH12VOL.TickFrequency = 64;
             this.CH12VOL.Scroll += new System.EventHandler(this.CH12VOL_Scroll);
             // 
             // CH11VOL
@@ -453,7 +460,7 @@
             this.CH11VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH11VOL.Size = new System.Drawing.Size(27, 123);
             this.CH11VOL.TabIndex = 41;
-            this.CH11VOL.TickFrequency = 16;
+            this.CH11VOL.TickFrequency = 64;
             this.CH11VOL.Scroll += new System.EventHandler(this.CH11VOL_Scroll);
             // 
             // CH10VOL
@@ -466,7 +473,7 @@
             this.CH10VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH10VOL.Size = new System.Drawing.Size(27, 123);
             this.CH10VOL.TabIndex = 40;
-            this.CH10VOL.TickFrequency = 16;
+            this.CH10VOL.TickFrequency = 64;
             this.CH10VOL.Scroll += new System.EventHandler(this.CH10VOL_Scroll);
             // 
             // CH9VOL
@@ -479,7 +486,7 @@
             this.CH9VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH9VOL.Size = new System.Drawing.Size(27, 123);
             this.CH9VOL.TabIndex = 39;
-            this.CH9VOL.TickFrequency = 16;
+            this.CH9VOL.TickFrequency = 64;
             this.CH9VOL.Scroll += new System.EventHandler(this.CH9VOL_Scroll);
             // 
             // CH8VOL
@@ -492,7 +499,7 @@
             this.CH8VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH8VOL.Size = new System.Drawing.Size(27, 123);
             this.CH8VOL.TabIndex = 38;
-            this.CH8VOL.TickFrequency = 16;
+            this.CH8VOL.TickFrequency = 64;
             this.CH8VOL.Scroll += new System.EventHandler(this.CH8VOL_Scroll);
             // 
             // CH7VOL
@@ -505,7 +512,7 @@
             this.CH7VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH7VOL.Size = new System.Drawing.Size(27, 123);
             this.CH7VOL.TabIndex = 37;
-            this.CH7VOL.TickFrequency = 16;
+            this.CH7VOL.TickFrequency = 64;
             this.CH7VOL.Scroll += new System.EventHandler(this.CH7VOL_Scroll);
             // 
             // CH6VOL
@@ -518,7 +525,7 @@
             this.CH6VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH6VOL.Size = new System.Drawing.Size(27, 123);
             this.CH6VOL.TabIndex = 36;
-            this.CH6VOL.TickFrequency = 16;
+            this.CH6VOL.TickFrequency = 64;
             this.CH6VOL.Scroll += new System.EventHandler(this.CH6VOL_Scroll);
             // 
             // CH5VOL
@@ -531,7 +538,7 @@
             this.CH5VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH5VOL.Size = new System.Drawing.Size(27, 123);
             this.CH5VOL.TabIndex = 35;
-            this.CH5VOL.TickFrequency = 16;
+            this.CH5VOL.TickFrequency = 64;
             this.CH5VOL.Scroll += new System.EventHandler(this.CH5VOL_Scroll);
             // 
             // CH4VOL
@@ -544,7 +551,7 @@
             this.CH4VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH4VOL.Size = new System.Drawing.Size(27, 123);
             this.CH4VOL.TabIndex = 34;
-            this.CH4VOL.TickFrequency = 16;
+            this.CH4VOL.TickFrequency = 64;
             this.CH4VOL.Scroll += new System.EventHandler(this.CH4VOL_Scroll);
             // 
             // CH3VOL
@@ -557,7 +564,7 @@
             this.CH3VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH3VOL.Size = new System.Drawing.Size(27, 123);
             this.CH3VOL.TabIndex = 33;
-            this.CH3VOL.TickFrequency = 16;
+            this.CH3VOL.TickFrequency = 64;
             this.CH3VOL.Scroll += new System.EventHandler(this.CH3VOL_Scroll);
             // 
             // CH2VOL
@@ -570,7 +577,7 @@
             this.CH2VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH2VOL.Size = new System.Drawing.Size(27, 123);
             this.CH2VOL.TabIndex = 32;
-            this.CH2VOL.TickFrequency = 16;
+            this.CH2VOL.TickFrequency = 64;
             this.CH2VOL.Scroll += new System.EventHandler(this.CH2VOL_Scroll);
             // 
             // CH1VOL
@@ -583,7 +590,7 @@
             this.CH1VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.CH1VOL.Size = new System.Drawing.Size(27, 123);
             this.CH1VOL.TabIndex = 31;
-            this.CH1VOL.TickFrequency = 16;
+            this.CH1VOL.TickFrequency = 64;
             this.CH1VOL.Scroll += new System.EventHandler(this.CH1VOL_Scroll);
             // 
             // Main
@@ -617,6 +624,13 @@
             this.RightChannel.Size = new System.Drawing.Size(151, 23);
             this.RightChannel.Step = 1;
             this.RightChannel.TabIndex = 30;
+            this.WhatIsThis.SetToolTip(this.RightChannel, "Right audio channel.");
+            // 
+            // WhatIsThis
+            // 
+            this.WhatIsThis.IsBalloon = true;
+            this.WhatIsThis.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.WhatIsThis.ToolTipTitle = "What is this?";
             // 
             // KeppySynthMixerWindow
             // 
@@ -749,6 +763,7 @@
         private System.Windows.Forms.MenuStrip Main;
         private System.Windows.Forms.Timer VolumeCheck;
         private System.Windows.Forms.ProgressBar RightChannel;
+        private System.Windows.Forms.ToolTip WhatIsThis;
     }
 }
 
