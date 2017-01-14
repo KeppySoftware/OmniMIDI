@@ -992,6 +992,7 @@ namespace KeppySynthConfigurator
                         Functions.SaveList(CurrentList);
                         Functions.TriggerReload();
                     }
+                    Program.DebugToConsole(false, String.Format("Added soundfont to list: {0}", Soundfonts[i]), null);
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sfz")
                 {
@@ -1017,6 +1018,7 @@ namespace KeppySynthConfigurator
                         Functions.SaveList(CurrentList);
                         Functions.TriggerReload();
                     }
+                    Program.DebugToConsole(false, String.Format("Added soundfont to list: {0}", Soundfonts[i]), null);
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dls")
                 {
@@ -1030,7 +1032,6 @@ namespace KeppySynthConfigurator
                 {
                     Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "Invalid soundfont!\n\nPlease select a valid soundfont and try again!", false, null);
                 }
-                Program.DebugToConsole(false, String.Format("Added soundfont to list: {0}", Soundfonts[i]), null);
             }
         }
 

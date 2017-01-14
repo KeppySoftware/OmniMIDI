@@ -16,7 +16,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.6.4'
+#define Version '4.0.6.5'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -61,13 +61,13 @@ VersionInfoProductTextVersion={#Version}
 VersionInfoTextVersion={#Description}
 VersionInfoVersion={#Version}
 UsePreviousSetupType=False
-FlatComponentsList=False
 AlwaysShowGroupOnReadyPage=True
 AlwaysShowDirOnReadyPage=True
-WizardImageFile=compiler:WizModernImage-IS.bmp
-WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
+WizardImageFile=scripts\image.bmp
+WizardSmallImageFile=scripts\smallimage.bmp
 LanguageDetectionMethod=none
 Compression=lzma2/ultra64
+FlatComponentsList=False
 
 [Files]
 ; Themes

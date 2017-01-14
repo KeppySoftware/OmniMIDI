@@ -315,14 +315,18 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                if (Lis.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
                 for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                 {
-                    String name = Lis.Items[i + 1].ToString();
+                    String name = Lis.SelectedItems[i].ToString();
                     Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                     Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
+                    Functions.SaveList(CurrentList);
+                    Functions.TriggerReload();
                 }
-                Functions.SaveList(CurrentList);
-                Functions.TriggerReload();
             }
             catch (Exception ex)
             {
@@ -442,23 +446,27 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
+                        String sfname;
                         string result = Lis.SelectedItem.ToString().Substring(0, 1);
                         if (result == "@")
                         {
                             string newvalue = Lis.SelectedItem.ToString().Remove(0, 1);
+                            sfname = newvalue;
                             int index = Lis.Items.IndexOf(Lis.SelectedItem);
                             Lis.Items.RemoveAt(index);
                             Lis.Items.Insert(index, newvalue);
                             Functions.SaveList(CurrentList);
                             Functions.TriggerReload();
+                            Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", sfname), null);
                         }
                         else
                         {
+                            sfname = Lis.SelectedItem.ToString();
+                            Program.DebugToConsole(false, String.Format("Soundfont already enabled: {0}", sfname), null);
                             MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
                 }
-                Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItem.ToString()), null);
             }
             catch (Exception ex)
             {
@@ -482,23 +490,27 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
+                        String sfname;
                         string result = Lis.SelectedItem.ToString().Substring(0, 1);
                         if (result != "@")
                         {
                             string newvalue = "@" + Lis.SelectedItem.ToString();
+                            sfname = Lis.SelectedItem.ToString();
                             int index = Lis.Items.IndexOf(Lis.SelectedItem);
                             Lis.Items.RemoveAt(index);
                             Lis.Items.Insert(index, newvalue);
                             Functions.SaveList(CurrentList);
                             Functions.TriggerReload();
+                            Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", sfname), null);
                         }
                         else
                         {
+                            sfname = Lis.SelectedItem.ToString();
+                            Program.DebugToConsole(false, String.Format("Soundfont already disabled: {0}", sfname), null);
                             MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
                 }
-                Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItem.ToString()), null);
             }
             catch (Exception ex)
             {
