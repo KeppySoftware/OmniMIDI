@@ -70,16 +70,13 @@ namespace KeppySynthConfigurator
             {
                 if (integer == 0)
                 {
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/register");
+                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/registerv");
                     process.WaitForExit();
-
-                    MessageBox.Show("The driver has been registered on the Windows registry.", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/unregister");
+                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/unregisterv");
                     process.WaitForExit();
-                    MessageBox.Show("The driver has been unregistered from the Windows registry.", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -431,6 +428,14 @@ namespace KeppySynthConfigurator
                 else
                 {
                     KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
                 {

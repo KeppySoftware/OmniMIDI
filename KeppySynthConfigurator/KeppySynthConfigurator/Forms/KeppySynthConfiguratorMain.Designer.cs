@@ -129,6 +129,7 @@
             this.ChangeDefaultOutput = new System.Windows.Forms.MenuItem();
             this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
+            this.MonophonicFunc = new System.Windows.Forms.MenuItem();
             this.FadeoutDisable = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
@@ -1210,6 +1211,7 @@
             this.ChangeDefaultOutput,
             this.ChangePitchShift,
             this.floatingpointaudio,
+            this.MonophonicFunc,
             this.FadeoutDisable,
             this.ReduceCPUOver,
             this.VolumeBoost,
@@ -1236,38 +1238,44 @@
             this.floatingpointaudio.Text = "Use floating point audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
+            // MonophonicFunc
+            // 
+            this.MonophonicFunc.Index = 3;
+            this.MonophonicFunc.Text = "Use monophonic rendering";
+            this.MonophonicFunc.Click += new System.EventHandler(this.MonophonicFunc_Click);
+            // 
             // FadeoutDisable
             // 
-            this.FadeoutDisable.Index = 3;
+            this.FadeoutDisable.Index = 4;
             this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
             this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
             // 
             // ReduceCPUOver
             // 
-            this.ReduceCPUOver.Index = 4;
+            this.ReduceCPUOver.Index = 5;
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
             // VolumeBoost
             // 
-            this.VolumeBoost.Index = 5;
+            this.VolumeBoost.Index = 6;
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
             // menuItem16
             // 
-            this.menuItem16.Index = 6;
+            this.menuItem16.Index = 7;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 7;
+            this.useoldbuffersystem.Index = 8;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 8;
+            this.slowdownnoskip.Index = 9;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1740,6 +1748,7 @@
         public System.Windows.Forms.MenuItem changeTheMaximumSamplesPerFrameToolStripMenuItem;
         private System.Windows.Forms.MenuItem SeeChangelog;
         private System.Windows.Forms.MenuItem menuItem29;
+        public System.Windows.Forms.MenuItem MonophonicFunc;
     }
 }
 

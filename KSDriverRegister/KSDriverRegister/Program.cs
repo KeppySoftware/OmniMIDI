@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace KSDriverRegister
 {
@@ -11,6 +12,8 @@ namespace KSDriverRegister
     {
         public static RegistryKey driver32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
         public static RegistryKey driver64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+        public static RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
+        public static RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
 
         static void Main(string[] args)
         {
@@ -45,202 +48,157 @@ namespace KSDriverRegister
 
             if (arguments[0] == "/register")
             {
-                using (RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true))
-                {
-                    clsid32.SetValue("midi", "wdmaud.drv");
-                    try
-                    {
-                        if (clsid32.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
-                        {
-                            clsid32.DeleteValue("midi9");
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-
-                    for (int i = 1; i <= 9; i++)
-                    {
-                        try
-                        {
-                            if (clsid32.GetValue(String.Format("midi{0}", i), null) == null)
-                            {
-                                clsid32.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
-                                Console.Write("Succesfully registered.");
-                                break;
-                            }
-                            else if (clsid32.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
-                            {
-                                clsid32.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
-                                Console.Write("Succesfully registered.");
-                                break;
-                            }
-                            else if (clsid32.GetValue(String.Format("midi{0}", i)).ToString() == "keppysynth\\keppysynth.dll")
-                            {
-                                Console.Write("Already registered.");
-                                break;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-                        catch
-                        {
-                            Console.Write("No MIDI driver values available.");
-                            Console.Read();
-                            break;
-                        }
-                    }
-                }
                 if (Environment.Is64BitOperatingSystem)
                 {
-                    using (RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true))
-                    {
-                        clsid64.SetValue("midi", "wdmaud.drv");
-                        try
-                        {
-                            if (clsid64.GetValue("midi9", null).ToString() == "keppysynth\\keppysynth.dll")
-                            {
-                                clsid64.DeleteValue("midi9");
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-
-                        for (int i = 1; i <= 9; i++)
-                        {
-                            try
-                            {
-                                if (clsid64.GetValue(String.Format("midi{0}", i), null) == null)
-                                {
-                                    clsid64.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
-                                    Console.Write("Succesfully registered.");
-                                    break;
-                                }
-                                else if (clsid64.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
-                                {
-                                    clsid64.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
-                                    Console.Write("Succesfully registered.");
-                                    break;
-                                }
-                                else if (clsid64.GetValue(String.Format("midi{0}", i)).ToString() == "keppysynth\\keppysynth.dll")
-                                {
-                                    Console.Write("Already registered.");
-                                    break;
-                                }
-                                else
-                                {
-                                    continue;
-                                }
-                            }
-                            catch
-                            {
-                                Console.Write("No MIDI driver values available.");
-                                Console.Read();
-                                break;
-                            }
-                        }
-                    }
+                    Register(true, "x86", clsid32);
+                    Register(true, "x64", clsid64);
+                }
+                else
+                {
+                    Register(true, "x86", clsid32);
                 }
             }
             else if (arguments[0] == "/unregister")
             {
-                using (RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true))
-                {
-                    try
-                    {
-                        if (clsid32.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
-                        {
-                            clsid32.DeleteValue("midi9");
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-
-                    for (int i = 1; i <= 9; i++)
-                    {
-                        try
-                        {
-                            if (clsid32.GetValue(String.Format("midi{0}", i)).ToString() == "keppysynth\\keppysynth.dll")
-                            {
-                                clsid32.SetValue(String.Format("midi{0}", i), "wdmaud.drv");
-                                Console.Write("Succesfully unregistered.");
-                                break;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-                        catch
-                        {
-                            Console.Write("Keppy's Synthesizer doesn't seem to be installed.");
-                            break;
-                        }
-                    }
-                }
                 if (Environment.Is64BitOperatingSystem)
                 {
-                    using (RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true))
-                    {
-                        try
-                        {
-                            if (clsid64.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
-                            {
-                                clsid64.DeleteValue("midi9");
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-
-                        for (int i = 1; i <= 9; i++)
-                        {
-                            try
-                            {
-                                if (clsid64.GetValue(String.Format("midi{0}", i)).ToString() == "keppysynth\\keppysynth.dll")
-                                {
-                                    clsid64.SetValue(String.Format("midi{0}", i), "wdmaud.drv");
-                                    Console.Write("Succesfully unregistered.");
-                                    break;
-                                }
-                                else
-                                {
-                                    continue;
-                                }
-                            }
-                            catch
-                            {
-                                Console.Write("Keppy's Synthesizer doesn't seem to be installed.");
-                                break;
-                            }
-                        }
-                    }
+                    Unregister(true, "x86", clsid32);
+                    Unregister(true, "x64", clsid64);
+                }
+                else
+                {
+                    Unregister(true, "x86", clsid32);
+                }
+            }
+            else if (arguments[0] == "/registerv")
+            {
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    Register(false, "x86", clsid32);
+                    Register(false, "x64", clsid64);
+                }
+                else
+                {
+                    Register(false, "x86", clsid32);
+                }
+            }
+            else if (arguments[0] == "/unregisterv")
+            {
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    Unregister(false, "x86", clsid32);
+                    Unregister(false, "x64", clsid64);
+                }
+                else
+                {
+                    Unregister(false, "x86", clsid32);
                 }
             }
             else if (arguments[0] == "/help")
             {
-                Console.Write("Keppy's Synthesizer Register/Unregister Tool");
-                Console.Write(Environment.NewLine);
-                Console.Write(Environment.NewLine);
-                Console.Write("/register = Register the driver as a MIDI device");
-                Console.Write(Environment.NewLine);
-                Console.Write("/unregister = Unregister the driver");
-                Console.Write(Environment.NewLine);
-                Console.Write("/help = This list");
-                Console.Read();
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Keppy's Synthesizer Register/Unregister Tool\n");
+                sb.AppendLine("/register = Register the driver as a MIDI device");
+                sb.AppendLine("/unregister = Unregister the driver");
+                sb.AppendLine("/help = This list");
+                MessageBox.Show(sb.ToString(), "Keppy's Synthesizer R/U Tool ~ Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Application.Exit();
             }
             else
             {
-                Console.Write("Invalid argument. Type \"KSDriverRegister.exe /help\" to see the available commands.");
-                Console.Read();
+                MessageBox.Show("Invalid argument.\nType \"KSDriverRegister.exe /help\" to see the available commands.", "Keppy's Synthesizer R/U Tool ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.Exit();
+            }
+        }
+
+        public static void ShowMessage(bool IsSilent, String Text, String Title, MessageBoxIcon TypeOfError) {
+            if (!IsSilent)
+            {
+                MessageBox.Show(Text, String.Format("Keppy's Synthesizer R/U Tool ~ {0}", Title), MessageBoxButtons.OK, TypeOfError);
+            }
+        }
+
+        public static void Register(bool IsSilent, String WhichBit, RegistryKey WhichKey)
+        {
+            WhichKey.SetValue("midi", "wdmaud.drv");
+            try
+            {
+                if (WhichKey.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
+                {
+                    WhichKey.DeleteValue("midi9");
+                }
+            }
+            catch { }
+
+            for (int i = 1; i <= 9; i++)
+            {
+                try
+                {
+                    if (WhichKey.GetValue(String.Format("midi{0}", i), null) == null)
+                    {
+                        WhichKey.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
+                        ShowMessage(IsSilent, String.Format("{0} driver succesfully registered.", WhichBit), "Information", MessageBoxIcon.Information);
+                        break;
+                    }
+                    else if (WhichKey.GetValue(String.Format("midi{0}", i)).ToString() == "wdmaud.drv")
+                    {
+                        WhichKey.SetValue(String.Format("midi{0}", i), "keppysynth\\keppysynth.dll");
+                        ShowMessage(IsSilent, String.Format("{0} driver succesfully registered.", WhichBit), "Information", MessageBoxIcon.Information);
+                        break;
+                    }
+                    else if (WhichKey.GetValue(String.Format("midi{0}", i)).ToString() == "keppysynth\\keppysynth.dll")
+                    {
+                        ShowMessage(IsSilent, String.Format("{0} driver already registered.", WhichBit), "Information", MessageBoxIcon.Information);
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                catch
+                {
+                    ShowMessage(IsSilent, "No MIDI driver values available.", "Error", MessageBoxIcon.Hand);
+                    Console.Read();
+                    break;
+                }
+            }
+        }
+
+        public static void Unregister(bool IsSilent, String WhichBit, RegistryKey WhichKey)
+        {
+            try
+            {
+                if (WhichKey.GetValue("midi9").ToString() == "keppysynth\\keppysynth.dll")
+                {
+                    WhichKey.DeleteValue("midi9");
+                }
+            }
+            catch
+            {
+
+            }
+
+            for (int i = 1; i <= 9; i++)
+            {
+                try
+                {
+                    if (WhichKey.GetValue(String.Format("midi{0}", i)).ToString() == "keppysynth\\keppysynth.dll")
+                    {
+                        WhichKey.SetValue(String.Format("midi{0}", i), "wdmaud.drv");
+                        ShowMessage(IsSilent, String.Format("{0} driver succesfully unregistered.", WhichBit), "Information", MessageBoxIcon.Information);
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                catch
+                {
+                    ShowMessage(IsSilent, String.Format("{0} driver already unregistered.", WhichBit), "Information", MessageBoxIcon.Information);
+                    break;
+                }
             }
         }
     }

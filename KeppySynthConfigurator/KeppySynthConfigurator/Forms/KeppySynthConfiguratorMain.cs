@@ -1298,6 +1298,20 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void MonophonicFunc_Click(object sender, EventArgs e)
+        {
+            if (MonophonicFunc.Checked == true)
+            {
+                SynthSettings.SetValue("monorendering", "1", RegistryValueKind.DWord);
+                floatingpointaudio.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("monorendering", "0", RegistryValueKind.DWord);
+                floatingpointaudio.Checked = false;
+            }
+        }
+
         private void VolumeBoost_Click(object sender, EventArgs e)
         {
             if (VolumeBoost.Checked == false)
