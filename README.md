@@ -6,11 +6,13 @@
 </p>
 
 ## What's so special about your driver that makes it different from the others out there?
-This driver is special because:
-- It's really easy for it to achieve very low latencies without struggling. (Almost 1ms with the right settings)
-- It's meant for [professional people] (#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
-- The buffer§/sample per frame rate are changeable *in real-time*. (§ = Not this one tho)
-- It offers a pretty spartan interface, for simple people who aims for features more than for style.
+This driver has unique features, such as:
+- Automatic rendering recovery. The driver will **always** try to give you the best audio quality, no matter what MIDI you're trying to play.
+- Spartan user interface, no "fancy graphics" which can distract the user from the original purpose of the driver, and designed for people who aims for features more than for style.
+- The ability to use up to 3 cores/threads, to ensure each function is executed at its best. Each core hosts a vital part of the driver: The first thread hosts the settings loader, the debug info writer etcetera, the second hosts the MIDI event parser, and the third hosts the audio render.
+- [Constant updates] (#why-do-i-get-updates-every-1-2-days), to keep the driver fresh and always up-to-date to users requests.
+
+It's meant for [professional people] (#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
 
 ## What do you mean by "for professional use"?
 Certain functions in this driver are not suited for newbies or for people that don't know how to use programs well.
@@ -20,6 +22,10 @@ Changing one single driver function could break the entire audio stream, and if 
 My advice for such people is to download CoolSoft VirtualMIDISynth driver from there: [Click me] (http://coolsoft.altervista.org/en/virtualmidisynth)
 <br>
 It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanoseconds. (Unlike mine)
+
+## Why do I get updates every 1-2 days???
+As I mentioned before, I always try to keep my driver fresh and up-to-date to today's users standards.
+If you're not okay with this (again), you can always switch to [CoolSoft VirtualMIDISynth] (http://coolsoft.altervista.org/en/virtualmidisynth).
 
 ## Can I use your program's source code for my program?
 Sure you can, but there are a few "rules" you need to follow.
