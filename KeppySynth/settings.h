@@ -262,7 +262,6 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_SetConfig);
 		LOADBASSFUNCTION(BASS_SetDevice);
 		LOADBASSFUNCTION(BASS_SetVolume);
-		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_StreamFree);
 		LOADBASSFUNCTION(BASS_Update);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
@@ -489,6 +488,26 @@ void WatchdogCheck()
 	}
 }
 
+void CheckVolume() {
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	DWORD level, left, right;
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
+	if (volumemon == 1) {
+		if (xaudiodisabled == 1)
+		{
+			level = BASS_ChannelGetLevel(hStream);
+			left = LOWORD(level); // the left level
+			right = HIWORD(level); // the right level
+			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
+			RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+		}
+	}
+	RegCloseKey(hKey);
+}
+
 void debug_info() {
 	try {
 		HKEY hKey;
@@ -503,15 +522,6 @@ void debug_info() {
 		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 
-		if (xaudiodisabled == 1) {
-			if (volumemon == 1) {
-				level = BASS_ChannelGetLevel(hStream);
-				left = LOWORD(level); // the left level
-				right = HIWORD(level); // the right level
-				RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
-				RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
-			}
-		}
 		if (autopanic == 1) {
 			if (currentcpuusage0 >= 100.0f) {
 				ResetSynth();
@@ -524,8 +534,6 @@ void debug_info() {
 		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
 
-		// OTHER THINGS
-		RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&decoded, sizeof(decoded));
 		RegCloseKey(hKey);
 	}
 	catch (...) {
@@ -553,6 +561,7 @@ void mixervoid() {
 				}
 			}
 			RegQueryValueEx(hKey, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
+
 		}
 
 		RegCloseKey(hKey);
