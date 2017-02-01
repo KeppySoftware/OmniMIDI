@@ -703,9 +703,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == 0){
-				Sleep(10);
+				Sleep(1);
 				realtime_load_settings();
 				debug_info();
+				Panic();
 				keybindings();
 				WatchdogCheck();
 				CheckVolume();
@@ -714,24 +715,24 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			stop_rtthread = 0;
 			if (hStream)
 			{
-				ResetSynth();
+				ResetSynth(0);
 				BASS_StreamFree(hStream);
 				hStream = 0;
 			}
 			if (bassmidi) {
-				ResetSynth();
+				ResetSynth(0);
 				FreeFonts(0);
 				FreeLibrary(bassmidi);
 				bassmidi = 0;
 			}
 			if (bass) {
-				ResetSynth();
+				ResetSynth(0);
 				BASS_Free();
 				FreeLibrary(bass);
 				bass = 0;
 			}
 			if (sound_driver) {
-				ResetSynth();
+				ResetSynth(0);
 				delete sound_driver;
 				sound_driver = NULL;
 			}
@@ -806,7 +807,7 @@ void DoStopClient() {
 }
 
 void DoResetClient(UINT uDeviceID) {
-	ResetSynth();
+	ResetSynth(0);
 	reset_synth = 1;
 }
 
@@ -902,12 +903,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	}
 	case MODM_PAUSE: {
 		reset_synth = 1;
-		ResetSynth();
+		ResetSynth(0);
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_STOP: {
 		reset_synth = 1;
-		ResetSynth();
+		ResetSynth(0);
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_RESET:

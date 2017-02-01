@@ -411,7 +411,7 @@
             this.LLab.AutoSize = true;
             this.LLab.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LLab.ForeColor = System.Drawing.Color.White;
-            this.LLab.Location = new System.Drawing.Point(10, 10);
+            this.LLab.Location = new System.Drawing.Point(10, 11);
             this.LLab.Name = "LLab";
             this.LLab.Size = new System.Drawing.Size(12, 11);
             this.LLab.TabIndex = 48;
@@ -657,11 +657,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(732, 100);
+            this.label3.Location = new System.Drawing.Point(739, 100);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 13);
+            this.label3.Size = new System.Drawing.Size(39, 13);
             this.label3.TabIndex = 72;
-            this.label3.Text = "Peaking:";
+            this.label3.Text = "Signal:";
             // 
             // LED
             // 
@@ -729,7 +729,7 @@
             // RV22
             // 
             this.RV22.BackColor = System.Drawing.Color.Red;
-            this.RV22.Location = new System.Drawing.Point(175, 28);
+            this.RV22.Location = new System.Drawing.Point(177, 28);
             this.RV22.Name = "RV22";
             this.RV22.Size = new System.Drawing.Size(5, 16);
             this.RV22.TabIndex = 93;
@@ -738,7 +738,7 @@
             // LV22
             // 
             this.LV22.BackColor = System.Drawing.Color.Red;
-            this.LV22.Location = new System.Drawing.Point(175, 8);
+            this.LV22.Location = new System.Drawing.Point(177, 9);
             this.LV22.Name = "LV22";
             this.LV22.Size = new System.Drawing.Size(5, 16);
             this.LV22.TabIndex = 71;
@@ -747,7 +747,7 @@
             // RV18
             // 
             this.RV18.BackColor = System.Drawing.Color.Yellow;
-            this.RV18.Location = new System.Drawing.Point(147, 28);
+            this.RV18.Location = new System.Drawing.Point(149, 28);
             this.RV18.Name = "RV18";
             this.RV18.Size = new System.Drawing.Size(5, 16);
             this.RV18.TabIndex = 89;
@@ -756,7 +756,7 @@
             // LV18
             // 
             this.LV18.BackColor = System.Drawing.Color.Yellow;
-            this.LV18.Location = new System.Drawing.Point(147, 8);
+            this.LV18.Location = new System.Drawing.Point(149, 9);
             this.LV18.Name = "LV18";
             this.LV18.Size = new System.Drawing.Size(5, 16);
             this.LV18.TabIndex = 67;
@@ -765,7 +765,7 @@
             // RV21
             // 
             this.RV21.BackColor = System.Drawing.Color.Red;
-            this.RV21.Location = new System.Drawing.Point(168, 28);
+            this.RV21.Location = new System.Drawing.Point(170, 28);
             this.RV21.Name = "RV21";
             this.RV21.Size = new System.Drawing.Size(5, 16);
             this.RV21.TabIndex = 92;
@@ -774,7 +774,7 @@
             // LV21
             // 
             this.LV21.BackColor = System.Drawing.Color.Red;
-            this.LV21.Location = new System.Drawing.Point(168, 8);
+            this.LV21.Location = new System.Drawing.Point(170, 9);
             this.LV21.Name = "LV21";
             this.LV21.Size = new System.Drawing.Size(5, 16);
             this.LV21.TabIndex = 70;
@@ -783,7 +783,7 @@
             // RV13
             // 
             this.RV13.BackColor = System.Drawing.Color.Yellow;
-            this.RV13.Location = new System.Drawing.Point(112, 28);
+            this.RV13.Location = new System.Drawing.Point(114, 28);
             this.RV13.Name = "RV13";
             this.RV13.Size = new System.Drawing.Size(5, 16);
             this.RV13.TabIndex = 84;
@@ -792,7 +792,7 @@
             // LV13
             // 
             this.LV13.BackColor = System.Drawing.Color.Yellow;
-            this.LV13.Location = new System.Drawing.Point(112, 8);
+            this.LV13.Location = new System.Drawing.Point(114, 9);
             this.LV13.Name = "LV13";
             this.LV13.Size = new System.Drawing.Size(5, 16);
             this.LV13.TabIndex = 62;
@@ -801,7 +801,7 @@
             // RV20
             // 
             this.RV20.BackColor = System.Drawing.Color.Red;
-            this.RV20.Location = new System.Drawing.Point(161, 28);
+            this.RV20.Location = new System.Drawing.Point(163, 28);
             this.RV20.Name = "RV20";
             this.RV20.Size = new System.Drawing.Size(5, 16);
             this.RV20.TabIndex = 91;
@@ -810,7 +810,7 @@
             // LV20
             // 
             this.LV20.BackColor = System.Drawing.Color.Red;
-            this.LV20.Location = new System.Drawing.Point(161, 8);
+            this.LV20.Location = new System.Drawing.Point(163, 9);
             this.LV20.Name = "LV20";
             this.LV20.Size = new System.Drawing.Size(5, 16);
             this.LV20.TabIndex = 69;
@@ -819,7 +819,7 @@
             // RV19
             // 
             this.RV19.BackColor = System.Drawing.Color.Red;
-            this.RV19.Location = new System.Drawing.Point(154, 28);
+            this.RV19.Location = new System.Drawing.Point(156, 28);
             this.RV19.Name = "RV19";
             this.RV19.Size = new System.Drawing.Size(5, 16);
             this.RV19.TabIndex = 90;
@@ -828,7 +828,7 @@
             // LV19
             // 
             this.LV19.BackColor = System.Drawing.Color.Red;
-            this.LV19.Location = new System.Drawing.Point(154, 8);
+            this.LV19.Location = new System.Drawing.Point(156, 9);
             this.LV19.Name = "LV19";
             this.LV19.Size = new System.Drawing.Size(5, 16);
             this.LV19.TabIndex = 68;
@@ -837,7 +837,7 @@
             // RV17
             // 
             this.RV17.BackColor = System.Drawing.Color.Yellow;
-            this.RV17.Location = new System.Drawing.Point(140, 28);
+            this.RV17.Location = new System.Drawing.Point(142, 28);
             this.RV17.Name = "RV17";
             this.RV17.Size = new System.Drawing.Size(5, 16);
             this.RV17.TabIndex = 88;
@@ -846,7 +846,7 @@
             // LV17
             // 
             this.LV17.BackColor = System.Drawing.Color.Yellow;
-            this.LV17.Location = new System.Drawing.Point(140, 8);
+            this.LV17.Location = new System.Drawing.Point(142, 9);
             this.LV17.Name = "LV17";
             this.LV17.Size = new System.Drawing.Size(5, 16);
             this.LV17.TabIndex = 66;
@@ -855,7 +855,7 @@
             // RV8
             // 
             this.RV8.BackColor = System.Drawing.Color.Lime;
-            this.RV8.Location = new System.Drawing.Point(77, 28);
+            this.RV8.Location = new System.Drawing.Point(79, 28);
             this.RV8.Name = "RV8";
             this.RV8.Size = new System.Drawing.Size(5, 16);
             this.RV8.TabIndex = 79;
@@ -864,7 +864,7 @@
             // LV8
             // 
             this.LV8.BackColor = System.Drawing.Color.Lime;
-            this.LV8.Location = new System.Drawing.Point(77, 8);
+            this.LV8.Location = new System.Drawing.Point(79, 9);
             this.LV8.Name = "LV8";
             this.LV8.Size = new System.Drawing.Size(5, 16);
             this.LV8.TabIndex = 57;
@@ -873,7 +873,7 @@
             // RV16
             // 
             this.RV16.BackColor = System.Drawing.Color.Yellow;
-            this.RV16.Location = new System.Drawing.Point(133, 28);
+            this.RV16.Location = new System.Drawing.Point(135, 28);
             this.RV16.Name = "RV16";
             this.RV16.Size = new System.Drawing.Size(5, 16);
             this.RV16.TabIndex = 87;
@@ -882,7 +882,7 @@
             // LV16
             // 
             this.LV16.BackColor = System.Drawing.Color.Yellow;
-            this.LV16.Location = new System.Drawing.Point(133, 8);
+            this.LV16.Location = new System.Drawing.Point(135, 9);
             this.LV16.Name = "LV16";
             this.LV16.Size = new System.Drawing.Size(5, 16);
             this.LV16.TabIndex = 65;
@@ -891,7 +891,7 @@
             // RV12
             // 
             this.RV12.BackColor = System.Drawing.Color.Lime;
-            this.RV12.Location = new System.Drawing.Point(105, 28);
+            this.RV12.Location = new System.Drawing.Point(107, 28);
             this.RV12.Name = "RV12";
             this.RV12.Size = new System.Drawing.Size(5, 16);
             this.RV12.TabIndex = 83;
@@ -900,7 +900,7 @@
             // LV12
             // 
             this.LV12.BackColor = System.Drawing.Color.Lime;
-            this.LV12.Location = new System.Drawing.Point(105, 8);
+            this.LV12.Location = new System.Drawing.Point(107, 9);
             this.LV12.Name = "LV12";
             this.LV12.Size = new System.Drawing.Size(5, 16);
             this.LV12.TabIndex = 61;
@@ -909,7 +909,7 @@
             // RV15
             // 
             this.RV15.BackColor = System.Drawing.Color.Yellow;
-            this.RV15.Location = new System.Drawing.Point(126, 28);
+            this.RV15.Location = new System.Drawing.Point(128, 28);
             this.RV15.Name = "RV15";
             this.RV15.Size = new System.Drawing.Size(5, 16);
             this.RV15.TabIndex = 86;
@@ -918,7 +918,7 @@
             // LV15
             // 
             this.LV15.BackColor = System.Drawing.Color.Yellow;
-            this.LV15.Location = new System.Drawing.Point(126, 8);
+            this.LV15.Location = new System.Drawing.Point(128, 9);
             this.LV15.Name = "LV15";
             this.LV15.Size = new System.Drawing.Size(5, 16);
             this.LV15.TabIndex = 64;
@@ -927,7 +927,7 @@
             // RV14
             // 
             this.RV14.BackColor = System.Drawing.Color.Yellow;
-            this.RV14.Location = new System.Drawing.Point(119, 28);
+            this.RV14.Location = new System.Drawing.Point(121, 28);
             this.RV14.Name = "RV14";
             this.RV14.Size = new System.Drawing.Size(5, 16);
             this.RV14.TabIndex = 85;
@@ -936,7 +936,7 @@
             // LV14
             // 
             this.LV14.BackColor = System.Drawing.Color.Yellow;
-            this.LV14.Location = new System.Drawing.Point(119, 8);
+            this.LV14.Location = new System.Drawing.Point(121, 9);
             this.LV14.Name = "LV14";
             this.LV14.Size = new System.Drawing.Size(5, 16);
             this.LV14.TabIndex = 63;
@@ -945,7 +945,7 @@
             // RV7
             // 
             this.RV7.BackColor = System.Drawing.Color.Lime;
-            this.RV7.Location = new System.Drawing.Point(70, 28);
+            this.RV7.Location = new System.Drawing.Point(72, 28);
             this.RV7.Name = "RV7";
             this.RV7.Size = new System.Drawing.Size(5, 16);
             this.RV7.TabIndex = 78;
@@ -954,7 +954,7 @@
             // LV7
             // 
             this.LV7.BackColor = System.Drawing.Color.Lime;
-            this.LV7.Location = new System.Drawing.Point(70, 8);
+            this.LV7.Location = new System.Drawing.Point(72, 9);
             this.LV7.Name = "LV7";
             this.LV7.Size = new System.Drawing.Size(5, 16);
             this.LV7.TabIndex = 56;
@@ -963,7 +963,7 @@
             // RV11
             // 
             this.RV11.BackColor = System.Drawing.Color.Lime;
-            this.RV11.Location = new System.Drawing.Point(98, 28);
+            this.RV11.Location = new System.Drawing.Point(100, 28);
             this.RV11.Name = "RV11";
             this.RV11.Size = new System.Drawing.Size(5, 16);
             this.RV11.TabIndex = 82;
@@ -972,7 +972,7 @@
             // LV11
             // 
             this.LV11.BackColor = System.Drawing.Color.Lime;
-            this.LV11.Location = new System.Drawing.Point(98, 8);
+            this.LV11.Location = new System.Drawing.Point(100, 9);
             this.LV11.Name = "LV11";
             this.LV11.Size = new System.Drawing.Size(5, 16);
             this.LV11.TabIndex = 60;
@@ -981,7 +981,7 @@
             // RV6
             // 
             this.RV6.BackColor = System.Drawing.Color.Lime;
-            this.RV6.Location = new System.Drawing.Point(63, 28);
+            this.RV6.Location = new System.Drawing.Point(65, 28);
             this.RV6.Name = "RV6";
             this.RV6.Size = new System.Drawing.Size(5, 16);
             this.RV6.TabIndex = 77;
@@ -990,7 +990,7 @@
             // RV10
             // 
             this.RV10.BackColor = System.Drawing.Color.Lime;
-            this.RV10.Location = new System.Drawing.Point(91, 28);
+            this.RV10.Location = new System.Drawing.Point(93, 28);
             this.RV10.Name = "RV10";
             this.RV10.Size = new System.Drawing.Size(5, 16);
             this.RV10.TabIndex = 81;
@@ -999,7 +999,7 @@
             // LV6
             // 
             this.LV6.BackColor = System.Drawing.Color.Lime;
-            this.LV6.Location = new System.Drawing.Point(63, 8);
+            this.LV6.Location = new System.Drawing.Point(65, 9);
             this.LV6.Name = "LV6";
             this.LV6.Size = new System.Drawing.Size(5, 16);
             this.LV6.TabIndex = 55;
@@ -1008,7 +1008,7 @@
             // RV5
             // 
             this.RV5.BackColor = System.Drawing.Color.Lime;
-            this.RV5.Location = new System.Drawing.Point(56, 28);
+            this.RV5.Location = new System.Drawing.Point(58, 28);
             this.RV5.Name = "RV5";
             this.RV5.Size = new System.Drawing.Size(5, 16);
             this.RV5.TabIndex = 76;
@@ -1017,7 +1017,7 @@
             // LV10
             // 
             this.LV10.BackColor = System.Drawing.Color.Lime;
-            this.LV10.Location = new System.Drawing.Point(91, 8);
+            this.LV10.Location = new System.Drawing.Point(93, 9);
             this.LV10.Name = "LV10";
             this.LV10.Size = new System.Drawing.Size(5, 16);
             this.LV10.TabIndex = 59;
@@ -1026,7 +1026,7 @@
             // RV9
             // 
             this.RV9.BackColor = System.Drawing.Color.Lime;
-            this.RV9.Location = new System.Drawing.Point(84, 28);
+            this.RV9.Location = new System.Drawing.Point(86, 28);
             this.RV9.Name = "RV9";
             this.RV9.Size = new System.Drawing.Size(5, 16);
             this.RV9.TabIndex = 80;
@@ -1035,7 +1035,7 @@
             // LV5
             // 
             this.LV5.BackColor = System.Drawing.Color.Lime;
-            this.LV5.Location = new System.Drawing.Point(56, 8);
+            this.LV5.Location = new System.Drawing.Point(58, 9);
             this.LV5.Name = "LV5";
             this.LV5.Size = new System.Drawing.Size(5, 16);
             this.LV5.TabIndex = 54;
@@ -1044,7 +1044,7 @@
             // RV4
             // 
             this.RV4.BackColor = System.Drawing.Color.Lime;
-            this.RV4.Location = new System.Drawing.Point(49, 28);
+            this.RV4.Location = new System.Drawing.Point(51, 28);
             this.RV4.Name = "RV4";
             this.RV4.Size = new System.Drawing.Size(5, 16);
             this.RV4.TabIndex = 75;
@@ -1053,7 +1053,7 @@
             // LV9
             // 
             this.LV9.BackColor = System.Drawing.Color.Lime;
-            this.LV9.Location = new System.Drawing.Point(84, 8);
+            this.LV9.Location = new System.Drawing.Point(86, 9);
             this.LV9.Name = "LV9";
             this.LV9.Size = new System.Drawing.Size(5, 16);
             this.LV9.TabIndex = 58;
@@ -1062,7 +1062,7 @@
             // RV3
             // 
             this.RV3.BackColor = System.Drawing.Color.Lime;
-            this.RV3.Location = new System.Drawing.Point(42, 28);
+            this.RV3.Location = new System.Drawing.Point(44, 28);
             this.RV3.Name = "RV3";
             this.RV3.Size = new System.Drawing.Size(5, 16);
             this.RV3.TabIndex = 74;
@@ -1071,7 +1071,7 @@
             // LV4
             // 
             this.LV4.BackColor = System.Drawing.Color.Lime;
-            this.LV4.Location = new System.Drawing.Point(49, 8);
+            this.LV4.Location = new System.Drawing.Point(51, 9);
             this.LV4.Name = "LV4";
             this.LV4.Size = new System.Drawing.Size(5, 16);
             this.LV4.TabIndex = 53;
@@ -1080,7 +1080,7 @@
             // RV2
             // 
             this.RV2.BackColor = System.Drawing.Color.Lime;
-            this.RV2.Location = new System.Drawing.Point(35, 28);
+            this.RV2.Location = new System.Drawing.Point(37, 28);
             this.RV2.Name = "RV2";
             this.RV2.Size = new System.Drawing.Size(5, 16);
             this.RV2.TabIndex = 73;
@@ -1089,7 +1089,7 @@
             // LV3
             // 
             this.LV3.BackColor = System.Drawing.Color.Lime;
-            this.LV3.Location = new System.Drawing.Point(42, 8);
+            this.LV3.Location = new System.Drawing.Point(44, 9);
             this.LV3.Name = "LV3";
             this.LV3.Size = new System.Drawing.Size(5, 16);
             this.LV3.TabIndex = 52;
@@ -1098,7 +1098,7 @@
             // RV1
             // 
             this.RV1.BackColor = System.Drawing.Color.Lime;
-            this.RV1.Location = new System.Drawing.Point(28, 28);
+            this.RV1.Location = new System.Drawing.Point(30, 28);
             this.RV1.Name = "RV1";
             this.RV1.Size = new System.Drawing.Size(5, 16);
             this.RV1.TabIndex = 72;
@@ -1107,7 +1107,7 @@
             // LV2
             // 
             this.LV2.BackColor = System.Drawing.Color.Lime;
-            this.LV2.Location = new System.Drawing.Point(35, 8);
+            this.LV2.Location = new System.Drawing.Point(37, 9);
             this.LV2.Name = "LV2";
             this.LV2.Size = new System.Drawing.Size(5, 16);
             this.LV2.TabIndex = 51;
@@ -1116,7 +1116,7 @@
             // LV1
             // 
             this.LV1.BackColor = System.Drawing.Color.Lime;
-            this.LV1.Location = new System.Drawing.Point(28, 8);
+            this.LV1.Location = new System.Drawing.Point(30, 9);
             this.LV1.Name = "LV1";
             this.LV1.Size = new System.Drawing.Size(5, 16);
             this.LV1.TabIndex = 50;

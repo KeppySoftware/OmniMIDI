@@ -625,7 +625,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 65;
             Frequency.Text = "48000";
             bufsize.Value = 30;
-            SPFRate.Value = 16;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
@@ -768,6 +768,35 @@ namespace KeppySynthConfigurator
 
             // Messagebox here
             MessageBox.Show("\"Keppy's Steinway Piano (Realism)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SBLowLatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 1000;
+            MaxCPU.Value = 75;
+            Frequency.Text = "48000";
+            bufsize.Value = 15;
+            SPFRate.Value = 75;
+            Preload.Checked = true;
+            NoteOffCheck.Checked = false;
+            SincInter.Checked = false;
+            EnableSFX.Checked = true;
+            SysResetIgnore.Checked = false;
+            OutputWAV.Checked = false;
+            XAudioDisable.Checked = false;
+            ManualAddBuffer.Checked = false;
+
+            // Additional settings
+            SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
+            ReduceCPUOver.Checked = true;
+
+            // And then...
+            Functions.SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("\"SoundBlaster - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Now, menustrip functions here
@@ -1581,11 +1610,6 @@ namespace KeppySynthConfigurator
             KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
             frm.ShowDialog();
             frm.Dispose();
-        }
-
-        private void RightClickMenu_Popup(object sender, EventArgs e)
-        {
-
         }
     }
 }

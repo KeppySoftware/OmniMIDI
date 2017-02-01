@@ -178,6 +178,7 @@
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
+            this.SBLowLatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabsForTheControls.SuspendLayout();
             this.List.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -870,7 +871,8 @@
             this.lowLatencyPresetToolStripMenuItem,
             this.blackMIDIsPresetToolStripMenuItem,
             this.chiptunesRetrogamingToolStripMenuItem,
-            this.keppysSteinwayPianoRealismToolStripMenuItem});
+            this.keppysSteinwayPianoRealismToolStripMenuItem,
+            this.SBLowLatToolStripMenuItem});
             this.settingsPresetsToolStripMenuItem.Name = "settingsPresetsToolStripMenuItem";
             this.settingsPresetsToolStripMenuItem.Size = new System.Drawing.Size(94, 27);
             this.settingsPresetsToolStripMenuItem.Text = "Settings presets";
@@ -948,7 +950,6 @@
             this.menuItem6,
             this.menuItem8,
             this.menuItem10});
-            this.RightClickMenu.Popup += new System.EventHandler(this.RightClickMenu_Popup);
             // 
             // menuItem4
             // 
@@ -1314,7 +1315,7 @@
             // autopanicmode
             // 
             this.autopanicmode.Index = 4;
-            this.autopanicmode.Text = "Automatic MIDI panic";
+            this.autopanicmode.Text = "Automatic rendering recovery";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
             // menuItem27
@@ -1560,6 +1561,13 @@
             // 
             this.ImportSettingsDialog.Filter = "Registry files|*.reg";
             // 
+            // SBLowLatToolStripMenuItem
+            // 
+            this.SBLowLatToolStripMenuItem.Name = "SBLowLatToolStripMenuItem";
+            this.SBLowLatToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.SBLowLatToolStripMenuItem.Text = "SoundBlaster - Low Latency";
+            this.SBLowLatToolStripMenuItem.Click += new System.EventHandler(this.SBLowLatToolStripMenuItem_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1750,6 +1758,7 @@
         private System.Windows.Forms.MenuItem SeeChangelog;
         private System.Windows.Forms.MenuItem menuItem29;
         public System.Windows.Forms.MenuItem MonophonicFunc;
+        private System.Windows.Forms.ToolStripMenuItem SBLowLatToolStripMenuItem;
     }
 }
 

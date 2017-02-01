@@ -49,10 +49,13 @@ void DLLLoadError2(LPCWSTR dll) {
 	exit(0);
 }
 
-void ResetSynth(){
-	evbwpoint = 0;
-	evbrpoint = 0;
-	evbcount = 0;
+void ResetSynth(int ischangingbuffermode){
+	reset_synth = 1;
+	if (ischangingbuffermode == 1) {
+		evbwpoint = 0;
+		evbrpoint = 0;
+		evbcount = 0;
+	}
 	BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 	reset_synth = 0;
 }
@@ -393,7 +396,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
 		if (oldbuffermodetemp != oldbuffermode) {
-			ResetSynth();
+			ResetSynth(0);
 		}
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
@@ -410,7 +413,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"allnotesignore", NULL, &dwType, (LPBYTE)&allnotesignore, &dwSize);
 		RegQueryValueEx(hKey, L"potato", NULL, &dwType, (LPBYTE)&potato, &dwSize);
 		if (vms2emutemp != vms2emu) {
-			ResetSynth();
+			ResetSynth(1);
 		}
 		if (potato) {
 			if (frequencyttemp != frequency) {
@@ -428,8 +431,7 @@ void realtime_load_settings()
 			sound_out_volume_float = (float)volume / 10000.0f;
 			sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 		}
-		//another cake
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+		// stuff
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 		if (noteoff1) {
@@ -460,6 +462,30 @@ void realtime_load_settings()
 	}
 	catch (...) {
 		crashmessage(L"RTSetLoad");
+	}
+}
+
+void Panic() {
+	//Panic system
+	if (autopanic == 1) {
+		if (currentcpuusage0 >= 100.0f && currentcpuusage0 < 150.0f) {
+			int reduceby;
+			if (currentcpuusage0 >= 100.0f && currentcpuusage0 < 110.0f) { reduceby = midivoices / 4; }
+			else if (currentcpuusage0 >= 110.0f && currentcpuusage0 < 120.0f) { reduceby = midivoices / 8; }
+			else if (currentcpuusage0 >= 120.0f && currentcpuusage0 < 130.0f) { reduceby = midivoices / 16; }
+			else if (currentcpuusage0 >= 130.0f && currentcpuusage0 < 140.0f) { reduceby = midivoices / 32; }
+			else if (currentcpuusage0 >= 140.0f && currentcpuusage0 < 150.0f) { reduceby = midivoices / 64; }
+			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, reduceby);
+		}
+		else if (currentcpuusage0 >= 150.0f) {
+			ResetSynth(0);
+		}
+		else {
+			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+		}
+	}
+	else {
+		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 	}
 }
 
@@ -517,17 +543,11 @@ void debug_info() {
 		DWORD level, left, right;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		float currentvoices0;
-		float currentcpuusage0;
 		int tempo;
 		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 
-		if (autopanic == 1) {
-			if (currentcpuusage0 >= 100.0f) {
-				ResetSynth();
-			}
-		}
-		int currentvoicesint0 = int(currentvoices0);
+	    currentvoicesint0 = int(currentvoices0);
 		int currentcpuusageint0 = int(currentcpuusage0);
 
 		// Things
@@ -579,7 +599,7 @@ void ReloadSFList(DWORD whichsflist){
 		else {
 			sound_out_volume_float = 0.0f / 10000.0f;
 		}
-		ResetSynth();
+		ResetSynth(0);
 		Sleep(100);
 		LoadSoundfont(whichsflist);
 		if (xaudiodisabled == 1) {
@@ -739,7 +759,7 @@ void keybindings()
 				}
 			}
 			if (GetAsyncKeyState(VK_INSERT) & 1) {
-				ResetSynth();
+				ResetSynth(0);
 			}
 			else {
 				// Nothing lel
