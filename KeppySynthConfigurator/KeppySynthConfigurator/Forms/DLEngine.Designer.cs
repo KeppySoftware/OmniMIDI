@@ -1,6 +1,6 @@
 ﻿namespace KeppySynthConfigurator.Forms
 {
-    partial class KeppySynthDLEngine
+    partial class DLEngine
     {
         /// <summary>
         /// Required designer variable.

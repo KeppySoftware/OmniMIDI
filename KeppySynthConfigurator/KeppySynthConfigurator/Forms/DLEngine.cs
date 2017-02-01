@@ -12,7 +12,7 @@ using System.Net;
 
 namespace KeppySynthConfigurator.Forms
 {
-    public partial class KeppySynthDLEngine : Form
+    public partial class DLEngine : Form
     {
         WebClient webClient;
         String VersionToDownload;
@@ -21,7 +21,7 @@ namespace KeppySynthConfigurator.Forms
         Uri URL;
         int test;
 
-        public KeppySynthDLEngine(String text, String MessageText, String toDL, int what)
+        public DLEngine(String text, String MessageText, String toDL, int what)
         {
             InitializeComponent();
             thestring = MessageText;

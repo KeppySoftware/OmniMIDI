@@ -1,7 +1,6 @@
 // Keppy's Synthesizer Values
 
 // Mandatory values
-static int decoded;
 static sound_out * sound_driver = NULL;
 static HINSTANCE hinst = NULL;			//main DLL handle
 

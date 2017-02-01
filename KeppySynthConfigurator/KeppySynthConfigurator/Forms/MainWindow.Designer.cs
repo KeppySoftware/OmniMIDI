@@ -948,6 +948,7 @@
             this.menuItem6,
             this.menuItem8,
             this.menuItem10});
+            this.RightClickMenu.Popup += new System.EventHandler(this.RightClickMenu_Popup);
             // 
             // menuItem4
             // 

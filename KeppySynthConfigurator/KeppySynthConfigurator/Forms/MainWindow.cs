@@ -117,6 +117,7 @@ namespace KeppySynthConfigurator
                 WinAPI.ShowWindow(Handle, WinAPI.SW_RESTORE);
                 WinAPI.SetForegroundWindow(Handle);
             }
+
             base.WndProc(ref m);
         }
 
@@ -1300,15 +1301,15 @@ namespace KeppySynthConfigurator
 
         private void MonophonicFunc_Click(object sender, EventArgs e)
         {
-            if (MonophonicFunc.Checked == true)
+            if (MonophonicFunc.Checked == false)
             {
                 SynthSettings.SetValue("monorendering", "1", RegistryValueKind.DWord);
-                floatingpointaudio.Checked = true;
+                MonophonicFunc.Checked = true;
             }
             else
             {
                 SynthSettings.SetValue("monorendering", "0", RegistryValueKind.DWord);
-                floatingpointaudio.Checked = false;
+                MonophonicFunc.Checked = false;
             }
         }
 
@@ -1580,6 +1581,11 @@ namespace KeppySynthConfigurator
             KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
             frm.ShowDialog();
             frm.Dispose();
+        }
+
+        private void RightClickMenu_Popup(object sender, EventArgs e)
+        {
+
         }
     }
 }

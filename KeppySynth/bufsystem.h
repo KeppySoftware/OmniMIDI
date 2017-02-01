@@ -192,6 +192,7 @@ bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_
 }
 
 void AudioRender() {
+	DWORD decoded;
 	decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 	if (encmode == 1) {
 

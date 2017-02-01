@@ -43,6 +43,8 @@
             this.CloseBtn = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.LELabel = new System.Windows.Forms.Label();
+            this.PrvwBtn = new System.Windows.Forms.Button();
+            this.PreviewThread = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // label1
@@ -194,6 +196,21 @@
             this.LELabel.TabIndex = 16;
             this.LELabel.Text = "SAS";
             // 
+            // PrvwBtn
+            // 
+            this.PrvwBtn.Location = new System.Drawing.Point(305, 282);
+            this.PrvwBtn.Name = "PrvwBtn";
+            this.PrvwBtn.Size = new System.Drawing.Size(133, 23);
+            this.PrvwBtn.TabIndex = 17;
+            this.PrvwBtn.Text = "Play SoundFont preview";
+            this.PrvwBtn.UseVisualStyleBackColor = true;
+            this.PrvwBtn.Visible = false;
+            this.PrvwBtn.Click += new System.EventHandler(this.PrvwBtn_Click);
+            // 
+            // PreviewThread
+            // 
+            this.PreviewThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.PreviewThread_DoWork);
+            // 
             // KeppySynthSoundfontInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -201,6 +218,7 @@
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(525, 312);
             this.ControlBox = false;
+            this.Controls.Add(this.PrvwBtn);
             this.Controls.Add(this.LELabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.CloseBtn);
@@ -245,5 +263,7 @@
         private System.Windows.Forms.Button CloseBtn;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label LELabel;
+        private System.Windows.Forms.Button PrvwBtn;
+        private System.ComponentModel.BackgroundWorker PreviewThread;
     }
 }

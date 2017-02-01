@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="keppysynth.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="xaudiopipe.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\external_packages\audiodefs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="bansystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bass_vst.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bassenc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="basserr.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bassmidi.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="bufsystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\comdecl.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\mmddk.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="settings.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="sfsystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_out.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\XAudio2.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\xma2defs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="val.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{c0bf8251-d876-4009-bc25-8a5fe38bea4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime">
+      <UniqueIdentifier>{bc795566-3e5e-4b04-868e-bd68977dd818}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="keppysynth.def">
+      <Filter>Runtime</Filter>
+    </None>
+  </ItemGroup>
+</Project>

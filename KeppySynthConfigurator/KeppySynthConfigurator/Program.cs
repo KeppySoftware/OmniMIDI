@@ -99,6 +99,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                DebugToConsole(false, "Started configurator.", null);
                 if (Environment.OSVersion.Version.Major < 6)
                 {
                     try
@@ -134,7 +135,6 @@ namespace KeppySynthConfigurator
                             case "/DBG":
                                 runmode = 0;
                                 AllocConsole();
-                                DebugToConsole(false, "Started configurator.", null);
                                 break;
                             default:
                                 runmode = 0;

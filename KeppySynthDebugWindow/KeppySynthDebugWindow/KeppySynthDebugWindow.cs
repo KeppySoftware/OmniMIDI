@@ -85,7 +85,7 @@ namespace KeppySynthDebugWindow
             {
                 System.Threading.Thread.Sleep(100); // Let it sleep, otherwise it'll eat all ya CPU resources :P
                 try
-                {
+                {                 
                     StringBuilder sb = new StringBuilder(); // Creates a string builder, because adding lines one by one to the richtextbox is unefficient
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
@@ -108,6 +108,7 @@ namespace KeppySynthDebugWindow
                     string bit;
                     string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
                     string bitapp = Watchdog.GetValue("bit", "Unknown").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
+                    int sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
                     string currentappreturn;
                     string bitappreturn;
 
@@ -173,7 +174,7 @@ namespace KeppySynthDebugWindow
                         {
                             // If you're using XAudio, it'll show you the size of a frame.
                             sb.Append(Environment.NewLine);
-                            sb.Append(String.Format("Decoded data size (bytes): {0} ({1} x 4)", Debug.GetValue("int", "0").ToString(), (Convert.ToInt32(Debug.GetValue("int", "0").ToString()) / 4).ToString()));
+                            sb.Append(String.Format("Decoded data size (bytes): {0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue));
                         }
                     }
                     finally

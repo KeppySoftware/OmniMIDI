@@ -105,7 +105,7 @@ namespace KeppySynthConfigurator
                 // 32-bit DLL
                 if (!File.Exists(userfolder + "\\LoudMax.dll"))
                 {
-                    Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(null, "Downloading LoudMax 32-bit... {0}%", loudmax32, 1);
+                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit... {0}%", loudmax32, 1);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
@@ -120,7 +120,7 @@ namespace KeppySynthConfigurator
                 {
                     if (!File.Exists(userfolder + "\\LoudMax64.dll"))
                     {
-                        Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(null, "Downloading LoudMax 64-bit... {0}%", loudmax64, 1);
+                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit... {0}%", loudmax64, 1);
                         frm.StartPosition = FormStartPosition.CenterScreen;
                         frm.ShowDialog();
                     }
@@ -199,7 +199,7 @@ namespace KeppySynthConfigurator
             upd.Dispose();
             if (dialogResult == DialogResult.Yes)
             {
-                Forms.KeppySynthDLEngine frm = new Forms.KeppySynthDLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
+                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 frm.ShowDialog();
             }
@@ -431,11 +431,11 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)) == 1)
                 {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked = true;
                 }
                 else
                 {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
                 {

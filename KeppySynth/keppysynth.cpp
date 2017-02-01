@@ -708,6 +708,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				debug_info();
 				keybindings();
 				WatchdogCheck();
+				CheckVolume();
 				mixervoid();
 			}
 			stop_rtthread = 0;
