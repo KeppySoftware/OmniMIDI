@@ -140,13 +140,22 @@ public:
 message_window * g_msgwnd = NULL;
 
 void basserr(int error) {
-	TCHAR part1[MAX_PATH] = L"BASS encountered the error \"";
-	TCHAR part2[MAX_PATH] = L"\".\n\nExplanation: ";
-	TCHAR part3[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
-	lstrcat(part1, errname[error]);
-	lstrcat(part2, errdesc[error]);
+	TCHAR buffer[MAX_PATH];
+	wsprintfW(buffer, L"%d", error);
+	TCHAR part1[MAX_PATH] = L"BASS encountered the error number ";
+	TCHAR part2[MAX_PATH] = L": \"";
+	TCHAR part3[MAX_PATH] = L"\"\n\nExplanation: ";
+	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
+	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
+	lstrcat(part1, buffer);
+	lstrcat(part2, errname[error]);
+	lstrcat(part3, errdesc[error]);
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
+	lstrcat(part1, part4);
+	if (isoverrideenabled == 1) {
+		lstrcat(part1, partE);
+	}
 	MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
 }
 

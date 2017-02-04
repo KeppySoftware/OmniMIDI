@@ -175,6 +175,7 @@ BOOL load_bassfuncs()
 				DLLLoadError(basspathalt);
 				exit(0);
 			}
+			isoverrideenabled = 1;
 		}
 		else {
 			lstrcat(basspath, installpath);
@@ -191,6 +192,7 @@ BOOL load_bassfuncs()
 				DLLLoadError(bassmidipathalt);
 				exit(0);
 			}
+			isoverrideenabled = 1;
 		}
 		else {
 			lstrcat(bassmidipath, installpath);
@@ -207,6 +209,7 @@ BOOL load_bassfuncs()
 				DLLLoadError(bassencpathalt);
 				exit(0);
 			}
+			isoverrideenabled = 1;
 		}
 		else {
 			lstrcat(bassencpath, installpath);
@@ -226,6 +229,7 @@ BOOL load_bassfuncs()
 			else {
 				isbassvstloaded = 1;
 			}
+			isoverrideenabled = 1;
 		}
 		else {
 			lstrcat(bassvstpath, installpath);
