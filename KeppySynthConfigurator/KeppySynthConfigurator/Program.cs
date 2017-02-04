@@ -176,31 +176,6 @@ namespace KeppySynthConfigurator
             return true;
         }
 
-        public static void UpdateTextPosition(Form form)
-        {
-            Version win8version = new Version(6, 2, 9200, 0);
-            Version win81version = new Version(6, 3, 9200, 0);
-            Version win81u1version = new Version(6, 3, 9600, 0);
-
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                Environment.OSVersion.Version != win8version | Environment.OSVersion.Version != win81version | Environment.OSVersion.Version != win81u1version)
-            {
-                Graphics g = form.CreateGraphics();
-                Double startingPoint = (form.Width / 2) - (g.MeasureString(form.Text.Trim(), form.Font).Width / 2);
-                Double widthOfASpace = g.MeasureString(" ", form.Font).Width;
-                String tmp = " ";
-                Double tmpWidth = 0;
-
-                while ((tmpWidth + widthOfASpace) < startingPoint)
-                {
-                    tmp += " ";
-                    tmpWidth += widthOfASpace;
-                }
-
-                form.Text = tmp + form.Text.Trim();
-            }
-        }
-
         private static void RecurseCopyKey(RegistryKey sourceKey, RegistryKey destinationKey)
         {
             foreach (string valueName in sourceKey.GetValueNames())
