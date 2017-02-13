@@ -1,6 +1,6 @@
 ﻿namespace KeppySynthConfigurator
 {
-    partial class KeppySynthSoundfontInfo
+    partial class SoundFontInfo
     {
         /// <summary>
         /// Required designer variable.
@@ -45,6 +45,11 @@
             this.LELabel = new System.Windows.Forms.Label();
             this.PrvwBtn = new System.Windows.Forms.Button();
             this.PreviewThread = new System.ComponentModel.BackgroundWorker();
+            this.CustomMIDI = new System.Windows.Forms.OpenFileDialog();
+            this.RightClickMenu = new System.Windows.Forms.ContextMenu();
+            this.StartNormalPrvw = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.StartCustomPrvw = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // label1
@@ -204,14 +209,42 @@
             this.PrvwBtn.TabIndex = 17;
             this.PrvwBtn.Text = "Play SoundFont preview";
             this.PrvwBtn.UseVisualStyleBackColor = true;
-            this.PrvwBtn.Visible = false;
             this.PrvwBtn.Click += new System.EventHandler(this.PrvwBtn_Click);
             // 
             // PreviewThread
             // 
             this.PreviewThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.PreviewThread_DoWork);
             // 
-            // KeppySynthSoundfontInfo
+            // CustomMIDI
+            // 
+            this.CustomMIDI.Filter = "MIDI files|*.mid;*.midi;*.rmi";
+            this.CustomMIDI.Title = "Select a MIDI...";
+            // 
+            // RightClickMenu
+            // 
+            this.RightClickMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.StartNormalPrvw,
+            this.menuItem2,
+            this.StartCustomPrvw});
+            // 
+            // StartNormalPrvw
+            // 
+            this.StartNormalPrvw.Index = 0;
+            this.StartNormalPrvw.Text = "Preview";
+            this.StartNormalPrvw.Click += new System.EventHandler(this.StartNormalPrvw_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "-";
+            // 
+            // StartCustomPrvw
+            // 
+            this.StartCustomPrvw.Index = 2;
+            this.StartCustomPrvw.Text = "Preview with a custom MIDI...";
+            this.StartCustomPrvw.Click += new System.EventHandler(this.StartCustomPrvw_Click);
+            // 
+            // SoundFontInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -235,7 +268,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "KeppySynthSoundfontInfo";
+            this.Name = "SoundFontInfo";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -265,5 +298,10 @@
         private System.Windows.Forms.Label LELabel;
         private System.Windows.Forms.Button PrvwBtn;
         private System.ComponentModel.BackgroundWorker PreviewThread;
+        private System.Windows.Forms.OpenFileDialog CustomMIDI;
+        private System.Windows.Forms.ContextMenu RightClickMenu;
+        private System.Windows.Forms.MenuItem StartCustomPrvw;
+        private System.Windows.Forms.MenuItem StartNormalPrvw;
+        private System.Windows.Forms.MenuItem menuItem2;
     }
 }

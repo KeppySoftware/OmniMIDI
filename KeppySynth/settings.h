@@ -280,6 +280,11 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_InFree);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_InGetDeviceInfo);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_InInit);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_InStart);
+		LOADBASSMIDIFUNCTION(BASS_MIDI_InStop);
 		if (isbassvstloaded == 1) {
 			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
 		}
@@ -328,6 +333,8 @@ void load_settings()
 		RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
 		RegQueryValueEx(hKey, L"fadeoutdisable", NULL, &dwType, (LPBYTE)&fadeoutdisable, &dwSize);
 		RegQueryValueEx(hKey, L"defaultdev", NULL, &dwType, (LPBYTE)&defaultoutput, &dwSize);
+		RegQueryValueEx(hKey, L"defaultmidiindev", NULL, &dwType, (LPBYTE)&defaultmidiindev, &dwSize);
+		RegQueryValueEx(hKey, L"midiinenabled", NULL, &dwType, (LPBYTE)&midiinenabled, &dwSize);
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);

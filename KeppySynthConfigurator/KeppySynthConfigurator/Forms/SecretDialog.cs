@@ -36,7 +36,7 @@ namespace KeppySynthConfigurator
 
         private void UpdateYesNo_Load(object sender, EventArgs e)
         {
-            System.Media.SystemSounds.Asterisk.Play();
+            SoundToPlay.Play();
         }
 
         private void NoBtn_Click(object sender, EventArgs e)

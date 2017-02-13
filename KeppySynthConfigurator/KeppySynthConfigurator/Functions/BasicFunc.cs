@@ -347,6 +347,20 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static void SetLastMIDIPath(string path) // Saves the last path from the SoundFont preview dialog to the registry 
+        {
+            try
+            {
+                SoundFontInfo.LastMIDIPath = path;
+                KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathmidimport", path);
+                Program.DebugToConsole(false, String.Format("Last MIDI preview path is: ", path), null);
+            }
+            catch
+            {
+                Functions.InitializeLastPath();
+            }
+        }
+
         // NOT SUPPORTED ON XP
         public static void OpenFileDialogAddCustomPaths(FileDialog dialog) // Allows you to add favorites to the SoundfontImport dialog
         {
@@ -373,6 +387,11 @@ namespace KeppySynthConfigurator
         public static void SetDefaultDevice(int dev)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultdev", dev, RegistryValueKind.DWord);
+        }
+
+        public static void SetDefaultMIDIInDevice(int dev)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultmidiindev", dev, RegistryValueKind.DWord);
         }
 
         public static void LoadSettings() // Loads the settings from the registry

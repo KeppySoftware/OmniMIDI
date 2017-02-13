@@ -511,6 +511,11 @@ unsigned __stdcall audioengine(LPVOID lpV){
 	return 0;
 }
 
+void CALLBACK MidiInProc(DWORD device, double time, const BYTE *buffer, DWORD length, void *user)
+{
+	BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, buffer, length); // forward the data to the MIDI stream
+}
+
 unsigned __stdcall threadfunc(LPVOID lpV){
 	USES_CONVERSION;
 	try {
@@ -565,7 +570,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						sound_driver = create_sound_out_xaudio2();
 						sound_out_float = TRUE;
 						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
-						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same has the sound card's max audio frequency.
+						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same as the sound card's max audio frequency.
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}
 				}
@@ -632,6 +637,17 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						}
 					}
 					#endif
+
+					// MIDI In code
+					if (midiinenabled == 1) {
+						// BASS_MIDI_DEVICEINFO* info;
+						// BASS_MIDI_InGetDeviceInfo(defaultmidiindev, info);
+						// BASS_MIDI_InInit(defaultmidiindev, MidiInProc, NULL);
+						// BASS_MIDI_InStart(defaultmidiindev);
+						// CheckUp();
+
+						// Working on it, currently disabled.
+					}
 					// Encoder code
 					if (encmode == 1) {
 						PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");

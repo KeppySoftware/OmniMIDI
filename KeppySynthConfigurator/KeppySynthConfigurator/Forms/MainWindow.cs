@@ -342,13 +342,17 @@ namespace KeppySynthConfigurator
                 try
                 {
                     Program.DebugToConsole(false, String.Format("Currently showing info for soundfont: {0}", Lis.SelectedItem.ToString()), null);
-                    KeppySynthSoundfontInfo frm = new KeppySynthSoundfontInfo(Lis.SelectedItem.ToString());
-                    frm.ShowDialog();
+                    SoundFontInfo frm = new SoundFontInfo(Lis.SelectedItem.ToString());
+                    if (!SoundFontInfo.ERROR)
+                    {
+                        frm.ShowDialog();
+                    }
+                    SoundFontInfo.ERROR = false;
                     frm.Dispose();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                     Environment.Exit(-1);
                 }
             }
@@ -1389,6 +1393,13 @@ namespace KeppySynthConfigurator
                 SynthSettings.SetValue("allnotesignore", "0", RegistryValueKind.DWord);
                 AllNotesIgnore.Checked = false;
             }
+        }
+
+        private void MIDIeventsRed_Click(object sender, EventArgs e)
+        {
+            MIDIRedirect frm = new MIDIRedirect();
+            frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void DebugModePls_Click(object sender, EventArgs e)
