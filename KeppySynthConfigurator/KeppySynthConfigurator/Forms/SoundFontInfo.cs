@@ -223,6 +223,8 @@ namespace KeppySynthConfigurator
             PreviewThread.RunWorkerAsync();
             PrvwBtn.Text = "Stop SoundFont preview";
             StartNormalPrvw1.Enabled = false;
+            StartNormalPrvw2.Enabled = false;
+            StartNormalPrvw3.Enabled = false;
             StartCustomPrvw.Enabled = false;
         }
 
@@ -262,7 +264,11 @@ namespace KeppySynthConfigurator
                 // Init stream
                 ChangePreviewButtonText("Initializing stream...", false);
                 ChangeWindowTitle("Initializing stream...");
-                hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_MIDI_DECAYEND | BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+                hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
+                    (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? BASSFlag.BASS_MIDI_NOFX : 0) |
+                    (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? BASSFlag.BASS_MIDI_NOTEOFF1 : 0) |
+                    (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? BASSFlag.BASS_MIDI_SINCINTER : 0) | 
+                    BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
                 Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_CPU, (int)(KeppySynthConfiguratorMain.Delegate.MaxCPU.Value / 100));
                 System.Threading.Thread.Sleep(50);
 
@@ -296,26 +302,40 @@ namespace KeppySynthConfigurator
                 }
 
                 BassMidi.BASS_MIDI_StreamLoadSamples(hStream);
+                int howmanytimes = 1;
 
-                RestartStream:
+            RestartStream:
+                CheckPlayTimes(howmanytimes);
                 Bass.BASS_ChannelPlay(hStream, false);
                 ChangePreviewButtonText("Stop SoundFont preview", true);
                 ChangeWindowTitle(String.Format("Playing \"{0}\"", Path.GetFileNameWithoutExtension(MIDIPreview)));
 
                 while (Bass.BASS_ChannelIsActive(hStream) == BASSActive.BASS_ACTIVE_PLAYING)
                 {
+                    float currentcpuusage0 = 0.0f;
+                    int midivoices = (int)KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value;
+                    Bass.BASS_ChannelGetAttribute(hStream, BASSAttribute.BASS_ATTRIB_CPU, ref currentcpuusage0);
+                    int reduceby = 0;
+                    if (currentcpuusage0 >= 100.0f && currentcpuusage0 < 110.0f) { reduceby = (int)midivoices / 4; }
+                    else if (currentcpuusage0 >= 110.0f && currentcpuusage0 < 120.0f) { reduceby = (int)midivoices / 8; }
+                    else if (currentcpuusage0 >= 120.0f && currentcpuusage0 < 130.0f) { reduceby = (int)midivoices / 16; }
+                    else if (currentcpuusage0 >= 130.0f && currentcpuusage0 < 140.0f) { reduceby = (int)midivoices / 32; }
+                    else if (currentcpuusage0 >= 140.0f && currentcpuusage0 < 150.0f) { reduceby = (int)midivoices / 64; }
+                    else if (currentcpuusage0 >= 150.0f) { reduceby = (int)midivoices / 128; }
+                    Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_VOICES, reduceby);
                     Bass.BASS_ChannelUpdate(hStream, 0);
-                    System.Threading.Thread.Sleep(1);
                     if (!IsPreviewEnabled)
                     {
                         break;
                     }
+                    System.Threading.Thread.Sleep(1);
                 }
 
                 if (!Quitting)
                 {
                     if (LoopYesNo.Checked == true && IsPreviewEnabled == true)
                     {
+                        howmanytimes++;
                         goto RestartStream;
                     }
 
@@ -358,6 +378,45 @@ namespace KeppySynthConfigurator
                 {
                     this.Text = String.Format("Keppy's Synthesizer - {0}", Text);
                 });
+            }
+        }
+
+        private void CheckPlayTimes(int times)
+        {
+            if (times == 10)
+            {
+                MessageBox.Show("Looks like you really like this MIDI.", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (times == 25)
+            {
+                MessageBox.Show("Yeah... You really do like this MIDI, don't you?", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (times == 50)
+            {
+                MessageBox.Show("Are you sick or something? Aren't you getting bored of this MIDI?", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (times == 100)
+            {
+                MessageBox.Show("I'm starting to think you're Gingeas...\nHe's the only one this crazy to play the same MIDI 100 times in a row...", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (times == 200)
+            {
+                MessageBox.Show("I guess you just left the PC on while taking a dump.", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (times == 400)
+            {
+                MessageBox.Show("Now I AM getting sick of it.", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+            else if (times == 800)
+            {
+                MessageBox.Show("Program error.\n\nFUNC: BASSMIDILib::LoopSystem::LoopMIDIForever\nLINE: 300\nINFO: 00000000 00000000", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+            else if (times == 1000)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ignored =>
+                {
+                    throw new IOException("The configurator has been manually crashed to prevent damages to the computer.");
+                }));
             }
         }
 
