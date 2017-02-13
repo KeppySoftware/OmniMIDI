@@ -19,6 +19,7 @@ namespace KeppySynthConfigurator
     public partial class SoundFontInfo : Form
     {
         public static Boolean ERROR = false;
+        public static Boolean Quitting = false;
 
         public static string LastMIDIPath { get; set; }
         bool bye;
@@ -164,59 +165,10 @@ namespace KeppySynthConfigurator
 
         private void CloseBtn_Click(object sender, EventArgs e)
         {
-            if (!bye)
-            {
-                if (ModifierKeys == Keys.Shift)
-                {
-                    MessageBox.Show("Bad move.", "Uh oh", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    MessageBox.Show("Now it's my turn.", "Hey", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    KeppySynthConfiguratorMain.Delegate.Visible = false;
-                    Text = "Ahah";
-
-                    Console.Clear();
-                    Console.Write("Good luck.");
-
-                    label1.Visible = false;
-                    label2.Visible = false;
-                    label3.Visible = false;
-                    label4.Visible = false;
-                    label5.Visible = false;
-                    label7.Visible = false;
-                    label9.Visible = false;
-                    FNBox.Visible = false;
-                    ISFBox.Visible = false;
-                    CIBox.Visible = false;
-                    SofSFLab.Visible = false;
-                    SFfLab.Visible = false;
-                    CommentRich.Visible = false;
-                    LELabel.Visible = false;
-
-                    CloseBtn.Location = new Point(231, 133);
-
-                    bye = true;
-                    skip = true;
-                }
-            }
-
-            if (skip)
-            {
-                skip = false;
-            }
-            else
-            {
-                if (bye)
-                {
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(ignored =>
-                    {
-                        throw new AccessViolationException("Lol");
-                    }));
-                }
-                else
-                {
-                    Close();
-                }
-            }
+            Bass.BASS_ChannelStop(hStream);
+            IsPreviewEnabled = false;
+            Quitting = true;
+            Close();
         }
 
         private void StartNormalPrvw_Click(object sender, EventArgs e)
@@ -225,8 +177,33 @@ namespace KeppySynthConfigurator
             IsPreviewEnabled = true;
             PreviewThread.RunWorkerAsync();
             PrvwBtn.Text = "Stop SoundFont preview";
-            CloseBtn.Enabled = false;
-            StartNormalPrvw.Enabled = false;
+            StartNormalPrvw1.Enabled = false;
+            StartNormalPrvw2.Enabled = false;
+            StartNormalPrvw3.Enabled = false;
+            StartCustomPrvw.Enabled = false;
+        }
+
+        private void StartNormalPrvw2_Click(object sender, EventArgs e)
+        {
+            MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\onestop.mid");
+            IsPreviewEnabled = true;
+            PreviewThread.RunWorkerAsync();
+            PrvwBtn.Text = "Stop SoundFont preview";
+            StartNormalPrvw1.Enabled = false;
+            StartNormalPrvw2.Enabled = false;
+            StartNormalPrvw3.Enabled = false;
+            StartCustomPrvw.Enabled = false;
+        }
+
+        private void StartNormalPrvw3_Click(object sender, EventArgs e)
+        {
+            MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\flourish.mid");
+            IsPreviewEnabled = true;
+            PreviewThread.RunWorkerAsync();
+            PrvwBtn.Text = "Stop SoundFont preview";
+            StartNormalPrvw1.Enabled = false;
+            StartNormalPrvw2.Enabled = false;
+            StartNormalPrvw3.Enabled = false;
             StartCustomPrvw.Enabled = false;
         }
 
@@ -245,8 +222,7 @@ namespace KeppySynthConfigurator
             IsPreviewEnabled = true;
             PreviewThread.RunWorkerAsync();
             PrvwBtn.Text = "Stop SoundFont preview";
-            CloseBtn.Enabled = false;
-            StartNormalPrvw.Enabled = false;
+            StartNormalPrvw1.Enabled = false;
             StartCustomPrvw.Enabled = false;
         }
 
@@ -254,34 +230,14 @@ namespace KeppySynthConfigurator
         {
             if (!IsPreviewEnabled)
             {
-                if (ModifierKeys == Keys.Shift)
-                {
-                    CustomMIDI.InitialDirectory = LastMIDIPath;
-                    if (CustomMIDI.ShowDialog() == DialogResult.OK)
-                    {
-                        MIDIPreview = CustomMIDI.FileName;
-                        Functions.SetLastMIDIPath(Path.GetDirectoryName(CustomMIDI.FileName));
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\town.mid");
-                }
-                IsPreviewEnabled = true;
-                PreviewThread.RunWorkerAsync();
-                PrvwBtn.Text = "Stop SoundFont preview";
-                CloseBtn.Enabled = false;
-                StartNormalPrvw.Enabled = false;
-                StartCustomPrvw.Enabled = false;
+                RightClickMenu.Show(PrvwBtn, new System.Drawing.Point(1, 20));
             }
             else
             {
                 IsPreviewEnabled = false;
-                StartNormalPrvw.Enabled = true;
+                StartNormalPrvw1.Enabled = true;
+                StartNormalPrvw2.Enabled = true;
+                StartNormalPrvw3.Enabled = true;
                 StartCustomPrvw.Enabled = true;
             }
         }
@@ -341,6 +297,7 @@ namespace KeppySynthConfigurator
 
                 BassMidi.BASS_MIDI_StreamLoadSamples(hStream);
 
+                RestartStream:
                 Bass.BASS_ChannelPlay(hStream, false);
                 ChangePreviewButtonText("Stop SoundFont preview", true);
                 ChangeWindowTitle(String.Format("Playing \"{0}\"", Path.GetFileNameWithoutExtension(MIDIPreview)));
@@ -355,14 +312,23 @@ namespace KeppySynthConfigurator
                     }
                 }
 
-                ChangePreviewButtonText("Play SoundFont preview", true);
-                ChangeWindowTitle("Information about the SoundFont");
-                this.Invoke((MethodInvoker)delegate
+                if (!Quitting)
                 {
-                    CloseBtn.Enabled = true;
-                    StartNormalPrvw.Enabled = true;
-                    StartCustomPrvw.Enabled = true;
-                });
+                    if (LoopYesNo.Checked == true && IsPreviewEnabled == true)
+                    {
+                        goto RestartStream;
+                    }
+
+                    ChangePreviewButtonText("Play SoundFont preview", true);
+                    ChangeWindowTitle("Information about the SoundFont");
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        StartNormalPrvw1.Enabled = true;
+                        StartNormalPrvw2.Enabled = true;
+                        StartNormalPrvw3.Enabled = true;
+                        StartCustomPrvw.Enabled = true;
+                    });
+                }
 
                 Bass.BASS_StreamFree(hStream);
             }
@@ -387,6 +353,18 @@ namespace KeppySynthConfigurator
             {
                 this.Text = String.Format("Keppy's Synthesizer - {0}", Text);
             });
+        }
+
+        private void LoopYesNo_Click(object sender, EventArgs e)
+        {
+            if (!LoopYesNo.Checked)
+            {
+                LoopYesNo.Checked = true;
+            }
+            else
+            {
+                LoopYesNo.Checked = false;
+            }
         }
     }
 }

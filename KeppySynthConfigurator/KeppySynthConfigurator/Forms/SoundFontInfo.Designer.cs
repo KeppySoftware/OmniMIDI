@@ -47,9 +47,13 @@
             this.PreviewThread = new System.ComponentModel.BackgroundWorker();
             this.CustomMIDI = new System.Windows.Forms.OpenFileDialog();
             this.RightClickMenu = new System.Windows.Forms.ContextMenu();
-            this.StartNormalPrvw = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.StartNormalPrvw1 = new System.Windows.Forms.MenuItem();
             this.StartCustomPrvw = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.StartNormalPrvw2 = new System.Windows.Forms.MenuItem();
+            this.StartNormalPrvw3 = new System.Windows.Forms.MenuItem();
+            this.LoopYesNo = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // label1
@@ -223,26 +227,53 @@
             // RightClickMenu
             // 
             this.RightClickMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.StartNormalPrvw,
-            this.menuItem2,
+            this.LoopYesNo,
+            this.menuItem3,
+            this.StartNormalPrvw1,
+            this.StartNormalPrvw2,
+            this.StartNormalPrvw3,
+            this.menuItem1,
             this.StartCustomPrvw});
             // 
-            // StartNormalPrvw
+            // StartNormalPrvw1
             // 
-            this.StartNormalPrvw.Index = 0;
-            this.StartNormalPrvw.Text = "Preview";
-            this.StartNormalPrvw.Click += new System.EventHandler(this.StartNormalPrvw_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 1;
-            this.menuItem2.Text = "-";
+            this.StartNormalPrvw1.Index = 2;
+            this.StartNormalPrvw1.Text = "Preview with Town";
+            this.StartNormalPrvw1.Click += new System.EventHandler(this.StartNormalPrvw_Click);
             // 
             // StartCustomPrvw
             // 
-            this.StartCustomPrvw.Index = 2;
+            this.StartCustomPrvw.Index = 6;
             this.StartCustomPrvw.Text = "Preview with a custom MIDI...";
             this.StartCustomPrvw.Click += new System.EventHandler(this.StartCustomPrvw_Click);
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 5;
+            this.menuItem1.Text = "-";
+            // 
+            // StartNormalPrvw2
+            // 
+            this.StartNormalPrvw2.Index = 3;
+            this.StartNormalPrvw2.Text = "Preview with Onestop";
+            this.StartNormalPrvw2.Click += new System.EventHandler(this.StartNormalPrvw2_Click);
+            // 
+            // StartNormalPrvw3
+            // 
+            this.StartNormalPrvw3.Index = 4;
+            this.StartNormalPrvw3.Text = "Preview with Flourish";
+            this.StartNormalPrvw3.Click += new System.EventHandler(this.StartNormalPrvw3_Click);
+            // 
+            // LoopYesNo
+            // 
+            this.LoopYesNo.Index = 0;
+            this.LoopYesNo.Text = "Loop";
+            this.LoopYesNo.Click += new System.EventHandler(this.LoopYesNo_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
             // 
             // SoundFontInfo
             // 
@@ -301,7 +332,11 @@
         private System.Windows.Forms.OpenFileDialog CustomMIDI;
         private System.Windows.Forms.ContextMenu RightClickMenu;
         private System.Windows.Forms.MenuItem StartCustomPrvw;
-        private System.Windows.Forms.MenuItem StartNormalPrvw;
-        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem StartNormalPrvw1;
+        private System.Windows.Forms.MenuItem StartNormalPrvw2;
+        private System.Windows.Forms.MenuItem StartNormalPrvw3;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem LoopYesNo;
+        private System.Windows.Forms.MenuItem menuItem3;
     }
 }

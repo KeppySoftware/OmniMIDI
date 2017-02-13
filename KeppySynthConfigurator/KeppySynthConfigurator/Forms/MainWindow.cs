@@ -348,6 +348,7 @@ namespace KeppySynthConfigurator
                         frm.ShowDialog();
                     }
                     SoundFontInfo.ERROR = false;
+                    SoundFontInfo.Quitting = false;
                     frm.Dispose();
                 }
                 catch (Exception ex)
