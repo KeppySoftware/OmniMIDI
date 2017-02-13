@@ -41,58 +41,67 @@ namespace KeppySynthConfigurator
             Int32 fonthandle;
             FileInfo f;
 
-            if (!File.Exists(SoundFont))
+            OriginalSF = SoundFont;
+
+            if (SoundFont.ToLower().IndexOf('=') != -1)
             {
-                Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.infoicon, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
-                ERROR = true;
-                Close();
+                var matches = System.Text.RegularExpressions.Regex.Matches(SoundFont, "[0-9]+");
+                string sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
+                if (!File.Exists(sf))
+                {
+                    Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.infoicon, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
+                    ERROR = true;
+                    Close();
+                }
+                SoundFontT = sf;
+                fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
+                f = new FileInfo(sf);
+                next = sf;
+            }
+            else if (SoundFont.ToLower().IndexOf('@') != -1)
+            {
+                string sf = SoundFont.Substring(SoundFont.LastIndexOf('@') + 1);
+                if (!File.Exists(sf))
+                {
+                    Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.infoicon, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
+                    ERROR = true;
+                    Close();
+                }
+                SoundFontT = sf;
+                fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
+                f = new FileInfo(sf);
+                next = sf;
             }
             else
             {
-                OriginalSF = SoundFont;
-
-                if (SoundFont.ToLower().IndexOf('=') != -1)
+                if (!File.Exists(SoundFont))
                 {
-                    var matches = System.Text.RegularExpressions.Regex.Matches(SoundFont, "[0-9]+");
-                    string sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
-                    SoundFontT = sf;
-                    fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
-                    f = new FileInfo(sf);
-                    next = sf;
+                    Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.infoicon, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
+                    ERROR = true;
+                    Close();
                 }
-                else if (SoundFont.ToLower().IndexOf('@') != -1)
-                {
-                    string sf = SoundFont.Substring(SoundFont.LastIndexOf('@') + 1);
-                    SoundFontT = sf;
-                    fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
-                    f = new FileInfo(sf);
-                    next = sf;
-                }
-                else
-                {
-                    SoundFontT = SoundFont;
-                    fonthandle = BassMidi.BASS_MIDI_FontInit(SoundFont);
-                    f = new FileInfo(SoundFont);
-                    next = SoundFont;
-                }
-
-                BASS_MIDI_FONTINFO fontinfo = BassMidi.BASS_MIDI_FontGetInfo(fonthandle);
-
-                FNBox.Text = next;
-                ISFBox.Text = ReturnName(fontinfo.name, next);
-                CIBox.Text = ReturnCopyright(fontinfo.copyright);
-
-                SofSFLab.Text = String.Format("{0} bytes ({1}Presets: {2})",
-                    f.Length.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")),
-                    ReturnSamplesSize(fontinfo.samsize),
-                    String.Format("{0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
-
-                SFfLab.Text = ReturnFormat(Path.GetExtension(next));
-                CommentRich.Text = ReturnComment(fontinfo.comment);
-                LELabel.Text = f.LastWriteTimeUtc.ToString();
-
-                BassMidi.BASS_MIDI_FontFree(fonthandle);
+                SoundFontT = SoundFont;
+                fonthandle = BassMidi.BASS_MIDI_FontInit(SoundFont);
+                f = new FileInfo(SoundFont);
+                next = SoundFont;
             }
+
+            BASS_MIDI_FONTINFO fontinfo = BassMidi.BASS_MIDI_FontGetInfo(fonthandle);
+
+            FNBox.Text = next;
+            ISFBox.Text = ReturnName(fontinfo.name, next);
+            CIBox.Text = ReturnCopyright(fontinfo.copyright);
+
+            SofSFLab.Text = String.Format("{0} bytes ({1}Presets: {2})",
+                f.Length.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")),
+                ReturnSamplesSize(fontinfo.samsize),
+                String.Format("{0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
+
+            SFfLab.Text = ReturnFormat(Path.GetExtension(next));
+            CommentRich.Text = ReturnComment(fontinfo.comment);
+            LELabel.Text = f.LastWriteTimeUtc.ToString();
+
+            BassMidi.BASS_MIDI_FontFree(fonthandle);
         }
 
         private void KeppySynthSoundfontInfo_Load(object sender, EventArgs e)
