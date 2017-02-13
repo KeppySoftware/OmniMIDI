@@ -332,27 +332,33 @@ namespace KeppySynthConfigurator
 
                 Bass.BASS_StreamFree(hStream);
             }
-            catch (Exception ex)
+            catch
             {
-                Functions.ShowErrorDialog(null, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
+
             }
         }
 
         void ChangePreviewButtonText(String Text, Boolean IsEnabled)
         {
-            this.Invoke((MethodInvoker)delegate
+            if (!Quitting)
             {
-                PrvwBtn.Text = Text;
-                PrvwBtn.Enabled = IsEnabled;
-            });
+                this.Invoke((MethodInvoker)delegate
+                {
+                    PrvwBtn.Text = Text;
+                    PrvwBtn.Enabled = IsEnabled;
+                });
+            }
         }
 
         void ChangeWindowTitle(String Text)
         {
-            this.Invoke((MethodInvoker)delegate
+            if (!Quitting)
             {
-                this.Text = String.Format("Keppy's Synthesizer - {0}", Text);
-            });
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.Text = String.Format("Keppy's Synthesizer - {0}", Text);
+                });
+            }
         }
 
         private void LoopYesNo_Click(object sender, EventArgs e)
