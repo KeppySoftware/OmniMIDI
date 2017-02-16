@@ -588,21 +588,54 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void IEL_Paint(object sender, PaintEventArgs e)
+        // Color buttons
+
+        private void ColorButton(Button button, Pen pen, PaintEventArgs e)
         {
-            Rectangle rect = IEL.ClientRectangle;
+            // Wew.
+            Rectangle rect = button.ClientRectangle;
             rect.Width--;
             rect.Height--;
-            e.Graphics.DrawRectangle(Pens.Green, rect);
+            e.Graphics.DrawRectangle(pen, rect);
         }
 
-        private void EL_Paint(object sender, PaintEventArgs e)
+        private void ButtonAddRemove(object sender, PaintEventArgs e)
         {
-            Rectangle rect = EL.ClientRectangle;
-            rect.Width--;
-            rect.Height--;
-            e.Graphics.DrawRectangle(Pens.Red, rect);
+            // I bet you're wondering,
+            ColorButton(AddSF, Pens.Violet, e);
         }
+
+        private void ButtonUpDown(object sender, PaintEventArgs e)
+        {
+            // How can it set the color to two buttons, if you're only parsing one?
+            ColorButton(MvU, Pens.Sienna, e);
+        }
+
+        private void ButtonEnableDisable(object sender, PaintEventArgs e)
+        {
+            // Well, it's quite simple,
+            ColorButton(EnableSF, Pens.Navy, e);
+        }
+
+        private void ButtonLoad(object sender, PaintEventArgs e)
+        {
+            // The button parsed is only used to calculate the area of the rectangle,
+            ColorButton(LoadToApp, Pens.PowderBlue, e);
+        }
+
+        private void ImportListButton(object sender, PaintEventArgs e)
+        {
+            // The actual button that is going to get the color is parsed through "e",
+            ColorButton(IEL, Pens.Green, e);
+        }
+
+        private void ExportListButton(object sender, PaintEventArgs e)
+        {
+            // Ye, it's not really that easy to explain...
+            ColorButton(EL, Pens.Red, e);
+        }
+
+        // Stuff
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1066,11 +1099,6 @@ namespace KeppySynthConfigurator
             MessageBox.Show("\"Automatic MIDI panic\" will tell the driver to kill all the active notes, when the CPU usage is equal or higher than 100%.", "What's the automatic MIDI panic?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void whyCanNotDisableSoftwareRendering_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Since Windows Vista, DirectSound is emulated through the \"Windows Audio Session API\".\n\nIt's not hardware rendered anymore, so the function is set to \"Enabled\" by default.\n\nWindows XP is the last O.S. to support native hardware rendering.", "Why can't I disable software rendering?", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         // Brand new output mode
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
@@ -1082,7 +1110,7 @@ namespace KeppySynthConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Check this, if you don't want static noises or the XAudio interface doesn't work properly and/or it's buggy.\n\n(Notice: Disabling XAudio also increases the latency by a bit, and disables the \"Output to WAV\" mode.)", "\"Disable the XAudio engine\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("After checking this, the driver will fall back on using BASS's own audio interface, based on DirectSound, instead of a direct interface with WASAPI, based on XAudio.\n\nUsing DirectSound instead of XAudio could reduce audio hiccups and app freezes on outdated machines, but will also increase the latency by a significant amount.", "\"Use DirectSound\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void XAudioDisable_CheckedChanged(object sender, EventArgs e)

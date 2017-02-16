@@ -242,19 +242,20 @@
             this.EL.Text = "Export list";
             this.EL.UseVisualStyleBackColor = false;
             this.EL.Click += new System.EventHandler(this.EL_Click);
-            this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.EL_Paint);
+            this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.ExportListButton);
             // 
             // LoadToApp
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
-            this.LoadToApp.Location = new System.Drawing.Point(545, 186);
+            this.LoadToApp.Location = new System.Drawing.Point(545, 159);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(89, 23);
             this.LoadToApp.TabIndex = 7;
             this.LoadToApp.Text = "Load to app";
             this.LoadToApp.UseVisualStyleBackColor = false;
             this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
+            this.LoadToApp.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonLoad);
             // 
             // IEL
             // 
@@ -267,16 +268,16 @@
             this.IEL.Text = "Import list";
             this.IEL.UseVisualStyleBackColor = false;
             this.IEL.Click += new System.EventHandler(this.IEL_Click);
-            this.IEL.Paint += new System.Windows.Forms.PaintEventHandler(this.IEL_Paint);
+            this.IEL.Paint += new System.Windows.Forms.PaintEventHandler(this.ImportListButton);
             // 
             // BankPresetOverride
             // 
             this.BankPresetOverride.AutoSize = true;
             this.BankPresetOverride.Location = new System.Drawing.Point(165, 11);
             this.BankPresetOverride.Name = "BankPresetOverride";
-            this.BankPresetOverride.Size = new System.Drawing.Size(322, 17);
+            this.BankPresetOverride.Size = new System.Drawing.Size(355, 17);
             this.BankPresetOverride.TabIndex = 1;
-            this.BankPresetOverride.Text = "Import specific bank/preset from SF2 file and assign it manually";
+            this.BankPresetOverride.Text = "Import specific bank/preset from SoundFont file and assign it manually";
             this.BankPresetOverride.UseVisualStyleBackColor = true;
             // 
             // SelectedListBox
@@ -313,25 +314,27 @@
             // 
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
-            this.DisableSF.Location = new System.Drawing.Point(545, 262);
+            this.DisableSF.Location = new System.Drawing.Point(545, 221);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(89, 23);
             this.DisableSF.TabIndex = 9;
             this.DisableSF.Text = "Disable SF";
             this.DisableSF.UseVisualStyleBackColor = false;
             this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
+            this.DisableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnableDisable);
             // 
             // EnableSF
             // 
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableSF.BackColor = System.Drawing.Color.Transparent;
-            this.EnableSF.Location = new System.Drawing.Point(545, 233);
+            this.EnableSF.Location = new System.Drawing.Point(545, 199);
             this.EnableSF.Name = "EnableSF";
             this.EnableSF.Size = new System.Drawing.Size(89, 23);
             this.EnableSF.TabIndex = 8;
             this.EnableSF.Text = "Enable SF";
             this.EnableSF.UseVisualStyleBackColor = false;
             this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
+            this.EnableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnableDisable);
             // 
             // List1Override
             // 
@@ -361,37 +364,40 @@
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvD.BackColor = System.Drawing.Color.Transparent;
-            this.MvD.Location = new System.Drawing.Point(545, 139);
+            this.MvD.Location = new System.Drawing.Point(545, 119);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(89, 23);
             this.MvD.TabIndex = 6;
             this.MvD.Text = "Move ▼";
             this.MvD.UseVisualStyleBackColor = false;
             this.MvD.Click += new System.EventHandler(this.MvD_Click);
+            this.MvD.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonUpDown);
             // 
             // MvU
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvU.BackColor = System.Drawing.Color.Transparent;
-            this.MvU.Location = new System.Drawing.Point(545, 110);
+            this.MvU.Location = new System.Drawing.Point(545, 97);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(89, 23);
             this.MvU.TabIndex = 5;
             this.MvU.Text = "Move ▲";
             this.MvU.UseVisualStyleBackColor = false;
             this.MvU.Click += new System.EventHandler(this.MvU_Click);
+            this.MvU.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonUpDown);
             // 
             // RmvSF
             // 
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RmvSF.BackColor = System.Drawing.Color.Transparent;
-            this.RmvSF.Location = new System.Drawing.Point(545, 65);
+            this.RmvSF.Location = new System.Drawing.Point(545, 58);
             this.RmvSF.Name = "RmvSF";
             this.RmvSF.Size = new System.Drawing.Size(89, 23);
             this.RmvSF.TabIndex = 4;
             this.RmvSF.Text = "Remove -";
             this.RmvSF.UseVisualStyleBackColor = false;
             this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
+            this.RmvSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
             // 
             // AddSF
             // 
@@ -404,6 +410,7 @@
             this.AddSF.Text = "Add +";
             this.AddSF.UseVisualStyleBackColor = false;
             this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
+            this.AddSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
             // 
             // Lis
             // 
@@ -449,7 +456,7 @@
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.ErrorImage")));
             this.WhatIsXAudio.Image = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.Image")));
-            this.WhatIsXAudio.Location = new System.Drawing.Point(393, 8);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(348, 8);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(21, 17);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -463,9 +470,9 @@
             this.XAudioDisable.BackColor = System.Drawing.Color.Transparent;
             this.XAudioDisable.Location = new System.Drawing.Point(242, 9);
             this.XAudioDisable.Name = "XAudioDisable";
-            this.XAudioDisable.Size = new System.Drawing.Size(154, 17);
+            this.XAudioDisable.Size = new System.Drawing.Size(110, 17);
             this.XAudioDisable.TabIndex = 28;
-            this.XAudioDisable.Text = "Disable the XAudio engine.";
+            this.XAudioDisable.Text = "Use DirectSound.";
             this.XAudioDisable.UseVisualStyleBackColor = false;
             this.XAudioDisable.CheckedChanged += new System.EventHandler(this.XAudioDisable_CheckedChanged);
             // 
@@ -568,10 +575,10 @@
             this.Label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label4.Location = new System.Drawing.Point(4, 80);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(455, 13);
+            this.Label4.Size = new System.Drawing.Size(403, 13);
             this.Label4.TabIndex = 26;
-            this.Label4.Text = "Set the samples per frame rate for XAudio (Useful to reduce latency, or to remove" +
-    " static noises):";
+            this.Label4.Text = "Set the samples per frame rate (Useful to reduce latency, or to remove static noi" +
+    "ses):";
             // 
             // BufferText
             // 

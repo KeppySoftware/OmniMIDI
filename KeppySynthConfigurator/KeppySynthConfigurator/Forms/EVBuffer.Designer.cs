@@ -100,7 +100,7 @@
             this.label2.TabIndex = 9;
             this.label2.Text = "EV buffer size (1-32768): ";
             // 
-            // KeppyDriverEVBuffer
+            // KeppySynthEVBuffer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -114,7 +114,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppyDriverEVBuffer";
+            this.Name = "KeppySynthEVBuffer";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

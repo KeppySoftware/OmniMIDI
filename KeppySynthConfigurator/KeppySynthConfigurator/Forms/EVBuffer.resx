@@ -118,7 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label1.Text" xml:space="preserve">
-    <value>The EV buffer is used to temporarily store MIDI data, that then get sent to the BASSMIDI audio stream to be played.
-Low values can improve performances (by really little), while high values can improve audio quality.</value>
+    <value>The EV buffer is used to temporarily store MIDI data,
+that then get sent to the BASSMIDI audio stream to be played.
+Low values can improve performances (by really little),
+while high values can improve audio quality.</value>
   </data>
 </root>

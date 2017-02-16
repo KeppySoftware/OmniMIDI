@@ -149,7 +149,7 @@ void basserr(int error) {
 	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
 	lstrcat(part1, buffer);
 	lstrcat(part2, errname[error]);
-	lstrcat(part3, errdesc[error]);
+	lstrcat(part3, errdesc[error - 1]);
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
 	lstrcat(part1, part4);
@@ -525,9 +525,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		}
 		else {
 			unsigned i;
+			int check;
 			int opend = 0;
 			BASS_MIDI_FONT * mf;
 			BASS_INFO info;
+			BASS_DEVICEINFO dinfo;
 			TCHAR loudmaxdll[MAX_PATH];
 			TCHAR loudmaxdll64[MAX_PATH];
 			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, loudmaxdll);
@@ -543,8 +545,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					if (FAILED(CoInitialize(NULL))) continue;
 					com_initialized = TRUE;
 				}
+				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (xaudiodisabled == 1) {
-					int check;
 					bassoutputfinal = (defaultoutput - 1);
 					if (defaultoutput == 0) {
 						check = 1;
@@ -552,11 +554,10 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					else {
 						check = bassoutputfinal;
 					}
-					BASS_DEVICEINFO dinfo;
 					BASS_GetDeviceInfo(check, &dinfo);
 					if (dinfo.name == NULL || defaultoutput == 1) {
 						bassoutputfinal = 0;
-						noaudiodevices = 1;					
+						noaudiodevices = 1;
 						PrintToConsole(FOREGROUND_RED, 1, "Can not open DirectSound device. Switching to \"No sound\"...");
 					}
 					else {
@@ -574,10 +575,9 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}
 				}
-				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
 					CheckUp();
-					PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");				
+					PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");	
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 					if (bassoutputfinal != 0) {

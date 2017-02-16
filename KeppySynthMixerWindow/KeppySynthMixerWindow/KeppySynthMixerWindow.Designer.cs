@@ -1140,7 +1140,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(190, 52);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Unavailable with XAudio.";
+            this.label1.Text = "Only available when\r\nusing DirectSound.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // KeppySynthMixerWindow

@@ -131,6 +131,8 @@ namespace KeppySynthConfigurator
                 return "SoundFont 2.x";
             else if (fileext.ToLowerInvariant() == ".sfz")
                 return "SoundFontZ/Sforzando";
+            else if (fileext.ToLowerInvariant() == ".ssx")
+                return "Crypted SoundFont";
             else if (fileext.ToLowerInvariant() == ".sfpack")
                 return "Compressed SoundFont 1.x/2.x";
             else if (fileext.ToLowerInvariant() == ".sfark")
@@ -171,9 +173,8 @@ namespace KeppySynthConfigurator
             Close();
         }
 
-        private void StartNormalPrvw_Click(object sender, EventArgs e)
+        private void RunWorker()
         {
-            MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\town.mid");
             IsPreviewEnabled = true;
             PreviewThread.RunWorkerAsync();
             PrvwBtn.Text = "Stop SoundFont preview";
@@ -181,30 +182,24 @@ namespace KeppySynthConfigurator
             StartNormalPrvw2.Enabled = false;
             StartNormalPrvw3.Enabled = false;
             StartCustomPrvw.Enabled = false;
+        }
+
+        private void StartNormalPrvw_Click(object sender, EventArgs e)
+        {
+            MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\town.mid");
+            RunWorker();
         }
 
         private void StartNormalPrvw2_Click(object sender, EventArgs e)
         {
             MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\onestop.mid");
-            IsPreviewEnabled = true;
-            PreviewThread.RunWorkerAsync();
-            PrvwBtn.Text = "Stop SoundFont preview";
-            StartNormalPrvw1.Enabled = false;
-            StartNormalPrvw2.Enabled = false;
-            StartNormalPrvw3.Enabled = false;
-            StartCustomPrvw.Enabled = false;
+            RunWorker();
         }
 
         private void StartNormalPrvw3_Click(object sender, EventArgs e)
         {
             MIDIPreview = String.Format("{0}{1}", Environment.GetEnvironmentVariable("windir"), "\\Media\\flourish.mid");
-            IsPreviewEnabled = true;
-            PreviewThread.RunWorkerAsync();
-            PrvwBtn.Text = "Stop SoundFont preview";
-            StartNormalPrvw1.Enabled = false;
-            StartNormalPrvw2.Enabled = false;
-            StartNormalPrvw3.Enabled = false;
-            StartCustomPrvw.Enabled = false;
+            RunWorker();
         }
 
         private void StartCustomPrvw_Click(object sender, EventArgs e)
@@ -219,13 +214,7 @@ namespace KeppySynthConfigurator
             {
                 return;
             }
-            IsPreviewEnabled = true;
-            PreviewThread.RunWorkerAsync();
-            PrvwBtn.Text = "Stop SoundFont preview";
-            StartNormalPrvw1.Enabled = false;
-            StartNormalPrvw2.Enabled = false;
-            StartNormalPrvw3.Enabled = false;
-            StartCustomPrvw.Enabled = false;
+            RunWorker();
         }
 
         private void PrvwBtn_Click(object sender, EventArgs e)
@@ -265,9 +254,10 @@ namespace KeppySynthConfigurator
                 ChangePreviewButtonText("Initializing stream...", false);
                 ChangeWindowTitle("Initializing stream...");
                 hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
-                    (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? BASSFlag.BASS_MIDI_NOFX : 0) |
-                    (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? BASSFlag.BASS_MIDI_NOTEOFF1 : 0) |
-                    (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? BASSFlag.BASS_MIDI_SINCINTER : 0) | 
+                    (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? 0 : BASSFlag.BASS_MIDI_NOFX) |
+                    (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? 0 : BASSFlag.BASS_MIDI_NOTEOFF1) |
+                    (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? 0 : BASSFlag.BASS_MIDI_SINCINTER) |
+                    (KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked ? BASSFlag.BASS_SAMPLE_MONO : 0) | 
                     BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
                 Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_CPU, (int)(KeppySynthConfiguratorMain.Delegate.MaxCPU.Value / 100));
                 System.Threading.Thread.Sleep(50);
