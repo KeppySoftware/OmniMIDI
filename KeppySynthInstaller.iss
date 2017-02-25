@@ -16,7 +16,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.0.6.15'
+#define Version '4.0.6.16'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -262,10 +262,11 @@ Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuse
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
 Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: waituntilterminated; StatusMsg: "Registering driver..."; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: waituntilterminated; StatusMsg: "Registering driver..."; Check: not Is64BitInstallMode
-Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser;StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
+Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
+Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml"; Flags: runascurrentuser postinstall waituntilidle shellexec unchecked; Description: "Vote Keppy's Synthesizer on Softpedia"
 
 [UninstallRun]
 Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: Is64BitInstallMode
@@ -303,49 +304,6 @@ SetupWindowTitle=Setup - %1 {#Version}
 #include "scripts\products\vcredist.iss"
 #endif
 
-// Import the LoadVCLStyle function from VclStylesInno.DLL
-procedure LoadVCLStyle(VClStyleFile: String); external 'LoadVCLStyleA@files:VclStylesInno.dll stdcall';
-// Import the UnLoadVCLStyles function from VclStylesInno.DLL
-procedure UnLoadVCLStyles; external 'UnLoadVCLStyles@files:VclStylesInno.dll stdcall';
-
-	procedure OpenSoftpediaLink(Sender: TObject);
-var
-  ErrorCode : Integer;
-begin
-  ShellExec('open', 'http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-end;
-
-procedure CreateWizardPages;
-var
-  Page: TWizardPage;
-  BitmapImage: TBitmapImage;
-  BitmapFileName: String;
-begin
-  ExtractTemporaryFile('voteme.bmp');
-  BitmapFileName := ExpandConstant('{tmp}\voteme.bmp');
-  ExtractTemporaryFile(ExtractFileName(BitmapFileName));
-
-  { TBitmapImage }
-  Page := CreateCustomPage(wpInstalling, 'Increase Keppy''s Synthesizer''s popularity by voting it on Softpedia',
-  'You can also vote it later by going to "Help > Useful links > Keppy''s Synthesizer''s Softpedia Page".');
-
-  BitmapImage := TBitmapImage.Create(Page);
-  BitmapImage.AutoSize := True;
-  BitmapImage.Left := 0;
-  BitmapImage.Top  := 0;
-  BitmapImage.Bitmap.LoadFromFile(BitmapFileName);
-  BitmapImage.Cursor := crHand;
-  BitmapImage.OnClick := @OpenSoftpediaLink;
-  BitmapImage.Parent := Page.Surface;
-  BitmapImage.Align:=alCLient;
-  BitmapImage.Stretch:=True;
-end;
-
-procedure InitializeWizard();
-begin
-  CreateWizardPages;
-end;
-
 function InitializeSetup(): boolean;
 
   var ErrorCode: Integer;
@@ -378,34 +336,18 @@ begin
 	vcredist2013();
 #endif
 
-  ExtractTemporaryFile('theme.vsf');
-  LoadVCLStyle(ExpandConstant('{tmp}\theme.vsf'));
-
 	Result := true;
 end;
 
-procedure DeinitializeSetup();
-begin
-  UnLoadVCLStyles;
-end;
 
 function InitializeUninstall(): Boolean;
 
   var ErrorCode: Integer;
 
 begin
-
-  ExtractTemporaryFile('theme.vsf');
-  LoadVCLStyle(ExpandConstant('{tmp}\theme.vsf'));
-
   // Kill the watchdog before uninstalling
   ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
   ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
  	Result := true;
 
-end;
-
-procedure DeinitializeUninstall();
-begin
-  UnLoadVCLStyles;
 end;
