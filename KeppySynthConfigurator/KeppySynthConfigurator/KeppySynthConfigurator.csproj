@@ -65,22 +65,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\MIDIRedirect.cs">
+    <Compile Include="Forms\Add-ons\MIDIRedirect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MIDIRedirect.Designer.cs">
+    <Compile Include="Forms\Add-ons\MIDIRedirect.Designer.cs">
       <DependentUpon>MIDIRedirect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FavouritesManager.cs">
+    <Compile Include="Forms\Add-ons\FavouritesManager.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FavouritesManager.Designer.cs">
+    <Compile Include="Forms\Add-ons\FavouritesManager.Designer.cs">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BlacklistSystem.cs">
+    <Compile Include="Forms\Add-ons\BlacklistSystem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BlacklistSystem.Designer.cs">
+    <Compile Include="Forms\Add-ons\BlacklistSystem.Designer.cs">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainWindow.cs">
@@ -89,22 +89,22 @@
     <Compile Include="Forms\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BankNPresetSel.cs">
+    <Compile Include="Forms\Add-ons\BankNPresetSel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BankNPresetSel.Designer.cs">
+    <Compile Include="Forms\Add-ons\BankNPresetSel.Designer.cs">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EVBuffer.cs">
+    <Compile Include="Forms\Add-ons\EVBuffer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EVBuffer.Designer.cs">
+    <Compile Include="Forms\Add-ons\EVBuffer.Designer.cs">
       <DependentUpon>EVBuffer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DefaultSFList.cs">
+    <Compile Include="Forms\Add-ons\DefaultSFList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DefaultSFList.Designer.cs">
+    <Compile Include="Forms\Add-ons\DefaultSFList.Designer.cs">
       <DependentUpon>DefaultSFList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Information.cs">
@@ -113,22 +113,22 @@
     <Compile Include="Forms\Information.Designer.cs">
       <DependentUpon>Information.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OutputWAVDir.cs">
+    <Compile Include="Forms\Add-ons\OutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OutputWAVDir.Designer.cs">
+    <Compile Include="Forms\Add-ons\OutputWAVDir.Designer.cs">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PitchShifting.cs">
+    <Compile Include="Forms\Add-ons\PitchShifting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\PitchShifting.Designer.cs">
+    <Compile Include="Forms\Add-ons\PitchShifting.Designer.cs">
       <DependentUpon>PitchShifting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SFListAssign.cs">
+    <Compile Include="Forms\Add-ons\SFListAssign.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SFListAssign.Designer.cs">
+    <Compile Include="Forms\Add-ons\SFListAssign.Designer.cs">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DLEngine.cs">
@@ -157,63 +157,69 @@
     </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
     <Compile Include="Functions\WatchdogFunc.cs" />
-    <Compile Include="Forms\DefaultAudioOutput.cs">
+    <Compile Include="Forms\Add-ons\DefaultAudioOutput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DefaultAudioOutput.Designer.cs">
+    <Compile Include="Forms\Add-ons\DefaultAudioOutput.Designer.cs">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VelocityIntervals.cs">
+    <Compile Include="Forms\Add-ons\VelocityIntervals.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VelocityIntervals.Designer.cs">
+    <Compile Include="Forms\Add-ons\VelocityIntervals.Designer.cs">
       <DependentUpon>VelocityIntervals.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Add-ons\MaskSynthAsAnother.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Add-ons\MaskSynthAsAnother.Designer.cs">
+      <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\MIDIRedirect.resx">
+    <EmbeddedResource Include="Forms\Add-ons\MIDIRedirect.resx">
       <DependentUpon>MIDIRedirect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FavouritesManager.resx">
+    <EmbeddedResource Include="Forms\Add-ons\FavouritesManager.resx">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BlacklistSystem.resx">
+    <EmbeddedResource Include="Forms\Add-ons\BlacklistSystem.resx">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BankNPresetSel.resx">
+    <EmbeddedResource Include="Forms\Add-ons\BankNPresetSel.resx">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EVBuffer.resx">
+    <EmbeddedResource Include="Forms\Add-ons\EVBuffer.resx">
       <DependentUpon>EVBuffer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DefaultSFList.resx">
+    <EmbeddedResource Include="Forms\Add-ons\DefaultSFList.resx">
       <DependentUpon>DefaultSFList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Information.resx">
       <DependentUpon>Information.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OutputWAVDir.resx">
+    <EmbeddedResource Include="Forms\Add-ons\OutputWAVDir.resx">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PitchShifting.resx">
+    <EmbeddedResource Include="Forms\Add-ons\PitchShifting.resx">
       <DependentUpon>PitchShifting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SFListAssign.resx">
+    <EmbeddedResource Include="Forms\Add-ons\SFListAssign.resx">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DLEngine.resx">
       <DependentUpon>DLEngine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DefaultAudioOutput.resx">
+    <EmbeddedResource Include="Forms\Add-ons\DefaultAudioOutput.resx">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SoundFontInfo.resx">
       <DependentUpon>SoundFontInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VelocityIntervals.resx">
+    <EmbeddedResource Include="Forms\Add-ons\VelocityIntervals.resx">
       <DependentUpon>VelocityIntervals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SecretDialog.resx">
@@ -221,6 +227,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateYesNo.resx">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Add-ons\MaskSynthAsAnother.resx">
+      <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

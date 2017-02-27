@@ -64,6 +64,32 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static void OpenSFWithDefaultApp(String SoundFont) // Basically changes the directory's name
+        {
+            try
+            {
+                if (SoundFont.ToLower().IndexOf('=') != -1)
+                {
+                    var matches = System.Text.RegularExpressions.Regex.Matches(SoundFont, "[0-9]+");
+                    string sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
+                    Process.Start(sf);
+                }
+                else if (SoundFont.ToLower().IndexOf('@') != -1)
+                {
+                    string sf = SoundFont.Substring(SoundFont.LastIndexOf('@') + 1);
+                    Process.Start(sf);
+                }
+                else
+                {
+                    Process.Start(SoundFont);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
         public static void DriverRegistry(int integer)
         {
             try
@@ -404,17 +430,11 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 0)
                 {
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Checked = false;
                 }
                 else
                 {
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810enabledToolStripMenuItem.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.DefaultOut810disabledToolStripMenuItem.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allhotkeys", 0)) == 1)
                 {
@@ -651,7 +671,7 @@ namespace KeppySynthConfigurator
 
                 // And finally, the volume!
                 int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
-                double x = VolumeValue / 100;
+                decimal VolVal = (decimal)VolumeValue / 100;
                 if (KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked == true)
                 {
                     KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
@@ -667,8 +687,8 @@ namespace KeppySynthConfigurator
                         KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
                     }
                 }
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = x.ToString("000\\%");
-                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
+                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }
             catch (Exception ex)

@@ -103,7 +103,7 @@
             this.NewOutputDir.Title = "Where do you want the WAV output to go?";
             this.NewOutputDir.ValidateNames = false;
             // 
-            // KeppyDriverOutputWAVDir
+            // KeppySynthOutputWAVDir
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -119,11 +119,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppyDriverOutputWAVDir";
+            this.Name = "KeppySynthOutputWAVDir";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "\"Output to WAV\" settings";
+            this.Text = "OTW mode settings";
             this.Load += new System.EventHandler(this.KeppyDriverOutputWAVDir_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

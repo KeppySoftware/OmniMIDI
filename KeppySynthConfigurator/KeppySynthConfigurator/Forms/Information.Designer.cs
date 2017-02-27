@@ -83,9 +83,9 @@
             // Label8
             // 
             this.Label8.BackColor = System.Drawing.Color.White;
-            this.Label8.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label8.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label8.ForeColor = System.Drawing.Color.Black;
-            this.Label8.Location = new System.Drawing.Point(263, 14);
+            this.Label8.Location = new System.Drawing.Point(264, 11);
             this.Label8.Name = "Label8";
             this.Label8.Size = new System.Drawing.Size(340, 53);
             this.Label8.TabIndex = 23;

@@ -206,16 +206,14 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                int VolumeValue = 0;
-                double x = VolTrackBar.Value / 100;
-                VolumeValue = Convert.ToInt32(x);
-                VolSimView.Text = VolumeValue.ToString("000\\%");
-                VolIntView.Text = "Value: " + VolTrackBar.Value.ToString("00000");
+                decimal VolVal = (decimal)VolTrackBar.Value / 100;
+                VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
+                VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(null, System.Media.SystemSounds.Asterisk, "Error", "Error during the import process of the list!", true, ex);
+                Functions.ShowErrorDialog(null, System.Media.SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
             }
         }
 
@@ -290,6 +288,27 @@ namespace KeppySynthConfigurator
                 {
                     Functions.ReinitializeList(ex, CurrentList);
                 }
+            }
+        }
+
+        private void OpenSFDefaultApp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Lis.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                {
+                    String name = Lis.SelectedItems[i].ToString();
+                    Functions.OpenSFWithDefaultApp(name);
+                    Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -805,7 +824,7 @@ namespace KeppySynthConfigurator
             Functions.SaveSettings();
 
             // Messagebox here
-            MessageBox.Show("\"Keppy's Steinway Piano (Realism)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("\"High fidelity audio (For HQ SoundFonts)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void SBLowLatToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1026,24 +1045,6 @@ namespace KeppySynthConfigurator
             frm.Dispose();
         }
 
-        private void DefaultOut810enabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
-            DefaultOut810enabledToolStripMenuItem.Checked = true;
-            DefaultOut810disabledToolStripMenuItem.Checked = false;
-            DefaultOut810enabledToolStripMenuItem.Enabled = false;
-            DefaultOut810disabledToolStripMenuItem.Enabled = true;
-        }
-
-        private void DefaultOut810disabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
-            DefaultOut810enabledToolStripMenuItem.Checked = false;
-            DefaultOut810disabledToolStripMenuItem.Checked = true;
-            DefaultOut810enabledToolStripMenuItem.Enabled = true;
-            DefaultOut810disabledToolStripMenuItem.Enabled = false;
-        }
-
         private void RegDriver_Click(object sender, EventArgs e)
         {
             Functions.DriverRegistry(0);
@@ -1056,11 +1057,13 @@ namespace KeppySynthConfigurator
 
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
+            Bass.BASS_Free();
             Application.Exit();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Bass.BASS_Free();
             Application.Exit();
         }
 
@@ -1103,8 +1106,10 @@ namespace KeppySynthConfigurator
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
             MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" +
-                "You can change the output directory by clicking \"Settings > Change directory of the \"Output to WAV\" mode\".\n\n" +
-                "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", "\"Output to WAV mode\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "You can change the output directory by clicking \"Settings > Change OTW directory\".\n\n" +
+                "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", 
+                "\"OTW mode\"? What is it?", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Brand new XAudio disabler
@@ -1650,6 +1655,32 @@ namespace KeppySynthConfigurator
             KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
             frm.ShowDialog();
             frm.Dispose();
+        }
+
+        private void MaskSynthesizerAsAnother_Click(object sender, EventArgs e)
+        {
+            MaskSynthAsAnother frm = new MaskSynthAsAnother();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
+
+        private void SettingsPresetsBtn_Click(object sender, EventArgs e)
+        {
+            SettingsPresets.Show(SettingsPresetsBtn, new System.Drawing.Point(1, 20));
+        }
+
+        private void SetSynthDefault_Click(object sender, EventArgs e)
+        {
+            if (!SetSynthDefault.Checked)
+            {
+                SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
+                SetSynthDefault.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
+                SetSynthDefault.Checked = false;
+            }
         }
     }
 }

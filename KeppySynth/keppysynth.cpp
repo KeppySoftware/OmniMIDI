@@ -354,6 +354,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
 	RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
+	RegQueryValueEx(hKey, L"newdevicename", NULL, &dwType, (LPBYTE)&selectedname, &dwSize);
 	RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
 	RegCloseKey(hKey);
 
@@ -374,19 +375,19 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
     MIDIOUTCAPS2W * myCaps2W;
 
 	const GUID CLSIDKEPSYNTH = { 0xa675eda2, 0xeb26, 0x4e32, { 0xa3, 0xe7, 0xe4, 0xe6, 0x61, 0xd8, 0xfc, 0x3f } };
-	
-	CHAR synthName[] = "Keppy's Synthesizer\0";
-	WCHAR synthNameW[] = L"Keppy's Synthesizer\0";
-	CHAR synthNameSH[] = "KEPSYNTH\0";
-	WCHAR synthNameSHW[] = L"KEPSYNTH\0";
+
+	CHAR SynthName[MAXPNAMELEN];
+	WCHAR SynthNameW[MAXPNAMELEN];
+
+	strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
+	wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
 
 	switch (capsSize) {
 	case (sizeof(MIDIOUTCAPSA)) :
 		myCapsA = (MIDIOUTCAPSA *)capsPtr;
 		myCapsA->wMid = 0xffff; //MM_UNMAPPED
 		myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
-		if (shortname) { memcpy(myCapsA->szPname, synthNameSH, sizeof(synthNameSH)); }
-		else { memcpy(myCapsA->szPname, synthName, sizeof(synthName)); }
+		memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
 		myCapsA->wTechnology = defaultmode;
 		myCapsA->wChannelMask = 0xffff;
 		myCapsA->dwSupport = MIDICAPS_VOLUME;
@@ -397,8 +398,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW = (MIDIOUTCAPSW *)capsPtr;
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
-		if (shortname) { memcpy(myCapsW->szPname, synthNameSHW, sizeof(synthNameSHW)); }
-		else { memcpy(myCapsW->szPname, synthNameW, sizeof(synthNameW)); }
+		memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
 		myCapsW->wTechnology = defaultmode;
 		myCapsW->wChannelMask = 0xffff;
 		myCapsW->dwSupport = MIDICAPS_VOLUME;
@@ -409,8 +409,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
 		myCaps2A->wMid = 0xffff; //MM_UNMAPPED
 		myCaps2A->wPid = 0xffff; //MM_PID_UNMAPPED
-		if (shortname) { memcpy(myCaps2A->szPname, synthNameSH, sizeof(synthNameSH)); }
-		else { memcpy(myCaps2A->szPname, synthName, sizeof(synthName)); }
+		memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
 		myCaps2A->wTechnology = defaultmode;
 		myCaps2A->wChannelMask = 0xffff;
 		myCaps2A->dwSupport = MIDICAPS_VOLUME;
@@ -421,8 +420,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
-		if (shortname) { memcpy(myCaps2W->szPname, synthNameSHW, sizeof(synthNameSHW)); }
-		else { memcpy(myCaps2W->szPname, synthNameW, sizeof(synthNameW)); }
+		memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
 		myCaps2W->wTechnology = defaultmode;
 		myCaps2W->wChannelMask = 0xffff;
 		myCaps2W->dwSupport = MIDICAPS_VOLUME;
