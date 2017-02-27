@@ -75,16 +75,21 @@ static LPCWSTR cnames[16] =
 static char SynthName[050];
 static char SynthNameW[050];
 static int selectedname = 3;			// Default name
-static LPCSTR SynthNames[15] =
+
+static LPCSTR SynthNames[19] =
 {
 	"AWE64 MIDI Synth\0",
 	"CoolSoft VirtualMIDISynth\0",
 	"Creative OPL3 FM\0",
 	"Keppy's Synthesizer\0",
 	"Microsoft GS Wavetable Synth\0",
+	"Microsoft Synthesizer\0",
+	"NVIDIA® Wavetable Synthesizer\0",
 	"SB AWE32 MIDI Synth\0",
 	"SB Live! Synth A\0",
 	"SB Live! Synth B\0",
+	"SoundMAX Wavetable Synth\0",
+	"USB Audio Device",
 	"VirtualMIDISynth #1\0",
 	"VirtualMIDISynth #2\0",
 	"VirtualMIDISynth #3\0",
@@ -94,16 +99,20 @@ static LPCSTR SynthNames[15] =
 	"Yamaha S-YXG50 SoftSynthesizer\0",
 };
 
-static LPCWSTR SynthNamesW[15] = 
+static LPCWSTR SynthNamesW[19] = 
 {
 	L"AWE64 MIDI Synth\0",
 	L"CoolSoft VirtualMIDISynth\0",
 	L"Creative OPL3 FM\0",
 	L"Keppy's Synthesizer\0",
 	L"Microsoft GS Wavetable Synth\0",
+	L"Microsoft Synthesizer\0",
+	L"NVIDIA® Wavetable Synthesizer\0",
 	L"SB AWE32 MIDI Synth\0",
 	L"SB Live! Synth A\0",
 	L"SB Live! Synth B\0",
+	L"SoundMAX Wavetable Synth\0",
+	L"USB Audio Device",
 	L"VirtualMIDISynth #1\0",
 	L"VirtualMIDISynth #2\0",
 	L"VirtualMIDISynth #3\0",
@@ -111,6 +120,29 @@ static LPCWSTR SynthNamesW[15] =
 	L"Windows OPL3 Synth\0",
 	L"YMF262 Synth Emulator\0",
 	L"Yamaha S-YXG50 SoftSynthesizer\0",
+};
+
+static int SynthNamesTypes[19] =
+{
+	MOD_MIDIPORT,						// AWE64 MIDI Synth
+	MOD_SWSYNTH,						// CoolSoft VirtualMIDISynth
+	MOD_FMSYNTH,						// Creative OPL3 FM
+	MOD_MIDIPORT,						// Keppy's Synthesizer
+	MOD_SWSYNTH,						// Microsoft GS Wavetable Synth
+	MOD_WAVETABLE,						// Microsoft Synthesizer
+	MOD_WAVETABLE,						// NVIDIA® Wavetable Synthesizer
+	MOD_WAVETABLE,						// SB AWE32 MIDI Synth
+	MOD_WAVETABLE,						// SB Live! Synth A
+	MOD_WAVETABLE,						// SB Live! Synth B
+	MOD_WAVETABLE,						// SoundMAX Wavetable Synth
+	MOD_MIDIPORT,						// USB Audio Device
+	MOD_SWSYNTH,						// VirtualMIDISynth #1
+	MOD_SWSYNTH,						// VirtualMIDISynth #2
+	MOD_SWSYNTH,						// VirtualMIDISynth #3
+	MOD_SWSYNTH,						// VirtualMIDISynth #4
+	MOD_FMSYNTH,						// Windows OPL3 Synth
+	MOD_FMSYNTH,						// YMF262 Synth Emulator
+	MOD_WAVETABLE,						// Yamaha S-YXG50 SoftSynthesizer
 };
 
 // Channels

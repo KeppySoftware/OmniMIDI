@@ -64,11 +64,15 @@
             "AWE64 MIDI Synth",
             "CoolSoft VirtualMIDISynth",
             "Creative OPL3 FM",
-            "Keppy\'s Synthesizer (Default)",
+            "Keppy\'s Synthesizer",
             "Microsoft GS Wavetable Synth",
+            "Microsoft Synthesizer",
+            "NVIDIA® Wavetable Synthesizer",
             "SB AWE32 MIDI Synth",
             "SB Live! Synth A",
             "SB Live! Synth B",
+            "SoundMAX Wavetable Synth",
+            "USB Audio Device",
             "VirtualMIDISynth #1",
             "VirtualMIDISynth #2",
             "VirtualMIDISynth #3",
@@ -76,7 +80,7 @@
             "Windows OPL3 Synth",
             "YMF262 Synth Emulator",
             "Yamaha S-YXG50 SoftSynthesizer"});
-            this.Names.Location = new System.Drawing.Point(163, 75);
+            this.Names.Location = new System.Drawing.Point(162, 75);
             this.Names.Name = "Names";
             this.Names.Size = new System.Drawing.Size(193, 21);
             this.Names.TabIndex = 3;

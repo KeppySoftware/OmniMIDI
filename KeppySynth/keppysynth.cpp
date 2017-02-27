@@ -361,7 +361,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	if (defaultmidiout == 1)
 		defaultmode = MOD_SWSYNTH;
 	else
-		defaultmode = MOD_MIDIPORT;
+		defaultmode = SynthNamesTypes[selectedname];
 
 	if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
 		CreateConsole();
