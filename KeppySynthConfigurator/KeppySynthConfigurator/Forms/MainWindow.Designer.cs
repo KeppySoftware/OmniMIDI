@@ -137,6 +137,7 @@
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
             this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
+            this.StatusBuf = new System.Windows.Forms.PictureBox();
             this.ManualAddBuffer = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
             this.SPFRate = new System.Windows.Forms.NumericUpDown();
@@ -185,6 +186,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
             this.GroupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SPFRate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -980,6 +982,7 @@
             this.GroupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.GroupBox5.BackColor = System.Drawing.Color.Transparent;
+            this.GroupBox5.Controls.Add(this.StatusBuf);
             this.GroupBox5.Controls.Add(this.ManualAddBuffer);
             this.GroupBox5.Controls.Add(this.SincInter);
             this.GroupBox5.Controls.Add(this.SPFRate);
@@ -993,6 +996,20 @@
             this.GroupBox5.TabIndex = 23;
             this.GroupBox5.TabStop = false;
             this.GroupBox5.Text = "Audio output settings";
+            // 
+            // StatusBuf
+            // 
+            this.StatusBuf.BackColor = System.Drawing.Color.Transparent;
+            this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
+            this.StatusBuf.ErrorImage = ((System.Drawing.Image)(resources.GetObject("StatusBuf.ErrorImage")));
+            this.StatusBuf.Image = global::KeppySynthConfigurator.Properties.Resources.wir;
+            this.StatusBuf.Location = new System.Drawing.Point(528, 55);
+            this.StatusBuf.Name = "StatusBuf";
+            this.StatusBuf.Size = new System.Drawing.Size(21, 17);
+            this.StatusBuf.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.StatusBuf.TabIndex = 38;
+            this.StatusBuf.TabStop = false;
+            this.StatusBuf.Click += new System.EventHandler(this.StatusBuf_Click);
             // 
             // ManualAddBuffer
             // 
@@ -1060,9 +1077,10 @@
             this.BufferText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BufferText.Location = new System.Drawing.Point(4, 57);
             this.BufferText.Name = "BufferText";
-            this.BufferText.Size = new System.Drawing.Size(346, 13);
+            this.BufferText.Size = new System.Drawing.Size(444, 13);
             this.BufferText.TabIndex = 23;
-            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Increase it on slow PCs):";
+            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Stay between 10-40 for optimal" +
+    " performance):";
             // 
             // SysResetIgnore
             // 
@@ -1095,6 +1113,7 @@
             0,
             0,
             0});
+            this.bufsize.ValueChanged += new System.EventHandler(this.bufsize_ValueChanged);
             // 
             // groupBox1
             // 
@@ -1609,6 +1628,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).EndInit();
             this.GroupBox5.ResumeLayout(false);
             this.GroupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SPFRate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -1776,6 +1796,7 @@
         private System.Windows.Forms.MenuItem keppysSteinwayPianoRealismToolStripMenuItem;
         public System.Windows.Forms.MenuItem SetSynthDefault;
         private System.Windows.Forms.MenuItem MaskSynthesizerAsAnother;
+        private System.Windows.Forms.PictureBox StatusBuf;
     }
 }
 

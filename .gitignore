@@ -71,4 +71,5 @@ output/KeppySynthDebugWindow.exe
 output/KeppySynthMixerWindow.exe
 output/KeppySynthWatchdog.exe
 output/KeppysSynthSetup.exe
+output/KSDriverRegister.exe
 output/Test Keppy's Synthesizer Configurator.bat

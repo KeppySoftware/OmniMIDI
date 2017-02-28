@@ -72,11 +72,6 @@ namespace KeppySynthConfigurator
         public KeppySynthConfiguratorMain(String[] args)
         {
             InitializeComponent();
-            if (!Functions.IsWindowsVistaOrNewer())
-            {
-                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
-                Application.ExitThread();
-            }
             Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
             this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
@@ -1102,6 +1097,11 @@ namespace KeppySynthConfigurator
             MessageBox.Show("\"Automatic MIDI panic\" will tell the driver to kill all the active notes, when the CPU usage is equal or higher than 100%.", "What's the automatic MIDI panic?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void StatusBuf_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("You should.\n\nKeep the buffer size between 10 and 40, which are the optimal values for performance and audio quality.\n\nIncreasing the buffer too much could lead to unexpected crashes during playback, while decreasing it could make the app not output any audio to the speakers. ", "Do I need to be careful with the buffer size setting?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         // Brand new output mode
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
@@ -1118,10 +1118,38 @@ namespace KeppySynthConfigurator
             MessageBox.Show("After checking this, the driver will fall back on using BASS's own audio interface, based on DirectSound, instead of a direct interface with WASAPI, based on XAudio.\n\nUsing DirectSound instead of XAudio could reduce audio hiccups and app freezes on outdated machines, but will also increase the latency by a significant amount.", "\"Use DirectSound\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void bufsize_ValueChanged(object sender, EventArgs e)
+        {
+            if (!XAudioDisable.Checked)
+            {
+                if (bufsize.Value >= 0 && bufsize.Value <= 9)
+                {
+                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
+                }
+                else if (bufsize.Value >= 10 && bufsize.Value <= 14)
+                {
+                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
+                }
+                else if (bufsize.Value >= 15 && bufsize.Value <= 39)
+                {
+                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.ok;
+                }
+                else if (bufsize.Value >= 40 && bufsize.Value <= 64)
+                {
+                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
+                }
+                else if (bufsize.Value >= 65 && bufsize.Value <= 100)
+                {
+                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
+                }
+            }
+        }
+
         private void XAudioDisable_CheckedChanged(object sender, EventArgs e)
         {
             if (XAudioDisable.Checked == true)
             {
+                StatusBuf.Visible = false;
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
                 Label4.Enabled = false;
@@ -1153,6 +1181,7 @@ namespace KeppySynthConfigurator
             }
             else if (XAudioDisable.Checked == false)
             {
+                StatusBuf.Visible = true;
                 OutputWAV.Enabled = true;
                 Label4.Enabled = true;
                 SPFRate.Enabled = true;
@@ -1161,7 +1190,7 @@ namespace KeppySynthConfigurator
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 VolumeBoost.Enabled = true;
-                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Increase it on slow PCs):";
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Stay between 10-40 for optimal performance):";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;

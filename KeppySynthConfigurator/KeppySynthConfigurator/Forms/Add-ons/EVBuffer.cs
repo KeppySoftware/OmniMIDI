@@ -38,7 +38,7 @@ namespace KeppySynthConfigurator
                 }
                 else if (numericUpDown1.Value <= 1023)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Using a value smaller than 1024 could make notes get stuck with Black MIDIs.\n\nAre you sure you want to use the following value: " + numericUpDown1.Value + "?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult dialogResult = MessageBox.Show("Using a value smaller than 1024 could make the application hang.\n\nAre you sure you want to use the following value: " + numericUpDown1.Value + "?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (dialogResult == DialogResult.Yes)
                     {
                         RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);

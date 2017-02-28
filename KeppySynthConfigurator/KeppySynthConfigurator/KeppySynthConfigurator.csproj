@@ -257,6 +257,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\wir.png" />
+    <None Include="Resources\ok.png" />
     <None Include="Resources\infoicon.png" />
     <None Include="Resources\refreshicon.png" />
     <None Include="Resources\rollbackicon.png" />

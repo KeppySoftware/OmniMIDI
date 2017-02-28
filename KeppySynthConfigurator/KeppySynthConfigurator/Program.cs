@@ -100,17 +100,10 @@ namespace KeppySynthConfigurator
             try
             {
                 DebugToConsole(false, "Started configurator.", null);
-                if (Environment.OSVersion.Version.Major < 6)
+                if (!Functions.IsWindowsVistaOrNewer())
                 {
-                    try
-                    {
-                        System.Media.SystemSounds.Hand.Play();
-                        Environment.Exit(-1);
-                    }
-                    catch
-                    {
-                        Environment.Exit(-1);
-                    }
+                    Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
+                    Application.ExitThread();
                 }
                 RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
                 int runmode = 0;
