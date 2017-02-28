@@ -67,9 +67,8 @@ BOOL BlackListSystem(){
 		}
 		return 0x1;
 	}
-	catch (std::exception & e) {
-		OutputDebugStringA(e.what());
-		exit;
+	catch (...) {
+		crashmessage(L"BlackListPT2");
 	}
 }
 
@@ -118,9 +117,8 @@ BOOL VMSBlackList(){
 		}
 		return 0x0;
 	}
-	catch (std::exception & e) {
-		OutputDebugStringA(e.what());
-		exit;
+	catch (...) {
+		crashmessage(L"BlackListPT1");
 	}
 }
 

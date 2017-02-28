@@ -53,7 +53,6 @@ static int shortname = 0;				// Use short name or nah
 static int sinc = 0;					// Sinc
 static int sysexignore = 0;				// Ignore SysEx events
 static int sysresetignore = 0;			// Ignore sysex messages
-static int tremoliov = 0;				// Yes
 static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
 static int vmsemu = 0;					// VirtualMIDISynth buffer emulation
 static int volume = 0;					// Volume limit

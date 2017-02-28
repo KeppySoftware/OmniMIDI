@@ -27,6 +27,10 @@ namespace KeppySynthDebugWindow
     public partial class KeppySynthDebugWindow : Form
     {
         public static FileVersionInfo Driver { get; set; }
+        public static RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
+        public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
+        public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
+        public static RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
 
         public KeppySynthDebugWindow()
         {
@@ -40,6 +44,8 @@ namespace KeppySynthDebugWindow
             Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
             ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the form
             richTextBox1.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the richtextbox
+            DoubleBuffered = true; // Reduce flickering
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true); // Reduce flickering
             DebugWorker.RunWorkerAsync(); // Creates a thread to show the info
         }
 
@@ -89,11 +95,6 @@ namespace KeppySynthDebugWindow
                     StringBuilder sb = new StringBuilder(); // Creates a string builder, because adding lines one by one to the richtextbox is unefficient
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
-       
-                    RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
-                    RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
-                    RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
-                    RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
 
                     string FullVersion;
                     if (WinVer.GetValue("ProductName").ToString().Contains("Windows 10"))
@@ -179,12 +180,10 @@ namespace KeppySynthDebugWindow
                     }
                     finally
                     {
-                        // Ok everything's done, let's close the registry keys to avoid memory leaks, and let's put the string builder output to the richboxtext.
-                        Debug.Close();
-                        Settings.Close();
-                        Watchdog.Close();
-                        WinVer.Close();
+                        // Ok everything's done, let's put the string builder output in the richboxtext.
                         richTextBox1.Text = sb.ToString();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
                 }
                 catch (Exception ex)

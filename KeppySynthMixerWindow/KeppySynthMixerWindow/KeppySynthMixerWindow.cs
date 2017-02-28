@@ -16,6 +16,9 @@ namespace KeppySynthMixerWindow
     public partial class KeppySynthMixerWindow : Form
     {
         public static KeppySynthMixerWindow Delegate;
+        public static RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", true);
+        public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
+        public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
         uint MaxStockClock;
 
         public KeppySynthMixerWindow()
@@ -107,9 +110,6 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
-
                 if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) != 1) {
                     Meter.Visible = false;
                     UnvMeter.Visible = true;
@@ -141,8 +141,6 @@ namespace KeppySynthMixerWindow
             {
                 Delegate = this;
                 CPUSpeed();
-                RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
                 if (Channels == null)
                 {
                     Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels");
@@ -188,6 +186,7 @@ namespace KeppySynthMixerWindow
                     UnvMeter.Visible = true;
                 }
                 ChannelVolume.Enabled = true;
+                GarbageCollector.RunWorkerAsync();
             }
             catch (Exception ex)
             {
@@ -209,7 +208,6 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
                 if (VolumeMonitor.Checked == true)
                 {
 
@@ -254,10 +252,10 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
                 if (Channels == null)
                 {
                     Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels");
+                    Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
                 }
                 Channels.SetValue("ch1", CH1VOL.Value.ToString(), RegistryValueKind.DWord);
                 Channels.SetValue("ch2", CH2VOL.Value.ToString(), RegistryValueKind.DWord);
@@ -288,7 +286,6 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
                 if (MIDIVolumeOverride.Checked == true)
                 {
                     Settings.SetValue("midivolumeoverride", "1", RegistryValueKind.DWord);
@@ -426,6 +423,16 @@ namespace KeppySynthMixerWindow
             if (DoSnap(this.Top, scn.WorkingArea.Top)) this.Top = scn.WorkingArea.Top;
             if (DoSnap(scn.WorkingArea.Right, this.Right)) this.Left = scn.WorkingArea.Right - this.Width;
             if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
+        }
+
+        private void GarbageCollector_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                System.Threading.Thread.Sleep(1);
+            }
         }
     }
 }

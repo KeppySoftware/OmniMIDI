@@ -1052,8 +1052,15 @@ namespace KeppySynthConfigurator
 
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
-            Bass.BASS_Free();
-            Application.Exit();
+            try
+            {
+                Bass.BASS_Free();
+                Application.Exit();
+            }
+            catch
+            {
+                Application.Exit();
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1202,6 +1209,7 @@ namespace KeppySynthConfigurator
         {
             if (OutputWAV.Checked == true)
             {
+                StatusBuf.Visible = false;
                 XAudioDisable.Enabled = false;
                 XAudioDisable.Checked = false;
                 Label5.Enabled = false;
@@ -1215,6 +1223,7 @@ namespace KeppySynthConfigurator
             }
             else if (OutputWAV.Checked == false)
             {
+                StatusBuf.Visible = true;
                 XAudioDisable.Enabled = true;
                 Label5.Enabled = true;
                 bufsize.Enabled = true;
@@ -1542,6 +1551,8 @@ namespace KeppySynthConfigurator
                         }
                     }
                     System.Threading.Thread.Sleep(1);
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
             }
             catch

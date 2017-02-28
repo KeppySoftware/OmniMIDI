@@ -90,11 +90,15 @@ namespace KeppySynthConfigurator
                 Process.Start(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", OnlineVersion));
             }
             DialogResult = DialogResult.Yes;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         private void NoBtn_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.No;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

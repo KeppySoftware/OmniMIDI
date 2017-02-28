@@ -127,6 +127,7 @@
             this.LV1 = new System.Windows.Forms.Panel();
             this.UnvMeter = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -1143,6 +1144,10 @@
             this.label1.Text = "Only available when\r\nusing DirectSound.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // GarbageCollector
+            // 
+            this.GarbageCollector.DoWork += new System.ComponentModel.DoWorkEventHandler(this.GarbageCollector_DoWork);
+            // 
             // KeppySynthMixerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1323,6 +1328,7 @@
         public System.Windows.Forms.Panel RV1;
         private System.Windows.Forms.Panel UnvMeter;
         private System.Windows.Forms.Label label1;
+        private System.ComponentModel.BackgroundWorker GarbageCollector;
     }
 }
 

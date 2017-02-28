@@ -85,7 +85,6 @@ static CRITICAL_SECTION mim_section;
 static volatile int stop_thread = 0;
 static volatile int stop_rtthread = 0;
 static volatile int reset_synth = 0;
-static HANDLE hCalcThread = NULL;
 static DWORD processPriority;
 static HANDLE load_sfevent = NULL;
 
@@ -97,10 +96,12 @@ static float sound_out_volume_float = 1.0;
 static int sound_out_volume_int = 0x1000;
 
 // Threads
+static HANDLE hCalcThread = NULL;
 static HANDLE hThread = NULL;
 static HANDLE hThread2 = NULL;
-static HANDLE hTremolio = NULL;
-static unsigned int thrdaddr;
+static unsigned int thrdaddr1;
+static unsigned int thrdaddr2;
+static unsigned int thrdaddr3;
 
 // Variables
 #include "basserr.h"
@@ -435,40 +436,28 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 }
 
 unsigned _stdcall notescatcher(LPVOID lpV){
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
-	while (stop_thread == 0){
-		Sleep(1);
-		bmsyn_play_some_data();
-		if (oldbuffermode == 1) {
-			break;
+	try {
+		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
+		while (stop_thread == 0){
+			bmsyn_play_some_data();
+			if (oldbuffermode == 1)
+				break;
+			Sleep(1);
 		}
+		PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
+		stop_thread = 0;
+		_endthreadex(0);
+		return 0;
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
-	stop_thread = 0;
-	_endthreadex(0);
-	return 0;
-}
-
-unsigned _stdcall tremolio(LPVOID lpV){
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing tremolio thread...");
-	while (stop_thread == 0){
-		int tremolio = rand() % ((frequency + 100) - (frequency - 100)) + (frequency - 100);
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, tremolio);
-		CheckUp();
-		Sleep(1);
+	catch (...) {
+		crashmessage(L"NotesCatcher");
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing tremolio thread...");
-	BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
-	CheckUp();
-	stop_thread = 0;
-	_endthreadex(0);
-	return 0;
 }
 
 void separatethreadfordata() {
 	if (hThread2 == NULL) {
 		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
-		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr);
+		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr2);
 		SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
 	}
@@ -713,14 +702,9 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
-					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr);
+					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
 					SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
 					SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
-					if (tremoliov) {
-						hTremolio = (HANDLE)_beginthreadex(NULL, 0, tremolio, 0, 0, &thrdaddr);
-						SetPriorityClass(hTremolio, NORMAL_PRIORITY_CLASS);
-						SetThreadPriority(hTremolio, THREAD_PRIORITY_NORMAL);
-					}
 					PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 				}
 			}
@@ -769,7 +753,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 		}
 	}
 	catch (...) {
-		crashmessage(L"DrvInit");
+		crashmessage(L"DrvMainThread");
 	}
 }
 
@@ -781,7 +765,6 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 void DoStartClient() {
 	if (modm_closed == 1) {
 		DWORD result;
-		unsigned int thrdaddr;
 		InitializeCriticalSection(&mim_section);
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
@@ -791,7 +774,7 @@ void DoStartClient() {
 			FALSE,              // initial state is nonsignaled
 			TEXT("SoundFontEvent")  // object name
 			);
-		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr);
+		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr1);
 		SetPriorityClass(hCalcThread, REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(hCalcThread, THREAD_PRIORITY_TIME_CRITICAL);
 		result = WaitForSingleObject(load_sfevent, INFINITE);
