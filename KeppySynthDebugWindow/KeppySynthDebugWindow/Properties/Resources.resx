@@ -133,4 +133,16 @@
   <data name="DebugIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DebugIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="amd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\amd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="intel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\intel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="w10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w10.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="w81" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\w81.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

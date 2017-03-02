@@ -63,6 +63,16 @@ namespace KeppySynthDebugWindow.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap amd {
+            get {
+                object obj = ResourceManager.GetObject("amd", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DebugIcon {
             get {
                 object obj = ResourceManager.GetObject("DebugIcon", resourceCulture);
@@ -73,9 +83,29 @@ namespace KeppySynthDebugWindow.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap intel {
+            get {
+                object obj = ResourceManager.GetObject("intel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap unknown {
             get {
                 object obj = ResourceManager.GetObject("unknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap w10 {
+            get {
+                object obj = ResourceManager.GetObject("w10", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -96,6 +126,16 @@ namespace KeppySynthDebugWindow.Properties {
         internal static System.Drawing.Bitmap w8 {
             get {
                 object obj = ResourceManager.GetObject("w8", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap w81 {
+            get {
+                object obj = ResourceManager.GetObject("w81", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -41,16 +41,18 @@ namespace KeppySynthDebugWindow
         string bit;
 
         // CPU/GPU information
-        ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
-        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
-        string cpubit = "";
-        string cpuclock = "";
-        string cpumanufacturer = "";
-        string cpuname = "";
-        string gpuchip = "";
-        string gpuname = "";
-        string gpuver = "";
-        string gpuvram = "";
+        ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("SELECT * FROM CIM_Processor");
+        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("SELECT * FROM CIM_VideoController");
+        ManagementObjectSearcher mosEnc = new ManagementObjectSearcher("SELECT * FROM CIM_Chassis");
+        string cpubit = "32";
+        string cpuclock = "0";
+        string cpumanufacturer = "Unknown";
+        string cpuname = "Unknown";
+        string gpuchip = "Unknown";
+        string gpuname = "Unknown";
+        string gpuver = "N/A";
+        string gpuvram = "0";
+        string enclosure = "Unknown";
         int coreCount = 0;
 
         public KeppySynthDebugWindow()
@@ -79,64 +81,102 @@ namespace KeppySynthDebugWindow
             base.WndProc(ref m);
         }
 
+        private string CPUArch(int Value)
+        {
+            if (Value == 0)
+                return "x86";
+            else if (Value == 6)
+                return "IA64";
+            else if (Value == 9)
+                return "x64";
+            else
+                return "N/A";
+        }
+
         private void GetWindowsInfoData()
         {
-            // Get CPU info
-            foreach (ManagementObject moProcessor in mosProcessor.Get())
+            try
             {
-                cpuclock = moProcessor["maxclockspeed"].ToString();
-                cpubit = moProcessor["datawidth"].ToString();
-                cpuname = moProcessor["name"].ToString();
-                cpumanufacturer = moProcessor["manufacturer"].ToString();
-                coreCount += int.Parse(moProcessor["NumberOfCores"].ToString());
-            }
+                // Get CPU info
+                foreach (ManagementObject moProcessor in mosProcessor.Get())
+                {
+                    cpuclock = moProcessor["maxclockspeed"].ToString();
+                    cpubit = CPUArch(int.Parse(moProcessor["Architecture"].ToString()));
+                    cpuname = moProcessor["name"].ToString();
+                    cpumanufacturer = moProcessor["manufacturer"].ToString();
+                    coreCount += int.Parse(moProcessor["NumberOfCores"].ToString());
+                }
+                // Get GPU info
+                foreach (ManagementObject moGPU in mosGPU.Get())
+                {
+                    try
+                    {
+                        gpuchip = moGPU["VideoProcessor"].ToString();
+                        gpuname = moGPU["Name"].ToString();
+                        gpuvram = (long.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
+                        gpuver = moGPU["DriverVersion"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                }
+                // Get enclosure info
+                foreach (ManagementObject moEnc in mosEnc.Get())
+                {
+                    foreach (int i in (UInt16[])(moEnc["ChassisTypes"]))
+                    {
+                        enclosure = OSInfo.Chassis[i];
+                    }
+                }
 
-            // Get GPU info
-            foreach (ManagementObject moGPU in mosGPU.Get())
-            {
-                gpuchip = moGPU["VideoProcessor"].ToString();
-                gpuname = moGPU["Name"].ToString();
-                gpuvram = (long.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
-                gpuver = moGPU["DriverVersion"].ToString();
-            }
+                if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
+                {
+                    FullVersion = String.Format("{0}.{1}.{2}.{3}",
+                       Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
+                       Environment.OSVersion.Version.Build.ToString(), WinVer.GetValue("UBR", 0).ToString());
+                }
+                else // Else, give normal version number
+                {
+                    FullVersion = String.Format("{0}.{1}.{2}",
+                       Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
+                       Environment.OSVersion.Version.Build.ToString());
+                }
 
-            if (WinVer.GetValue("ProductName").ToString().Contains("Windows 10")) // If OS is Windows 10, get UBR too
-            {
-                FullVersion = String.Format("{0}.{1}.{2}.{3}",
-                   Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
-                   Environment.OSVersion.Version.Build.ToString(), WinVer.GetValue("UBR").ToString());
-            }
-            else // Else, give normal version number
-            {
-                FullVersion = String.Format("{0}.{1}.{2}",
-                   Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
-                   Environment.OSVersion.Version.Build.ToString());
-            }
+                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
+                    WinLogo.Image = Properties.Resources.wvista;
+                else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                    WinLogo.Image = Properties.Resources.w7;
+                else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
+                    WinLogo.Image = Properties.Resources.w8;
+                else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
+                    WinLogo.Image = Properties.Resources.w81;
+                else if (Environment.OSVersion.Version.Major == 10)
+                    WinLogo.Image = Properties.Resources.w10;
+                else
+                    WinLogo.Image = Properties.Resources.unknown;
 
-            if (Environment.OSVersion.Version.Major == 6 && (Environment.OSVersion.Version.Minor >= 0 & Environment.OSVersion.Version.Minor < 1))
-            { 
-                WinLogo.Image = Properties.Resources.wvista;
-            }
-            else if (Environment.OSVersion.Version.Major == 6 && (Environment.OSVersion.Version.Minor >= 1 & Environment.OSVersion.Version.Minor < 2))
-            {
-                WinLogo.Image = Properties.Resources.w7;
-            }
-            else if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
-            {
-                WinLogo.Image = Properties.Resources.w8;
-            }
-            else
-            {
-                WinLogo.Image = Properties.Resources.unknown;
-            }
+                if (cpumanufacturer == "GenuineIntel")
+                    CPULogo.Image = Properties.Resources.intel;
+                else if (cpumanufacturer == "AuthenticAMD")
+                    CPULogo.Image = Properties.Resources.amd;
+                else
+                    CPULogo.Image = Properties.Resources.unknown;
 
-            if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture   
+                if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture   
 
-            COS.Text = String.Format("{0} ({1}, {2})", CI.OSFullName, FullVersion, bit);
-            CPU.Text = cpuname;
-            CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}MHz", cpumanufacturer, coreCount, Environment.ProcessorCount, cpuclock);
-            GPU.Text = String.Format("{0} (Chip: {1})", gpuname, gpuchip);
-            GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", gpuvram, gpuver);
+                COS.Text = String.Format("{0}{1} ({2}, {3})", OSInfo.GetOSName(), OSInfo.GetOSProductType(), FullVersion, bit);
+                CPU.Text = String.Format("{0} ({1} processor)", cpuname, cpubit);
+                CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}MHz", cpumanufacturer, coreCount, Environment.ProcessorCount, cpuclock);
+                GPU.Text = gpuname;
+                GPUInternalChip.Text = gpuchip;
+                GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", gpuvram, gpuver);
+                MT.Text = enclosure;
+            }
+            catch
+            {
+                
+            }
         }
 
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using Keppy's Synthesizer
@@ -164,9 +204,11 @@ namespace KeppySynthDebugWindow
             sb.AppendLine(String.Format("{0} {1}", CPULabel.Text, CPU.Text));
             sb.AppendLine(String.Format("{0} {1}", CPUInfoLabel.Text, CPUInfo.Text));
             sb.AppendLine(String.Format("{0} {1}", GPULabel.Text, GPU.Text));
+            sb.AppendLine(String.Format("{0} {1}", GPUInternalChipLabel.Text, GPUInternalChip.Text));
             sb.AppendLine(String.Format("{0} {1}", GPUInfoLabel.Text, GPUInfo.Text));
             sb.AppendLine(String.Format("{0} {1}", TMLabel.Text, TM.Text));
             sb.AppendLine(String.Format("{0} {1}", AMLabel.Text, AM.Text));
+            sb.AppendLine(String.Format("{0} {1}", MTLabel.Text, MT.Text));
 
             Thread thread = new Thread(() => Clipboard.SetText(sb.ToString())); // Creates another thread, otherwise the form locks up while copying the richtextbox
             thread.SetApartmentState(ApartmentState.STA);
@@ -180,12 +222,7 @@ namespace KeppySynthDebugWindow
             CopyToClipBoardCmd();
         }
 
-        private void CopyToClip1_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
-        {
-            CopyToClipBoardCmd();
-        }
-
-        private void CopyToClip2_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
+        private void CopyToClip_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
         {
             CopyToClipBoardCmd();
         }
@@ -272,19 +309,23 @@ namespace KeppySynthDebugWindow
 
         private void MemoryThread_Tick(object sender, EventArgs e)
         {
-            // This thread just takes the available and total memory info from Windows, then outputs them in the 2nd tab
+            try
+            {
+                // This thread just takes the available and total memory info from Windows, then outputs them in the 2nd tab
 
-            ComputerInfo CI = new ComputerInfo();
-            ulong avmem = CI.AvailablePhysicalMemory;
-            ulong tlmem = CI.TotalPhysicalMemory;
-            ulong avmemint = avmem / (1024 * 1024);
-            ulong tlmemint = tlmem / (1024 * 1024);
-            double percentage = avmem * 100.0 / tlmem;
+                ComputerInfo CI = new ComputerInfo();
+                ulong avmem = CI.AvailablePhysicalMemory;
+                ulong tlmem = CI.TotalPhysicalMemory;
+                ulong avmemint = avmem / (1024 * 1024);
+                ulong tlmemint = tlmem / (1024 * 1024);
+                double percentage = avmem * 100.0 / tlmem;
 
-            TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-            AM.Text = String.Format("{0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                AM.Text = String.Format("{0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
 
-            CI = null;
+                CI = null;
+            }
+            catch { }
         }
 
         private void OpenConfigurator_Click(object sender, EventArgs e)

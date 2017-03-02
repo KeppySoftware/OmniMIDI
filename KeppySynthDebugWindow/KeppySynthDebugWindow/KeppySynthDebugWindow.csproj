@@ -26,12 +26,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\output\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
+    <ErrorReport>send</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>debugicon.ico</ApplicationIcon>
@@ -57,6 +58,7 @@
     <Compile Include="KeppySynthDebugWindow.Designer.cs">
       <DependentUpon>KeppySynthDebugWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="OSInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="KeppySynthDebugWindow.resx">
@@ -85,7 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="debugicon.ico" />
-    <None Include="DebugIcon.png" />
+    <None Include="Resources\intel.png" />
+    <None Include="Resources\amd.png" />
+    <None Include="Resources\w81.png" />
+    <None Include="Resources\w10.png" />
     <None Include="Resources\unknown.png" />
     <None Include="Resources\wvista.png" />
     <None Include="Resources\w7.png" />
