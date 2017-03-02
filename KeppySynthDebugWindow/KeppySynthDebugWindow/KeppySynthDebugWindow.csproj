@@ -87,6 +87,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="debugicon.ico" />
+    <None Include="Resources\other.png" />
+    <None Include="Resources\vmware.png" />
+    <None Include="Resources\parallels.png" />
+    <None Include="Resources\kvm.png" />
+    <None Include="Resources\via.png" />
+    <None Include="Resources\ws2016.png" />
+    <None Include="Resources\ws2012.png" />
     <None Include="Resources\intel.png" />
     <None Include="Resources\amd.png" />
     <None Include="Resources\w81.png" />

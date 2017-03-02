@@ -45,7 +45,7 @@ namespace KeppySynthDebugWindow
         ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("SELECT * FROM CIM_VideoController");
         ManagementObjectSearcher mosEnc = new ManagementObjectSearcher("SELECT * FROM CIM_Chassis");
         string cpubit = "32";
-        string cpuclock = "0";
+        int cpuclock = 0;
         string cpumanufacturer = "Unknown";
         string cpuname = "Unknown";
         string gpuchip = "Unknown";
@@ -97,10 +97,12 @@ namespace KeppySynthDebugWindow
         {
             try
             {
+                OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
+                String Frequency = "";
                 // Get CPU info
                 foreach (ManagementObject moProcessor in mosProcessor.Get())
                 {
-                    cpuclock = moProcessor["maxclockspeed"].ToString();
+                    cpuclock = int.Parse(moProcessor["maxclockspeed"].ToString());
                     cpubit = CPUArch(int.Parse(moProcessor["Architecture"].ToString()));
                     cpuname = moProcessor["name"].ToString();
                     cpumanufacturer = moProcessor["manufacturer"].ToString();
@@ -143,40 +145,73 @@ namespace KeppySynthDebugWindow
                        Environment.OSVersion.Version.Build.ToString());
                 }
 
-                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
-                    WinLogo.Image = Properties.Resources.wvista;
-                else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
-                    WinLogo.Image = Properties.Resources.w7;
-                else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
-                    WinLogo.Image = Properties.Resources.w8;
-                else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
-                    WinLogo.Image = Properties.Resources.w81;
-                else if (Environment.OSVersion.Version.Major == 10)
-                    WinLogo.Image = Properties.Resources.w10;
+                int p = (int) Environment.OSVersion.Platform;
+                if ((p == 4) || (p == 6) || (p == 128))
+                    WinLogo.Image = Properties.Resources.other;
                 else
-                    WinLogo.Image = Properties.Resources.unknown;
+                {
+                    if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
+                        WinLogo.Image = Properties.Resources.wvista;
+                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                        WinLogo.Image = Properties.Resources.w7;
+                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
+                    {
+                        if (osVersionInfo.wProductType == 3)
+                            WinLogo.Image = Properties.Resources.ws2012;
+                        else
+                            WinLogo.Image = Properties.Resources.w8;
+                    }
+                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
+                    {
+                        if (osVersionInfo.wProductType == 3)
+                            WinLogo.Image = Properties.Resources.ws2012;
+                        else
+                            WinLogo.Image = Properties.Resources.w81;
+                    }
+                    else if (Environment.OSVersion.Version.Major == 10)
+                    {
+                        if (osVersionInfo.wProductType == 3)
+                            WinLogo.Image = Properties.Resources.ws2016;
+                        else
+                            WinLogo.Image = Properties.Resources.w10;
+                    }
+                    else
+                        WinLogo.Image = Properties.Resources.unknown;
+                }
 
                 if (cpumanufacturer == "GenuineIntel")
                     CPULogo.Image = Properties.Resources.intel;
                 else if (cpumanufacturer == "AuthenticAMD")
                     CPULogo.Image = Properties.Resources.amd;
+                else if (cpumanufacturer == "CentaurHauls" || cpumanufacturer == "VIA VIA VIA ")
+                    CPULogo.Image = Properties.Resources.via;
+                else if (cpumanufacturer == "VMwareVMware")
+                    CPULogo.Image = Properties.Resources.vmware;
+                else if (cpumanufacturer == " lrpepyh vr")
+                    CPULogo.Image = Properties.Resources.parallels;
+                else if (cpumanufacturer == "KVMKVMKVM" || cpumanufacturer.Contains("KVMKVMKVM"))
+                    CPULogo.Image = Properties.Resources.kvm;
+                else if (cpumanufacturer == "Microsoft Hv")
+                    CPULogo.Image = Properties.Resources.ws2012;
                 else
                     CPULogo.Image = Properties.Resources.unknown;
 
-                if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture   
+                if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture  
+
+                if (cpuclock < 1000)
+                    Frequency = String.Format("{0}MHz", cpuclock);
+                else
+                    Frequency = String.Format("{0}GHz", ((float)cpuclock / 1000).ToString("0.00"));
 
                 COS.Text = String.Format("{0}{1} ({2}, {3})", OSInfo.GetOSName(), OSInfo.GetOSProductType(), FullVersion, bit);
                 CPU.Text = String.Format("{0} ({1} processor)", cpuname, cpubit);
-                CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}MHz", cpumanufacturer, coreCount, Environment.ProcessorCount, cpuclock);
+                CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency);
                 GPU.Text = gpuname;
                 GPUInternalChip.Text = gpuchip;
                 GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", gpuvram, gpuver);
                 MT.Text = enclosure;
             }
-            catch
-            {
-                
-            }
+            catch { }
         }
 
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using Keppy's Synthesizer

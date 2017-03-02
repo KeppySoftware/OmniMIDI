@@ -59,6 +59,7 @@
             this.CMA = new System.Windows.Forms.Label();
             this.CMALabel = new System.Windows.Forms.Label();
             this.PCSpecs = new System.Windows.Forms.TabPage();
+            this.CPULogo = new System.Windows.Forms.PictureBox();
             this.MT = new System.Windows.Forms.Label();
             this.MTLabel = new System.Windows.Forms.Label();
             this.GPUInternalChip = new System.Windows.Forms.Label();
@@ -80,13 +81,12 @@
             this.COSLabel = new System.Windows.Forms.Label();
             this.WinLogo = new System.Windows.Forms.PictureBox();
             this.MemoryThread = new System.Windows.Forms.Timer(this.components);
-            this.CPULogo = new System.Windows.Forms.PictureBox();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             this.PCSpecs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // MainCont
@@ -315,6 +315,17 @@
             this.PCSpecs.Text = "Computer specifications";
             this.PCSpecs.UseVisualStyleBackColor = true;
             // 
+            // CPULogo
+            // 
+            this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CPULogo.Cursor = System.Windows.Forms.Cursors.Help;
+            this.CPULogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
+            this.CPULogo.Location = new System.Drawing.Point(389, 37);
+            this.CPULogo.Name = "CPULogo";
+            this.CPULogo.Size = new System.Drawing.Size(32, 32);
+            this.CPULogo.TabIndex = 38;
+            this.CPULogo.TabStop = false;
+            // 
             // MT
             // 
             this.MT.AutoSize = true;
@@ -527,6 +538,7 @@
             // WinLogo
             // 
             this.WinLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.WinLogo.Cursor = System.Windows.Forms.Cursors.Help;
             this.WinLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
             this.WinLogo.Location = new System.Drawing.Point(389, 3);
             this.WinLogo.Name = "WinLogo";
@@ -538,16 +550,6 @@
             // 
             this.MemoryThread.Enabled = true;
             this.MemoryThread.Tick += new System.EventHandler(this.MemoryThread_Tick);
-            // 
-            // CPULogo
-            // 
-            this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CPULogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
-            this.CPULogo.Location = new System.Drawing.Point(389, 37);
-            this.CPULogo.Name = "CPULogo";
-            this.CPULogo.Size = new System.Drawing.Size(32, 32);
-            this.CPULogo.TabIndex = 38;
-            this.CPULogo.TabStop = false;
             // 
             // KeppySynthDebugWindow
             // 
@@ -569,8 +571,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.PCSpecs.ResumeLayout(false);
             this.PCSpecs.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -6,7 +6,7 @@ namespace KeppySynthDebugWindow
     public class OSInfo
     {
         [StructLayout(LayoutKind.Sequential)]
-        private struct OSVERSIONINFOEX
+        public struct OSVERSIONINFOEX
         {
             public int dwOSVersionInfoSize;
             public int dwMajorVersion;
@@ -156,97 +156,52 @@ namespace KeppySynthDebugWindow
         /// <returns>A string containing the the operating system name.</returns>
         public static string GetOSName()
         {
+            OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
             OperatingSystem osInfo = Environment.OSVersion;
             string osName = "UNKNOWN";
 
             switch (osInfo.Platform)
             {
-                case PlatformID.Win32Windows:
-                    {
-                        switch (osInfo.Version.Minor)
-                        {
-                            case 0:
-                                {
-                                    osName = "Windows 95";
-                                    break;
-                                }
-
-                            case 10:
-                                {
-                                    if (osInfo.Version.Revision.ToString() == "2222A")
-                                    {
-                                        osName = "Windows 98 Second Edition";
-                                    }
-                                    else
-                                    {
-                                        osName = "Windows 98";
-                                    }
-                                    break;
-                                }
-
-                            case 90:
-                                {
-                                    osName = "Windows Me";
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-
                 case PlatformID.Win32NT:
                     {
                         switch (osInfo.Version.Major)
                         {
-                            case 3:
-                                {
-                                    osName = "Windows NT 3.51";
-                                    break;
-                                }
-
-                            case 4:
-                                {
-                                    osName = "Windows NT 4.0";
-                                    break;
-                                }
-
-                            case 5:
-                                {
-                                    if (osInfo.Version.Minor == 0)
-                                    {
-                                        osName = "Windows 2000";
-                                    }
-                                    else if (osInfo.Version.Minor == 1)
-                                    {
-                                        osName = "Windows XP";
-                                    }
-                                    else if (osInfo.Version.Minor == 2)
-                                    {
-                                        osName = "Windows Server 2003";
-                                    }
-                                    break;
-                                }
-
                             case 6:
                                 if (osInfo.Version.Minor == 0)
                                 {
-                                    osName = "Windows Vista";
+                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
+                                        osName = "Windows Server 2008";
+                                    else
+                                        osName = "Windows Vista";
                                 }
                                 else if (osInfo.Version.Minor == 1)
                                 {
-                                    osName = "Windows 7";
+                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
+                                        osName = "Windows Server 2008 R2";
+                                    else
+                                        osName = "Windows 7";
                                 }
                                 else if (osInfo.Version.Minor == 2)
                                 {
-                                    osName = "Windows 8";
+                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
+                                        osName = "Windows Server 2012";
+                                    else
+                                        osName = "Windows 8";
                                 }
                                 else if (osInfo.Version.Minor == 3)
                                 {
-                                    osName = "Windows 8.1";
+                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
+                                        osName = "Windows Server 2012 R2";
+                                    else
+                                        osName = "Windows 8.1";
                                 }
                                 break;
 
                             case 10:
-                                osName = "Windows 10";
+                                if (osVersionInfo.wProductType == VER_NT_SERVER)
+                                    osName = "Windows Server 2016";
+                                else
+                                    osName = "Windows 10";
                                 break;
                         }
                         break;
