@@ -20,17 +20,38 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic.Devices;
 using System.Text.RegularExpressions;
+using System.IO;
 using Microsoft.Win32;
 
 namespace KeppySynthDebugWindow
 {
     public partial class KeppySynthDebugWindow : Form
     {
-        public static FileVersionInfo Driver { get; set; }
-        public static RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
-        public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
-        public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
-        public static RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
+        // Required for KS
+        FileVersionInfo Driver { get; set; }
+        RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
+        RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
+        RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
+        RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
+        String LogPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\DebugOutput.txt";
+
+        // Windows information
+        ComputerInfo CI = new ComputerInfo();
+        string FullVersion;
+        string bit;
+
+        // CPU/GPU information
+        ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
+        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
+        string cpubit = "";
+        string cpuclock = "";
+        string cpumanufacturer = "";
+        string cpuname = "";
+        string gpuchip = "";
+        string gpuname = "";
+        string gpuver = "";
+        string gpuvram = "";
+        int coreCount = 0;
 
         public KeppySynthDebugWindow()
         {
@@ -42,10 +63,9 @@ namespace KeppySynthDebugWindow
         private void KeppySynthDebugWindow_Load(object sender, EventArgs e)
         {
             Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
-            ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the form
-            richTextBox1.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the richtextbox
-            DoubleBuffered = true; // Reduce flickering
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true); // Reduce flickering
+            GetWindowsInfoData(); // Get info about your Windows installation
+            SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+            PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             DebugWorker.RunWorkerAsync(); // Creates a thread to show the info
         }
 
@@ -59,6 +79,66 @@ namespace KeppySynthDebugWindow
             base.WndProc(ref m);
         }
 
+        private void GetWindowsInfoData()
+        {
+            // Get CPU info
+            foreach (ManagementObject moProcessor in mosProcessor.Get())
+            {
+                cpuclock = moProcessor["maxclockspeed"].ToString();
+                cpubit = moProcessor["datawidth"].ToString();
+                cpuname = moProcessor["name"].ToString();
+                cpumanufacturer = moProcessor["manufacturer"].ToString();
+                coreCount += int.Parse(moProcessor["NumberOfCores"].ToString());
+            }
+
+            // Get GPU info
+            foreach (ManagementObject moGPU in mosGPU.Get())
+            {
+                gpuchip = moGPU["VideoProcessor"].ToString();
+                gpuname = moGPU["Name"].ToString();
+                gpuvram = (long.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
+                gpuver = moGPU["DriverVersion"].ToString();
+            }
+
+            if (WinVer.GetValue("ProductName").ToString().Contains("Windows 10")) // If OS is Windows 10, get UBR too
+            {
+                FullVersion = String.Format("{0}.{1}.{2}.{3}",
+                   Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
+                   Environment.OSVersion.Version.Build.ToString(), WinVer.GetValue("UBR").ToString());
+            }
+            else // Else, give normal version number
+            {
+                FullVersion = String.Format("{0}.{1}.{2}",
+                   Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
+                   Environment.OSVersion.Version.Build.ToString());
+            }
+
+            if (Environment.OSVersion.Version.Major == 6 && (Environment.OSVersion.Version.Minor >= 0 & Environment.OSVersion.Version.Minor < 1))
+            { 
+                WinLogo.Image = Properties.Resources.wvista;
+            }
+            else if (Environment.OSVersion.Version.Major == 6 && (Environment.OSVersion.Version.Minor >= 1 & Environment.OSVersion.Version.Minor < 2))
+            {
+                WinLogo.Image = Properties.Resources.w7;
+            }
+            else if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
+            {
+                WinLogo.Image = Properties.Resources.w8;
+            }
+            else
+            {
+                WinLogo.Image = Properties.Resources.unknown;
+            }
+
+            if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture   
+
+            COS.Text = String.Format("{0} ({1}, {2})", CI.OSFullName, FullVersion, bit);
+            CPU.Text = cpuname;
+            CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}MHz", cpumanufacturer, coreCount, Environment.ProcessorCount, cpuclock);
+            GPU.Text = String.Format("{0} (Chip: {1})", gpuname, gpuchip);
+            GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", gpuvram, gpuver);
+        }
+
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using Keppy's Synthesizer
         {
             RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
@@ -67,17 +147,47 @@ namespace KeppySynthDebugWindow
             Watchdog.Close();
         }
 
-        private void CopyToClipboard_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
+        private void CopyToClipBoardCmd() // Copies content of window to clipboard
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (string line in richTextBox1.Lines) { sb.AppendLine(line); }
+            sb.AppendLine(String.Format("Keppy's Synthesizer version {0}", Driver.FileVersion));
+            sb.AppendLine("========= Debug information =========");
+            sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
+            sb.AppendLine(String.Format("{0} {1}", CMALabel.Text, CMA.Text));
+            sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
+            sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
+            sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
+            sb.AppendLine("======== System  information ========");
+            sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
+            sb.AppendLine(String.Format("{0} {1}", COSLabel.Text, COS.Text));
+            sb.AppendLine(String.Format("{0} {1}", CPULabel.Text, CPU.Text));
+            sb.AppendLine(String.Format("{0} {1}", CPUInfoLabel.Text, CPUInfo.Text));
+            sb.AppendLine(String.Format("{0} {1}", GPULabel.Text, GPU.Text));
+            sb.AppendLine(String.Format("{0} {1}", GPUInfoLabel.Text, GPUInfo.Text));
+            sb.AppendLine(String.Format("{0} {1}", TMLabel.Text, TM.Text));
+            sb.AppendLine(String.Format("{0} {1}", AMLabel.Text, AM.Text));
 
             Thread thread = new Thread(() => Clipboard.SetText(sb.ToString())); // Creates another thread, otherwise the form locks up while copying the richtextbox
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             thread.Join();
             MessageBox.Show("Info copied to clipboard.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information); // Done, now get out
+        }
+
+        private void CopyToClipboard_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
+        {
+            CopyToClipBoardCmd();
+        }
+
+        private void CopyToClip1_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
+        {
+            CopyToClipBoardCmd();
+        }
+
+        private void CopyToClip2_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
+        {
+            CopyToClipBoardCmd();
         }
 
         private void Exit_Click(object sender, EventArgs e) // Exit? lel
@@ -92,53 +202,16 @@ namespace KeppySynthDebugWindow
                 System.Threading.Thread.Sleep(100); // Let it sleep, otherwise it'll eat all ya CPU resources :P
                 try
                 {                 
-                    StringBuilder sb = new StringBuilder(); // Creates a string builder, because adding lines one by one to the richtextbox is unefficient
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
-
-                    string FullVersion;
-                    if (WinVer.GetValue("ProductName").ToString().Contains("Windows 10"))
-                    {
-                        FullVersion = Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + "." + Environment.OSVersion.Version.Build.ToString() + "." + WinVer.GetValue("UBR").ToString();
-                    }
-                    else
-                    {
-                        FullVersion = Environment.OSVersion.Version.Major.ToString() + "." + Environment.OSVersion.Version.Minor.ToString() + "." + Environment.OSVersion.Version.Build.ToString();
-                    }
-
-                    string bit;
                     string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
                     string bitapp = Watchdog.GetValue("bit", "Unknown").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
                     int sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
                     string currentappreturn;
                     string bitappreturn;
-
-                    if (Environment.Is64BitOperatingSystem == true) { bit = "x64"; } else {  bit = "x86"; }  // Gets Windows architecture              
-
-                    // Some info about the computer
-                    ComputerInfo CI = new ComputerInfo();
-                    ulong avmem = ulong.Parse(CI.AvailablePhysicalMemory.ToString());
-                    ulong tlmem = ulong.Parse(CI.TotalPhysicalMemory.ToString());
-                    int avmemint = Convert.ToInt32(avmem / (1024 * 1024));
-                    int tlmemint = Convert.ToInt32(tlmem / (1024 * 1024));
-                    double percentage = avmem * 100.0 / tlmem;
-                    // Some info about the computer
-
                     try
                     {
                         // Time to write all the stuff to the string builder
-                        sb.Append(String.Format("Keppy's Synthesizer Debug Window - Version {0}", Driver.FileVersion.ToString()));
-                        sb.Append(Environment.NewLine);
-                        sb.Append("------------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUS
-                        sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("O.S.: {0} ({1}, {2})", (string)WinVer.GetValue("ProductName"), FullVersion, bit));
-                        sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Total memory: {0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
-                        sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Available memory: {0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
-                        sb.Append(Environment.NewLine);
-                        sb.Append("------------------------------------------------------------"); // MINUSMINUSMINUSMINUSMINUSMINUSx2
-                        sb.Append(Environment.NewLine);
                         if (System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters()) == "0")
                         {
                             OpenAppLocat.Enabled = false;
@@ -156,32 +229,34 @@ namespace KeppySynthDebugWindow
                         {
                             bitappreturn = bitapp.RemoveGarbageCharacters();
                         }
-                        sb.Append(String.Format("Current MIDI app: {0} ({1})", currentappreturn, bitappreturn)); // Removes garbage characters
-                        sb.Append(Environment.NewLine);
-                        sb.Append(String.Format("Active voices: {0}", Debug.GetValue("currentvoices0", "0").ToString())); // Get current active voices
-                        sb.Append(Environment.NewLine);
+                        CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
+                        AV.Text = String.Format("{0}", Debug.GetValue("currentvoices0", "0").ToString()); // Get current active voices
                         if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
                         {
-                            sb.Append("Rendering time: Unavailable"); // If BASS is in encoding mode, BASS usage will stay at constant 100%.
+                            RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.
                         }
                         else
                         {
                             if (Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
-                                sb.Append(String.Format("Rendering time: {0}% (Beyond limit: {1}%)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString()));
+                                RT.Text = String.Format("{0}% (Beyond limit: {1}%)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString());
                             else
-                                sb.Append(String.Format("Rendering time: {0}%", Debug.GetValue("currentcpuusage0", "0").ToString())); // Else, it'll give you the info about how many cycles it needs to work.
+                                RT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusage0", "0").ToString()); // Else, it'll give you the info about how many cycles it needs to work.
                         }
-                        if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
+                        if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 1)
                         {
-                            // If you're using XAudio, it'll show you the size of a frame.
-                            sb.Append(Environment.NewLine);
-                            sb.Append(String.Format("Decoded data size (bytes): {0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue));
+                            DDSLabel.Enabled = false;
+                            DDS.Enabled = false;
+                            DDS.Text = "Unavailable";
+                        }
+                        else
+                        {
+                            DDSLabel.Enabled = true;
+                            DDS.Enabled = true;
+                            DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
                         }
                     }
                     finally
                     {
-                        // Ok everything's done, let's put the string builder output in the richboxtext.
-                        richTextBox1.Text = sb.ToString();
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                     }
@@ -195,7 +270,24 @@ namespace KeppySynthDebugWindow
             }
         }
 
-        private void menuItem2_Click(object sender, EventArgs e)
+        private void MemoryThread_Tick(object sender, EventArgs e)
+        {
+            // This thread just takes the available and total memory info from Windows, then outputs them in the 2nd tab
+
+            ComputerInfo CI = new ComputerInfo();
+            ulong avmem = CI.AvailablePhysicalMemory;
+            ulong tlmem = CI.TotalPhysicalMemory;
+            ulong avmemint = avmem / (1024 * 1024);
+            ulong tlmemint = tlmem / (1024 * 1024);
+            double percentage = avmem * 100.0 / tlmem;
+
+            TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+            AM.Text = String.Format("{0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+
+            CI = null;
+        }
+
+        private void OpenConfigurator_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
         }

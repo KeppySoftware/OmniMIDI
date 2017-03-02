@@ -1488,6 +1488,18 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void DebugModeOpenNotepad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\DebugOutput.txt");
+            }
+            catch
+            {
+                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "Can not open debug log!\n\nYou probably never used the debug feature, or the log file is corrupted.", false, null);
+            }
+        }
+
         private void IgnoreNotes1_Click(object sender, EventArgs e)
         {
             if (IgnoreNotes1.Checked == false)
@@ -1501,6 +1513,53 @@ namespace KeppySynthConfigurator
                 SynthSettings.SetValue("ignorenotes1", "0", RegistryValueKind.DWord);
                 IgnoreNotes1.Checked = false;
                 IgnoreNotesInterval.Enabled = false;
+            }
+        }
+
+        private void ChangeDefaultOutput_Click(object sender, EventArgs e)
+        {
+            KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
+
+        private void IgnoreNotesInterval_Click(object sender, EventArgs e)
+        {
+            KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
+
+        private void ChangePitchShift_Click(object sender, EventArgs e)
+        {
+            KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
+
+        private void MaskSynthesizerAsAnother_Click(object sender, EventArgs e)
+        {
+            MaskSynthAsAnother frm = new MaskSynthAsAnother();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
+
+        private void SettingsPresetsBtn_Click(object sender, EventArgs e)
+        {
+            SettingsPresets.Show(SettingsPresetsBtn, new System.Drawing.Point(1, 20));
+        }
+
+        private void SetSynthDefault_Click(object sender, EventArgs e)
+        {
+            if (!SetSynthDefault.Checked)
+            {
+                SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
+                SetSynthDefault.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
+                SetSynthDefault.Checked = false;
             }
         }
 
@@ -1674,53 +1733,6 @@ namespace KeppySynthConfigurator
         private void KepChannel_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRnA");
-        }
-
-        private void ChangeDefaultOutput_Click(object sender, EventArgs e)
-        {
-            KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
-            frm.ShowDialog();
-            frm.Dispose();
-        }
-
-        private void IgnoreNotesInterval_Click(object sender, EventArgs e)
-        {
-            KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
-            frm.ShowDialog();
-            frm.Dispose();
-        }
-
-        private void ChangePitchShift_Click(object sender, EventArgs e)
-        {
-            KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
-            frm.ShowDialog();
-            frm.Dispose();
-        }
-
-        private void MaskSynthesizerAsAnother_Click(object sender, EventArgs e)
-        {
-            MaskSynthAsAnother frm = new MaskSynthAsAnother();
-            frm.ShowDialog();
-            frm.Dispose();
-        }
-
-        private void SettingsPresetsBtn_Click(object sender, EventArgs e)
-        {
-            SettingsPresets.Show(SettingsPresetsBtn, new System.Drawing.Point(1, 20));
-        }
-
-        private void SetSynthDefault_Click(object sender, EventArgs e)
-        {
-            if (!SetSynthDefault.Checked)
-            {
-                SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
-                SetSynthDefault.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
-                SetSynthDefault.Checked = false;
-            }
         }
     }
 }

@@ -182,6 +182,8 @@
             this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem28 = new System.Windows.Forms.MenuItem();
+            this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -383,7 +385,7 @@
             // 
             // enableextra8sf
             // 
-            this.enableextra8sf.Index = 3;
+            this.enableextra8sf.Index = 2;
             this.enableextra8sf.Text = "Enable extra 8 soundfont lists";
             this.enableextra8sf.Click += new System.EventHandler(this.enableextra8sf_Click);
             // 
@@ -424,6 +426,7 @@
             this.menuItem11,
             this.menuItem14,
             this.menuItem12,
+            this.menuItem28,
             this.menuItem20});
             this.menuItem2.Text = "Additional settings";
             // 
@@ -557,7 +560,6 @@
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MIDIeventsRed,
             this.MaskSynthesizerAsAnother,
-            this.DebugModePls,
             this.enableextra8sf,
             this.MIDINameNoSpace,
             this.menuItem18,
@@ -582,41 +584,41 @@
             // 
             // DebugModePls
             // 
-            this.DebugModePls.Index = 2;
-            this.DebugModePls.Text = "Enable debug mode";
+            this.DebugModePls.Index = 0;
+            this.DebugModePls.Text = "Enable debug log";
             this.DebugModePls.Click += new System.EventHandler(this.DebugModePls_Click);
             // 
             // MIDINameNoSpace
             // 
-            this.MIDINameNoSpace.Index = 4;
+            this.MIDINameNoSpace.Index = 3;
             this.MIDINameNoSpace.Text = "Use MIDI device name without spaces";
             this.MIDINameNoSpace.Click += new System.EventHandler(this.MIDINameNoSpace_Click);
             // 
             // menuItem18
             // 
-            this.menuItem18.Index = 5;
+            this.menuItem18.Index = 4;
             this.menuItem18.Text = "-";
             // 
             // autopanicmode
             // 
-            this.autopanicmode.Index = 6;
+            this.autopanicmode.Index = 5;
             this.autopanicmode.Text = "Automatic rendering recovery";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
             // menuItem27
             // 
-            this.menuItem27.Index = 7;
+            this.menuItem27.Index = 6;
             this.menuItem27.Text = "-";
             // 
             // IgnoreNotes1
             // 
-            this.IgnoreNotes1.Index = 8;
+            this.IgnoreNotes1.Index = 7;
             this.IgnoreNotes1.Text = "Ignore notes in between two velocity values";
             this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
             // 
             // IgnoreNotesInterval
             // 
-            this.IgnoreNotesInterval.Index = 9;
+            this.IgnoreNotesInterval.Index = 8;
             this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
             this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
             // 
@@ -649,7 +651,7 @@
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 15;
+            this.menuItem20.Index = 16;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
             this.UnregDriver,
@@ -1605,6 +1607,20 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "High fidelity audio (For HQ SoundFonts)";
             this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
             // 
+            // menuItem28
+            // 
+            this.menuItem28.Index = 15;
+            this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DebugModePls,
+            this.DebugModeOpenNotepad});
+            this.menuItem28.Text = "Debug logging for troubleshooting";
+            // 
+            // DebugModeOpenNotepad
+            // 
+            this.DebugModeOpenNotepad.Index = 1;
+            this.DebugModeOpenNotepad.Text = "Open debug log on default text editor";
+            this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1797,6 +1813,8 @@
         public System.Windows.Forms.MenuItem SetSynthDefault;
         private System.Windows.Forms.MenuItem MaskSynthesizerAsAnother;
         private System.Windows.Forms.PictureBox StatusBuf;
+        private System.Windows.Forms.MenuItem menuItem28;
+        private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
     }
 }
 

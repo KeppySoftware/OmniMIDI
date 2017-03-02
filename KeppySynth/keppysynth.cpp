@@ -208,25 +208,42 @@ bool GetVersionInfo(
 }
 
 void CreateConsole() {
+	TCHAR modulename[MAX_PATH];
 	TCHAR installpath[MAX_PATH] = { 0 };
+	TCHAR pathfortext[MAX_PATH];
+	char pathfortextchar[500];
+	ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, pathfortext);
+	PathAppend(pathfortext, _T("\\Keppy's Synthesizer\\DebugOutput.txt"));
 	GetModuleFileName(hinst, installpath, MAX_PATH);
+	GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
 	PathRemoveFileSpec(installpath);
 	lstrcat(installpath, L"\\keppysynth.dll");
 	int major2;
 	int minor2;
 	int build;
 	int revision;
+	int number = 1;
 	GetVersionInfo(installpath, major2, minor2, build, revision);
-	//
 	if (alreadyshown != 1) {
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
+		wcstombs(pathfortextchar, pathfortext, 500);
+		freopen(pathfortextchar, "w", stdout);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTitle(L"Keppy's Synthesizer Debug Console");
 		std::cout << "Keppy's Synthesizer Version " << major2 << "." << minor2 << "." << build << "." << revision;
 		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
 		std::cout << std::endl;
 		alreadyshown = 1;
+	}
+}
+
+inline bool DebugFileExists(const std::string& name) {
+	if (FILE *file = fopen(name.c_str(), "r")) {
+		fclose(file);
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 
