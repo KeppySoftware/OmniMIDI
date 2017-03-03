@@ -37,6 +37,9 @@ namespace KeppySynthConfigurator
         public static string List7PathOld { get; set; }
         public static string List8PathOld { get; set; }
 
+        // Buffer stuff
+        public int CurrentIndexFreq { get; set; }
+
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE");
 
         public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
@@ -800,8 +803,8 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 850;
             MaxCPU.Value = 85;
             Frequency.Text = "66150";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
+            bufsize.Value = 40;
+            SPFRate.Value = 80;
             Preload.Checked = true;
             NoteOffCheck.Checked = true;
             SincInter.Checked = true;
@@ -1106,7 +1109,8 @@ namespace KeppySynthConfigurator
 
         private void StatusBuf_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("You should.\n\nKeep the buffer size between 10 and 40, which are the optimal values for performance and audio quality.\n\nIncreasing the buffer too much could lead to unexpected crashes during playback, while decreasing it could make the app not output any audio to the speakers. ", "Do I need to be careful with the buffer size setting?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            String message = String.Format("You should.\n\nKeep the buffer size between {0} and {1}, which are the optimal values for performance and audio quality, when outputting the audio at a frequency of {2}Hz.\n\nIncreasing the buffer too much could lead to unexpected crashes during playback, while decreasing it could make the app not output any audio to the speakers.", Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 4), Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 5), Frequency.Text);
+            MessageBox.Show(message, "Do I need to be careful with the buffer size setting?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Brand new output mode
@@ -1117,6 +1121,8 @@ namespace KeppySynthConfigurator
                 "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", 
                 "\"OTW mode\"? What is it?", 
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                
         }
 
         // Brand new XAudio disabler
@@ -1125,30 +1131,45 @@ namespace KeppySynthConfigurator
             MessageBox.Show("After checking this, the driver will fall back on using BASS's own audio interface, based on DirectSound, instead of a direct interface with WASAPI, based on XAudio.\n\nUsing DirectSound instead of XAudio could reduce audio hiccups and app freezes on outdated machines, but will also increase the latency by a significant amount.", "\"Use DirectSound\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void Frequency_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CurrentIndexFreq = Frequency.SelectedIndex;
+            CheckBuffer();
+        }
+
         private void bufsize_ValueChanged(object sender, EventArgs e)
+        {
+            CheckBuffer();
+        }
+
+        private void CheckBuffer()
         {
             if (!XAudioDisable.Checked)
             {
-                if (bufsize.Value >= 0 && bufsize.Value <= 9)
+                if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 0) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 1))
                 {
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
                 }
-                else if (bufsize.Value >= 10 && bufsize.Value <= 14)
+                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 2) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 3))
                 {
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
                 }
-                else if (bufsize.Value >= 15 && bufsize.Value <= 39)
+                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 4) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 5))
                 {
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.ok;
                 }
-                else if (bufsize.Value >= 40 && bufsize.Value <= 64)
+                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 6) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 7))
                 {
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
                 }
-                else if (bufsize.Value >= 65 && bufsize.Value <= 100)
+                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 8) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 9))
                 {
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
                 }
+                RecommendedBuffer.SetToolTip(
+                    StatusBuf, 
+                    String.Format("It is recommended to set a buffer size with {0}Hz audio is between {1} and {2}.",
+                    Frequency.Text, Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 4), Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 5)));
             }
         }
 

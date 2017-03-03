@@ -85,7 +85,6 @@
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.MIDIeventsRed = new System.Windows.Forms.MenuItem();
             this.MaskSynthesizerAsAnother = new System.Windows.Forms.MenuItem();
-            this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.autopanicmode = new System.Windows.Forms.MenuItem();
@@ -96,6 +95,9 @@
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.menuItem25 = new System.Windows.Forms.MenuItem();
+            this.menuItem28 = new System.Windows.Forms.MenuItem();
+            this.DebugModePls = new System.Windows.Forms.MenuItem();
+            this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
             this.UnregDriver = new System.Windows.Forms.MenuItem();
@@ -182,8 +184,7 @@
             this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem28 = new System.Windows.Forms.MenuItem();
-            this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
+            this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -582,12 +583,6 @@
             this.MaskSynthesizerAsAnother.Text = "Mask synthesizer as another";
             this.MaskSynthesizerAsAnother.Click += new System.EventHandler(this.MaskSynthesizerAsAnother_Click);
             // 
-            // DebugModePls
-            // 
-            this.DebugModePls.Index = 0;
-            this.DebugModePls.Text = "Enable debug log";
-            this.DebugModePls.Click += new System.EventHandler(this.DebugModePls_Click);
-            // 
             // MIDINameNoSpace
             // 
             this.MIDINameNoSpace.Index = 3;
@@ -648,6 +643,26 @@
             // 
             this.menuItem25.Index = 2;
             this.menuItem25.Text = "-";
+            // 
+            // menuItem28
+            // 
+            this.menuItem28.Index = 15;
+            this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DebugModePls,
+            this.DebugModeOpenNotepad});
+            this.menuItem28.Text = "Debug logging for troubleshooting";
+            // 
+            // DebugModePls
+            // 
+            this.DebugModePls.Index = 0;
+            this.DebugModePls.Text = "Enable debug log";
+            this.DebugModePls.Click += new System.EventHandler(this.DebugModePls_Click);
+            // 
+            // DebugModeOpenNotepad
+            // 
+            this.DebugModeOpenNotepad.Index = 1;
+            this.DebugModeOpenNotepad.Text = "Open debug log on default text editor";
+            this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
             // 
             // menuItem20
             // 
@@ -1004,7 +1019,7 @@
             this.StatusBuf.BackColor = System.Drawing.Color.Transparent;
             this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
             this.StatusBuf.ErrorImage = ((System.Drawing.Image)(resources.GetObject("StatusBuf.ErrorImage")));
-            this.StatusBuf.Image = global::KeppySynthConfigurator.Properties.Resources.wir;
+            this.StatusBuf.Image = global::KeppySynthConfigurator.Properties.Resources.what;
             this.StatusBuf.Location = new System.Drawing.Point(528, 55);
             this.StatusBuf.Name = "StatusBuf";
             this.StatusBuf.Size = new System.Drawing.Size(21, 17);
@@ -1104,17 +1119,17 @@
             1,
             0,
             0,
-            0});
+            -2147483648});
             this.bufsize.Name = "bufsize";
             this.bufsize.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.bufsize.Size = new System.Drawing.Size(64, 20);
             this.bufsize.TabIndex = 27;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.bufsize.Value = new decimal(new int[] {
-            20,
+            1,
             0,
             0,
-            0});
+            -2147483648});
             this.bufsize.ValueChanged += new System.EventHandler(this.bufsize_ValueChanged);
             // 
             // groupBox1
@@ -1193,7 +1208,8 @@
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 22;
-            this.Frequency.Text = "44100";
+            this.Frequency.Text = "NULL";
+            this.Frequency.SelectedIndexChanged += new System.EventHandler(this.Frequency_SelectedIndexChanged);
             // 
             // Label5
             // 
@@ -1607,19 +1623,11 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "High fidelity audio (For HQ SoundFonts)";
             this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
             // 
-            // menuItem28
+            // RecommendedBuffer
             // 
-            this.menuItem28.Index = 15;
-            this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.DebugModePls,
-            this.DebugModeOpenNotepad});
-            this.menuItem28.Text = "Debug logging for troubleshooting";
-            // 
-            // DebugModeOpenNotepad
-            // 
-            this.DebugModeOpenNotepad.Index = 1;
-            this.DebugModeOpenNotepad.Text = "Open debug log on default text editor";
-            this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
+            this.RecommendedBuffer.IsBalloon = true;
+            this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -1815,6 +1823,7 @@
         private System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
+        private System.Windows.Forms.ToolTip RecommendedBuffer;
     }
 }
 

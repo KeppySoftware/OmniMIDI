@@ -50,6 +50,153 @@ namespace KeppySynthConfigurator
             }
         }
 
+        // Buffer stuff
+
+        public static Int32 ChangeRecommendedBuffer(Int32 Index, Int32 ReturnValue)
+        {
+            int MinimumBufDangerLow;     // Red warning icon
+            int MaximumBufDangerLow;     // Red warning icon
+            int MinimumBufWarningLow;    // Yellow warning icon
+            int MaximumBufWarningLow;    // Yellow warning icon
+            int MinimumBufRecommended;   // Ok sign
+            int MaximumBufRecommended;   // Ok sign
+            int MinimumBufWarningHigh;   // Yellow warning icon
+            int MaximumBufWarningHigh;   // Yellow warning icon
+            int MinimumBufDangerHigh;    // Yellow warning icon
+            int MaximumBufDangerHigh ;   // Yellow warning icon
+
+            if (Index >= 0 && Index <= 2)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 39;
+                MinimumBufWarningLow = 40;
+                MaximumBufWarningLow = 44;
+                MinimumBufRecommended = 45;
+                MaximumBufRecommended = 55;
+                MinimumBufWarningHigh = 56;
+                MaximumBufWarningHigh = 60;
+                MinimumBufDangerHigh = 61;
+                MaximumBufDangerHigh = 100;
+            }
+            else if (Index >= 3 && Index <= 5)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 24;
+                MinimumBufWarningLow = 25;
+                MaximumBufWarningLow = 29;
+                MinimumBufRecommended = 30;
+                MaximumBufRecommended = 49;
+                MinimumBufWarningHigh = 50;
+                MaximumBufWarningHigh = 79;
+                MinimumBufDangerHigh = 80;
+                MaximumBufDangerHigh = 100;
+            }
+            else if (Index >= 6 && Index <= 10)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 14;
+                MinimumBufWarningLow = 15;
+                MaximumBufWarningLow = 19;
+                MinimumBufRecommended = 20;
+                MaximumBufRecommended = 49;
+                MinimumBufWarningHigh = 50;
+                MaximumBufWarningHigh = 69;
+                MinimumBufDangerHigh = 70;
+                MaximumBufDangerHigh = 100;
+            }
+            else if (Index >= 11 && Index <= 12)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 9;
+                MinimumBufWarningLow = 10;
+                MaximumBufWarningLow = 14;
+                MinimumBufRecommended = 15;
+                MaximumBufRecommended = 39;
+                MinimumBufWarningHigh = 40;
+                MaximumBufWarningHigh = 59;
+                MinimumBufDangerHigh = 60;
+                MaximumBufDangerHigh = 100;
+            }
+            else if (Index >= 13 && Index <= 15)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 9;
+                MinimumBufWarningLow = 10;
+                MaximumBufWarningLow = 14;
+                MinimumBufRecommended = 15;
+                MaximumBufRecommended = 39;
+                MinimumBufWarningHigh = 40;
+                MaximumBufWarningHigh = 59;
+                MinimumBufDangerHigh = 60;
+                MaximumBufDangerHigh = 100;
+            }
+            else if (Index >= 16 && Index <= 18)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 4;
+                MinimumBufWarningLow = 5;
+                MaximumBufWarningLow = 9;
+                MinimumBufRecommended = 10;
+                MaximumBufRecommended = 19;
+                MinimumBufWarningHigh = 20;
+                MaximumBufWarningHigh = 39;
+                MinimumBufDangerHigh = 40;
+                MaximumBufDangerHigh = 100;
+            }
+            else if (Index >= 19 && Index <= 20)
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 0;
+                MinimumBufWarningLow = 1;
+                MaximumBufWarningLow = 4;
+                MinimumBufRecommended = 4;
+                MaximumBufRecommended = 10;
+                MinimumBufWarningHigh = 11;
+                MaximumBufWarningHigh = 29;
+                MinimumBufDangerHigh = 30;
+                MaximumBufDangerHigh = 100;
+            }
+            else
+            {
+                MinimumBufDangerLow = 0;
+                MaximumBufDangerLow = 0;
+                MinimumBufWarningLow = 0;
+                MaximumBufWarningLow = 0;
+                MinimumBufRecommended = 0;
+                MaximumBufRecommended = 0;
+                MinimumBufWarningHigh = 0;
+                MaximumBufWarningHigh = 0;
+                MinimumBufDangerHigh = 0;
+                MaximumBufDangerHigh = 0;
+            }
+            
+            // Now return value
+            if (ReturnValue == 0)
+                return MinimumBufDangerLow;
+            else if (ReturnValue == 1)
+                return MaximumBufDangerLow;
+            else if (ReturnValue == 2)
+                return MinimumBufWarningLow;
+            else if (ReturnValue == 3)
+                return MaximumBufWarningLow;
+            else if (ReturnValue == 4)
+                return MinimumBufRecommended;
+            else if (ReturnValue == 5)
+                return MaximumBufRecommended;
+            else if (ReturnValue == 6)
+                return MinimumBufWarningHigh;
+            else if (ReturnValue == 7)
+                return MaximumBufWarningHigh;
+            else if (ReturnValue == 8)
+                return MinimumBufDangerHigh;
+            else if (ReturnValue == 9)
+                return MaximumBufDangerHigh;
+            else
+                return 0;
+        }
+
+        // Buffer stuff
+
         public static void DriverToSynthMigration() // Basically changes the directory's name
         {
             try
@@ -426,6 +573,7 @@ namespace KeppySynthConfigurator
             try
             {
                 // First, the most important settings
+                KeppySynthConfiguratorMain.Delegate.bufsize.Minimum = 1;
                 KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 0)
@@ -723,11 +871,9 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("sndbfvalue", KeppySynthConfiguratorMain.Delegate.SPFRate.Value.ToString(), RegistryValueKind.DWord);
 
                 // Let's not forget about the volume!
-                int VolumeValue = 0;
-                double x = KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value / 100;
-                VolumeValue = Convert.ToInt32(x);
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = VolumeValue.ToString("000\\%");
-                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
+                decimal VolVal = (decimal)KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value / 100;
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
+                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("volume", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
 
                 // Checkbox stuff yay

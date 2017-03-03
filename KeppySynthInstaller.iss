@@ -16,7 +16,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.0.6'
+#define Version '4.1.0.7'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -49,10 +49,10 @@ SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
 SolidCompression=yes
 TimeStampsInUTC=True
-UninstallDisplayIcon={syswow64}\{#ProductName}\{#Configurator}.exe
+UninstallDisplayIcon={syswow64}\{#InstallDir}\{#Configurator}.exe
 UninstallDisplayName={#ProductName} {#Version} (Uninstall only)
 UninstallDisplaySize=8241947
-UninstallFilesDir={sys}\{#InstallDir}\
+UninstallFilesDir={syswow64}\{#InstallDir}\
 VersionInfoCompany={#Author}
 VersionInfoCopyright={#Copyright}
 VersionInfoDescription={#Description}

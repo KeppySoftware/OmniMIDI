@@ -129,6 +129,7 @@ BOOL BannedSystemProcess() {
 	TCHAR bannedcsrss[MAX_PATH];
 	TCHAR bannedexplorer[MAX_PATH];
 	TCHAR bannedmstsc[MAX_PATH];
+	TCHAR bannedrust[MAX_PATH];
 	TCHAR bannedshare[MAX_PATH];
 	TCHAR bannedshellinfrastructure[MAX_PATH];
 	TCHAR bannedsndvol[MAX_PATH];
@@ -141,6 +142,7 @@ BOOL BannedSystemProcess() {
 	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
 	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
 	_tcscpy_s(bannedmstsc, _countof(bannedmstsc), _T("mstsc.exe"));
+	_tcscpy_s(bannedrust, _countof(bannedrust), _T("RustClient.exe"));
 	_tcscpy_s(bannedshare, _countof(bannedshare), _T("NVIDIA Share.exe"));
 	_tcscpy_s(bannedshellinfrastructure, _countof(bannedshellinfrastructure), _T("ShellExperienceHost.exe"));
 	_tcscpy_s(bannedsndvol, _countof(bannedsndvol), _T("SndVol.exe"));
@@ -153,6 +155,7 @@ BOOL BannedSystemProcess() {
 		!_tcsicmp(modulename, bannedcsrss) |
 		!_tcsicmp(modulename, bannedexplorer) |
 		!_tcsicmp(modulename, bannedmstsc) |
+		!_tcsicmp(modulename, bannedrust) |
 		!_tcsicmp(modulename, bannedshare) |
 		!_tcsicmp(modulename, bannedshellinfrastructure) |
 		!_tcsicmp(modulename, bannedsndvol) |
