@@ -185,6 +185,9 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
+            this.bit8audio = new System.Windows.Forms.MenuItem();
+            this.menuItem32 = new System.Windows.Forms.MenuItem();
+            this.bit16audio = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -484,9 +487,9 @@
             // 
             this.menuItem11.Index = 12;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem32,
             this.ChangeDefaultOutput,
             this.ChangePitchShift,
-            this.floatingpointaudio,
             this.MonophonicFunc,
             this.FadeoutDisable,
             this.ReduceCPUOver,
@@ -498,20 +501,20 @@
             // 
             // ChangeDefaultOutput
             // 
-            this.ChangeDefaultOutput.Index = 0;
+            this.ChangeDefaultOutput.Index = 1;
             this.ChangeDefaultOutput.Text = "Change default audio output";
             this.ChangeDefaultOutput.Click += new System.EventHandler(this.ChangeDefaultOutput_Click);
             // 
             // ChangePitchShift
             // 
-            this.ChangePitchShift.Index = 1;
+            this.ChangePitchShift.Index = 2;
             this.ChangePitchShift.Text = "Change pitch shifting";
             this.ChangePitchShift.Click += new System.EventHandler(this.ChangePitchShift_Click);
             // 
             // floatingpointaudio
             // 
             this.floatingpointaudio.Index = 2;
-            this.floatingpointaudio.Text = "Use floating point audio rendering";
+            this.floatingpointaudio.Text = "Use 32-bit float audio rendering";
             this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
             // 
             // MonophonicFunc
@@ -661,7 +664,7 @@
             // DebugModeOpenNotepad
             // 
             this.DebugModeOpenNotepad.Index = 1;
-            this.DebugModeOpenNotepad.Text = "Open debug log on default text editor";
+            this.DebugModeOpenNotepad.Text = "Open debug folder on Windows Explorer";
             this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
             // 
             // menuItem20
@@ -1628,6 +1631,27 @@
             this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
             // 
+            // bit8audio
+            // 
+            this.bit8audio.Index = 0;
+            this.bit8audio.Text = "Use 8-bit integer audio rendering";
+            this.bit8audio.Click += new System.EventHandler(this.bit8audio_Click);
+            // 
+            // menuItem32
+            // 
+            this.menuItem32.Index = 0;
+            this.menuItem32.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.bit8audio,
+            this.bit16audio,
+            this.floatingpointaudio});
+            this.menuItem32.Text = "Audio bit depth";
+            // 
+            // bit16audio
+            // 
+            this.bit16audio.Index = 1;
+            this.bit16audio.Text = "Use 16-bit integer audio rendering";
+            this.bit16audio.Click += new System.EventHandler(this.bit16audio_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1823,6 +1847,9 @@
         private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
         private System.Windows.Forms.ToolTip RecommendedBuffer;
+        private System.Windows.Forms.MenuItem menuItem32;
+        public System.Windows.Forms.MenuItem bit8audio;
+        public System.Windows.Forms.MenuItem bit16audio;
     }
 }
 

@@ -499,6 +499,17 @@ void Panic() {
 	}
 }
 
+int AudioRenderingType(int value) {
+	if (value == 1)
+		return BASS_SAMPLE_FLOAT;
+	else if (value == 2 || value == 0)
+		return 0;
+	else if (value == 3)
+		return BASS_SAMPLE_8BITS;
+	else
+		return BASS_SAMPLE_FLOAT;
+}
+
 void WatchdogCheck()
 {
 	try {

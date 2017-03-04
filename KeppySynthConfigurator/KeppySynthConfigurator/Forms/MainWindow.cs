@@ -1421,11 +1421,30 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("32bit", "1", RegistryValueKind.DWord);
                 floatingpointaudio.Checked = true;
+                bit16audio.Checked = false;
+                bit8audio.Checked = false;
             }
-            else
+        }
+
+        private void bit16audio_Click(object sender, EventArgs e)
+        {
+            if (bit16audio.Checked == false)
             {
-                SynthSettings.SetValue("32bit", "0", RegistryValueKind.DWord);
+                SynthSettings.SetValue("32bit", "2", RegistryValueKind.DWord);
                 floatingpointaudio.Checked = false;
+                bit16audio.Checked = true;
+                bit8audio.Checked = false;
+            }
+        }
+
+        private void bit8audio_Click(object sender, EventArgs e)
+        {
+            if (bit8audio.Checked == false)
+            {
+                SynthSettings.SetValue("32bit", "3", RegistryValueKind.DWord);
+                floatingpointaudio.Checked = false;
+                bit16audio.Checked = false;
+                bit8audio.Checked = true;
             }
         }
 
@@ -1515,13 +1534,15 @@ namespace KeppySynthConfigurator
 
         private void DebugModeOpenNotepad_Click(object sender, EventArgs e)
         {
+            String DirectoryDebug = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\debug\\";
             try
             {
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\DebugOutput.txt");
+                Process.Start(DirectoryDebug);
             }
             catch
             {
-                Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Error", "Can not open debug log!\n\nYou probably never used the debug feature, or the log file is corrupted.", false, null);
+                Directory.CreateDirectory(DirectoryDebug);
+                Process.Start(DirectoryDebug);
             }
         }
 
@@ -1759,5 +1780,6 @@ namespace KeppySynthConfigurator
         {
             Process.Start("https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRnA");
         }
+
     }
 }

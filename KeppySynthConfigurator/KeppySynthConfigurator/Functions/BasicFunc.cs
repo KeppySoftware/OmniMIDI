@@ -669,13 +669,30 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = false;
                 }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)) == 1)
+                int floatingpointaudioval = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1));
+                if (floatingpointaudioval == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = false;
+                }
+                else if (floatingpointaudioval == 2 || floatingpointaudioval == 0)
+                {
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = false;
+                }
+                else if (floatingpointaudioval == 3)
+                {
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = true;
                 }
                 else
                 {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
                 {

@@ -207,16 +207,29 @@ bool GetVersionInfo(
 	return false;
 }
 
+LPCWSTR ReturnAppName() {
+	// Get app name
+	typedef std::basic_string<TCHAR> tstring;
+	TCHAR buffer[MAX_PATH] = { 0 };
+	TCHAR * out;
+	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
+	if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
+	out = PathFindFileName(buffer);
+	std::wstring stemp = tstring(out) + L" - Debug Output.txt";
+	return stemp.c_str();
+}
+
 void CreateConsole() {
-	TCHAR modulename[MAX_PATH];
+	// Create file and start console output
+	LPCWSTR appname = ReturnAppName();
 	TCHAR installpath[MAX_PATH] = { 0 };
 	TCHAR pathfortext[MAX_PATH];
 	char pathfortextchar[500];
-	ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, pathfortext);
-	PathAppend(pathfortext, _T("\\Keppy's Synthesizer\\DebugOutput.txt"));
+	PathAppend(pathfortext, _T("\\Keppy's Synthesizer\\debug\\"));
+	CreateDirectory(pathfortext, NULL);
+	PathAppend(pathfortext, appname);
 	GetModuleFileName(hinst, installpath, MAX_PATH);
-	GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
 	PathRemoveFileSpec(installpath);
 	lstrcat(installpath, L"\\keppysynth.dll");
 	int major2;
@@ -574,7 +587,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
 						sound_driver = create_sound_out_xaudio2();
 						sound_out_float = TRUE;
-						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, 2, sound_out_float, newsndbfvalue, frames);
+						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, (monorendering ? 1 : 2), sound_out_float, newsndbfvalue, frames);
 						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same as the sound card's max audio frequency.
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}
@@ -594,7 +607,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						else {
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
-						hStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (monorendering ? BASS_SAMPLE_MONO : 0) | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						hStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
 						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
 						BASS_ChannelPlay(hStream, false);
@@ -603,7 +616,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					else {
 						PrintToConsole(FOREGROUND_RED, 1, "Working...");
-						hStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | BASS_SAMPLE_SOFTWARE | (floatrendering ? BASS_SAMPLE_FLOAT : 0) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						hStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
 						if (noaudiodevices != 1) {
 							PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
