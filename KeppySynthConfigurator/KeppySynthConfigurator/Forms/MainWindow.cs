@@ -204,6 +204,11 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                if (VolTrackBar.Value <= 49)
+                    VolSimView.ForeColor = Color.Red;
+                else
+                    VolSimView.ForeColor = Color.Blue;
+
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
                 VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
                 VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
@@ -1109,7 +1114,9 @@ namespace KeppySynthConfigurator
 
         private void StatusBuf_Click(object sender, EventArgs e)
         {
-            String message = String.Format("You should.\n\nKeep the buffer size between {0} and {1}, which are the optimal values for performance and audio quality, when outputting the audio at a frequency of {2}Hz.\n\nIncreasing the buffer too much could lead to unexpected crashes during playback, while decreasing it could make the app not output any audio to the speakers.", Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 4), Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 5), Frequency.Text);
+            Int32[] valuearray = new Int32[10];
+            Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
+            String message = String.Format("You should.\n\nKeep the buffer size between {0} and {1}, which are the optimal values for performance and audio quality, when outputting the audio at a frequency of {2}Hz.\n\nIncreasing the buffer too much could lead to unexpected crashes during playback, while decreasing it could make the app not output any audio to the speakers.", valuearray[4], valuearray[5], Frequency.Text);
             MessageBox.Show(message, "Do I need to be careful with the buffer size setting?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1146,30 +1153,27 @@ namespace KeppySynthConfigurator
         {
             if (!XAudioDisable.Checked)
             {
-                if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 0) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 1))
-                {
+                Int32[] valuearray = new Int32[10];
+                Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
+
+                if (bufsize.Value >= valuearray[0] && bufsize.Value <= valuearray[1])
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
-                }
-                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 2) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 3))
-                {
+                else if (bufsize.Value >= valuearray[2] && bufsize.Value <= valuearray[3])
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
-                }
-                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 4) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 5))
-                {
+                else if (bufsize.Value >= valuearray[4] && bufsize.Value <= valuearray[5])
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.ok;
-                }
-                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 6) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 7))
-                {
+                else if (bufsize.Value >= valuearray[6] && bufsize.Value <= valuearray[7])
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
-                }
-                else if (bufsize.Value >= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 8) && bufsize.Value <= Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 9))
-                {
+                else if (bufsize.Value >= valuearray[8] && bufsize.Value <= valuearray[9])
                     StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
-                }
+
                 RecommendedBuffer.SetToolTip(
                     StatusBuf, 
                     String.Format("It is recommended to set a buffer size with {0}Hz audio is between {1} and {2}.",
-                    Frequency.Text, Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 4), Functions.ChangeRecommendedBuffer(CurrentIndexFreq, 5)));
+                    Frequency.Text, valuearray[4], valuearray[5]));
+
+                BufferText.Text = String.Format( "Set a buffer length for the driver, from 1 to 100 (Optimal range is between {0} and {1}):", 
+                    valuearray[4], valuearray[5]);
             }
         }
 
@@ -1218,7 +1222,7 @@ namespace KeppySynthConfigurator
                 changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 VolumeBoost.Enabled = true;
-                BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Stay between 10-40 for optimal performance):";
+                BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;

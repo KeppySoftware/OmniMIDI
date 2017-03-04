@@ -44,7 +44,7 @@ namespace KeppySynthConfigurator
         private void KeppyDriverInformation_Load(object sender, EventArgs e)
         {
             FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
-            Text = String.Format("Keppy's Synthesizer {0} (Build time: {1}, GMT +1)", Driver.FileVersion.ToString(), GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Local));
+            Text = String.Format("Keppy's Synthesizer {0} (Build date: {1}, .NET {2})", Driver.FileVersion.ToString(), GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Utc), Assembly.GetExecutingAssembly().ImageRuntimeVersion);
             Label8.Text = String.Format("Keppy's Synthesizer {0}\nUser-mode MIDI driver for Windows", Driver.FileVersion.ToString());
         }
 

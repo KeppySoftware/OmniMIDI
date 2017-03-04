@@ -19,7 +19,7 @@ namespace KeppySynthMixerWindow
         public static RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
         public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-        uint MaxStockClock;
+        int MaxStockClock;
 
         public KeppySynthMixerWindow()
         {
@@ -28,12 +28,11 @@ namespace KeppySynthMixerWindow
 
         public void CPUSpeed()
         {
-            RegistryKey registrykeyHKLM = Registry.LocalMachine;
-            string keyPath = @"HARDWARE\DESCRIPTION\System\CentralProcessor\0";
-            RegistryKey registrykeyCPU = registrykeyHKLM.OpenSubKey(keyPath, false);
-            MaxStockClock = Convert.ToUInt32(registrykeyCPU.GetValue("~MHz").ToString());
-            registrykeyCPU.Close();
-            registrykeyHKLM.Close();
+            ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("SELECT * FROM CIM_Processor");
+            foreach (ManagementObject moProcessor in mosProcessor.Get())
+            {
+                MaxStockClock = int.Parse(moProcessor["maxclockspeed"].ToString());
+            }
         }
 
         private void fullVolumeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -123,10 +122,6 @@ namespace KeppySynthMixerWindow
                     MeterFunc.ChangeMeter(0, left);
                     MeterFunc.ChangeMeter(1, right);
                 }
-
-                Debug.Close();
-                Settings.Close();
-
                 System.Threading.Thread.Sleep(1);
             }
             catch (Exception ex)
@@ -278,7 +273,6 @@ namespace KeppySynthMixerWindow
             {
                 MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-
             System.Threading.Thread.Sleep(1);
         }
 

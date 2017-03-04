@@ -1094,10 +1094,9 @@
             this.BufferText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BufferText.Location = new System.Drawing.Point(4, 57);
             this.BufferText.Name = "BufferText";
-            this.BufferText.Size = new System.Drawing.Size(444, 13);
+            this.BufferText.Size = new System.Drawing.Size(227, 13);
             this.BufferText.TabIndex = 23;
-            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100 (Stay between 10-40 for optimal" +
-    " performance):";
+            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
             // 
             // SysResetIgnore
             // 
@@ -1181,6 +1180,7 @@
             // Frequency
             // 
             this.Frequency.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.Frequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Frequency.FormattingEnabled = true;
             this.Frequency.Items.AddRange(new object[] {
             "192000",
@@ -1208,7 +1208,6 @@
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 22;
-            this.Frequency.Text = "NULL";
             this.Frequency.SelectedIndexChanged += new System.EventHandler(this.Frequency_SelectedIndexChanged);
             // 
             // Label5

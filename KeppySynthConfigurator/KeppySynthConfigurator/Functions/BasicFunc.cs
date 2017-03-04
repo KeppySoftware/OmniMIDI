@@ -52,147 +52,125 @@ namespace KeppySynthConfigurator
 
         // Buffer stuff
 
-        public static Int32 ChangeRecommendedBuffer(Int32 Index, Int32 ReturnValue)
+        public static void ChangeRecommendedBuffer(Int32 Index, out Int32[] valuearray)
         {
-            int MinimumBufDangerLow;     // Red warning icon
-            int MaximumBufDangerLow;     // Red warning icon
-            int MinimumBufWarningLow;    // Yellow warning icon
-            int MaximumBufWarningLow;    // Yellow warning icon
-            int MinimumBufRecommended;   // Ok sign
-            int MaximumBufRecommended;   // Ok sign
-            int MinimumBufWarningHigh;   // Yellow warning icon
-            int MaximumBufWarningHigh;   // Yellow warning icon
-            int MinimumBufDangerHigh;    // Yellow warning icon
-            int MaximumBufDangerHigh ;   // Yellow warning icon
+            valuearray = new Int32[10];
 
-            if (Index >= 0 && Index <= 2)
+            valuearray[0] = 0;
+            valuearray[9] = 100;
+
+            if (Index == 0)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 39;
-                MinimumBufWarningLow = 40;
-                MaximumBufWarningLow = 44;
-                MinimumBufRecommended = 45;
-                MaximumBufRecommended = 55;
-                MinimumBufWarningHigh = 56;
-                MaximumBufWarningHigh = 60;
-                MinimumBufDangerHigh = 61;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 50;
+                valuearray[2] = 51;
+                valuearray[3] = 60;
+                valuearray[4] = 61;
+                valuearray[5] = 70;
+                valuearray[6] = 71;
+                valuearray[7] = 90;
+                valuearray[8] = 91;
+            }
+            else if (Index == 1)
+            {
+                valuearray[1] = 45;
+                valuearray[2] = 46;
+                valuearray[3] = 55;
+                valuearray[4] = 56;
+                valuearray[5] = 65;
+                valuearray[6] = 66;
+                valuearray[7] = 85;
+                valuearray[8] = 86;
+            }
+            else if (Index == 2)
+            {
+                valuearray[1] = 40;
+                valuearray[2] = 41;
+                valuearray[3] = 44;
+                valuearray[4] = 45;
+                valuearray[5] = 55;
+                valuearray[6] = 56;
+                valuearray[7] = 60;
+                valuearray[8] = 61;
             }
             else if (Index >= 3 && Index <= 5)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 24;
-                MinimumBufWarningLow = 25;
-                MaximumBufWarningLow = 29;
-                MinimumBufRecommended = 30;
-                MaximumBufRecommended = 49;
-                MinimumBufWarningHigh = 50;
-                MaximumBufWarningHigh = 79;
-                MinimumBufDangerHigh = 80;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 24;
+                valuearray[2] = 25;
+                valuearray[3] = 29;
+                valuearray[4] = 30;
+                valuearray[5] = 49;
+                valuearray[6] = 50;
+                valuearray[7] = 79;
+                valuearray[8] = 80;
             }
             else if (Index >= 6 && Index <= 10)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 14;
-                MinimumBufWarningLow = 15;
-                MaximumBufWarningLow = 19;
-                MinimumBufRecommended = 20;
-                MaximumBufRecommended = 49;
-                MinimumBufWarningHigh = 50;
-                MaximumBufWarningHigh = 69;
-                MinimumBufDangerHigh = 70;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 14;
+                valuearray[2] = 15;
+                valuearray[3] = 19;
+                valuearray[4] = 20;
+                valuearray[5] = 49;
+                valuearray[6] = 50;
+                valuearray[7] = 69;
+                valuearray[8] = 70;
             }
             else if (Index >= 11 && Index <= 12)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 9;
-                MinimumBufWarningLow = 10;
-                MaximumBufWarningLow = 14;
-                MinimumBufRecommended = 15;
-                MaximumBufRecommended = 39;
-                MinimumBufWarningHigh = 40;
-                MaximumBufWarningHigh = 59;
-                MinimumBufDangerHigh = 60;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 9;
+                valuearray[2] = 10;
+                valuearray[3] = 14;
+                valuearray[4] = 15;
+                valuearray[5] = 39;
+                valuearray[6] = 40;
+                valuearray[7] = 59;
+                valuearray[8] = 60;
             }
             else if (Index >= 13 && Index <= 15)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 9;
-                MinimumBufWarningLow = 10;
-                MaximumBufWarningLow = 14;
-                MinimumBufRecommended = 15;
-                MaximumBufRecommended = 39;
-                MinimumBufWarningHigh = 40;
-                MaximumBufWarningHigh = 59;
-                MinimumBufDangerHigh = 60;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 9;
+                valuearray[2] = 10;
+                valuearray[3] = 14;
+                valuearray[4] = 15;
+                valuearray[5] = 39;
+                valuearray[6] = 40;
+                valuearray[7] = 59;
+                valuearray[8] = 60;
             }
             else if (Index >= 16 && Index <= 18)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 4;
-                MinimumBufWarningLow = 5;
-                MaximumBufWarningLow = 9;
-                MinimumBufRecommended = 10;
-                MaximumBufRecommended = 19;
-                MinimumBufWarningHigh = 20;
-                MaximumBufWarningHigh = 39;
-                MinimumBufDangerHigh = 40;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 4;
+                valuearray[2] = 5;
+                valuearray[3] = 9;
+                valuearray[4] = 10;
+                valuearray[5] = 19;
+                valuearray[6] = 20;
+                valuearray[7] = 39;
+                valuearray[8] = 40;
             }
             else if (Index >= 19 && Index <= 20)
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 0;
-                MinimumBufWarningLow = 1;
-                MaximumBufWarningLow = 4;
-                MinimumBufRecommended = 4;
-                MaximumBufRecommended = 10;
-                MinimumBufWarningHigh = 11;
-                MaximumBufWarningHigh = 29;
-                MinimumBufDangerHigh = 30;
-                MaximumBufDangerHigh = 100;
+                valuearray[1] = 0;
+                valuearray[2] = 1;
+                valuearray[3] = 4;
+                valuearray[4] = 4;
+                valuearray[5] = 10;
+                valuearray[6] = 11;
+                valuearray[7] = 29;
+                valuearray[8] = 30;
             }
             else
             {
-                MinimumBufDangerLow = 0;
-                MaximumBufDangerLow = 0;
-                MinimumBufWarningLow = 0;
-                MaximumBufWarningLow = 0;
-                MinimumBufRecommended = 0;
-                MaximumBufRecommended = 0;
-                MinimumBufWarningHigh = 0;
-                MaximumBufWarningHigh = 0;
-                MinimumBufDangerHigh = 0;
-                MaximumBufDangerHigh = 0;
+                valuearray[1] = 9;
+                valuearray[2] = 10;
+                valuearray[3] = 14;
+                valuearray[4] = 15;
+                valuearray[5] = 39;
+                valuearray[6] = 40;
+                valuearray[7] = 59;
+                valuearray[8] = 60;
             }
-            
-            // Now return value
-            if (ReturnValue == 0)
-                return MinimumBufDangerLow;
-            else if (ReturnValue == 1)
-                return MaximumBufDangerLow;
-            else if (ReturnValue == 2)
-                return MinimumBufWarningLow;
-            else if (ReturnValue == 3)
-                return MaximumBufWarningLow;
-            else if (ReturnValue == 4)
-                return MinimumBufRecommended;
-            else if (ReturnValue == 5)
-                return MaximumBufRecommended;
-            else if (ReturnValue == 6)
-                return MinimumBufWarningHigh;
-            else if (ReturnValue == 7)
-                return MaximumBufWarningHigh;
-            else if (ReturnValue == 8)
-                return MinimumBufDangerHigh;
-            else if (ReturnValue == 9)
-                return MaximumBufDangerHigh;
-            else
-                return 0;
+
+            // Done, it'll output the array now
         }
 
         // Buffer stuff
@@ -835,6 +813,10 @@ namespace KeppySynthConfigurator
                         KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
                     }
                 }
+                if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
+                    KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
+                else
+                    KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
                 Program.DebugToConsole(false, "Done loading settings.", null);
@@ -856,15 +838,7 @@ namespace KeppySynthConfigurator
                 // Normal settings
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("polyphony", KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value.ToString(), RegistryValueKind.DWord);
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("cpu", KeppySynthConfiguratorMain.Delegate.MaxCPU.Value, RegistryValueKind.DWord);
-                if (string.IsNullOrWhiteSpace(KeppySynthConfiguratorMain.Delegate.Frequency.Text))
-                {
-                    KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", "44100").ToString();
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("frequency", KeppySynthConfiguratorMain.Delegate.Frequency.Text, RegistryValueKind.DWord);
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("frequency", KeppySynthConfiguratorMain.Delegate.Frequency.Text, RegistryValueKind.DWord);
-                }
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("frequency", KeppySynthConfiguratorMain.Delegate.Frequency.Text, RegistryValueKind.DWord);
 
                 // Advanced SynthSettings
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("buflen", KeppySynthConfiguratorMain.Delegate.bufsize.Value.ToString(), RegistryValueKind.DWord);
