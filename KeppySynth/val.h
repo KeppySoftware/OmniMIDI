@@ -75,9 +75,12 @@ static char SynthName[050];
 static char SynthNameW[050];
 static int selectedname = 3;			// Default name
 
-static LPCSTR SynthNames[19] =
+static LPCSTR SynthNames[22] =
 {
 	"AWE64 MIDI Synth\0",
+	"BASSMIDI Driver\0",
+	"BASSMIDI Driver (Port A)\0",
+	"BASSMIDI Driver (Port B)\0",
 	"CoolSoft VirtualMIDISynth\0",
 	"Creative OPL3 FM\0",
 	"Keppy's Synthesizer\0",
@@ -98,9 +101,12 @@ static LPCSTR SynthNames[19] =
 	"Yamaha S-YXG50 SoftSynthesizer\0",
 };
 
-static LPCWSTR SynthNamesW[19] = 
+static LPCWSTR SynthNamesW[22] = 
 {
 	L"AWE64 MIDI Synth\0",
+	L"BASSMIDI Driver\0",
+	L"BASSMIDI Driver (Port A)\0",
+	L"BASSMIDI Driver (Port B)\0",
 	L"CoolSoft VirtualMIDISynth\0",
 	L"Creative OPL3 FM\0",
 	L"Keppy's Synthesizer\0",
@@ -121,9 +127,12 @@ static LPCWSTR SynthNamesW[19] =
 	L"Yamaha S-YXG50 SoftSynthesizer\0",
 };
 
-static int SynthNamesTypes[19] =
+static int SynthNamesTypes[22] =
 {
 	MOD_MIDIPORT,						// AWE64 MIDI Synth
+	MOD_MIDIPORT,						// BASSMIDI Driver
+	MOD_MIDIPORT,						// BASSMIDI Driver (Port A)
+	MOD_MIDIPORT,						// BASSMIDI Driver (Port B)
 	MOD_SWSYNTH,						// CoolSoft VirtualMIDISynth
 	MOD_FMSYNTH,						// Creative OPL3 FM
 	MOD_MIDIPORT,						// Keppy's Synthesizer

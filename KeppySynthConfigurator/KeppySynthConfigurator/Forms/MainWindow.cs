@@ -914,7 +914,18 @@ namespace KeppySynthConfigurator
 
         private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
         {
-            Functions.LoudMaxInstall();
+            if (!floatingpointaudio.Checked)
+            {
+                DialogResult dialogResult = MessageBox.Show("LoudMax is useless without 32-bit float audio rendering.\nPlease enable it by going to \"Additional settings > Advanced audio settings > Audio bit depth\".\n\nDo you want to continue anyway?", "Keppy's Synthesizer - LoudMax", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Functions.LoudMaxInstall();
+                }
+            }
+            else
+            {
+                Functions.LoudMaxInstall();
+            }
         }
 
         private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)

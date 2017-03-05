@@ -62,6 +62,9 @@
             this.Names.FormattingEnabled = true;
             this.Names.Items.AddRange(new object[] {
             "AWE64 MIDI Synth",
+            "BASSMIDI Driver",
+            "BASSMIDI Driver (Port A)",
+            "BASSMIDI Driver (Port B)",
             "CoolSoft VirtualMIDISynth",
             "Creative OPL3 FM",
             "Keppy\'s Synthesizer",

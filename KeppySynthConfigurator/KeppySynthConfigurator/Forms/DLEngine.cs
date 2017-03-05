@@ -75,23 +75,38 @@ namespace KeppySynthConfigurator.Forms
 
         private void Completed(object sender, AsyncCompletedEventArgs e)
         {
-            if (test == 0)
+            if (e.Cancelled)
             {
-                try
-                {
-                    Process.Start(Path.GetTempPath() + "KeppySynthSetup.exe");
-                    Application.ExitThread();
-                }
-                catch
-                {
-                    MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, its missing the Win32PE header, or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Close();
-                }
+                webClient.Dispose();
+                if (File.Exists(Path.GetTempPath() + "KeppySynthSetup.exe")) { File.Delete(Path.GetTempPath() + "KeppySynthSetup.exe"); }
+                MessageBox.Show("Download aborted.\n\nPress OK to close the download window.", "Keppy's Synthesizer - Download aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Close();
             }
             else
             {
-                Close();
+                if (test == 0)
+                {
+                    try
+                    {
+                        Process.Start(Path.GetTempPath() + "KeppySynthSetup.exe");
+                        Application.ExitThread();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, its missing the Win32PE header, or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Close();
+                    }
+                }
+                else
+                {
+                    Close();
+                }
             }
+        }
+
+        private void CancelBtn_Click(object sender, EventArgs e)
+        {
+            webClient.CancelAsync();
         }
     }
 }

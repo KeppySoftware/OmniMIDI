@@ -30,6 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.CancelBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -47,21 +48,32 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(12, 29);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(271, 23);
+            this.progressBar1.Size = new System.Drawing.Size(190, 23);
             this.progressBar1.TabIndex = 1;
             // 
-            // KeppySynthDLEngine
+            // CancelBtn
+            // 
+            this.CancelBtn.Location = new System.Drawing.Point(209, 29);
+            this.CancelBtn.Name = "CancelBtn";
+            this.CancelBtn.Size = new System.Drawing.Size(74, 23);
+            this.CancelBtn.TabIndex = 2;
+            this.CancelBtn.Text = "Cancel";
+            this.CancelBtn.UseVisualStyleBackColor = true;
+            this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
+            // 
+            // DLEngine
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(295, 63);
             this.ControlBox = false;
+            this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label1);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "KeppySynthDLEngine";
+            this.Name = "DLEngine";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -75,5 +87,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button CancelBtn;
     }
 }
