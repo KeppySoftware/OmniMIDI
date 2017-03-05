@@ -56,7 +56,7 @@ void ResetSynth(int ischangingbuffermode){
 		evbrpoint = 0;
 		evbcount = 0;
 	}
-	BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
+	BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 	reset_synth = 0;
 }
 
@@ -78,7 +78,7 @@ void LoadSoundfont(int whichsf){
 			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
 			RegCloseKey(hKey);
 			LoadFonts(0, sflistloadme[whichsf - 1]);
-			BASS_MIDI_StreamLoadSamples(hStream);
+			BASS_MIDI_StreamLoadSamples(KSStream);
 			PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 		}
 		catch (...) {
@@ -427,7 +427,7 @@ void realtime_load_settings()
 		}
 		if (potato) {
 			if (frequencyttemp != frequency) {
-				BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_FREQ, frequency);
+				BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_FREQ, frequency);
 			}
 		}
 		if (lovel < 1) { lovel = 1; }
@@ -442,31 +442,31 @@ void realtime_load_settings()
 			sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 		}
 		// stuff
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 		if (noteoff1) {
-			BASS_ChannelFlags(hStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
+			BASS_ChannelFlags(KSStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
 		}
 		else {
-			BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOTEOFF1);
+			BASS_ChannelFlags(KSStream, 0, BASS_MIDI_NOTEOFF1);
 		}
 		if (nofx) {
-			BASS_ChannelFlags(hStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+			BASS_ChannelFlags(KSStream, BASS_MIDI_NOFX, BASS_MIDI_NOFX);
 		}
 		else {
-			BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOFX);
+			BASS_ChannelFlags(KSStream, 0, BASS_MIDI_NOFX);
 		}
 		if (sysresetignore) {
-			BASS_ChannelFlags(hStream, BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
+			BASS_ChannelFlags(KSStream, BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
 		}
 		else {
-			BASS_ChannelFlags(hStream, 0, BASS_MIDI_NOSYSRESET);
+			BASS_ChannelFlags(KSStream, 0, BASS_MIDI_NOSYSRESET);
 		}
 		if (sinc) {
-			BASS_ChannelFlags(hStream, BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
+			BASS_ChannelFlags(KSStream, BASS_MIDI_SINCINTER, BASS_MIDI_SINCINTER);
 		}
 		else {
-			BASS_ChannelFlags(hStream, 0, BASS_MIDI_SINCINTER);
+			BASS_ChannelFlags(KSStream, 0, BASS_MIDI_SINCINTER);
 		}
 		appname();
 	}
@@ -485,17 +485,17 @@ void Panic() {
 			else if (currentcpuusage0 >= 120.0f && currentcpuusage0 < 130.0f) { reduceby = midivoices / 16; }
 			else if (currentcpuusage0 >= 130.0f && currentcpuusage0 < 140.0f) { reduceby = midivoices / 32; }
 			else if (currentcpuusage0 >= 140.0f && currentcpuusage0 < 150.0f) { reduceby = midivoices / 64; }
-			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, reduceby);
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, reduceby);
 		}
 		else if (currentcpuusage0 >= 150.0f) {
 			ResetSynth(0);
 		}
 		else {
-			BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 		}
 	}
 	else {
-		BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 	}
 }
 
@@ -545,7 +545,7 @@ void CheckVolume() {
 	if (volumemon == 1) {
 		if (xaudiodisabled == 1)
 		{
-			level = BASS_ChannelGetLevel(hStream);
+			level = BASS_ChannelGetLevel(KSStream);
 			left = LOWORD(level); // the left level
 			right = HIWORD(level); // the right level
 			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
@@ -565,8 +565,8 @@ void debug_info() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		float currentvoices0;
 		int tempo;
-		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
-		BASS_ChannelGetAttribute(hStream, BASS_ATTRIB_CPU, &currentcpuusage0);
+		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
+		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 
 	    currentvoicesint0 = int(currentvoices0);
 		int currentcpuusageint0 = int(currentcpuusage0);
@@ -593,11 +593,11 @@ void mixervoid() {
 		for (int i = 0; i <= 15; ++i) {
 			RegQueryValueEx(hKey, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
 			if (midivolumeoverride == 1) {
-				BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
+				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
 			}
 			else {
 				if (cvalues[i] != tcvalues[i]) {
-					BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
+					BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
 					tcvalues[i] = cvalues[i];
 				}
 			}

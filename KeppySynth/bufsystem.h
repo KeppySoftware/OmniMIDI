@@ -17,11 +17,11 @@ static void ResetDrumChannels()
 
 	memcpy(gs_part_to_ch, part_to_ch, sizeof(gs_part_to_ch));
 
-	if (hStream)
+	if (KSStream)
 	{
 		for (i = 0; i < 16; ++i)
 		{
-			BASS_MIDI_StreamEvent(hStream, i, MIDI_EVENT_DRUMS, drum_channels[i]);
+			BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_DRUMS, drum_channels[i]);
 		}
 	}
 }
@@ -68,7 +68,7 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 
 	dwParam2 = dwParam1 & 0xF0;
 	exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-	BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
 
 	CheckUp();
 
@@ -131,7 +131,7 @@ int bmsyn_play_some_data(void){
 				break;
 			case MODM_LONGDATA:
 				if (sysresetignore == 1) {
-					BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
 					CheckUp();
 					if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
 						(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
@@ -194,7 +194,7 @@ bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_
 
 void AudioRender() {
 	DWORD decoded;
-	decoded = BASS_ChannelGetData(hStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
+	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 	if (encmode == 1) {
 
 	}

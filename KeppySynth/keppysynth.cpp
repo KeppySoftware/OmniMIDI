@@ -88,7 +88,7 @@ static volatile int reset_synth = 0;
 static DWORD processPriority;
 static HANDLE load_sfevent = NULL;
 
-static HSTREAM hStream = 0;
+static HSTREAM KSStream = 0;
 
 static BOOL com_initialized = FALSE;
 static BOOL sound_out_float = FALSE;
@@ -149,8 +149,8 @@ void basserr(int error) {
 	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
 	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
 	lstrcat(part1, buffer);
-	lstrcat(part2, errname[error]);
-	lstrcat(part3, errdesc[error - 1]);
+	lstrcat(part2, errname[error + 1]);
+	lstrcat(part3, errdesc[error + 1]);
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
 	lstrcat(part1, part4);
@@ -419,9 +419,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsA->wMid = 0xffff; //MM_UNMAPPED
 		myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
 		memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
+		myCapsA->wVoices = 65535;
+		myCapsA->wNotes = 65535;
 		myCapsA->wTechnology = defaultmode;
 		myCapsA->wChannelMask = 0xffff;
-		myCapsA->dwSupport = MIDICAPS_VOLUME;
+		myCapsA->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
 		return MMSYSERR_NOERROR;
 
@@ -430,9 +432,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCapsW->wMid = 0xffff;
 		myCapsW->wPid = 0xffff;
 		memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
+		myCapsW->wVoices = 65535;
+		myCapsW->wNotes = 65535;
 		myCapsW->wTechnology = defaultmode;
 		myCapsW->wChannelMask = 0xffff;
-		myCapsW->dwSupport = MIDICAPS_VOLUME;
+		myCapsW->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
 		return MMSYSERR_NOERROR;
 
@@ -441,9 +445,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wMid = 0xffff; //MM_UNMAPPED
 		myCaps2A->wPid = 0xffff; //MM_PID_UNMAPPED
 		memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
+		myCaps2A->wVoices = 65535;
+		myCaps2A->wNotes = 65535;
 		myCaps2A->wTechnology = defaultmode;
 		myCaps2A->wChannelMask = 0xffff;
-		myCaps2A->dwSupport = MIDICAPS_VOLUME;
+		myCaps2A->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
 		return MMSYSERR_NOERROR;
 
@@ -452,9 +458,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
 		memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
+		myCaps2W->wVoices = 65535;
+		myCaps2W->wNotes = 65535;
 		myCaps2W->wTechnology = defaultmode;
 		myCaps2W->wChannelMask = 0xffff;
-		myCaps2W->dwSupport = MIDICAPS_VOLUME;
+		myCaps2W->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
 		return MMSYSERR_NOERROR;
 
@@ -499,7 +507,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 		try {
 			if (reset_synth != 0){
 				reset_synth = 0;
-				BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+				BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				CheckUp();
 			}
 
@@ -511,7 +519,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 
 			if (xaudiodisabled == 1) {
 				if (rco == 1) { Sleep(1); }
-				BASS_ChannelUpdate(hStream, 0);
+				BASS_ChannelUpdate(KSStream, 0);
 				CheckUp();
 			}
 			else {
@@ -530,7 +538,7 @@ unsigned __stdcall audioengine(LPVOID lpV){
 
 void CALLBACK MidiInProc(DWORD device, double time, const BYTE *buffer, DWORD length, void *user)
 {
-	BASS_MIDI_StreamEvents(hStream, BASS_MIDI_EVENTS_RAW, buffer, length); // forward the data to the MIDI stream
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, buffer, length); // forward the data to the MIDI stream
 }
 
 unsigned __stdcall threadfunc(LPVOID lpV){
@@ -607,16 +615,16 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						else {
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
-						hStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						KSStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_NOBUFFER, 1);
-						BASS_ChannelPlay(hStream, false);
+						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_NOBUFFER, 1);
+						BASS_ChannelPlay(KSStream, false);
 						CheckUp();
 						PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 					}
 					else {
 						PrintToConsole(FOREGROUND_RED, 1, "Working...");
-						hStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+						KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
 						if (noaudiodevices != 1) {
 							PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
@@ -625,17 +633,17 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 							PrintToConsole(FOREGROUND_RED, 1, "Dummy stream enabled.");
 						}
 					}
-					if (!hStream) {
-						BASS_StreamFree(hStream);
+					if (!KSStream) {
+						BASS_StreamFree(KSStream);
 						CheckUp();
-						hStream = 0;
+						KSStream = 0;
 						PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
 						continue;
 					}
 					else {
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-						BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
+						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 						CheckUp();
 					}
 					// Error handling
@@ -644,13 +652,13 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					#if defined(_WIN64)
 					if (PathFileExists(loudmaxdll64)) {
 						if (isbassvstloaded == 1) {
-							BASS_VST_ChannelSetDSP(hStream, LMDLL64, 0, 1);
+							BASS_VST_ChannelSetDSP(KSStream, LMDLL64, 0, 1);
 						}
 					}
 					#elif defined(_WIN32)
 					if (PathFileExists(loudmaxdll)) {
 						if (isbassvstloaded == 1) {
-							BASS_VST_ChannelSetDSP(hStream, LMDLL, 0, 1);
+							BASS_VST_ChannelSetDSP(KSStream, LMDLL, 0, 1);
 						}
 					}
 					#endif
@@ -699,7 +707,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						switch (result)
 						{
 						case IDYES:
-							BASS_Encode_Start(hStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
+							BASS_Encode_Start(KSStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 							// Error handling
 							CheckUp();
 							break;
@@ -717,9 +725,9 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					}
 					// Cake.
 					PrintToConsole(FOREGROUND_RED, 1, "Preparing stream...");
-					BASS_ChannelSetAttribute(hStream, BASS_ATTRIB_MIDI_CHANS, 16);
-					BASS_MIDI_StreamEvent(hStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-					BASS_MIDI_StreamEvent(hStream, 9, MIDI_EVENT_DRUMS, 1);
+					BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CHANS, 16);
+					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+					BASS_MIDI_StreamEvent(KSStream, 9, MIDI_EVENT_DRUMS, 1);
 					PrintToConsole(FOREGROUND_RED, 1, "Loading soundfonts...");
 					if (LoadSoundfontStartup() == TRUE) {
 						PrintToConsole(FOREGROUND_RED, 1, "Default list for app loaded.");
@@ -750,11 +758,11 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 				mixervoid();
 			}
 			stop_rtthread = 0;
-			if (hStream)
+			if (KSStream)
 			{
 				ResetSynth(0);
-				BASS_StreamFree(hStream);
-				hStream = 0;
+				BASS_StreamFree(KSStream);
+				KSStream = 0;
 			}
 			if (bassmidi) {
 				ResetSynth(0);

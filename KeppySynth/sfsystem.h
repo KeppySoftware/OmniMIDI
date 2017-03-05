@@ -240,6 +240,6 @@ void LoadFonts(UINT uDeviceID, const TCHAR * name)
 		{
 			fonts.push_back(presetList[uDeviceID][j - i - 1]);
 		}
-		BASS_MIDI_StreamSetFonts(hStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
+		BASS_MIDI_StreamSetFonts(KSStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 	}
 }

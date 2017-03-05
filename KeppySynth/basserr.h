@@ -2,8 +2,9 @@
 Keppy's Synthesizer errors list
 */
 
-static TCHAR * errname[47] =
+static TCHAR * errname[48] =
 {
+	L"BASS_ERROR_UNKNOWN",		// Error -1
 	L"BASS_OK",					// Error 0
 	L"BASS_ERROR_MEM",			// Error 1
 	L"BASS_ERROR_FILEOPEN",		// Error 2
@@ -53,8 +54,9 @@ static TCHAR * errname[47] =
 	L"BASS_ERROR_BUSY",			// Error 46
 };
 
-static TCHAR * errdesc[47] =
+static TCHAR * errdesc[48] =
 {
+	L"Unknown error.",																							// Error -1
 	L"Nothing's wrong.",																						// Error 0
 	L"There is insufficient memory.",																			// Error 1
 	L"The file could not be opened.",																			// Error 2
