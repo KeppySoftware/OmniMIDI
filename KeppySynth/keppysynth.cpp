@@ -405,10 +405,15 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	MIDIOUTCAPS2A * myCaps2A;
     MIDIOUTCAPS2W * myCaps2W;
 
-	const GUID CLSIDKEPSYNTH = { 0xa675eda2, 0xeb26, 0x4e32, { 0xa3, 0xe7, 0xe4, 0xe6, 0x61, 0xd8, 0xfc, 0x3f } };
+	const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6, { 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
 
 	CHAR SynthName[MAXPNAMELEN];
 	WCHAR SynthNameW[MAXPNAMELEN];
+
+	if (selectedname > (defaultarraysize - 1))
+		selectedname = defaultarraysize - 1;
+	else if (selectedname < 0)
+		selectedname = 0;
 
 	strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
 	wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
@@ -445,6 +450,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2A->wMid = 0xffff; //MM_UNMAPPED
 		myCaps2A->wPid = 0xffff; //MM_PID_UNMAPPED
 		memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
+		myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
+		myCaps2A->ProductGuid = CLSIDKEPSYNTH;
+		myCaps2A->NameGuid = CLSIDKEPSYNTH;
 		myCaps2A->wVoices = 65535;
 		myCaps2A->wNotes = 65535;
 		myCaps2A->wTechnology = defaultmode;
@@ -458,6 +466,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		myCaps2W->wMid = 0xffff;
 		myCaps2W->wPid = 0xffff;
 		memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
+		myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
+		myCaps2W->ProductGuid = CLSIDKEPSYNTH;
+		myCaps2W->NameGuid = CLSIDKEPSYNTH;
 		myCaps2W->wVoices = 65535;
 		myCaps2W->wNotes = 65535;
 		myCaps2W->wTechnology = defaultmode;

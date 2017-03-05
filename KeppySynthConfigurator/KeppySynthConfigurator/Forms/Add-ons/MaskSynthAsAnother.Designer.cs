@@ -61,13 +61,13 @@
             this.Names.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Names.FormattingEnabled = true;
             this.Names.Items.AddRange(new object[] {
+            "Default name (Keppy\'s Synthesizer)",
             "AWE64 MIDI Synth",
             "BASSMIDI Driver",
             "BASSMIDI Driver (Port A)",
             "BASSMIDI Driver (Port B)",
             "CoolSoft VirtualMIDISynth",
             "Creative OPL3 FM",
-            "Keppy\'s Synthesizer",
             "Microsoft GS Wavetable Synth",
             "Microsoft Synthesizer",
             "NVIDIA® Wavetable Synthesizer",
@@ -75,6 +75,7 @@
             "SB Live! Synth A",
             "SB Live! Synth B",
             "SoundMAX Wavetable Synth",
+            "Timidity++ Driver",
             "USB Audio Device",
             "VirtualMIDISynth #1",
             "VirtualMIDISynth #2",
