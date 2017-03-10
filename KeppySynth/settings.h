@@ -40,12 +40,7 @@ void DLLLoadError(LPCWSTR dll) {
 }
 
 void DLLLoadError2(LPCWSTR dll) {
-	TCHAR errormessage[MAX_PATH] = L"BASS VST hasn't been loaded because Microsoft Visual C++ 2010 is missing from your computer.\nIt's not mandatory, but you'll not be able to use LoudMax.";
-	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to continue.";
-	lstrcat(errormessage, clickokmsg);
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
-	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONASTERISK | MB_SYSTEMMODAL);
+	std::cout << "(BASS_VST ERROR: " << dll << ") " << " - Can not load DLL. VC++ 2010 is missing. Skipping..." << std::endl;
 	exit(0);
 }
 

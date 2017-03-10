@@ -2,7 +2,6 @@
 #define use_dotnetfx40
 #define use_wic
 #define use_msiproduct
-#define vc
 
 #define Author "KaleidonKep99"
 #define Configurator "KeppySynthConfigurator"
@@ -300,10 +299,6 @@ SetupWindowTitle=Setup - %1 {#Version}
 #include "scripts\products\msiproduct.iss"
 #endif
 
-#ifdef vc
-#include "scripts\products\vcredist.iss"
-#endif
-
 function InitializeSetup(): boolean;
 
   var ErrorCode: Integer;
@@ -329,10 +324,6 @@ begin
 #ifdef use_dotnetfx40
 	if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '')) then
 		dotnetfx40client();
-#endif
-
-#ifdef vc
-	vcredist2010();
 #endif
 
 	Result := true;
