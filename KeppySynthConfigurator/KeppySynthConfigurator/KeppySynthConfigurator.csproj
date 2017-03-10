@@ -107,12 +107,6 @@
     <Compile Include="Forms\Add-ons\DefaultSFList.Designer.cs">
       <DependentUpon>DefaultSFList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Information.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Information.Designer.cs">
-      <DependentUpon>Information.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Add-ons\OutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -175,6 +169,12 @@
     <Compile Include="Forms\Add-ons\MaskSynthAsAnother.Designer.cs">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\InfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InfoDialog.Designer.cs">
+      <DependentUpon>InfoDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\Add-ons\MIDIRedirect.resx">
@@ -197,9 +197,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\DefaultSFList.resx">
       <DependentUpon>DefaultSFList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Information.resx">
-      <DependentUpon>Information.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\OutputWAVDir.resx">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
@@ -230,6 +227,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\MaskSynthAsAnother.resx">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InfoDialog.resx">
+      <DependentUpon>InfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

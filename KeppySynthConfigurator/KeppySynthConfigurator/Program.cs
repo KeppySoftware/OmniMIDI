@@ -105,8 +105,8 @@ namespace KeppySynthConfigurator
                     Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
                     Application.ExitThread();
                 }
-                RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
                 int runmode = 0;
+                int window = 0;
                 bool ok;
                 BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthConfiguratorToFront");
                 Mutex m = new Mutex(true, "KeppySynthConfigurator", out ok);
@@ -124,25 +124,24 @@ namespace KeppySynthConfigurator
                         {
                             case "/ASP":
                                 runmode = 1;
+                                window = 0;
+                                break;
+                            case "/INF":
+                                runmode = 2;
+                                window = 1;
                                 break;
                             case "/DBG":
                                 runmode = 0;
+                                window = 0;
                                 AllocConsole();
                                 break;
                             default:
                                 runmode = 0;
+                                window = 0;
                                 break;
                         }
                     }
-
-                    if (runmode == 0)
-                    {
-                        Functions.CheckForUpdates(false, true);
-                    }
-                    Application.EnableVisualStyles();
-                    SynthSettings.Close();
-                    Application.Run(new KeppySynthConfiguratorMain(args));
-                    GC.KeepAlive(m);
+                    ExecuteForm(runmode, args, m, window);
                 }
                 catch
                 {
@@ -156,6 +155,20 @@ namespace KeppySynthConfigurator
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        public static void ExecuteForm(Int32 runmode, String[] args, Mutex m, Int32 form)
+        {
+            if (runmode == 0)
+            {
+                Functions.CheckForUpdates(false, true);
+            }
+            Application.EnableVisualStyles();
+            if (form == 0)
+                Application.Run(new KeppySynthConfiguratorMain(args));
+            else if (form == 1)
+                Application.Run(new InfoDialog(1));
+            GC.KeepAlive(m);
         }
 
         public static bool CopyKey(RegistryKey parentKey, string keyNameToCopy, string newKeyName)

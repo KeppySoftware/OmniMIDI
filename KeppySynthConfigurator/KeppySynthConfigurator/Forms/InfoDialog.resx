@@ -117,31 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label7.Text" xml:space="preserve">
-    <value>The perfect driver for professional environments.
-
-Keppy's Synthesizer is a direct fork of the original BASSMIDI Driver by
-Brad Miller and Chris Moeller.
-Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi
-All rights reserved.
-
-Credits:
-Ian Luck - BASS\BASSMIDI libraries
-Frozen Snow - For being such an awesome friend! (And supporter)
-Dave Meadowcroft - For the MIDI out selector
-Thomas Mundt - For allowing me to redistribute LoudMax!
-
-And many thanks to other people who gave me feedback about the quality of the driver!
-</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>The formats support on Keppy's Synthesizer is handled by BASSMIDI, a library from Un4seen Developments.
-
-The driver complies with the SF2 1.0, SF2 2.0, SFZ 1.0 and SFZ 2.0 standards, and supports the compressed variants of SF2, like SFPACK and SFARK.
-
-If you want to use an unsupported format, please ask Ian Luck from Un4seen to add support for it, instead of me (KaleidonKep99). I have no power on this, while Ian Luck does.
-
-
-You can make a topic on Un4seen's official forum here:</value>
-  </data>
 </root>

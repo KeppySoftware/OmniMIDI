@@ -880,7 +880,7 @@ namespace KeppySynthConfigurator
 
         private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthInformation frm = new KeppySynthInformation();
+            InfoDialog frm = new InfoDialog(0);
             frm.ShowDialog();
             frm.Dispose();
         }
