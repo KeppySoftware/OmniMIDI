@@ -27,6 +27,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include <mmsystem.h>
 #include <process.h>
 #include <process.h>
+#include "sha256.h"
 #include <shlobj.h>
 #include <signal.h>
 #include <shellapi.h>

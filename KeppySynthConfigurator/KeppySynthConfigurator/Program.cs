@@ -126,6 +126,12 @@ namespace KeppySynthConfigurator
                                 runmode = 1;
                                 window = 0;
                                 break;
+                            case "/REI":
+                                RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
+                                sourceKey.DeleteSubKeyTree("Keppy's Synthesizer", true);
+                                sourceKey.Close();
+                                Functions.CheckForUpdates(true, true);
+                                return;
                             case "/INF":
                                 runmode = 2;
                                 window = 1;

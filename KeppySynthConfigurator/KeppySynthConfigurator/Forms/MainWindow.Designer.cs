@@ -35,6 +35,7 @@
             this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
             this.RightClickMenu = new System.Windows.Forms.ContextMenu();
             this.OpenSFDefaultApp = new System.Windows.Forms.MenuItem();
+            this.OpenSFMainDirectory = new System.Windows.Forms.MenuItem();
             this.menuItem30 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
@@ -122,6 +123,8 @@
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.SeeChangelog = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
+            this.SignatureCheck = new System.Windows.Forms.MenuItem();
+            this.menuItem33 = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
             this.menuItem24 = new System.Windows.Forms.MenuItem();
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
@@ -223,6 +226,7 @@
             // 
             this.RightClickMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.OpenSFDefaultApp,
+            this.OpenSFMainDirectory,
             this.menuItem30,
             this.menuItem4,
             this.menuItem5,
@@ -236,37 +240,43 @@
             this.OpenSFDefaultApp.Text = "Open SoundFont with default app";
             this.OpenSFDefaultApp.Click += new System.EventHandler(this.OpenSFDefaultApp_Click);
             // 
+            // OpenSFMainDirectory
+            // 
+            this.OpenSFMainDirectory.Index = 1;
+            this.OpenSFMainDirectory.Text = "Open SoundFont parent directory";
+            this.OpenSFMainDirectory.Click += new System.EventHandler(this.OpenSFMainDirectory_Click);
+            // 
             // menuItem30
             // 
-            this.menuItem30.Index = 1;
+            this.menuItem30.Index = 2;
             this.menuItem30.Text = "-";
             // 
             // menuItem4
             // 
-            this.menuItem4.Index = 2;
+            this.menuItem4.Index = 3;
             this.menuItem4.Text = "Add soundfont(s)";
             this.menuItem4.Click += new System.EventHandler(this.AddSF_Click);
             // 
             // menuItem5
             // 
-            this.menuItem5.Index = 3;
+            this.menuItem5.Index = 4;
             this.menuItem5.Text = "Remove soundfont(s)";
             this.menuItem5.Click += new System.EventHandler(this.RmvSF_Click);
             // 
             // menuItem6
             // 
-            this.menuItem6.Index = 4;
+            this.menuItem6.Index = 5;
             this.menuItem6.Text = "-";
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 5;
+            this.menuItem8.Index = 6;
             this.menuItem8.Text = "Move up";
             this.menuItem8.Click += new System.EventHandler(this.MvU_Click);
             // 
             // menuItem10
             // 
-            this.menuItem10.Index = 6;
+            this.menuItem10.Index = 7;
             this.menuItem10.Text = "Move down";
             this.menuItem10.Click += new System.EventHandler(this.MvD_Click);
             // 
@@ -737,33 +747,33 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 7;
+            this.menuItem15.Index = 9;
             this.menuItem15.Text = "-";
             this.menuItem15.Visible = false;
             // 
             // reportABugToolStripMenuItem
             // 
-            this.reportABugToolStripMenuItem.Index = 4;
+            this.reportABugToolStripMenuItem.Index = 6;
             this.reportABugToolStripMenuItem.Text = "Report a bug";
             this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
             // 
             // getTheMIDIMapperForWindows8xToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 8;
+            this.getTheMIDIMapperForWindows8xToolStripMenuItem.Index = 10;
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 8.x";
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows8xToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows8xToolStripMenuItem_Click);
             // 
             // getTheMIDIMapperForWindows10ToolStripMenuItem
             // 
-            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 9;
+            this.getTheMIDIMapperForWindows10ToolStripMenuItem.Index = 11;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Text = "Get the MIDI-Mapper for Windows 10";
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = false;
             this.getTheMIDIMapperForWindows10ToolStripMenuItem.Click += new System.EventHandler(this.getTheMIDIMapperForWindows10ToolStripMenuItem_Click);
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 10;
+            this.menuItem42.Index = 12;
             this.menuItem42.Text = "-";
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
@@ -786,7 +796,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 6;
+            this.guidesToolStripMenuItem.Index = 8;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -795,13 +805,13 @@
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 12;
+            this.donateToSupportUsToolStripMenuItem.Index = 14;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me and my programs";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 13;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 15;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -813,6 +823,8 @@
             this.openUpdaterToolStripMenuItem,
             this.SeeChangelog,
             this.menuItem29,
+            this.SignatureCheck,
+            this.menuItem33,
             this.reportABugToolStripMenuItem,
             this.PanicButton,
             this.guidesToolStripMenuItem,
@@ -836,15 +848,26 @@
             this.menuItem29.Index = 3;
             this.menuItem29.Text = "-";
             // 
+            // SignatureCheck
+            // 
+            this.SignatureCheck.Index = 4;
+            this.SignatureCheck.Text = "Check the driver signature for tampering";
+            this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
+            // 
+            // menuItem33
+            // 
+            this.menuItem33.Index = 5;
+            this.menuItem33.Text = "-";
+            // 
             // PanicButton
             // 
-            this.PanicButton.Index = 5;
+            this.PanicButton.Index = 7;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // menuItem24
             // 
-            this.menuItem24.Index = 11;
+            this.menuItem24.Index = 13;
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
@@ -1595,6 +1618,7 @@
             this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
             this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
             this.Lis.DoubleClick += new System.EventHandler(this.SelectedSFInfo);
+            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             // 
             // TabsForTheControls
             // 
@@ -1850,6 +1874,9 @@
         private System.Windows.Forms.MenuItem menuItem32;
         public System.Windows.Forms.MenuItem bit8audio;
         public System.Windows.Forms.MenuItem bit16audio;
+        private System.Windows.Forms.MenuItem OpenSFMainDirectory;
+        private System.Windows.Forms.MenuItem SignatureCheck;
+        private System.Windows.Forms.MenuItem menuItem33;
     }
 }
 

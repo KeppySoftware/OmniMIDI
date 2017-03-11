@@ -20,8 +20,9 @@ namespace KeppySynthConfigurator.Forms
         String thestring;
         Uri URL;
         int test;
+        bool reinstallbool;
 
-        public DLEngine(String text, String MessageText, String toDL, int what)
+        public DLEngine(String text, String MessageText, String toDL, int what, bool reinstall)
         {
             InitializeComponent();
             thestring = MessageText;
@@ -29,6 +30,7 @@ namespace KeppySynthConfigurator.Forms
             VersionToDownload = text;
             FullURL = toDL;
             test = what;
+            reinstallbool = reinstall;
         }
 
         private void KeppySynthUpdateDL_Load(object sender, EventArgs e)
@@ -40,6 +42,11 @@ namespace KeppySynthConfigurator.Forms
 
                 if (test == 0)
                 {
+                    if (reinstallbool)
+                    {
+                        CancelBtn.Visible = false;
+                        progressBar1.Size = new Size(271, 23);
+                    }
                     URL = new Uri(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/download/{0}/KeppysSynthSetup.exe", VersionToDownload));
                 }
                 else

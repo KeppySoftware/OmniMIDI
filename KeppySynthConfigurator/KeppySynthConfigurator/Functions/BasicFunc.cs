@@ -256,7 +256,7 @@ namespace KeppySynthConfigurator
                 // 32-bit DLL
                 if (!File.Exists(userfolder + "\\LoudMax.dll"))
                 {
-                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit... {0}%", loudmax32, 1);
+                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit... {0}%", loudmax32, 1, false);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
@@ -271,7 +271,7 @@ namespace KeppySynthConfigurator
                 {
                     if (!File.Exists(userfolder + "\\LoudMax64.dll"))
                     {
-                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit... {0}%", loudmax64, 1);
+                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit... {0}%", loudmax64, 1, false);
                         frm.StartPosition = FormStartPosition.CenterScreen;
                         frm.ShowDialog();
                     }
@@ -339,20 +339,29 @@ namespace KeppySynthConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void TriggerUpdateWindow(Version x, Version y, String newestversion, bool startup)
+        public static void TriggerUpdateWindow(Version x, Version y, String newestversion, bool forced, bool startup)
         {
-            UpdateYesNo upd = new UpdateYesNo(x, y, true);
-            if (startup)
-                upd.StartPosition = FormStartPosition.CenterScreen;
-            else
-                upd.StartPosition = FormStartPosition.CenterParent;
-            DialogResult dialogResult = upd.ShowDialog();
-            upd.Dispose();
-            if (dialogResult == DialogResult.Yes)
+            if (forced && startup)
             {
-                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0);
+                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0, true);
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 frm.ShowDialog();
+            }
+            else
+            {
+                UpdateYesNo upd = new UpdateYesNo(x, y, true);
+                if (startup)
+                    upd.StartPosition = FormStartPosition.CenterScreen;
+                else
+                    upd.StartPosition = FormStartPosition.CenterParent;
+                DialogResult dialogResult = upd.ShowDialog();
+                upd.Dispose();
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0, false);
+                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    frm.ShowDialog();
+                }
             }
         }
 
@@ -414,14 +423,14 @@ namespace KeppySynthConfigurator
                     if (forced)
                     {
                         Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the driver. ({0})", newestversion), null);
-                        TriggerUpdateWindow(x, y, newestversion, startup);
+                        TriggerUpdateWindow(x, y, newestversion, forced, startup);
                     }
                     else
                     {
                         if (x > y)
                         {
                             Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                            TriggerUpdateWindow(x, y, newestversion, startup);
+                            TriggerUpdateWindow(x, y, newestversion, forced, startup);
                         }
                         else
                         {

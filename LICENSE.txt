@@ -1,36 +1,36 @@
-    Keppy's Synthesizer, a fork of BASSMIDI Driver
+	Keppy's Synthesizer, a fork of BASSMIDI Driver
 	
 	Copyright (c) 2011-2016 Brad Miller, Chris Moeller and Riccardo Loi
-    All rights reserved.
-     
-    Redistribution and use of this code or any derivative works are permitted
-    provided that the following conditions are met:
-     
-    1) Redistributions may not be sold, nor may they be used in a commercial
-    product or activity, without direct written/verbal consent of the authors. 
-     
-    2) Redistributions that are modified from the original source *must* include the
-    complete source code, *including* the source code for all components used by a
-    binary built from the modified sources. This also applies to any use of code 
-    from this product in any other uses. 
+	All rights reserved.
 	
-    If a commercial license is acquired, this does not apply.
-     
-    3) Redistributions must reproduce the above copyright notice, this list of
-    conditions and the following disclaimer in the documentation and/or other
-    materials provided with the distribution.
-     
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
+	Redistribution and use of this code or any derivative works are permitted
+	provided that the following conditions are met:
+	 
+	1) Redistributions may not be sold, nor may they be used in a commercial
+	product or activity, without direct written/verbal consent of the authors. 
+	 
+	2) Redistributions that are modified from the original source *must* include the
+	complete source code, *including* the source code for all components used by a
+	binary built from the modified sources. This also applies to any use of code 
+	from this product in any other uses. 
+	
+	If a commercial license is acquired, this does not apply.
+	 
+	3) Redistributions must reproduce the above copyright notice, this list of
+	conditions and the following disclaimer in the documentation and/or other
+	materials provided with the distribution.
+	 
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+	AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+	IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+	ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+	LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+	CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
 	
 	--------------------------------------------
 	
@@ -39,13 +39,13 @@
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 	PURPOSE AND NONINFRINGEMENT.
-    USE IT AT YOUR OWN RISK!
-    IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
+	USE IT AT YOUR OWN RISK!
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
 	IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 	THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-    LoudMax is freeware and not commercial in any mean.
-    You may not distribute and/or modify LoudMax without having an
+	LoudMax is freeware and not commercial in any mean.
+	You may not distribute and/or modify LoudMax without having an
 	explicit permission from Thomas Mundt.
 	
 	Website: https://loudmax.blogspot.com/

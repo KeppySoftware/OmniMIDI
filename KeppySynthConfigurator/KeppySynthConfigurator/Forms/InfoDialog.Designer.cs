@@ -160,7 +160,7 @@
             this.groupBox2.Size = new System.Drawing.Size(362, 59);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Version info";
+            this.groupBox2.Text = "Windows installation info";
             // 
             // WinVer
             // 
@@ -218,7 +218,7 @@
             this.groupBox1.Size = new System.Drawing.Size(362, 97);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Version info";
+            this.groupBox1.Text = "Driver info";
             // 
             // CompiledOn
             // 
