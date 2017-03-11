@@ -26,9 +26,8 @@ namespace KeppySynthConfigurator
         public static string LastImportExportPath { get; set; }
 
         // SHA256
-        [DllImport("keppysynth.dll", EntryPoint = "ReleaseID", CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.LPStr)]
-        private static extern String ReleaseID();
+        [DllImport("keppysynth.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void ReleaseID(StringBuilder SHA256Code, Int32 length);
 
         // Themes handler
         public static int CurrentTheme = 0;
@@ -1210,7 +1209,10 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                String DriverSHA256 = ReleaseID().ToUpperInvariant();
+                StringBuilder str = new StringBuilder(65);
+                //get my string from native code
+                ReleaseID(str, str.Capacity);
+                String DriverSHA256 = str.ToString().ToUpperInvariant();
                 String CorrectSHA256 = "3CECC85768CA5CC2D8621546429A0693A2A8A0CE7AFAF0C0FB71B7EA7794E3D3";
                 if (DriverSHA256 != CorrectSHA256)
                 {
@@ -1221,10 +1223,10 @@ namespace KeppySynthConfigurator
                     MessageBox.Show(String.Format("The driver's signature matches the original.\n\nCurrent SHA256 is: {0}\n\nYou're running the official release from GitHub.\nClick OK to dismiss the dialog.", DriverSHA256), "Keppy's Synthesizer - Driver signature check successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // Something bad happened hehe
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.\n\nException; "+ ex.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 Application.Exit();
             }
         }

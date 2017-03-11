@@ -8,22 +8,7 @@ SHA256 sha256;
 #define STRINGIFY(...) #__VA_ARGS__
 #define STR(...) STRINGIFY(__VA_ARGS__)
 
-extern "C" __declspec(dllexport) std::wstring NNl3JatZb8lB6Gsd()
-{
-	return L"\x57\x68\x61\x74\x20\x61\x72\x65\x20\x79\x6F\x75\x20\x64\x6F\x69\x6E\x67\x20\x68\x65\x72\x65\x3F";
-}
-
-extern "C" __declspec(dllexport) std::wstring iN4GI7Wz4O89Kw91()
-{
-	return L"\x53\x74\x6F\x70\x20\x68\x61\x72\x72\x61\x73\x69\x6E\x67\x20\x6D\x65\x21";
-}
-
-extern "C" __declspec(dllexport) std::wstring HxO2aOzURUEfAsET()
-{
-	return L"\x54\x68\x65\x72\x65\x27\x73\x20\x6E\x6F\x74\x68\x69\x6E\x67\x20\x73\x65\x63\x72\x65\x74\x20\x68\x65\x72\x65\x2C\x20\x67\x6F\x20\x61\x77\x61\x79\x21";
-}
-
-extern "C" __declspec(dllexport) const char * ReleaseID()
+extern "C" __declspec(dllexport) void ReleaseID(char * out, int length)
 {
 	// Replace this with your signature. You can find a base called signature.bas, in the main directory
 	// of the source code.
@@ -33,8 +18,7 @@ extern "C" __declspec(dllexport) const char * ReleaseID()
 #include "signature.kep"
 	};
 	std::string shacode = sha256(a);
-	const char * c = shacode.c_str();
-	return c;
+	strcpy_s(out, length, shacode.c_str());
 }
 
 #endif 
