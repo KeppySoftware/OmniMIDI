@@ -10,6 +10,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms.VisualStyles;
+using System.Security.Cryptography;
 using Microsoft.Win32;
 // For SF info
 using Un4seen.Bass;
@@ -1209,18 +1210,68 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                StringBuilder str = new StringBuilder(65);
-                //get my string from native code
-                ReleaseID(str, str.Capacity);
-                String DriverSHA256 = str.ToString().ToUpperInvariant();
-                String CorrectSHA256 = "3CECC85768CA5CC2D8621546429A0693A2A8A0CE7AFAF0C0FB71B7EA7794E3D3";
-                if (DriverSHA256 != CorrectSHA256)
+                var sha32 = new SHA256Managed();
+                var DLL32bit = new FileStream(System.Environment.ExpandEnvironmentVariables("%windir%\\System32\\keppysynth\\keppysynth.dll"), FileMode.OpenOrCreate, FileAccess.Read);
+                byte[] checksum32 = sha32.ComputeHash(DLL32bit);
+                String Driver32SHA256 = BitConverter.ToString(checksum32).Replace("-", String.Empty);
+                String Correct32SHA256 = "\u0042\u0044\u0035\u0045\u0046\u0037\u0039\u0036\u0031\u0045\u0035\u0045\u0035\u0031\u0030\u0038\u0038\u0045\u0033\u0036\u0041\u0034\u0037\u0041\u0046\u0036\u0038\u0032\u0039\u0038\u0042\u0039\u0046\u0046\u0038\u0032\u0038\u0032\u0041\u0041\u0030\u0035\u0032\u0031\u0031\u0030\u0045\u0031\u0039\u0043\u0039\u0035\u0044\u0043\u0039\u0037\u0032\u0043\u0046\u0041\u0039\u0045\u0031\u0045";
+
+                if (Environment.Is64BitOperatingSystem)
                 {
-                    MessageBox.Show(String.Format("The driver's signature doesn't match the original.\n\nCurrent SHA256 is: {0}\n\nExpected SHA256: {1}\n\nIf you downloaded this version of the driver from the Internet, and didn't compile it yourself, IMMEDIATELY uninstall it from your computer!!!", DriverSHA256, CorrectSHA256), "Keppy's Synthesizer - Driver signature check failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    var sha64 = new SHA256Managed();
+                    var DLL64bit = new FileStream(System.Environment.ExpandEnvironmentVariables("%windir%\\Sysnative\\keppysynth\\keppysynth.dll"), FileMode.OpenOrCreate, FileAccess.Read);
+                    byte[] checksum64 = sha64.ComputeHash(DLL64bit);
+                    String Driver64SHA256 = BitConverter.ToString(checksum64).Replace("-", String.Empty);
+                    String Correct64SHA256 = "\u0036\u0041\u0035\u0045\u0032\u0042\u0032\u0037\u0039\u0044\u0046\u0032\u0044\u0042\u0037\u0044\u0042\u0046\u0035\u0030\u0032\u0033\u0037\u0045\u0039\u0034\u0039\u0039\u0033\u0038\u0033\u0044\u0043\u0039\u0037\u0032\u0042\u0042\u0036\u0031\u0042\u0043\u0039\u0036\u0045\u0031\u0035\u0037\u0036\u0031\u0042\u0033\u0031\u0045\u0038\u0030\u0041\u0042\u0031\u0030\u0044\u0036\u0033\u0045";
+
+                    if (Driver32SHA256 != Correct32SHA256 && Driver64SHA256 != Correct64SHA256)
+                    {
+                        MessageBox.Show(String.Format(
+                            "Both 32-bit and 64-bit drivers have the wrong signature!\n\nCurrent SHA256 for 32-bit driver is: {0}\nExpected: {1}\n\nCurrent SHA256 for 64-bit driver is: {2}\nExpected: {3}\n\nIf you downloaded this version of the driver from the Internet, and didn't compile it yourself, IMMEDIATELY uninstall it from your computer!!!",
+                            Driver32SHA256, Correct32SHA256, Driver64SHA256, Correct64SHA256),
+                            "Keppy's Synthesizer - Driver signature check failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        if (Driver32SHA256 != Correct32SHA256)
+                        {
+                            MessageBox.Show(String.Format(
+                                "The 32-bit driver has the wrong signature!\n\nCurrent SHA256 for 32-bit driver is: {0}\nExpected: {1}\n\nCurrent SHA256 for 64-bit driver is: {2}\n\nIf you downloaded this version of the driver from the Internet, and didn't compile it yourself, IMMEDIATELY uninstall it from your computer!!!",
+                                Driver32SHA256, Correct32SHA256, Driver64SHA256),
+                                "Keppy's Synthesizer - Driver signature check failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else if (Driver64SHA256 != Correct64SHA256)
+                        {
+                            MessageBox.Show(String.Format(
+                                "The 64-bit driver has the wrong signature!\n\nCurrent SHA256 for 32-bit driver is: {0}\n\nCurrent SHA256 for 64-bit driver is: {1}\nExpected: {2}\n\nIf you downloaded this version of the driver from the Internet, and didn't compile it yourself, IMMEDIATELY uninstall it from your computer!!!",
+                                Driver32SHA256, Driver64SHA256, Correct64SHA256),
+                                "Keppy's Synthesizer - Driver signature check failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            MessageBox.Show(String.Format(
+                                "The driver's signature matches the original.\n\nCurrent SHA256 for 32-bit driver is: {0}\n\nCurrent SHA256 for 64-bit driver is: {1}\n\nYou're running the official release from GitHub.\nClick OK to dismiss the dialog.",
+                                Driver32SHA256, Driver64SHA256),
+                                "Keppy's Synthesizer - Driver signature check successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
                 }
                 else
                 {
-                    MessageBox.Show(String.Format("The driver's signature matches the original.\n\nCurrent SHA256 is: {0}\n\nYou're running the official release from GitHub.\nClick OK to dismiss the dialog.", DriverSHA256), "Keppy's Synthesizer - Driver signature check successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (Driver32SHA256 != Correct32SHA256)
+                    {
+                        MessageBox.Show(String.Format(
+                            "The 32-bit driver has the wrong signature!\n\nCurrent SHA256 for 32-bit driver is: {0}\nExpected: {1}\n\nIf you downloaded this version of the driver from the Internet, and didn't compile it yourself, IMMEDIATELY uninstall it from your computer!!!",
+                            Driver32SHA256, Correct32SHA256),
+                            "Keppy's Synthesizer - Driver signature check failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show(String.Format(
+                            "The driver signature matches the original.\n\nCurrent SHA256 for 32-bit driver is: {0}\n\nYou're running the official release from GitHub.\nClick OK to dismiss the dialog.",
+                            Driver32SHA256),
+                            "Keppy's Synthesizer - Driver signature check successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
