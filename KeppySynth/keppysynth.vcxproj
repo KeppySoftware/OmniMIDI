@@ -181,6 +181,12 @@
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PostBuildEvent>
+      <Command>cd "..\output\"
+GetSHA256.exe</Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
@@ -261,6 +267,14 @@
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PostBuildEvent>
+      <Command>cd "..\output\"
+GetSHA256.exe</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
