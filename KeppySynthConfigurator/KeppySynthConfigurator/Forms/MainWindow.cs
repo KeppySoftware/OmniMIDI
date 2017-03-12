@@ -1207,7 +1207,7 @@ namespace KeppySynthConfigurator
 
         private void SignatureCheck_Click(object sender, EventArgs e)
         {
-
+            Functions.GetSHA256OfDLLs();
         }
 
         // Brand new output mode
