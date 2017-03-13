@@ -1207,7 +1207,14 @@ namespace KeppySynthConfigurator
 
         private void SignatureCheck_Click(object sender, EventArgs e)
         {
-            Functions.GetSHA256OfDLLs();
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                Functions.GetSHA256OfDLLs(true);
+            }
+            else
+            {
+                Functions.GetSHA256OfDLLs(false);
+            }
         }
 
         // Brand new output mode

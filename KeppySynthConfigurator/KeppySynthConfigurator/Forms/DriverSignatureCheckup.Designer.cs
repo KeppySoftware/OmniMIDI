@@ -175,15 +175,15 @@
             // 
             // BothDriverStatus
             // 
-            this.BothDriverStatus.AutoSize = true;
             this.BothDriverStatus.BackColor = System.Drawing.Color.Transparent;
             this.BothDriverStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BothDriverStatus.ForeColor = System.Drawing.Color.Pink;
-            this.BothDriverStatus.Location = new System.Drawing.Point(13, 136);
+            this.BothDriverStatus.Location = new System.Drawing.Point(13, 122);
             this.BothDriverStatus.Name = "BothDriverStatus";
-            this.BothDriverStatus.Size = new System.Drawing.Size(174, 13);
+            this.BothDriverStatus.Size = new System.Drawing.Size(553, 41);
             this.BothDriverStatus.TabIndex = 11;
             this.BothDriverStatus.Text = "I don\'t know the status, derp.";
+            this.BothDriverStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BothDriverStatus.Click += new System.EventHandler(this.BothDriverStatus_Click);
             // 
             // DriverSignatureCheckup

@@ -159,6 +159,15 @@ void basserr(int error) {
 		lstrcat(part1, partE);
 	}
 	MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+
+	if (error == -1 || 
+		error >= 2 && error <= 10 || 
+		error == 19 ||
+		error >= 24 && error <= 26 ||
+		error == 44)
+	{
+		exit(error);
+	}
 }
 
 void CheckUp() {

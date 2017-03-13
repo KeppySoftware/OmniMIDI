@@ -267,7 +267,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Icons\successiconupd.png" />
     <None Include="Resources\Audio\warning.wav" />
+    <None Include="Resources\Hashes\DRV32.SHA" />
+    <None Include="Resources\Hashes\DRV64.SHA" />
     <None Include="Resources\Icons\successicon.png" />
     <None Include="Resources\Icons\wir.png" />
     <None Include="Resources\Icons\ok.png" />
@@ -285,6 +288,7 @@
     <Content Include="FodyWeavers.xml" />
     <None Include="Resources\Icons\erroricon.png" />
     <None Include="Resources\Audio\error.wav" />
+    <None Include="Resources\Icons\erroriconupd.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Pictures\sfzcomp.png" />

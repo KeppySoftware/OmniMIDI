@@ -22,7 +22,13 @@ namespace KeppySynthConfigurator
     class Functions
     {
         [DllImport("wininet.dll")]
-        private extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
+        public extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool Wow64DisableWow64FsRedirection(ref IntPtr ptr);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool Wow64RevertWow64FsRedirection(IntPtr ptr);
 
         public static string IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
         {
@@ -237,27 +243,65 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void GetSHA256OfDLLs()
+        public static void GetSHA256OfDLLs(Boolean GetSHAToClipboard)
         {
             try
             {
-                WebClient client = new WebClient();
-
-                Stream Stream32 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/DRV32.SHA");
-                StreamReader Reader32 = new StreamReader(Stream32);
-                String Correct32SHA256 = Reader32.ReadToEnd();
-                String Correct64SHA256 = null;
-
-                if (Environment.Is64BitOperatingSystem)
+                if (GetSHAToClipboard)
                 {
-                    Stream Stream64 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/DRV64.SHA");
-                    StreamReader Reader64 = new StreamReader(Stream64);
-                    Correct64SHA256 = Reader64.ReadToEnd();
-                }
+                    IntPtr WOW64Value = IntPtr.Zero;
 
-                DriverSignatureCheckup frm = new DriverSignatureCheckup(Correct32SHA256, Correct64SHA256, Environment.Is64BitOperatingSystem);
-                frm.ShowDialog();
-                frm.Dispose();
+                    var sha32 = new SHA256Managed();
+                    var DLL32bit = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\keppysynth.dll", FileMode.OpenOrCreate, FileAccess.Read);
+                    byte[] checksum32 = sha32.ComputeHash(DLL32bit);
+                    String Driver32SHA256 = BitConverter.ToString(checksum32).Replace("-", String.Empty);
+                    String Driver64SHA256 = null;
+
+                    if (Environment.Is64BitOperatingSystem)
+                    {
+                        Functions.Wow64DisableWow64FsRedirection(ref WOW64Value);
+                        var sha64 = new SHA256Managed();
+                        var DLL64bit = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppysynth\\keppysynth.dll", FileMode.OpenOrCreate, FileAccess.Read);
+                        byte[] checksum64 = sha64.ComputeHash(DLL64bit);
+                        Driver64SHA256 = BitConverter.ToString(checksum64).Replace("-", String.Empty);
+                        Functions.Wow64RevertWow64FsRedirection(WOW64Value);
+                    }
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(String.Format("32-bit SHA256: {0}\n", Driver32SHA256));
+                    sb.Append(String.Format("64-bit SHA256: {0}", Driver64SHA256));
+                    Clipboard.SetText(sb.ToString());
+
+                    MessageBox.Show("Driver signatures copied to the clipboard.", "Driver signature check", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    WebClient client = new WebClient();
+
+                    Stream Stream32 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/DRV32.SHA");
+                    StreamReader Reader32 = new StreamReader(Stream32);
+                    String New32SHA256 = Reader32.ReadToEnd();
+                    String New64SHA256 = null;
+                    String Current32SHA256 = null;
+                    String Current64SHA256 = null;
+
+                    Current32SHA256 = System.Text.Encoding.UTF8.GetString(KeppySynthConfigurator.Properties.Resources.DRV32);
+                    MessageBox.Show(Current32SHA256);
+
+                    if (Environment.Is64BitOperatingSystem)
+                    {
+                        Stream Stream64 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/DRV64.SHA");
+                        StreamReader Reader64 = new StreamReader(Stream64);
+                        New32SHA256 = Reader64.ReadToEnd();
+
+                        Current64SHA256 = System.Text.Encoding.UTF8.GetString(KeppySynthConfigurator.Properties.Resources.DRV64);
+                        MessageBox.Show(Current64SHA256);
+                    }
+
+                    DriverSignatureCheckup frm = new DriverSignatureCheckup(Current32SHA256, Current64SHA256, New32SHA256, New64SHA256, Environment.Is64BitOperatingSystem);
+                    frm.ShowDialog();
+                    frm.Dispose();
+                }
             }
             catch
             {

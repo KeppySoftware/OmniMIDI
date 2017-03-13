@@ -73,6 +73,7 @@ mscams64.exe
 mscamsvc.exe
 msiexec.exe
 mspdbsrv.exe
+node.exe
 notepad++.exe
 nvbackend.exe
 nvcontainer.exe
@@ -90,6 +91,8 @@ nvvsvc.exe
 nvwirelesscontroller.exe
 nvxdsync.exe
 nvxdsync.exe
+origin.exe
+originwebhelperservice.exe
 pcsx2.exe
 photoshop.exe
 portal2.exe
@@ -102,6 +105,7 @@ ravcpl64.exe
 rthdcpl.exe
 rustclient.exe
 samp.exe
+searchui.exe
 secd.exe
 setpoint.exe
 settingssynchost.exe
@@ -123,6 +127,8 @@ steamservice.exe
 steamwebhelper.exe
 svchost.exe
 sxgtkbar.exe
+tabtip.exe
+tabletdriver.exe
 taskeng.exe
 taskhost.exe
 taskhostex.exe

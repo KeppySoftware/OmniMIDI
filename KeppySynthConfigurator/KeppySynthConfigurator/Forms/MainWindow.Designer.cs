@@ -753,7 +753,7 @@
             // 
             // reportABugToolStripMenuItem
             // 
-            this.reportABugToolStripMenuItem.Index = 6;
+            this.reportABugToolStripMenuItem.Index = 4;
             this.reportABugToolStripMenuItem.Text = "Report a bug";
             this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
             // 
@@ -823,10 +823,10 @@
             this.openUpdaterToolStripMenuItem,
             this.SeeChangelog,
             this.menuItem29,
-            this.SignatureCheck,
-            this.menuItem33,
             this.reportABugToolStripMenuItem,
+            this.SignatureCheck,
             this.PanicButton,
+            this.menuItem33,
             this.guidesToolStripMenuItem,
             this.menuItem15,
             this.getTheMIDIMapperForWindows8xToolStripMenuItem,
@@ -850,18 +850,18 @@
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 4;
+            this.SignatureCheck.Index = 5;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 5;
+            this.menuItem33.Index = 7;
             this.menuItem33.Text = "-";
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 7;
+            this.PanicButton.Index = 6;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 

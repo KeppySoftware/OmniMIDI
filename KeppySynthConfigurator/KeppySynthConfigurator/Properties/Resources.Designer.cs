@@ -71,6 +71,26 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] DRV32 {
+            get {
+                object obj = ResourceManager.GetObject("DRV32", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] DRV64 {
+            get {
+                object obj = ResourceManager.GetObject("DRV64", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
         /// </summary>
         internal static System.IO.UnmanagedMemoryStream error {
@@ -85,6 +105,16 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap erroricon {
             get {
                 object obj = ResourceManager.GetObject("erroricon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap erroriconupd {
+            get {
+                object obj = ResourceManager.GetObject("erroriconupd", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -229,6 +259,16 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap successicon {
             get {
                 object obj = ResourceManager.GetObject("successicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap successiconupd {
+            get {
+                object obj = ResourceManager.GetObject("successiconupd", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
