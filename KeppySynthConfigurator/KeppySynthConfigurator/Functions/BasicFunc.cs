@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Text;
 using System.Linq;
 using System.Net;
@@ -277,10 +278,12 @@ namespace KeppySynthConfigurator
                 else
                 {
                     WebClient client = new WebClient();
+                    Regex rgx = new Regex("[^a-zA-Z0-9 -]");
 
-                    Stream Stream32 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/DRV32.SHA");
+                    Stream Stream32 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/KeppySynthConfigurator/KeppySynthConfigurator/Resources/Hashes/DRV32.SHA");
                     StreamReader Reader32 = new StreamReader(Stream32);
                     String New32SHA256 = Reader32.ReadToEnd();
+                    New32SHA256 = rgx.Replace(New32SHA256, "");
                     String New64SHA256 = null;
                     String Current32SHA256 = null;
                     String Current64SHA256 = null;
@@ -289,10 +292,10 @@ namespace KeppySynthConfigurator
 
                     if (Environment.Is64BitOperatingSystem)
                     {
-                        Stream Stream64 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/DRV64.SHA");
+                        Stream Stream64 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/KeppySynthConfigurator/KeppySynthConfigurator/Resources/Hashes/DRV64.SHA");
                         StreamReader Reader64 = new StreamReader(Stream64);
-                        New32SHA256 = Reader64.ReadToEnd();
-
+                        New64SHA256 = Reader64.ReadToEnd();
+                        New64SHA256 = rgx.Replace(New64SHA256, "");
                         Current64SHA256 = System.Text.Encoding.UTF8.GetString(KeppySynthConfigurator.Properties.Resources.DRV64);
                     }
 

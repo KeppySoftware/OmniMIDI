@@ -100,7 +100,7 @@ namespace KeppySynthConfigurator
 
             String OriginalRelease = "{0} not the original from GitHub. Click here to download the original release.";
             String LatestRelease = "{0} not the original from GitHub.\nThere's also an update, click here to download the latest release.";
-            String EverythingFine = "Both drivers are the originals from GitHub. Everything's good, press OK to close the dialog.";
+            String EverythingFine = "Both drivers are the originals from GitHub. Everything's good, click OK to close the dialog.";
             String EverythingFineUpd = "Both drivers are the originals from GitHub, but newer versions are available.\nClick here to download the latest release.";
             
             if (!Is32BitMatch && !Is64BitMatch)
@@ -194,7 +194,7 @@ namespace KeppySynthConfigurator
 
         private void BothDriverStatus_Click(object sender, EventArgs e)
         {
-            if (!Is32BitMatch || !Is64BitMatch)
+            if (!Is32BitMatch || !Is64BitMatch || IsNewVerAvailable)
             {
                 var p = new System.Diagnostics.Process();
                 p.StartInfo.FileName = Application.ExecutablePath;

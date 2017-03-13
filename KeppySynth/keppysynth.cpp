@@ -108,39 +108,6 @@ static unsigned int thrdaddr3;
 #include "basserr.h"
 #include "val.h"
 
-class message_window
-{
-	HWND m_hWnd;
-	ATOM class_atom;
-
-public:
-	message_window() {
-		static const TCHAR * class_name = _T("Keppy's Synthesizer Message Window");
-		WNDCLASSEX cls = { 0 };
-		cls.cbSize = sizeof(cls);
-		cls.lpfnWndProc = DefWindowProc;
-		cls.hInstance = hinst;
-		cls.lpszClassName = class_name;
-		class_atom = RegisterClassEx(&cls);
-		if (class_atom) {
-			m_hWnd = CreateWindowEx(0, (LPCTSTR)class_atom, _T("keppysynth"), 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hinst, NULL);
-		}
-		else {
-			m_hWnd = NULL;
-		}
-	}
-
-	~message_window()
-	{
-		if (IsWindow(m_hWnd)) DestroyWindow(m_hWnd);
-		if (class_atom) UnregisterClass((LPCTSTR)class_atom, hinst);
-	}
-
-	HWND get_hwnd() const { return m_hWnd; }
-};
-
-message_window * g_msgwnd = NULL;
-
 void basserr(int error) {
 	TCHAR buffer[MAX_PATH];
 	wsprintfW(buffer, L"%d", error);
@@ -305,12 +272,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
 	if (fdwReason == DLL_PROCESS_ATTACH){
 		hinst = hinstDLL;
 		DisableThreadLibraryCalls(hinstDLL);
-		g_msgwnd = new message_window;
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH){
 		;
 		DoStopClient();
-		delete g_msgwnd;
 	}
 	return TRUE;
 }
@@ -616,7 +581,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 						PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
 						sound_driver = create_sound_out_xaudio2();
 						sound_out_float = TRUE;
-						sound_driver->open(g_msgwnd->get_hwnd(), frequency + 100, (monorendering ? 1 : 2), sound_out_float, newsndbfvalue, frames);
+						sound_driver->open(NULL, frequency + 100, (monorendering ? 1 : 2), sound_out_float, newsndbfvalue, frames);
 						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same as the sound card's max audio frequency.
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}

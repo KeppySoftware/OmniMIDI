@@ -76,16 +76,20 @@ BOOL VMSBlackList(){
 	// First, the VMS blacklist system, then the main one
 	TCHAR modulename[MAX_PATH];
 	TCHAR sndvol[MAX_PATH];
+	TCHAR bassmididrv[MAX_PATH];
 	TCHAR vmidisynthdll[MAX_PATH];
 	TCHAR vmidisynth2exe[MAX_PATH];
 	// Clears all the tchars
 	ZeroMemory(modulename, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(sndvol, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(bassmididrv, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(vmidisynthdll, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(vmidisynth2exe, sizeof(TCHAR) * MAX_PATH);
 	// Here we go
+	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, bassmididrv);
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
 	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+	PathAppend(bassmididrv, _T("\\bassmididrv\\bassmididrv.dll"));
 	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
 	GetModuleFileName(NULL, modulename, MAX_PATH);
@@ -111,6 +115,10 @@ BOOL VMSBlackList(){
 					}
 				}
 			}
+		}
+		else if (PathFileExists(bassmididrv)) {
+			MessageBox(0, L"Keppy's Synthesizer can NOT work while BASSMIDI Driver is installed.\nPlease uninstall BASSMIDI Driver before utilizing this synthesizer.\n\nClick OK to continue.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			exit(1114);
 		}
 		else {
 			return BlackListSystem();
