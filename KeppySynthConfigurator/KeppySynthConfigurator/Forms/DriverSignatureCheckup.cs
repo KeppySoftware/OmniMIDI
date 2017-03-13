@@ -15,8 +15,8 @@ namespace KeppySynthConfigurator
 {
     public partial class DriverSignatureCheckup : Form
     {
-        Boolean Is32BitNoMatch = true;
-        Boolean Is64BitNoMatch = true;
+        Boolean Is32BitMatch = true;
+        Boolean Is64BitMatch = true;
         Boolean IsNewVerAvailable = false;
         Stream OnlyOneError = Properties.Resources.error;
         Stream TwoError = Properties.Resources.warning;
@@ -37,7 +37,7 @@ namespace KeppySynthConfigurator
 
             if (Driver32SHA256 != SHA25632)
             {
-                if (SHA25632 != NewSHA25632)
+                if (!object.Equals(SHA25664, NewSHA25664))
                 {
                     Driver32Status.Image = KeppySynthConfigurator.Properties.Resources.erroriconupd;
                 }
@@ -45,11 +45,11 @@ namespace KeppySynthConfigurator
                 {
                     Driver32Status.Image = KeppySynthConfigurator.Properties.Resources.erroricon;
                 }
-                Is32BitNoMatch = false;
+                Is32BitMatch = false;
             }
             else
             {
-                if (SHA25632 != NewSHA25632)
+                if (!object.Equals(SHA25664, NewSHA25664))
                 {
                     Driver32Status.Image = KeppySynthConfigurator.Properties.Resources.successiconupd;
                 }
@@ -57,7 +57,7 @@ namespace KeppySynthConfigurator
                 {
                     Driver32Status.Image = KeppySynthConfigurator.Properties.Resources.successicon;
                 }
-                Is32BitNoMatch = true;
+                Is32BitMatch = true;
             }
 
             if (Environment.Is64BitOperatingSystem)
@@ -74,7 +74,7 @@ namespace KeppySynthConfigurator
 
                 if (Driver64SHA256 != SHA25664)
                 {
-                    if (SHA25664 != NewSHA25664)
+                    if (!object.Equals(SHA25664, NewSHA25664))
                     {
                         Driver64Status.Image = KeppySynthConfigurator.Properties.Resources.erroriconupd;
                     }
@@ -82,11 +82,11 @@ namespace KeppySynthConfigurator
                     {
                         Driver64Status.Image = KeppySynthConfigurator.Properties.Resources.erroricon;
                     }
-                    Is64BitNoMatch = false;
+                    Is64BitMatch = false;
                 }
                 else
                 {
-                    if (SHA25664 != NewSHA25664)
+                    if (!object.Equals(SHA25664, NewSHA25664))
                     {
                         Driver64Status.Image = KeppySynthConfigurator.Properties.Resources.successiconupd;
                     }
@@ -94,17 +94,18 @@ namespace KeppySynthConfigurator
                     {
                         Driver64Status.Image = KeppySynthConfigurator.Properties.Resources.successicon;
                     }
-                    Is64BitNoMatch = true;
+                    Is64BitMatch = true;
                 }
             }
 
             String OriginalRelease = "{0} not the original from GitHub. Click here to download the original release.";
             String LatestRelease = "{0} not the original from GitHub, but newer versions are available.\nClick here to download the latest release.";
             String EverythingFine = "Both drivers are the originals from GitHub. Everything's good, press OK to close the dialog.";
+            String EverythingFineUpd = "Both drivers are the originals from GitHub, but newer versions are available.\nClick here to download the latest release.";
             
-            if (!Is32BitNoMatch && !Is64BitNoMatch)
+            if (!Is32BitMatch && !Is64BitMatch)
             {
-                if (SHA25632 != NewSHA25632 || SHA25664 != NewSHA25664)
+                if (!object.Equals(SHA25632, NewSHA25632) || !object.Equals(SHA25664, NewSHA25664))
                 {
                     BothDriverStatus.Text = String.Format(LatestRelease, "Both drivers are");
                     BothDriverStatus.ForeColor = Color.DarkRed;
@@ -119,9 +120,9 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
-            else if (!Is32BitNoMatch)
+            else if (!Is32BitMatch)
             {
-                if (SHA25632 != NewSHA25632 || SHA25664 != NewSHA25664)
+                if (!object.Equals(SHA25632, NewSHA25632) || !object.Equals(SHA25664, NewSHA25664))
                 {
                     BothDriverStatus.Text = String.Format(LatestRelease, "The 32-bit driver is");
                     BothDriverStatus.ForeColor = Color.Peru;
@@ -136,9 +137,9 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
-            else if (!Is64BitNoMatch)
+            else if (!Is64BitMatch)
             {
-                if (SHA25632 != NewSHA25632 || SHA25664 != NewSHA25664)
+                if (!object.Equals(SHA25632, NewSHA25632) || !object.Equals(SHA25664, NewSHA25664))
                 {
                     BothDriverStatus.Text = String.Format(LatestRelease, "The 64-bit driver is");
                     BothDriverStatus.ForeColor = Color.Peru;
@@ -155,16 +156,18 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                if (SHA25632 != NewSHA25632 || SHA25664 != NewSHA25664)
+                if (!object.Equals(Driver32SHA256, NewSHA25632) || !object.Equals(Driver64SHA256, NewSHA25664))
                 {
-                    BothDriverStatus.Text = "Both drivers are the originals from GitHub, but newer versions are available.\nClick here to download the latest release.";
+                    BothDriverStatus.Text = EverythingFineUpd;
                     BothDriverStatus.ForeColor = Color.Blue;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    MessageBox.Show(object.Equals(SHA25632, NewSHA25632).ToString());
+                    MessageBox.Show(object.Equals(SHA25664, NewSHA25664).ToString());
                 }
                 else
                 {
-                    BothDriverStatus.Text = "Both drivers are the originals from GitHub. Everything's good, press OK to close the dialog.";
+                    BothDriverStatus.Text = EverythingFine;
                     BothDriverStatus.ForeColor = Color.Green;
                     BothDriverStatus.Cursor = Cursors.Arrow;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -174,12 +177,12 @@ namespace KeppySynthConfigurator
 
         private void DriverSignatureCheckup_Load(object sender, EventArgs e)
         {
-            if (!Is32BitNoMatch && !Is64BitNoMatch)
+            if (!Is32BitMatch && !Is64BitMatch)
             {
                 SoundPlayer snd = new SoundPlayer(TwoError);
                 snd.Play();
             }
-            else if (!Is32BitNoMatch || !Is64BitNoMatch)
+            else if (!Is32BitMatch || !Is64BitMatch)
             {
                 SoundPlayer snd = new SoundPlayer(OnlyOneError);
                 snd.Play();
@@ -193,7 +196,7 @@ namespace KeppySynthConfigurator
 
         private void BothDriverStatus_Click(object sender, EventArgs e)
         {
-            if (!Is32BitNoMatch || !Is64BitNoMatch)
+            if (!Is32BitMatch || !Is64BitMatch)
             {
                 var p = new System.Diagnostics.Process();
                 p.StartInfo.FileName = Application.ExecutablePath;
