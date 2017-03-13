@@ -30,7 +30,7 @@
     <NuGetPackageImportStamp>28fd5892</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\gear.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icons\gear.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
@@ -66,6 +66,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\DriverSignatureCheckup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DriverSignatureCheckup.Designer.cs">
+      <DependentUpon>DriverSignatureCheckup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Add-ons\MIDIRedirect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +193,9 @@
     <EmbeddedResource Include="Forms\Add-ons\BlacklistSystem.resx">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DriverSignatureCheckup.resx">
+      <DependentUpon>DriverSignatureCheckup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -234,20 +243,20 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -258,26 +267,29 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\wir.png" />
-    <None Include="Resources\ok.png" />
-    <None Include="Resources\infoicon.png" />
-    <None Include="Resources\refreshicon.png" />
-    <None Include="Resources\rollbackicon.png" />
-    <None Include="Resources\nointerneticon.png" />
-    <None Include="Resources\noupdateicon.png" />
-    <None Include="Resources\updateicon.png" />
-    <None Include="Resources\whatoverride.txt" />
-    <None Include="Resources\KSynthLogo.png" />
-    <None Include="Resources\wi.png" />
-    <None Include="Resources\logo_bass.gif" />
-    <None Include="Resources\donatebtn.png" />
+    <None Include="Resources\Audio\warning.wav" />
+    <None Include="Resources\Icons\successicon.png" />
+    <None Include="Resources\Icons\wir.png" />
+    <None Include="Resources\Icons\ok.png" />
+    <None Include="Resources\Icons\infoicon.png" />
+    <None Include="Resources\Icons\refreshicon.png" />
+    <None Include="Resources\Icons\rollbackicon.png" />
+    <None Include="Resources\Icons\nointerneticon.png" />
+    <None Include="Resources\Icons\noupdateicon.png" />
+    <None Include="Resources\Icons\updateicon.png" />
+    <None Include="Resources\Text\whatoverride.txt" />
+    <None Include="Resources\Pictures\KSynthLogo.png" />
+    <None Include="Resources\Icons\wi.png" />
+    <None Include="Resources\Pictures\logo_bass.gif" />
+    <None Include="Resources\Pictures\donatebtn.png" />
     <Content Include="FodyWeavers.xml" />
-    <None Include="Resources\erroricon.png" />
-    <Content Include="Resources\gear.ico" />
-    <None Include="Resources\what.png" />
-    <None Include="Resources\sfzcomp.png" />
-    <None Include="Resources\gmlist.txt" />
-    <None Include="Resources\updatebk.png" />
+    <None Include="Resources\Icons\erroricon.png" />
+    <None Include="Resources\Audio\error.wav" />
+    <Content Include="Resources\Icons\gear.ico" />
+    <None Include="Resources\Icons\what.png" />
+    <None Include="Resources\Pictures\sfzcomp.png" />
+    <None Include="Resources\Text\gmlist.txt" />
+    <None Include="Resources\Pictures\updatebk.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -291,6 +303,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.28.3\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.3\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

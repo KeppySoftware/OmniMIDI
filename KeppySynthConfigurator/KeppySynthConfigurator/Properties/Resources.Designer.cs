@@ -71,6 +71,15 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream error {
+            get {
+                return ResourceManager.GetStream("error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap erroricon {
@@ -217,6 +226,16 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap successicon {
+            get {
+                object obj = ResourceManager.GetObject("successicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap updatebk {
             get {
                 object obj = ResourceManager.GetObject("updatebk", resourceCulture);
@@ -231,6 +250,15 @@ namespace KeppySynthConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("updateicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream warning {
+            get {
+                return ResourceManager.GetStream("warning", resourceCulture);
             }
         }
         

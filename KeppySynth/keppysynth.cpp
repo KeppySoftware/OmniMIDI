@@ -373,7 +373,7 @@ STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM
 	case DRV_CLOSE:
 		return DoDriverClose(dwDriverId, hdrvr, static_cast<LONG>(lParam1), static_cast<LONG>(lParam2));
 	default:
-		return DefDriverProc(dwDriverId, hdrvr, uMsg, lParam1, lParam2);
+		return DRV_OK;
 	}
 }
 

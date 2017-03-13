@@ -113,7 +113,7 @@
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -137,15 +137,18 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <EnableParallelCodeGeneration>
-      </EnableParallelCodeGeneration>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
-      <FloatingPointExceptions>
-      </FloatingPointExceptions>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
+      <OpenMPSupport>true</OpenMPSupport>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -162,7 +165,7 @@
       <ModuleDefinitionFile>.\keppysynth.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>keppysynth.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>keppysynth_win32drv.lib</ImportLibrary>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -172,14 +175,16 @@
       <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
       <LargeAddressAware>true</LargeAddressAware>
       <Driver>NotSet</Driver>
-      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
       <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
-      <PreventDllBinding>false</PreventDllBinding>
-      <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
+      <PreventDllBinding>true</PreventDllBinding>
+      <TurnOffAssemblyGeneration>false</TurnOffAssemblyGeneration>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+      <UACUIAccess>true</UACUIAccess>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <PostBuildEvent>
       <Command>cd "..\output\"
@@ -202,7 +207,7 @@ GetSHA256.exe</Command>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -226,13 +231,16 @@ GetSHA256.exe</Command>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <EnableParallelCodeGeneration>
-      </EnableParallelCodeGeneration>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <OpenMPSupport>true</OpenMPSupport>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -248,7 +256,7 @@ GetSHA256.exe</Command>
       <ModuleDefinitionFile>.\keppysynth.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>keppysynth.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>keppysynth_win32drv.lib</ImportLibrary>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -256,16 +264,19 @@ GetSHA256.exe</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib</AdditionalLibraryDirectories>
       <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
-      <LargeAddressAware>true</LargeAddressAware>
+      <LargeAddressAware>
+      </LargeAddressAware>
       <Driver>NotSet</Driver>
-      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
       <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
-      <PreventDllBinding>false</PreventDllBinding>
+      <PreventDllBinding>true</PreventDllBinding>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
+      <TurnOffAssemblyGeneration>false</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <UACUIAccess>true</UACUIAccess>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <PostBuildEvent>
       <Command>cd "..\output\"

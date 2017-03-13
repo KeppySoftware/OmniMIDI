@@ -8,7 +8,7 @@ SHA256 sha256;
 #define STRINGIFY(...) #__VA_ARGS__
 #define STR(...) STRINGIFY(__VA_ARGS__)
 
-extern "C" __declspec(dllexport) void ReleaseID(char * out, int length)
+extern "C" __declspec(dllexport) void CompilerID(char * out, int length)
 {
 	// Replace this with your signature. You can find a base called signature.bas, in the main directory
 	// of the source code.
@@ -19,6 +19,25 @@ extern "C" __declspec(dllexport) void ReleaseID(char * out, int length)
 	};
 	std::string shacode = sha256(a);
 	strcpy_s(out, length, shacode.c_str());
+}
+
+extern "C" __declspec(dllexport) LPCSTR KepSays()
+{
+	LPCSTR KepSaidWhat[8] =
+	{
+		"VirtualMIDISynth shall copy me no more.",
+		"I am quite a charming guy.",
+		"I don't like salty people, being salty myself."
+		"H3H3 is an awesome YouTuber.",
+		"H3Y B0SS",
+		"Gingeas is the supreme master.",
+		"Welcome to Windows 95.",
+		"Sexy.",
+	};
+
+	int randomwhat = rand() % 8;
+
+	return KepSaidWhat[randomwhat];
 }
 
 #endif 
