@@ -286,7 +286,6 @@ namespace KeppySynthConfigurator
                     String Current64SHA256 = null;
 
                     Current32SHA256 = System.Text.Encoding.UTF8.GetString(KeppySynthConfigurator.Properties.Resources.DRV32);
-                    MessageBox.Show(Current32SHA256);
 
                     if (Environment.Is64BitOperatingSystem)
                     {
@@ -295,7 +294,6 @@ namespace KeppySynthConfigurator
                         New32SHA256 = Reader64.ReadToEnd();
 
                         Current64SHA256 = System.Text.Encoding.UTF8.GetString(KeppySynthConfigurator.Properties.Resources.DRV64);
-                        MessageBox.Show(Current64SHA256);
                     }
 
                     DriverSignatureCheckup frm = new DriverSignatureCheckup(Current32SHA256, Current64SHA256, New32SHA256, New64SHA256, Environment.Is64BitOperatingSystem);

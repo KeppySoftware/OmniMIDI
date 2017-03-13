@@ -124,8 +124,8 @@
             this.SeeChangelog = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
-            this.menuItem33 = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
+            this.menuItem33 = new System.Windows.Forms.MenuItem();
             this.menuItem24 = new System.Windows.Forms.MenuItem();
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
@@ -854,16 +854,16 @@
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
-            // menuItem33
-            // 
-            this.menuItem33.Index = 7;
-            this.menuItem33.Text = "-";
-            // 
             // PanicButton
             // 
             this.PanicButton.Index = 6;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
+            // 
+            // menuItem33
+            // 
+            this.menuItem33.Index = 7;
+            this.menuItem33.Text = "-";
             // 
             // menuItem24
             // 
