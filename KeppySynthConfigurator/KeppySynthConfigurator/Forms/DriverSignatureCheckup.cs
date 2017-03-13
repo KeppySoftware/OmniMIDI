@@ -99,7 +99,7 @@ namespace KeppySynthConfigurator
             }
 
             String OriginalRelease = "{0} not the original from GitHub. Click here to download the original release.";
-            String LatestRelease = "{0} not the original from GitHub, but newer versions are available.\nClick here to download the latest release.";
+            String LatestRelease = "{0} not the original from GitHub.\nThere's also an update, click here to download the latest release.";
             String EverythingFine = "Both drivers are the originals from GitHub. Everything's good, press OK to close the dialog.";
             String EverythingFineUpd = "Both drivers are the originals from GitHub, but newer versions are available.\nClick here to download the latest release.";
             
@@ -162,8 +162,6 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.ForeColor = Color.Blue;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    MessageBox.Show(object.Equals(SHA25632, NewSHA25632).ToString());
-                    MessageBox.Show(object.Equals(SHA25664, NewSHA25664).ToString());
                 }
                 else
                 {
