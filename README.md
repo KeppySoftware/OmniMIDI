@@ -42,8 +42,8 @@ What you can't do:
 ## Required software
 You need this software installed before attempting to run the setup:
 - [Microsoft Visual C++ 2010](https://www.microsoft.com/en-us/download/details.aspx?id=5555) (Install the 64-bit version too if you're using a 64-bit O.S.)
-- [Microsoft .NET Framework 4.0] (https://www.microsoft.com/en-US/download/details.aspx?id=17718)
-- [Windows XP: Windows Imaging Component] (https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
+- [Microsoft .NET Framework 4.0](https://www.microsoft.com/en-US/download/details.aspx?id=17718)
+- [Windows XP: Windows Imaging Component](https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
 
 The DirectX Web Installer is already included with the driver setup, so there's no need to install it separately.
 
