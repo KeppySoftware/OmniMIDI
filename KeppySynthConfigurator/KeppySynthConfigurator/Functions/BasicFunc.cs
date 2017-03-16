@@ -318,6 +318,11 @@ namespace KeppySynthConfigurator
             frm.Dispose();
         }
 
+        public static void SetDriverPriority(int priority)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("driverprio", priority, RegistryValueKind.DWord);
+        }
+
         public static void LoudMaxInstall()
         {
             try
@@ -692,6 +697,26 @@ namespace KeppySynthConfigurator
                 else
                 {
                     KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
+                {
+                    KeppySynthConfiguratorMain.Delegate.RTPrio.Checked = true;
+                }
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.HNPrio.Checked = true;
+                }
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 2)
+                {
+                    KeppySynthConfiguratorMain.Delegate.NoPrio.Checked = true;
+                }
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 3)
+                {
+                    KeppySynthConfiguratorMain.Delegate.LNPrio.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.LoPrio.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allnotesignore", 0)) == 1)
                 {

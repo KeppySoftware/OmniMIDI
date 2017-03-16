@@ -482,8 +482,6 @@ void separatethreadfordata() {
 	if (hThread2 == NULL) {
 		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
 		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr2);
-		SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
-		SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
 	}
 }
 
@@ -727,8 +725,6 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					opend = 1;
 					reset_synth = 0;
 					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
-					SetPriorityClass(hThread, REALTIME_PRIORITY_CLASS);
-					SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);
 					PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 				}
 			}
@@ -790,8 +786,6 @@ void DoStartClient() {
 	if (modm_closed == 1) {
 		DWORD result;
 		InitializeCriticalSection(&mim_section);
-		processPriority = GetPriorityClass(GetCurrentProcess());
-		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 		load_sfevent = CreateEvent(
 			NULL,               // default security attributes
 			TRUE,               // manual-reset event
@@ -799,8 +793,6 @@ void DoStartClient() {
 			TEXT("SoundFontEvent")  // object name
 			);
 		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr1);
-		SetPriorityClass(hCalcThread, REALTIME_PRIORITY_CLASS);
-		SetThreadPriority(hCalcThread, THREAD_PRIORITY_TIME_CRITICAL);
 		result = WaitForSingleObject(load_sfevent, INFINITE);
 		if (result == WAIT_OBJECT_0)
 		{
@@ -831,7 +823,6 @@ void DoStopClient() {
 		WaitForSingleObject(hCalcThread, INFINITE);
 		CloseHandle(hCalcThread);
 		modm_closed = 1;
-		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
 	DeleteCriticalSection(&mim_section);
 }
@@ -869,7 +860,6 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	driver->clients[clientNum].instance = desc->dwInstance;
 	*dwUser = clientNum;
 	driver->clientCount++;
-	SetPriorityClass(GetCurrentProcess(), processPriority);
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 	return MMSYSERR_NOERROR;
 }

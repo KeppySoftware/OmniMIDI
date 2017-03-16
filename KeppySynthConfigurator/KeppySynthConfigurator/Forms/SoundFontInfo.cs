@@ -373,36 +373,9 @@ namespace KeppySynthConfigurator
 
         private void CheckPlayTimes(int times)
         {
-            if (times == 10)
-            {
-                MessageBox.Show("Looks like you really like this MIDI.", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (times == 25)
-            {
-                MessageBox.Show("Yeah... You really do like this MIDI, don't you?", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (times == 50)
-            {
-                MessageBox.Show("Are you sick or something? Aren't you getting bored of this MIDI?", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else if (times == 100)
-            {
-                MessageBox.Show("I'm starting to think you're Gingeas...\nHe's the only one this crazy to play the same MIDI 100 times in a row...", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else if (times == 200)
-            {
-                MessageBox.Show("I guess you just left the PC on while taking a dump.", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else if (times == 400)
-            {
-                MessageBox.Show("Now I AM getting sick of it.", "Keppy's Synthesizer - SoundFont Info", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-            else if (times == 800)
+            if (times == 1000)
             {
                 MessageBox.Show("Program error.\n\nFUNC: BASSMIDILib::LoopSystem::LoopMIDIForever\nLINE: 300\nINFO: 00000000 00000000", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-            else if (times == 1000)
-            {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(ignored =>
                 {
                     throw new IOException("The configurator has been manually crashed to prevent damages to the computer.");

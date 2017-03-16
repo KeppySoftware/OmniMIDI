@@ -1143,6 +1143,76 @@ namespace KeppySynthConfigurator
             Functions.DriverRegistry(1);
         }
 
+        // Priority stuff
+
+        private void RTPrio_Click(object sender, EventArgs e)
+        {
+            RTPrio.Checked = true;
+            HiPrio.Checked = false;
+            HNPrio.Checked = false;
+            NoPrio.Checked = false;
+            LNPrio.Checked = false;
+            LoPrio.Checked = false;
+            Functions.SetDriverPriority(0);
+        }
+
+        private void HiPrio_Click(object sender, EventArgs e)
+        {
+            RTPrio.Checked = false;
+            HiPrio.Checked = true;
+            HNPrio.Checked = false;
+            NoPrio.Checked = false;
+            LNPrio.Checked = false;
+            LoPrio.Checked = false;
+            Functions.SetDriverPriority(1);
+        }
+
+        private void HNPrio_Click(object sender, EventArgs e)
+        {
+            RTPrio.Checked = false;
+            HiPrio.Checked = false;
+            HNPrio.Checked = true;
+            NoPrio.Checked = false;
+            LNPrio.Checked = false;
+            LoPrio.Checked = false;
+            Functions.SetDriverPriority(2);
+        }
+
+        private void NoPrio_Click(object sender, EventArgs e)
+        {
+            RTPrio.Checked = false;
+            HiPrio.Checked = false;
+            HNPrio.Checked = false;
+            NoPrio.Checked = true;
+            LNPrio.Checked = false;
+            LoPrio.Checked = false;
+            Functions.SetDriverPriority(3);
+        }
+
+        private void LNPrio_Click(object sender, EventArgs e)
+        {
+            RTPrio.Checked = false;
+            HiPrio.Checked = false;
+            HNPrio.Checked = false;
+            NoPrio.Checked = false;
+            LNPrio.Checked = true;
+            LoPrio.Checked = false;
+            Functions.SetDriverPriority(4);
+        }
+
+        private void LoPrio_Click(object sender, EventArgs e)
+        {
+            RTPrio.Checked = false;
+            HiPrio.Checked = false;
+            HNPrio.Checked = false;
+            NoPrio.Checked = false;
+            LNPrio.Checked = false;
+            LoPrio.Checked = true;
+            Functions.SetDriverPriority(5);
+        }
+
+        // Priority stuff
+
         private void CloseConfigurator(object sender, CancelEventArgs e)
         {
             try

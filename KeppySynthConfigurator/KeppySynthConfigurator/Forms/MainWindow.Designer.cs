@@ -69,6 +69,13 @@
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.ImportSettings = new System.Windows.Forms.MenuItem();
             this.ExportSettings = new System.Windows.Forms.MenuItem();
+            this.menuItem31 = new System.Windows.Forms.MenuItem();
+            this.RTPrio = new System.Windows.Forms.MenuItem();
+            this.HiPrio = new System.Windows.Forms.MenuItem();
+            this.HNPrio = new System.Windows.Forms.MenuItem();
+            this.NoPrio = new System.Windows.Forms.MenuItem();
+            this.LNPrio = new System.Windows.Forms.MenuItem();
+            this.LoPrio = new System.Windows.Forms.MenuItem();
             this.menuItem22 = new System.Windows.Forms.MenuItem();
             this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
             this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
@@ -436,6 +443,7 @@
             this.ImportSettings,
             this.ExportSettings,
             this.menuItem19,
+            this.menuItem31,
             this.menuItem22,
             this.menuItem11,
             this.menuItem14,
@@ -473,9 +481,57 @@
             this.ExportSettings.Text = "Export driver settings";
             this.ExportSettings.Click += new System.EventHandler(this.ExportSettings_Click);
             // 
+            // menuItem31
+            // 
+            this.menuItem31.Index = 11;
+            this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.RTPrio,
+            this.HiPrio,
+            this.HNPrio,
+            this.NoPrio,
+            this.LNPrio,
+            this.LoPrio});
+            this.menuItem31.Text = "Set driver and host app\'s CPU priority";
+            // 
+            // RTPrio
+            // 
+            this.RTPrio.Index = 0;
+            this.RTPrio.Text = "Real-time";
+            this.RTPrio.Click += new System.EventHandler(this.RTPrio_Click);
+            // 
+            // HiPrio
+            // 
+            this.HiPrio.Index = 1;
+            this.HiPrio.Text = "High";
+            this.HiPrio.Click += new System.EventHandler(this.HiPrio_Click);
+            // 
+            // HNPrio
+            // 
+            this.HNPrio.Index = 2;
+            this.HNPrio.Text = "Higher than normal";
+            this.HNPrio.Click += new System.EventHandler(this.HNPrio_Click);
+            // 
+            // NoPrio
+            // 
+            this.NoPrio.Index = 3;
+            this.NoPrio.Text = "Normal";
+            this.NoPrio.Click += new System.EventHandler(this.NoPrio_Click);
+            // 
+            // LNPrio
+            // 
+            this.LNPrio.Index = 4;
+            this.LNPrio.Text = "Lower than normal";
+            this.LNPrio.Click += new System.EventHandler(this.LNPrio_Click);
+            // 
+            // LoPrio
+            // 
+            this.LoPrio.Index = 5;
+            this.LoPrio.Text = "Low";
+            this.LoPrio.Click += new System.EventHandler(this.LoPrio_Click);
+            // 
             // menuItem22
             // 
-            this.menuItem22.Index = 11;
+            this.menuItem22.Index = 12;
             this.menuItem22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.LoudMaxInstallMenu,
             this.LoudMaxUninstallMenu});
@@ -495,7 +551,7 @@
             // 
             // menuItem11
             // 
-            this.menuItem11.Index = 12;
+            this.menuItem11.Index = 13;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem32,
             this.ChangeDefaultOutput,
@@ -591,7 +647,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 13;
+            this.menuItem14.Index = 14;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MIDIeventsRed,
             this.MaskSynthesizerAsAnother,
@@ -653,7 +709,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 14;
+            this.menuItem12.Index = 15;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AllNotesIgnore,
             this.SysExIgnore,
@@ -680,7 +736,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 15;
+            this.menuItem28.Index = 16;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -700,7 +756,7 @@
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 16;
+            this.menuItem20.Index = 17;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
             this.UnregDriver,
@@ -1877,6 +1933,13 @@
         private System.Windows.Forms.MenuItem OpenSFMainDirectory;
         private System.Windows.Forms.MenuItem SignatureCheck;
         private System.Windows.Forms.MenuItem menuItem33;
+        private System.Windows.Forms.MenuItem menuItem31;
+        public System.Windows.Forms.MenuItem RTPrio;
+        public System.Windows.Forms.MenuItem HiPrio;
+        public System.Windows.Forms.MenuItem HNPrio;
+        public System.Windows.Forms.MenuItem NoPrio;
+        public System.Windows.Forms.MenuItem LNPrio;
+        public System.Windows.Forms.MenuItem LoPrio;
     }
 }
 
