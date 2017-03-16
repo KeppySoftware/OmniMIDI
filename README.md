@@ -19,13 +19,13 @@ Certain functions in this driver are not suited for newbies or for people that d
 <br>
 Changing one single driver function could break the entire audio stream, and if you're not an advanced user, you could have troubles on getting it working again.
 <br>
-My advice for such people is to download CoolSoft VirtualMIDISynth driver from there: [Click me] (http://coolsoft.altervista.org/en/virtualmidisynth)
+My advice for such people is to download CoolSoft VirtualMIDISynth driver from there: [Click me](http://coolsoft.altervista.org/en/virtualmidisynth)
 <br>
 It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanoseconds. (Unlike mine)
 
 ## Why do I get updates every 1-2 days???
 As I mentioned before, I always try to keep my driver fresh and up-to-date to today's users standards.
-If you're not okay with this (again), you can always switch to [CoolSoft VirtualMIDISynth] (http://coolsoft.altervista.org/en/virtualmidisynth).
+If you're not okay with this (again), you can always switch to [CoolSoft VirtualMIDISynth](http://coolsoft.altervista.org/en/virtualmidisynth).
 
 ## Can I use your program's source code for my program?
 Sure you can, but there are a few "rules" you need to follow.
@@ -41,7 +41,7 @@ What you can't do:
 
 ## Required software
 You need this software installed before attempting to run the setup:
-- [Microsoft Visual C++ 2010] (https://www.microsoft.com/en-us/download/details.aspx?id=5555) and [Microsoft Visual C++ 2013] (https://www.microsoft.com/en-us/download/details.aspx?id=40784) (Install the 64-bit version too if you're using a 64-bit O.S.)
+- [Microsoft Visual C++ 2010](https://www.microsoft.com/en-us/download/details.aspx?id=5555) (Install the 64-bit version too if you're using a 64-bit O.S.)
 - [Microsoft .NET Framework 4.0] (https://www.microsoft.com/en-US/download/details.aspx?id=17718)
 - [Windows XP: Windows Imaging Component] (https://www.microsoft.com/en-us/download/details.aspx?id=32) (Install the 64-bit version too if you're using a 64-bit O.S.)
 
@@ -61,7 +61,7 @@ To use the driver, you need at least:
 
 ## Minimum system requirements for driver compiling
 To compile (and test) the driver, you need:
-- Microsoft Visual Studio 2013
+- Microsoft Visual Studio 2015
 - Inno Setup 5.5.6 (It's recommended to install Inno Setup Studio and the Inno Setup Pack)
 - A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support, for Microsoft Visual Studio 2013)
 - 768MB of RAM (for both soundfonts and Microsoft Visual Studio 2013)

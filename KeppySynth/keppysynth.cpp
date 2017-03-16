@@ -4,10 +4,6 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
-name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-
 #pragma comment(lib,"Version.lib")
 
 #include "stdafx.h"
@@ -482,6 +478,8 @@ void separatethreadfordata() {
 	if (hThread2 == NULL) {
 		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
 		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr2);
+		SetPriorityClass(hThread, callprioval[driverprio]);
+		SetThreadPriority(hThread, prioval[driverprio]);
 	}
 }
 
@@ -725,6 +723,8 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					opend = 1;
 					reset_synth = 0;
 					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
+					SetPriorityClass(hThread, callprioval[driverprio]);
+					SetThreadPriority(hThread, prioval[driverprio]);
 					PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 				}
 			}
@@ -786,6 +786,7 @@ void DoStartClient() {
 	if (modm_closed == 1) {
 		DWORD result;
 		InitializeCriticalSection(&mim_section);
+		SetPriorityClass(GetCurrentProcess(), callprioval[driverprio]);
 		load_sfevent = CreateEvent(
 			NULL,               // default security attributes
 			TRUE,               // manual-reset event
@@ -793,6 +794,8 @@ void DoStartClient() {
 			TEXT("SoundFontEvent")  // object name
 			);
 		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr1);
+		SetPriorityClass(hCalcThread, callprioval[driverprio]);
+		SetThreadPriority(hCalcThread, prioval[driverprio]);
 		result = WaitForSingleObject(load_sfevent, INFINITE);
 		if (result == WAIT_OBJECT_0)
 		{
@@ -823,6 +826,7 @@ void DoStopClient() {
 		WaitForSingleObject(hCalcThread, INFINITE);
 		CloseHandle(hCalcThread);
 		modm_closed = 1;
+		SetPriorityClass(GetCurrentProcess(), callprioval[driverprio]);
 	}
 	DeleteCriticalSection(&mim_section);
 }
@@ -860,6 +864,7 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	driver->clients[clientNum].instance = desc->dwInstance;
 	*dwUser = clientNum;
 	driver->clientCount++;
+	SetPriorityClass(GetCurrentProcess(), callprioval[driverprio]);
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 	return MMSYSERR_NOERROR;
 }
