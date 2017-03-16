@@ -83,4 +83,8 @@
       <Filter>Runtime</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+    <Image Include="ksicon.ico" />
+  </ItemGroup>
 </Project>

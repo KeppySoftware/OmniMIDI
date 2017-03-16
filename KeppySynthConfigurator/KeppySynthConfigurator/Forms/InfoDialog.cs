@@ -80,14 +80,23 @@ namespace KeppySynthConfigurator
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
             {
                 WinVer.Text = String.Format("{0}.{1}.{2} (Update Build Revision {3})",
-                   Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
-                   Environment.OSVersion.Version.Build.ToString(), CurrentVerKey.GetValue("UBR", 0).ToString());
+                   Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
+                   Environment.OSVersion.Version.Build, CurrentVerKey.GetValue("UBR", 0).ToString());
             }
             else // Else, give normal version number
             {
-                WinVer.Text = String.Format("{0}.{1}.{2}",
-                   Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
-                   Environment.OSVersion.Version.Build.ToString());
+                if (Environment.OSVersion.Version.Major == 6 || Environment.OSVersion.Version.Major <= 1)
+                {
+                    WinVer.Text = String.Format("{0}.{1}.{2} (Service Pack {3})",
+                        Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
+                        Environment.OSVersion.Version.Build, Environment.OSVersion.ServicePack);
+                }
+                else
+                {
+                    WinVer.Text = String.Format("{0}.{1}.{2} (Metro)",
+                        Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
+                        Environment.OSVersion.Version.Build);
+                }
             }
         }
 
@@ -210,6 +219,26 @@ namespace KeppySynthConfigurator
             {
                 Functions.CheckForUpdates(false, false);
             }
+        }
+
+        private void DonateBtn_Click(object sender, EventArgs e)
+        {
+            string url = "";
+
+            string business = "prapapappo1999@gmail.com";
+            string description = "Donation";
+            string country = "US";
+            string currency = "USD";
+
+            url += "https://www.paypal.com/cgi-bin/webscr" +
+                "?cmd=" + "_donations" +
+                "&business=" + business +
+                "&lc=" + country +
+                "&item_name=" + description +
+                "&currency_code=" + currency +
+                "&bn=" + "PP%2dDonationsBF";
+
+            Process.Start(url);
         }
     }
 }

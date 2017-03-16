@@ -226,6 +226,16 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ppdonate {
+            get {
+                object obj = ResourceManager.GetObject("ppdonate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap refreshicon {
             get {
                 object obj = ResourceManager.GetObject("refreshicon", resourceCulture);

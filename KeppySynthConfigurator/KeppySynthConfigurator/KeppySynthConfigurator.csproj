@@ -267,6 +267,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ppdonate.png" />
     <None Include="Resources\Icons\successiconupd.png" />
     <None Include="Resources\Audio\warning.wav" />
     <None Include="Resources\Hashes\DRV32.SHA" />

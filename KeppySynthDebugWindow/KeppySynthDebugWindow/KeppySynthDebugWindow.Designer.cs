@@ -49,7 +49,6 @@
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
             this.CopyToClip1 = new System.Windows.Forms.Button();
-            this.KSLogo = new System.Windows.Forms.PictureBox();
             this.DDS = new System.Windows.Forms.Label();
             this.DDSLabel = new System.Windows.Forms.Label();
             this.RT = new System.Windows.Forms.Label();
@@ -59,7 +58,6 @@
             this.CMA = new System.Windows.Forms.Label();
             this.CMALabel = new System.Windows.Forms.Label();
             this.PCSpecs = new System.Windows.Forms.TabPage();
-            this.CPULogo = new System.Windows.Forms.PictureBox();
             this.MT = new System.Windows.Forms.Label();
             this.MTLabel = new System.Windows.Forms.Label();
             this.GPUInternalChip = new System.Windows.Forms.Label();
@@ -79,12 +77,14 @@
             this.TMLabel = new System.Windows.Forms.Label();
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
-            this.WinLogo = new System.Windows.Forms.PictureBox();
             this.MemoryThread = new System.Windows.Forms.Timer(this.components);
+            this.KSLogo = new System.Windows.Forms.PictureBox();
+            this.CPULogo = new System.Windows.Forms.PictureBox();
+            this.WinLogo = new System.Windows.Forms.PictureBox();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             this.PCSpecs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
             this.SuspendLayout();
@@ -185,16 +185,6 @@
             this.CopyToClip1.Text = "Copy both tabs to clipboard";
             this.CopyToClip1.UseVisualStyleBackColor = true;
             this.CopyToClip1.Click += new System.EventHandler(this.CopyToClip_Click);
-            // 
-            // KSLogo
-            // 
-            this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogo.Location = new System.Drawing.Point(389, 3);
-            this.KSLogo.Name = "KSLogo";
-            this.KSLogo.Size = new System.Drawing.Size(32, 32);
-            this.KSLogo.TabIndex = 25;
-            this.KSLogo.TabStop = false;
             // 
             // DDS
             // 
@@ -314,17 +304,6 @@
             this.PCSpecs.TabIndex = 1;
             this.PCSpecs.Text = "Computer specifications";
             this.PCSpecs.UseVisualStyleBackColor = true;
-            // 
-            // CPULogo
-            // 
-            this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CPULogo.Cursor = System.Windows.Forms.Cursors.Help;
-            this.CPULogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
-            this.CPULogo.Location = new System.Drawing.Point(389, 37);
-            this.CPULogo.Name = "CPULogo";
-            this.CPULogo.Size = new System.Drawing.Size(32, 32);
-            this.CPULogo.TabIndex = 38;
-            this.CPULogo.TabStop = false;
             // 
             // MT
             // 
@@ -535,6 +514,33 @@
             this.COSLabel.Text = "Operating system:";
             this.COSLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // MemoryThread
+            // 
+            this.MemoryThread.Enabled = true;
+            this.MemoryThread.Tick += new System.EventHandler(this.MemoryThread_Tick);
+            // 
+            // KSLogo
+            // 
+            this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.KSLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogo.Location = new System.Drawing.Point(389, 3);
+            this.KSLogo.Name = "KSLogo";
+            this.KSLogo.Size = new System.Drawing.Size(32, 32);
+            this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogo.TabIndex = 25;
+            this.KSLogo.TabStop = false;
+            // 
+            // CPULogo
+            // 
+            this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CPULogo.Cursor = System.Windows.Forms.Cursors.Help;
+            this.CPULogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
+            this.CPULogo.Location = new System.Drawing.Point(389, 37);
+            this.CPULogo.Name = "CPULogo";
+            this.CPULogo.Size = new System.Drawing.Size(32, 32);
+            this.CPULogo.TabIndex = 38;
+            this.CPULogo.TabStop = false;
+            // 
             // WinLogo
             // 
             this.WinLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -545,11 +551,6 @@
             this.WinLogo.Size = new System.Drawing.Size(32, 32);
             this.WinLogo.TabIndex = 24;
             this.WinLogo.TabStop = false;
-            // 
-            // MemoryThread
-            // 
-            this.MemoryThread.Enabled = true;
-            this.MemoryThread.Tick += new System.EventHandler(this.MemoryThread_Tick);
             // 
             // KeppySynthDebugWindow
             // 
@@ -568,9 +569,9 @@
             this.Tabs.ResumeLayout(false);
             this.SynthDbg.ResumeLayout(false);
             this.SynthDbg.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.PCSpecs.ResumeLayout(false);
             this.PCSpecs.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
             this.ResumeLayout(false);

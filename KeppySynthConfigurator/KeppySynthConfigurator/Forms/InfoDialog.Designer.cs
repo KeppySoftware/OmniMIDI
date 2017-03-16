@@ -50,6 +50,7 @@
             this.OKClose = new System.Windows.Forms.Button();
             this.CTC = new System.Windows.Forms.Button();
             this.CFU = new System.Windows.Forms.Button();
+            this.DonateBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -61,7 +62,6 @@
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(79, 80);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -293,12 +293,27 @@
             this.CFU.UseVisualStyleBackColor = true;
             this.CFU.Click += new System.EventHandler(this.CFU_Click);
             // 
+            // DonateBtn
+            // 
+            this.DonateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DonateBtn.Image = global::KeppySynthConfigurator.Properties.Resources.ppdonate;
+            this.DonateBtn.Location = new System.Drawing.Point(285, 12);
+            this.DonateBtn.Name = "DonateBtn";
+            this.DonateBtn.Size = new System.Drawing.Size(87, 23);
+            this.DonateBtn.TabIndex = 11;
+            this.DonateBtn.Text = "Donate";
+            this.DonateBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.DonateBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.DonateBtn.UseVisualStyleBackColor = true;
+            this.DonateBtn.Click += new System.EventHandler(this.DonateBtn_Click);
+            // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(382, 351);
+            this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
             this.Controls.Add(this.CTC);
             this.Controls.Add(this.OKClose);
@@ -352,5 +367,6 @@
         private System.Windows.Forms.Button OKClose;
         private System.Windows.Forms.Button CTC;
         private System.Windows.Forms.Button CFU;
+        private System.Windows.Forms.Button DonateBtn;
     }
 }
