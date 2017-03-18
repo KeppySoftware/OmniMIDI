@@ -62,6 +62,7 @@ khalmnpr.exe
 ldsvc.exe
 lightshot.exe
 line.exe
+lineplayer.exe
 livecomm.exe
 loopmidi.exe
 lsass.exe
@@ -127,8 +128,8 @@ steamservice.exe
 steamwebhelper.exe
 svchost.exe
 sxgtkbar.exe
-tabtip.exe
 tabletdriver.exe
+tabtip.exe
 taskeng.exe
 taskhost.exe
 taskhostex.exe

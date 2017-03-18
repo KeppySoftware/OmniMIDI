@@ -69,6 +69,8 @@
             this.ImportSettings = new System.Windows.Forms.MenuItem();
             this.ExportSettings = new System.Windows.Forms.MenuItem();
             this.menuItem31 = new System.Windows.Forms.MenuItem();
+            this.DePrio = new System.Windows.Forms.MenuItem();
+            this.menuItem34 = new System.Windows.Forms.MenuItem();
             this.RTPrio = new System.Windows.Forms.MenuItem();
             this.HiPrio = new System.Windows.Forms.MenuItem();
             this.HNPrio = new System.Windows.Forms.MenuItem();
@@ -196,6 +198,8 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
+            this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.ResetToDefault = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -476,47 +480,60 @@
             // 
             this.menuItem31.Index = 10;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DePrio,
+            this.menuItem34,
             this.RTPrio,
             this.HiPrio,
             this.HNPrio,
             this.NoPrio,
             this.LNPrio,
             this.LoPrio});
-            this.menuItem31.Text = "Set driver and host app\'s CPU priority";
+            this.menuItem31.Text = "Set driver\'s CPU cycles affinity";
+            // 
+            // DePrio
+            // 
+            this.DePrio.Index = 0;
+            this.DePrio.Text = "Leave default";
+            this.DePrio.Click += new System.EventHandler(this.DePrio_Click);
+            // 
+            // menuItem34
+            // 
+            this.menuItem34.Index = 1;
+            this.menuItem34.Text = "-";
             // 
             // RTPrio
             // 
-            this.RTPrio.Index = 0;
+            this.RTPrio.Index = 2;
             this.RTPrio.Text = "Real-time";
             this.RTPrio.Click += new System.EventHandler(this.RTPrio_Click);
             // 
             // HiPrio
             // 
-            this.HiPrio.Index = 1;
+            this.HiPrio.Index = 3;
             this.HiPrio.Text = "High";
             this.HiPrio.Click += new System.EventHandler(this.HiPrio_Click);
             // 
             // HNPrio
             // 
-            this.HNPrio.Index = 2;
+            this.HNPrio.Index = 4;
             this.HNPrio.Text = "Higher than normal";
             this.HNPrio.Click += new System.EventHandler(this.HNPrio_Click);
             // 
             // NoPrio
             // 
-            this.NoPrio.Index = 3;
+            this.NoPrio.Index = 5;
             this.NoPrio.Text = "Normal";
             this.NoPrio.Click += new System.EventHandler(this.NoPrio_Click);
             // 
             // LNPrio
             // 
-            this.LNPrio.Index = 4;
+            this.LNPrio.Index = 6;
             this.LNPrio.Text = "Lower than normal";
             this.LNPrio.Click += new System.EventHandler(this.LNPrio_Click);
             // 
             // LoPrio
             // 
-            this.LoPrio.Index = 5;
+            this.LoPrio.Index = 7;
             this.LoPrio.Text = "Low";
             this.LoPrio.Click += new System.EventHandler(this.LoPrio_Click);
             // 
@@ -922,7 +939,9 @@
             this.menuItem25.Index = 2;
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.WinMMPatch32,
-            this.WinMMPatch64});
+            this.WinMMPatch64,
+            this.menuItem15,
+            this.ResetToDefault});
             this.menuItem25.Text = "Tools";
             // 
             // WinMMPatch32
@@ -1715,6 +1734,17 @@
             this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
             // 
+            // menuItem15
+            // 
+            this.menuItem15.Index = 2;
+            this.menuItem15.Text = "-";
+            // 
+            // ResetToDefault
+            // 
+            this.ResetToDefault.Index = 3;
+            this.ResetToDefault.Text = "Reinstall the driver from scratch";
+            this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1921,6 +1951,10 @@
         private System.Windows.Forms.MenuItem menuItem25;
         private System.Windows.Forms.MenuItem WinMMPatch32;
         private System.Windows.Forms.MenuItem WinMMPatch64;
+        private System.Windows.Forms.MenuItem menuItem34;
+        public System.Windows.Forms.MenuItem DePrio;
+        private System.Windows.Forms.MenuItem menuItem15;
+        private System.Windows.Forms.MenuItem ResetToDefault;
     }
 }
 

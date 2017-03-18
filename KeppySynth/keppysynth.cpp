@@ -784,9 +784,18 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 
 void DoStartClient() {
 	if (modm_closed == 1) {
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		int One = 0;
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
+		RegCloseKey(hKey);
 		DWORD result;
 		InitializeCriticalSection(&mim_section);
-		SetPriorityClass(GetCurrentProcess(), callprioval[driverprio]);
+		processPriority = GetPriorityClass(GetCurrentProcess());
+		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 		load_sfevent = CreateEvent(
 			NULL,               // default security attributes
 			TRUE,               // manual-reset event
@@ -826,7 +835,7 @@ void DoStopClient() {
 		WaitForSingleObject(hCalcThread, INFINITE);
 		CloseHandle(hCalcThread);
 		modm_closed = 1;
-		SetPriorityClass(GetCurrentProcess(), callprioval[driverprio]);
+		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
 	DeleteCriticalSection(&mim_section);
 }
@@ -864,7 +873,7 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	driver->clients[clientNum].instance = desc->dwInstance;
 	*dwUser = clientNum;
 	driver->clientCount++;
-	SetPriorityClass(GetCurrentProcess(), callprioval[driverprio]);
+	SetPriorityClass(GetCurrentProcess(), processPriority);
 	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 	return MMSYSERR_NOERROR;
 }

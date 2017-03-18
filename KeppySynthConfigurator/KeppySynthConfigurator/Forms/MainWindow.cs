@@ -1146,21 +1146,40 @@ namespace KeppySynthConfigurator
 
         // Priority stuff
 
-        private void RTPrio_Click(object sender, EventArgs e)
+        private void DePrio_Click(object sender, EventArgs e)
         {
-            RTPrio.Checked = true;
-            HiPrio.Checked = false;
-            HNPrio.Checked = false;
-            NoPrio.Checked = false;
-            LNPrio.Checked = false;
-            LoPrio.Checked = false;
-            Functions.SetDriverPriority(0);
+            if (!DePrio.Checked)
+            {
+                Functions.ButtonStatus(false);
+                DePrio.Checked = true;
+                RTPrio.Checked = false;
+                HiPrio.Checked = false;
+                HNPrio.Checked = false;
+                NoPrio.Checked = false;
+                LNPrio.Checked = false;
+                LoPrio.Checked = false;
+                Functions.SetDriverPriority(0);
+            }
+            else
+            {
+                Functions.ButtonStatus(true);
+                DePrio.Checked = false;
+                RTPrio.Checked = true;
+                HiPrio.Checked = false;
+                HNPrio.Checked = false;
+                NoPrio.Checked = false;
+                LNPrio.Checked = false;
+                LoPrio.Checked = false;
+                Functions.SetDriverPriority(1);
+            }
         }
 
-        private void HiPrio_Click(object sender, EventArgs e)
+        private void RTPrio_Click(object sender, EventArgs e)
         {
-            RTPrio.Checked = false;
-            HiPrio.Checked = true;
+            Functions.ButtonStatus(true);
+            DePrio.Checked = false;
+            RTPrio.Checked = true;
+            HiPrio.Checked = false;
             HNPrio.Checked = false;
             NoPrio.Checked = false;
             LNPrio.Checked = false;
@@ -1168,48 +1187,69 @@ namespace KeppySynthConfigurator
             Functions.SetDriverPriority(1);
         }
 
-        private void HNPrio_Click(object sender, EventArgs e)
+        private void HiPrio_Click(object sender, EventArgs e)
         {
+            Functions.ButtonStatus(true);
+            DePrio.Checked = false;
             RTPrio.Checked = false;
-            HiPrio.Checked = false;
-            HNPrio.Checked = true;
+            HiPrio.Checked = true;
+            HNPrio.Checked = false;
             NoPrio.Checked = false;
             LNPrio.Checked = false;
             LoPrio.Checked = false;
             Functions.SetDriverPriority(2);
         }
 
+        private void HNPrio_Click(object sender, EventArgs e)
+        {
+            Functions.ButtonStatus(true);
+            DePrio.Checked = false;
+            RTPrio.Checked = false;
+            HiPrio.Checked = false;
+            HNPrio.Checked = true;
+            NoPrio.Checked = false;
+            LNPrio.Checked = false;
+            LoPrio.Checked = false;
+            Functions.SetDriverPriority(3);
+        }
+
         private void NoPrio_Click(object sender, EventArgs e)
         {
+            Functions.ButtonStatus(true);
+            DePrio.Checked = false;
             RTPrio.Checked = false;
             HiPrio.Checked = false;
             HNPrio.Checked = false;
             NoPrio.Checked = true;
             LNPrio.Checked = false;
             LoPrio.Checked = false;
-            Functions.SetDriverPriority(3);
+            Functions.SetDriverPriority(4);
         }
 
         private void LNPrio_Click(object sender, EventArgs e)
         {
+            Functions.ButtonStatus(true);
+            DePrio.Checked = false;
             RTPrio.Checked = false;
             HiPrio.Checked = false;
             HNPrio.Checked = false;
             NoPrio.Checked = false;
             LNPrio.Checked = true;
             LoPrio.Checked = false;
-            Functions.SetDriverPriority(4);
+            Functions.SetDriverPriority(5);
         }
 
         private void LoPrio_Click(object sender, EventArgs e)
         {
+            Functions.ButtonStatus(true);
+            DePrio.Checked = false;
             RTPrio.Checked = false;
             HiPrio.Checked = false;
             HNPrio.Checked = false;
             NoPrio.Checked = false;
             LNPrio.Checked = false;
             LoPrio.Checked = true;
-            Functions.SetDriverPriority(5);
+            Functions.SetDriverPriority(6);
         }
 
         // Priority stuff
@@ -1956,7 +1996,7 @@ namespace KeppySynthConfigurator
             Process.Start("https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRnA");
         }
 
-        // WinMM Patch
+        // Tools
 
         private void WinMMPatch32_Click(object sender, EventArgs e)
         {
@@ -1972,6 +2012,23 @@ namespace KeppySynthConfigurator
                 Functions.ApplyWinMMPatch(true);
             else
                 MessageBox.Show("The patch is not needed on Windows 7 and older!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void ResetToDefault_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to reinstall the driver?\n\nThe configurator will download the latest installer, and remove all the old registry keys.\nYou'll lose ALL the settings.", "Keppy's Synthesizer - Reinstall the driver from scratch", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                var p = new System.Diagnostics.Process();
+                p.StartInfo.FileName = Application.ExecutablePath;
+                p.StartInfo.Arguments = "/REI";
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+                Application.ExitThread();
+            }
+
         }
     }
 }

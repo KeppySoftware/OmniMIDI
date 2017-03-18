@@ -700,17 +700,26 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
-                    KeppySynthConfiguratorMain.Delegate.RTPrio.Checked = true;
+                    Functions.ButtonStatus(false);
+                    KeppySynthConfiguratorMain.Delegate.DePrio.Checked = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 1)
                 {
-                    KeppySynthConfiguratorMain.Delegate.HNPrio.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.RTPrio.Checked = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 2)
                 {
-                    KeppySynthConfiguratorMain.Delegate.NoPrio.Checked = true;
+                    KeppySynthConfiguratorMain.Delegate.HiPrio.Checked = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 3)
+                {
+                    KeppySynthConfiguratorMain.Delegate.HNPrio.Checked = true;
+                }
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 4)
+                {
+                    KeppySynthConfiguratorMain.Delegate.NoPrio.Checked = true;
+                }
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 5)
                 {
                     KeppySynthConfiguratorMain.Delegate.LNPrio.Checked = true;
                 }
@@ -1156,6 +1165,16 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static void ButtonStatus(Boolean Status)
+        {
+            KeppySynthConfiguratorMain.Delegate.RTPrio.Enabled = Status;
+            KeppySynthConfiguratorMain.Delegate.HiPrio.Enabled = Status;
+            KeppySynthConfiguratorMain.Delegate.HNPrio.Enabled = Status;
+            KeppySynthConfiguratorMain.Delegate.NoPrio.Enabled = Status;
+            KeppySynthConfiguratorMain.Delegate.LNPrio.Enabled = Status;
+            KeppySynthConfiguratorMain.Delegate.LoPrio.Enabled = Status;
+        }
+
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
             if (SelectedList == 1)
@@ -1456,16 +1475,6 @@ namespace KeppySynthConfigurator
                         {
                             if (Is64Bit)
                             {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
-                            }
-                            else
-                            {
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
@@ -1474,16 +1483,26 @@ namespace KeppySynthConfigurator
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
                             }
+                            else
+                            {
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
+                            }
                         }
                         if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
                         {
                             if (Is64Bit)
                             {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm832);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm864);
                             }
                             else
                             {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm864);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm832);
                             }
                         }
                         MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

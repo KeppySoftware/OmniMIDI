@@ -67,7 +67,7 @@ static int bassoutputfinal = 0;			// DO NOT TOUCH
 static int debugmode = 0;				// Debug console
 static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
 static int defaultoutput = 0;			// Default audio output (DSound)
-static int driverprio = 0;
+static int driverprio = 0;				// Process priority
 static int midiinenabled = 0;			// MIDI Input
 static int defaultmidiindev = 0;		// MIDI Input device
 static int defaultsflist = 1;			// Default soundfont list
@@ -104,24 +104,26 @@ static int volumemon = 1;				// Volume monitoring
 static int xaudiodisabled = 0;			// Override the default engine
 
 // Priority values
-static int prioval[6] =
+static int prioval[7] =
 {
-	THREAD_PRIORITY_TIME_CRITICAL,
-	THREAD_PRIORITY_HIGHEST,
-	THREAD_PRIORITY_ABOVE_NORMAL,
-	THREAD_PRIORITY_NORMAL,
-	THREAD_PRIORITY_BELOW_NORMAL,
-	THREAD_PRIORITY_LOWEST
+	15,
+	15,
+	2,
+	1,
+	0,
+	-1,
+	-2
 };
 
-static int callprioval[6] =
+static int callprioval[7] =
 {
-	REALTIME_PRIORITY_CLASS,
-	HIGH_PRIORITY_CLASS,
-	ABOVE_NORMAL_PRIORITY_CLASS,
-	NORMAL_PRIORITY_CLASS,
-	BELOW_NORMAL_PRIORITY_CLASS,
-	IDLE_PRIORITY_CLASS
+	0x00000100,
+	0x00000100,
+	0x00000080,
+	0x00008000,
+	0x0000020,
+	0x00004000,
+	0x0000040
 };
 
 // BASS_VST load status
