@@ -101,6 +101,8 @@
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.autopanicmode = new System.Windows.Forms.MenuItem();
             this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.CapFram = new System.Windows.Forms.MenuItem();
+            this.menuItem36 = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.menuItem27 = new System.Windows.Forms.MenuItem();
@@ -138,6 +140,8 @@
             this.menuItem25 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
+            this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.ResetToDefault = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
@@ -198,8 +202,6 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
-            this.menuItem15 = new System.Windows.Forms.MenuItem();
-            this.ResetToDefault = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -414,7 +416,7 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 2;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 4;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
@@ -699,6 +701,8 @@
             // 
             this.menuItem12.Index = 14;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.CapFram,
+            this.menuItem36,
             this.AllNotesIgnore,
             this.SysExIgnore,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
@@ -707,32 +711,43 @@
             this.IgnoreNotesInterval});
             this.menuItem12.Text = "MIDI events parser settings";
             // 
+            // CapFram
+            // 
+            this.CapFram.Index = 0;
+            this.CapFram.Text = "Cap input framerate to 60FPS";
+            this.CapFram.Click += new System.EventHandler(this.CapFram_Click);
+            // 
+            // menuItem36
+            // 
+            this.menuItem36.Index = 1;
+            this.menuItem36.Text = "-";
+            // 
             // AllNotesIgnore
             // 
-            this.AllNotesIgnore.Index = 0;
+            this.AllNotesIgnore.Index = 2;
             this.AllNotesIgnore.Text = "Ignore all MIDI events";
             this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 1;
+            this.SysExIgnore.Index = 3;
             this.SysExIgnore.Text = "Ignore all SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
             // menuItem27
             // 
-            this.menuItem27.Index = 3;
+            this.menuItem27.Index = 5;
             this.menuItem27.Text = "-";
             // 
             // IgnoreNotes1
             // 
-            this.IgnoreNotes1.Index = 4;
+            this.IgnoreNotes1.Index = 6;
             this.IgnoreNotes1.Text = "Ignore notes in between two velocity values";
             this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
             // 
             // IgnoreNotesInterval
             // 
-            this.IgnoreNotesInterval.Index = 5;
+            this.IgnoreNotesInterval.Index = 7;
             this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
             this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
             // 
@@ -955,6 +970,17 @@
             this.WinMMPatch64.Index = 1;
             this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
             this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
+            // 
+            // menuItem15
+            // 
+            this.menuItem15.Index = 2;
+            this.menuItem15.Text = "-";
+            // 
+            // ResetToDefault
+            // 
+            this.ResetToDefault.Index = 3;
+            this.ResetToDefault.Text = "Reinstall the driver from scratch";
+            this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
             // ThemeCheck
             // 
@@ -1734,17 +1760,6 @@
             this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
             // 
-            // menuItem15
-            // 
-            this.menuItem15.Index = 2;
-            this.menuItem15.Text = "-";
-            // 
-            // ResetToDefault
-            // 
-            this.ResetToDefault.Index = 3;
-            this.ResetToDefault.Text = "Reinstall the driver from scratch";
-            this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
-            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1955,6 +1970,8 @@
         public System.Windows.Forms.MenuItem DePrio;
         private System.Windows.Forms.MenuItem menuItem15;
         private System.Windows.Forms.MenuItem ResetToDefault;
+        private System.Windows.Forms.MenuItem menuItem36;
+        public System.Windows.Forms.MenuItem CapFram;
     }
 }
 

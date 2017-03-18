@@ -462,7 +462,10 @@ unsigned _stdcall notescatcher(LPVOID lpV){
 			bmsyn_play_some_data();
 			if (oldbuffermode == 1)
 				break;
-			Sleep(1);
+			if (capframerate == 1)
+				Sleep(16);
+			else
+				Sleep(1);
 		}
 		PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 		stop_thread = 0;
@@ -500,9 +503,9 @@ unsigned __stdcall audioengine(LPVOID lpV){
 			else separatethreadfordata();
 
 			if (xaudiodisabled == 1) {
-				if (rco == 1) { Sleep(1); }
 				BASS_ChannelUpdate(KSStream, 0);
 				CheckUp();
+				if (rco == 1) { Sleep(1); }
 			}
 			else {
 				AudioRender();
@@ -730,7 +733,7 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == 0){
-				Sleep(1);
+				Sleep(10);
 				realtime_load_settings();
 				debug_info();
 				Panic();

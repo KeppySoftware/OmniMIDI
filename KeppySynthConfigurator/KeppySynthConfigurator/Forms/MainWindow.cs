@@ -1092,6 +1092,20 @@ namespace KeppySynthConfigurator
             Process.Start(url);
         }
 
+        private void CapFram_Click(object sender, EventArgs e)
+        {
+            if (!CapFram.Checked)
+            {
+                CapFram.Checked = true;
+                Functions.SetFramerate(1);
+            }
+            else
+            {
+                CapFram.Checked = false;
+                Functions.SetFramerate(0);
+            }
+        }
+
         private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthEVBuffer frm = new KeppySynthEVBuffer();

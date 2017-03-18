@@ -64,6 +64,7 @@ static int allnotesignore = 0;			// Ignore all MIDI events
 static int alreadyshown = 0;			// Check if the info about the drivers have been already shown.
 static int autopanic = 1;				// Autopanic switch
 static int bassoutputfinal = 0;			// DO NOT TOUCH
+static int capframerate = 1;			// Cap input framerate
 static int debugmode = 0;				// Debug console
 static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
 static int defaultoutput = 0;			// Default audio output (DSound)

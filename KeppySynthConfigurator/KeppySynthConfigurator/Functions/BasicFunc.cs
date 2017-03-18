@@ -323,6 +323,11 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.SynthSettings.SetValue("driverprio", priority, RegistryValueKind.DWord);
         }
 
+        public static void SetFramerate(int yesno)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("capframerate", yesno, RegistryValueKind.DWord);
+        }
+
         public static void LoudMaxInstall()
         {
             try
@@ -665,6 +670,14 @@ namespace KeppySynthConfigurator
                 else
                 {
                     KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = false;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("capframerate", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.CapFram.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.CapFram.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("shortname", 0)) == 1)
                 {
