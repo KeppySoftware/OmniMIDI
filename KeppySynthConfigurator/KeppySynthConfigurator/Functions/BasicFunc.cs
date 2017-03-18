@@ -874,7 +874,6 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = true;
-                    KeppySynthConfiguratorMain.Delegate.changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
                     KeppySynthConfiguratorMain.Delegate.VolumeBoost.Enabled = false;
@@ -1402,6 +1401,99 @@ namespace KeppySynthConfigurator
                 Program.DebugToConsole(true, null, ex2);
                 Functions.ShowErrorDialog(null, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex2);
                 Environment.Exit(-1);
+            }
+        }
+
+        // WinMM Patch
+        public enum MachineType { Native = 0, x86 = 0x014c, Itanium = 0x0200, x64 = 0x8664 }
+
+        public static string GetAppCompiledMachineType(string fileName)
+        {
+            const int PE_POINTER_OFFSET = 60;
+            const int MACHINE_OFFSET = 4;
+            byte[] data = new byte[4096];
+            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                s.Read(data, 0, 4096);
+            }
+            // dos header is 64 bytes, last element, long (4 bytes) is the address of the PE header
+            int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
+            int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
+            return ((MachineType)machineUint).ToString();
+        }
+
+        public static void ApplyWinMMPatch(Boolean Is64Bit)
+        {
+            OpenFileDialog WinMMDialog = new OpenFileDialog();
+            TryAgain:
+            try
+            {
+                WinMMDialog.Filter = "Executables (*.exe, *.dll)|*.exe;*.dll;";
+                WinMMDialog.Title = "Select an application to patch";
+                WinMMDialog.Multiselect = false;
+                WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (WinMMDialog.ShowDialog() == DialogResult.OK)
+                {
+                    String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
+                    String MMName = "midimap.dll";
+                    String MSACMDrvName = "msacm32.drv";
+                    String MSACMName = "msacm32.dll";
+                    String MSADPName = "msapd32.drv";
+                    String WDMAUDDrvName = "wdmaud.drv";
+                    String WDMAUDName = "wdmaud.sys";
+                    String WinMMName = "winmm.dll";
+                    if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x86" && Is64Bit)
+                    {
+                        MessageBox.Show("You can't patch a 32-bit application with the 64-bit patch!", "Keppy's Synthesizer - Patch error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
+                    else if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x64" && !Is64Bit)
+                    {
+                        MessageBox.Show("You can't patch a 64-bit application with the 32-bit patch!", "Keppy's Synthesizer - Patch error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
+                    else
+                    {
+                        if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
+                        {
+                            if (Is64Bit)
+                            {
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
+                            }
+                            else
+                            {
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp64);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
+                            }
+                        }
+                        if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
+                        {
+                            if (Is64Bit)
+                            {
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm832);
+                            }
+                            else
+                            {
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm864);
+                            }
+                        }
+                        MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                goto TryAgain;
             }
         }
     }

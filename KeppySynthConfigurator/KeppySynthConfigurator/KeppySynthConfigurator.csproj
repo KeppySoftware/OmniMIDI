@@ -262,11 +262,27 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\WinMM64\msacm32.drv" />
+    <None Include="Resources\WinMM64\wdmaud.drv" />
+    <None Include="Resources\WinMM64\wdmaud.sys" />
+    <None Include="Resources\WinMM32\wdmaud.drv" />
+    <None Include="Resources\WinMM32\wdmaud.sys" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\WinMM64\winmm8.dll" />
+    <None Include="Resources\WinMM32\winmm8.dll" />
+    <None Include="Resources\WinMM64\winmm.dll" />
+    <None Include="Resources\WinMM64\msadp32.dll" />
+    <None Include="Resources\WinMM64\msacm32.dll" />
+    <None Include="Resources\WinMM64\midimap.dll" />
+    <None Include="Resources\WinMM32\winmm.dll" />
+    <None Include="Resources\WinMM32\msadp32.dll" />
+    <None Include="Resources\WinMM32\msacm32.dll" />
+    <None Include="Resources\WinMM32\midimap.dll" />
+    <None Include="Resources\WinMM32\msacm32.drv" />
     <None Include="Resources\ppdonate.png" />
     <None Include="Resources\Icons\successiconupd.png" />
     <None Include="Resources\Audio\warning.wav" />

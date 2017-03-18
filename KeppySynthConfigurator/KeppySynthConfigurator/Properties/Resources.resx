@@ -196,4 +196,52 @@
   <data name="ppdonate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ppdonate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="midimap32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\midimap.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msacm32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\msacm32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msacm32drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\msacm32.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msadp32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\msadp32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wdmaud32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\wdmaud.sys;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wdmaud32drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\wdmaud.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="winmm32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="midimap64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\midimap.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msacm64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\msacm32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msacm64drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\msacm32.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="msadp64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\msadp32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wdmaud64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\wdmaud.sys;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wdmaud64drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\wdmaud.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="winmm64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="winmm832" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\winmm8.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="winmm864" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\winmm8.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

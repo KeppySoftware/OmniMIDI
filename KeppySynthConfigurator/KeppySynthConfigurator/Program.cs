@@ -152,7 +152,7 @@ namespace KeppySynthConfigurator
                 catch
                 {
                     Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
+
                     Application.Run(new KeppySynthConfiguratorMain(args));
                     GC.KeepAlive(m);
                 }

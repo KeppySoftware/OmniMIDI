@@ -151,54 +151,60 @@ namespace KeppySynthConfigurator
         // Here we go!
         private void KeppySynthConfiguratorMain_Load(object sender, EventArgs e)
         {
-            // SAS THEME HANDLER   
-            BassNet.Registration("kaleidonkep99@outlook.com", "2X203132524822");
-            Bass.LoadMe();
-            this.ThemeCheck.RunWorkerAsync();
-            this.Size = new Size(665, 481);
-            // MIDI out selector disabler
-            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
+            try
             {
-                changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
-                changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-                menuItem15.Visible = true;
-                getTheMIDIMapperForWindows8xToolStripMenuItem.Visible = true;
-                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
-                SetSynthDefault.Visible = true;
-            }
-            else if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
-            {
-                changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
-                changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-                menuItem15.Visible = true;
-                getTheMIDIMapperForWindows10ToolStripMenuItem.Visible = true;
-                SetSynthDefault.Visible = true;
-            }
-            if (Environment.Is64BitOperatingSystem == false)
-            {
-                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
-                changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-            }
-            else
-            {
-                changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
-                changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
-            }
+                // SAS THEME HANDLER   
+                BassNet.Registration("kaleidonkep99@outlook.com", "2X203132524822");
+                Bass.LoadMe();
+                this.ThemeCheck.RunWorkerAsync();
+                this.Size = new Size(665, 481);
+                // MIDI out selector disabler
+                if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
+                {
+                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                    changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                    SetSynthDefault.Visible = true;
+                }
+                else if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
+                {
+                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                    changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                    SetSynthDefault.Visible = true;
+                }
+                if (Environment.Is64BitOperatingSystem == false)
+                {
+                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
+                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    WinMMPatch32.Enabled = true;
+                    WinMMPatch64.Enabled = false;
+                }
+                else
+                {
+                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    WinMMPatch32.Enabled = true;
+                    WinMMPatch64.Enabled = true;
+                }
 
-            Functions.InitializeLastPath();
-            SelectedListBox.Text = "List 1";
-            KeppySynthConfiguratorMain.whichone = 1;
+                Functions.InitializeLastPath();
+                SelectedListBox.Text = "List 1";
+                KeppySynthConfiguratorMain.whichone = 1;
 
-            Functions.LoadSettings();
+                Functions.LoadSettings();
 
-            // If /AS is specified, switch to the Settings tab automatically
-            if (openadvanced == 1)
+                // If /AS is specified, switch to the Settings tab automatically
+                if (openadvanced == 1)
+                {
+                    TabsForTheControls.SelectedIndex = 1;
+                }
+            }
+            catch (Exception ex)
             {
-                TabsForTheControls.SelectedIndex = 1;
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -1114,11 +1120,6 @@ namespace KeppySynthConfigurator
             frm.Dispose();
         }
 
-        private void changeTheMaximumSamplesPerFrameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TabsForTheControls.SelectedIndex = 1;
-        }
-
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
@@ -1353,7 +1354,6 @@ namespace KeppySynthConfigurator
                 SPFRate.Enabled = false;
                 ManualAddBuffer.Visible = true;
                 ChangeDefaultOutput.Enabled = true;
-                changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                 if (VolTrackBar.Value > 10000)
                 {
@@ -1384,7 +1384,6 @@ namespace KeppySynthConfigurator
                 SPFRate.Enabled = true;
                 ManualAddBuffer.Visible = false;
                 ChangeDefaultOutput.Enabled = false;
-                changeTheMaximumSamplesPerFrameToolStripMenuItem.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 VolumeBoost.Enabled = true;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
@@ -1955,6 +1954,24 @@ namespace KeppySynthConfigurator
         private void KepChannel_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRnA");
+        }
+
+        // WinMM Patch
+
+        private void WinMMPatch32_Click(object sender, EventArgs e)
+        {
+            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8") || Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
+                Functions.ApplyWinMMPatch(false);
+            else
+                MessageBox.Show("The patch is not needed on Windows 7 and older!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void WinMMPatch64_Click(object sender, EventArgs e)
+        {
+            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8") || Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
+                Functions.ApplyWinMMPatch(true);
+            else
+                MessageBox.Show("The patch is not needed on Windows 7 and older!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
