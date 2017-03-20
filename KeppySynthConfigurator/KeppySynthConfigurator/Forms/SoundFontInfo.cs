@@ -98,7 +98,7 @@ namespace KeppySynthConfigurator
                 ReturnSamplesSize(fontinfo.samsize),
                 String.Format("{0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
 
-            SFfLab.Text = ReturnFormat(Path.GetExtension(next));
+            SFfLab.Text = Functions.ReturnSoundFontFormat(Path.GetExtension(next));
             CommentRich.Text = ReturnComment(fontinfo.comment);
             LELabel.Text = f.LastWriteTimeUtc.ToString();
 
@@ -121,24 +121,6 @@ namespace KeppySynthConfigurator
                 return Path.GetFileNameWithoutExtension(path);
             else
                 return name;
-        }
-
-        private string ReturnFormat(string fileext)
-        {
-            if (fileext.ToLowerInvariant() == ".sf1")
-                return "SoundFont 1.x";
-            else if (fileext.ToLowerInvariant() == ".sf2")
-                return "SoundFont 2.x";
-            else if (fileext.ToLowerInvariant() == ".sfz")
-                return "SoundFontZ/Sforzando";
-            else if (fileext.ToLowerInvariant() == ".ssx")
-                return "Crypted SoundFont";
-            else if (fileext.ToLowerInvariant() == ".sfpack")
-                return "Compressed SoundFont 1.x/2.x";
-            else if (fileext.ToLowerInvariant() == ".sfark")
-                return "SfARK Compressed SoundFont 1.x/2.x";
-            else
-                return "Unknown or unsupported format";
         }
 
         private string ReturnCopyright(string copyright)

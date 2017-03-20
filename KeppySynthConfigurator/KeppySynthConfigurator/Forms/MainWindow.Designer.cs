@@ -39,6 +39,9 @@
             this.menuItem30 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem37 = new System.Windows.Forms.MenuItem();
+            this.menuItem35 = new System.Windows.Forms.MenuItem();
+            this.menuItem38 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
@@ -179,6 +182,10 @@
             this.VolStaticLab = new System.Windows.Forms.Label();
             this.VolTrackBar = new System.Windows.Forms.TrackBar();
             this.List = new System.Windows.Forms.TabPage();
+            this.Lis = new KeppySynthConfigurator.ListViewEx();
+            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EL = new System.Windows.Forms.Button();
             this.LoadToApp = new System.Windows.Forms.Button();
             this.IEL = new System.Windows.Forms.Button();
@@ -193,7 +200,6 @@
             this.MvU = new System.Windows.Forms.Button();
             this.RmvSF = new System.Windows.Forms.Button();
             this.AddSF = new System.Windows.Forms.Button();
-            this.Lis = new System.Windows.Forms.ListBox();
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
             this.SettingsPresets = new System.Windows.Forms.ContextMenu();
             this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -241,6 +247,9 @@
             this.menuItem30,
             this.menuItem4,
             this.menuItem5,
+            this.menuItem37,
+            this.menuItem35,
+            this.menuItem38,
             this.menuItem6,
             this.menuItem8,
             this.menuItem10});
@@ -265,29 +274,46 @@
             // menuItem4
             // 
             this.menuItem4.Index = 3;
-            this.menuItem4.Text = "Add soundfont(s)";
+            this.menuItem4.Text = "Add SoundFont(s)";
             this.menuItem4.Click += new System.EventHandler(this.AddSF_Click);
             // 
             // menuItem5
             // 
             this.menuItem5.Index = 4;
-            this.menuItem5.Text = "Remove soundfont(s)";
+            this.menuItem5.Text = "Remove SoundFont(s)";
             this.menuItem5.Click += new System.EventHandler(this.RmvSF_Click);
+            // 
+            // menuItem37
+            // 
+            this.menuItem37.Index = 5;
+            this.menuItem37.Text = "-";
+            // 
+            // menuItem35
+            // 
+            this.menuItem35.Index = 6;
+            this.menuItem35.Text = "Enable SoundFont(s)";
+            this.menuItem35.Click += new System.EventHandler(this.menuItem35_Click);
+            // 
+            // menuItem38
+            // 
+            this.menuItem38.Index = 7;
+            this.menuItem38.Text = "Disable SoundFont(s)";
+            this.menuItem38.Click += new System.EventHandler(this.menuItem38_Click);
             // 
             // menuItem6
             // 
-            this.menuItem6.Index = 5;
+            this.menuItem6.Index = 8;
             this.menuItem6.Text = "-";
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 6;
+            this.menuItem8.Index = 9;
             this.menuItem8.Text = "Move up";
             this.menuItem8.Click += new System.EventHandler(this.MvU_Click);
             // 
             // menuItem10
             // 
-            this.menuItem10.Index = 7;
+            this.menuItem10.Index = 10;
             this.menuItem10.Text = "Move down";
             this.menuItem10.Click += new System.EventHandler(this.MvD_Click);
             // 
@@ -1482,6 +1508,7 @@
             // List
             // 
             this.List.BackColor = System.Drawing.Color.Transparent;
+            this.List.Controls.Add(this.Lis);
             this.List.Controls.Add(this.EL);
             this.List.Controls.Add(this.LoadToApp);
             this.List.Controls.Add(this.IEL);
@@ -1496,13 +1523,60 @@
             this.List.Controls.Add(this.MvU);
             this.List.Controls.Add(this.RmvSF);
             this.List.Controls.Add(this.AddSF);
-            this.List.Controls.Add(this.Lis);
             this.List.Location = new System.Drawing.Point(4, 22);
             this.List.Name = "List";
             this.List.Padding = new System.Windows.Forms.Padding(3);
             this.List.Size = new System.Drawing.Size(641, 417);
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
+            // 
+            // Lis
+            // 
+            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.Lis.AllowDrop = true;
+            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Lis.BackColor = System.Drawing.Color.White;
+            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.SoundFont,
+            this.SFFormat,
+            this.SFSize});
+            this.Lis.FullRowSelect = true;
+            this.Lis.GridLines = true;
+            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.Lis.HideSelection = false;
+            this.Lis.LabelWrap = false;
+            this.Lis.LineAfter = -1;
+            this.Lis.LineBefore = -1;
+            this.Lis.Location = new System.Drawing.Point(6, 36);
+            this.Lis.Name = "Lis";
+            this.Lis.ShowGroups = false;
+            this.Lis.Size = new System.Drawing.Size(532, 363);
+            this.Lis.TabIndex = 12;
+            this.Lis.UseCompatibleStateImageBehavior = false;
+            this.Lis.View = System.Windows.Forms.View.Details;
+            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
+            this.Lis.DoubleClick += new System.EventHandler(this.SelectedSFInfo);
+            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
+            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
+            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
+            // 
+            // SoundFont
+            // 
+            this.SoundFont.Text = "SoundFont";
+            this.SoundFont.Width = 393;
+            // 
+            // SFFormat
+            // 
+            this.SFFormat.Text = "Format";
+            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // SFSize
+            // 
+            this.SFSize.Text = "Size";
+            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // EL
             // 
@@ -1684,25 +1758,6 @@
             this.AddSF.UseVisualStyleBackColor = false;
             this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
             this.AddSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
-            // 
-            // Lis
-            // 
-            this.Lis.AllowDrop = true;
-            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Lis.FormattingEnabled = true;
-            this.Lis.HorizontalScrollbar = true;
-            this.Lis.IntegralHeight = false;
-            this.Lis.Location = new System.Drawing.Point(6, 36);
-            this.Lis.Name = "Lis";
-            this.Lis.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.Lis.Size = new System.Drawing.Size(532, 363);
-            this.Lis.TabIndex = 12;
-            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
-            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
-            this.Lis.DoubleClick += new System.EventHandler(this.SelectedSFInfo);
-            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             // 
             // TabsForTheControls
             // 
@@ -1929,7 +1984,6 @@
         private System.Windows.Forms.Button MvU;
         private System.Windows.Forms.Button RmvSF;
         private System.Windows.Forms.Button AddSF;
-        public System.Windows.Forms.ListBox Lis;
         private System.Windows.Forms.TabControl TabsForTheControls;
         private System.Windows.Forms.MenuItem OpenSFDefaultApp;
         private System.Windows.Forms.MenuItem menuItem30;
@@ -1972,6 +2026,13 @@
         private System.Windows.Forms.MenuItem ResetToDefault;
         private System.Windows.Forms.MenuItem menuItem36;
         public System.Windows.Forms.MenuItem CapFram;
+        public ListViewEx Lis;
+        private System.Windows.Forms.ColumnHeader SoundFont;
+        private System.Windows.Forms.ColumnHeader SFFormat;
+        private System.Windows.Forms.ColumnHeader SFSize;
+        private System.Windows.Forms.MenuItem menuItem37;
+        private System.Windows.Forms.MenuItem menuItem35;
+        private System.Windows.Forms.MenuItem menuItem38;
     }
 }
 

@@ -33,6 +33,7 @@ namespace KeppySynthConfigurator
         public static int CurrentTheme = 0;
 
         // Lists
+        public static ListViewItem _itemDnD = null;
         public static string List1PathOld { get; set; }
         public static string List2PathOld { get; set; }
         public static string List3PathOld { get; set; }
@@ -71,6 +72,7 @@ namespace KeppySynthConfigurator
         public static int openadvanced { get; set; }
         public static int whichone { get; set; }
         public static string CurrentList { get; set; }
+        public static bool AvoidSave = false;
 
         public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
@@ -113,17 +115,19 @@ namespace KeppySynthConfigurator
 
         protected override void WndProc(ref Message m)
         {
+            base.WndProc(ref m);
+
             if (m.Msg == (int)Program.BringToFrontMessage)
             {
                 WinAPI.ShowWindow(Handle, WinAPI.SW_RESTORE);
                 WinAPI.SetForegroundWindow(Handle);
             }
-
-            base.WndProc(ref m);
         }
 
         private void KeppySynthConfiguratorMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Bass.BASS_Free();
+            Bass.FreeMe();
             SynthSettings.Close();
             Watchdog.Close();
         }
@@ -156,6 +160,10 @@ namespace KeppySynthConfigurator
                 // SAS THEME HANDLER   
                 BassNet.Registration("kaleidonkep99@outlook.com", "2X203132524822");
                 Bass.LoadMe();
+                Lis.Columns[0].Tag = 7;
+                Lis.Columns[1].Tag = 1;
+                Lis.Columns[2].Tag = 1;
+                Lis_SizeChanged(Lis, new EventArgs());
                 this.ThemeCheck.RunWorkerAsync();
                 this.Size = new Size(665, 481);
                 // MIDI out selector disabler
@@ -304,11 +312,12 @@ namespace KeppySynthConfigurator
 
         private void Lis_MouseDown(object sender, MouseEventArgs e)
         {
-            Lis.SelectedIndex = Lis.IndexFromPoint(e.X, e.Y);
+            Lis.PointToClient(new Point(e.X, e.Y));
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    // Do nothing
+                    if (Lis.SelectedIndices.Count == 1)
+                        _itemDnD = Lis.GetItemAt(e.X, e.Y);
                     break;
 
                 case MouseButtons.Right:
@@ -318,6 +327,88 @@ namespace KeppySynthConfigurator
                 case MouseButtons.Middle:
                     OpenSoundFont();
                     break;
+            }
+        }
+
+        private void Lis_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_itemDnD == null || Lis.SelectedIndices.Count > 1)
+                return;
+
+            Cursor = Cursors.Hand;
+
+            int lastItemBottom = Math.Min(e.Y, Lis.Items[Lis.Items.Count - 1].GetBounds(ItemBoundsPortion.Entire).Bottom - 1);
+
+            ListViewItem itemOver = Lis.GetItemAt(0, lastItemBottom);
+
+            if (itemOver == null)
+                return;
+
+            Rectangle rc = itemOver.GetBounds(ItemBoundsPortion.Entire);
+            if (e.Y < rc.Top + (rc.Height / 2))
+            {
+                Lis.LineBefore = itemOver.Index;
+                Lis.LineAfter = -1;
+            }
+            else
+            {
+                Lis.LineBefore = -1;
+                Lis.LineAfter = itemOver.Index;
+            }
+
+            Lis.Invalidate();
+        }
+
+        private void Lis_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (_itemDnD == null || Lis.SelectedIndices.Count > 1)
+                return;
+
+            try
+            {
+                int lastItemBottom = Math.Min(e.Y, Lis.Items[Lis.Items.Count - 1].GetBounds(ItemBoundsPortion.Entire).Bottom - 1);
+
+                ListViewItem itemOver = Lis.GetItemAt(0, lastItemBottom);
+
+                if (itemOver == null)
+                    return;
+
+                Rectangle rc = itemOver.GetBounds(ItemBoundsPortion.Entire);
+
+                bool insertBefore;
+                if (e.Y < rc.Top + (rc.Height / 2))
+                {
+                    insertBefore = true;
+                }
+                else
+                {
+                    insertBefore = false;
+                }
+
+                if (_itemDnD != itemOver)
+                {
+                    if (insertBefore)
+                    {
+                        Lis.Items.Remove(_itemDnD);
+                        Lis.Items.Insert(itemOver.Index, _itemDnD);
+                    }
+                    else
+                    {
+                        Lis.Items.Remove(_itemDnD);
+                        Lis.Items.Insert(itemOver.Index + 1, _itemDnD);
+                    }
+                }
+
+                Lis.LineAfter =
+                Lis.LineBefore = -1;
+
+                Lis.Invalidate();
+            }
+            finally
+            {
+                _itemDnD = null;
+                Cursor = Cursors.Default;
+                Functions.SaveList(CurrentList);
             }
         }
 
@@ -342,7 +433,7 @@ namespace KeppySynthConfigurator
                 }
                 else if (howmany == 1)
                 {
-                    String name = Lis.SelectedItem.ToString();
+                    String name = Lis.SelectedItems[0].Text.ToString();
                     Functions.OpenSFWithDefaultApp(name);
                     Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
                 }
@@ -353,7 +444,7 @@ namespace KeppySynthConfigurator
                     {
                         for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                         {
-                            String name = Lis.SelectedItems[i].ToString();
+                            String name = Lis.SelectedItems[i].Text.ToString();
                             Functions.OpenSFWithDefaultApp(name);
                             Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
                         }
@@ -377,7 +468,7 @@ namespace KeppySynthConfigurator
                 }
                 else if (howmany == 1)
                 {
-                    String name = Lis.SelectedItem.ToString();
+                    String name = Lis.SelectedItems[0].Text.ToString();
                     Process.Start(Path.GetDirectoryName(name));
                     Program.DebugToConsole(false, String.Format("Opened soundfont directory from list: {0}", name), null);
                 }
@@ -415,13 +506,13 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (Lis.SelectedIndex == -1)
+                if (Lis.SelectedItems[0] == null)
                 {
                     MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                 {
-                    String name = Lis.SelectedItems[i].ToString();
+                    String name = Lis.SelectedItems[i].Text.ToString();
                     Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                     Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
                     Functions.SaveList(CurrentList);
@@ -436,12 +527,17 @@ namespace KeppySynthConfigurator
 
         private void SelectedSFInfo(object sender, EventArgs e)
         {
-            if (Lis.SelectedItem != null)
+            AvoidSave = true;
+            if (Lis.SelectedItems[0] != null)
             {
                 try
                 {
-                    Program.DebugToConsole(false, String.Format("Currently showing info for soundfont: {0}", Lis.SelectedItem.ToString()), null);
-                    SoundFontInfo frm = new SoundFontInfo(Lis.SelectedItem.ToString());
+                    _itemDnD = null;
+                    Lis.LineAfter =
+                    Lis.LineBefore = -1;
+                    Lis.Invalidate();
+                    Program.DebugToConsole(false, String.Format("Currently showing info for soundfont: {0}", Lis.SelectedItems[0].Text.ToString()), null);
+                    SoundFontInfo frm = new SoundFontInfo(Lis.SelectedItems[0].Text.ToString());
                     if (!SoundFontInfo.ERROR)
                     {
                         frm.ShowDialog();
@@ -456,84 +552,45 @@ namespace KeppySynthConfigurator
                     Environment.Exit(-1);
                 }
             }
-            else
-            {
-               
-            }
+            AvoidSave = false;
         }
 
         private void MvU_Click(object sender, EventArgs e)
         {
-            MoveUpOrDownSwitch(true);
+            MoveListViewItems(Lis, MoveDirection.Up);
         }
 
         private void MvD_Click(object sender, EventArgs e)
         {
-            MoveUpOrDownSwitch(false);
+            MoveListViewItems(Lis, MoveDirection.Down);
         }
 
-        private void MoveUpOrDownSwitch(Boolean Up)
+        private enum MoveDirection { Up = -1, Down = 1 };
+        private static void MoveListViewItems(ListView sender, MoveDirection direction)
         {
-            try
+            int dir = (int)direction;
+            int opp = dir * -1;
+
+            bool valid = sender.SelectedItems.Count > 0 &&
+                            ((direction == MoveDirection.Down && (sender.SelectedItems[sender.SelectedItems.Count - 1].Index < sender.Items.Count - 1))
+                        || (direction == MoveDirection.Up && (sender.SelectedItems[0].Index > 0)));
+
+            if (valid)
             {
-                int howmany = Lis.SelectedItems.Count;
-                if (howmany == 0)
+                foreach (ListViewItem item in sender.SelectedItems)
                 {
-                    MessageBox.Show("Select a SoundFont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string str = item.Text;
+                    int index = item.Index + dir;
+
+                    sender.Items.RemoveAt(item.Index);
+                    sender.Items.Insert(index, item);
                 }
-                else if (howmany == 1)
-                {
-                    if (Up)
-                    {
-                        object selected = Lis.SelectedItem;
-                        int indx = Lis.Items.IndexOf(selected);
-                        int totl = Lis.Items.Count;
-                        if (indx == 0)
-                        {
-                            Lis.Items.Remove(selected);
-                            Lis.Items.Insert(totl - 1, selected);
-                            Lis.SetSelected(totl - 1, true);
-                        }
-                        else
-                        {
-                            Lis.Items.Remove(selected);
-                            Lis.Items.Insert(indx - 1, selected);
-                            Lis.SetSelected(indx - 1, true);
-                        }
-                        Program.DebugToConsole(false, String.Format("Moved down soundfont: {0}", selected.ToString()), null);
-                        Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
-                    }
-                    else
-                    {
-                        object selected = Lis.SelectedItem;
-                        int indx = Lis.Items.IndexOf(selected);
-                        int totl = Lis.Items.Count;
-                        if (indx == totl - 1)
-                        {
-                            Lis.Items.Remove(selected);
-                            Lis.Items.Insert(0, selected);
-                            Lis.SetSelected(0, true);
-                        }
-                        else
-                        {
-                            Lis.Items.Remove(selected);
-                            Lis.Items.Insert(indx + 1, selected);
-                            Lis.SetSelected(indx + 1, true);
-                        }
-                        Program.DebugToConsole(false, String.Format("Moved up soundfont: {0}", selected.ToString()), null);
-                        Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
-                    }
-                }
-                else if (howmany > 1)
-                {
-                    MessageBox.Show("You can only move one SoundFont at a time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                Functions.SaveList(CurrentList);
+                Functions.TriggerReload();
             }
-            catch (Exception ex)
+            else if (valid || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count < 1 || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count > 1)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -554,68 +611,68 @@ namespace KeppySynthConfigurator
             SFEnableDisableSwitch(false);
         }
 
+        private void menuItem35_Click(object sender, EventArgs e)
+        {
+            SFEnableDisableSwitch(true);
+        }
+
+        private void menuItem38_Click(object sender, EventArgs e)
+        {
+            SFEnableDisableSwitch(false);
+        }
+
         private void SFEnableDisableSwitch(Boolean Enable)
         {
             try
             {
-                if (Lis.SelectedIndex == -1)
+                if (Lis.SelectedItems[0] == null)
                 {
                     MessageBox.Show("Select a SoundFont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                else
+                for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                 {
-                    if (Lis.SelectedIndices.Count > 1)
+                    if (Enable)
                     {
-                        if (Enable)
-                            MessageBox.Show("You can only enable one SoundFont at a time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        else
-                            MessageBox.Show("You can only disable one SoundFont at a time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        String sfname;
+                        string result = Lis.SelectedItems[i].Text.ToString().Substring(0, 1);
+                        if (result == "@")
+                        {
+                            string newvalue = Lis.SelectedItems[i].Text.ToString().Remove(0, 1);
+                            FileInfo file = new FileInfo(newvalue);
+                            ListViewItem SF = new ListViewItem(new[] {
+                                        newvalue,
+                                        Functions.ReturnSoundFontFormat(Path.GetExtension(newvalue)),
+                                        Functions.ReturnSoundFontSize(file.Length)
+                                    });
+                            sfname = Lis.SelectedItems[i].ToString();
+                            int index = Lis.Items.IndexOf(Lis.SelectedItems[i]);
+                            Lis.Items.RemoveAt(index);
+                            Lis.Items.Insert(index, SF);
+                            Functions.SaveList(CurrentList);
+                            Functions.TriggerReload();
+                            Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", sfname), null);
+                        }
                     }
                     else
                     {
-                        if (Enable)
+                        String sfname;
+                        string result = Lis.SelectedItems[i].Text.ToString().Substring(0, 1);
+                        if (result != "@")
                         {
-                            String sfname;
-                            string result = Lis.SelectedItem.ToString().Substring(0, 1);
-                            if (result == "@")
-                            {
-                                string newvalue = Lis.SelectedItem.ToString().Remove(0, 1);
-                                sfname = newvalue;
-                                int index = Lis.Items.IndexOf(Lis.SelectedItem);
-                                Lis.Items.RemoveAt(index);
-                                Lis.Items.Insert(index, newvalue);
-                                Functions.SaveList(CurrentList);
-                                Functions.TriggerReload();
-                                Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", sfname), null);
-                            }
-                            else
-                            {
-                                sfname = Lis.SelectedItem.ToString();
-                                Program.DebugToConsole(false, String.Format("Soundfont already enabled: {0}", sfname), null);
-                                MessageBox.Show("The soundfont is already enabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-                        }
-                        else
-                        {
-                            String sfname;
-                            string result = Lis.SelectedItem.ToString().Substring(0, 1);
-                            if (result != "@")
-                            {
-                                string newvalue = "@" + Lis.SelectedItem.ToString();
-                                sfname = Lis.SelectedItem.ToString();
-                                int index = Lis.Items.IndexOf(Lis.SelectedItem);
-                                Lis.Items.RemoveAt(index);
-                                Lis.Items.Insert(index, newvalue);
-                                Functions.SaveList(CurrentList);
-                                Functions.TriggerReload();
-                                Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", sfname), null);
-                            }
-                            else
-                            {
-                                sfname = Lis.SelectedItem.ToString();
-                                Program.DebugToConsole(false, String.Format("Soundfont already disabled: {0}", sfname), null);
-                                MessageBox.Show("The soundfont is already disabled!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            string newvalue = "@" + Lis.SelectedItems[i].Text.ToString();
+                            FileInfo file = new FileInfo(Functions.StripSFZValues(newvalue));
+                            ListViewItem SF = new ListViewItem(new[] {
+                                        newvalue,
+                                        Functions.ReturnSoundFontFormat(Path.GetExtension(Functions.StripSFZValues(newvalue))),
+                                        Functions.ReturnSoundFontSize(file.Length)
+                                    });
+                            sfname = Lis.SelectedItems[i].ToString();
+                            int index = Lis.Items.IndexOf(Lis.SelectedItems[i]);
+                            Lis.Items.RemoveAt(index);
+                            Lis.Items.Insert(index, SF);
+                            Functions.SaveList(CurrentList);
+                            Functions.TriggerReload();
+                            Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", sfname), null);
                         }
                     }
                 }
@@ -680,9 +737,9 @@ namespace KeppySynthConfigurator
                 Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListExport.FileNames[0]));
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
                 Functions.SetLastPath(LastBrowserPath);
-                foreach (var item in Lis.Items)
+                foreach (ListViewItem item in Lis.Items)
                 {
-                    SaveFile.WriteLine(item.ToString());
+                    SaveFile.WriteLine(item.Text.ToString());
                 }
                 SaveFile.Close();
                 Program.DebugToConsole(false, String.Format("Exported list {0} to {1}.", CurrentList, ExternalListExport.FileName), null);
@@ -2011,6 +2068,34 @@ namespace KeppySynthConfigurator
         }
 
         // Tools
+
+        private bool Resizing = false;
+        private void Lis_SizeChanged(object sender, EventArgs e)
+        {
+            if (!Resizing)
+            {
+                Resizing = true;
+                ListView listView = sender as ListView;
+                if (listView != null)
+                {
+                    float totalColumnWidth = 0;
+
+                    for (int i = 0; i < listView.Columns.Count; i++)
+                        totalColumnWidth += Convert.ToInt32(listView.Columns[i].Tag);
+
+                    for (int i = 0; i < listView.Columns.Count; i++)
+                    {
+                        float colPercentage;
+                        colPercentage = (Convert.ToInt32(listView.Columns[i].Tag) / totalColumnWidth);
+                        if(i == 0)
+                            listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width)) - 10;
+                        else
+                            listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width));
+                    }
+                }
+            }
+            Resizing = false;
+        }
 
         private void WinMMPatch32_Click(object sender, EventArgs e)
         {

@@ -531,17 +531,36 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static string StripSFZValues(string SFToStrip)
+        {
+            if (SFToStrip.ToLower().IndexOf('=') != -1)
+            {
+                var matches = System.Text.RegularExpressions.Regex.Matches(SFToStrip, "[0-9]+");
+                return SFToStrip.Substring(SFToStrip.LastIndexOf('|') + 1);
+            }
+            else if (SFToStrip.ToLower().IndexOf('@') != -1)
+            {
+                return SFToStrip.Substring(SFToStrip.LastIndexOf('@') + 1);
+            }
+            else
+            {
+                return SFToStrip;
+            }
+        }
+
         public static void SaveList(String SelectedList) // Saves the selected list to the hard drive
         {
-            using (StreamWriter sw = new StreamWriter(SelectedList))
+            if (!KeppySynthConfiguratorMain.AvoidSave)
             {
-                foreach (var item in KeppySynthConfiguratorMain.Delegate.Lis.Items)
+                using (StreamWriter sw = new StreamWriter(SelectedList))
                 {
-                    sw.WriteLine(item.ToString());
-                    Program.DebugToConsole(false, String.Format("Adding soundfont to stream writer: {0}", item.ToString()), null);
+                    foreach (ListViewItem item in KeppySynthConfiguratorMain.Delegate.Lis.Items)
+                    {
+                        sw.WriteLine(item.Text.ToString());
+                    }
                 }
+                Program.DebugToConsole(false, String.Format("Soundfont list saved: {0}", SelectedList), null);
             }
-            Program.DebugToConsole(false, String.Format("Soundfont list saved: {0}", SelectedList), null);
         }
 
         // -------------------------
@@ -1188,6 +1207,44 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.LoPrio.Enabled = Status;
         }
 
+        public static string ReturnSoundFontSize(long length)
+        {
+            string size;
+            try
+            {
+                if (length / 1024f >= 1000000000)
+                    size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
+                else if (length / 1024f >= 1000000)
+                    size = (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
+                else if (length / 1024f >= 1000)
+                    size = ((length / 1024f) / 1024f).ToString("0.0 MB");
+                else if (length / 1024f >= 1)
+                    size = (length / 1024f).ToString("0.0 KB");
+                else
+                    size = (length).ToString("0.0 B");
+            }
+            catch { size = "-"; }
+            return size;
+        }
+
+        public static string ReturnSoundFontFormat(string fileext)
+        {
+            if (fileext.ToLowerInvariant() == ".sf1")
+                return "SF1";
+            else if (fileext.ToLowerInvariant() == ".sf2")
+                return "SF2";
+            else if (fileext.ToLowerInvariant() == ".sfz")
+                return "SFZ";
+            else if (fileext.ToLowerInvariant() == ".ssx")
+                return "SSX";
+            else if (fileext.ToLowerInvariant() == ".sfpack")
+                return "SFPACK";
+            else if (fileext.ToLowerInvariant() == ".sfark")
+                return "SFARK";
+            else
+                return "N/A";
+        }
+
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
             if (SelectedList == 1)
@@ -1254,9 +1311,16 @@ namespace KeppySynthConfigurator
                     {
                         string line;
                         KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
+                        KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
                         while ((line = r.ReadLine()) != null)
                         {
-                            KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(line);
+                            FileInfo file = new FileInfo(StripSFZValues(line));
+                            ListViewItem SF = new ListViewItem(new[] {
+                                line,
+                                ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
+                                ReturnSoundFontSize(file.Length)
+                            });
+                            KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
                     }
                 }
@@ -1301,13 +1365,25 @@ namespace KeppySynthConfigurator
                                     string spreset = form.PresetValueReturn;
                                     string dbank = form.DesBankValueReturn;
                                     string dpreset = form.DesPresetValueReturn;
-                                    KeppySynthConfiguratorMain.Delegate.Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i]);
+                                    FileInfo file = new FileInfo(Soundfonts[i]);
+                                    ListViewItem SF = new ListViewItem(new[] {
+                                        "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
+                                        ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
+                                        ReturnSoundFontSize(file.Length)
+                                    });
+                                    KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                                 }
                             }
                         }
                         else
                         {
-                            KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(Soundfonts[i]);
+                            FileInfo file = new FileInfo(Soundfonts[i]);
+                            ListViewItem SF = new ListViewItem(new[] {
+                                        Soundfonts[i],
+                                        ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
+                                        ReturnSoundFontSize(file.Length)
+                                    });
+                            KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
                         Functions.SaveList(CurrentList);
                         Functions.TriggerReload();
@@ -1332,7 +1408,13 @@ namespace KeppySynthConfigurator
                                 string spreset = form.PresetValueReturn;
                                 string dbank = form.DesBankValueReturn;
                                 string dpreset = form.DesPresetValueReturn;
-                                KeppySynthConfiguratorMain.Delegate.Lis.Items.Add("p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i]);
+                                FileInfo file = new FileInfo(Soundfonts[i]);
+                                ListViewItem SF = new ListViewItem(new[] {
+                                        "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
+                                        ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
+                                        ReturnSoundFontSize(file.Length)
+                                    });
+                                KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                             }
                         }
                         Functions.SaveList(CurrentList);
