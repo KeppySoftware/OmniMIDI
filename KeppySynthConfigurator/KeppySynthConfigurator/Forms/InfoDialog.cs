@@ -68,13 +68,15 @@ namespace KeppySynthConfigurator
             BASSMIDIVer.Text = String.Format("{0} (Revision {1})", BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
             CompiledOn.Text = GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Utc).ToString();
 
+            String OSPartialName = CI.OSFullName.Replace("Microsoft ", "");
+
             if (Environment.Is64BitOperatingSystem == true) // If OS is 64-bit, show "64-bit"
             { 
-                WinName.Text = String.Format("{0} ({1})", CI.OSFullName, "64-bit");
+                WinName.Text = String.Format("{0} ({1})", OSPartialName, "64-bit");
             }
             else // Else, show "32-bit"
             {
-                WinName.Text = String.Format("{0} ({1})", CI.OSFullName, "32-bit");
+                WinName.Text = String.Format("{0} ({1})", OSPartialName, "32-bit");
             }
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
