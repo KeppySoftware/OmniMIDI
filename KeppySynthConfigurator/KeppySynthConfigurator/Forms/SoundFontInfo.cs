@@ -98,7 +98,7 @@ namespace KeppySynthConfigurator
                 ReturnSamplesSize(fontinfo.samsize),
                 String.Format("{0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
 
-            SFfLab.Text = Functions.ReturnSoundFontFormat(Path.GetExtension(next));
+            SFfLab.Text = Functions.ReturnSoundFontFormatMore(Path.GetExtension(next));
             CommentRich.Text = ReturnComment(fontinfo.comment);
             LELabel.Text = f.LastWriteTimeUtc.ToString();
 
@@ -150,6 +150,7 @@ namespace KeppySynthConfigurator
         private void CloseBtn_Click(object sender, EventArgs e)
         {
             Bass.BASS_ChannelStop(hStream);
+            Bass.BASS_Free();
             IsPreviewEnabled = false;
             Quitting = true;
             Close();

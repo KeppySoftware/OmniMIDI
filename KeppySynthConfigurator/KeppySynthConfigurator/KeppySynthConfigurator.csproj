@@ -278,6 +278,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\List Editor\ReloadIcon.png" />
+    <None Include="Resources\List Editor\RmvSFIcon.png" />
+    <None Include="Resources\List Editor\MvUpIcon.png" />
+    <None Include="Resources\List Editor\MvDwIcon.png" />
+    <None Include="Resources\List Editor\ImportIcon.png" />
     <None Include="Resources\WinMM64\winmm8.dll" />
     <None Include="Resources\WinMM32\winmm8.dll" />
     <None Include="Resources\WinMM64\winmm.dll" />
@@ -289,7 +294,7 @@
     <None Include="Resources\WinMM32\msacm32.dll" />
     <None Include="Resources\WinMM32\midimap.dll" />
     <None Include="Resources\WinMM32\msacm32.drv" />
-    <None Include="Resources\ppdonate.png" />
+    <None Include="Resources\Pictures\ppdonate.png" />
     <None Include="Resources\Icons\successiconupd.png" />
     <None Include="Resources\Audio\warning.wav" />
     <None Include="Resources\Hashes\DRV32.SHA" />
@@ -312,6 +317,11 @@
     <None Include="Resources\Icons\erroricon.png" />
     <None Include="Resources\Audio\error.wav" />
     <None Include="Resources\Icons\erroriconupd.png" />
+    <None Include="Resources\List Editor\AddSFIcon.png" />
+    <None Include="Resources\List Editor\ClearIcon.png" />
+    <None Include="Resources\List Editor\DisableIcon.png" />
+    <None Include="Resources\List Editor\EnableIcon.png" />
+    <None Include="Resources\List Editor\ExportIcon.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Pictures\sfzcomp.png" />

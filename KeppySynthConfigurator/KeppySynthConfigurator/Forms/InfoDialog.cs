@@ -62,7 +62,7 @@ namespace KeppySynthConfigurator
         {
             ComputerInfo CI = new ComputerInfo();
             String Version = String.Format("{0}.{1}.{2}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart);
-            VerLabel.Text = String.Format("Keppy's Synthesizer {0}\n\nCopyright Ⓒ 2013 - {1}\nKaleidonKep99, Kode54 && Mudlord", Version, DateTime.Now.Year.ToString());
+            VerLabel.Text = String.Format("Keppy's Synthesizer {0}\n\nCopyright Ⓒ 2011\nKaleidonKep99, Kode54 && Mudlord", Version, DateTime.Now.Year.ToString());
             DriverVer.Text = String.Format("{0} (Bugfix {1})", Version, Driver.FilePrivatePart);
             BASSVer.Text = String.Format("{0} (Revision {1})", BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = String.Format("{0} (Revision {1})", BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);

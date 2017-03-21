@@ -51,19 +51,19 @@ namespace KeppySynthDebugWindow
         };
 
         [DllImport("kernel32.dll")]
-        private static extern bool GetVersionEx(ref OSVERSIONINFOEX osVersionInfo);
+        public static extern bool GetVersionEx(ref OSVERSIONINFOEX osVersionInfo);
 
         #region Private Constants
-        private const int VER_NT_WORKSTATION = 1;
-        private const int VER_NT_DOMAIN_CONTROLLER = 2;
-        private const int VER_NT_SERVER = 3;
-        private const int VER_SUITE_SMALLBUSINESS = 1;
-        private const int VER_SUITE_ENTERPRISE = 2;
-        private const int VER_SUITE_TERMINAL = 16;
-        private const int VER_SUITE_DATACENTER = 128;
-        private const int VER_SUITE_SINGLEUSERTS = 256;
-        private const int VER_SUITE_PERSONAL = 512;
-        private const int VER_SUITE_BLADE = 1024;
+        public const int VER_NT_WORKSTATION = 1;
+        public const int VER_NT_DOMAIN_CONTROLLER = 2;
+        public const int VER_NT_SERVER = 3;
+        public const int VER_SUITE_SMALLBUSINESS = 1;
+        public const int VER_SUITE_ENTERPRISE = 2;
+        public const int VER_SUITE_TERMINAL = 16;
+        public const int VER_SUITE_DATACENTER = 128;
+        public const int VER_SUITE_SINGLEUSERTS = 256;
+        public const int VER_SUITE_PERSONAL = 512;
+        public const int VER_SUITE_BLADE = 1024;
         #endregion
 
         #region Public Methods
@@ -77,7 +77,6 @@ namespace KeppySynthDebugWindow
             OperatingSystem osInfo = Environment.OSVersion;
 
             osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
-
 
             if (!GetVersionEx(ref osVersionInfo))
             {
@@ -154,61 +153,59 @@ namespace KeppySynthDebugWindow
         /// Returns the name of the operating system running on this computer.
         /// </summary>
         /// <returns>A string containing the the operating system name.</returns>
+
         public static string GetOSName()
         {
             OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
             OperatingSystem osInfo = Environment.OSVersion;
-            string osName = "UNKNOWN";
 
-            switch (osInfo.Platform)
+            osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
+
+            if (!GetVersionEx(ref osVersionInfo))
             {
-                case PlatformID.Win32NT:
+                return "";
+            }
+            else
+            {
+                if (osVersionInfo.wProductType == VER_NT_WORKSTATION)
+                {
+                    if (osInfo.Version.Major == 6)
                     {
-                        switch (osInfo.Version.Major)
-                        {
-                            case 6:
-                                if (osInfo.Version.Minor == 0)
-                                {
-                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
-                                        osName = "Windows Server 2008";
-                                    else
-                                        osName = "Windows Vista";
-                                }
-                                else if (osInfo.Version.Minor == 1)
-                                {
-                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
-                                        osName = "Windows Server 2008 R2";
-                                    else
-                                        osName = "Windows 7";
-                                }
-                                else if (osInfo.Version.Minor == 2)
-                                {
-                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
-                                        osName = "Windows Server 2012";
-                                    else
-                                        osName = "Windows 8";
-                                }
-                                else if (osInfo.Version.Minor == 3)
-                                {
-                                    if (osVersionInfo.wProductType == VER_NT_SERVER)
-                                        osName = "Windows Server 2012 R2";
-                                    else
-                                        osName = "Windows 8.1";
-                                }
-                                break;
-
-                            case 10:
-                                if (osVersionInfo.wProductType == VER_NT_SERVER)
-                                    osName = "Windows Server 2016";
-                                else
-                                    osName = "Windows 10";
-                                break;
-                        }
-                        break;
+                        if (osInfo.Version.Minor == 0)
+                            return "Windows Vista";
+                        else if (osInfo.Version.Minor == 1)
+                            return "Windows 7";
+                        else if (osInfo.Version.Minor == 2)
+                            return "Windows 8";
+                        else if (osInfo.Version.Minor == 3)
+                            return "Windows 8.1";
                     }
+                    else if (osInfo.Version.Major == 10)
+                    {
+                        return "Windows 10";
+                    }
+                }
+                else if (osVersionInfo.wProductType == VER_NT_SERVER)
+                {
+                    if (osInfo.Version.Major == 6)
+                    {
+                        if (osInfo.Version.Minor == 0)
+                            return "Windows Server 2008";
+                        else if (osInfo.Version.Minor == 1)
+                            return "Windows Server 2008 R2";
+                        else if (osInfo.Version.Minor == 2)
+                            return "Windows Server 2012";
+                        else if (osInfo.Version.Minor == 3)
+                            return "Windows Server 2012 R2";
+                    }
+                    else if (osInfo.Version.Major == 10)
+                    {
+                        return "Windows Server 2016";
+                    }
+                }
             }
 
-            return osName;
+            return "";
         }
         #endregion
 

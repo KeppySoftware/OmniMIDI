@@ -98,6 +98,7 @@ namespace KeppySynthDebugWindow
             try
             {
                 OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
+                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
                 String Frequency = "";
                 // Get CPU info
                 foreach (ManagementObject moProcessor in mosProcessor.Get())
@@ -145,38 +146,45 @@ namespace KeppySynthDebugWindow
                        Environment.OSVersion.Version.Build.ToString());
                 }
 
-                int p = (int) Environment.OSVersion.Platform;
-                if ((p == 4) || (p == 6) || (p == 128))
-                    WinLogo.Image = Properties.Resources.other;
+                if (!OSInfo.GetVersionEx(ref osVersionInfo))
+                {
+                    WinLogo.Image = Properties.Resources.unknown;
+                }
                 else
                 {
-                    if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
-                        WinLogo.Image = Properties.Resources.wvista;
-                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
-                        WinLogo.Image = Properties.Resources.w7;
-                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
-                    {
-                        if (osVersionInfo.wProductType == 3)
-                            WinLogo.Image = Properties.Resources.ws2012;
-                        else
-                            WinLogo.Image = Properties.Resources.w8;
-                    }
-                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
-                    {
-                        if (osVersionInfo.wProductType == 3)
-                            WinLogo.Image = Properties.Resources.ws2012;
-                        else
-                            WinLogo.Image = Properties.Resources.w81;
-                    }
-                    else if (Environment.OSVersion.Version.Major == 10)
-                    {
-                        if (osVersionInfo.wProductType == 3)
-                            WinLogo.Image = Properties.Resources.ws2016;
-                        else
-                            WinLogo.Image = Properties.Resources.w10;
-                    }
+                    int p = (int)Environment.OSVersion.Platform;
+                    if ((p == 4) || (p == 6) || (p == 128))
+                        WinLogo.Image = Properties.Resources.other;
                     else
-                        WinLogo.Image = Properties.Resources.unknown;
+                    {
+                        if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
+                            WinLogo.Image = Properties.Resources.wvista;
+                        else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                            WinLogo.Image = Properties.Resources.w7;
+                        else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
+                        {
+                            if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                                WinLogo.Image = Properties.Resources.ws2012;
+                            else
+                                WinLogo.Image = Properties.Resources.w8;
+                        }
+                        else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
+                        {
+                            if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                                WinLogo.Image = Properties.Resources.ws2012;
+                            else
+                                WinLogo.Image = Properties.Resources.w81;
+                        }
+                        else if (Environment.OSVersion.Version.Major == 10)
+                        {
+                            if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                                WinLogo.Image = Properties.Resources.ws2016;
+                            else
+                                WinLogo.Image = Properties.Resources.w10;
+                        }
+                        else
+                            WinLogo.Image = Properties.Resources.unknown;
+                    }
                 }
 
                 if (cpumanufacturer == "GenuineIntel")
@@ -276,8 +284,8 @@ namespace KeppySynthDebugWindow
                 {                 
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
-                    string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
-                    string bitapp = Watchdog.GetValue("bit", "Unknown").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
+                    string currentapp = Watchdog.GetValue("currentapp", "None").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
+                    string bitapp = Watchdog.GetValue("bit", "...").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
                     int sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
                     string currentappreturn;
                     string bitappreturn;

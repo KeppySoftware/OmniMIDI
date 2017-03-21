@@ -1207,24 +1207,56 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.LoPrio.Enabled = Status;
         }
 
-        public static string ReturnSoundFontSize(long length)
+        public static string ReturnSoundFontSize(string ext, long length)
         {
-            string size;
-            try
+            if (ext.ToLowerInvariant() != ".sfz")
             {
-                if (length / 1024f >= 1000000000)
-                    size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
-                else if (length / 1024f >= 1000000)
-                    size = (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
-                else if (length / 1024f >= 1000)
-                    size = ((length / 1024f) / 1024f).ToString("0.0 MB");
-                else if (length / 1024f >= 1)
-                    size = (length / 1024f).ToString("0.0 KB");
-                else
-                    size = (length).ToString("0.0 B");
+                string size;
+                try
+                {
+                    if (length >= 1099511627776)
+                    {
+                        if (length >= 1099511627776 && length < 10995116277760)
+                            size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.00 TB");
+                        else
+                            size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
+                    }
+                    else if (length >= 1073741824)
+                    {
+                        if (length >= 1073741824 && length < 10737418240)
+                            size = (((length / 1024f) / 1024f) / 1024f).ToString("0.00 GB");
+                        else
+                            size = (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
+                    }
+                    else if (length >= 1048576)
+                    {
+                        if (length >= 1048576 && length < 10485760)
+                            size = ((length / 1024f) / 1024f).ToString("0.00 MB");
+                        else
+                            size = ((length / 1024f) / 1024f).ToString("0.0 MB");
+                    }
+                    else if (length >= 1024)
+                    {
+                        if (length >= 1024 && length < 10240)
+                            size = (length / 1024f).ToString("0.00 KB");
+                        else
+                            size = (length / 1024f).ToString("0.0 KB");
+                    }
+                    else
+                    {
+                        if (length >= 1 && length < 1024)
+                            size = (length).ToString("0.00 B");
+                        else
+                            size = (length / 1024f).ToString("0.0 B");
+                    }
+                }
+                catch { size = "-"; }
+                return size;
             }
-            catch { size = "-"; }
-            return size;
+            else
+            {
+                return "N/A";
+            }
         }
 
         public static string ReturnSoundFontFormat(string fileext)
@@ -1236,13 +1268,31 @@ namespace KeppySynthConfigurator
             else if (fileext.ToLowerInvariant() == ".sfz")
                 return "SFZ";
             else if (fileext.ToLowerInvariant() == ".ssx")
-                return "SSX";
+                return "Enc. SF";
             else if (fileext.ToLowerInvariant() == ".sfpack")
-                return "SFPACK";
+                return "SF Pack";
             else if (fileext.ToLowerInvariant() == ".sfark")
-                return "SFARK";
+                return "SF Arch.";
             else
                 return "N/A";
+        }
+
+        public static string ReturnSoundFontFormatMore(string fileext)
+        {
+            if (fileext.ToLowerInvariant() == ".sf1")
+                return "SoundFont 1.x by E-mu Systems";
+            else if (fileext.ToLowerInvariant() == ".sf2")
+                return "SoundFont 2.x by Creative Labs";
+            else if (fileext.ToLowerInvariant() == ".sfz")
+                return "SoundFontZ by Cakewalk™";
+            else if (fileext.ToLowerInvariant() == ".ssx")
+                return "Princess Soft Encrypted SoundFont";
+            else if (fileext.ToLowerInvariant() == ".sfpack")
+                return "SoundFont compressed package";
+            else if (fileext.ToLowerInvariant() == ".sfark")
+                return "SoundFont Archive (SfARK)";
+            else
+                return "Unknown format";
         }
 
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
@@ -1318,7 +1368,7 @@ namespace KeppySynthConfigurator
                             ListViewItem SF = new ListViewItem(new[] {
                                 line,
                                 ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
-                                ReturnSoundFontSize(file.Length)
+                                ReturnSoundFontSize(Path.GetExtension(StripSFZValues(line)), file.Length)
                             });
                             KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
@@ -1369,7 +1419,7 @@ namespace KeppySynthConfigurator
                                     ListViewItem SF = new ListViewItem(new[] {
                                         "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
-                                        ReturnSoundFontSize(file.Length)
+                                        ReturnSoundFontSize(Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
                                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                                 }
@@ -1381,7 +1431,7 @@ namespace KeppySynthConfigurator
                             ListViewItem SF = new ListViewItem(new[] {
                                         Soundfonts[i],
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
-                                        ReturnSoundFontSize(file.Length)
+                                        ReturnSoundFontSize(Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
                             KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
@@ -1412,7 +1462,7 @@ namespace KeppySynthConfigurator
                                 ListViewItem SF = new ListViewItem(new[] {
                                         "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
-                                        ReturnSoundFontSize(file.Length)
+                                        ReturnSoundFontSize(Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
                                 KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                             }
@@ -1506,7 +1556,14 @@ namespace KeppySynthConfigurator
                     string line;
                     while ((line = r.ReadLine()) != null)
                     {
-                        KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(line);
+                        string newvaluenosfz = Functions.StripSFZValues(line);
+                        FileInfo file = new FileInfo(newvaluenosfz);
+                        ListViewItem SF = new ListViewItem(new[] {
+                                        newvaluenosfz,
+                                        Functions.ReturnSoundFontFormat(newvaluenosfz),
+                                        Functions.ReturnSoundFontSize(newvaluenosfz, file.Length)
+                                    });
+                        KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                     }
                 }
             }

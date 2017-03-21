@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InfoDialog));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.VerLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -72,8 +73,8 @@
             this.VerLabel.Name = "VerLabel";
             this.VerLabel.Size = new System.Drawing.Size(172, 52);
             this.VerLabel.TabIndex = 1;
-            this.VerLabel.Text = "Keppy\'s Synthesizer VERSION\r\n\r\nCopyright Ⓒ 2013-CURYEAR\r\nKaleidonKep99, Kode54 &&" +
-    " Mudlord";
+            this.VerLabel.Text = "Keppy\'s Synthesizer VERSION\r\n\r\nCopyright Ⓒ 2011\r\nKaleidonKep99, Kode54 && Mudlord" +
+    "";
             // 
             // label2
             // 
@@ -325,10 +326,10 @@
             this.Controls.Add(this.VerLabel);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "InfoDialog";
-            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Information";

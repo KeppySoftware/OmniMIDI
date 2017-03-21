@@ -410,7 +410,7 @@
             this.menuItem13,
             this.exitToolStripMenuItem});
             this.menuItem1.MergeType = System.Windows.Forms.MenuMerge.MergeItems;
-            this.menuItem1.Text = "Functions";
+            this.menuItem1.Text = "File";
             // 
             // autoupdate
             // 
@@ -1040,14 +1040,14 @@
             this.Settings.Controls.Add(this.VolTrackBar);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 417);
+            this.Settings.Size = new System.Drawing.Size(641, 416);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
             // assignSoundfontListToAppToolStripMenuItem
             // 
             this.assignSoundfontListToAppToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(168, 386);
+            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(168, 385);
             this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
             this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.assignSoundfontListToAppToolStripMenuItem.TabIndex = 30;
@@ -1058,7 +1058,7 @@
             // changeDefaultSoundfontListToolStripMenuItem
             // 
             this.changeDefaultSoundfontListToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(8, 386);
+            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(8, 385);
             this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
             this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.changeDefaultSoundfontListToolStripMenuItem.TabIndex = 29;
@@ -1069,7 +1069,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(355, 386);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(355, 385);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
             this.SettingsPresetsBtn.TabIndex = 31;
@@ -1080,7 +1080,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(448, 386);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(448, 385);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 32;
@@ -1091,7 +1091,7 @@
             // applySettingsToolStripMenuItem
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(541, 386);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(541, 385);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 33;
@@ -1526,7 +1526,7 @@
             this.List.Location = new System.Drawing.Point(4, 22);
             this.List.Name = "List";
             this.List.Padding = new System.Windows.Forms.Padding(3);
-            this.List.Size = new System.Drawing.Size(641, 417);
+            this.List.Size = new System.Drawing.Size(641, 416);
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             // 
@@ -1553,12 +1553,11 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(532, 363);
+            this.Lis.Size = new System.Drawing.Size(532, 362);
             this.Lis.TabIndex = 12;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
             this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
-            this.Lis.DoubleClick += new System.EventHandler(this.SelectedSFInfo);
             this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
             this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
@@ -1582,11 +1581,14 @@
             // 
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(545, 369);
+            this.EL.Image = global::KeppySynthConfigurator.Properties.Resources.ExportIcon;
+            this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.EL.Location = new System.Drawing.Point(545, 368);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
             this.EL.Text = "Export list";
+            this.EL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.EL.UseVisualStyleBackColor = false;
             this.EL.Click += new System.EventHandler(this.EL_Click);
             this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.ExportListButton);
@@ -1595,11 +1597,14 @@
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
+            this.LoadToApp.Image = global::KeppySynthConfigurator.Properties.Resources.ReloadIcon;
+            this.LoadToApp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadToApp.Location = new System.Drawing.Point(545, 159);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(89, 23);
             this.LoadToApp.TabIndex = 7;
             this.LoadToApp.Text = "Load to app";
+            this.LoadToApp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LoadToApp.UseVisualStyleBackColor = false;
             this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
             this.LoadToApp.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonLoad);
@@ -1608,11 +1613,14 @@
             // 
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(545, 340);
+            this.IEL.Image = global::KeppySynthConfigurator.Properties.Resources.ImportIcon;
+            this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.IEL.Location = new System.Drawing.Point(545, 339);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
             this.IEL.Text = "Import list";
+            this.IEL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.IEL.UseVisualStyleBackColor = false;
             this.IEL.Click += new System.EventHandler(this.IEL_Click);
             this.IEL.Paint += new System.Windows.Forms.PaintEventHandler(this.ImportListButton);
@@ -1661,11 +1669,14 @@
             // 
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
+            this.DisableSF.Image = global::KeppySynthConfigurator.Properties.Resources.DisableIcon;
+            this.DisableSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DisableSF.Location = new System.Drawing.Point(545, 221);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(89, 23);
             this.DisableSF.TabIndex = 9;
             this.DisableSF.Text = "Disable SF";
+            this.DisableSF.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.DisableSF.UseVisualStyleBackColor = false;
             this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
             this.DisableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnableDisable);
@@ -1674,11 +1685,14 @@
             // 
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableSF.BackColor = System.Drawing.Color.Transparent;
+            this.EnableSF.Image = global::KeppySynthConfigurator.Properties.Resources.EnableIcon;
+            this.EnableSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.EnableSF.Location = new System.Drawing.Point(545, 199);
             this.EnableSF.Name = "EnableSF";
             this.EnableSF.Size = new System.Drawing.Size(89, 23);
             this.EnableSF.TabIndex = 8;
             this.EnableSF.Text = "Enable SF";
+            this.EnableSF.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.EnableSF.UseVisualStyleBackColor = false;
             this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
             this.EnableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnableDisable);
@@ -1689,7 +1703,7 @@
             this.List1Override.AutoSize = true;
             this.List1Override.BackColor = System.Drawing.Color.Transparent;
             this.List1Override.Enabled = false;
-            this.List1Override.Location = new System.Drawing.Point(4, 402);
+            this.List1Override.Location = new System.Drawing.Point(4, 401);
             this.List1Override.Name = "List1Override";
             this.List1Override.Size = new System.Drawing.Size(243, 13);
             this.List1Override.TabIndex = 31;
@@ -1699,11 +1713,14 @@
             // 
             this.CLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CLi.BackColor = System.Drawing.Color.Transparent;
+            this.CLi.Image = global::KeppySynthConfigurator.Properties.Resources.ClearIcon;
+            this.CLi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CLi.Location = new System.Drawing.Point(545, 7);
             this.CLi.Name = "CLi";
             this.CLi.Size = new System.Drawing.Size(89, 23);
             this.CLi.TabIndex = 2;
             this.CLi.Text = "Clear list";
+            this.CLi.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CLi.UseVisualStyleBackColor = false;
             this.CLi.Click += new System.EventHandler(this.CLi_Click);
             // 
@@ -1711,11 +1728,14 @@
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvD.BackColor = System.Drawing.Color.Transparent;
+            this.MvD.Image = global::KeppySynthConfigurator.Properties.Resources.MvDwIcon;
+            this.MvD.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.MvD.Location = new System.Drawing.Point(545, 119);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(89, 23);
             this.MvD.TabIndex = 6;
-            this.MvD.Text = "Move ▼";
+            this.MvD.Text = "Move down";
+            this.MvD.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.MvD.UseVisualStyleBackColor = false;
             this.MvD.Click += new System.EventHandler(this.MvD_Click);
             this.MvD.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonUpDown);
@@ -1724,11 +1744,14 @@
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvU.BackColor = System.Drawing.Color.Transparent;
+            this.MvU.Image = global::KeppySynthConfigurator.Properties.Resources.MvUpIcon;
+            this.MvU.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.MvU.Location = new System.Drawing.Point(545, 97);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(89, 23);
             this.MvU.TabIndex = 5;
-            this.MvU.Text = "Move ▲";
+            this.MvU.Text = "Move up";
+            this.MvU.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.MvU.UseVisualStyleBackColor = false;
             this.MvU.Click += new System.EventHandler(this.MvU_Click);
             this.MvU.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonUpDown);
@@ -1737,11 +1760,14 @@
             // 
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RmvSF.BackColor = System.Drawing.Color.Transparent;
+            this.RmvSF.Image = global::KeppySynthConfigurator.Properties.Resources.RmvSFIcon;
+            this.RmvSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.RmvSF.Location = new System.Drawing.Point(545, 58);
             this.RmvSF.Name = "RmvSF";
             this.RmvSF.Size = new System.Drawing.Size(89, 23);
             this.RmvSF.TabIndex = 4;
-            this.RmvSF.Text = "Remove -";
+            this.RmvSF.Text = "Remove";
+            this.RmvSF.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.RmvSF.UseVisualStyleBackColor = false;
             this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
             this.RmvSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
@@ -1750,11 +1776,14 @@
             // 
             this.AddSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddSF.BackColor = System.Drawing.Color.Transparent;
+            this.AddSF.Image = global::KeppySynthConfigurator.Properties.Resources.AddSFIcon;
+            this.AddSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddSF.Location = new System.Drawing.Point(545, 36);
             this.AddSF.Name = "AddSF";
             this.AddSF.Size = new System.Drawing.Size(89, 23);
             this.AddSF.TabIndex = 3;
-            this.AddSF.Text = "Add +";
+            this.AddSF.Text = "Add";
+            this.AddSF.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.AddSF.UseVisualStyleBackColor = false;
             this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
             this.AddSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
@@ -1767,7 +1796,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 443);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 442);
             this.TabsForTheControls.TabIndex = 32;
             // 
             // SettingsPresets
@@ -1820,7 +1849,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(649, 443);
+            this.ClientSize = new System.Drawing.Size(649, 442);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

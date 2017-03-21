@@ -5,7 +5,7 @@
 
 #define Author "KaleidonKep99"
 #define Configurator "KeppySynthConfigurator"
-#define Copyright 'Copyright (c) 2011-2017 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.'
+#define Copyright 'Copyright (c) 2011 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.'
 #define DebugWindow "KeppySynthDebugWindow"
 #define Description 'User-mode MIDI driver based on the BASS libraries'
 #define DriverRegister "KSDriverRegister"
@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.1.6'
+#define Version '4.1.1.7'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'

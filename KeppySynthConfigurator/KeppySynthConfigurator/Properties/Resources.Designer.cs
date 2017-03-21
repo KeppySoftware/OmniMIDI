@@ -63,6 +63,36 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AddSFIcon {
+            get {
+                object obj = ResourceManager.GetObject("AddSFIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ClearIcon {
+            get {
+                object obj = ResourceManager.GetObject("ClearIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DisableIcon {
+            get {
+                object obj = ResourceManager.GetObject("DisableIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap donatebtn {
             get {
                 object obj = ResourceManager.GetObject("donatebtn", resourceCulture);
@@ -91,6 +121,16 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap EnableIcon {
+            get {
+                object obj = ResourceManager.GetObject("EnableIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
         /// </summary>
         internal static System.IO.UnmanagedMemoryStream error {
@@ -115,6 +155,16 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap erroriconupd {
             get {
                 object obj = ResourceManager.GetObject("erroriconupd", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ExportIcon {
+            get {
+                object obj = ResourceManager.GetObject("ExportIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -160,6 +210,16 @@ namespace KeppySynthConfigurator.Properties {
         internal static string gmlist {
             get {
                 return ResourceManager.GetString("gmlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ImportIcon {
+            get {
+                object obj = ResourceManager.GetObject("ImportIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -276,6 +336,26 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap MvDwIcon {
+            get {
+                object obj = ResourceManager.GetObject("MvDwIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MvUpIcon {
+            get {
+                object obj = ResourceManager.GetObject("MvUpIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap nointerneticon {
             get {
                 object obj = ResourceManager.GetObject("nointerneticon", resourceCulture);
@@ -319,6 +399,26 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap refreshicon {
             get {
                 object obj = ResourceManager.GetObject("refreshicon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ReloadIcon {
+            get {
+                object obj = ResourceManager.GetObject("ReloadIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RmvSFIcon {
+            get {
+                object obj = ResourceManager.GetObject("RmvSFIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

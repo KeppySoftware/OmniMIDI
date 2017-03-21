@@ -325,7 +325,7 @@ namespace KeppySynthConfigurator
                     break;
 
                 case MouseButtons.Middle:
-                    OpenSoundFont();
+                    SelectedSFInfo(e);
                     break;
             }
         }
@@ -525,10 +525,10 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void SelectedSFInfo(object sender, EventArgs e)
+        private void SelectedSFInfo(MouseEventArgs e)
         {
             AvoidSave = true;
-            if (Lis.SelectedItems[0] != null)
+            if (Lis.GetItemAt(e.X, e.Y) != null)
             {
                 try
                 {
@@ -536,8 +536,10 @@ namespace KeppySynthConfigurator
                     Lis.LineAfter =
                     Lis.LineBefore = -1;
                     Lis.Invalidate();
-                    Program.DebugToConsole(false, String.Format("Currently showing info for soundfont: {0}", Lis.SelectedItems[0].Text.ToString()), null);
-                    SoundFontInfo frm = new SoundFontInfo(Lis.SelectedItems[0].Text.ToString());
+                    Lis.SelectedItems.Clear();
+                    Lis.GetItemAt(e.X, e.Y).Selected = true;
+                    Program.DebugToConsole(false, String.Format("Currently showing info for soundfont: {0}", Lis.GetItemAt(e.X, e.Y).Text.ToString()), null);
+                    SoundFontInfo frm = new SoundFontInfo(Lis.GetItemAt(e.X, e.Y).Text.ToString());
                     if (!SoundFontInfo.ERROR)
                     {
                         frm.ShowDialog();
@@ -638,11 +640,12 @@ namespace KeppySynthConfigurator
                         if (result == "@")
                         {
                             string newvalue = Lis.SelectedItems[i].Text.ToString().Remove(0, 1);
-                            FileInfo file = new FileInfo(newvalue);
+                            string newvaluenosfz = Functions.StripSFZValues(newvalue);
+                            FileInfo file = new FileInfo(Functions.StripSFZValues(newvalue));
                             ListViewItem SF = new ListViewItem(new[] {
                                         newvalue,
-                                        Functions.ReturnSoundFontFormat(Path.GetExtension(newvalue)),
-                                        Functions.ReturnSoundFontSize(file.Length)
+                                        Functions.ReturnSoundFontFormat(Path.GetExtension(newvaluenosfz)),
+                                        Functions.ReturnSoundFontSize(Path.GetExtension(newvaluenosfz), file.Length)
                                     });
                             sfname = Lis.SelectedItems[i].ToString();
                             int index = Lis.Items.IndexOf(Lis.SelectedItems[i]);
@@ -660,11 +663,12 @@ namespace KeppySynthConfigurator
                         if (result != "@")
                         {
                             string newvalue = "@" + Lis.SelectedItems[i].Text.ToString();
-                            FileInfo file = new FileInfo(Functions.StripSFZValues(newvalue));
+                            string newvaluenosfz = Functions.StripSFZValues(newvalue);
+                            FileInfo file = new FileInfo(newvaluenosfz);
                             ListViewItem SF = new ListViewItem(new[] {
                                         newvalue,
-                                        Functions.ReturnSoundFontFormat(Path.GetExtension(Functions.StripSFZValues(newvalue))),
-                                        Functions.ReturnSoundFontSize(file.Length)
+                                        Functions.ReturnSoundFontFormat(Path.GetExtension(newvaluenosfz)),
+                                        Functions.ReturnSoundFontSize(Path.GetExtension(newvaluenosfz), file.Length)
                                     });
                             sfname = Lis.SelectedItems[i].ToString();
                             int index = Lis.Items.IndexOf(Lis.SelectedItems[i]);
