@@ -348,111 +348,134 @@ STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM
 }
 
 HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
-	HKEY hKey;
-	long lResult;
-	int defaultmode;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
-	RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
-	RegQueryValueEx(hKey, L"newdevicename", NULL, &dwType, (LPBYTE)&selectedname, &dwSize);
-	RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
-	RegCloseKey(hKey);
+	try {
+		HKEY hKey;
+		long lResult;
+		int defaultmode;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
+		RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
+		RegQueryValueEx(hKey, L"newdevicename", NULL, &dwType, (LPBYTE)&selectedname, &dwSize);
+		RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
+		RegCloseKey(hKey);
 
-	if (defaultmidiout == 1)
-		defaultmode = MOD_SWSYNTH;
-	else
-		defaultmode = SynthNamesTypes[selectedname];
+		if (defaultmidiout == 1)
+			defaultmode = MOD_SWSYNTH;
+		else
+			defaultmode = SynthNamesTypes[selectedname];
 
-	if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
-		CreateConsole();
+		if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
+			CreateConsole();
+		}
+
+		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
+
+		MIDIOUTCAPSA * myCapsA;
+		MIDIOUTCAPSW * myCapsW;
+		MIDIOUTCAPS2A * myCaps2A;
+		MIDIOUTCAPS2W * myCaps2W;
+
+		const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6,{ 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
+
+		CHAR SynthName[MAXPNAMELEN];
+		WCHAR SynthNameW[MAXPNAMELEN];
+
+		if (selectedname > (defaultarraysize - 1))
+			selectedname = defaultarraysize - 1;
+		else if (selectedname < 0)
+			selectedname = 0;
+
+		strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
+		wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
+
+		switch (capsSize) {
+		case (sizeof(MIDIOUTCAPSA)):
+			myCapsA = (MIDIOUTCAPSA *)capsPtr;
+			myCapsA->wMid = 0xffff; //MM_UNMAPPED
+			myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
+			memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
+			myCapsA->wVoices = 65535;
+			myCapsA->wNotes = 65535;
+			myCapsA->wTechnology = defaultmode;
+			myCapsA->wChannelMask = 0xffff;
+			myCapsA->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
+			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
+			return MMSYSERR_NOERROR;
+
+		case (sizeof(MIDIOUTCAPSW)):
+			myCapsW = (MIDIOUTCAPSW *)capsPtr;
+			myCapsW->wMid = 0xffff;
+			myCapsW->wPid = 0xffff;
+			memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
+			myCapsW->wVoices = 65535;
+			myCapsW->wNotes = 65535;
+			myCapsW->wTechnology = defaultmode;
+			myCapsW->wChannelMask = 0xffff;
+			myCapsW->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
+			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
+			return MMSYSERR_NOERROR;
+
+		case (sizeof(MIDIOUTCAPS2A)):
+			myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
+			myCaps2A->wMid = 0xffff; //MM_UNMAPPED
+			myCaps2A->wPid = 0xffff; //MM_PID_UNMAPPED
+			memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
+			myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
+			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
+			myCaps2A->NameGuid = CLSIDKEPSYNTH;
+			myCaps2A->wVoices = 65535;
+			myCaps2A->wNotes = 65535;
+			myCaps2A->wTechnology = defaultmode;
+			myCaps2A->wChannelMask = 0xffff;
+			myCaps2A->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
+			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
+			return MMSYSERR_NOERROR;
+
+		case (sizeof(MIDIOUTCAPS2W)):
+			myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
+			myCaps2W->wMid = 0xffff;
+			myCaps2W->wPid = 0xffff;
+			memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
+			myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
+			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
+			myCaps2W->NameGuid = CLSIDKEPSYNTH;
+			myCaps2W->wVoices = 65535;
+			myCaps2W->wNotes = 65535;
+			myCaps2W->wTechnology = defaultmode;
+			myCaps2W->wChannelMask = 0xffff;
+			myCaps2W->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
+			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
+			return MMSYSERR_NOERROR;
+
+		default:
+			try {
+				PrintToConsole(FOREGROUND_BLUE, 1, "App is not asking for specific caps. Trying to give Unicode caps...");
+				myCapsW = (MIDIOUTCAPSW *)capsPtr;
+				myCapsW->wMid = 0xffff;
+				myCapsW->wPid = 0xffff;
+				memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
+				myCapsW->wVoices = 65535;
+				myCapsW->wNotes = 65535;
+				myCapsW->wTechnology = defaultmode;
+				myCapsW->wChannelMask = 0xffff;
+				myCapsW->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
+				PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
+				return MMSYSERR_NOERROR;
+			}
+			catch (...) {
+				PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
+				return MMSYSERR_NOTSUPPORTED;
+			}
+			break;
+		}
+	}
+	catch (...) {
+		PrintToConsole(FOREGROUND_BLUE, 1, "Fatal error while sharing MIDI caps!!!");
+		exit(-1);
 	}
 
-	PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
-
-	MIDIOUTCAPSA * myCapsA;
-	MIDIOUTCAPSW * myCapsW;
-	MIDIOUTCAPS2A * myCaps2A;
-    MIDIOUTCAPS2W * myCaps2W;
-
-	const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6, { 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
-
-	CHAR SynthName[MAXPNAMELEN];
-	WCHAR SynthNameW[MAXPNAMELEN];
-
-	if (selectedname > (defaultarraysize - 1))
-		selectedname = defaultarraysize - 1;
-	else if (selectedname < 0)
-		selectedname = 0;
-
-	strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
-	wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
-
-	switch (capsSize) {
-	case (sizeof(MIDIOUTCAPSA)) :
-		myCapsA = (MIDIOUTCAPSA *)capsPtr;
-		myCapsA->wMid = 0xffff; //MM_UNMAPPED
-		myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
-		memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
-		myCapsA->wVoices = 65535;
-		myCapsA->wNotes = 65535;
-		myCapsA->wTechnology = defaultmode;
-		myCapsA->wChannelMask = 0xffff;
-		myCapsA->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
-		return MMSYSERR_NOERROR;
-
-	case (sizeof(MIDIOUTCAPSW)) :
-		myCapsW = (MIDIOUTCAPSW *)capsPtr;
-		myCapsW->wMid = 0xffff;
-		myCapsW->wPid = 0xffff;
-		memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
-		myCapsW->wVoices = 65535;
-		myCapsW->wNotes = 65535;
-		myCapsW->wTechnology = defaultmode;
-		myCapsW->wChannelMask = 0xffff;
-		myCapsW->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
-		return MMSYSERR_NOERROR;
-
-	case (sizeof(MIDIOUTCAPS2A)) :
-		myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
-		myCaps2A->wMid = 0xffff; //MM_UNMAPPED
-		myCaps2A->wPid = 0xffff; //MM_PID_UNMAPPED
-		memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
-		myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
-		myCaps2A->ProductGuid = CLSIDKEPSYNTH;
-		myCaps2A->NameGuid = CLSIDKEPSYNTH;
-		myCaps2A->wVoices = 65535;
-		myCaps2A->wNotes = 65535;
-		myCaps2A->wTechnology = defaultmode;
-		myCaps2A->wChannelMask = 0xffff;
-		myCaps2A->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
-		return MMSYSERR_NOERROR;
-
-	case (sizeof(MIDIOUTCAPS2W)) :
-		myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
-		myCaps2W->wMid = 0xffff;
-		myCaps2W->wPid = 0xffff;
-		memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
-		myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
-		myCaps2W->ProductGuid = CLSIDKEPSYNTH;
-		myCaps2W->NameGuid = CLSIDKEPSYNTH;
-		myCaps2W->wVoices = 65535;
-		myCaps2W->wNotes = 65535;
-		myCaps2W->wTechnology = defaultmode;
-		myCaps2W->wChannelMask = 0xffff;
-		myCaps2W->dwSupport = MIDICAPS_VOLUME | MIDICAPS_CACHE;
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
-		return MMSYSERR_NOERROR;
-
-	default:
-		PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
-		return MMSYSERR_NOTSUPPORTED;
-		break;
-	}
 }
 
 unsigned _stdcall notescatcher(LPVOID lpV){
@@ -918,6 +941,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		try {
 			longmodmdata(IIMidiHdr, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
+			break;
 		}
 		catch (...) {
 			crashmessage(L"LongMODMData");

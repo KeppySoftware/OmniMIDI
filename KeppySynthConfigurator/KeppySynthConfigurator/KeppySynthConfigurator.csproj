@@ -84,10 +84,10 @@
     <Compile Include="Forms\Add-ons\FavouritesManager.Designer.cs">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Add-ons\BlacklistSystem.cs">
+    <Compile Include="Forms\BlacklistSystem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Add-ons\BlacklistSystem.Designer.cs">
+    <Compile Include="Forms\BlacklistSystem.Designer.cs">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainWindow.cs">
@@ -196,7 +196,7 @@
     <EmbeddedResource Include="Forms\Add-ons\FavouritesManager.resx">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Add-ons\BlacklistSystem.resx">
+    <EmbeddedResource Include="Forms\BlacklistSystem.resx">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DriverSignatureCheckup.resx">

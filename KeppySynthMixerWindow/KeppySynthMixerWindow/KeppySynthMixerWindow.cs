@@ -109,19 +109,10 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) != 1) {
-                    Meter.Visible = false;
-                    UnvMeter.Visible = true;
-                }
-                else
-                {
-                    Meter.Visible = true;
-                    UnvMeter.Visible = false;
-                    int left = Convert.ToInt32(Debug.GetValue("leftvol"));
-                    int right = Convert.ToInt32(Debug.GetValue("rightvol"));
-                    MeterFunc.ChangeMeter(0, left);
-                    MeterFunc.ChangeMeter(1, right);
-                }
+                int left = Convert.ToInt32(Debug.GetValue("leftvol"));
+                int right = Convert.ToInt32(Debug.GetValue("rightvol"));
+                MeterFunc.ChangeMeter(0, left);
+                MeterFunc.ChangeMeter(1, right);
                 System.Threading.Thread.Sleep(1);
             }
             catch (Exception ex)
@@ -159,13 +150,23 @@ namespace KeppySynthMixerWindow
                 CH16VOL.Value = Convert.ToInt32(Channels.GetValue("ch16", 100));
                 if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
                 {
+                    SignalLabel.Visible = true;
+                    LED.Visible = true;
+                    Meter.Visible = true;
                     VolumeMonitor.Checked = true;
                     VolumeCheck.Enabled = true;
+                    Size = new Size(821, 222);
+                    CenterToScreen();
                 }
                 else
                 {
+                    SignalLabel.Visible = false;
+                    LED.Visible = false;
+                    Meter.Visible = false;
                     VolumeMonitor.Checked = false;
                     VolumeCheck.Enabled = false;
+                    Size = new Size(620, 222);
+                    CenterToScreen();
                 }
                 if (Convert.ToInt32(Settings.GetValue("midivolumeoverride")) == 1)
                 {
@@ -174,11 +175,6 @@ namespace KeppySynthMixerWindow
                 else
                 {
                     MIDIVolumeOverride.Checked = false;
-                }
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) != 1)
-                {
-                    Meter.Visible = false;
-                    UnvMeter.Visible = true;
                 }
                 ChannelVolume.Enabled = true;
                 GarbageCollector.RunWorkerAsync();
@@ -199,32 +195,50 @@ namespace KeppySynthMixerWindow
             base.WndProc(ref m);
         }
 
-        private void VolumeMonitor_CheckedChanged(object sender, EventArgs e)
+
+        private void VolumeMonitor_Click(object sender, EventArgs e)
         {
             try
             {
-                if (VolumeMonitor.Checked == true)
+                if (VolumeMonitor.Checked != true)
                 {
-
                     if (MaxStockClock < 1100)
                     {
                         DialogResult dialogResult = MessageBox.Show("Enabling a mixer on a computer with poor specs could make the driver stutter.\n\nAre you sure you want to enable it?", "Weak processor detected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (dialogResult == DialogResult.Yes)
                         {
                             Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                            SignalLabel.Visible = true;
+                            LED.Visible = true;
+                            Meter.Visible = true;
+                            VolumeMonitor.Checked = true;
                             VolumeCheck.Enabled = true;
+                            Size = new Size(821, 222);
+                            CenterToScreen();
                             MeterFunc.ChangeMeter(0, 0);
                             MeterFunc.ChangeMeter(1, 0);
                         }
                         else if (dialogResult == DialogResult.No)
                         {
+                            SignalLabel.Visible = false;
+                            LED.Visible = false;
+                            Meter.Visible = false;
                             VolumeMonitor.Checked = false;
+                            VolumeCheck.Enabled = false;
+                            Size = new Size(620, 222);
+                            CenterToScreen();
                         }
                     }
                     else if (MaxStockClock >= 1100)
                     {
                         Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                        SignalLabel.Visible = true;
+                        LED.Visible = true;
+                        Meter.Visible = true;
+                        VolumeMonitor.Checked = true;
                         VolumeCheck.Enabled = true;
+                        Size = new Size(821, 222);
+                        CenterToScreen();
                         MeterFunc.ChangeMeter(0, 0);
                         MeterFunc.ChangeMeter(1, 0);
                     }
@@ -232,9 +246,13 @@ namespace KeppySynthMixerWindow
                 else
                 {
                     Settings.SetValue("volumemon", "0", RegistryValueKind.DWord);
+                    SignalLabel.Visible = false;
+                    LED.Visible = false;
+                    Meter.Visible = false;
+                    VolumeMonitor.Checked = false;
                     VolumeCheck.Enabled = false;
-                    MeterFunc.ChangeMeter(0, 0);
-                    MeterFunc.ChangeMeter(1, 0);
+                    Size = new Size(620, 222);
+                    CenterToScreen();
                 }
             }
             catch (Exception ex)
@@ -427,6 +445,46 @@ namespace KeppySynthMixerWindow
                 GC.WaitForPendingFinalizers();
                 System.Threading.Thread.Sleep(1);
             }
+        }
+
+        private void CheckIfXAudio_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) != 1)
+                {
+                    SignalLabel.Visible = false;
+                    LED.Visible = false;
+                    Meter.Visible = false;
+                    VolumeMonitor.Enabled = false;
+                    VolumeCheck.Enabled = false;
+                    Size = new Size(620, 222);
+                }
+                else
+                {
+                    int left = Convert.ToInt32(Debug.GetValue("leftvol"));
+                    int right = Convert.ToInt32(Debug.GetValue("rightvol"));
+                    MeterFunc.ChangeMeter(0, left);
+                    MeterFunc.ChangeMeter(1, right);
+                }
+                System.Threading.Thread.Sleep(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        protected new void CenterToScreen()
+        {
+            Screen screen = Screen.FromControl(this);
+
+            Rectangle workingArea = screen.WorkingArea;
+            this.Location = new Point()
+            {
+                X = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - this.Width) / 2),
+                Y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - this.Height) / 2)
+            };
         }
     }
 }

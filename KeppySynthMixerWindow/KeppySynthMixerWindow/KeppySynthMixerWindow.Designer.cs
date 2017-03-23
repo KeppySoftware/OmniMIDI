@@ -32,14 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthMixerWindow));
             this.label4 = new System.Windows.Forms.Label();
             this.ChannelVolume = new System.Windows.Forms.Timer(this.components);
-            this.showTheConfiguratorWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.muteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainVol = new System.Windows.Forms.TrackBar();
             this.CH16 = new System.Windows.Forms.Label();
-            this.fullVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MIDIVolumeOverride = new System.Windows.Forms.CheckBox();
-            this.VolumeMonitor = new System.Windows.Forms.CheckBox();
             this.CH15 = new System.Windows.Forms.Label();
             this.CH14 = new System.Windows.Forms.Label();
             this.CH13 = new System.Windows.Forms.Label();
@@ -52,7 +46,6 @@
             this.CH7 = new System.Windows.Forms.Label();
             this.CH6 = new System.Windows.Forms.Label();
             this.CH5 = new System.Windows.Forms.Label();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CH4 = new System.Windows.Forms.Label();
             this.CH3 = new System.Windows.Forms.Label();
             this.CH2 = new System.Windows.Forms.Label();
@@ -75,10 +68,9 @@
             this.CH3VOL = new System.Windows.Forms.TrackBar();
             this.CH2VOL = new System.Windows.Forms.TrackBar();
             this.CH1VOL = new System.Windows.Forms.TrackBar();
-            this.Main = new System.Windows.Forms.MenuStrip();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.WhatIsThis = new System.Windows.Forms.ToolTip(this.components);
-            this.label3 = new System.Windows.Forms.Label();
+            this.SignalLabel = new System.Windows.Forms.Label();
             this.LED = new System.Windows.Forms.Panel();
             this.Meter = new System.Windows.Forms.Panel();
             this.RV22 = new System.Windows.Forms.Panel();
@@ -125,9 +117,21 @@
             this.RV1 = new System.Windows.Forms.Panel();
             this.LV2 = new System.Windows.Forms.Panel();
             this.LV1 = new System.Windows.Forms.Panel();
-            this.UnvMeter = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.showTheConfiguratorWindowToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.VolumeMonitor = new System.Windows.Forms.MenuItem();
+            this.MIDIVolumeOverride = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.fullVolumeToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.muteToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.CheckIfXAudio = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -145,14 +149,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).BeginInit();
-            this.Main.SuspendLayout();
             this.Meter.SuspendLayout();
-            this.UnvMeter.SuspendLayout();
             this.SuspendLayout();
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(554, 39);
+            this.label4.Location = new System.Drawing.Point(554, 13);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 71;
@@ -165,36 +167,17 @@
             this.ChannelVolume.Interval = 17;
             this.ChannelVolume.Tick += new System.EventHandler(this.ChannelVolume_Tick);
             // 
-            // showTheConfiguratorWindowToolStripMenuItem
-            // 
-            this.showTheConfiguratorWindowToolStripMenuItem.Name = "showTheConfiguratorWindowToolStripMenuItem";
-            this.showTheConfiguratorWindowToolStripMenuItem.Size = new System.Drawing.Size(162, 20);
-            this.showTheConfiguratorWindowToolStripMenuItem.Text = "Show the configurator window";
-            this.showTheConfiguratorWindowToolStripMenuItem.Click += new System.EventHandler(this.showTheConfiguratorWindowToolStripMenuItem_Click);
-            // 
-            // resetToDefaultToolStripMenuItem
-            // 
-            this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
-            this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
-            this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
-            this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
-            // 
-            // muteToolStripMenuItem
-            // 
-            this.muteToolStripMenuItem.Name = "muteToolStripMenuItem";
-            this.muteToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.muteToolStripMenuItem.Text = "Mute";
-            this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
-            // 
             // MainVol
             // 
+            this.MainVol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.MainVol.AutoSize = false;
             this.MainVol.LargeChange = 10;
-            this.MainVol.Location = new System.Drawing.Point(559, 55);
+            this.MainVol.Location = new System.Drawing.Point(559, 29);
             this.MainVol.Maximum = 127;
             this.MainVol.Name = "MainVol";
             this.MainVol.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.MainVol.Size = new System.Drawing.Size(27, 123);
+            this.MainVol.Size = new System.Drawing.Size(27, 127);
             this.MainVol.TabIndex = 70;
             this.MainVol.TickFrequency = 16;
             this.WhatIsThis.SetToolTip(this.MainVol, "Control the volume of all the channels through this slider.");
@@ -203,53 +186,16 @@
             // 
             // CH16
             // 
-            this.CH16.Location = new System.Drawing.Point(504, 39);
+            this.CH16.Location = new System.Drawing.Point(504, 13);
             this.CH16.Name = "CH16";
             this.CH16.Size = new System.Drawing.Size(27, 13);
             this.CH16.TabIndex = 52;
             this.CH16.Text = "16";
             this.CH16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // fullVolumeToolStripMenuItem
-            // 
-            this.fullVolumeToolStripMenuItem.Name = "fullVolumeToolStripMenuItem";
-            this.fullVolumeToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
-            this.fullVolumeToolStripMenuItem.Text = "Full volume";
-            this.fullVolumeToolStripMenuItem.Click += new System.EventHandler(this.fullVolumeToolStripMenuItem_Click);
-            // 
-            // MIDIVolumeOverride
-            // 
-            this.MIDIVolumeOverride.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.MIDIVolumeOverride.AutoSize = true;
-            this.MIDIVolumeOverride.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.MIDIVolumeOverride.Location = new System.Drawing.Point(615, 47);
-            this.MIDIVolumeOverride.Name = "MIDIVolumeOverride";
-            this.MIDIVolumeOverride.Size = new System.Drawing.Size(178, 17);
-            this.MIDIVolumeOverride.TabIndex = 69;
-            this.MIDIVolumeOverride.Text = "Enable channel volume override";
-            this.WhatIsThis.SetToolTip(this.MIDIVolumeOverride, "It overrides the default volume of a channel.\r\nWARNING: It will make the driver i" +
-        "gnore channel volume events,\r\nwhich can break the audio with some MIDIs.");
-            this.MIDIVolumeOverride.UseVisualStyleBackColor = true;
-            this.MIDIVolumeOverride.CheckedChanged += new System.EventHandler(this.MIDIVolumeOverride_CheckedChanged);
-            // 
-            // VolumeMonitor
-            // 
-            this.VolumeMonitor.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.VolumeMonitor.AutoSize = true;
-            this.VolumeMonitor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VolumeMonitor.Location = new System.Drawing.Point(646, 65);
-            this.VolumeMonitor.Name = "VolumeMonitor";
-            this.VolumeMonitor.Size = new System.Drawing.Size(147, 17);
-            this.VolumeMonitor.TabIndex = 67;
-            this.VolumeMonitor.Text = "Enable volume monitoring";
-            this.WhatIsThis.SetToolTip(this.VolumeMonitor, "Enable the volume monitoring.\r\nYou\'ll see the current volume in the two progress " +
-        "bars down below.\r\n\r\n(Note: It only works when using DirectSound.)");
-            this.VolumeMonitor.UseVisualStyleBackColor = true;
-            this.VolumeMonitor.CheckedChanged += new System.EventHandler(this.VolumeMonitor_CheckedChanged);
-            // 
             // CH15
             // 
-            this.CH15.Location = new System.Drawing.Point(471, 39);
+            this.CH15.Location = new System.Drawing.Point(471, 13);
             this.CH15.Name = "CH15";
             this.CH15.Size = new System.Drawing.Size(27, 13);
             this.CH15.TabIndex = 53;
@@ -258,7 +204,7 @@
             // 
             // CH14
             // 
-            this.CH14.Location = new System.Drawing.Point(438, 39);
+            this.CH14.Location = new System.Drawing.Point(438, 13);
             this.CH14.Name = "CH14";
             this.CH14.Size = new System.Drawing.Size(27, 13);
             this.CH14.TabIndex = 54;
@@ -267,7 +213,7 @@
             // 
             // CH13
             // 
-            this.CH13.Location = new System.Drawing.Point(405, 39);
+            this.CH13.Location = new System.Drawing.Point(405, 13);
             this.CH13.Name = "CH13";
             this.CH13.Size = new System.Drawing.Size(27, 13);
             this.CH13.TabIndex = 58;
@@ -280,7 +226,7 @@
             // 
             // CH12
             // 
-            this.CH12.Location = new System.Drawing.Point(372, 39);
+            this.CH12.Location = new System.Drawing.Point(372, 13);
             this.CH12.Name = "CH12";
             this.CH12.Size = new System.Drawing.Size(27, 13);
             this.CH12.TabIndex = 56;
@@ -289,7 +235,7 @@
             // 
             // CH11
             // 
-            this.CH11.Location = new System.Drawing.Point(341, 39);
+            this.CH11.Location = new System.Drawing.Point(341, 13);
             this.CH11.Name = "CH11";
             this.CH11.Size = new System.Drawing.Size(27, 13);
             this.CH11.TabIndex = 57;
@@ -298,16 +244,16 @@
             // 
             // CH10
             // 
-            this.CH10.Location = new System.Drawing.Point(308, 39);
+            this.CH10.Location = new System.Drawing.Point(303, 13);
             this.CH10.Name = "CH10";
-            this.CH10.Size = new System.Drawing.Size(27, 13);
+            this.CH10.Size = new System.Drawing.Size(39, 13);
             this.CH10.TabIndex = 65;
-            this.CH10.Text = "10";
+            this.CH10.Text = "Drums";
             this.CH10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH9
             // 
-            this.CH9.Location = new System.Drawing.Point(275, 39);
+            this.CH9.Location = new System.Drawing.Point(275, 13);
             this.CH9.Name = "CH9";
             this.CH9.Size = new System.Drawing.Size(27, 13);
             this.CH9.TabIndex = 59;
@@ -316,7 +262,7 @@
             // 
             // CH8
             // 
-            this.CH8.Location = new System.Drawing.Point(242, 39);
+            this.CH8.Location = new System.Drawing.Point(242, 13);
             this.CH8.Name = "CH8";
             this.CH8.Size = new System.Drawing.Size(27, 13);
             this.CH8.TabIndex = 60;
@@ -325,7 +271,7 @@
             // 
             // CH7
             // 
-            this.CH7.Location = new System.Drawing.Point(209, 39);
+            this.CH7.Location = new System.Drawing.Point(209, 13);
             this.CH7.Name = "CH7";
             this.CH7.Size = new System.Drawing.Size(27, 13);
             this.CH7.TabIndex = 61;
@@ -334,7 +280,7 @@
             // 
             // CH6
             // 
-            this.CH6.Location = new System.Drawing.Point(176, 39);
+            this.CH6.Location = new System.Drawing.Point(176, 13);
             this.CH6.Name = "CH6";
             this.CH6.Size = new System.Drawing.Size(27, 13);
             this.CH6.TabIndex = 62;
@@ -343,23 +289,16 @@
             // 
             // CH5
             // 
-            this.CH5.Location = new System.Drawing.Point(143, 39);
+            this.CH5.Location = new System.Drawing.Point(143, 13);
             this.CH5.Name = "CH5";
             this.CH5.Size = new System.Drawing.Size(27, 13);
             this.CH5.TabIndex = 63;
             this.CH5.Text = "5";
             this.CH5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // CH4
             // 
-            this.CH4.Location = new System.Drawing.Point(110, 39);
+            this.CH4.Location = new System.Drawing.Point(110, 13);
             this.CH4.Name = "CH4";
             this.CH4.Size = new System.Drawing.Size(27, 13);
             this.CH4.TabIndex = 64;
@@ -368,7 +307,7 @@
             // 
             // CH3
             // 
-            this.CH3.Location = new System.Drawing.Point(77, 39);
+            this.CH3.Location = new System.Drawing.Point(77, 13);
             this.CH3.Name = "CH3";
             this.CH3.Size = new System.Drawing.Size(27, 13);
             this.CH3.TabIndex = 51;
@@ -377,7 +316,7 @@
             // 
             // CH2
             // 
-            this.CH2.Location = new System.Drawing.Point(44, 39);
+            this.CH2.Location = new System.Drawing.Point(44, 13);
             this.CH2.Name = "CH2";
             this.CH2.Size = new System.Drawing.Size(27, 13);
             this.CH2.TabIndex = 55;
@@ -386,7 +325,7 @@
             // 
             // CH1
             // 
-            this.CH1.Location = new System.Drawing.Point(11, 39);
+            this.CH1.Location = new System.Drawing.Point(11, 13);
             this.CH1.Name = "CH1";
             this.CH1.Size = new System.Drawing.Size(27, 13);
             this.CH1.TabIndex = 50;
@@ -421,227 +360,243 @@
             // 
             // CH16VOL
             // 
+            this.CH16VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH16VOL.AutoSize = false;
             this.CH16VOL.LargeChange = 10;
-            this.CH16VOL.Location = new System.Drawing.Point(507, 55);
+            this.CH16VOL.Location = new System.Drawing.Point(507, 29);
             this.CH16VOL.Maximum = 127;
             this.CH16VOL.Name = "CH16VOL";
             this.CH16VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH16VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH16VOL.Size = new System.Drawing.Size(27, 127);
             this.CH16VOL.TabIndex = 46;
             this.CH16VOL.TickFrequency = 16;
             this.CH16VOL.Scroll += new System.EventHandler(this.CH16VOL_Scroll);
             // 
             // CH15VOL
             // 
+            this.CH15VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH15VOL.AutoSize = false;
             this.CH15VOL.LargeChange = 10;
-            this.CH15VOL.Location = new System.Drawing.Point(474, 55);
+            this.CH15VOL.Location = new System.Drawing.Point(474, 29);
             this.CH15VOL.Maximum = 127;
             this.CH15VOL.Name = "CH15VOL";
             this.CH15VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH15VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH15VOL.Size = new System.Drawing.Size(27, 127);
             this.CH15VOL.TabIndex = 45;
             this.CH15VOL.TickFrequency = 16;
             this.CH15VOL.Scroll += new System.EventHandler(this.CH15VOL_Scroll);
             // 
             // CH14VOL
             // 
+            this.CH14VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH14VOL.AutoSize = false;
             this.CH14VOL.LargeChange = 10;
-            this.CH14VOL.Location = new System.Drawing.Point(441, 55);
+            this.CH14VOL.Location = new System.Drawing.Point(441, 29);
             this.CH14VOL.Maximum = 127;
             this.CH14VOL.Name = "CH14VOL";
             this.CH14VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH14VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH14VOL.Size = new System.Drawing.Size(27, 127);
             this.CH14VOL.TabIndex = 44;
             this.CH14VOL.TickFrequency = 16;
             this.CH14VOL.Scroll += new System.EventHandler(this.CH14VOL_Scroll);
             // 
             // CH13VOL
             // 
+            this.CH13VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH13VOL.AutoSize = false;
             this.CH13VOL.LargeChange = 10;
-            this.CH13VOL.Location = new System.Drawing.Point(408, 55);
+            this.CH13VOL.Location = new System.Drawing.Point(408, 29);
             this.CH13VOL.Maximum = 127;
             this.CH13VOL.Name = "CH13VOL";
             this.CH13VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH13VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH13VOL.Size = new System.Drawing.Size(27, 127);
             this.CH13VOL.TabIndex = 43;
             this.CH13VOL.TickFrequency = 16;
             this.CH13VOL.Scroll += new System.EventHandler(this.CH13VOL_Scroll);
             // 
             // CH12VOL
             // 
+            this.CH12VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH12VOL.AutoSize = false;
             this.CH12VOL.LargeChange = 10;
-            this.CH12VOL.Location = new System.Drawing.Point(375, 55);
+            this.CH12VOL.Location = new System.Drawing.Point(375, 29);
             this.CH12VOL.Maximum = 127;
             this.CH12VOL.Name = "CH12VOL";
             this.CH12VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH12VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH12VOL.Size = new System.Drawing.Size(27, 127);
             this.CH12VOL.TabIndex = 42;
             this.CH12VOL.TickFrequency = 16;
             this.CH12VOL.Scroll += new System.EventHandler(this.CH12VOL_Scroll);
             // 
             // CH11VOL
             // 
+            this.CH11VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH11VOL.AutoSize = false;
             this.CH11VOL.LargeChange = 10;
-            this.CH11VOL.Location = new System.Drawing.Point(344, 55);
+            this.CH11VOL.Location = new System.Drawing.Point(344, 29);
             this.CH11VOL.Maximum = 127;
             this.CH11VOL.Name = "CH11VOL";
             this.CH11VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH11VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH11VOL.Size = new System.Drawing.Size(27, 127);
             this.CH11VOL.TabIndex = 41;
             this.CH11VOL.TickFrequency = 16;
             this.CH11VOL.Scroll += new System.EventHandler(this.CH11VOL_Scroll);
             // 
             // CH10VOL
             // 
+            this.CH10VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH10VOL.AutoSize = false;
             this.CH10VOL.LargeChange = 10;
-            this.CH10VOL.Location = new System.Drawing.Point(311, 55);
+            this.CH10VOL.Location = new System.Drawing.Point(311, 29);
             this.CH10VOL.Maximum = 127;
             this.CH10VOL.Name = "CH10VOL";
             this.CH10VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH10VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH10VOL.Size = new System.Drawing.Size(27, 127);
             this.CH10VOL.TabIndex = 40;
             this.CH10VOL.TickFrequency = 16;
             this.CH10VOL.Scroll += new System.EventHandler(this.CH10VOL_Scroll);
             // 
             // CH9VOL
             // 
+            this.CH9VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH9VOL.AutoSize = false;
             this.CH9VOL.LargeChange = 10;
-            this.CH9VOL.Location = new System.Drawing.Point(278, 55);
+            this.CH9VOL.Location = new System.Drawing.Point(278, 29);
             this.CH9VOL.Maximum = 127;
             this.CH9VOL.Name = "CH9VOL";
             this.CH9VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH9VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH9VOL.Size = new System.Drawing.Size(27, 127);
             this.CH9VOL.TabIndex = 39;
             this.CH9VOL.TickFrequency = 16;
             this.CH9VOL.Scroll += new System.EventHandler(this.CH9VOL_Scroll);
             // 
             // CH8VOL
             // 
+            this.CH8VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH8VOL.AutoSize = false;
             this.CH8VOL.LargeChange = 10;
-            this.CH8VOL.Location = new System.Drawing.Point(245, 55);
+            this.CH8VOL.Location = new System.Drawing.Point(245, 29);
             this.CH8VOL.Maximum = 127;
             this.CH8VOL.Name = "CH8VOL";
             this.CH8VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH8VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH8VOL.Size = new System.Drawing.Size(27, 127);
             this.CH8VOL.TabIndex = 38;
             this.CH8VOL.TickFrequency = 16;
             this.CH8VOL.Scroll += new System.EventHandler(this.CH8VOL_Scroll);
             // 
             // CH7VOL
             // 
+            this.CH7VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH7VOL.AutoSize = false;
             this.CH7VOL.LargeChange = 10;
-            this.CH7VOL.Location = new System.Drawing.Point(212, 55);
+            this.CH7VOL.Location = new System.Drawing.Point(212, 29);
             this.CH7VOL.Maximum = 127;
             this.CH7VOL.Name = "CH7VOL";
             this.CH7VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH7VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH7VOL.Size = new System.Drawing.Size(27, 127);
             this.CH7VOL.TabIndex = 37;
             this.CH7VOL.TickFrequency = 16;
             this.CH7VOL.Scroll += new System.EventHandler(this.CH7VOL_Scroll);
             // 
             // CH6VOL
             // 
+            this.CH6VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH6VOL.AutoSize = false;
             this.CH6VOL.LargeChange = 10;
-            this.CH6VOL.Location = new System.Drawing.Point(179, 55);
+            this.CH6VOL.Location = new System.Drawing.Point(179, 29);
             this.CH6VOL.Maximum = 127;
             this.CH6VOL.Name = "CH6VOL";
             this.CH6VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH6VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH6VOL.Size = new System.Drawing.Size(27, 127);
             this.CH6VOL.TabIndex = 36;
             this.CH6VOL.TickFrequency = 16;
             this.CH6VOL.Scroll += new System.EventHandler(this.CH6VOL_Scroll);
             // 
             // CH5VOL
             // 
+            this.CH5VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH5VOL.AutoSize = false;
             this.CH5VOL.LargeChange = 10;
-            this.CH5VOL.Location = new System.Drawing.Point(146, 55);
+            this.CH5VOL.Location = new System.Drawing.Point(146, 29);
             this.CH5VOL.Maximum = 127;
             this.CH5VOL.Name = "CH5VOL";
             this.CH5VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH5VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH5VOL.Size = new System.Drawing.Size(27, 127);
             this.CH5VOL.TabIndex = 35;
             this.CH5VOL.TickFrequency = 16;
             this.CH5VOL.Scroll += new System.EventHandler(this.CH5VOL_Scroll);
             // 
             // CH4VOL
             // 
+            this.CH4VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH4VOL.AutoSize = false;
             this.CH4VOL.LargeChange = 10;
-            this.CH4VOL.Location = new System.Drawing.Point(113, 55);
+            this.CH4VOL.Location = new System.Drawing.Point(113, 29);
             this.CH4VOL.Maximum = 127;
             this.CH4VOL.Name = "CH4VOL";
             this.CH4VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH4VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH4VOL.Size = new System.Drawing.Size(27, 127);
             this.CH4VOL.TabIndex = 34;
             this.CH4VOL.TickFrequency = 16;
             this.CH4VOL.Scroll += new System.EventHandler(this.CH4VOL_Scroll);
             // 
             // CH3VOL
             // 
+            this.CH3VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH3VOL.AutoSize = false;
             this.CH3VOL.LargeChange = 10;
-            this.CH3VOL.Location = new System.Drawing.Point(80, 55);
+            this.CH3VOL.Location = new System.Drawing.Point(80, 29);
             this.CH3VOL.Maximum = 127;
             this.CH3VOL.Name = "CH3VOL";
             this.CH3VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH3VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH3VOL.Size = new System.Drawing.Size(27, 127);
             this.CH3VOL.TabIndex = 33;
             this.CH3VOL.TickFrequency = 16;
             this.CH3VOL.Scroll += new System.EventHandler(this.CH3VOL_Scroll);
             // 
             // CH2VOL
             // 
+            this.CH2VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH2VOL.AutoSize = false;
             this.CH2VOL.LargeChange = 10;
-            this.CH2VOL.Location = new System.Drawing.Point(47, 55);
+            this.CH2VOL.Location = new System.Drawing.Point(47, 29);
             this.CH2VOL.Maximum = 127;
             this.CH2VOL.Name = "CH2VOL";
             this.CH2VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH2VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH2VOL.Size = new System.Drawing.Size(27, 127);
             this.CH2VOL.TabIndex = 32;
             this.CH2VOL.TickFrequency = 16;
             this.CH2VOL.Scroll += new System.EventHandler(this.CH2VOL_Scroll);
             // 
             // CH1VOL
             // 
+            this.CH1VOL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.CH1VOL.AutoSize = false;
             this.CH1VOL.LargeChange = 10;
-            this.CH1VOL.Location = new System.Drawing.Point(14, 55);
+            this.CH1VOL.Location = new System.Drawing.Point(14, 29);
             this.CH1VOL.Maximum = 127;
             this.CH1VOL.Name = "CH1VOL";
             this.CH1VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH1VOL.Size = new System.Drawing.Size(27, 123);
+            this.CH1VOL.Size = new System.Drawing.Size(27, 127);
             this.CH1VOL.TabIndex = 31;
             this.CH1VOL.TickFrequency = 16;
             this.CH1VOL.Scroll += new System.EventHandler(this.CH1VOL_Scroll);
-            // 
-            // Main
-            // 
-            this.Main.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showTheConfiguratorWindowToolStripMenuItem,
-            this.resetToDefaultToolStripMenuItem,
-            this.muteToolStripMenuItem,
-            this.fullVolumeToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.Main.Location = new System.Drawing.Point(0, 0);
-            this.Main.Name = "Main";
-            this.Main.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.Main.Size = new System.Drawing.Size(805, 24);
-            this.Main.TabIndex = 68;
-            this.Main.Text = "menuStrip1";
             // 
             // VolumeCheck
             // 
@@ -655,19 +610,21 @@
             this.WhatIsThis.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.WhatIsThis.ToolTipTitle = "What is this?";
             // 
-            // label3
+            // SignalLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(739, 100);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(39, 13);
-            this.label3.TabIndex = 72;
-            this.label3.Text = "Signal:";
+            this.SignalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SignalLabel.AutoSize = true;
+            this.SignalLabel.Location = new System.Drawing.Point(538, 78);
+            this.SignalLabel.Name = "SignalLabel";
+            this.SignalLabel.Size = new System.Drawing.Size(39, 13);
+            this.SignalLabel.TabIndex = 72;
+            this.SignalLabel.Text = "Signal:";
             // 
             // LED
             // 
+            this.LED.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.LED.BackColor = System.Drawing.Color.Black;
-            this.LED.Location = new System.Drawing.Point(780, 101);
+            this.LED.Location = new System.Drawing.Point(579, 79);
             this.LED.Name = "LED";
             this.LED.Size = new System.Drawing.Size(12, 12);
             this.LED.TabIndex = 73;
@@ -675,6 +632,7 @@
             // 
             // Meter
             // 
+            this.Meter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Meter.BackColor = System.Drawing.Color.Black;
             this.Meter.Controls.Add(this.RV22);
             this.Meter.Controls.Add(this.LV22);
@@ -722,7 +680,7 @@
             this.Meter.Controls.Add(this.LV1);
             this.Meter.Controls.Add(this.LLab);
             this.Meter.Controls.Add(this.RLab);
-            this.Meter.Location = new System.Drawing.Point(603, 121);
+            this.Meter.Location = new System.Drawing.Point(402, 99);
             this.Meter.Name = "Meter";
             this.Meter.Size = new System.Drawing.Size(190, 52);
             this.Meter.TabIndex = 74;
@@ -1123,46 +1081,113 @@
             this.LV1.TabIndex = 50;
             this.LV1.Visible = false;
             // 
-            // UnvMeter
-            // 
-            this.UnvMeter.BackColor = System.Drawing.Color.Black;
-            this.UnvMeter.Controls.Add(this.label1);
-            this.UnvMeter.Location = new System.Drawing.Point(603, 121);
-            this.UnvMeter.Name = "UnvMeter";
-            this.UnvMeter.Size = new System.Drawing.Size(190, 52);
-            this.UnvMeter.TabIndex = 75;
-            // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(190, 52);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Only available when\r\nusing DirectSound.";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // GarbageCollector
             // 
             this.GarbageCollector.DoWork += new System.ComponentModel.DoWorkEventHandler(this.GarbageCollector_DoWork);
+            // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem6,
+            this.menuItem3});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.showTheConfiguratorWindowToolStripMenuItem,
+            this.menuItem2,
+            this.exitToolStripMenuItem});
+            this.menuItem1.Text = "File";
+            // 
+            // showTheConfiguratorWindowToolStripMenuItem
+            // 
+            this.showTheConfiguratorWindowToolStripMenuItem.Index = 0;
+            this.showTheConfiguratorWindowToolStripMenuItem.Text = "Show the configurator window";
+            this.showTheConfiguratorWindowToolStripMenuItem.Click += new System.EventHandler(this.showTheConfiguratorWindowToolStripMenuItem_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "-";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Index = 2;
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 1;
+            this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.VolumeMonitor,
+            this.MIDIVolumeOverride});
+            this.menuItem6.Text = "Functions";
+            // 
+            // VolumeMonitor
+            // 
+            this.VolumeMonitor.Index = 0;
+            this.VolumeMonitor.Text = "Enable volume monitoring";
+            this.VolumeMonitor.Click += new System.EventHandler(this.VolumeMonitor_Click);
+            // 
+            // MIDIVolumeOverride
+            // 
+            this.MIDIVolumeOverride.Index = 1;
+            this.MIDIVolumeOverride.Text = "Enable channel volume override";
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 2;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.fullVolumeToolStripMenuItem,
+            this.muteToolStripMenuItem,
+            this.menuItem4,
+            this.resetToDefaultToolStripMenuItem});
+            this.menuItem3.Text = "Settings";
+            // 
+            // fullVolumeToolStripMenuItem
+            // 
+            this.fullVolumeToolStripMenuItem.Index = 0;
+            this.fullVolumeToolStripMenuItem.Text = "Set to full volume";
+            this.fullVolumeToolStripMenuItem.Click += new System.EventHandler(this.fullVolumeToolStripMenuItem_Click);
+            // 
+            // muteToolStripMenuItem
+            // 
+            this.muteToolStripMenuItem.Index = 1;
+            this.muteToolStripMenuItem.Text = "Mute";
+            this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 2;
+            this.menuItem4.Text = "-";
+            // 
+            // resetToDefaultToolStripMenuItem
+            // 
+            this.resetToDefaultToolStripMenuItem.Index = 3;
+            this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
+            this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
+            // 
+            // CheckIfXAudio
+            // 
+            this.CheckIfXAudio.Enabled = true;
+            this.CheckIfXAudio.Interval = 10;
+            this.CheckIfXAudio.Tick += new System.EventHandler(this.CheckIfXAudio_Tick);
             // 
             // KeppySynthMixerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(805, 185);
-            this.Controls.Add(this.UnvMeter);
+            this.ClientSize = new System.Drawing.Size(604, 162);
             this.Controls.Add(this.Meter);
             this.Controls.Add(this.LED);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.SignalLabel);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.MainVol);
             this.Controls.Add(this.CH16);
-            this.Controls.Add(this.MIDIVolumeOverride);
-            this.Controls.Add(this.VolumeMonitor);
             this.Controls.Add(this.CH15);
             this.Controls.Add(this.CH14);
             this.Controls.Add(this.CH13);
@@ -1194,10 +1219,10 @@
             this.Controls.Add(this.CH3VOL);
             this.Controls.Add(this.CH2VOL);
             this.Controls.Add(this.CH1VOL);
-            this.Controls.Add(this.Main);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.Menu = this.mainMenu1;
             this.Name = "KeppySynthMixerWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keppy\'s Synthesizer Mixer";
@@ -1219,11 +1244,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.CH3VOL)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH2VOL)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH1VOL)).EndInit();
-            this.Main.ResumeLayout(false);
-            this.Main.PerformLayout();
             this.Meter.ResumeLayout(false);
             this.Meter.PerformLayout();
-            this.UnvMeter.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1233,14 +1255,8 @@
 
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Timer ChannelVolume;
-        private System.Windows.Forms.ToolStripMenuItem showTheConfiguratorWindowToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetToDefaultToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem muteToolStripMenuItem;
         private System.Windows.Forms.TrackBar MainVol;
         private System.Windows.Forms.Label CH16;
-        private System.Windows.Forms.ToolStripMenuItem fullVolumeToolStripMenuItem;
-        private System.Windows.Forms.CheckBox MIDIVolumeOverride;
-        private System.Windows.Forms.CheckBox VolumeMonitor;
         private System.Windows.Forms.Label CH15;
         private System.Windows.Forms.Label CH14;
         private System.Windows.Forms.Label CH13;
@@ -1253,7 +1269,6 @@
         private System.Windows.Forms.Label CH7;
         private System.Windows.Forms.Label CH6;
         private System.Windows.Forms.Label CH5;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Label CH4;
         private System.Windows.Forms.Label CH3;
         private System.Windows.Forms.Label CH2;
@@ -1276,10 +1291,9 @@
         private System.Windows.Forms.TrackBar CH3VOL;
         private System.Windows.Forms.TrackBar CH2VOL;
         private System.Windows.Forms.TrackBar CH1VOL;
-        private System.Windows.Forms.MenuStrip Main;
         private System.Windows.Forms.Timer VolumeCheck;
         private System.Windows.Forms.ToolTip WhatIsThis;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label SignalLabel;
         private System.Windows.Forms.Panel Meter;
         public System.Windows.Forms.Panel LV1;
         public System.Windows.Forms.Panel LV2;
@@ -1326,9 +1340,21 @@
         public System.Windows.Forms.Panel RV3;
         public System.Windows.Forms.Panel RV2;
         public System.Windows.Forms.Panel RV1;
-        private System.Windows.Forms.Panel UnvMeter;
-        private System.Windows.Forms.Label label1;
         private System.ComponentModel.BackgroundWorker GarbageCollector;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MenuItem showTheConfiguratorWindowToolStripMenuItem;
+        private System.Windows.Forms.MenuItem resetToDefaultToolStripMenuItem;
+        private System.Windows.Forms.MenuItem muteToolStripMenuItem;
+        private System.Windows.Forms.MenuItem fullVolumeToolStripMenuItem;
+        private System.Windows.Forms.MenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.Timer CheckIfXAudio;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem MIDIVolumeOverride;
+        private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem VolumeMonitor;
     }
 }
 

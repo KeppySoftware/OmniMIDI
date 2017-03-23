@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-using System.Windows.Forms;
-using System.Management;
-using Microsoft.Win32;
+﻿using System.Drawing;
 
 namespace KeppySynthMixerWindow
 {

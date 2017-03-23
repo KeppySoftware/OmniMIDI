@@ -28,65 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthSFListAssign));
-            this.DefMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addAnAppToTheListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addAnAppToTheListAppNameOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeSelectedAppsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.clearListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AddApp = new System.Windows.Forms.OpenFileDialog();
             this.label5 = new System.Windows.Forms.Label();
             this.Lis = new System.Windows.Forms.ListBox();
             this.SelectedListBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.DefMenu.SuspendLayout();
+            this.DefMenu = new System.Windows.Forms.ContextMenu();
+            this.addAnAppToTheListToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.addAnAppToTheListAppNameOnlyToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.removeSelectedAppsToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.clearListToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
-            // 
-            // DefMenu
-            // 
-            this.DefMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addAnAppToTheListToolStripMenuItem,
-            this.addAnAppToTheListAppNameOnlyToolStripMenuItem,
-            this.removeSelectedAppsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.clearListToolStripMenuItem});
-            this.DefMenu.Name = "DefMenu";
-            this.DefMenu.Size = new System.Drawing.Size(289, 98);
-            // 
-            // addAnAppToTheListToolStripMenuItem
-            // 
-            this.addAnAppToTheListToolStripMenuItem.Name = "addAnAppToTheListToolStripMenuItem";
-            this.addAnAppToTheListToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.addAnAppToTheListToolStripMenuItem.Text = "Add an app to the list (Absolute path)...";
-            this.addAnAppToTheListToolStripMenuItem.Click += new System.EventHandler(this.addAnAppToTheListToolStripMenuItem_Click);
-            // 
-            // addAnAppToTheListAppNameOnlyToolStripMenuItem
-            // 
-            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Name = "addAnAppToTheListAppNameOnlyToolStripMenuItem";
-            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Text = "Add an app to the list (App name only)...";
-            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Click += new System.EventHandler(this.addAnAppToTheListAppNameOnlyToolStripMenuItem_Click);
-            // 
-            // removeSelectedAppsToolStripMenuItem
-            // 
-            this.removeSelectedAppsToolStripMenuItem.Name = "removeSelectedAppsToolStripMenuItem";
-            this.removeSelectedAppsToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.removeSelectedAppsToolStripMenuItem.Text = "Remove selected app(s)";
-            this.removeSelectedAppsToolStripMenuItem.Click += new System.EventHandler(this.removeSelectedAppsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(285, 6);
-            // 
-            // clearListToolStripMenuItem
-            // 
-            this.clearListToolStripMenuItem.Name = "clearListToolStripMenuItem";
-            this.clearListToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.clearListToolStripMenuItem.Text = "Clear list";
-            this.clearListToolStripMenuItem.Click += new System.EventHandler(this.clearListToolStripMenuItem_Click);
             // 
             // AddApp
             // 
@@ -106,7 +60,6 @@
             // 
             // Lis
             // 
-            this.Lis.ContextMenuStrip = this.DefMenu;
             this.Lis.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.Lis.FormattingEnabled = true;
             this.Lis.Location = new System.Drawing.Point(0, 88);
@@ -144,6 +97,44 @@
             this.label1.TabIndex = 36;
             this.label1.Text = "Select applist to edit:";
             // 
+            // DefMenu
+            // 
+            this.DefMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.addAnAppToTheListToolStripMenuItem,
+            this.addAnAppToTheListAppNameOnlyToolStripMenuItem,
+            this.removeSelectedAppsToolStripMenuItem,
+            this.menuItem4,
+            this.clearListToolStripMenuItem});
+            // 
+            // addAnAppToTheListToolStripMenuItem
+            // 
+            this.addAnAppToTheListToolStripMenuItem.Index = 0;
+            this.addAnAppToTheListToolStripMenuItem.Text = "Add an app to the list (Absolute path)...";
+            this.addAnAppToTheListToolStripMenuItem.Click += new System.EventHandler(this.addAnAppToTheListToolStripMenuItem_Click);
+            // 
+            // addAnAppToTheListAppNameOnlyToolStripMenuItem
+            // 
+            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Index = 1;
+            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Text = "Add an app to the list (App name only)...";
+            this.addAnAppToTheListAppNameOnlyToolStripMenuItem.Click += new System.EventHandler(this.addAnAppToTheListAppNameOnlyToolStripMenuItem_Click);
+            // 
+            // removeSelectedAppsToolStripMenuItem
+            // 
+            this.removeSelectedAppsToolStripMenuItem.Index = 2;
+            this.removeSelectedAppsToolStripMenuItem.Text = "Remove selected app(s)";
+            this.removeSelectedAppsToolStripMenuItem.Click += new System.EventHandler(this.removeSelectedAppsToolStripMenuItem_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 3;
+            this.menuItem4.Text = "-";
+            // 
+            // clearListToolStripMenuItem
+            // 
+            this.clearListToolStripMenuItem.Index = 4;
+            this.clearListToolStripMenuItem.Text = "Clear list";
+            this.clearListToolStripMenuItem.Click += new System.EventHandler(this.clearListToolStripMenuItem_Click);
+            // 
             // KeppySynthSFListAssign
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -163,24 +154,22 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Assign a soundfont list to a specific app";
             this.Load += new System.EventHandler(this.KeppyDriverSFListAssign_Load);
-            this.DefMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ContextMenuStrip DefMenu;
-        private System.Windows.Forms.ToolStripMenuItem addAnAppToTheListToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeSelectedAppsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem clearListToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog AddApp;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ToolStripMenuItem addAnAppToTheListAppNameOnlyToolStripMenuItem;
         private System.Windows.Forms.ListBox Lis;
         private System.Windows.Forms.ComboBox SelectedListBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ContextMenu DefMenu;
+        private System.Windows.Forms.MenuItem addAnAppToTheListToolStripMenuItem;
+        private System.Windows.Forms.MenuItem addAnAppToTheListAppNameOnlyToolStripMenuItem;
+        private System.Windows.Forms.MenuItem removeSelectedAppsToolStripMenuItem;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem clearListToolStripMenuItem;
     }
 }

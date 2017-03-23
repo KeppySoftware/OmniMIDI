@@ -1469,7 +1469,7 @@
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
             this.VolSimView.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolSimView.ForeColor = System.Drawing.Color.Blue;
+            this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
             this.VolSimView.Location = new System.Drawing.Point(557, 4);
             this.VolSimView.Name = "VolSimView";
             this.VolSimView.Size = new System.Drawing.Size(78, 38);

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading;
+using System;
+using System.Diagnostics;
 using System.Windows.Forms;
-using System.Threading;
 using System.Runtime.InteropServices;
 
 namespace KeppySynthMixerWindow
@@ -38,9 +36,12 @@ namespace KeppySynthMixerWindow
                 WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
                 return;
             }
+            Process thisProc = Process.GetCurrentProcess();
+            thisProc.PriorityClass = ProcessPriorityClass.Idle;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new KeppySynthMixerWindow());
+            GC.KeepAlive(m);
         }
     }
 }

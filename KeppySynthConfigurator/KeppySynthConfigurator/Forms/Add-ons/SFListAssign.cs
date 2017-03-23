@@ -130,8 +130,12 @@ namespace KeppySynthConfigurator
 
         private void ClearAppList()
         {
-            Lis.Items.Clear();
-            SaveList(CurrentList);
+            DialogResult dialogResult = MessageBox.Show(String.Format("Are you sure you want to clear the list {0}?", whichone), "Assign a soundfont list to a specific app", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Lis.Items.Clear();
+                SaveList(CurrentList);
+            }
         }
 
         private void RemoveAppFromList(string selectedlist)
@@ -186,6 +190,7 @@ namespace KeppySynthConfigurator
         private void KeppyDriverSFListAssign_Load(object sender, EventArgs e)
         {
             SelectedListBox.Text = "List 1";
+            Lis.ContextMenu = DefMenu;
             InitializeLastPath();
         }
 
