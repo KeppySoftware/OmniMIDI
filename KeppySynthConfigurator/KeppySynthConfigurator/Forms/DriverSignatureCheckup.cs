@@ -111,6 +111,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.ForeColor = Color.DarkRed;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    IsNewVerAvailable = true;
                 }
                 else
                 {
@@ -128,6 +129,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.ForeColor = Color.Peru;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    IsNewVerAvailable = true;
                 }
                 else
                 {
@@ -145,6 +147,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.ForeColor = Color.Peru;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    IsNewVerAvailable = true;
                 }
                 else
                 {
@@ -162,6 +165,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.ForeColor = Color.Blue;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    IsNewVerAvailable = true;
                 }
                 else
                 {

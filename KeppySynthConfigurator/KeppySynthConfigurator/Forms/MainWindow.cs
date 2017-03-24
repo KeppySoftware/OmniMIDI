@@ -506,7 +506,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (Lis.SelectedItems[0] == null)
+                if (Lis.SelectedIndices.Count < 1)
                 {
                     MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }

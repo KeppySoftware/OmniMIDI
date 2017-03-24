@@ -61,11 +61,11 @@ To use the driver, you need at least:
 
 ## Minimum system requirements for driver compiling
 To compile (and test) the driver, you need:
-- Microsoft Visual Studio 2015
+- Microsoft Visual Studio 2017
 - Inno Setup 5.5.6 (It's recommended to install Inno Setup Studio and the Inno Setup Pack)
-- A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support, for Microsoft Visual Studio 2013)
-- 768MB of RAM (for both soundfonts and Microsoft Visual Studio 2013)
-- Windows 7 SP1 or greater (Otherwise, no VS2013 for you)
+- A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support, for Microsoft Visual Studio 2017)
+- 768MB of RAM (for both soundfonts and Microsoft Visual Studio 2017)
+- Windows 7 SP1 or greater (Otherwise, no VS2017 for you)
 
 ## Does it support Windows 10?
 Yes it does.
