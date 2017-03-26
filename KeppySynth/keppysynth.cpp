@@ -6,11 +6,13 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 #pragma comment(lib,"Version.lib")
 
+#include "sha256.h"
 #include "stdafx.h"
+#include <Dbghelp.h>
+#include <Psapi.h>
 #include <Shlwapi.h>
 #include <Tlhelp32.h>
 #include <assert.h>
-#include <Dbghelp.h>
 #include <atlbase.h>
 #include <atlstr.h>
 #include <cctype>
@@ -23,10 +25,9 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <mmsystem.h>
 #include <process.h>
 #include <process.h>
-#include "sha256.h"
+#include <shellapi.h>
 #include <shlobj.h>
 #include <signal.h>
-#include <shellapi.h>
 #include <sstream>
 #include <stdarg.h>
 #include <stdio.h>
@@ -34,12 +35,11 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <string.h>
 #include <string>
 #include <tchar.h>
-#include <Psapi.h>
 #include <vector>
 #include <winbase.h>
 #include <windows.h>
 
-#define BASSDEF(f) (WINAPI *f)	// define the BASS/BASSMIDI functions as pointers
+#define BASSDEF(f) (WINAPI *f)
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASS_VSTDEF(f) (WINAPI *f)
@@ -579,6 +579,12 @@ unsigned __stdcall threadfunc(LPVOID lpV){
 					com_initialized = TRUE;
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+				if (!CheckXAudioInstallation()) {
+					xaudiodisabled = 1;
+					PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
+					CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109 ");
+					MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				}
 				if (xaudiodisabled == 1) {
 					bassoutputfinal = (defaultoutput - 1);
 					if (defaultoutput == 0) {

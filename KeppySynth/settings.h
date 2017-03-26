@@ -41,7 +41,32 @@ void DLLLoadError(LPCWSTR dll) {
 
 void DLLLoadError2(LPCWSTR dll) {
 	std::cout << "(BASS_VST ERROR: " << dll << ") " << " - Can not load DLL. VC++ 2010 is missing. Skipping..." << std::endl;
-	exit(0);
+}
+
+bool CheckXAudioInstallation() {
+	TCHAR xaudio[MAX_PATH];
+	ZeroMemory(xaudio, sizeof(TCHAR) * MAX_PATH);
+	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, xaudio);
+	PathAppend(xaudio, _T("XAudio2_7.dll"));
+	if (!PathFileExists(xaudio)) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
+void CopyToClipboard(const std::string &s) {
+	OpenClipboard(0);
+	EmptyClipboard();
+	HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, s.size());
+	if (!hg) {
+		CloseClipboard();
+		return;
+	}
+	memcpy(GlobalLock(hg), s.c_str(), s.size());
+	GlobalUnlock(hg);
+	SetClipboardData(CF_TEXT, hg);
+	CloseClipboard();
+	GlobalFree(hg);
 }
 
 void ResetSynth(int ischangingbuffermode){
