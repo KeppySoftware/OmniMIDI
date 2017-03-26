@@ -2076,29 +2076,34 @@ namespace KeppySynthConfigurator
         private bool Resizing = false;
         private void Lis_SizeChanged(object sender, EventArgs e)
         {
-            if (!Resizing)
+            try
             {
-                Resizing = true;
-                ListView listView = sender as ListView;
-                if (listView != null)
+                if (!Resizing)
                 {
-                    float totalColumnWidth = 0;
-
-                    for (int i = 0; i < listView.Columns.Count; i++)
-                        totalColumnWidth += Convert.ToInt32(listView.Columns[i].Tag);
-
-                    for (int i = 0; i < listView.Columns.Count; i++)
+                    Resizing = true;
+                    ListView listView = sender as ListView;
+                    if (listView != null)
                     {
-                        float colPercentage;
-                        colPercentage = (Convert.ToInt32(listView.Columns[i].Tag) / totalColumnWidth);
-                        if(i == 0)
-                            listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width)) - 10;
-                        else
-                            listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width));
+                        float totalColumnWidth = 0;
+
+                        for (int i = 0; i < listView.Columns.Count; i++)
+                            totalColumnWidth += Convert.ToInt32(listView.Columns[i].Tag);
+
+                        for (int i = 0; i < listView.Columns.Count; i++)
+                        {
+                            float colPercentage;
+                            colPercentage = (Convert.ToInt32(listView.Columns[i].Tag) / totalColumnWidth);
+                            if (i == 0)
+                                listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width)) - 10;
+                            else
+                                listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width));
+                        }
                     }
                 }
+
             }
-            Resizing = false;
+            catch { }
+            finally { Resizing = false; }
         }
 
         private void WinMMPatch32_Click(object sender, EventArgs e)
