@@ -340,7 +340,7 @@ namespace KeppySynthConfigurator
                 // 32-bit DLL
                 if (!File.Exists(userfolder + "\\LoudMax.dll"))
                 {
-                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit... {0}%", loudmax32, 1, false);
+                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit...", loudmax32, 1, false);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
@@ -355,7 +355,7 @@ namespace KeppySynthConfigurator
                 {
                     if (!File.Exists(userfolder + "\\LoudMax64.dll"))
                     {
-                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit... {0}%", loudmax64, 1, false);
+                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit...", loudmax64, 1, false);
                         frm.StartPosition = FormStartPosition.CenterScreen;
                         frm.ShowDialog();
                     }
@@ -427,13 +427,13 @@ namespace KeppySynthConfigurator
         {
             if (forced && startup)
             {
-                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0, true);
+                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait...", newestversion, @"{0}"), null, 0, true);
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 frm.ShowDialog();
             }
             else
             {
-                UpdateYesNo upd = new UpdateYesNo(x, y, true);
+                UpdateYesNo upd = new UpdateYesNo(x, y, true, startup);
                 if (startup)
                     upd.StartPosition = FormStartPosition.CenterScreen;
                 else
@@ -442,7 +442,7 @@ namespace KeppySynthConfigurator
                 upd.Dispose();
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait... {1}%", newestversion, @"{0}"), null, 0, false);
+                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait...", newestversion, @"{0}"), null, 0, false);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
@@ -453,7 +453,7 @@ namespace KeppySynthConfigurator
         {
             if (!startup)
             {
-                UpdateYesNo upd = new UpdateYesNo(null, null, internetok);
+                UpdateYesNo upd = new UpdateYesNo(null, null, internetok, startup);
                 upd.StartPosition = FormStartPosition.CenterParent;
                 upd.ShowDialog();
                 upd.Dispose();

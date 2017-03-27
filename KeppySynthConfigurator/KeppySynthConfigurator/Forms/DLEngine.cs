@@ -26,7 +26,7 @@ namespace KeppySynthConfigurator.Forms
         {
             InitializeComponent();
             thestring = MessageText;
-            label1.Text = String.Format(thestring, 0);
+            Status.Text = String.Format(thestring, 0);
             VersionToDownload = text;
             FullURL = toDL;
             test = what;
@@ -77,7 +77,8 @@ namespace KeppySynthConfigurator.Forms
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
-            label1.Text = String.Format(thestring, e.ProgressPercentage);
+            Status.Text = thestring;
+            DLPercent.Text = String.Format("{0}%", e.ProgressPercentage);
         }
 
         private void Completed(object sender, AsyncCompletedEventArgs e)

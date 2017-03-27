@@ -28,21 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.Status = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.CancelBtn = new System.Windows.Forms.Button();
+            this.DLPercent = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // label1
+            // Status
             // 
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(271, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Downloading potatoes, please wait...";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Status.ForeColor = System.Drawing.Color.White;
+            this.Status.Location = new System.Drawing.Point(12, 7);
+            this.Status.Name = "Status";
+            this.Status.Size = new System.Drawing.Size(209, 17);
+            this.Status.TabIndex = 0;
+            this.Status.Text = "Downloading update 0.0.0.0, please wait...";
+            this.Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // progressBar1
             // 
@@ -53,13 +54,28 @@
             // 
             // CancelBtn
             // 
+            this.CancelBtn.BackColor = System.Drawing.Color.Red;
+            this.CancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.CancelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CancelBtn.ForeColor = System.Drawing.Color.White;
             this.CancelBtn.Location = new System.Drawing.Point(209, 29);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(74, 23);
             this.CancelBtn.TabIndex = 2;
             this.CancelBtn.Text = "Cancel";
-            this.CancelBtn.UseVisualStyleBackColor = true;
+            this.CancelBtn.UseVisualStyleBackColor = false;
             this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
+            // 
+            // DLPercent
+            // 
+            this.DLPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DLPercent.ForeColor = System.Drawing.Color.LightBlue;
+            this.DLPercent.Location = new System.Drawing.Point(227, 7);
+            this.DLPercent.Name = "DLPercent";
+            this.DLPercent.Size = new System.Drawing.Size(56, 17);
+            this.DLPercent.TabIndex = 3;
+            this.DLPercent.Text = "0%";
+            this.DLPercent.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DLEngine
             // 
@@ -68,9 +84,10 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(295, 63);
             this.ControlBox = false;
+            this.Controls.Add(this.DLPercent);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.Status);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "DLEngine";
@@ -85,8 +102,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label Status;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button CancelBtn;
+        private System.Windows.Forms.Label DLPercent;
     }
 }

@@ -478,7 +478,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 }
 
-unsigned _stdcall notescatcher(LPVOID lpV){
+unsigned WINAPI notescatcher(LPVOID lpV){
 	try {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 		while (stop_thread == 0){
@@ -509,7 +509,7 @@ void separatethreadfordata() {
 	}
 }
 
-unsigned __stdcall audioengine(LPVOID lpV){
+unsigned WINAPI audioengine(LPVOID lpV){
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread...");
 	while (stop_thread == 0){
 		try {
@@ -549,7 +549,7 @@ void CALLBACK MidiInProc(DWORD device, double time, const BYTE *buffer, DWORD le
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, buffer, length); // forward the data to the MIDI stream
 }
 
-unsigned __stdcall threadfunc(LPVOID lpV){
+unsigned WINAPI threadfunc(LPVOID lpV){
 	USES_CONVERSION;
 	try {
 		if (BannedSystemProcess() == TRUE) {

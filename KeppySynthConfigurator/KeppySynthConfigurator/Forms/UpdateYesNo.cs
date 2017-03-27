@@ -16,11 +16,15 @@ namespace KeppySynthConfigurator
         String OnlineVersion;
         String CurrentVersion;
 
-        public UpdateYesNo(Version x, Version y, bool internetok)
+        public UpdateYesNo(Version x, Version y, Boolean internetok, Boolean StartUp)
         {
             try
             {
                 InitializeComponent();
+                if (StartUp)
+                {
+                    this.ShowInTaskbar = StartUp;
+                }
                 if (Functions.IsInternetAvailable())
                 {
                     if (x == null || y == null)

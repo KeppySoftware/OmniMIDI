@@ -2136,7 +2136,6 @@ namespace KeppySynthConfigurator
                 p.Start();
                 Application.ExitThread();
             }
-
         }
     }
 }

@@ -232,32 +232,41 @@ namespace KeppySynthDebugWindow
 
         private void CopyToClipBoardCmd() // Copies content of window to clipboard
         {
-            StringBuilder sb = new StringBuilder();
+            try
+            {
+                StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(String.Format("Keppy's Synthesizer version {0}", Driver.FileVersion));
-            sb.AppendLine("========= Debug information =========");
-            sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
-            sb.AppendLine(String.Format("{0} {1}", CMALabel.Text, CMA.Text));
-            sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
-            sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
-            sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
-            sb.AppendLine("======== System  information ========");
-            sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
-            sb.AppendLine(String.Format("{0} {1}", COSLabel.Text, COS.Text));
-            sb.AppendLine(String.Format("{0} {1}", CPULabel.Text, CPU.Text));
-            sb.AppendLine(String.Format("{0} {1}", CPUInfoLabel.Text, CPUInfo.Text));
-            sb.AppendLine(String.Format("{0} {1}", GPULabel.Text, GPU.Text));
-            sb.AppendLine(String.Format("{0} {1}", GPUInternalChipLabel.Text, GPUInternalChip.Text));
-            sb.AppendLine(String.Format("{0} {1}", GPUInfoLabel.Text, GPUInfo.Text));
-            sb.AppendLine(String.Format("{0} {1}", TMLabel.Text, TM.Text));
-            sb.AppendLine(String.Format("{0} {1}", AMLabel.Text, AM.Text));
-            sb.AppendLine(String.Format("{0} {1}", MTLabel.Text, MT.Text));
+                sb.AppendLine(String.Format("Keppy's Synthesizer version {0}", Driver.FileVersion));
+                sb.AppendLine("========= Debug information =========");
+                sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
+                sb.AppendLine(String.Format("{0} {1}", CMALabel.Text, CMA.Text));
+                sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
+                sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
+                sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
+                sb.AppendLine("======== System  information ========");
+                sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
+                sb.AppendLine(String.Format("{0} {1}", COSLabel.Text, COS.Text));
+                sb.AppendLine(String.Format("{0} {1}", CPULabel.Text, CPU.Text));
+                sb.AppendLine(String.Format("{0} {1}", CPUInfoLabel.Text, CPUInfo.Text));
+                sb.AppendLine(String.Format("{0} {1}", GPULabel.Text, GPU.Text));
+                sb.AppendLine(String.Format("{0} {1}", GPUInternalChipLabel.Text, GPUInternalChip.Text));
+                sb.AppendLine(String.Format("{0} {1}", GPUInfoLabel.Text, GPUInfo.Text));
+                sb.AppendLine(String.Format("{0} {1}", TMLabel.Text, TM.Text));
+                sb.AppendLine(String.Format("{0} {1}", AMLabel.Text, AM.Text));
+                sb.AppendLine(String.Format("{0} {1}", MTLabel.Text, MT.Text));
 
-            Thread thread = new Thread(() => Clipboard.SetText(sb.ToString())); // Creates another thread, otherwise the form locks up while copying the richtextbox
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-            thread.Join();
-            MessageBox.Show("Info copied to clipboard.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information); // Done, now get out
+                Thread thread = new Thread(() => Clipboard.SetText(sb.ToString())); // Creates another thread, otherwise the form locks up while copying the richtextbox
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+                thread.Join();
+            }
+            catch {
+                // lel
+            }
+            finally
+            {
+                MessageBox.Show("Info copied to clipboard.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information); // Done, now get out
+            }
         }
 
         private void CopyToClipboard_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
