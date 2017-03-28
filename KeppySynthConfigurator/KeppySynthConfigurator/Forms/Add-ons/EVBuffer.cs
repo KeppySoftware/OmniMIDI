@@ -70,7 +70,6 @@ namespace KeppySynthConfigurator
                 numericUpDown1.Value = 16384;
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
                 Settings.SetValue("newevbuffvalue", 16384, RegistryValueKind.DWord);
-                this.Close();
             }
             catch (Exception ex)
             {

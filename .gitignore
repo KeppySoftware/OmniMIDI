@@ -24,6 +24,7 @@
 /KeppySynth/*.suo
 /KeppySynth/*.user
 /KeppySynth/*.vcxproj.user
+/KeppySynth/.vs/
 /KeppySynth/Debug
 /KeppySynth/Release
 /KeppySynth/ipch
