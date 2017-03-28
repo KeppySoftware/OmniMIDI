@@ -13,17 +13,15 @@
   <ItemGroup>
     <ClCompile Include="keppysynth.cpp" />
     <ClCompile Include="sha256.cpp" />
-    <ClCompile Include="xaudiopipe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external_packages\bass.h" />
     <ClInclude Include="..\external_packages\bassenc.h" />
     <ClInclude Include="..\external_packages\bassmidi.h" />
     <ClInclude Include="..\external_packages\audiodefs.h" />
+    <ClInclude Include="..\external_packages\bassxa.h" />
     <ClInclude Include="..\external_packages\bass_vst.h" />
     <ClInclude Include="..\external_packages\comdecl.h" />
-    <ClInclude Include="..\external_packages\XAudio2.h" />
-    <ClInclude Include="..\external_packages\xma2defs.h" />
     <ClInclude Include="..\external_packages\mmddk.h" />
     <ClInclude Include="bansystem.h" />
     <ClInclude Include="basserr.h" />
@@ -32,7 +30,6 @@
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />
     <ClInclude Include="sha256.h" />
-    <ClInclude Include="sound_out.h" />
     <ClInclude Include="val.h" />
   </ItemGroup>
   <ItemGroup>

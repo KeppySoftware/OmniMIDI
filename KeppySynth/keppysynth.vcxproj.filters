@@ -4,9 +4,6 @@
     <ClCompile Include="keppysynth.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
-    <ClCompile Include="xaudiopipe.cpp">
-      <Filter>Runtime</Filter>
-    </ClCompile>
     <ClCompile Include="sha256.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
@@ -51,19 +48,13 @@
     <ClInclude Include="sfsystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="sound_out.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\external_packages\XAudio2.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\external_packages\xma2defs.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="val.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="sha256.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\bassxa.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -164,6 +164,8 @@ BOOL load_bassfuncs()
 		TCHAR basspathalt[MAX_PATH] = { 0 };
 		TCHAR bassvstpath[MAX_PATH] = { 0 };
 		TCHAR bassvstpathalt[MAX_PATH] = { 0 };
+		TCHAR bassxapath[MAX_PATH] = { 0 };
+		TCHAR bassxapathalt[MAX_PATH] = { 0 };
 		int installpathlength;
 
 		GetModuleFileName(hinst, installpath, MAX_PATH);
@@ -173,17 +175,20 @@ BOOL load_bassfuncs()
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassxapathalt);
 
 #if defined(_WIN64)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmidi.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
+		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassxa.dll"));
 #elif defined(_WIN32)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
+		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassxa.dll"));
 #endif
 
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
@@ -236,6 +241,23 @@ BOOL load_bassfuncs()
 			lstrcat(bassencpath, L"\\bassenc.dll");
 			if (!(bassenc = LoadLibrary(bassencpath))) {
 				DLLLoadError(bassencpath);
+				exit(0);
+			}
+		}
+
+		// BASSXA
+		if (PathFileExists(bassxapathalt)) {
+			if (!(bassxa = LoadLibrary(bassxapathalt))) {
+				DLLLoadError(bassxapathalt);
+				exit(0);
+			}
+			isoverrideenabled = 1;
+		}
+		else {
+			lstrcat(bassxapath, installpath);
+			lstrcat(bassxapath, L"\\bassxa.dll");
+			if (!(bassxa = LoadLibrary(bassxapath))) {
+				DLLLoadError(bassxapath);
 				exit(0);
 			}
 		}
@@ -305,6 +327,10 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_InInit);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_InStart);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_InStop);
+		LOADBASSXAFUNCTION(BASSXA_InitializeAudioStream);
+		LOADBASSXAFUNCTION(BASSXA_WriteFrame);
+		LOADBASSXAFUNCTION(BASSXA_TerminateAudioStream);
+		LOADBASSXAFUNCTION(BASSXA_CreateAudioStream);
 		if (isbassvstloaded == 1) {
 			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
 		}

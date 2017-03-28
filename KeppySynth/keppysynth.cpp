@@ -43,18 +43,19 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASS_VSTDEF(f) (WINAPI *f)
+#define BASSXADEF(f) (WINAPI *f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
+#define LOADBASSXAFUNCTION(f) *((void**)&f)=GetProcAddress(bassxa,#f)
 #define Between(value, a, b) (value <= b && value >= a)
 
 #include <bass.h>
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bass_vst.h>
-
-#include "sound_out.h"
+#include <bassxa.h>
 
 #define MAX_DRIVERS 256
 #define MAX_CLIENTS 256 // Per driver
@@ -579,13 +580,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					com_initialized = TRUE;
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-				if (!CheckXAudioInstallation()) {
-					xaudiodisabled = 1;
-					PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
-					CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109 ");
-					MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-				}
-				if (xaudiodisabled == 1) {
+				RETRY:if (xaudiodisabled == 1) {
 					bassoutputfinal = (defaultoutput - 1);
 					if (defaultoutput == 0) {
 						check = 1;
@@ -607,10 +602,14 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 				else {
 					if (sound_driver == NULL) {
 						PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
-						sound_driver = create_sound_out_xaudio2();
-						sound_out_float = TRUE;
-						sound_driver->open(NULL, frequency + 100, (monorendering ? 1 : 2), sound_out_float, newsndbfvalue, frames);
-						// Why frequency + 100? There's a bug on XAudio that cause clipping when the MIDI driver's audio frequency is the same as the sound card's max audio frequency.
+						sound_driver = BASSXA_CreateAudioStream();
+						if (!BASSXA_InitializeAudioStream(sound_driver, frequency + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
+							xaudiodisabled = 1;
+							PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
+							CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109 ");
+							MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+							goto RETRY;
+						}
 						PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 					}
 				}
@@ -792,8 +791,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			}
 			if (sound_driver) {
 				ResetSynth(0);
-				delete sound_driver;
-				sound_driver = NULL;
+				BASSXA_TerminateAudioStream(sound_driver);
 			}
 			if (com_initialized) {
 				CoUninitialize();

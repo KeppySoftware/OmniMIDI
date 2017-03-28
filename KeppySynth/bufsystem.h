@@ -202,6 +202,6 @@ void AudioRender() {
 		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
 			sndbf[i] *= sound_out_volume_float;
 		}
-		sound_driver->write_frame(sndbf, decoded / sizeof(float), true);
+		BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT);
 	}
 }

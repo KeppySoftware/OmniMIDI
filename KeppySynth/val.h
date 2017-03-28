@@ -49,6 +49,7 @@ static HINSTANCE hinst = NULL;			//main DLL handle
 static HINSTANCE bass = 0;				// bass handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
 static HINSTANCE bassenc = 0;			// bassenc handle
+static HINSTANCE bassxa = 0;			// bassxa handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 
 // Potato
