@@ -53,7 +53,7 @@ bool depends() {
 void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
 	if (turnnoteoffintonoteon) {
 		if (Between(status, 0x80, 0x8f) && (status != 0x89)) {
-			int newstatus = status + 16;
+			int newstatus = status + 0x22;
 			SETSTATUS(dwParam1, newstatus);
 		}
 	}

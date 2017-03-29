@@ -106,11 +106,11 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.CapFram = new System.Windows.Forms.MenuItem();
             this.menuItem36 = new System.Windows.Forms.MenuItem();
-            this.FullVelocityMode = new System.Windows.Forms.MenuItem();
             this.NoteOFFtoON = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.menuItem27 = new System.Windows.Forms.MenuItem();
+            this.FullVelocityMode = new System.Windows.Forms.MenuItem();
             this.IgnoreNotes1 = new System.Windows.Forms.MenuItem();
             this.IgnoreNotesInterval = new System.Windows.Forms.MenuItem();
             this.menuItem28 = new System.Windows.Forms.MenuItem();
@@ -752,12 +752,6 @@
             this.menuItem36.Index = 1;
             this.menuItem36.Text = "-";
             // 
-            // FullVelocityMode
-            // 
-            this.FullVelocityMode.Index = 7;
-            this.FullVelocityMode.Text = "Set all events to full velocity";
-            this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
-            // 
             // NoteOFFtoON
             // 
             this.NoteOFFtoON.Index = 2;
@@ -780,6 +774,12 @@
             // 
             this.menuItem27.Index = 6;
             this.menuItem27.Text = "-";
+            // 
+            // FullVelocityMode
+            // 
+            this.FullVelocityMode.Index = 7;
+            this.FullVelocityMode.Text = "Set all events to full velocity";
+            this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
             // 
             // IgnoreNotes1
             // 
