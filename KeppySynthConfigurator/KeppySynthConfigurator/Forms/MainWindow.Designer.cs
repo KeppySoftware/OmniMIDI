@@ -106,6 +106,8 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.CapFram = new System.Windows.Forms.MenuItem();
             this.menuItem36 = new System.Windows.Forms.MenuItem();
+            this.FullVelocityMode = new System.Windows.Forms.MenuItem();
+            this.NoteOFFtoON = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.menuItem27 = new System.Windows.Forms.MenuItem();
@@ -208,8 +210,6 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
-            this.FullVelocityMode = new System.Windows.Forms.MenuItem();
-            this.NoteOFFtoON = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -444,7 +444,7 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 6;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 5;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
@@ -731,12 +731,12 @@
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.CapFram,
             this.menuItem36,
-            this.FullVelocityMode,
             this.NoteOFFtoON,
             this.AllNotesIgnore,
             this.SysExIgnore,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.menuItem27,
+            this.FullVelocityMode,
             this.IgnoreNotes1,
             this.IgnoreNotesInterval});
             this.menuItem12.Text = "MIDI events parser settings";
@@ -752,21 +752,33 @@
             this.menuItem36.Index = 1;
             this.menuItem36.Text = "-";
             // 
+            // FullVelocityMode
+            // 
+            this.FullVelocityMode.Index = 7;
+            this.FullVelocityMode.Text = "Set all events to full velocity";
+            this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
+            // 
+            // NoteOFFtoON
+            // 
+            this.NoteOFFtoON.Index = 2;
+            this.NoteOFFtoON.Text = "Ignore NoteOFF events";
+            this.NoteOFFtoON.Click += new System.EventHandler(this.NoteOFFtoON_Click);
+            // 
             // AllNotesIgnore
             // 
-            this.AllNotesIgnore.Index = 4;
+            this.AllNotesIgnore.Index = 3;
             this.AllNotesIgnore.Text = "Ignore all MIDI events";
             this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 5;
+            this.SysExIgnore.Index = 4;
             this.SysExIgnore.Text = "Ignore all SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
             // menuItem27
             // 
-            this.menuItem27.Index = 7;
+            this.menuItem27.Index = 6;
             this.menuItem27.Text = "-";
             // 
             // IgnoreNotes1
@@ -1847,18 +1859,6 @@
             this.RecommendedBuffer.IsBalloon = true;
             this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
-            // 
-            // FullVelocityMode
-            // 
-            this.FullVelocityMode.Index = 2;
-            this.FullVelocityMode.Text = "Set all events to full velocity";
-            this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
-            // 
-            // NoteOFFtoON
-            // 
-            this.NoteOFFtoON.Index = 3;
-            this.NoteOFFtoON.Text = "Convert Note OFF events to Note ON";
-            this.NoteOFFtoON.Click += new System.EventHandler(this.NoteOFFtoON_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
