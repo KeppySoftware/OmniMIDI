@@ -1790,6 +1790,34 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void FullVelocityMode_Click(object sender, EventArgs e)
+        {
+            if (FullVelocityMode.Checked == false)
+            {
+                SynthSettings.SetValue("fullvelocity", "1", RegistryValueKind.DWord);
+                FullVelocityMode.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("fullvelocity", "0", RegistryValueKind.DWord);
+                FullVelocityMode.Checked = false;
+            }
+        }
+
+        private void NoteOFFtoON_Click(object sender, EventArgs e)
+        {
+            if (NoteOFFtoON.Checked == false)
+            {
+                SynthSettings.SetValue("turnnoteoffintonoteon", "1", RegistryValueKind.DWord);
+                NoteOFFtoON.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("turnnoteoffintonoteon", "0", RegistryValueKind.DWord);
+                NoteOFFtoON.Checked = false;
+            }
+        }
+
         private void MIDIeventsRed_Click(object sender, EventArgs e)
         {
             MIDIRedirect frm = new MIDIRedirect();

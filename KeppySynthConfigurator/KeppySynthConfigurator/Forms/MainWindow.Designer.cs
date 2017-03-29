@@ -208,6 +208,8 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
+            this.FullVelocityMode = new System.Windows.Forms.MenuItem();
+            this.NoteOFFtoON = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -442,7 +444,7 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 4;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 6;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
@@ -729,6 +731,8 @@
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.CapFram,
             this.menuItem36,
+            this.FullVelocityMode,
+            this.NoteOFFtoON,
             this.AllNotesIgnore,
             this.SysExIgnore,
             this.changeTheSizeOfTheEVBufferToolStripMenuItem,
@@ -750,30 +754,30 @@
             // 
             // AllNotesIgnore
             // 
-            this.AllNotesIgnore.Index = 2;
+            this.AllNotesIgnore.Index = 4;
             this.AllNotesIgnore.Text = "Ignore all MIDI events";
             this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 3;
+            this.SysExIgnore.Index = 5;
             this.SysExIgnore.Text = "Ignore all SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
             // menuItem27
             // 
-            this.menuItem27.Index = 5;
+            this.menuItem27.Index = 7;
             this.menuItem27.Text = "-";
             // 
             // IgnoreNotes1
             // 
-            this.IgnoreNotes1.Index = 6;
+            this.IgnoreNotes1.Index = 8;
             this.IgnoreNotes1.Text = "Ignore notes in between two velocity values";
             this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
             // 
             // IgnoreNotesInterval
             // 
-            this.IgnoreNotesInterval.Index = 7;
+            this.IgnoreNotesInterval.Index = 9;
             this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
             this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
             // 
@@ -1844,6 +1848,18 @@
             this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
             // 
+            // FullVelocityMode
+            // 
+            this.FullVelocityMode.Index = 2;
+            this.FullVelocityMode.Text = "Set all events to full velocity";
+            this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
+            // 
+            // NoteOFFtoON
+            // 
+            this.NoteOFFtoON.Index = 3;
+            this.NoteOFFtoON.Text = "Convert Note OFF events to Note ON";
+            this.NoteOFFtoON.Click += new System.EventHandler(this.NoteOFFtoON_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2062,6 +2078,8 @@
         private System.Windows.Forms.MenuItem menuItem37;
         private System.Windows.Forms.MenuItem menuItem35;
         private System.Windows.Forms.MenuItem menuItem38;
+        public System.Windows.Forms.MenuItem FullVelocityMode;
+        public System.Windows.Forms.MenuItem NoteOFFtoON;
     }
 }
 

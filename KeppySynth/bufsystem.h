@@ -51,7 +51,12 @@ bool depends() {
 }
 
 void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
-	//SETSTATUS(dwParam1, status);
+	if (turnnoteoffintonoteon) {
+		if (Between(status, 0x80, 0x8f) && (status != 0x89)) {
+			int newstatus = status + 0x22;
+			SETSTATUS(dwParam1, newstatus);
+		}
+	}
 	if (pitchshift != 127) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
 			for (int i = 0; i <= 15; ++i) {
@@ -64,7 +69,8 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 			}
 		}
 	}
-	//SETVELOCITY(dwParam1, velocity);
+	if (fullvelocity)
+		SETVELOCITY(dwParam1, velocity);
 
 	dwParam2 = dwParam1 & 0xF0;
 	exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
@@ -113,10 +119,13 @@ int bmsyn_play_some_data(void){
 			int note = (dwParam1 & 0x0000FF00) >> 8;
 			int velocity = (dwParam1 & 0x00FF0000) >> 16;
 
+			if (fullvelocity)
+				velocity = 127;
+
 			LeaveCriticalSection(&mim_section);
 			switch (uMsg) {
 			case MODM_DATA:
-				if (ignorenotes1 == 1) {	
+				if (ignorenotes1) {	
 					if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144) 
 						&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
@@ -124,10 +133,9 @@ int bmsyn_play_some_data(void){
 					else {
 						playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
 					}
+					break;
 				}
-				else {
-					playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
-				}
+				playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
 				break;
 			case MODM_LONGDATA:
 				if (sysresetignore == 1) {
@@ -138,7 +146,7 @@ int bmsyn_play_some_data(void){
 						(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
 						ResetDrumChannels();
 					}
-					if (debugmode == 1) {
+					if (debugmode) {
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 					}
 				}
@@ -166,7 +174,7 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 		if (InterlockedIncrement(&evbcount) >= newevbuffvalue) {
 			do
 			{
-				if (debugmode == 1) {
+				if (debugmode) {
 					std::cout << "Buffer is full, slowing down..." << std::endl << std::flush;;
 				}
 				Sleep(1);
@@ -195,10 +203,7 @@ bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_
 void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
-	if (encmode == 1) {
-
-	}
-	else if (encmode == 0) {
+	if (!encmode) {
 		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
 			sndbf[i] *= sound_out_volume_float;
 		}

@@ -9,7 +9,7 @@ public:
 
 	virtual const char* open(void * hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames) = 0;
 
-	virtual const char* write_frame(void * buffer, unsigned num_samples, bool wait = false) = 0;
+	virtual const char* write_frame(void * buffer, unsigned num_samples, bool wait) = 0;
 
 	virtual const char* set_ratio(double ratio) = 0;
 

@@ -678,57 +678,37 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.hotkeys.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.hotkeys.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autopanic", 1)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("capframerate", 1)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.CapFram.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.CapFram.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("shortname", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
                 }
-                else
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
                 {
-                    KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.FullVelocityMode.Checked = true;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("turnnoteoffintonoteon", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.NoteOFFtoON.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
@@ -764,59 +744,30 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.AllNotesIgnore.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.AllNotesIgnore.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.ReduceCPUOver.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.ReduceCPUOver.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.slowdownnoskip.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.slowdownnoskip.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.IgnoreNotesInterval.Enabled = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.IgnoreNotesInterval.Enabled = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffersystem", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.useoldbuffersystem.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.useoldbuffersystem.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = false;
                 }
                 int floatingpointaudioval = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1));
                 if (floatingpointaudioval == 1)
@@ -847,10 +798,6 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("extra8lists", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.enableextra8sf.Checked = true;
@@ -863,10 +810,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 15");
                     KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 16");
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.enableextra8sf.Checked = false;
-                }
                 KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100).ToString();
                 KeppySynthConfiguratorMain.Delegate.SPFRate.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sndbfvalue", 16));
 
@@ -875,41 +818,21 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.Preload.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.Preload.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("nofx", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = false;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("noteoff", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysresetignore", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = true;
                 }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = false;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("encmode", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = false;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
@@ -951,10 +874,6 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.SincInter.Checked = false;
                 }
 
                 // LEL
