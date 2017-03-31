@@ -52,7 +52,7 @@ bool depends() {
 
 void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
 	if (turnnoteoffintonoteon) {
-		if (Between(status, 0x80, 0x8f) && (status != 0x89)) {
+		if ((Between(status, 0x80, 0x8f) && (status != 0x89))) {
 			int newstatus = status + 0x22;
 			SETSTATUS(dwParam1, newstatus);
 		}
@@ -69,7 +69,7 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 			}
 		}
 	}
-	if (fullvelocity)
+	if (fullvelocity && velocity != 0)
 		SETVELOCITY(dwParam1, velocity);
 
 	dwParam2 = dwParam1 & 0xF0;
@@ -207,6 +207,7 @@ void AudioRender() {
 		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
 			sndbf[i] *= sound_out_volume_float;
 		}
-		BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT);
+		if (!BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT))
+			crashmessage(L"XAWriteFrame");
 	}
 }

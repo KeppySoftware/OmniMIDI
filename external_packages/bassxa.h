@@ -48,7 +48,7 @@ extern "C" {
 
 	BASSXASCOPE sound_out * BASSXADEF(BASSXA_CreateAudioStream)();
 	BASSXASCOPE BOOL BASSXADEF(BASSXA_InitializeAudioStream)(sound_out * stream, int frequency, int channels, bool floataudio, int sndbf, int frames);
-	BASSXASCOPE void BASSXADEF(BASSXA_WriteFrame)(sound_out * stream, void* buffer, unsigned int data, bool wait);
+	BASSXASCOPE BOOL BASSXADEF(BASSXA_WriteFrame)(sound_out * stream, void* buffer, unsigned int data, bool wait);
 	BASSXASCOPE void BASSXADEF(BASSXA_TerminateAudioStream)(sound_out * stream);
 	BASSXASCOPE DWORD BASSXADEF(BASSXA_GetVersion)();
 

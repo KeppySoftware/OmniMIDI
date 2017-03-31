@@ -67,6 +67,7 @@ namespace KeppySynthDebugWindow
             Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
             GetWindowsInfoData(); // Get info about your Windows installation
             SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+            ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             DebugWorker.RunWorkerAsync(); // Creates a thread to show the info
         }
@@ -243,6 +244,23 @@ namespace KeppySynthDebugWindow
                 sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
                 sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
                 sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
+                sb.AppendLine("======= Channels  information =======");
+                sb.AppendLine(String.Format("{0} {1}", CHV1L.Text, CHV1.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV2L.Text, CHV2.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV3L.Text, CHV3.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV4L.Text, CHV4.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV5L.Text, CHV5.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV6L.Text, CHV6.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV7L.Text, CHV7.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV8L.Text, CHV8.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV9L.Text, CHV9.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV10L.Text, CHV10.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV11L.Text, CHV11.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV12L.Text, CHV12.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV13L.Text, CHV13.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV14L.Text, CHV14.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV15L.Text, CHV15.Text));
+                sb.AppendLine(String.Format("{0} {1}", CHV16L.Text, CHV16.Text));
                 sb.AppendLine("======== System  information ========");
                 sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
                 sb.AppendLine(String.Format("{0} {1}", COSLabel.Text, COS.Text));
@@ -319,7 +337,28 @@ namespace KeppySynthDebugWindow
                             bitappreturn = bitapp.RemoveGarbageCharacters();
                         }
                         CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
-                        AV.Text = String.Format("{0}", Debug.GetValue("currentvoices0", "0").ToString()); // Get current active voices
+
+                        // Get current active voices
+                        AV.Text = String.Format("{0}", Debug.GetValue("currentvoices0", "0").ToString());
+
+                        String FormatForVoices = "{0} voices";
+                        CHV1.Text = String.Format(FormatForVoices, Debug.GetValue("chv1", "0").ToString());
+                        CHV2.Text = String.Format(FormatForVoices, Debug.GetValue("chv2", "0").ToString());
+                        CHV3.Text = String.Format(FormatForVoices, Debug.GetValue("chv3", "0").ToString());
+                        CHV4.Text = String.Format(FormatForVoices, Debug.GetValue("chv4", "0").ToString());
+                        CHV5.Text = String.Format(FormatForVoices, Debug.GetValue("chv5", "0").ToString());
+                        CHV6.Text = String.Format(FormatForVoices, Debug.GetValue("chv6", "0").ToString());
+                        CHV7.Text = String.Format(FormatForVoices, Debug.GetValue("chv7", "0").ToString());
+                        CHV8.Text = String.Format(FormatForVoices, Debug.GetValue("chv8", "0").ToString());
+                        CHV9.Text = String.Format(FormatForVoices, Debug.GetValue("chv9", "0").ToString());
+                        CHV10.Text = String.Format(FormatForVoices, Debug.GetValue("chv10", "0").ToString());
+                        CHV11.Text = String.Format(FormatForVoices, Debug.GetValue("chv11", "0").ToString());
+                        CHV12.Text = String.Format(FormatForVoices, Debug.GetValue("chv12", "0").ToString());
+                        CHV13.Text = String.Format(FormatForVoices, Debug.GetValue("chv13", "0").ToString());
+                        CHV14.Text = String.Format(FormatForVoices, Debug.GetValue("chv14", "0").ToString());
+                        CHV15.Text = String.Format(FormatForVoices, Debug.GetValue("chv15", "0").ToString());
+                        CHV16.Text = String.Format(FormatForVoices, Debug.GetValue("chv16", "0").ToString());
+
                         if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
                         {
                             RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.

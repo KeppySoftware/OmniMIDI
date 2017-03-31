@@ -140,6 +140,20 @@ static LPCWSTR cnames[16] =
 	L"ch9", L"ch10", L"ch11", L"ch2", L"ch13", L"ch14", L"ch15", L"ch16"
 };
 
+// Channels voices
+static LPCWSTR cvnames[16] =
+{
+	L"chv1", L"chv2", L"chv3", L"chv4", L"chv5", L"chv6", L"chv7", L"chv8",
+	L"chv9", L"chv10", L"chv11", L"chv2", L"chv13", L"chv14", L"chv15", L"chv16"
+};
+
+static int cvvalues[16] =
+{
+	0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0
+};
+
+
 // Synth names
 static char SynthName[MAXPNAMELEN];
 static char SynthNameW[MAXPNAMELEN];

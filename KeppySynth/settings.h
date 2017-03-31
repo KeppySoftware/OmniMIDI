@@ -628,6 +628,11 @@ void debug_info() {
 		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
 
+		for (int i = 0; i <= 15; ++i) {
+			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
+			RegSetValueEx(hKey, cvnames[i], 0, dwType, (LPBYTE)&cvvalues[i], sizeof(cvvalues[i]));
+		}
+
 		RegCloseKey(hKey);
 	}
 	catch (...) {
@@ -655,7 +660,6 @@ void mixervoid() {
 				}
 			}
 			RegQueryValueEx(hKey, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
-
 		}
 
 		RegCloseKey(hKey);
