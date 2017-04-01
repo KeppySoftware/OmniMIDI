@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.2.7'
+#define Version '4.1.2.8'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -41,7 +41,7 @@ CompressionThreads=2
 CreateAppDir=False
 DefaultGroupName={#ProductName}
 InternalCompressLevel=ultra64
-LicenseFile=nsislicense.txt
+LicenseFile=license.txt
 MinVersion=0,6.0.6001sp2
 OutputBaseFilename={#OutputName}
 SetupIconFile=midiicon.ico

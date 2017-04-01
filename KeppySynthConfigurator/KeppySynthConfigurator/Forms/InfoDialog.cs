@@ -87,7 +87,7 @@ namespace KeppySynthConfigurator
             }
             else // Else, give normal version number
             {
-                if (Environment.OSVersion.Version.Major == 6 || Environment.OSVersion.Version.Major <= 1)
+                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1)
                 {
                     WinVer.Text = String.Format("{0}.{1}.{2} (Service Pack {3})",
                         Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,

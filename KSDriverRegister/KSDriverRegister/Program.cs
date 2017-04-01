@@ -84,6 +84,22 @@ namespace KSDriverRegister
                     Unregister(false, "x86", clsid32);
                 }
             }
+            else if (arguments[0] == "/rmidimap")
+            {
+                RegisterMidiMapper(true, false);
+            }
+            else if (arguments[0] == "/umidimap")
+            {
+                RegisterMidiMapper(true, true);
+            }
+            else if (arguments[0] == "/rmidimapv")
+            {
+                RegisterMidiMapper(false, false);
+            }
+            else if (arguments[0] == "/umidimapv")
+            {
+                RegisterMidiMapper(false, true);
+            }
             else if (arguments[0] == "/help")
             {
                 StringBuilder sb = new StringBuilder();
@@ -152,6 +168,45 @@ namespace KSDriverRegister
                     Console.Read();
                     break;
                 }
+            }
+        }
+
+        public static void RegisterMidiMapper(bool IsSilent, bool Uninstall)
+        {
+            String Dir32And64 = Environment.GetFolderPath(Environment.SpecialFolder.System) + "amidimap.cpl";
+            String Dir32On64 = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "amidimap.cpl";
+            if (!Uninstall)
+            {
+                Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Multimedia\MIDIMap");
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    clsid32.SetValue("midimapper", "amidimap.cpl");
+                    clsid64.SetValue("midimapper", "amidimap.cpl");
+                    System.IO.File.WriteAllBytes(Dir32And64, Properties.Resources.amidimap64);
+                    System.IO.File.WriteAllBytes(Dir32On64, Properties.Resources.amidimap32);
+                }
+                else
+                {
+                    clsid32.SetValue("midimapper", "amidimap.cpl");
+                    System.IO.File.WriteAllBytes(Dir32And64, Properties.Resources.amidimap32);
+                }
+                ShowMessage(IsSilent, "MIDI mapper succesfully registered.", "Information", MessageBoxIcon.Information);
+            }
+            else
+            {
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    clsid32.SetValue("midimapper", "midimap.dll");
+                    clsid64.SetValue("midimapper", "midimap.dll");
+                    System.IO.File.Delete(Dir32And64);
+                    System.IO.File.Delete(Dir32On64);
+                }
+                else
+                {
+                    clsid32.SetValue("midimapper", "midimap.cpl");
+                    System.IO.File.Delete(Dir32And64);
+                }
+                ShowMessage(IsSilent, "MIDI mapper succesfully unregistered.", "Information", MessageBoxIcon.Information);
             }
         }
 

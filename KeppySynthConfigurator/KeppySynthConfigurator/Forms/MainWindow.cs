@@ -167,36 +167,7 @@ namespace KeppySynthConfigurator
                 this.ThemeCheck.RunWorkerAsync();
                 this.Size = new Size(665, 481);
                 // MIDI out selector disabler
-                if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
-                {
-                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
-                    changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-                    SetSynthDefault.Visible = true;
-                }
-                else if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
-                {
-                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
-                    changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-                    SetSynthDefault.Visible = true;
-                }
-                if (Environment.Is64BitOperatingSystem == false)
-                {
-                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
-                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    WinMMPatch32.Enabled = true;
-                    WinMMPatch64.Enabled = false;
-                }
-                else
-                {
-                    changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                    changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    WinMMPatch32.Enabled = true;
-                    WinMMPatch64.Enabled = true;
-                }
+                Functions.CheckMIDIMapper();
 
                 Functions.InitializeLastPath();
                 SelectedListBox.Text = "List 1";
@@ -1031,7 +1002,7 @@ namespace KeppySynthConfigurator
             Functions.CheckChangelog();
         }
 
-        private void changeDefaultMIDIOutDeviceToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
         }
@@ -1217,6 +1188,16 @@ namespace KeppySynthConfigurator
         private void UnregDriver_Click(object sender, EventArgs e)
         {
             Functions.DriverRegistry(1);
+        }
+
+        private void AMIDIMapInstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.MIDIMapRegistry(0);
+        }
+
+        private void AMIDIMapUninstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.MIDIMapRegistry(1);
         }
 
         // Priority stuff
@@ -1913,6 +1894,19 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
                 SetSynthDefault.Checked = false;
+            }
+        }
+
+        private void AMIDIMapCpl_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\amidimap.cpl");
+                process.WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Asterisk, "Error", "Can not open the Alternative MIDI Mapper applet!", true, ex);
             }
         }
 

@@ -649,16 +649,10 @@ void mixervoid() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Channels", 0, KEY_ALL_ACCESS, &hKey);
 
 		for (int i = 0; i <= 15; ++i) {
+			tcvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOLUME);
 			RegQueryValueEx(hKey, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
-			if (midivolumeoverride == 1) {
-				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
-			}
-			else {
-				if (cvalues[i] != tcvalues[i]) {
-					BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
-					tcvalues[i] = cvalues[i];
-				}
-			}
+			int volumenew = (tcvalues[i] + cvalues[i]) / 2;
+			BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, volumenew);
 			RegQueryValueEx(hKey, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
 		}
 

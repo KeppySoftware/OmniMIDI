@@ -244,6 +244,28 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static void MIDIMapRegistry(int integer)
+        {
+            try
+            {
+                if (integer == 0)
+                {
+                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/rmidimapv");
+                    process.WaitForExit();
+                }
+                else
+                {
+                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/umidimapv");
+                    process.WaitForExit();
+                }
+                CheckMIDIMapper();
+            }
+            catch (Exception ex)
+            {
+                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
+            }
+        }
+
         public static void GetSHA256OfDLLs(Boolean GetSHAToClipboard)
         {
             try
@@ -666,11 +688,7 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.bufsize.Minimum = 1;
                 KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 0)
-                {
-                    KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Checked = false;
-                }
-                else
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Checked = true;
                 }
@@ -818,9 +836,9 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.Preload.Checked = true;
                 }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("nofx", 0)) == 1)
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("nofx", 0)) == 0)
                 {
-                    KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = false;
+                    KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("noteoff", 0)) == 1)
                 {
@@ -909,6 +927,53 @@ namespace KeppySynthConfigurator
             {
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
+            }
+        }
+
+        public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
+        {
+            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.System) + "amidimap.cpl"))
+            {
+                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = false;
+                if (Environment.OSVersion.Version.Major > 6)
+                {
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                    KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = true;
+                }
+                if (!Environment.Is64BitOperatingSystem)
+                {
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
+                }
+            }
+            else
+            {
+                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = true;
+                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                if (!Environment.Is64BitOperatingSystem)
+                {
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
+                }
+                KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = false;
             }
         }
 

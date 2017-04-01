@@ -58,6 +58,7 @@
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.AMIDIMapCpl = new System.Windows.Forms.MenuItem();
             this.autoupdate = new System.Windows.Forms.MenuItem();
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -80,9 +81,6 @@
             this.NoPrio = new System.Windows.Forms.MenuItem();
             this.LNPrio = new System.Windows.Forms.MenuItem();
             this.LoPrio = new System.Windows.Forms.MenuItem();
-            this.menuItem22 = new System.Windows.Forms.MenuItem();
-            this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
-            this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.menuItem32 = new System.Windows.Forms.MenuItem();
             this.bit8audio = new System.Windows.Forms.MenuItem();
@@ -121,6 +119,9 @@
             this.UnregDriver = new System.Windows.Forms.MenuItem();
             this.menuItem23 = new System.Windows.Forms.MenuItem();
             this.DLLOverrideFolder = new System.Windows.Forms.MenuItem();
+            this.menuItem22 = new System.Windows.Forms.MenuItem();
+            this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
+            this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.reportABugToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -143,6 +144,10 @@
             this.KepChannel = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem25 = new System.Windows.Forms.MenuItem();
+            this.menuItem40 = new System.Windows.Forms.MenuItem();
+            this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
+            this.AMIDIMapUninstallMenu = new System.Windows.Forms.MenuItem();
+            this.menuItem39 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -357,40 +362,40 @@
             // 
             // SetSynthDefault
             // 
-            this.SetSynthDefault.Index = 6;
+            this.SetSynthDefault.Index = 7;
             this.SetSynthDefault.Text = "Set the synthesizer as default MIDI out device";
             this.SetSynthDefault.Visible = false;
             this.SetSynthDefault.Click += new System.EventHandler(this.SetSynthDefault_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem1
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 7;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 8;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 8;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 9;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem1_Click);
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefault64bitMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 9;
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 10;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // menuItem13
             // 
-            this.menuItem13.Index = 10;
+            this.menuItem13.Index = 11;
             this.menuItem13.Text = "-";
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Index = 11;
+            this.exitToolStripMenuItem.Index = 12;
             this.exitToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.AltF4;
             this.exitToolStripMenuItem.Text = "Close the configurator";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
@@ -405,6 +410,7 @@
             this.menuItem7,
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem,
             this.menuItem9,
+            this.AMIDIMapCpl,
             this.SetSynthDefault,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
@@ -413,6 +419,13 @@
             this.exitToolStripMenuItem});
             this.menuItem1.MergeType = System.Windows.Forms.MenuMerge.MergeItems;
             this.menuItem1.Text = "File";
+            // 
+            // AMIDIMapCpl
+            // 
+            this.AMIDIMapCpl.Index = 6;
+            this.AMIDIMapCpl.Text = "Open the Alternative MIDI Mapper applet";
+            this.AMIDIMapCpl.Visible = false;
+            this.AMIDIMapCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
             // 
             // autoupdate
             // 
@@ -475,7 +488,6 @@
             this.ExportSettings,
             this.menuItem19,
             this.menuItem31,
-            this.menuItem22,
             this.menuItem11,
             this.menuItem14,
             this.menuItem12,
@@ -567,29 +579,9 @@
             this.LoPrio.Text = "Low";
             this.LoPrio.Click += new System.EventHandler(this.LoPrio_Click);
             // 
-            // menuItem22
-            // 
-            this.menuItem22.Index = 11;
-            this.menuItem22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.LoudMaxInstallMenu,
-            this.LoudMaxUninstallMenu});
-            this.menuItem22.Text = "LoudMax installation";
-            // 
-            // LoudMaxInstallMenu
-            // 
-            this.LoudMaxInstallMenu.Index = 0;
-            this.LoudMaxInstallMenu.Text = "(Re)Install LoudMax";
-            this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
-            // 
-            // LoudMaxUninstallMenu
-            // 
-            this.LoudMaxUninstallMenu.Index = 1;
-            this.LoudMaxUninstallMenu.Text = "Uninstall LoudMax";
-            this.LoudMaxUninstallMenu.Click += new System.EventHandler(this.LoudMaxUninstallMenu_Click);
-            // 
             // menuItem11
             // 
-            this.menuItem11.Index = 12;
+            this.menuItem11.Index = 11;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem32,
             this.ChangeDefaultOutput,
@@ -685,7 +677,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 13;
+            this.menuItem14.Index = 12;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MIDIeventsRed,
             this.MaskSynthesizerAsAnother,
@@ -727,7 +719,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 14;
+            this.menuItem12.Index = 13;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.CapFram,
             this.menuItem36,
@@ -795,7 +787,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 15;
+            this.menuItem28.Index = 14;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -815,7 +807,7 @@
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 16;
+            this.menuItem20.Index = 15;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
             this.UnregDriver,
@@ -845,6 +837,26 @@
             this.DLLOverrideFolder.Index = 3;
             this.DLLOverrideFolder.Text = "Open folder for DLL override";
             this.DLLOverrideFolder.Click += new System.EventHandler(this.DLLOverrideFolder_Click);
+            // 
+            // menuItem22
+            // 
+            this.menuItem22.Index = 0;
+            this.menuItem22.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.LoudMaxInstallMenu,
+            this.LoudMaxUninstallMenu});
+            this.menuItem22.Text = "LoudMax installation";
+            // 
+            // LoudMaxInstallMenu
+            // 
+            this.LoudMaxInstallMenu.Index = 0;
+            this.LoudMaxInstallMenu.Text = "(Re)Install";
+            this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
+            // 
+            // LoudMaxUninstallMenu
+            // 
+            this.LoudMaxUninstallMenu.Index = 1;
+            this.LoudMaxUninstallMenu.Text = "Uninstall";
+            this.LoudMaxUninstallMenu.Click += new System.EventHandler(this.LoudMaxUninstallMenu_Click);
             // 
             // informationAboutTheDriverToolStripMenuItem
             // 
@@ -995,32 +1007,60 @@
             // 
             this.menuItem25.Index = 2;
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem22,
+            this.menuItem40,
+            this.menuItem39,
             this.WinMMPatch32,
             this.WinMMPatch64,
             this.menuItem15,
             this.ResetToDefault});
             this.menuItem25.Text = "Tools";
             // 
+            // menuItem40
+            // 
+            this.menuItem40.Index = 1;
+            this.menuItem40.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.AMIDIMapInstallMenu,
+            this.AMIDIMapUninstallMenu});
+            this.menuItem40.Text = "Alternative MIDI Mapper";
+            // 
+            // AMIDIMapInstallMenu
+            // 
+            this.AMIDIMapInstallMenu.Index = 0;
+            this.AMIDIMapInstallMenu.Text = "(Re)Install";
+            this.AMIDIMapInstallMenu.Click += new System.EventHandler(this.AMIDIMapInstallMenu_Click);
+            // 
+            // AMIDIMapUninstallMenu
+            // 
+            this.AMIDIMapUninstallMenu.Index = 1;
+            this.AMIDIMapUninstallMenu.Text = "Uninstall";
+            this.AMIDIMapUninstallMenu.Click += new System.EventHandler(this.AMIDIMapUninstallMenu_Click);
+            // 
+            // menuItem39
+            // 
+            this.menuItem39.Index = 2;
+            this.menuItem39.Text = "-";
+            // 
             // WinMMPatch32
             // 
-            this.WinMMPatch32.Index = 0;
+            this.WinMMPatch32.Index = 3;
             this.WinMMPatch32.Text = "Apply the WinMM patch to a 32-bit app";
             this.WinMMPatch32.Click += new System.EventHandler(this.WinMMPatch32_Click);
             // 
             // WinMMPatch64
             // 
-            this.WinMMPatch64.Index = 1;
+            this.WinMMPatch64.Index = 4;
             this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
             this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 2;
+            this.menuItem15.Index = 5;
             this.menuItem15.Text = "-";
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 3;
+            this.ResetToDefault.Index = 6;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
@@ -1944,9 +1984,6 @@
         public System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
         public System.Windows.Forms.MenuItem enableextra8sf;
         public System.Windows.Forms.MenuItem DebugModePls;
-        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
-        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
-        public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
         public System.Windows.Forms.MenuItem autopanicmode;
         public System.Windows.Forms.MenuItem MIDINameNoSpace;
@@ -2043,7 +2080,6 @@
         private System.Windows.Forms.MenuItem blackMIDIsPresetToolStripMenuItem;
         private System.Windows.Forms.MenuItem chiptunesRetrogamingToolStripMenuItem;
         private System.Windows.Forms.MenuItem keppysSteinwayPianoRealismToolStripMenuItem;
-        public System.Windows.Forms.MenuItem SetSynthDefault;
         private System.Windows.Forms.MenuItem MaskSynthesizerAsAnother;
         private System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem menuItem28;
@@ -2063,8 +2099,6 @@
         public System.Windows.Forms.MenuItem LNPrio;
         public System.Windows.Forms.MenuItem LoPrio;
         private System.Windows.Forms.MenuItem menuItem25;
-        private System.Windows.Forms.MenuItem WinMMPatch32;
-        private System.Windows.Forms.MenuItem WinMMPatch64;
         private System.Windows.Forms.MenuItem menuItem34;
         public System.Windows.Forms.MenuItem DePrio;
         private System.Windows.Forms.MenuItem menuItem15;
@@ -2080,6 +2114,17 @@
         private System.Windows.Forms.MenuItem menuItem38;
         public System.Windows.Forms.MenuItem FullVelocityMode;
         public System.Windows.Forms.MenuItem NoteOFFtoON;
+        private System.Windows.Forms.MenuItem menuItem40;
+        private System.Windows.Forms.MenuItem AMIDIMapInstallMenu;
+        private System.Windows.Forms.MenuItem AMIDIMapUninstallMenu;
+        private System.Windows.Forms.MenuItem menuItem39;
+        public System.Windows.Forms.MenuItem SetSynthDefault;
+        public System.Windows.Forms.MenuItem AMIDIMapCpl;
+        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
+        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
+        public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
+        public System.Windows.Forms.MenuItem WinMMPatch32;
+        public System.Windows.Forms.MenuItem WinMMPatch64;
     }
 }
 

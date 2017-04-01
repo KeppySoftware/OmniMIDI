@@ -2,9 +2,9 @@
 Keppy's Synthesizer buffer system
 */
 
-#define SETVELOCITY(evento, newstatus) evento = (DWORD(evento) & 0xFF00FFFF) | ((DWORD(newstatus) & 0xFF) << 16)
+#define SETVELOCITY(evento, newvelocity) evento = (DWORD(evento) & 0xFF00FFFF) | ((DWORD(newvelocity) & 0xFF) << 16)
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
-#define SETSTATUS(evento, newvelocity) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newvelocity) & 0xFF)
+#define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
 static void ResetDrumChannels()
 {
