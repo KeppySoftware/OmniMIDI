@@ -1799,6 +1799,13 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void RevbNChor_Click(object sender, EventArgs e)
+        {
+            RevbNChorForm frm = new RevbNChorForm();
+            frm.ShowDialog();
+            frm.Dispose();
+        }
+
         private void MIDIeventsRed_Click(object sender, EventArgs e)
         {
             MIDIRedirect frm = new MIDIRedirect();

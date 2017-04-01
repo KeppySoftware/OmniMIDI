@@ -175,6 +175,7 @@
             this.CH4.Size = new System.Drawing.Size(15, 14);
             this.CH4.TabIndex = 13;
             this.CH4.UseVisualStyleBackColor = true;
+            this.CH4.CheckedChanged += new System.EventHandler(this.CH4_CheckedChanged);
             // 
             // CH5
             // 

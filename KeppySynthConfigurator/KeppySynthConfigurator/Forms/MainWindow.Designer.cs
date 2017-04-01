@@ -104,6 +104,7 @@
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.CapFram = new System.Windows.Forms.MenuItem();
             this.menuItem36 = new System.Windows.Forms.MenuItem();
+            this.RevbNChor = new System.Windows.Forms.MenuItem();
             this.NoteOFFtoON = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
@@ -457,7 +458,7 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 5;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 6;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
@@ -723,6 +724,7 @@
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.CapFram,
             this.menuItem36,
+            this.RevbNChor,
             this.NoteOFFtoON,
             this.AllNotesIgnore,
             this.SysExIgnore,
@@ -744,44 +746,50 @@
             this.menuItem36.Index = 1;
             this.menuItem36.Text = "-";
             // 
+            // RevbNChor
+            // 
+            this.RevbNChor.Index = 2;
+            this.RevbNChor.Text = "Set reverb and chorus";
+            this.RevbNChor.Click += new System.EventHandler(this.RevbNChor_Click);
+            // 
             // NoteOFFtoON
             // 
-            this.NoteOFFtoON.Index = 2;
+            this.NoteOFFtoON.Index = 3;
             this.NoteOFFtoON.Text = "Ignore NoteOFF events";
             this.NoteOFFtoON.Click += new System.EventHandler(this.NoteOFFtoON_Click);
             // 
             // AllNotesIgnore
             // 
-            this.AllNotesIgnore.Index = 3;
+            this.AllNotesIgnore.Index = 4;
             this.AllNotesIgnore.Text = "Ignore all MIDI events";
             this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 4;
+            this.SysExIgnore.Index = 5;
             this.SysExIgnore.Text = "Ignore all SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
             // menuItem27
             // 
-            this.menuItem27.Index = 6;
+            this.menuItem27.Index = 7;
             this.menuItem27.Text = "-";
             // 
             // FullVelocityMode
             // 
-            this.FullVelocityMode.Index = 7;
+            this.FullVelocityMode.Index = 8;
             this.FullVelocityMode.Text = "Set all events to full velocity";
             this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
             // 
             // IgnoreNotes1
             // 
-            this.IgnoreNotes1.Index = 8;
+            this.IgnoreNotes1.Index = 9;
             this.IgnoreNotes1.Text = "Ignore notes in between two velocity values";
             this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
             // 
             // IgnoreNotesInterval
             // 
-            this.IgnoreNotesInterval.Index = 9;
+            this.IgnoreNotesInterval.Index = 10;
             this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
             this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
             // 
@@ -2125,6 +2133,7 @@
         public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem WinMMPatch32;
         public System.Windows.Forms.MenuItem WinMMPatch64;
+        private System.Windows.Forms.MenuItem RevbNChor;
     }
 }
 

@@ -254,6 +254,10 @@ static int tcvalues[16] =
 	16383, 16383, 16383, 16383, 16383, 16383, 16383, 16383
 };
 
+// Reverb and chorus
+static int reverb = 64;					// Reverb
+static int chorus = 64;					// Chorus
+
 // Watchdog stuff
 static LPCWSTR rnames[16] =
 {

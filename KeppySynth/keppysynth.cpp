@@ -769,6 +769,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 				WatchdogCheck();
 				CheckVolume();
 				mixervoid();
+				RevbNChor();
 			}
 			stop_rtthread = 0;
 			if (KSStream)

@@ -649,11 +649,44 @@ void mixervoid() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Channels", 0, KEY_ALL_ACCESS, &hKey);
 
 		for (int i = 0; i <= 15; ++i) {
-			tcvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOLUME);
 			RegQueryValueEx(hKey, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
-			int volumenew = (tcvalues[i] + cvalues[i]) / 2;
-			BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, volumenew);
+			if (midivolumeoverride == 1) {
+				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
+			}
+			else {
+				if (cvalues[i] != tcvalues[i]) {
+					BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
+					tcvalues[i] = cvalues[i];
+				}
+			}
 			RegQueryValueEx(hKey, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
+		}
+
+		RegCloseKey(hKey);
+	}
+	catch (...) {
+		crashmessage(L"MixerCheck");
+	}
+}
+
+void RevbNChor() {
+	try {
+		int status = 0;
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+
+		RegQueryValueEx(hKey, L"rcoverride", NULL, &dwType, (LPBYTE)&status, &dwSize);
+		RegQueryValueEx(hKey, L"reverb", NULL, &dwType, (LPBYTE)&reverb, &dwSize);
+		RegQueryValueEx(hKey, L"chorus", NULL, &dwType, (LPBYTE)&chorus, &dwSize);
+
+		if (status == 1) {
+			for (int i = 0; i <= 15; ++i) {
+				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_REVERB, reverb);
+				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_CHORUS, chorus);
+			}
 		}
 
 		RegCloseKey(hKey);

@@ -290,5 +290,10 @@ namespace KeppySynthConfigurator
             }
             catch { }
         }
+
+        private void CH4_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
