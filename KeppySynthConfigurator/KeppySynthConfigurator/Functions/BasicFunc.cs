@@ -857,8 +857,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.XAudioDisable.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = true;
                     KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.VolumeBoost.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vmsemu", 0)) == 1)
                     {
@@ -878,16 +876,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
-                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost", 0)) == 1)
-                    {
-                        KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = true;
-                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 20000;
-                    }
-                    else
-                    {
-                        KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
-                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 10000;
-                    }
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
                 {
@@ -900,21 +888,6 @@ namespace KeppySynthConfigurator
                 // And finally, the volume!
                 int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
                 decimal VolVal = (decimal)VolumeValue / 100;
-                if (KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked == true)
-                {
-                    KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
-                }
-                else
-                {
-                    if (VolumeValue > 10000)
-                    {
-                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = 10000;
-                    }
-                    else
-                    {
-                        KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
-                    }
-                }
                 if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
                 else

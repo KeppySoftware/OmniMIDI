@@ -1456,8 +1456,6 @@ namespace KeppySynthConfigurator
                     VolTrackBar.Value = 10000;
                 }
                 VolTrackBar.Maximum = 10000;
-                VolumeBoost.Checked = false;
-                VolumeBoost.Enabled = false;
                 BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
@@ -1481,7 +1479,6 @@ namespace KeppySynthConfigurator
                 ManualAddBuffer.Visible = false;
                 ChangeDefaultOutput.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
-                VolumeBoost.Enabled = true;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
@@ -1722,26 +1719,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void VolumeBoost_Click(object sender, EventArgs e)
-        {
-            if (VolumeBoost.Checked == false)
-            {
-                SynthSettings.SetValue("volumeboost", "1", RegistryValueKind.DWord);
-                VolTrackBar.Maximum = 20000;
-                VolumeBoost.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("volumeboost", "0", RegistryValueKind.DWord);
-                if (VolTrackBar.Value > 10000)
-                {
-                    VolTrackBar.Value = 10000;
-                }
-                VolTrackBar.Maximum = 10000;
-                VolumeBoost.Checked = false;
-            }
-        }
-
         private void SysExIgnore_Click(object sender, EventArgs e)
         {
             if (SysExIgnore.Checked == false)
@@ -1802,13 +1779,6 @@ namespace KeppySynthConfigurator
         private void RevbNChor_Click(object sender, EventArgs e)
         {
             RevbNChorForm frm = new RevbNChorForm();
-            frm.ShowDialog();
-            frm.Dispose();
-        }
-
-        private void MIDIeventsRed_Click(object sender, EventArgs e)
-        {
-            MIDIRedirect frm = new MIDIRedirect();
             frm.ShowDialog();
             frm.Dispose();
         }

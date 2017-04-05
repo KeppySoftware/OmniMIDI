@@ -1,24 +1,24 @@
 /*
- * Copyright 1998, Luiz Otavio L. Zorzella
- *           1999, Eric Pouech
- *
- * Purpose:   multimedia declarations (external to WINMM & MMSYSTEM DLLs
- *                                     for other DLLs (MCI, drivers...))
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
- */
+* Copyright 1998, Luiz Otavio L. Zorzella
+*           1999, Eric Pouech
+*
+* Purpose:   multimedia declarations (external to WINMM & MMSYSTEM DLLs
+*                                     for other DLLs (MCI, drivers...))
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2.1 of the License, or (at your option) any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+*/
 #ifndef __MMDDK_H
 #define __MMDDK_H
 
@@ -30,16 +30,16 @@ extern "C" {
 #endif
 
 #define MAX_MIDIINDRV 	(16)
-/* For now I'm making 16 the maximum number of midi devices one can
- * have. This should be more than enough for everybody. But as a purist,
- * I intend to make it unbounded in the future, as soon as I figure
- * a good way to do so.
- */
+	/* For now I'm making 16 the maximum number of midi devices one can
+	* have. This should be more than enough for everybody. But as a purist,
+	* I intend to make it unbounded in the future, as soon as I figure
+	* a good way to do so.
+	*/
 #define MAX_MIDIOUTDRV 	(16)
 
-/* ==================================
- *   Multimedia DDK compatible part
- * ================================== */
+	/* ==================================
+	*   Multimedia DDK compatible part
+	* ================================== */
 
 #include <pshpack1.h>
 
@@ -48,24 +48,24 @@ extern "C" {
 #define DRVM_DISABLE		102
 #define DRVM_ENABLE		103
 
-/* messages that have IOCTL format
- *    dw1 = NULL or handle
- *    dw2 = NULL or ptr to DRVM_IOCTL_DATA
- *    return is MMRESULT
- */
+	/* messages that have IOCTL format
+	*    dw1 = NULL or handle
+	*    dw2 = NULL or ptr to DRVM_IOCTL_DATA
+	*    return is MMRESULT
+	*/
 #define DRVM_IOCTL		0x100
 #define DRVM_ADD_THRU		(DRVM_IOCTL+1)
 #define DRVM_REMOVE_THRU	(DRVM_IOCTL+2)
 #define DRVM_IOCTL_LAST		(DRVM_IOCTL+5)
-typedef struct {
-    DWORD  dwSize; 	/* size of this structure */
-    DWORD  dwCmd;  	/* IOCTL command code, 0x80000000 and above reserved for system */
-} DRVM_IOCTL_DATA, *LPDRVM_IOCTL_DATA;
+	typedef struct {
+		DWORD  dwSize; 	/* size of this structure */
+		DWORD  dwCmd;  	/* IOCTL command code, 0x80000000 and above reserved for system */
+	} DRVM_IOCTL_DATA, *LPDRVM_IOCTL_DATA;
 
-/* command code ranges for dwCmd field of DRVM_IOCTL message
- * - codes from 0 to 0x7FFFFFFF are user defined
- * - codes from 0x80000000 to 0xFFFFFFFF are reserved for future definition by microsoft
- */
+	/* command code ranges for dwCmd field of DRVM_IOCTL message
+	* - codes from 0 to 0x7FFFFFFF are user defined
+	* - codes from 0x80000000 to 0xFFFFFFFF are reserved for future definition by microsoft
+	*/
 #define DRVM_IOCTL_CMD_USER   __MSABI_LONG(0x00000000)
 #define DRVM_IOCTL_CMD_SYSTEM __MSABI_LONG(0x80000000)
 
@@ -153,14 +153,10 @@ typedef struct {
 #define MODM_SETVOLUME		11
 #define MODM_CACHEPATCHES	12
 #define MODM_CACHEDRUMPATCHES	13
-#define MODM_STRMDATA               14
-#define MODM_GETPOS                 17
+
 #define MODM_PAUSE                  18
 #define MODM_RESTART                19
 #define MODM_STOP                   20
-#define MODM_PROPERTIES             21
-#define MODM_PREFERRED              22
-#define MODM_RECONFIGURE            (MODM_USER+0x0768)
 
 #define MIDM_INIT		DRVM_INIT
 #define MIDM_GETNUMDEVS  	53
@@ -194,7 +190,7 @@ typedef struct {
 #define	MXDM_GETCONTROLDETAILS	7
 #define	MXDM_SETCONTROLDETAILS	8
 
-/* pre-defined joystick types */
+	/* pre-defined joystick types */
 #define JOY_HW_NONE			0
 #define JOY_HW_CUSTOM			1
 #define JOY_HW_2A_2B_GENERIC		2
@@ -209,7 +205,7 @@ typedef struct {
 #define JOY_HW_4B_FLIGHTYOKETHROTTLE	11
 #define JOY_HW_LASTENTRY		12
 
-/* calibration flags */
+	/* calibration flags */
 #define JOY_ISCAL_XY            __MSABI_LONG(0x00000001)    /* XY are calibrated */
 #define JOY_ISCAL_Z             __MSABI_LONG(0x00000002)    /* Z is calibrated */
 #define JOY_ISCAL_R             __MSABI_LONG(0x00000004)    /* R is calibrated */
@@ -217,14 +213,14 @@ typedef struct {
 #define JOY_ISCAL_V             __MSABI_LONG(0x00000010)    /* V is calibrated */
 #define JOY_ISCAL_POV           __MSABI_LONG(0x00000020)    /* POV is calibrated */
 
-/* point of view constants */
+	/* point of view constants */
 #define JOY_POV_NUMDIRS          4
 #define JOY_POVVAL_FORWARD       0
 #define JOY_POVVAL_BACKWARD      1
 #define JOY_POVVAL_LEFT          2
 #define JOY_POVVAL_RIGHT         3
 
-/* Specific settings for joystick hardware */
+	/* Specific settings for joystick hardware */
 #define JOY_HWS_HASZ            __MSABI_LONG(0x00000001)    /* has Z info? */
 #define JOY_HWS_HASPOV          __MSABI_LONG(0x00000002)    /* point of view hat present */
 #define JOY_HWS_POVISBUTTONCOMBOS __MSABI_LONG(0x00000004)  /* pov done through combo of buttons */
@@ -232,99 +228,99 @@ typedef struct {
 #define JOY_HWS_ISYOKE          __MSABI_LONG(0x00000010)    /* joystick is a flight yoke */
 #define JOY_HWS_ISGAMEPAD       __MSABI_LONG(0x00000020)    /* joystick is a game pad */
 #define JOY_HWS_ISCARCTRL       __MSABI_LONG(0x00000040)    /* joystick is a car controller */
-/* X defaults to J1 X axis */
+	/* X defaults to J1 X axis */
 #define JOY_HWS_XISJ1Y          __MSABI_LONG(0x00000080)    /* X is on J1 Y axis */
 #define JOY_HWS_XISJ2X          __MSABI_LONG(0x00000100)    /* X is on J2 X axis */
 #define JOY_HWS_XISJ2Y          __MSABI_LONG(0x00000200)    /* X is on J2 Y axis */
-/* Y defaults to J1 Y axis */
+	/* Y defaults to J1 Y axis */
 #define JOY_HWS_YISJ1X          __MSABI_LONG(0x00000400)    /* Y is on J1 X axis */
 #define JOY_HWS_YISJ2X          __MSABI_LONG(0x00000800)    /* Y is on J2 X axis */
 #define JOY_HWS_YISJ2Y          __MSABI_LONG(0x00001000)    /* Y is on J2 Y axis */
-/* Z defaults to J2 Y axis */
+	/* Z defaults to J2 Y axis */
 #define JOY_HWS_ZISJ1X          __MSABI_LONG(0x00002000)    /* Z is on J1 X axis */
 #define JOY_HWS_ZISJ1Y          __MSABI_LONG(0x00004000)    /* Z is on J1 Y axis */
 #define JOY_HWS_ZISJ2X          __MSABI_LONG(0x00008000)    /* Z is on J2 X axis */
-/* POV defaults to J2 Y axis, if it is not button based */
+	/* POV defaults to J2 Y axis, if it is not button based */
 #define JOY_HWS_POVISJ1X        __MSABI_LONG(0x00010000)    /* pov done through J1 X axis */
 #define JOY_HWS_POVISJ1Y        __MSABI_LONG(0x00020000)    /* pov done through J1 Y axis */
 #define JOY_HWS_POVISJ2X        __MSABI_LONG(0x00040000)    /* pov done through J2 X axis */
-/* R defaults to J2 X axis */
+	/* R defaults to J2 X axis */
 #define JOY_HWS_HASR            __MSABI_LONG(0x00080000)    /* has R (4th axis) info */
 #define JOY_HWS_RISJ1X          __MSABI_LONG(0x00100000)    /* R done through J1 X axis */
 #define JOY_HWS_RISJ1Y          __MSABI_LONG(0x00200000)    /* R done through J1 Y axis */
 #define JOY_HWS_RISJ2Y          __MSABI_LONG(0x00400000)    /* R done through J2 X axis */
-/* U & V for future hardware */
+	/* U & V for future hardware */
 #define JOY_HWS_HASU            __MSABI_LONG(0x00800000)    /* has U (5th axis) info */
 #define JOY_HWS_HASV            __MSABI_LONG(0x01000000)    /* has V (6th axis) info */
 
-/* Usage settings */
+	/* Usage settings */
 #define JOY_US_HASRUDDER        __MSABI_LONG(0x00000001)    /* joystick configured with rudder */
 #define JOY_US_PRESENT          __MSABI_LONG(0x00000002)    /* is joystick actually present? */
 #define JOY_US_ISOEM            __MSABI_LONG(0x00000004)    /* joystick is an OEM defined type */
 
 
-/* struct for storing x,y, z, and rudder values */
-typedef struct joypos_tag {
-    DWORD	dwX;
-    DWORD	dwY;
-    DWORD	dwZ;
-    DWORD	dwR;
-    DWORD	dwU;
-    DWORD	dwV;
-} JOYPOS, *LPJOYPOS;
+	/* struct for storing x,y, z, and rudder values */
+	typedef struct joypos_tag {
+		DWORD	dwX;
+		DWORD	dwY;
+		DWORD	dwZ;
+		DWORD	dwR;
+		DWORD	dwU;
+		DWORD	dwV;
+	} JOYPOS, *LPJOYPOS;
 
-/* struct for storing ranges */
-typedef struct joyrange_tag {
-    JOYPOS	jpMin;
-    JOYPOS	jpMax;
-    JOYPOS	jpCenter;
-} JOYRANGE,*LPJOYRANGE;
+	/* struct for storing ranges */
+	typedef struct joyrange_tag {
+		JOYPOS	jpMin;
+		JOYPOS	jpMax;
+		JOYPOS	jpCenter;
+	} JOYRANGE, *LPJOYRANGE;
 
-typedef struct joyreguservalues_tag {
-    DWORD	dwTimeOut;	/* value at which to timeout joystick polling */
-    JOYRANGE	jrvRanges;	/* range of values app wants returned for axes */
-    JOYPOS	jpDeadZone;	/* area around center to be considered
-    				   as "dead". specified as a percentage
-				   (0-100). Only X & Y handled by system driver */
-} JOYREGUSERVALUES, *LPJOYREGUSERVALUES;
+	typedef struct joyreguservalues_tag {
+		DWORD	dwTimeOut;	/* value at which to timeout joystick polling */
+		JOYRANGE	jrvRanges;	/* range of values app wants returned for axes */
+		JOYPOS	jpDeadZone;	/* area around center to be considered
+							as "dead". specified as a percentage
+							(0-100). Only X & Y handled by system driver */
+	} JOYREGUSERVALUES, *LPJOYREGUSERVALUES;
 
-typedef struct joyreghwsettings_tag {
-    DWORD	dwFlags;
-    DWORD	dwNumButtons;		/* number of buttons */
-} JOYREGHWSETTINGS, *LPJOYHWSETTINGS;
+	typedef struct joyreghwsettings_tag {
+		DWORD	dwFlags;
+		DWORD	dwNumButtons;		/* number of buttons */
+	} JOYREGHWSETTINGS, *LPJOYHWSETTINGS;
 
-/* range of values returned by the hardware (filled in by calibration) */
-typedef struct joyreghwvalues_tag {
-    JOYRANGE	jrvHardware;		/* values returned by hardware */
-    DWORD	dwPOVValues[JOY_POV_NUMDIRS];/* POV values returned by hardware */
-    DWORD	dwCalFlags;		/* what has been calibrated */
-} JOYREGHWVALUES, *LPJOYREGHWVALUES;
+	/* range of values returned by the hardware (filled in by calibration) */
+	typedef struct joyreghwvalues_tag {
+		JOYRANGE	jrvHardware;		/* values returned by hardware */
+		DWORD	dwPOVValues[JOY_POV_NUMDIRS];/* POV values returned by hardware */
+		DWORD	dwCalFlags;		/* what has been calibrated */
+	} JOYREGHWVALUES, *LPJOYREGHWVALUES;
 
-/* hardware configuration */
-typedef struct joyreghwconfig_tag {
-    JOYREGHWSETTINGS	hws;		/* hardware settings */
-    DWORD		dwUsageSettings;/* usage settings */
-    JOYREGHWVALUES	hwv;		/* values returned by hardware */
-    DWORD		dwType;		/* type of joystick */
-    DWORD		dwReserved;	/* reserved for OEM drivers */
-} JOYREGHWCONFIG, *LPJOYREGHWCONFIG;
+	/* hardware configuration */
+	typedef struct joyreghwconfig_tag {
+		JOYREGHWSETTINGS	hws;		/* hardware settings */
+		DWORD		dwUsageSettings;/* usage settings */
+		JOYREGHWVALUES	hwv;		/* values returned by hardware */
+		DWORD		dwType;		/* type of joystick */
+		DWORD		dwReserved;	/* reserved for OEM drivers */
+	} JOYREGHWCONFIG, *LPJOYREGHWCONFIG;
 
-/* joystick calibration info structure */
-typedef struct joycalibrate_tag {
-    UINT    wXbase;
-    UINT    wXdelta;
-    UINT    wYbase;
-    UINT    wYdelta;
-    UINT    wZbase;
-    UINT    wZdelta;
-} JOYCALIBRATE;
-typedef JOYCALIBRATE *LPJOYCALIBRATE;
+	/* joystick calibration info structure */
+	typedef struct joycalibrate_tag {
+		UINT    wXbase;
+		UINT    wXdelta;
+		UINT    wYbase;
+		UINT    wYdelta;
+		UINT    wZbase;
+		UINT    wZdelta;
+	} JOYCALIBRATE;
+	typedef JOYCALIBRATE *LPJOYCALIBRATE;
 
-/* prototype for joystick message function */
-typedef UINT (CALLBACK * JOYDEVMSGPROC)(DWORD dwID, UINT uMessage, LPARAM lParam1, LPARAM lParam2);
-typedef JOYDEVMSGPROC *LPJOYDEVMSGPROC;
+	/* prototype for joystick message function */
+	typedef UINT(CALLBACK * JOYDEVMSGPROC)(DWORD dwID, UINT uMessage, LPARAM lParam1, LPARAM lParam2);
+	typedef JOYDEVMSGPROC *LPJOYDEVMSGPROC;
 
-/* messages sent to joystick driver's DriverProc() function */
+	/* messages sent to joystick driver's DriverProc() function */
 #define JDD_GETNUMDEVS          (DRV_RESERVED + 0x0001)
 #define JDD_GETDEVCAPS          (DRV_RESERVED + 0x0002)
 #define JDD_GETPOS              (DRV_RESERVED + 0x0101)
@@ -391,62 +387,62 @@ typedef JOYDEVMSGPROC *LPJOYDEVMSGPROC;
 
 #define MAKEMCIRESOURCE(wRet, wRes) MAKELRESULT((wRet), (wRes))
 
-typedef struct {
-	HWAVE			hWave;
-	LPWAVEFORMATEX		lpFormat;
-	DWORD_PTR		dwCallback;
-	DWORD_PTR		dwInstance;
-	UINT			uMappedDeviceID;
-	DWORD_PTR		dnDevNode;
-} WAVEOPENDESC, *LPWAVEOPENDESC;
+	typedef struct {
+		HWAVE			hWave;
+		LPWAVEFORMATEX		lpFormat;
+		DWORD_PTR		dwCallback;
+		DWORD_PTR		dwInstance;
+		UINT			uMappedDeviceID;
+		DWORD_PTR		dnDevNode;
+	} WAVEOPENDESC, *LPWAVEOPENDESC;
 
-typedef struct {
-        DWORD  			dwStreamID;
-        WORD   			wDeviceID;
-} MIDIOPENSTRMID;
+	typedef struct {
+		DWORD  			dwStreamID;
+		WORD   			wDeviceID;
+	} MIDIOPENSTRMID;
 
-typedef struct {
-	HMIDI			hMidi;
-	DWORD_PTR		dwCallback;
-	DWORD_PTR		dwInstance;
-	DWORD_PTR		dnDevNode;
-        DWORD          		cIds;
-        MIDIOPENSTRMID 		rgIds;
-} MIDIOPENDESC, *LPMIDIOPENDESC;
+	typedef struct {
+		HMIDI			hMidi;
+		DWORD_PTR		dwCallback;
+		DWORD_PTR		dwInstance;
+		DWORD_PTR		dnDevNode;
+		DWORD          		cIds;
+		MIDIOPENSTRMID 		rgIds;
+	} MIDIOPENDESC, *LPMIDIOPENDESC;
 
-typedef struct tMIXEROPENDESC
-{
-	HMIXEROBJ		hmx;
-        LPVOID			pReserved0;
-	DWORD_PTR		dwCallback;
-	DWORD_PTR		dwInstance;
-	DWORD_PTR		dnDevNode;
-} MIXEROPENDESC, *LPMIXEROPENDESC;
+	typedef struct tMIXEROPENDESC
+	{
+		HMIXEROBJ		hmx;
+		LPVOID			pReserved0;
+		DWORD_PTR		dwCallback;
+		DWORD_PTR		dwInstance;
+		DWORD_PTR		dnDevNode;
+	} MIXEROPENDESC, *LPMIXEROPENDESC;
 
-typedef struct {
-	UINT			wDeviceID;		/* device ID */
-	LPSTR			lpstrParams;		/* parameter string for entry in SYSTEM.INI */
-	UINT			wCustomCommandTable;	/* custom command table (0xFFFF if none) * filled in by the driver */
-	UINT			wType;			/* driver type (filled in by the driver) */
-} MCI_OPEN_DRIVER_PARMSA, *LPMCI_OPEN_DRIVER_PARMSA;
+	typedef struct {
+		UINT			wDeviceID;		/* device ID */
+		LPSTR			lpstrParams;		/* parameter string for entry in SYSTEM.INI */
+		UINT			wCustomCommandTable;	/* custom command table (0xFFFF if none) * filled in by the driver */
+		UINT			wType;			/* driver type (filled in by the driver) */
+	} MCI_OPEN_DRIVER_PARMSA, *LPMCI_OPEN_DRIVER_PARMSA;
 
-typedef struct {
-	UINT			wDeviceID;		/* device ID */
-	LPWSTR			lpstrParams;		/* parameter string for entry in SYSTEM.INI */
-	UINT			wCustomCommandTable;	/* custom command table (0xFFFF if none) * filled in by the driver */
-	UINT			wType;			/* driver type (filled in by the driver) */
-} MCI_OPEN_DRIVER_PARMSW, *LPMCI_OPEN_DRIVER_PARMSW;
+	typedef struct {
+		UINT			wDeviceID;		/* device ID */
+		LPWSTR			lpstrParams;		/* parameter string for entry in SYSTEM.INI */
+		UINT			wCustomCommandTable;	/* custom command table (0xFFFF if none) * filled in by the driver */
+		UINT			wType;			/* driver type (filled in by the driver) */
+	} MCI_OPEN_DRIVER_PARMSW, *LPMCI_OPEN_DRIVER_PARMSW;
 
-DWORD_PTR		WINAPI	mciGetDriverData(UINT uDeviceID);
-BOOL			WINAPI	mciSetDriverData(UINT uDeviceID, DWORD_PTR dwData);
-UINT			WINAPI	mciDriverYield(UINT uDeviceID);
+	DWORD_PTR		WINAPI	mciGetDriverData(UINT uDeviceID);
+	BOOL			WINAPI	mciSetDriverData(UINT uDeviceID, DWORD_PTR dwData);
+	UINT			WINAPI	mciDriverYield(UINT uDeviceID);
 #ifndef _MCIAPI_H_
-BOOL			WINAPI	mciDriverNotify(HWND hwndCallback, UINT uDeviceID,
-						UINT uStatus);
-UINT			WINAPI	mciLoadCommandResource(HINSTANCE hInstance,
-					       LPCWSTR lpResName, UINT uType);
+	BOOL			WINAPI	mciDriverNotify(HWND hwndCallback, UINT uDeviceID,
+		UINT uStatus);
+	UINT			WINAPI	mciLoadCommandResource(HINSTANCE hInstance,
+		LPCWSTR lpResName, UINT uType);
 #endif
-BOOL			WINAPI	mciFreeCommandResource(UINT uTable);
+	BOOL			WINAPI	mciFreeCommandResource(UINT uTable);
 
 #define DCB_NULL		0x0000
 #define DCB_WINDOW		0x0001			/* dwCallback is a HWND */
@@ -456,18 +452,18 @@ BOOL			WINAPI	mciFreeCommandResource(UINT uTable);
 #define DCB_TYPEMASK		0x0007
 #define DCB_NOSWITCH		0x0008			/* don't switch stacks for callback */
 
-BOOL APIENTRY DriverCallback(DWORD_PTR dwCallback, DWORD dwFlags,
-    HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
+	BOOL APIENTRY DriverCallback(DWORD_PTR dwCallback, DWORD dwFlags,
+		HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
-typedef VOID (*LPTASKCALLBACK)(DWORD_PTR dwInst);
+	typedef VOID(*LPTASKCALLBACK)(DWORD_PTR dwInst);
 
 #define TASKERR_NOTASKSUPPORT 1
 #define TASKERR_OUTOFMEMORY   2
-UINT     WINAPI mmTaskCreate(LPTASKCALLBACK, HANDLE*, DWORD_PTR);
-VOID     WINAPI mmTaskBlock(DWORD);
-BOOL     WINAPI mmTaskSignal(DWORD);
-VOID     WINAPI mmTaskYield(VOID);
-DWORD    WINAPI mmGetCurrentTask(VOID);
+	UINT     WINAPI mmTaskCreate(LPTASKCALLBACK, HANDLE*, DWORD_PTR);
+	VOID     WINAPI mmTaskBlock(DWORD);
+	BOOL     WINAPI mmTaskSignal(DWORD);
+	VOID     WINAPI mmTaskYield(VOID);
+	DWORD    WINAPI mmGetCurrentTask(VOID);
 
 #include <poppack.h>
 

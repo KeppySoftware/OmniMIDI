@@ -6,7 +6,7 @@ using System.Resources;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Per modificare le informazioni associate a un assembly
 // occorre quindi modificare i valori di questi attributi.
-[assembly: AssemblyTitle("Keppy's Synthesizer ~ Configurator")]
+[assembly: AssemblyTitle("Keppy's Synthesizer ~ Mixer")]
 [assembly: AssemblyDescription("Keppy's Synthesizer New Configurator (C#)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]

@@ -6,20 +6,6 @@ namespace KeppySynthMixerWindow
     {
         public static void ChangeMeter(int channel, int volume)
         {
-            // For peak indicator
-            if (volume == 0)
-            {
-                KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Black;
-            }
-            else if (volume > 0 && volume <= 32767)
-            {
-                KeppySynthMixerWindow.Delegate.LED.BackColor = Color.LightGreen;
-            }
-            else if (volume > 32767)
-            {
-                KeppySynthMixerWindow.Delegate.LED.BackColor = Color.OrangeRed;
-            }
-
             // For normal meter
             if (volume == 0)
             {
@@ -113,6 +99,153 @@ namespace KeppySynthMixerWindow
             {
                 TurnOnLEDs(channel, 22);
             }
+        }
+
+        public static void SetMaximum(int maximum)
+        {
+            KeppySynthMixerWindow.Delegate.CH1VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH2VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH3VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH4VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH5VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH6VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH7VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH8VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH9VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH10VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH11VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH12VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH13VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH14VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH15VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.CH16VOL.Maximum = maximum;
+            KeppySynthMixerWindow.Delegate.MainVol.Maximum = maximum;
+        }
+
+        public static void AverageMeter(int left, int right)
+        {
+            int average = (left + right) / 2;
+
+            // For peak indicator
+            if (average == 0)
+            {
+                KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Black;
+            }
+            else if (average > 0 && average <= 32767)
+            {
+                KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Lime;
+            }
+            else if (average > 32767)
+            {
+                KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Red;
+            }
+
+        }
+
+        public static void DisableLEDs()
+        {
+            KeppySynthMixerWindow.Delegate.Meter.Cursor = System.Windows.Forms.Cursors.No;
+            KeppySynthMixerWindow.Delegate.SignalLabel.ForeColor = Color.Gray;
+            KeppySynthMixerWindow.Delegate.LLab.ForeColor = Color.Gray;
+            KeppySynthMixerWindow.Delegate.RLab.ForeColor = Color.Gray;
+            KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV1.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV2.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV3.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV4.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV5.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV6.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV7.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV8.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV9.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV10.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV11.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV12.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV13.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV14.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV15.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV16.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV17.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV18.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV19.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV20.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV21.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV22.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV1.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV2.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV3.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV4.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV5.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV6.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV7.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV8.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV9.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV10.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV11.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV12.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV13.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV14.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV15.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV16.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV17.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV18.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV19.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV20.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV21.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.RV22.BackColor = Color.Black;
+        }
+
+        public static void EnableLEDs()
+        {       
+            KeppySynthMixerWindow.Delegate.Meter.Cursor = System.Windows.Forms.Cursors.Default;
+            KeppySynthMixerWindow.Delegate.SignalLabel.ForeColor = Color.White;
+            KeppySynthMixerWindow.Delegate.LLab.ForeColor = Color.White;
+            KeppySynthMixerWindow.Delegate.RLab.ForeColor = Color.White;
+            KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.LV1.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV2.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV3.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV4.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV5.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV6.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV7.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV8.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV9.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV10.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV11.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.LV12.BackColor = Color.GreenYellow;
+            KeppySynthMixerWindow.Delegate.LV13.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.LV14.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.LV15.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.LV16.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.LV17.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.LV18.BackColor = Color.Orange;
+            KeppySynthMixerWindow.Delegate.LV19.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.LV20.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.LV21.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.LV22.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.RV1.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV2.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV3.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV4.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV5.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV6.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV7.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV8.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV9.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV10.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV11.BackColor = Color.Lime;
+            KeppySynthMixerWindow.Delegate.RV12.BackColor = Color.GreenYellow;
+            KeppySynthMixerWindow.Delegate.RV13.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.RV14.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.RV15.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.RV16.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.RV17.BackColor = Color.Yellow;
+            KeppySynthMixerWindow.Delegate.RV18.BackColor = Color.Orange;
+            KeppySynthMixerWindow.Delegate.RV19.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.RV20.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.RV21.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.RV22.BackColor = Color.Red;
         }
 
         public static void TurnOnLEDs(int channel, int number)

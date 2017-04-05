@@ -676,16 +676,6 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					}
 					#endif
 
-					// MIDI In code
-					if (midiinenabled == 1) {
-						// BASS_MIDI_DEVICEINFO* info;
-						// BASS_MIDI_InGetDeviceInfo(defaultmidiindev, info);
-						// BASS_MIDI_InInit(defaultmidiindev, MidiInProc, NULL);
-						// BASS_MIDI_InStart(defaultmidiindev);
-						// CheckUp();
-
-						// Working on it, currently disabled.
-					}
 					// Encoder code
 					if (encmode == 1) {
 						PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");
@@ -854,6 +844,8 @@ void DoStopClient() {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&One, 1);
 	for (int i = 0; i <= 15; ++i) {
 		RegSetValueEx(hKey, cvnames[i], 0, dwType, (LPBYTE)&One, sizeof(One));
 	}
@@ -876,8 +868,8 @@ void DoStopClient() {
 }
 
 void DoResetClient(UINT uDeviceID) {
-	ResetSynth(0);
 	reset_synth = 1;
+	ResetSynth(0);
 }
 
 LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPENDESC * desc, DWORD flags) {

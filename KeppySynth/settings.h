@@ -3,12 +3,9 @@ Keppy's Synthesizer settings loading system
 */
 
 struct evbuf_t{
-	UINT   uDeviceID;
 	UINT   uMsg;
 	DWORD_PTR	dwParam1;
 	DWORD_PTR	dwParam2;
-	int exlen;
-	unsigned char *sysexbuffer;
 };
 
 static struct evbuf_t evbuf[36864];
@@ -650,15 +647,7 @@ void mixervoid() {
 
 		for (int i = 0; i <= 15; ++i) {
 			RegQueryValueEx(hKey, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
-			if (midivolumeoverride == 1) {
-				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
-			}
-			else {
-				if (cvalues[i] != tcvalues[i]) {
-					BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_VOLUME, cvalues[i]);
-					tcvalues[i] = cvalues[i];
-				}
-			}
+			BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 			RegQueryValueEx(hKey, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
 		}
 

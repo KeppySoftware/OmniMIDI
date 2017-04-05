@@ -85,7 +85,7 @@ static int midiinenabled = 0;			// MIDI Input
 static int midivoices = 0;				// Max voices INT
 static int midivolumeoverride = 0;		// MIDI track volume override
 static int monorendering = 0;			// Mono rendering (Instead of stereo by default)
-static int newevbuffvalue = 64;			// DO NOT TOUCH
+static UINT newevbuffvalue = 32768;		// DO NOT TOUCH
 static int newsndbfvalue;				// DO NOT TOUCH
 static int noaudiodevices = 0;			// No audio devices flag
 static int nofloat = 1;					// Enable or disable the float engine
@@ -104,6 +104,7 @@ static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
 static int vmsemu = 0;					// VirtualMIDISynth buffer emulation
 static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
+static int ischangingbuffermode = 0;	// Stuff
 static int volumemon = 1;				// Volume monitoring
 static int xaudiodisabled = 0;			// Override the default engine
 
@@ -137,14 +138,14 @@ static int isbassvstloaded = 0;
 static LPCWSTR cnames[16] =
 {
 	L"ch1", L"ch2", L"ch3", L"ch4", L"ch5", L"ch6", L"ch7", L"ch8",
-	L"ch9", L"ch10", L"ch11", L"ch2", L"ch13", L"ch14", L"ch15", L"ch16"
+	L"ch9", L"ch10", L"ch11", L"ch12", L"ch13", L"ch14", L"ch15", L"ch16"
 };
 
 // Channels voices
 static LPCWSTR cvnames[16] =
 {
 	L"chv1", L"chv2", L"chv3", L"chv4", L"chv5", L"chv6", L"chv7", L"chv8",
-	L"chv9", L"chv10", L"chv11", L"chv2", L"chv13", L"chv14", L"chv15", L"chv16"
+	L"chv9", L"chv10", L"chv11", L"chv12", L"chv13", L"chv14", L"chv15", L"chv16"
 };
 
 static int cvvalues[16] =
@@ -244,8 +245,8 @@ static int SynthNamesTypes[defaultarraysize] =
 // Channels
 static int cvalues[16] =
 {
-	16383, 16383, 16383, 16383, 16383, 16383, 16383, 16383,
-	16383, 16383, 16383, 16383, 16383, 16383, 16383, 16383
+	100, 100, 100, 100, 100, 100, 100, 100,
+	100, 100, 100, 100, 100, 100, 100, 100
 };
 
 static int tcvalues[16] =
@@ -276,13 +277,6 @@ static int buffull = 0;
 static int extra8lists = 0;
 static int lovel = 1;
 static int hivel = 1;
-
-// Buffer system
-static BYTE gs_part_to_ch[16];
-static BYTE drum_channels[16];
-static const char sysex_gm_reset[] = { 0xF0, 0x7E, 0x7F, 0x09, 0x01, 0xF7 };
-static const char sysex_gs_reset[] = { 0xF0, 0x41, 0x10, 0x42, 0x12, 0x40, 0x00, 0x7F, 0x00, 0x41, 0xF7 };
-static const char sysex_xg_reset[] = { 0xF0, 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00, 0xF7 };
 
 // Soundfont lists
 static TCHAR userprofile[MAX_PATH];

@@ -6,26 +6,6 @@ Keppy's Synthesizer buffer system
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-static void ResetDrumChannels()
-{
-	static const BYTE part_to_ch[16] = { 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15 };
-
-	unsigned i;
-
-	memset(drum_channels, 0, sizeof(drum_channels));
-	drum_channels[9] = 1;
-
-	memcpy(gs_part_to_ch, part_to_ch, sizeof(gs_part_to_ch));
-
-	if (KSStream)
-	{
-		for (i = 0; i < 16; ++i)
-		{
-			BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_DRUMS, drum_channels[i]);
-		}
-	}
-}
-
 int bmsyn_buf_check(void){
 	int retval;
 	int retvalemu;
@@ -51,7 +31,7 @@ bool depends() {
 }
 
 void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
-	if (turnnoteoffintonoteon) {
+	if (turnnoteoffintonoteon == 1) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89))) {
 			int newstatus = status + 0x22;
 			SETSTATUS(dwParam1, newstatus);
@@ -69,12 +49,19 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 			}
 		}
 	}
-	if (fullvelocity && velocity != 0)
+	if (fullvelocity == 1 && velocity != 0)
 		SETVELOCITY(dwParam1, velocity);
 
-	dwParam2 = dwParam1 & 0xF0;
-	exlen = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, exlen);
+	BYTE statusv = (BYTE)dwParam1;
+	DWORD len;
+	if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)
+		len = 2;
+	else if (statusv < 0xf0 || statusv == 0xf2)
+		len = 3;
+	else
+		len = 1;
+
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 
 	CheckUp();
 
@@ -88,14 +75,12 @@ int bmsyn_play_some_data(void){
 		return 0;
 	}
 	else {
-		UINT uDeviceID;
 		UINT uMsg;
 		DWORD_PTR	dwParam1;
 		DWORD_PTR   dwParam2;
 
 		UINT evbpoint;
 		int exlen;
-		unsigned char *sysexbuffer;
 
 		if (!bmsyn_buf_check()){
 			return ~0;
@@ -108,12 +93,9 @@ int bmsyn_play_some_data(void){
 				evbrpoint -= newevbuffvalue;
 			}
 
-			uDeviceID = evbuf[evbpoint].uDeviceID;
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
 			dwParam2 = evbuf[evbpoint].dwParam2;
-			exlen = evbuf[evbpoint].exlen;
-			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 
 			int status = (dwParam1 & 0x000000FF);
 			int note = (dwParam1 & 0x0000FF00) >> 8;
@@ -123,6 +105,7 @@ int bmsyn_play_some_data(void){
 				velocity = 127;
 
 			LeaveCriticalSection(&mim_section);
+			
 			switch (uMsg) {
 			case MODM_DATA:
 				if (ignorenotes1) {	
@@ -137,20 +120,38 @@ int bmsyn_play_some_data(void){
 				}
 				playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
 				break;
-			case MODM_LONGDATA:
-				if (sysresetignore == 1) {
-					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
-					CheckUp();
-					if ((exlen == _countof(sysex_gm_reset) && !memcmp(sysexbuffer, sysex_gm_reset, _countof(sysex_gm_reset))) ||
-						(exlen == _countof(sysex_gs_reset) && !memcmp(sysexbuffer, sysex_gs_reset, _countof(sysex_gs_reset))) ||
-						(exlen == _countof(sysex_xg_reset) && !memcmp(sysexbuffer, sysex_xg_reset, _countof(sysex_xg_reset)))) {
-						ResetDrumChannels();
+			case MIM_DATA:
+				if (ignorenotes1) {
+					if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
+						&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
 					}
+					else {
+						playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
+					}
+					break;
+				}
+				playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
+				break;
+			case MODM_LONGDATA:
+				if (sysresetignore != 1) {
+					MIDIHDR *hdr = (MIDIHDR*)dwParam1;
+					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
+					CheckUp();
 					if (debugmode) {
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 					}
 				}
-				free(sysexbuffer);
+				break;
+			case MIM_LONGDATA:
+				if (sysresetignore != 1) {
+					MIDIHDR *hdr = (MIDIHDR*)dwParam1;
+					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
+					CheckUp();
+					if (debugmode) {
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
+					}
+				}
 				break;
 			}
 		} while (depends());
@@ -163,12 +164,9 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 	evbpoint = evbwpoint;
 	if (++evbwpoint >= newevbuffvalue)
 		evbwpoint -= newevbuffvalue;
-	evbuf[evbpoint].uDeviceID = !!uDeviceID;
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
-	evbuf[evbpoint].exlen = exlen;
-	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 	LeaveCriticalSection(&mim_section);
 	if (vms2emu == 1) {
 		if (InterlockedIncrement(&evbcount) >= newevbuffvalue) {
@@ -185,19 +183,15 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 }
 
 bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
-	IIMidiHdr = (MIDIHDR *)dwParam1;
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-	IIMidiHdr->dwFlags &= ~MHDR_DONE;
-	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-	exlen = (int)IIMidiHdr->dwBufferLength;
-	if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char)))) {
-		return MMSYSERR_NOMEM;
+	if (sysresetignore != 1) {
+		MIDIHDR *hdr = (MIDIHDR*)dwParam1;
+		BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
+		CheckUp();
+		if (debugmode) {
+			PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
+		}
 	}
-	else {
-		memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-	}
-	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-	IIMidiHdr->dwFlags |= MHDR_DONE;
+	return MMSYSERR_NOERROR;
 }
 
 void AudioRender() {

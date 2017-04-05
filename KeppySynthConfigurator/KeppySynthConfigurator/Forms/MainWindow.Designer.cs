@@ -91,12 +91,10 @@
             this.MonophonicFunc = new System.Windows.Forms.MenuItem();
             this.FadeoutDisable = new System.Windows.Forms.MenuItem();
             this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
-            this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
-            this.MIDIeventsRed = new System.Windows.Forms.MenuItem();
             this.MaskSynthesizerAsAnother = new System.Windows.Forms.MenuItem();
             this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
@@ -452,7 +450,7 @@
             // 
             // enableextra8sf
             // 
-            this.enableextra8sf.Index = 2;
+            this.enableextra8sf.Index = 1;
             this.enableextra8sf.Text = "Enable extra 8 soundfont lists";
             this.enableextra8sf.Click += new System.EventHandler(this.enableextra8sf_Click);
             // 
@@ -590,7 +588,6 @@
             this.MonophonicFunc,
             this.FadeoutDisable,
             this.ReduceCPUOver,
-            this.VolumeBoost,
             this.menuItem16,
             this.useoldbuffersystem,
             this.slowdownnoskip});
@@ -653,26 +650,20 @@
             this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
             this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
             // 
-            // VolumeBoost
-            // 
-            this.VolumeBoost.Index = 6;
-            this.VolumeBoost.Text = "Enable volume boost";
-            this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
-            // 
             // menuItem16
             // 
-            this.menuItem16.Index = 7;
+            this.menuItem16.Index = 6;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 8;
+            this.useoldbuffersystem.Index = 7;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 9;
+            this.slowdownnoskip.Index = 8;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -680,7 +671,6 @@
             // 
             this.menuItem14.Index = 12;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.MIDIeventsRed,
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
             this.MIDINameNoSpace,
@@ -688,33 +678,26 @@
             this.autopanicmode});
             this.menuItem14.Text = "Advanced driver settings";
             // 
-            // MIDIeventsRed
-            // 
-            this.MIDIeventsRed.Index = 0;
-            this.MIDIeventsRed.Text = "MIDI In Data Parser";
-            this.MIDIeventsRed.Visible = false;
-            this.MIDIeventsRed.Click += new System.EventHandler(this.MIDIeventsRed_Click);
-            // 
             // MaskSynthesizerAsAnother
             // 
-            this.MaskSynthesizerAsAnother.Index = 1;
+            this.MaskSynthesizerAsAnother.Index = 0;
             this.MaskSynthesizerAsAnother.Text = "Mask synthesizer as another";
             this.MaskSynthesizerAsAnother.Click += new System.EventHandler(this.MaskSynthesizerAsAnother_Click);
             // 
             // MIDINameNoSpace
             // 
-            this.MIDINameNoSpace.Index = 3;
+            this.MIDINameNoSpace.Index = 2;
             this.MIDINameNoSpace.Text = "Use MIDI device name without spaces";
             this.MIDINameNoSpace.Click += new System.EventHandler(this.MIDINameNoSpace_Click);
             // 
             // menuItem18
             // 
-            this.menuItem18.Index = 4;
+            this.menuItem18.Index = 3;
             this.menuItem18.Text = "-";
             // 
             // autopanicmode
             // 
-            this.autopanicmode.Index = 5;
+            this.autopanicmode.Index = 4;
             this.autopanicmode.Text = "Automatic rendering recovery";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
@@ -2017,7 +2000,6 @@
         private System.Windows.Forms.MenuItem menuItem23;
         private System.Windows.Forms.MenuItem DLLOverrideFolder;
         private System.Windows.Forms.MenuItem PanicButton;
-        public System.Windows.Forms.MenuItem VolumeBoost;
         private System.Windows.Forms.MenuItem menuItem24;
         private System.Windows.Forms.MenuItem SoftpediaPage;
         private System.Windows.Forms.MenuItem menuItem26;
@@ -2031,7 +2013,6 @@
         private System.Windows.Forms.MenuItem SeeChangelog;
         private System.Windows.Forms.MenuItem menuItem29;
         public System.Windows.Forms.MenuItem MonophonicFunc;
-        private System.Windows.Forms.MenuItem MIDIeventsRed;
         private System.Windows.Forms.TabPage Settings;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
         public System.Windows.Forms.CheckBox XAudioDisable;

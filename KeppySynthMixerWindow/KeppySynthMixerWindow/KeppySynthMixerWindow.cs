@@ -19,7 +19,11 @@ namespace KeppySynthMixerWindow
         public static RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
         public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+        public static Boolean VUStatus = false;
         int MaxStockClock;
+
+        public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16" };
+        public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         public KeppySynthMixerWindow()
         {
@@ -33,26 +37,6 @@ namespace KeppySynthMixerWindow
             {
                 MaxStockClock = int.Parse(moProcessor["maxclockspeed"].ToString());
             }
-        }
-
-        private void fullVolumeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CH1VOL.Value = 127;
-            CH2VOL.Value = 127;
-            CH3VOL.Value = 127;
-            CH4VOL.Value = 127;
-            CH5VOL.Value = 127;
-            CH6VOL.Value = 127;
-            CH7VOL.Value = 127;
-            CH8VOL.Value = 127;
-            CH9VOL.Value = 127;
-            CH10VOL.Value = 127;
-            CH11VOL.Value = 127;
-            CH12VOL.Value = 127;
-            CH13VOL.Value = 127;
-            CH14VOL.Value = 127;
-            CH15VOL.Value = 127;
-            CH16VOL.Value = 127;
         }
 
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
@@ -73,6 +57,7 @@ namespace KeppySynthMixerWindow
             CH14VOL.Value = 100;
             CH15VOL.Value = 100;
             CH16VOL.Value = 100;
+            MainVol.Value = 100;
         }
 
         private void muteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -93,6 +78,7 @@ namespace KeppySynthMixerWindow
             CH14VOL.Value = 0;
             CH15VOL.Value = 0;
             CH16VOL.Value = 0;
+            MainVol.Value = 0;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,6 +99,7 @@ namespace KeppySynthMixerWindow
                 int right = Convert.ToInt32(Debug.GetValue("rightvol"));
                 MeterFunc.ChangeMeter(0, left);
                 MeterFunc.ChangeMeter(1, right);
+                MeterFunc.AverageMeter(left, right);
                 System.Threading.Thread.Sleep(1);
             }
             catch (Exception ex)
@@ -125,6 +112,13 @@ namespace KeppySynthMixerWindow
         {
             try
             {
+                base.DoubleBuffered = true;
+                SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+                SetStyle(ControlStyles.ResizeRedraw, true);
+                SetStyle(ControlStyles.UserPaint, true);
+                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+                UpdateStyles();
+
                 Delegate = this;
                 CPUSpeed();
                 if (Channels == null)
@@ -132,49 +126,53 @@ namespace KeppySynthMixerWindow
                     Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels");
                     return;
                 }
-                CH1VOL.Value = Convert.ToInt32(Channels.GetValue("ch1", 100));
-                CH2VOL.Value = Convert.ToInt32(Channels.GetValue("ch2", 100));
-                CH3VOL.Value = Convert.ToInt32(Channels.GetValue("ch3", 100));
-                CH4VOL.Value = Convert.ToInt32(Channels.GetValue("ch4", 100));
-                CH5VOL.Value = Convert.ToInt32(Channels.GetValue("ch5", 100));
-                CH6VOL.Value = Convert.ToInt32(Channels.GetValue("ch6", 100));
-                CH7VOL.Value = Convert.ToInt32(Channels.GetValue("ch7", 100));
-                CH8VOL.Value = Convert.ToInt32(Channels.GetValue("ch8", 100));
-                CH9VOL.Value = Convert.ToInt32(Channels.GetValue("ch9", 100));
-                CH10VOL.Value = Convert.ToInt32(Channels.GetValue("ch10", 100));
-                CH11VOL.Value = Convert.ToInt32(Channels.GetValue("ch11", 100));
-                CH12VOL.Value = Convert.ToInt32(Channels.GetValue("ch12", 100));
-                CH13VOL.Value = Convert.ToInt32(Channels.GetValue("ch13", 100));
-                CH14VOL.Value = Convert.ToInt32(Channels.GetValue("ch14", 100));
-                CH15VOL.Value = Convert.ToInt32(Channels.GetValue("ch15", 100));
-                CH16VOL.Value = Convert.ToInt32(Channels.GetValue("ch16", 100));
+                if (Convert.ToInt32(Settings.GetValue("volumeboost")) == 1)
+                {
+                    menuItem5.Checked = true;
+                    MeterFunc.SetMaximum(200);
+                    for (int i = 0; i <= 15; ++i)
+                    {
+                        RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
+                        if (RegValInt[i] > 200)
+                            RegValInt[i] = 200;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i <= 15; ++i)
+                    {
+                        RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
+                        if (RegValInt[i] > 100)
+                            RegValInt[i] = 100;
+                    }
+                }
+                CH1VOL.Value = RegValInt[0];
+                CH2VOL.Value = RegValInt[1];
+                CH3VOL.Value = RegValInt[2];
+                CH4VOL.Value = RegValInt[3];
+                CH5VOL.Value = RegValInt[4];
+                CH6VOL.Value = RegValInt[5];
+                CH7VOL.Value = RegValInt[6];
+                CH8VOL.Value = RegValInt[7];
+                CH9VOL.Value = RegValInt[8];
+                CH10VOL.Value = RegValInt[9];
+                CH11VOL.Value = RegValInt[10];
+                CH12VOL.Value = RegValInt[11];
+                CH13VOL.Value = RegValInt[12];
+                CH14VOL.Value = RegValInt[13];
+                CH15VOL.Value = RegValInt[14];
+                CH16VOL.Value = RegValInt[15];               
                 if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
                 {
-                    SignalLabel.Visible = true;
-                    LED.Visible = true;
-                    Meter.Visible = true;
                     VolumeMonitor.Checked = true;
-                    VolumeCheck.Enabled = true;
-                    Size = new Size(821, 222);
-                    CenterToScreen();
+                    MeterFunc.EnableLEDs();
+                    VUStatus = true;
                 }
                 else
                 {
-                    SignalLabel.Visible = false;
-                    LED.Visible = false;
-                    Meter.Visible = false;
                     VolumeMonitor.Checked = false;
-                    VolumeCheck.Enabled = false;
-                    Size = new Size(620, 222);
-                    CenterToScreen();
-                }
-                if (Convert.ToInt32(Settings.GetValue("midivolumeoverride")) == 1)
-                {
-                    MIDIVolumeOverride.Checked = true;
-                }
-                else
-                {
-                    MIDIVolumeOverride.Checked = false;
+                    MeterFunc.DisableLEDs();
+                    VUStatus = false;
                 }
                 ChannelVolume.Enabled = true;
                 GarbageCollector.RunWorkerAsync();
@@ -207,52 +205,30 @@ namespace KeppySynthMixerWindow
                         DialogResult dialogResult = MessageBox.Show("Enabling a mixer on a computer with poor specs could make the driver stutter.\n\nAre you sure you want to enable it?", "Weak processor detected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (dialogResult == DialogResult.Yes)
                         {
-                            Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
-                            SignalLabel.Visible = true;
-                            LED.Visible = true;
-                            Meter.Visible = true;
                             VolumeMonitor.Checked = true;
-                            VolumeCheck.Enabled = true;
-                            Size = new Size(821, 222);
-                            CenterToScreen();
+                            Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                            MeterFunc.EnableLEDs();
+                            VUStatus = true;
                             MeterFunc.ChangeMeter(0, 0);
                             MeterFunc.ChangeMeter(1, 0);
-                        }
-                        else if (dialogResult == DialogResult.No)
-                        {
-                            SignalLabel.Visible = false;
-                            LED.Visible = false;
-                            Meter.Visible = false;
-                            VolumeMonitor.Checked = false;
-                            VolumeCheck.Enabled = false;
-                            Size = new Size(620, 222);
-                            CenterToScreen();
                         }
                     }
                     else if (MaxStockClock >= 1100)
                     {
-                        Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
-                        SignalLabel.Visible = true;
-                        LED.Visible = true;
-                        Meter.Visible = true;
                         VolumeMonitor.Checked = true;
-                        VolumeCheck.Enabled = true;
-                        Size = new Size(821, 222);
-                        CenterToScreen();
+                        Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                        MeterFunc.EnableLEDs();
+                        VUStatus = true;
                         MeterFunc.ChangeMeter(0, 0);
                         MeterFunc.ChangeMeter(1, 0);
                     }
                 }
                 else
                 {
-                    Settings.SetValue("volumemon", "0", RegistryValueKind.DWord);
-                    SignalLabel.Visible = false;
-                    LED.Visible = false;
-                    Meter.Visible = false;
                     VolumeMonitor.Checked = false;
-                    VolumeCheck.Enabled = false;
-                    Size = new Size(620, 222);
-                    CenterToScreen();
+                    Settings.SetValue("volumemon", "0", RegistryValueKind.DWord);
+                    MeterFunc.DisableLEDs();
+                    VUStatus = false;
                 }
             }
             catch (Exception ex)
@@ -294,25 +270,6 @@ namespace KeppySynthMixerWindow
             System.Threading.Thread.Sleep(1);
         }
 
-        private void MIDIVolumeOverride_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (MIDIVolumeOverride.Checked == true)
-                {
-                    Settings.SetValue("midivolumeoverride", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    Settings.SetValue("midivolumeoverride", "0", RegistryValueKind.DWord);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-        }
-
         private void showTheConfiguratorWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
@@ -320,93 +277,110 @@ namespace KeppySynthMixerWindow
 
         private void VolumeToolTip(string channel, TrackBar trackbar)
         {
-            int percentage = (int)Math.Round((double)(100 * trackbar.Value) / 127); ;
-            VolumeTip.SetToolTip(trackbar, String.Format("{0}: {1}%", channel, percentage));
+            int percentage;
+            VolumeTip.SetToolTip(trackbar, String.Format("{0}: {1}%", channel, trackbar.Value));
         }
 
         private void CH16VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 16", CH16VOL);
+            RegValInt[15] = CH16VOL.Value;
         }
 
         private void CH15VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 15", CH15VOL);
+            RegValInt[14] = CH15VOL.Value;
         }
 
         private void CH14VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 14", CH14VOL);
+            RegValInt[13] = CH14VOL.Value;
         }
 
         private void CH13VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 13", CH13VOL);
+            RegValInt[12] = CH13VOL.Value;
         }
 
         private void CH12VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 12", CH12VOL);
+            RegValInt[11] = CH12VOL.Value;
         }
 
         private void CH11VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 11", CH11VOL);
+            RegValInt[10] = CH11VOL.Value;
         }
 
         private void CH10VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 10", CH10VOL);
+            RegValInt[9] = CH10VOL.Value;
         }
 
         private void CH9VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 9", CH9VOL);
+            RegValInt[8] = CH9VOL.Value;
         }
 
         private void CH8VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 8", CH8VOL);
+            RegValInt[7] = CH8VOL.Value;
         }
 
         private void CH7VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 7", CH7VOL);
+            RegValInt[6] = CH7VOL.Value;
         }
 
         private void CH6VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 6", CH6VOL);
+            RegValInt[5] = CH6VOL.Value;
         }
 
         private void CH5VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 5", CH5VOL);
+            RegValInt[4] = CH5VOL.Value;
         }
 
         private void CH4VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 4", CH4VOL);
+            RegValInt[3] = CH4VOL.Value;
         }
 
         private void CH3VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 3", CH3VOL);
+            RegValInt[2] = CH3VOL.Value;
         }
 
         private void CH2VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 2", CH2VOL);
+            RegValInt[1] = CH2VOL.Value;
         }
 
         private void CH1VOL_Scroll(object sender, EventArgs e)
         {
             VolumeToolTip("Channel 1", CH1VOL);
+            RegValInt[0] = CH1VOL.Value;
         }
 
         private void MainVol_Scroll(object sender, EventArgs e)
         {
             CH1VOL.Value = CH2VOL.Value = CH3VOL.Value = CH4VOL.Value = CH5VOL.Value = CH6VOL.Value = CH7VOL.Value = CH8VOL.Value = CH9VOL.Value = CH10VOL.Value = CH11VOL.Value = CH12VOL.Value = CH13VOL.Value = CH14VOL.Value = CH15VOL.Value = CH16VOL.Value = MainVol.Value;
+            VolumeToolTip("All", MainVol);
         }
 
         private void LED_Paint(object sender, PaintEventArgs e)
@@ -414,7 +388,10 @@ namespace KeppySynthMixerWindow
             Rectangle rect = LED.ClientRectangle;
             rect.Width--;
             rect.Height--;
-            e.Graphics.DrawRectangle(Pens.Black, rect);
+            if (VUStatus)
+                e.Graphics.DrawRectangle(Pens.White, rect);
+            else
+                e.Graphics.DrawRectangle(Pens.Gray, rect);
         }
 
         // Snap feature
@@ -453,21 +430,32 @@ namespace KeppySynthMixerWindow
             {
                 if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) != 1)
                 {
-                    SignalLabel.Visible = false;
-                    LED.Visible = false;
-                    Meter.Visible = false;
-                    VolumeMonitor.Enabled = false;
-                    VolumeCheck.Enabled = false;
-                    Size = new Size(620, 222);
+                    if (VUStatus != false)
+                    {
+                        MeterFunc.DisableLEDs();
+                        VUStatus = false;
+                    }
                 }
                 else
                 {
-                    int left = Convert.ToInt32(Debug.GetValue("leftvol"));
-                    int right = Convert.ToInt32(Debug.GetValue("rightvol"));
-                    MeterFunc.ChangeMeter(0, left);
-                    MeterFunc.ChangeMeter(1, right);
+                    if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
+                    {
+                        if (VUStatus != true)
+                        {
+                            MeterFunc.EnableLEDs();
+                            VUStatus = true;
+                        }
+                    }
+                    else
+                    {
+                        if (VUStatus != false)
+                        {
+                            MeterFunc.DisableLEDs();
+                            VUStatus = false;
+                        }
+                    }
                 }
-                System.Threading.Thread.Sleep(1);
+                System.Threading.Thread.Sleep(10);
             }
             catch (Exception ex)
             {
@@ -485,6 +473,30 @@ namespace KeppySynthMixerWindow
                 X = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - this.Width) / 2),
                 Y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - this.Height) / 2)
             };
+        }
+
+        private void menuItem5_Click(object sender, EventArgs e)
+        {
+            if (!menuItem5.Checked)
+            {
+                menuItem5.Checked = true;
+                Settings.SetValue("volumeboost", 1, RegistryValueKind.DWord);
+                MeterFunc.SetMaximum(200);
+            }
+            else
+            {
+                menuItem5.Checked = false;
+                Settings.SetValue("volumeboost", 0, RegistryValueKind.DWord);
+
+                for (int i = 0; i <= 15; ++i)
+                {
+                    if (RegValInt[i] > 100)
+                    {
+                        Channels.SetValue(RegValName[i], 100, RegistryValueKind.DWord);
+                    }
+                }
+                MeterFunc.SetMaximum(100);
+            }
         }
     }
 }
