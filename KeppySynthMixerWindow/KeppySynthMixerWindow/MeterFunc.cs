@@ -101,6 +101,55 @@ namespace KeppySynthMixerWindow
             }
         }
 
+        public static void ChangeStyle(Color TextColor, Color BackgroundColor, Color MeterTextColor, Color MeterBackgroundColor, Font FontFamily, Font MeterFontFamily)
+        {
+            // Colors
+            KeppySynthMixerWindow.Delegate.BackColor = BackgroundColor;
+            KeppySynthMixerWindow.Delegate.CH1.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH2.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH3.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH4.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH5.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH6.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH7.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH8.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH9.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH10.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH11.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH12.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH13.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH14.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH15.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.CH16.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.AllCh.ForeColor = TextColor;
+            KeppySynthMixerWindow.Delegate.Meter.BackColor = MeterBackgroundColor;
+            KeppySynthMixerWindow.Delegate.LLab.ForeColor = MeterTextColor;
+            KeppySynthMixerWindow.Delegate.RLab.ForeColor = MeterTextColor;
+            KeppySynthMixerWindow.Delegate.SignalLabel.ForeColor = MeterTextColor;
+
+            // Fonts
+            KeppySynthMixerWindow.Delegate.CH1.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH2.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH3.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH4.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH5.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH6.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH7.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH8.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH9.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH10.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH11.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH12.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH13.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH14.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH15.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.CH16.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.AllCh.Font = FontFamily;
+            KeppySynthMixerWindow.Delegate.LLab.Font = MeterFontFamily;
+            KeppySynthMixerWindow.Delegate.RLab.Font = MeterFontFamily;
+            KeppySynthMixerWindow.Delegate.SignalLabel.Font = MeterFontFamily;
+        }
+
         public static void SetMaximum(int maximum)
         {
             KeppySynthMixerWindow.Delegate.CH1VOL.Maximum = maximum;
@@ -213,13 +262,13 @@ namespace KeppySynthMixerWindow
             KeppySynthMixerWindow.Delegate.LV9.BackColor = Color.Lime;
             KeppySynthMixerWindow.Delegate.LV10.BackColor = Color.Lime;
             KeppySynthMixerWindow.Delegate.LV11.BackColor = Color.Lime;
-            KeppySynthMixerWindow.Delegate.LV12.BackColor = Color.GreenYellow;
+            KeppySynthMixerWindow.Delegate.LV12.BackColor = Color.LightGreen;
             KeppySynthMixerWindow.Delegate.LV13.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.LV14.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.LV15.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.LV16.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.LV17.BackColor = Color.Yellow;
-            KeppySynthMixerWindow.Delegate.LV18.BackColor = Color.Orange;
+            KeppySynthMixerWindow.Delegate.LV18.BackColor = Color.Goldenrod;
             KeppySynthMixerWindow.Delegate.LV19.BackColor = Color.Red;
             KeppySynthMixerWindow.Delegate.LV20.BackColor = Color.Red;
             KeppySynthMixerWindow.Delegate.LV21.BackColor = Color.Red;
@@ -235,13 +284,13 @@ namespace KeppySynthMixerWindow
             KeppySynthMixerWindow.Delegate.RV9.BackColor = Color.Lime;
             KeppySynthMixerWindow.Delegate.RV10.BackColor = Color.Lime;
             KeppySynthMixerWindow.Delegate.RV11.BackColor = Color.Lime;
-            KeppySynthMixerWindow.Delegate.RV12.BackColor = Color.GreenYellow;
+            KeppySynthMixerWindow.Delegate.RV12.BackColor = Color.LightGreen;
             KeppySynthMixerWindow.Delegate.RV13.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.RV14.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.RV15.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.RV16.BackColor = Color.Yellow;
             KeppySynthMixerWindow.Delegate.RV17.BackColor = Color.Yellow;
-            KeppySynthMixerWindow.Delegate.RV18.BackColor = Color.Orange;
+            KeppySynthMixerWindow.Delegate.RV18.BackColor = Color.Goldenrod;
             KeppySynthMixerWindow.Delegate.RV19.BackColor = Color.Red;
             KeppySynthMixerWindow.Delegate.RV20.BackColor = Color.Red;
             KeppySynthMixerWindow.Delegate.RV21.BackColor = Color.Red;

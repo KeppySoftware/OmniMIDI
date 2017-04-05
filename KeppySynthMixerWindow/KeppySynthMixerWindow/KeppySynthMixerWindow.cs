@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Management;
 using Microsoft.Win32;
@@ -22,8 +16,8 @@ namespace KeppySynthMixerWindow
         public static Boolean VUStatus = false;
         int MaxStockClock;
 
-        public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16" };
-        public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "cha" };
+        public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         public KeppySynthMixerWindow()
         {
@@ -130,7 +124,7 @@ namespace KeppySynthMixerWindow
                 {
                     menuItem5.Checked = true;
                     MeterFunc.SetMaximum(200);
-                    for (int i = 0; i <= 15; ++i)
+                    for (int i = 0; i <= 16; ++i)
                     {
                         RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
                         if (RegValInt[i] > 200)
@@ -139,13 +133,27 @@ namespace KeppySynthMixerWindow
                 }
                 else
                 {
-                    for (int i = 0; i <= 15; ++i)
+                    for (int i = 0; i <= 16; ++i)
                     {
                         RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
                         if (RegValInt[i] > 100)
                             RegValInt[i] = 100;
                     }
                 }
+
+                if (Properties.Settings.Default.CurrentTheme == 0)
+                {
+                    ClassicTheme.PerformClick();
+                }
+                else if (Properties.Settings.Default.CurrentTheme == 1)
+                {
+                    DarkTheme.PerformClick();
+                }
+                else
+                {
+                    ClassicTheme.PerformClick();
+                }
+
                 CH1VOL.Value = RegValInt[0];
                 CH2VOL.Value = RegValInt[1];
                 CH3VOL.Value = RegValInt[2];
@@ -161,7 +169,9 @@ namespace KeppySynthMixerWindow
                 CH13VOL.Value = RegValInt[12];
                 CH14VOL.Value = RegValInt[13];
                 CH15VOL.Value = RegValInt[14];
-                CH16VOL.Value = RegValInt[15];               
+                CH16VOL.Value = RegValInt[15];
+                MainVol.Value = RegValInt[16];
+
                 if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
                 {
                     VolumeMonitor.Checked = true;
@@ -262,6 +272,7 @@ namespace KeppySynthMixerWindow
                 Channels.SetValue("ch14", CH14VOL.Value.ToString(), RegistryValueKind.DWord);
                 Channels.SetValue("ch15", CH15VOL.Value.ToString(), RegistryValueKind.DWord);
                 Channels.SetValue("ch16", CH16VOL.Value.ToString(), RegistryValueKind.DWord);
+                Channels.SetValue("cha", MainVol.Value.ToString(), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -497,6 +508,24 @@ namespace KeppySynthMixerWindow
                 }
                 MeterFunc.SetMaximum(100);
             }
+        }
+
+        private void ClassicTheme_Click(object sender, EventArgs e)
+        {
+            MeterFunc.ChangeStyle(Color.Black, Color.White, Color.White, Color.Black, new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular), new Font("Lucida Console", 8.25f, FontStyle.Regular));
+            ClassicTheme.Checked = true;
+            DarkTheme.Checked = false;
+            Properties.Settings.Default.CurrentTheme = 1;
+            Properties.Settings.Default.Save();
+        }
+
+        private void DarkTheme_Click(object sender, EventArgs e)
+        {
+            MeterFunc.ChangeStyle(Color.White, Color.Black, Color.White, Color.FromArgb(16, 16, 16), new Font("Arial", 8.25f, FontStyle.Regular), new Font("Arial", 8.25f, FontStyle.Regular));
+            ClassicTheme.Checked = false;
+            DarkTheme.Checked = true;
+            Properties.Settings.Default.CurrentTheme = 0;
+            Properties.Settings.Default.Save();
         }
     }
 }

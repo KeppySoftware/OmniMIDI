@@ -630,7 +630,6 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 						}
 						KSStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
 						CheckUp();
-						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_NOBUFFER, 1);
 						BASS_ChannelPlay(KSStream, false);
 						CheckUp();
 						PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
@@ -646,6 +645,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 							PrintToConsole(FOREGROUND_RED, 1, "Dummy stream enabled.");
 						}
 					}
+					BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_NOBUFFER, 1);
 					if (!KSStream) {
 						BASS_StreamFree(KSStream);
 						CheckUp();

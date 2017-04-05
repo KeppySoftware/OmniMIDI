@@ -887,6 +887,7 @@ namespace KeppySynthConfigurator
 
                 // And finally, the volume!
                 int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
                 decimal VolVal = (decimal)VolumeValue / 100;
                 if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
