@@ -41,9 +41,9 @@ namespace KeppySynthDebugWindow
         string bit;
 
         // CPU/GPU information
-        ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("SELECT * FROM CIM_Processor");
-        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("SELECT * FROM CIM_VideoController");
-        ManagementObjectSearcher mosEnc = new ManagementObjectSearcher("SELECT * FROM CIM_Chassis");
+        ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Processor");
+        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_VideoController");
+        ManagementObjectSearcher mosEnc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Chassis");
         string cpubit = "32";
         int cpuclock = 0;
         string cpumanufacturer = "Unknown";
@@ -51,7 +51,7 @@ namespace KeppySynthDebugWindow
         string gpuchip = "Unknown";
         string gpuname = "Unknown";
         string gpuver = "N/A";
-        string gpuvram = "0";
+        UInt32 gpuvram = 0;
         string enclosure = "Unknown";
         int coreCount = 0;
 
@@ -110,21 +110,33 @@ namespace KeppySynthDebugWindow
                     cpumanufacturer = moProcessor["manufacturer"].ToString();
                     coreCount += int.Parse(moProcessor["NumberOfCores"].ToString());
                 }
+
                 // Get GPU info
-                foreach (ManagementObject moGPU in mosGPU.Get())
+                try
                 {
-                    try
+                    foreach (ManagementObject moGPU in mosGPU.Get())
                     {
                         gpuchip = moGPU["VideoProcessor"].ToString();
                         gpuname = moGPU["Name"].ToString();
-                        gpuvram = (long.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
+                        gpuvram = Convert.ToUInt32(moGPU["AdapterRAM"]);
                         gpuver = moGPU["DriverVersion"].ToString();
                     }
-                    catch (Exception ex)
+                }
+                catch
+                {
+                    // The GPU doesn't want to share its internal chip. Skip.
+                    // This might be caused by outdated drivers, an integrated GPU, or by a GPU that doesn't support WMI data.
+                    // (The latter is usually caused by using non-WDDM drivers)
+                    GPUInternalChip.Enabled = false;
+                    foreach (ManagementObject moGPU in mosGPU.Get())
                     {
-                        MessageBox.Show(ex.ToString());
+                        gpuchip = "The graphics card refused to share this info";
+                        gpuname = moGPU["Name"].ToString();
+                        gpuvram = Convert.ToUInt32(moGPU["AdapterRAM"]);
+                        gpuver = moGPU["DriverVersion"].ToString();
                     }
                 }
+
                 // Get enclosure info
                 foreach (ManagementObject moEnc in mosEnc.Get())
                 {
@@ -217,10 +229,12 @@ namespace KeppySynthDebugWindow
                 CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency);
                 GPU.Text = gpuname;
                 GPUInternalChip.Text = gpuchip;
-                GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", gpuvram, gpuver);
+                GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", (gpuvram / 1048576), gpuver);
                 MT.Text = enclosure;
             }
-            catch { }
+            catch (Exception ex) {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using Keppy's Synthesizer

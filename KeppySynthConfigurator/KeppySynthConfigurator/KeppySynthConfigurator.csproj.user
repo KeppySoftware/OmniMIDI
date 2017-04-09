@@ -14,5 +14,6 @@
     <StartArguments>
     </StartArguments>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+    <EnableSQLServerDebugging>true</EnableSQLServerDebugging>
   </PropertyGroup>
 </Project>

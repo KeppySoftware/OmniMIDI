@@ -819,10 +819,13 @@ namespace KeppySynthConfigurator
         {
             // Just save the Settings
             Functions.SaveSettings();
+            applySettingsToolStripMenuItem.Text = "Saved!";
+            applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Bold);
+            applySettingsToolStripMenuItem.ForeColor = Color.ForestGreen;
+            SavedLabel.Enabled = true;
 
             // Messagebox here
             Program.DebugToConsole(false, "Applied new settings.", null);
-            MessageBox.Show("Settings saved to the registry!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2103,6 +2106,26 @@ namespace KeppySynthConfigurator
             }
             catch { }
             finally { Resizing = false; }
+        }
+
+        private void CheckIfUserPressesEnter(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Functions.SaveSettings();
+                applySettingsToolStripMenuItem.Text = "Saved!";
+                applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Bold);
+                applySettingsToolStripMenuItem.ForeColor = Color.ForestGreen;
+                SavedLabel.Enabled = true;
+            }
+        }
+
+        private void SavedLabel_Tick(object sender, EventArgs e)
+        {
+            applySettingsToolStripMenuItem.Text = "Apply settings";
+            applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Regular);
+            applySettingsToolStripMenuItem.ForeColor = SystemColors.ControlText;
+            SavedLabel.Enabled = false;
         }
 
         private void WinMMPatch32_Click(object sender, EventArgs e)

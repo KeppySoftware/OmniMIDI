@@ -133,7 +133,7 @@
     <value>17, 17</value>
   </metadata>
   <metadata name="ThemeCheck.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>184, 56</value>
+    <value>17, 56</value>
   </metadata>
   <metadata name="ExportSettingsDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1010, 17</value>
@@ -145,7 +145,7 @@
   <data name="WhatIsXAudio.ErrorImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDAAAAIGNIUk0AAIcbAACL/wAA/lUAAIJ8AAB9
-        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
+        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADrwAAA68AZW8ckkAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
         syYoILqCNurCQQqSGxAUnaAWFLZiOcuW2iSdTGUtTdOSUlnsJzABFcUNoKJoqWWhlpaJurI0NC0rN5Up
         5V6sVpnUcv3L9/+c3xjXHL/vHOeze7/3e77NuJ7j+B15vDG/733v576v6/qdzzvGuGW32zVN0zRN0zRN
         0zRNc8mJLzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN
@@ -4443,7 +4443,7 @@
   <data name="WhatIsXAudio.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDAAAAIGNIUk0AAIcbAACL/wAA/lUAAIJ8AAB9
-        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
+        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADrwAAA68AZW8ckkAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
         syYoILqCNurCQQqSGxAUnaAWFLZiOcuW2iSdTGUtTdOSUlnsJzABFcUNoKJoqWWhlpaJurI0NC0rN5Up
         5V6sVpnUcv3L9/+c3xjXHL/vHOeze7/3e77NuJ7j+B15vDG/733v576v6/qdzzvGuGW32zVN0zRN0zRN
         0zRNc8mJLzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN
@@ -8741,7 +8741,7 @@
   <data name="WhatIsOutput.ErrorImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDAAAAIGNIUk0AAIcbAACL/wAA/lUAAIJ8AAB9
-        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
+        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADrwAAA68AZW8ckkAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
         syYoILqCNurCQQqSGxAUnaAWFLZiOcuW2iSdTGUtTdOSUlnsJzABFcUNoKJoqWWhlpaJurI0NC0rN5Up
         5V6sVpnUcv3L9/+c3xjXHL/vHOeze7/3e77NuJ7j+B15vDG/733v576v6/qdzzvGuGW32zVN0zRN0zRN
         0zRNc8mJLzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN
@@ -13039,7 +13039,7 @@
   <data name="WhatIsOutput.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDAAAAIGNIUk0AAIcbAACL/wAA/lUAAIJ8AAB9
-        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
+        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADrwAAA68AZW8ckkAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
         syYoILqCNurCQQqSGxAUnaAWFLZiOcuW2iSdTGUtTdOSUlnsJzABFcUNoKJoqWWhlpaJurI0NC0rN5Up
         5V6sVpnUcv3L9/+c3xjXHL/vHOeze7/3e77NuJ7j+B15vDG/733v576v6/qdzzvGuGW32zVN0zRN0zRN
         0zRNc8mJLzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN
@@ -17337,7 +17337,7 @@
   <data name="StatusBuf.ErrorImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDAAAAIGNIUk0AAIcbAACL/wAA/lUAAIJ8AAB9
-        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADsMAAA7DAcdvqGQAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
+        MwAA680AADo7AAAjQeoHuS0AAAAJcEhZcwAADrwAAA68AZW8ckkAAP+WSURBVHhe7P0L2K5rWdaLT/Yt
         syYoILqCNurCQQqSGxAUnaAWFLZiOcuW2iSdTGUtTdOSUlnsJzABFcUNoKJoqWWhlpaJurI0NC0rN5Up
         5V6sVpnUcv3L9/+c3xjXHL/vHOeze7/3e77NuJ7j+B15vDG/733v576v6/qdzzvGuGW32zVN0zRN0zRN
         0zRNc8mJLzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN0zRNc7mILzZN0zRN0zRN
@@ -21636,7 +21636,10 @@
     <value>264, 17</value>
   </metadata>
   <metadata name="RecommendedBuffer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
+    <value>1289, 17</value>
+  </metadata>
+  <metadata name="SavedLabel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1176, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>54</value>

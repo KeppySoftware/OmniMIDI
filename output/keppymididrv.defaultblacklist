@@ -48,7 +48,10 @@ googleupdate.exe
 gta5.exe
 gta_sa.exe
 gui.exe
+hamachi.exe
 hl2.exe
+hwinfo64.exe
+hwinfomonitor.exe
 iclouddrive.exe
 icloudphotos.exe
 icloudservices.exe
@@ -64,9 +67,11 @@ lightshot.exe
 line.exe
 lineplayer.exe
 livecomm.exe
+logmein.exe
 loopmidi.exe
 lsass.exe
 lsm.exe
+lssrvc.exe
 manycam.exe
 mdm.exe
 mdnsresponder.exe
@@ -78,6 +83,7 @@ node.exe
 notepad++.exe
 nvbackend.exe
 nvcontainer.exe
+nvdisplay.container.exe
 nvidia share.exe
 nvnetworkservice.exe
 nvoawrappercache.exe
@@ -88,6 +94,7 @@ nvsphelper64.exe
 nvstreamnetworkservice.exe
 nvstreamservice.exe
 nvstreamuseragent.exe
+nvtray.exe
 nvvsvc.exe
 nvwirelesscontroller.exe
 nvxdsync.exe
@@ -97,6 +104,7 @@ originwebhelperservice.exe
 paladins.exe
 paladinseac.exe
 pcsx2.exe
+perfwatson2.exe
 photoshop.exe
 portal2.exe
 procaster.exe
@@ -117,7 +125,9 @@ secd.exe
 setpoint.exe
 settingssynchost.exe
 sharex.exe
+sharex.exe
 shellexperiencehost.exe
+sidebar.exe
 sihost.exe
 skydrive.exe
 skype.exe
@@ -162,7 +172,9 @@ vscvol.exe
 vsetwservice.exe
 wininit.exe
 winlogon.exe
+wuauclt.exe
 wudfhost.exe
+xboxstat.exe
 xmousebuttoncontrol.exe
 xsplit.core.exe
 xsplit.exe

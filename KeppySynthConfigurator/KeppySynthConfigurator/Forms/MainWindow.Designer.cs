@@ -214,6 +214,7 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
+            this.SavedLabel = new System.Windows.Forms.Timer(this.components);
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1087,7 +1088,7 @@
             this.Settings.Controls.Add(this.VolTrackBar);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 416);
+            this.Settings.Size = new System.Drawing.Size(641, 417);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -1138,6 +1139,7 @@
             // applySettingsToolStripMenuItem
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(541, 385);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
@@ -1278,6 +1280,7 @@
             0,
             0,
             0});
+            this.SPFRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
             // Label4
             // 
@@ -1334,6 +1337,7 @@
             0,
             -2147483648});
             this.bufsize.ValueChanged += new System.EventHandler(this.bufsize_ValueChanged);
+            this.bufsize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
             // groupBox1
             // 
@@ -1369,6 +1373,7 @@
             0,
             0,
             0});
+            this.MaxCPU.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
             // Label6
             // 
@@ -1413,6 +1418,7 @@
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 22;
             this.Frequency.SelectedIndexChanged += new System.EventHandler(this.Frequency_SelectedIndexChanged);
+            this.Frequency.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
             // Label5
             // 
@@ -1460,6 +1466,7 @@
             0,
             0,
             0});
+            this.PolyphonyLimit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
             // EnableSFX
             // 
@@ -1891,6 +1898,11 @@
             this.RecommendedBuffer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.RecommendedBuffer.ToolTipTitle = "What\'s the recommended buffer size?";
             // 
+            // SavedLabel
+            // 
+            this.SavedLabel.Interval = 1250;
+            this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2116,6 +2128,7 @@
         public System.Windows.Forms.MenuItem WinMMPatch32;
         public System.Windows.Forms.MenuItem WinMMPatch64;
         private System.Windows.Forms.MenuItem RevbNChor;
+        private System.Windows.Forms.Timer SavedLabel;
     }
 }
 

@@ -134,20 +134,19 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("SELECT * FROM CIM_Processor");
-                ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("SELECT * FROM CIM_VideoController");
+                ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Processor");
+                ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_VideoController");
 
-                String cpubit = "32";
+                String cpubit = "??";
                 Int32 cpuclock = 0;
                 String cpumanufacturer = "Unknown";
                 String cpuname = "Unknown";
-                String gpuchip = "Unknown";
                 String gpuname = "Unknown";
                 String gpuver = "N/A";
-                String gpuvram = "0";
+                UInt32 gpuvram = 0;
                 String enclosure = "Unknown";
-                String Frequency = "";
-                String coreCount = "";
+                String Frequency = "0";
+                String coreCount = "1";
 
                 // Get CPU info
                 foreach (ManagementObject moProcessor in mosProcessor.Get())
@@ -158,12 +157,12 @@ namespace KeppySynthConfigurator
                     cpumanufacturer = moProcessor["manufacturer"].ToString();
                     coreCount = moProcessor["NumberOfCores"].ToString();
                 }
+
                 // Get GPU info
                 foreach (ManagementObject moGPU in mosGPU.Get())
                 {
-                    gpuchip = moGPU["VideoProcessor"].ToString();
                     gpuname = moGPU["Name"].ToString();
-                    gpuvram = (Int64.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
+                    gpuvram = Convert.ToUInt32(moGPU["AdapterRAM"]);
                     gpuver = moGPU["DriverVersion"].ToString();
                 }
 
@@ -172,6 +171,7 @@ namespace KeppySynthConfigurator
                 else
                     Frequency = String.Format("{0}GHz", ((float)cpuclock / 1000).ToString("0.00"));
 
+                // Ok, print everything to the string builder
                 StringBuilder sb = new StringBuilder();
                 sb.Append(String.Format("Keppy's Synthesizer Information Dialog\n\n", DriverVer.Text));
                 sb.Append("== Driver info =================================================\n");
@@ -185,10 +185,12 @@ namespace KeppySynthConfigurator
                 sb.Append("== Computer info ===============================================\n");
                 sb.Append(String.Format("Processor: {0} ({1})\n", cpuname, cpubit));
                 sb.Append(String.Format("Processor info: {1} cores and {2} threads, running at {3}\n", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency));
-                sb.Append(String.Format("Graphics card: {0}\n", gpuchip));
-                sb.Append(String.Format("Graphics card info: {0}MB VRAM, driver version {1}\n\n", gpuvram, gpuver));
+                sb.Append(String.Format("Graphics card: {0}\n", gpuname));
+                sb.Append(String.Format("Graphics card info: {0}MB VRAM, driver version {1}\n\n", (gpuvram / 1048576), gpuver));
                 sb.Append("================================================================\n");
                 sb.Append(String.Format("End of info. Got them on {0}.", DateTime.Now.ToString()));
+
+                // Copy to clipboard
                 Clipboard.SetText(sb.ToString());
                 sb = null;
 
@@ -196,7 +198,8 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                String Error = String.Format("An error has occured while copying the info to the clipboard.\n\nError:\n{0}\n\nDo you want to try again?", ex.ToString());
+                string message = String.Format("Exception type: {0}\nException message: {1}\nStack trace: {2}", ex.GetType(), ex.Message, ex.StackTrace);
+                String Error = String.Format("An error has occured while copying the info to the clipboard.\n\nError:\n{0}\n\nDo you want to try again?", message);
                 DialogResult dialogResult = MessageBox.Show(Error, "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
