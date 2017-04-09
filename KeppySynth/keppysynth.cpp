@@ -105,7 +105,7 @@ static unsigned int thrdaddr3;
 #include "basserr.h"
 #include "val.h"
 
-void basserr(int error) {
+void basserr(int error, TCHAR * codeline) {
 	TCHAR buffer[MAX_PATH];
 	wsprintfW(buffer, L"%d", error);
 	TCHAR part1[MAX_PATH] = L"BASS encountered the error number ";
@@ -113,6 +113,7 @@ void basserr(int error) {
 	TCHAR part3[MAX_PATH] = L"\"\n\nExplanation: ";
 	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
 	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
+	TCHAR partA[MAX_PATH] = L"\n\nCode line error: ";
 	lstrcat(part1, buffer);
 	lstrcat(part2, errname[error + 1]);
 	lstrcat(part3, errdesc[error + 1]);
@@ -122,6 +123,8 @@ void basserr(int error) {
 	if (isoverrideenabled == 1) {
 		lstrcat(part1, partE);
 	}
+	lstrcat(part1, partA);
+	lstrcat(part1, codeline);
 	MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
 
 	if (error == -1 || 
@@ -134,10 +137,10 @@ void basserr(int error) {
 	}
 }
 
-void CheckUp() {
+void CheckUp(TCHAR * codeline) {
 	int error = BASS_ErrorGetCode();
 	if (error != 0) {
-		basserr(error);
+		basserr(error, codeline);
 	}
 }
 
@@ -517,7 +520,7 @@ unsigned WINAPI audioengine(LPVOID lpV){
 			if (reset_synth != 0){
 				reset_synth = 0;
 				BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				CheckUp();
+				CheckUp(L"AudioEngine");
 			}
 
 			if (oldbuffermode == 1) {
@@ -528,7 +531,7 @@ unsigned WINAPI audioengine(LPVOID lpV){
 
 			if (xaudiodisabled == 1) {
 				BASS_ChannelUpdate(KSStream, 0);
-				CheckUp();
+				CheckUp(L"ChannelUpdate");
 				if (rco == 1) { Sleep(1); }
 			}
 			else {
@@ -614,7 +617,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					}
 				}
 				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
-					CheckUp();
+					CheckUp(L"BASSInit");
 					PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");	
 					BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 					BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
@@ -629,15 +632,15 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 							BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
 						}
 						KSStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
-						CheckUp();
+						CheckUp(L"KSStreamCreateDS");
 						BASS_ChannelPlay(KSStream, false);
-						CheckUp();
+						CheckUp(L"ChannelPlayDS");
 						PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 					}
 					else {
 						PrintToConsole(FOREGROUND_RED, 1, "Working...");
 						KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
-						CheckUp();
+						CheckUp(L"KSStreamCreateXA");
 						if (noaudiodevices != 1) {
 							PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
 						}
@@ -645,10 +648,9 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 							PrintToConsole(FOREGROUND_RED, 1, "Dummy stream enabled.");
 						}
 					}
-					BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_NOBUFFER, 1);
 					if (!KSStream) {
 						BASS_StreamFree(KSStream);
-						CheckUp();
+						CheckUp(L"StreamFree");
 						KSStream = 0;
 						PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
 						continue;
@@ -657,10 +659,10 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
 						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 						BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
-						CheckUp();
+						CheckUp(L"Attributes");
 					}
 					// Error handling
-					CheckUp();
+					CheckUp(L"Line677");
 					// LoudMax stuff lel
 					#if defined(_WIN64)
 					if (PathFileExists(loudmaxdll64)) {
@@ -712,7 +714,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 						case IDYES:
 							BASS_Encode_Start(KSStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 							// Error handling
-							CheckUp();
+							CheckUp(L"EncoderStart");
 							break;
 						case IDNO:
 							TCHAR configuratorapp[MAX_PATH];

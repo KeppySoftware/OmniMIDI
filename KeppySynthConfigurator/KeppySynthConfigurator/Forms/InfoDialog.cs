@@ -72,11 +72,11 @@ namespace KeppySynthConfigurator
 
             if (Environment.Is64BitOperatingSystem == true) // If OS is 64-bit, show "64-bit"
             { 
-                WinName.Text = String.Format("{0} ({1})", OSPartialName, "64-bit");
+                WinName.Text = String.Format("{0}({1})", OSPartialName, "64-bit");
             }
             else // Else, show "32-bit"
             {
-                WinName.Text = String.Format("{0} ({1})", OSPartialName, "32-bit");
+                WinName.Text = String.Format("{0}({1})", OSPartialName, "32-bit");
             }
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
@@ -89,7 +89,7 @@ namespace KeppySynthConfigurator
             {
                 if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1)
                 {
-                    WinVer.Text = String.Format("{0}.{1}.{2} (Service Pack {3})",
+                    WinVer.Text = String.Format("{0}.{1}.{2} ({3})",
                         Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
                         Environment.OSVersion.Version.Build, Environment.OSVersion.ServicePack);
                 }
@@ -147,7 +147,7 @@ namespace KeppySynthConfigurator
                 String gpuvram = "0";
                 String enclosure = "Unknown";
                 String Frequency = "";
-                Int32 coreCount = 0;
+                String coreCount = "";
 
                 // Get CPU info
                 foreach (ManagementObject moProcessor in mosProcessor.Get())
@@ -156,22 +156,15 @@ namespace KeppySynthConfigurator
                     cpubit = CPUArch(int.Parse(moProcessor["Architecture"].ToString()));
                     cpuname = moProcessor["name"].ToString();
                     cpumanufacturer = moProcessor["manufacturer"].ToString();
-                    coreCount += int.Parse(moProcessor["NumberOfCores"].ToString());
+                    coreCount = moProcessor["NumberOfCores"].ToString();
                 }
                 // Get GPU info
                 foreach (ManagementObject moGPU in mosGPU.Get())
                 {
-                    try
-                    {
-                        gpuchip = moGPU["VideoProcessor"].ToString();
-                        gpuname = moGPU["Name"].ToString();
-                        gpuvram = (long.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
-                        gpuver = moGPU["DriverVersion"].ToString();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
+                    gpuchip = moGPU["VideoProcessor"].ToString();
+                    gpuname = moGPU["Name"].ToString();
+                    gpuvram = (Int64.Parse(moGPU["AdapterRAM"].ToString()) / 1048576).ToString();
+                    gpuver = moGPU["DriverVersion"].ToString();
                 }
 
                 if (cpuclock < 1000)
@@ -201,9 +194,10 @@ namespace KeppySynthConfigurator
 
                 MessageBox.Show("Copied to clipboard.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch
+            catch (Exception ex)
             {
-                DialogResult dialogResult = MessageBox.Show("An error has occured while copying the info to the clipboard.\n\nDo you want to try again?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                String Error = String.Format("An error has occured while copying the info to the clipboard.\n\nError:\n{0}\n\nDo you want to try again?", ex.ToString());
+                DialogResult dialogResult = MessageBox.Show(Error, "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
                     CTC.PerformClick();

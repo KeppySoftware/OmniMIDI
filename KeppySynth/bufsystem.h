@@ -63,7 +63,7 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 
-	CheckUp();
+	CheckUp(L"DataToAudioStream");
 
 	if (debugmode == 1) {
 		PrintEventToConsole(FOREGROUND_GREEN, dwParam1, "Parsed normal MIDI event.", status, note, velocity);
@@ -137,7 +137,7 @@ int bmsyn_play_some_data(void){
 				if (sysresetignore != 1) {
 					MIDIHDR *hdr = (MIDIHDR*)dwParam1;
 					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-					CheckUp();
+					CheckUp(L"LongDataToAudioStream");
 					if (debugmode) {
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 					}
@@ -147,7 +147,7 @@ int bmsyn_play_some_data(void){
 				if (sysresetignore != 1) {
 					MIDIHDR *hdr = (MIDIHDR*)dwParam1;
 					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-					CheckUp();
+					CheckUp(L"LongDataToAudioStream");
 					if (debugmode) {
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 					}
@@ -186,7 +186,7 @@ bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_
 	if (sysresetignore != 1) {
 		MIDIHDR *hdr = (MIDIHDR*)dwParam1;
 		BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-		CheckUp();
+		CheckUp(L"LongDataToAudioStream");
 		if (debugmode) {
 			PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 		}

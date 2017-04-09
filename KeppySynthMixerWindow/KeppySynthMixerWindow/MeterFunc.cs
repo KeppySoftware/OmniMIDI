@@ -193,10 +193,11 @@ namespace KeppySynthMixerWindow
 
         public static void DisableLEDs()
         {
+            KeppySynthMixerWindow.Delegate.Meter.Refresh();
             KeppySynthMixerWindow.Delegate.Meter.Cursor = System.Windows.Forms.Cursors.No;
-            KeppySynthMixerWindow.Delegate.SignalLabel.ForeColor = Color.Gray;
-            KeppySynthMixerWindow.Delegate.LLab.ForeColor = Color.Gray;
-            KeppySynthMixerWindow.Delegate.RLab.ForeColor = Color.Gray;
+            KeppySynthMixerWindow.Delegate.SignalLabel.Enabled = false;
+            KeppySynthMixerWindow.Delegate.LLab.Enabled = false;
+            KeppySynthMixerWindow.Delegate.RLab.Enabled = false;
             KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Black;
             KeppySynthMixerWindow.Delegate.LV1.BackColor = Color.Black;
             KeppySynthMixerWindow.Delegate.LV2.BackColor = Color.Black;
@@ -242,14 +243,16 @@ namespace KeppySynthMixerWindow
             KeppySynthMixerWindow.Delegate.RV20.BackColor = Color.Black;
             KeppySynthMixerWindow.Delegate.RV21.BackColor = Color.Black;
             KeppySynthMixerWindow.Delegate.RV22.BackColor = Color.Black;
+            KeppySynthMixerWindow.Delegate.Meter.Refresh();
         }
 
         public static void EnableLEDs()
-        {       
+        {
+            KeppySynthMixerWindow.Delegate.Meter.Refresh();
             KeppySynthMixerWindow.Delegate.Meter.Cursor = System.Windows.Forms.Cursors.Default;
-            KeppySynthMixerWindow.Delegate.SignalLabel.ForeColor = Color.White;
-            KeppySynthMixerWindow.Delegate.LLab.ForeColor = Color.White;
-            KeppySynthMixerWindow.Delegate.RLab.ForeColor = Color.White;
+            KeppySynthMixerWindow.Delegate.SignalLabel.Enabled = true;
+            KeppySynthMixerWindow.Delegate.LLab.Enabled = true;
+            KeppySynthMixerWindow.Delegate.RLab.Enabled = true;
             KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Black;
             KeppySynthMixerWindow.Delegate.LV1.BackColor = Color.Lime;
             KeppySynthMixerWindow.Delegate.LV2.BackColor = Color.Lime;
@@ -295,6 +298,7 @@ namespace KeppySynthMixerWindow
             KeppySynthMixerWindow.Delegate.RV20.BackColor = Color.Red;
             KeppySynthMixerWindow.Delegate.RV21.BackColor = Color.Red;
             KeppySynthMixerWindow.Delegate.RV22.BackColor = Color.Red;
+            KeppySynthMixerWindow.Delegate.Meter.Refresh();
         }
 
         public static void TurnOnLEDs(int channel, int number)

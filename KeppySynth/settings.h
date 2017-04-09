@@ -292,7 +292,7 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_ChannelGetAttribute);
 		LOADBASSFUNCTION(BASS_ChannelSetDevice);
 		LOADBASSFUNCTION(BASS_ChannelGetData);
-		LOADBASSFUNCTION(BASS_ChannelGetLevel);
+		LOADBASSFUNCTION(BASS_ChannelGetLevelEx);
 		LOADBASSFUNCTION(BASS_ChannelPlay);
 		LOADBASSFUNCTION(BASS_ChannelStop);
 		LOADBASSFUNCTION(BASS_ChannelRemoveFX);
@@ -309,7 +309,6 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_SetDevice);
 		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_StreamFree);
-		LOADBASSFUNCTION(BASS_Update);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
@@ -319,11 +318,6 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_InFree);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_InGetDeviceInfo);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_InInit);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_InStart);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_InStop);
 		LOADBASSXAFUNCTION(BASSXA_InitializeAudioStream);
 		LOADBASSXAFUNCTION(BASSXA_WriteFrame);
 		LOADBASSXAFUNCTION(BASSXA_TerminateAudioStream);
@@ -590,12 +584,14 @@ void CheckVolume() {
 	long lResult;
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
-	DWORD level, left, right;
+	DWORD left, right;
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 	if (volumemon == 1) {
 		if (xaudiodisabled == 1)
 		{
-			level = BASS_ChannelGetLevel(KSStream);
+			float levels[2];
+			BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
 			left = LOWORD(level); // the left level
 			right = HIWORD(level); // the right level
 			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));

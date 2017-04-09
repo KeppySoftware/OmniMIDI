@@ -1573,7 +1573,7 @@
             this.List.Location = new System.Drawing.Point(4, 22);
             this.List.Name = "List";
             this.List.Padding = new System.Windows.Forms.Padding(3);
-            this.List.Size = new System.Drawing.Size(641, 416);
+            this.List.Size = new System.Drawing.Size(641, 417);
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             // 
@@ -1600,7 +1600,7 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(532, 362);
+            this.Lis.Size = new System.Drawing.Size(532, 363);
             this.Lis.TabIndex = 12;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -1630,7 +1630,7 @@
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.Image = global::KeppySynthConfigurator.Properties.Resources.ExportIcon;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.EL.Location = new System.Drawing.Point(545, 368);
+            this.EL.Location = new System.Drawing.Point(545, 369);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -1662,7 +1662,7 @@
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.Image = global::KeppySynthConfigurator.Properties.Resources.ImportIcon;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IEL.Location = new System.Drawing.Point(545, 339);
+            this.IEL.Location = new System.Drawing.Point(545, 340);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -1750,7 +1750,7 @@
             this.List1Override.AutoSize = true;
             this.List1Override.BackColor = System.Drawing.Color.Transparent;
             this.List1Override.Enabled = false;
-            this.List1Override.Location = new System.Drawing.Point(4, 401);
+            this.List1Override.Location = new System.Drawing.Point(4, 402);
             this.List1Override.Name = "List1Override";
             this.List1Override.Size = new System.Drawing.Size(243, 13);
             this.List1Override.TabIndex = 31;
@@ -1843,7 +1843,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 442);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 443);
             this.TabsForTheControls.TabIndex = 32;
             // 
             // SettingsPresets
@@ -1895,8 +1895,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(649, 442);
+            this.ClientSize = new System.Drawing.Size(649, 443);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

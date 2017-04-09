@@ -118,7 +118,7 @@
             this.LV2 = new System.Windows.Forms.Panel();
             this.LV1 = new System.Windows.Forms.Panel();
             this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
-            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.showTheConfiguratorWindowToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
@@ -127,9 +127,11 @@
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.ClassicTheme = new System.Windows.Forms.MenuItem();
             this.DarkTheme = new System.Windows.Forms.MenuItem();
+            this.ItsThe80sTheme = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.VolumeMonitor = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.ReduceDelayVol = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -168,7 +170,7 @@
             // ChannelVolume
             // 
             this.ChannelVolume.Enabled = true;
-            this.ChannelVolume.Interval = 17;
+            this.ChannelVolume.Interval = 1;
             this.ChannelVolume.Tick += new System.EventHandler(this.ChannelVolume_Tick);
             // 
             // MainVol
@@ -633,7 +635,7 @@
             // VolumeCheck
             // 
             this.VolumeCheck.Enabled = true;
-            this.VolumeCheck.Interval = 17;
+            this.VolumeCheck.Interval = 1;
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
             // 
             // WhatIsThis
@@ -1123,9 +1125,9 @@
             // 
             this.GarbageCollector.DoWork += new System.ComponentModel.DoWorkEventHandler(this.GarbageCollector_DoWork);
             // 
-            // mainMenu1
+            // MainMenu
             // 
-            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
             this.menuItem3});
             // 
@@ -1165,6 +1167,7 @@
             this.menuItem9,
             this.VolumeMonitor,
             this.menuItem5,
+            this.ReduceDelayVol,
             this.menuItem4,
             this.resetToDefaultToolStripMenuItem,
             this.muteToolStripMenuItem});
@@ -1175,7 +1178,8 @@
             this.menuItem8.Index = 0;
             this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ClassicTheme,
-            this.DarkTheme});
+            this.DarkTheme,
+            this.ItsThe80sTheme});
             this.menuItem8.Text = "Change mixer theme";
             // 
             // ClassicTheme
@@ -1191,6 +1195,13 @@
             this.DarkTheme.Shortcut = System.Windows.Forms.Shortcut.F3;
             this.DarkTheme.Text = "Dark";
             this.DarkTheme.Click += new System.EventHandler(this.DarkTheme_Click);
+            // 
+            // ItsThe80sTheme
+            // 
+            this.ItsThe80sTheme.Index = 2;
+            this.ItsThe80sTheme.Text = "1980";
+            this.ItsThe80sTheme.Visible = false;
+            this.ItsThe80sTheme.Click += new System.EventHandler(this.ItsThe80sTheme_Click);
             // 
             // menuItem9
             // 
@@ -1211,21 +1222,27 @@
             this.menuItem5.Text = "Enable volume boost";
             this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
             // 
+            // ReduceDelayVol
+            // 
+            this.ReduceDelayVol.Index = 4;
+            this.ReduceDelayVol.Text = "Reduce volume check delay";
+            this.ReduceDelayVol.Click += new System.EventHandler(this.ReduceDelayVol_Click);
+            // 
             // menuItem4
             // 
-            this.menuItem4.Index = 4;
+            this.menuItem4.Index = 5;
             this.menuItem4.Text = "-";
             // 
             // resetToDefaultToolStripMenuItem
             // 
-            this.resetToDefaultToolStripMenuItem.Index = 5;
+            this.resetToDefaultToolStripMenuItem.Index = 6;
             this.resetToDefaultToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
             this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
             this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
             // 
             // muteToolStripMenuItem
             // 
-            this.muteToolStripMenuItem.Index = 6;
+            this.muteToolStripMenuItem.Index = 7;
             this.muteToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlM;
             this.muteToolStripMenuItem.Text = "Mute";
             this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
@@ -1240,6 +1257,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(677, 220);
             this.Controls.Add(this.Meter);
@@ -1281,7 +1299,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Menu = this.mainMenu1;
+            this.Menu = this.MainMenu;
             this.Name = "KeppySynthMixerWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keppy\'s Synthesizer Mixer";
@@ -1338,7 +1356,7 @@
         public System.Windows.Forms.Panel LV3;
         public System.Windows.Forms.Panel LED;
         private System.ComponentModel.BackgroundWorker GarbageCollector;
-        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MainMenu MainMenu;
         private System.Windows.Forms.MenuItem showTheConfiguratorWindowToolStripMenuItem;
         private System.Windows.Forms.MenuItem resetToDefaultToolStripMenuItem;
         private System.Windows.Forms.MenuItem muteToolStripMenuItem;
@@ -1414,6 +1432,8 @@
         public System.Windows.Forms.Label CH3;
         public System.Windows.Forms.Label CH2;
         public System.Windows.Forms.Label CH1;
+        private System.Windows.Forms.MenuItem ItsThe80sTheme;
+        private System.Windows.Forms.MenuItem ReduceDelayVol;
     }
 }
 

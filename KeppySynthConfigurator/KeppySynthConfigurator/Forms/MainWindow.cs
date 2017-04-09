@@ -1933,7 +1933,7 @@ namespace KeppySynthConfigurator
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
                     }
-                    System.Threading.Thread.Sleep(1);
+                    System.Threading.Thread.Sleep(100);
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                 }

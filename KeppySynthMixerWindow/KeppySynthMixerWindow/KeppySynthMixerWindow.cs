@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Management;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace KeppySynthMixerWindow
 {
@@ -15,6 +16,10 @@ namespace KeppySynthMixerWindow
         public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
         public static Boolean VUStatus = false;
         int MaxStockClock;
+
+        [DllImport("uxtheme", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        public extern static Int32 SetWindowTheme(IntPtr hWnd,
+              String textSubAppName, String textSubIdList);
 
         public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "cha" };
         public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -85,15 +90,59 @@ namespace KeppySynthMixerWindow
             Close();
         }
 
+        private void ChangeLeftChannelSize(Size UseSize)
+        {
+            LV1.Size = UseSize;
+            LV2.Size = UseSize;
+            LV3.Size = UseSize;
+            LV4.Size = UseSize;
+            LV5.Size = UseSize;
+            LV6.Size = UseSize;
+            LV7.Size = UseSize;
+            LV8.Size = UseSize;
+            LV9.Size = UseSize;
+            LV10.Size = UseSize;
+            LV11.Size = UseSize;
+            LV12.Size = UseSize;
+            LV13.Size = UseSize;
+            LV14.Size = UseSize;
+            LV15.Size = UseSize;
+            LV16.Size = UseSize;
+            LV17.Size = UseSize;
+            LV18.Size = UseSize;
+            LV19.Size = UseSize;
+            LV20.Size = UseSize;
+            LV21.Size = UseSize;
+            LV22.Size = UseSize;
+        }
+
         private void VolumeCheck_Tick(object sender, EventArgs e)
         {
             try
             {
-                int left = Convert.ToInt32(Debug.GetValue("leftvol"));
-                int right = Convert.ToInt32(Debug.GetValue("rightvol"));
-                MeterFunc.ChangeMeter(0, left);
-                MeterFunc.ChangeMeter(1, right);
-                MeterFunc.AverageMeter(left, right);
+                int left = Convert.ToInt32(Debug.GetValue("leftvol", 0));
+                int right = Convert.ToInt32(Debug.GetValue("rightvol", 0));
+
+                if (Convert.ToInt32(Settings.GetValue("monorendering", 0)) == 1) {
+                    Size UseSize = new Size(39, 5);
+                    LLab.Size = new Size(39, 16);
+                    LLab.Text = "LVL";
+                    ChangeLeftChannelSize(UseSize);
+                    MeterFunc.ChangeMeter(0, left);
+                    MeterFunc.ChangeMeter(1, 0);
+                    MeterFunc.AverageMeter(left, left);
+                }
+                else
+                {
+                    Size UseSize = new Size(16, 5);
+                    LLab.Size = new Size(16, 16);
+                    LLab.Text = "L";
+                    ChangeLeftChannelSize(UseSize);
+                    MeterFunc.ChangeMeter(0, left);
+                    MeterFunc.ChangeMeter(1, right);
+                    MeterFunc.AverageMeter(left, right);
+                }
+
                 System.Threading.Thread.Sleep(1);
             }
             catch (Exception ex)
@@ -141,19 +190,6 @@ namespace KeppySynthMixerWindow
                     }
                 }
 
-                if (Properties.Settings.Default.CurrentTheme == 0)
-                {
-                    ClassicTheme.PerformClick();
-                }
-                else if (Properties.Settings.Default.CurrentTheme == 1)
-                {
-                    DarkTheme.PerformClick();
-                }
-                else
-                {
-                    ClassicTheme.PerformClick();
-                }
-
                 CH1VOL.Value = RegValInt[0];
                 CH2VOL.Value = RegValInt[1];
                 CH3VOL.Value = RegValInt[2];
@@ -186,6 +222,34 @@ namespace KeppySynthMixerWindow
                 }
                 ChannelVolume.Enabled = true;
                 GarbageCollector.RunWorkerAsync();
+
+                if (Properties.Settings.Default.VolDelay)
+                {
+                    ReduceDelayVol.Checked = true;
+                    VolumeCheck.Interval = 1;
+                }
+                else
+                {
+                    ReduceDelayVol.Checked = false;
+                    VolumeCheck.Interval = 50;
+                }
+
+                if (Properties.Settings.Default.CurrentTheme == 0)
+                {
+                    ClassicTheme.PerformClick();
+                }
+                else if (Properties.Settings.Default.CurrentTheme == 1)
+                {
+                    DarkTheme.PerformClick();
+                }
+                else if (Properties.Settings.Default.CurrentTheme == 2)
+                {
+                    ItsThe80sTheme.PerformClick();
+                }
+                else
+                {
+                    ClassicTheme.PerformClick();
+                }
             }
             catch (Exception ex)
             {
@@ -512,20 +576,50 @@ namespace KeppySynthMixerWindow
 
         private void ClassicTheme_Click(object sender, EventArgs e)
         {
-            MeterFunc.ChangeStyle(Color.Black, Color.White, Color.White, Color.Black, new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular), new Font("Lucida Console", 8.25f, FontStyle.Regular));
+            MeterFunc.ChangeStyle(Color.Black, Color.White, Color.White, Color.FromArgb(16, 16, 16), new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular), new Font("Lucida Console", 8.25f, FontStyle.Regular));
             ClassicTheme.Checked = true;
             DarkTheme.Checked = false;
-            Properties.Settings.Default.CurrentTheme = 1;
+            ItsThe80sTheme.Checked = false;
+            SetWindowTheme(Handle, "EXPLORER", null);
+            Properties.Settings.Default.CurrentTheme = 0;
             Properties.Settings.Default.Save();
         }
 
         private void DarkTheme_Click(object sender, EventArgs e)
         {
-            MeterFunc.ChangeStyle(Color.White, Color.Black, Color.White, Color.FromArgb(16, 16, 16), new Font("Arial", 8.25f, FontStyle.Regular), new Font("Arial", 8.25f, FontStyle.Regular));
+            MeterFunc.ChangeStyle(Color.White, Color.Black, Color.White, Color.FromArgb(24, 24, 24), new Font("Arial", 8.25f, FontStyle.Regular), new Font("Arial", 8.25f, FontStyle.Regular));
             ClassicTheme.Checked = false;
             DarkTheme.Checked = true;
-            Properties.Settings.Default.CurrentTheme = 0;
+            ItsThe80sTheme.Checked = false;
+            SetWindowTheme(Handle, "EXPLORER", null);
+            Properties.Settings.Default.CurrentTheme = 1;
             Properties.Settings.Default.Save();
+        }
+
+        private void ItsThe80sTheme_Click(object sender, EventArgs e)
+        {
+            MeterFunc.ChangeStyle(Color.White, Color.Purple, Color.DarkRed, Color.BlanchedAlmond, new Font("Comic Sans MS", 8.25f, FontStyle.Regular), new Font("Comic Sans MS", 8.25f, FontStyle.Regular));
+            ClassicTheme.Checked = false;
+            DarkTheme.Checked = false;
+            ItsThe80sTheme.Checked = true;
+            Properties.Settings.Default.CurrentTheme = 2;
+            Properties.Settings.Default.Save();
+        }
+
+        private void ReduceDelayVol_Click(object sender, EventArgs e)
+        {
+            if (!ReduceDelayVol.Checked)
+            {
+                Properties.Settings.Default.VolDelay = true;
+                ReduceDelayVol.Checked = true;
+                VolumeCheck.Interval = 1;
+            }
+            else
+            {
+                Properties.Settings.Default.VolDelay = false;
+                ReduceDelayVol.Checked = false;
+                VolumeCheck.Interval = 50;
+            }
         }
     }
 }
