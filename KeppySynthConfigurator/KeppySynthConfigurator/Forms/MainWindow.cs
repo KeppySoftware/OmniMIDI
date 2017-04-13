@@ -14,6 +14,7 @@ using Microsoft.Win32;
 // For SF info
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
+using System.Media;
 
 namespace KeppySynthConfigurator
 {
@@ -1072,6 +1073,11 @@ namespace KeppySynthConfigurator
             });
         }
 
+        private void GiveFeedback_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://goo.gl/forms/sLlghX6mzr3FWG5i2");
+        }
+
         private void reportABugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about Keppy's Synthesizer?\n\nHere are the requisites for a report:\n1) Make a video of the issue.\n2) Describe all the steps to reproduce the bug.\n3) Please give as much information as you can, to allow me (KaleidonKep99) to fix it as soon as possible.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -2118,6 +2124,7 @@ namespace KeppySynthConfigurator
         
         private void EnableFade()
         {
+            SystemSounds.Question.Play();
             SavedLabel.Enabled = false;
             greenfade = 128;
             SavedLabel.Enabled = true;

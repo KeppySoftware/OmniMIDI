@@ -216,6 +216,8 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
+            this.menuItem43 = new System.Windows.Forms.MenuItem();
+            this.GiveFeedback = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -873,13 +875,13 @@
             // 
             // reportABugToolStripMenuItem
             // 
-            this.reportABugToolStripMenuItem.Index = 4;
-            this.reportABugToolStripMenuItem.Text = "Report a bug";
+            this.reportABugToolStripMenuItem.Index = 1;
+            this.reportABugToolStripMenuItem.Text = "Report a bug on GitHub";
             this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 9;
+            this.menuItem42.Index = 8;
             this.menuItem42.Text = "-";
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
@@ -902,7 +904,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 8;
+            this.guidesToolStripMenuItem.Index = 7;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -911,25 +913,24 @@
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 11;
+            this.donateToSupportUsToolStripMenuItem.Index = 10;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me and my programs";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 12;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 11;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 3;
+            this.menuItem3.Index = 4;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
             this.SeeChangelog,
             this.menuItem29,
-            this.reportABugToolStripMenuItem,
             this.SignatureCheck,
             this.PanicButton,
             this.menuItem33,
@@ -953,24 +954,24 @@
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 5;
+            this.SignatureCheck.Index = 4;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 6;
+            this.PanicButton.Index = 5;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 7;
+            this.menuItem33.Index = 6;
             this.menuItem33.Text = "-";
             // 
             // menuItem24
             // 
-            this.menuItem24.Index = 10;
+            this.menuItem24.Index = 9;
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
@@ -999,12 +1000,13 @@
             this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
             this.menuItem2,
+            this.menuItem43,
             this.menuItem25,
             this.menuItem3});
             // 
             // menuItem25
             // 
-            this.menuItem25.Index = 2;
+            this.menuItem25.Index = 3;
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem22,
             this.menuItem40,
@@ -1910,6 +1912,20 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
+            // menuItem43
+            // 
+            this.menuItem43.Index = 2;
+            this.menuItem43.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.GiveFeedback,
+            this.reportABugToolStripMenuItem});
+            this.menuItem43.Text = "Feedback";
+            // 
+            // GiveFeedback
+            // 
+            this.GiveFeedback.Index = 0;
+            this.GiveFeedback.Text = "Give feedback about the driver";
+            this.GiveFeedback.Click += new System.EventHandler(this.GiveFeedback_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2137,6 +2153,8 @@
         private System.Windows.Forms.MenuItem RevbNChor;
         private System.Windows.Forms.Timer SavedLabel;
         private System.Windows.Forms.MenuItem menuItem41;
+        private System.Windows.Forms.MenuItem menuItem43;
+        private System.Windows.Forms.MenuItem GiveFeedback;
     }
 }
 

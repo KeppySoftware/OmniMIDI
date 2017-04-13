@@ -281,6 +281,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Audio\success.wav" />
     <None Include="Resources\List Editor\ReloadIcon.png" />
     <None Include="Resources\List Editor\RmvSFIcon.png" />
     <None Include="Resources\List Editor\MvUpIcon.png" />
