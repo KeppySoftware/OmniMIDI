@@ -38,6 +38,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <vector>
 #include <winbase.h>
 #include <windows.h>
+#include "Resource.h"
 
 #define BASSDEF(f) (WINAPI *f)
 #define BASSMIDIDEF(f) (WINAPI *f)	

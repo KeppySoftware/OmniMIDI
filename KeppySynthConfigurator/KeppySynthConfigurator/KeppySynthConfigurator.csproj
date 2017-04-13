@@ -134,6 +134,7 @@
     <Compile Include="Forms\DLEngine.Designer.cs">
       <DependentUpon>DLEngine.cs</DependentUpon>
     </Compile>
+    <Compile Include="Functions\OSInfo.cs" />
     <Compile Include="Forms\SoundFontInfo.cs">
       <SubType>Form</SubType>
     </Compile>

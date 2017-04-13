@@ -906,7 +906,25 @@ namespace KeppySynthConfigurator
 
         public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
         {
-            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.System) + "amidimap.cpl"))
+            RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
+            if (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "keppysynth\\amidimap.cpl")
+            {
+                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = true;
+                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                if (!Environment.Is64BitOperatingSystem)
+                {
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
+                }
+                KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = false;
+            }
+            else
             {
                 KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = false;
                 if (Environment.OSVersion.Version.Major > 6)
@@ -931,23 +949,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
                 }
-            }
-            else
-            {
-                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = true;
-                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                if (!Environment.Is64BitOperatingSystem)
-                {
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
-                }
-                KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = false;
             }
         }
 
@@ -1553,6 +1554,11 @@ namespace KeppySynthConfigurator
 
         public static void ApplyWinMMPatch(Boolean Is64Bit)
         {
+            Boolean ForceReactOSPatch = false;
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                ForceReactOSPatch = true;
+            }
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             TryAgain:
             try
@@ -1581,7 +1587,7 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
-                        if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
+                        if (ForceReactOSPatch)
                         {
                             if (Is64Bit)
                             {
@@ -1604,15 +1610,41 @@ namespace KeppySynthConfigurator
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
                             }
                         }
-                        if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
+                        else
                         {
-                            if (Is64Bit)
+                            if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
                             {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm864);
+                                if (Is64Bit)
+                                {
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp64);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
+                                }
+                                else
+                                {
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
+                                }
                             }
-                            else
+                            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
                             {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm832);
+                                if (Is64Bit)
+                                {
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm864);
+                                }
+                                else
+                                {
+                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm832);
+                                }
                             }
                         }
                         MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

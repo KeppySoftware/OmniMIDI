@@ -27,6 +27,15 @@ namespace KeppySynthDebugWindow
 {
     public partial class KeppySynthDebugWindow : Form
     {
+        // Topmost
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowPos(IntPtr Handle, IntPtr HandleInsertAfter, int PosX, int PosY, int SizeX, int SizeY, uint Flags);
+
+        static readonly IntPtr TOPMOST = new IntPtr(-1);
+        static readonly IntPtr NOTOPMOST = new IntPtr(-2);
+        const UInt32 KEEPPOS = 2 | 1;
+
         // Required for KS
         FileVersionInfo Driver { get; set; }
         RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
@@ -65,6 +74,7 @@ namespace KeppySynthDebugWindow
         private void KeppySynthDebugWindow_Load(object sender, EventArgs e)
         {
             Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
+            VersionLabel.Text = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
             GetWindowsInfoData(); // Get info about your Windows installation
             SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
@@ -86,6 +96,8 @@ namespace KeppySynthDebugWindow
         {
             if (Value == 0)
                 return "x86";
+            else if (Value == 5)
+                return "ARM";
             else if (Value == 6)
                 return "IA64";
             else if (Value == 9)
@@ -463,12 +475,12 @@ namespace KeppySynthDebugWindow
             if (debugwintop.Checked)
             {
                 debugwintop.Checked = false;
-                TopMost = false;
+                SetWindowPos(this.Handle, NOTOPMOST, 0, 0, 0, 0, KEEPPOS);
             }
             else
             {
                 debugwintop.Checked = true;
-                TopMost = true;
+                SetWindowPos(this.Handle, TOPMOST, 0, 0, 0, 0, KEEPPOS);
             }
         }
     }

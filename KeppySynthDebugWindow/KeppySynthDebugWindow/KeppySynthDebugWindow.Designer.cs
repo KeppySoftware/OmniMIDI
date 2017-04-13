@@ -48,6 +48,7 @@
             this.DebugWorker = new System.ComponentModel.BackgroundWorker();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
+            this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyToClip1 = new System.Windows.Forms.Button();
             this.KSLogo = new System.Windows.Forms.PictureBox();
             this.DDS = new System.Windows.Forms.Label();
@@ -195,6 +196,7 @@
             // 
             // SynthDbg
             // 
+            this.SynthDbg.Controls.Add(this.VersionLabel);
             this.SynthDbg.Controls.Add(this.CopyToClip1);
             this.SynthDbg.Controls.Add(this.KSLogo);
             this.SynthDbg.Controls.Add(this.DDS);
@@ -212,6 +214,18 @@
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
             this.SynthDbg.UseVisualStyleBackColor = true;
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.Enabled = false;
+            this.VersionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.Location = new System.Drawing.Point(7, 156);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(107, 15);
+            this.VersionLabel.TabIndex = 35;
+            this.VersionLabel.Text = "Checking version...";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CopyToClip1
             // 
@@ -1118,6 +1132,7 @@
         private System.Windows.Forms.Button CopyToClip2;
         private System.Windows.Forms.PictureBox KSLogo;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label VersionLabel;
     }
 }
 

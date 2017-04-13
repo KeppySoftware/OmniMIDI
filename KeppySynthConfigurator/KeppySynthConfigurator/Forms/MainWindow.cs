@@ -69,6 +69,7 @@ namespace KeppySynthConfigurator
         // Lists
 
         // Work
+        public static int greenfade = 0;
         public static int openadvanced { get; set; }
         public static int whichone { get; set; }
         public static string CurrentList { get; set; }
@@ -819,10 +820,7 @@ namespace KeppySynthConfigurator
         {
             // Just save the Settings
             Functions.SaveSettings();
-            applySettingsToolStripMenuItem.Text = "Saved!";
-            applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Bold);
-            applySettingsToolStripMenuItem.ForeColor = Color.ForestGreen;
-            SavedLabel.Enabled = true;
+            EnableFade();
 
             // Messagebox here
             Program.DebugToConsole(false, "Applied new settings.", null);
@@ -1881,7 +1879,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\amidimap.cpl");
+                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppysynth\\amidimap.cpl");
                 process.WaitForExit();
             }
             catch (Exception ex)
@@ -2113,19 +2111,32 @@ namespace KeppySynthConfigurator
             if (e.KeyCode == Keys.Enter)
             {
                 Functions.SaveSettings();
-                applySettingsToolStripMenuItem.Text = "Saved!";
-                applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Bold);
-                applySettingsToolStripMenuItem.ForeColor = Color.ForestGreen;
-                SavedLabel.Enabled = true;
+                EnableFade();
             }
+        }
+
+        
+        private void EnableFade()
+        {
+            SavedLabel.Enabled = false;
+            greenfade = 128;
+            SavedLabel.Enabled = true;
         }
 
         private void SavedLabel_Tick(object sender, EventArgs e)
         {
-            applySettingsToolStripMenuItem.Text = "Apply settings";
-            applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Regular);
-            applySettingsToolStripMenuItem.ForeColor = SystemColors.ControlText;
-            SavedLabel.Enabled = false;
+            applySettingsToolStripMenuItem.Text = "Saved!";
+            applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Bold);
+            applySettingsToolStripMenuItem.ForeColor = Color.FromArgb(0, greenfade, 0);
+            greenfade--;
+            if (greenfade <= 1)
+            {
+                SavedLabel.Enabled = false;
+                applySettingsToolStripMenuItem.Text = "Apply settings";
+                applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Regular);
+                applySettingsToolStripMenuItem.ForeColor = SystemColors.ControlText;
+            }
+            System.Threading.Thread.Sleep(1);
         }
 
         private void WinMMPatch32_Click(object sender, EventArgs e)

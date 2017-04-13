@@ -59,25 +59,5 @@ namespace KSDriverRegister.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] amidimap32 {
-            get {
-                object obj = ResourceManager.GetObject("amidimap32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] amidimap64 {
-            get {
-                object obj = ResourceManager.GetObject("amidimap64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.2.13'
+#define Version '4.1.2.14'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -92,6 +92,7 @@ Source: "{#outputdir32}\sfpacker.exe"; DestDir: "{sys}\{#InstallDir}"; DestName:
 Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{sys}\{#InstallDir}"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 
 ; 64-bit libs
+Source: "{#lib64}\amidimap.cpl"; DestDir: "{sys}\{#InstallDir}"; DestName: "amidimap.cpl"; Flags: uninsrestartdelete onlyifdoesntexist; Check: Is64BitInstallMode
 Source: "{#lib64}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib64}\bass_mpc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib64}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -101,6 +102,7 @@ Source: "{#lib64}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass
 Source: "{#lib64}\bassopus.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib64}\basswv.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib64}\bassxa.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassxa.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "{#lib32}\amidimap.cpl"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "amidimap.cpl"; Flags: uninsrestartdelete onlyifdoesntexist; Check: Is64BitInstallMode
 Source: "{#lib32}\bass.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib32}\bass_mpc.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -112,6 +114,7 @@ Source: "{#lib32}\basswv.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "b
 Source: "{#lib32}\bassxa.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassxa.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 
 ; 32-bit libs
+Source: "{#lib32}\amidimap.cpl"; DestDir: "{sys}\{#InstallDir}"; DestName: "amidimap.cpl"; Flags: uninsrestartdelete onlyifdoesntexist; Check: not Is64BitInstallMode
 Source: "{#lib32}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "{#lib32}\bass_mpc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_mpc.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
@@ -252,13 +255,15 @@ Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMo
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\"
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"
+Type: filesandordirs; Name: "{group}\"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\"Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\keppydrv\"Type: files; Name: "{tmp}\LoudMax.dll"
+Type: filesandordirs; Name: "{sys}\keppydrv\"
+Type: filesandordirs; Name: "{group}\"Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
 [Run]
@@ -273,6 +278,8 @@ Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntiltermina
 Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml"; Flags: runascurrentuser postinstall waituntilidle shellexec unchecked; Description: "Vote Keppy's Synthesizer on Softpedia"
 
 [UninstallRun]
+Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/umidimap"; Flags: waituntilterminated; StatusMsg: "Unregistering MIDI Mapper..."; Check: Is64BitInstallMode
+Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/umidimap"; Flags: waituntilterminated; StatusMsg: "Unregistering MIDI Mapper..."; Check: not Is64BitInstallMode
 Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: not Is64BitInstallMode
 

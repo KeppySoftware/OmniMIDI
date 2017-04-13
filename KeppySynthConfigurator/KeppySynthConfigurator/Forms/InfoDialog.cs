@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.VisualBasic.Devices;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace KeppySynthConfigurator
 {
@@ -58,25 +59,38 @@ namespace KeppySynthConfigurator
                 StartPosition = FormStartPosition.CenterScreen;
         }
 
+        private string ReturnBASSAssemblyVersion(String FileVersion, Int32 FilePrivatePart)
+        {
+            if (FilePrivatePart < 1)
+            {
+                return String.Format("{0}", FileVersion, FilePrivatePart);
+            }
+            else
+            {
+                return String.Format("{0} (Revision {1})", FileVersion, FilePrivatePart);
+            }
+        }
+
         private void InfoDialog_Load(object sender, EventArgs e)
         {
             ComputerInfo CI = new ComputerInfo();
             String Version = String.Format("{0}.{1}.{2}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart);
             VerLabel.Text = String.Format("Keppy's Synthesizer {0}\n\nCopyright Ⓒ 2011\nKaleidonKep99, Kode54 && Mudlord", Version, DateTime.Now.Year.ToString());
             DriverVer.Text = String.Format("{0} (Bugfix {1})", Version, Driver.FilePrivatePart);
-            BASSVer.Text = String.Format("{0} (Revision {1})", BASS.FileVersion, BASS.FilePrivatePart);
-            BASSMIDIVer.Text = String.Format("{0} (Revision {1})", BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
+            BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
+            BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
             CompiledOn.Text = GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Utc).ToString();
 
-            String OSPartialName = CI.OSFullName.Replace("Microsoft ", "");
+            OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
+            osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
 
             if (Environment.Is64BitOperatingSystem == true) // If OS is 64-bit, show "64-bit"
-            { 
-                WinName.Text = String.Format("{0}({1})", OSPartialName, "64-bit");
+            {
+                WinName.Text = String.Format("{0}{1} ({2})", OSInfo.GetOSName(), OSInfo.GetOSProductType(), "64-bit");
             }
             else // Else, show "32-bit"
             {
-                WinName.Text = String.Format("{0}({1})", OSPartialName, "32-bit");
+                WinName.Text = String.Format("{0}{1} ({2})", OSInfo.GetOSName(), OSInfo.GetOSProductType(), "32-bit");
             }
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
