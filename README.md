@@ -5,6 +5,13 @@
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with new functions.
 </p>
 
+## Reviews
+### [Gingeas](https://www.youtube.com/user/gingeas), famous YouTuber who uploads Black MIDI videos:
+_"Extremely high utility driver.<br />
+I believe that you can make good audio with any driver (even TiMidity and BASSMIDI), but the driver changes the effort needed.<br />
+I could spend 30 min - 2 hours making perfect audio in BASSMIDI that can be done with Keppy's Synthesizer in maybe 5 - 20 minutes due to its streamlined efficiency as well as its tools.<br />
+Even though Keppy's Synthesizer by far has the highest performance out of all drivers I've used, the big selling point to the synth is the utility from its tools, such as the debug window and the SoundFont manager system."_
+
 ## What's so special about your driver that makes it different from the others out there?
 This driver has unique features, such as:
 - Automatic rendering recovery. The driver will **always** try to give you the best audio quality, no matter what MIDI you're trying to play.
@@ -12,7 +19,7 @@ This driver has unique features, such as:
 - The ability to use up to 3 cores/threads, to ensure each function is executed at its best. Each core hosts a vital part of the driver: The first thread hosts the settings loader, the debug info writer etcetera, the second hosts the MIDI event parser, and the third hosts the audio render.
 - [Constant updates] (#why-do-i-get-updates-every-1-2-days), to keep the driver fresh and always up-to-date to users requests.
 
-It's meant for [professional people] (#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
+It's meant for [professional people](#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
 
 ## What do you mean by "for professional use"?
 Certain functions in this driver are not suited for newbies or for people that don't know how to use programs well.
