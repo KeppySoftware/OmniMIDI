@@ -52,6 +52,8 @@
             this.CTC = new System.Windows.Forms.Button();
             this.CFU = new System.Windows.Forms.Button();
             this.DonateBtn = new System.Windows.Forms.Button();
+            this.CurBranch = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -111,7 +113,6 @@
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 20);
             this.label3.Name = "label3";
@@ -121,7 +122,6 @@
             // 
             // label4
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 39);
             this.label4.Name = "label4";
@@ -131,7 +131,6 @@
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 58);
             this.label5.Name = "label5";
@@ -141,7 +140,6 @@
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 77);
             this.label6.Name = "label6";
@@ -151,12 +149,13 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.WinVer);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.WinName);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Location = new System.Drawing.Point(10, 254);
+            this.groupBox2.Location = new System.Drawing.Point(10, 274);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(362, 59);
             this.groupBox2.TabIndex = 6;
@@ -205,7 +204,11 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.CurBranch);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.CompiledOn);
             this.groupBox1.Controls.Add(this.BASSMIDIVer);
             this.groupBox1.Controls.Add(this.BASSVer);
@@ -216,14 +219,13 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(10, 151);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(362, 97);
+            this.groupBox1.Size = new System.Drawing.Size(362, 117);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Driver info";
             // 
             // CompiledOn
             // 
-            this.CompiledOn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CompiledOn.AutoSize = true;
             this.CompiledOn.Location = new System.Drawing.Point(120, 77);
             this.CompiledOn.Name = "CompiledOn";
@@ -233,7 +235,6 @@
             // 
             // BASSMIDIVer
             // 
-            this.BASSMIDIVer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BASSMIDIVer.AutoSize = true;
             this.BASSMIDIVer.Location = new System.Drawing.Point(120, 58);
             this.BASSMIDIVer.Name = "BASSMIDIVer";
@@ -243,7 +244,6 @@
             // 
             // BASSVer
             // 
-            this.BASSVer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BASSVer.AutoSize = true;
             this.BASSVer.Location = new System.Drawing.Point(120, 39);
             this.BASSVer.Name = "BASSVer";
@@ -253,7 +253,6 @@
             // 
             // DriverVer
             // 
-            this.DriverVer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DriverVer.AutoSize = true;
             this.DriverVer.Location = new System.Drawing.Point(120, 20);
             this.DriverVer.Name = "DriverVer";
@@ -264,7 +263,7 @@
             // OKClose
             // 
             this.OKClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKClose.Location = new System.Drawing.Point(286, 319);
+            this.OKClose.Location = new System.Drawing.Point(286, 339);
             this.OKClose.Name = "OKClose";
             this.OKClose.Size = new System.Drawing.Size(87, 23);
             this.OKClose.TabIndex = 7;
@@ -275,7 +274,7 @@
             // CTC
             // 
             this.CTC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CTC.Location = new System.Drawing.Point(9, 319);
+            this.CTC.Location = new System.Drawing.Point(9, 339);
             this.CTC.Name = "CTC";
             this.CTC.Size = new System.Drawing.Size(105, 23);
             this.CTC.TabIndex = 8;
@@ -286,7 +285,7 @@
             // CFU
             // 
             this.CFU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CFU.Location = new System.Drawing.Point(120, 319);
+            this.CFU.Location = new System.Drawing.Point(120, 339);
             this.CFU.Name = "CFU";
             this.CFU.Size = new System.Drawing.Size(105, 23);
             this.CFU.TabIndex = 9;
@@ -296,7 +295,7 @@
             // 
             // DonateBtn
             // 
-            this.DonateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DonateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DonateBtn.Image = global::KeppySynthConfigurator.Properties.Resources.ppdonate;
             this.DonateBtn.Location = new System.Drawing.Point(285, 12);
             this.DonateBtn.Name = "DonateBtn";
@@ -308,12 +307,30 @@
             this.DonateBtn.UseVisualStyleBackColor = true;
             this.DonateBtn.Click += new System.EventHandler(this.DonateBtn_Click);
             // 
+            // CurBranch
+            // 
+            this.CurBranch.AutoSize = true;
+            this.CurBranch.Location = new System.Drawing.Point(120, 96);
+            this.CurBranch.Name = "CurBranch";
+            this.CurBranch.Size = new System.Drawing.Size(52, 13);
+            this.CurBranch.TabIndex = 9;
+            this.CurBranch.Text = "BRANCH";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 96);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(81, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Update branch:";
+            // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(382, 351);
+            this.ClientSize = new System.Drawing.Size(382, 371);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
             this.Controls.Add(this.CTC);
@@ -369,5 +386,7 @@
         private System.Windows.Forms.Button CTC;
         private System.Windows.Forms.Button CFU;
         private System.Windows.Forms.Button DonateBtn;
+        private System.Windows.Forms.Label CurBranch;
+        private System.Windows.Forms.Label label9;
     }
 }

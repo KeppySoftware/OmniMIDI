@@ -25,7 +25,7 @@ namespace KeppySynthConfigurator
                 {
                     this.ShowInTaskbar = StartUp;
                 }
-                if (Functions.IsInternetAvailable())
+                if (UpdateSystem.IsInternetAvailable())
                 {
                     if (x == null || y == null)
                     {

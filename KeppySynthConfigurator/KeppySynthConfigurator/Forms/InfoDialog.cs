@@ -59,16 +59,20 @@ namespace KeppySynthConfigurator
                 StartPosition = FormStartPosition.CenterScreen;
         }
 
+        private string ReturnDriverAssemblyVersion(String FileVersion, Int32 FilePrivatePart)
+        {
+            if (FilePrivatePart < 1)
+                return String.Format("{0} (No bugfixes yet)", FileVersion, FilePrivatePart);
+            else
+                return String.Format("{0} (Bugfix {1})", FileVersion, FilePrivatePart);
+        }
+
         private string ReturnBASSAssemblyVersion(String FileVersion, Int32 FilePrivatePart)
         {
             if (FilePrivatePart < 1)
-            {
                 return String.Format("{0}", FileVersion, FilePrivatePart);
-            }
             else
-            {
                 return String.Format("{0} (Revision {1})", FileVersion, FilePrivatePart);
-            }
         }
 
         private void InfoDialog_Load(object sender, EventArgs e)
@@ -76,10 +80,11 @@ namespace KeppySynthConfigurator
             ComputerInfo CI = new ComputerInfo();
             String Version = String.Format("{0}.{1}.{2}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart);
             VerLabel.Text = String.Format("Keppy's Synthesizer {0}\n\nCopyright Ⓒ 2011\nKaleidonKep99, Kode54 && Mudlord", Version, DateTime.Now.Year.ToString());
-            DriverVer.Text = String.Format("{0} (Bugfix {1})", Version, Driver.FilePrivatePart);
+            DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
             CompiledOn.Text = GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Utc).ToString();
+            CurBranch.Text = UpdateSystem.GetCurrentBranch();
 
             OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
             osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
@@ -226,11 +231,11 @@ namespace KeppySynthConfigurator
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                Functions.CheckForUpdates(true, false);
+                UpdateSystem.CheckForUpdates(true, false);
             }
             else
             {
-                Functions.CheckForUpdates(false, false);
+                UpdateSystem.CheckForUpdates(false, false);
             }
         }
 

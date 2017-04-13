@@ -93,10 +93,6 @@ namespace KeppySynthConfigurator
                 {
                     switch (s.Substring(0, 4).ToUpper())
                     {
-                        case "/ASP":
-                            Functions.UserProfileMigration();
-                            Environment.Exit(0);
-                            return;
                         case "/AST":
                             openadvanced = 1;
                             break;
@@ -1001,7 +997,8 @@ namespace KeppySynthConfigurator
 
         private void SeeChangelog_Click(object sender, EventArgs e)
         {
-            Functions.CheckChangelog();
+
+            UpdateSystem.CheckChangelog();
         }
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1018,11 +1015,11 @@ namespace KeppySynthConfigurator
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                Functions.CheckForUpdates(true, false);
+                UpdateSystem.CheckForUpdates(true, false);
             }
             else
             {
-                Functions.CheckForUpdates(false, false);
+                UpdateSystem.CheckForUpdates(false, false);
             }
         }
 
@@ -2176,6 +2173,13 @@ namespace KeppySynthConfigurator
                 p.Start();
                 Application.ExitThread();
             }
+        }
+
+        private void ChangeUpdateBranch_Click(object sender, EventArgs e)
+        {
+            SelectBranch frm = new SelectBranch();
+            frm.ShowDialog();
+            frm.Dispose();
         }
     }
 }

@@ -128,10 +128,16 @@
     <Compile Include="Forms\Add-ons\SFListAssign.Designer.cs">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DLEngine.cs">
+    <Compile Include="UpdateSystem\SelectBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DLEngine.Designer.cs">
+    <Compile Include="UpdateSystem\SelectBranch.Designer.cs">
+      <DependentUpon>SelectBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateSystem\DLEngine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateSystem\DLEngine.Designer.cs">
       <DependentUpon>DLEngine.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\OSInfo.cs" />
@@ -147,10 +153,10 @@
     <Compile Include="Forms\SecretDialog.Designer.cs">
       <DependentUpon>SecretDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UpdateYesNo.cs">
+    <Compile Include="UpdateSystem\UpdateYesNo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\UpdateYesNo.Designer.cs">
+    <Compile Include="UpdateSystem\UpdateYesNo.Designer.cs">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
@@ -179,10 +185,10 @@
     <Compile Include="Forms\InfoDialog.Designer.cs">
       <DependentUpon>InfoDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListViewEx.cs">
+    <Compile Include="Functions\ListViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ListViewEx.Designer.cs">
+    <Compile Include="Functions\ListViewEx.Designer.cs">
       <DependentUpon>ListViewEx.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -193,6 +199,7 @@
     <Compile Include="Forms\Add-ons\RevbNChorForm.Designer.cs">
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UpdateSystem\UpdateSystem.cs" />
     <EmbeddedResource Include="Forms\Add-ons\FavouritesManager.resx">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </EmbeddedResource>
@@ -226,7 +233,10 @@
     <EmbeddedResource Include="Forms\Add-ons\SFListAssign.resx">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DLEngine.resx">
+    <EmbeddedResource Include="UpdateSystem\SelectBranch.resx">
+      <DependentUpon>SelectBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateSystem\DLEngine.resx">
       <DependentUpon>DLEngine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\DefaultAudioOutput.resx">
@@ -241,7 +251,7 @@
     <EmbeddedResource Include="Forms\SecretDialog.resx">
       <DependentUpon>SecretDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdateYesNo.resx">
+    <EmbeddedResource Include="UpdateSystem\UpdateYesNo.resx">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\MaskSynthAsAnother.resx">

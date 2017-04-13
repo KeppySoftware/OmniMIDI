@@ -22,9 +22,6 @@ namespace KeppySynthConfigurator
 {
     class Functions
     {
-        [DllImport("wininet.dll")]
-        public extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
-
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool Wow64DisableWow64FsRedirection(ref IntPtr ptr);
 
@@ -439,120 +436,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static bool IsInternetAvailable()
-        {
-            int Desc;
-            return InternetGetConnectedState(out Desc, 0);
-        }
-
-        public static void TriggerUpdateWindow(Version x, Version y, String newestversion, bool forced, bool startup)
-        {
-            if (forced && startup)
-            {
-                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait...", newestversion, @"{0}"), null, 0, true);
-                frm.StartPosition = FormStartPosition.CenterScreen;
-                frm.ShowDialog();
-            }
-            else
-            {
-                UpdateYesNo upd = new UpdateYesNo(x, y, true, startup);
-                if (startup)
-                    upd.StartPosition = FormStartPosition.CenterScreen;
-                else
-                    upd.StartPosition = FormStartPosition.CenterParent;
-                DialogResult dialogResult = upd.ShowDialog();
-                upd.Dispose();
-                if (dialogResult == DialogResult.Yes)
-                {
-                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}, please wait...", newestversion, @"{0}"), null, 0, false);
-                    frm.StartPosition = FormStartPosition.CenterScreen;
-                    frm.ShowDialog();
-                }
-            }
-        }
-
-        public static void NoUpdates(bool startup, bool internetok)
-        {
-            if (!startup)
-            {
-                UpdateYesNo upd = new UpdateYesNo(null, null, internetok, startup);
-                upd.StartPosition = FormStartPosition.CenterParent;
-                upd.ShowDialog();
-                upd.Dispose();
-            }
-        }
-
-        public static void CheckChangelog()
-        {
-            bool internetok = IsInternetAvailable();
-            if (internetok == false)
-            {
-                MessageBox.Show("There's no Internet connection.\n\nYou can't see the changelog without one.", "Keppy's Synthesizer - No Internet connection available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                try
-                {
-                    WebClient client = new WebClient();
-                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/keppydriverupdate.txt");
-                    StreamReader reader = new StreamReader(stream);
-                    String newestversion = reader.ReadToEnd();
-                    Process.Start(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", newestversion));
-                }
-                catch (Exception ex)
-                {
-                    Functions.ShowErrorDialog(Properties.Resources.wi, System.Media.SystemSounds.Exclamation, "Unknown error", "An error has occurred while trying to show you the latest changelog.\nPlease try again later.\n\nPress OK to continue.", true, ex);
-                }
-            }
-        }
-
-        public static void CheckForUpdates(bool forced, bool startup)
-        {
-            bool internetok = IsInternetAvailable();
-            if (internetok == false)
-            {
-                NoUpdates(startup, false);
-            }
-            else
-            {
-                try
-                {
-                    WebClient client = new WebClient();
-                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Driver/master/output/keppydriverupdate.txt");
-                    StreamReader reader = new StreamReader(stream);
-                    String newestversion = reader.ReadToEnd();
-                    FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppysynth\\keppysynth.dll");
-                    Version x = null;
-                    Version.TryParse(newestversion.ToString(), out x);
-                    Version y = null;
-                    Version.TryParse(Driver.FileVersion.ToString(), out y);
-                    if (forced)
-                    {
-                        Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the driver. ({0})", newestversion), null);
-                        TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                    }
-                    else
-                    {
-                        if (x > y)
-                        {
-                            Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                            TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                        }
-                        else
-                        {
-                            Program.DebugToConsole(false, String.Format("No updates have been found. ({0})", newestversion), null);
-                            NoUpdates(startup, internetok);
-                        }
-                    }
-                }
-                catch
-                {
-                    Program.DebugToConsole(false, "An error has occurred while checking for updates.", null);
-                    NoUpdates(startup, internetok);
-                }
-            }
-        }
-
         public static string StripSFZValues(string SFToStrip)
         {
             if (SFToStrip.ToLower().IndexOf('=') != -1)
@@ -597,6 +480,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Watchdog.SetValue("rel" + KeppySynthConfiguratorMain.whichone.ToString(), "1", RegistryValueKind.DWord);
                 }
                 Program.DebugToConsole(false, String.Format("(Re)Loaded soundfont list {0}.", KeppySynthConfiguratorMain.whichone), null);
+                KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
             }
             catch
             {

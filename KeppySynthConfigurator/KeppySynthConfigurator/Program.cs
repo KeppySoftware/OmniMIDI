@@ -100,6 +100,7 @@ namespace KeppySynthConfigurator
             try
             {
                 DebugToConsole(false, "Started configurator.", null);
+                Application.SetCompatibleTextRenderingDefault(false);
                 if (!Functions.IsWindowsVistaOrNewer())
                 {
                     Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
@@ -115,7 +116,6 @@ namespace KeppySynthConfigurator
                     WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
                     return;
                 }
-                Application.SetCompatibleTextRenderingDefault(false);
                 try
                 {
                     foreach (String s in args)
@@ -123,14 +123,13 @@ namespace KeppySynthConfigurator
                         switch (s.Substring(0, 4).ToUpper())
                         {
                             case "/ASP":
-                                runmode = 1;
-                                window = 0;
-                                break;
+                                Functions.UserProfileMigration();
+                                return;
                             case "/REI":
                                 RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
                                 sourceKey.DeleteSubKeyTree("Keppy's Synthesizer", true);
                                 sourceKey.Close();
-                                Functions.CheckForUpdates(true, true);
+                                UpdateSystem.CheckForUpdates(true, true);
                                 return;
                             case "/INF":
                                 runmode = 2;
@@ -147,12 +146,20 @@ namespace KeppySynthConfigurator
                                 break;
                         }
                     }
+                    if (Properties.Settings.Default.UpdateBranch == "choose")
+                    {
+                        MessageBox.Show("The driver's update system is divided into three branches. For future update notifications, you can pick between the following branches, which are the Canary Branch, the Normal Branch, and the Delayed Branch. These preferences can be changed at any time.\n\nCanary Branch: all updates\nNormal Branch: occasional updates (default, recommended)\nDelayed Branch: very infrequent updates (not recommended)\n\nClick OK to choose a branch.", "Keppy's Synthesizer - New update branches", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        SelectBranch frm = new SelectBranch();
+                        frm.ShowInTaskbar = true;
+                        frm.StartPosition = FormStartPosition.CenterScreen;
+                        frm.ShowDialog();
+                        frm.Dispose();
+                    }
                     ExecuteForm(runmode, args, m, window);
                 }
                 catch
                 {
                     Application.EnableVisualStyles();
-
                     Application.Run(new KeppySynthConfiguratorMain(args));
                     GC.KeepAlive(m);
                 }
@@ -167,7 +174,7 @@ namespace KeppySynthConfigurator
         {
             if (runmode == 0)
             {
-                Functions.CheckForUpdates(false, true);
+                UpdateSystem.CheckForUpdates(false, true);
             }
             Application.EnableVisualStyles();
             if (form == 0)
