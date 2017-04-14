@@ -604,48 +604,22 @@ namespace KeppySynthConfigurator
                 {
                     if (Enable)
                     {
-                        String sfname;
-                        string result = Lis.SelectedItems[i].Text.ToString().Substring(0, 1);
-                        if (result == "@")
+                        if (Lis.SelectedItems[i].ForeColor != Functions.SFEnabled)
                         {
-                            string newvalue = Lis.SelectedItems[i].Text.ToString().Remove(0, 1);
-                            string newvaluenosfz = Functions.StripSFZValues(newvalue);
-                            FileInfo file = new FileInfo(Functions.StripSFZValues(newvalue));
-                            ListViewItem SF = new ListViewItem(new[] {
-                                        newvalue,
-                                        Functions.ReturnSoundFontFormat(Path.GetExtension(newvaluenosfz)),
-                                        Functions.ReturnSoundFontSize(Path.GetExtension(newvaluenosfz), file.Length)
-                                    });
-                            sfname = Lis.SelectedItems[i].ToString();
-                            int index = Lis.Items.IndexOf(Lis.SelectedItems[i]);
-                            Lis.Items.RemoveAt(index);
-                            Lis.Items.Insert(index, SF);
+                            Lis.SelectedItems[i].ForeColor = Functions.SFEnabled;
                             Functions.SaveList(CurrentList);
                             Functions.TriggerReload();
-                            Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", sfname), null);
+                            Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
                         }
                     }
                     else
                     {
-                        String sfname;
-                        string result = Lis.SelectedItems[i].Text.ToString().Substring(0, 1);
-                        if (result != "@")
+                        if (Lis.SelectedItems[i].ForeColor != Functions.SFDisabled)
                         {
-                            string newvalue = "@" + Lis.SelectedItems[i].Text.ToString();
-                            string newvaluenosfz = Functions.StripSFZValues(newvalue);
-                            FileInfo file = new FileInfo(newvaluenosfz);
-                            ListViewItem SF = new ListViewItem(new[] {
-                                        newvalue,
-                                        Functions.ReturnSoundFontFormat(Path.GetExtension(newvaluenosfz)),
-                                        Functions.ReturnSoundFontSize(Path.GetExtension(newvaluenosfz), file.Length)
-                                    });
-                            sfname = Lis.SelectedItems[i].ToString();
-                            int index = Lis.Items.IndexOf(Lis.SelectedItems[i]);
-                            Lis.Items.RemoveAt(index);
-                            Lis.Items.Insert(index, SF);
+                            Lis.SelectedItems[i].ForeColor = Functions.SFDisabled;
                             Functions.SaveList(CurrentList);
                             Functions.TriggerReload();
-                            Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", sfname), null);
+                            Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
                         }
                     }
                 }
@@ -743,10 +717,16 @@ namespace KeppySynthConfigurator
             ColorButton(MvU, Pens.Sienna, e);
         }
 
-        private void ButtonEnableDisable(object sender, PaintEventArgs e)
+        private void ButtonEnable(object sender, PaintEventArgs e)
         {
             // Well, it's quite simple,
-            ColorButton(EnableSF, Pens.Navy, e);
+            ColorButton(EnableSF, Pens.Green, e);
+        }
+
+        private void ButtonDisable(object sender, PaintEventArgs e)
+        {
+            // Well, it's quite simple,
+            ColorButton(DisableSF, Pens.Red, e);
         }
 
         private void ButtonLoad(object sender, PaintEventArgs e)
@@ -758,13 +738,13 @@ namespace KeppySynthConfigurator
         private void ImportListButton(object sender, PaintEventArgs e)
         {
             // The actual button that is going to get the color is parsed through "e",
-            ColorButton(IEL, Pens.Green, e);
+            ColorButton(IEL, new Pen(Color.FromArgb(114, 141, 208)), e);
         }
 
-        private void ExportListButton(object sender, PaintEventArgs e)
+        private void ClearListButton(object sender, PaintEventArgs e)
         {
             // Ye, it's not really that easy to explain...
-            ColorButton(EL, Pens.Red, e);
+            ColorButton(CLi, Pens.BlueViolet, e);
         }
 
         // Stuff
@@ -786,6 +766,48 @@ namespace KeppySynthConfigurator
 
         // End of the soundfont lists functions
         // ------------------------------------
+
+        public static void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
+        }
+
+        private void DeleteUserData_Click(object sender, EventArgs e)
+        {
+            Boolean RestartAfterDelete = false;
+            DialogResult dialogResult = MessageBox.Show("Deleting the driver's user data will delete all the SoundFont lists, the DLL overrides and will also uninstall LoudMax.\nThis action is irreversible!\n\nAre you sure you want to continue?\nAfter deleting the data, the configurator will restart.", "Keppy's Synthesizer - Clear driver's user data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                DialogResult dialogResult2 = MessageBox.Show("Would you like to restart the configurator after the process?", "Keppy's Synthesizer - Clear driver's user data", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResult2 == DialogResult.Yes)
+                    RestartAfterDelete = true;
+
+                DeleteDirectory(System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\");
+                if (RestartAfterDelete)
+                {
+                    System.Diagnostics.Process.Start(Application.ExecutablePath);
+                    this.Close();
+                }
+                else
+                {
+                    this.Close();
+                }
+            }
+        }
 
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {

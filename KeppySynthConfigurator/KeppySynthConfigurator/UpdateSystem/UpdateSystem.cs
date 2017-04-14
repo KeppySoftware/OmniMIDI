@@ -161,16 +161,8 @@ namespace KeppySynthConfigurator
                         {
                             if (Properties.Settings.Default.UpdateBranch == "canary")
                             {
-                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision || x.Minor != y.Minor || x.MinorRevision != y.MinorRevision)
-                                {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                                }
-                                else
-                                {
-                                    Program.DebugToConsole(false, String.Format("No canary updates have been found. ({0})", newestversion), null);
-                                    NoUpdates(startup, internetok);
-                                }
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                TriggerUpdateWindow(x, y, newestversion, forced, startup);
                             }
                             else if (Properties.Settings.Default.UpdateBranch == "normal")
                             {

@@ -56,6 +56,7 @@
             this.CFU = new System.Windows.Forms.Button();
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.ChangeBranch = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -209,6 +210,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.ChangeBranch);
             this.groupBox1.Controls.Add(this.CurBranch);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.CompiledOn);
@@ -334,6 +336,18 @@
             this.BranchToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BranchToolTip.ToolTipTitle = "Branch info";
             // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
+            // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -398,5 +412,6 @@
         private System.Windows.Forms.Label CurBranch;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolTip BranchToolTip;
+        private System.Windows.Forms.LinkLabel ChangeBranch;
     }
 }

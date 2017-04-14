@@ -145,8 +145,6 @@
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
-            this.menuItem43 = new System.Windows.Forms.MenuItem();
-            this.GiveFeedback = new System.Windows.Forms.MenuItem();
             this.menuItem25 = new System.Windows.Forms.MenuItem();
             this.menuItem40 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
@@ -155,7 +153,10 @@
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ResetToDefault = new System.Windows.Forms.MenuItem();
+            this.menuItem43 = new System.Windows.Forms.MenuItem();
+            this.GiveFeedback = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
@@ -1016,27 +1017,13 @@
             this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
             this.menuItem2,
-            this.menuItem43,
             this.menuItem25,
+            this.menuItem43,
             this.menuItem3});
-            // 
-            // menuItem43
-            // 
-            this.menuItem43.Index = 2;
-            this.menuItem43.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.GiveFeedback,
-            this.reportABugToolStripMenuItem});
-            this.menuItem43.Text = "Feedback";
-            // 
-            // GiveFeedback
-            // 
-            this.GiveFeedback.Index = 0;
-            this.GiveFeedback.Text = "Give feedback about the driver";
-            this.GiveFeedback.Click += new System.EventHandler(this.GiveFeedback_Click);
             // 
             // menuItem25
             // 
-            this.menuItem25.Index = 3;
+            this.menuItem25.Index = 2;
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem22,
             this.menuItem40,
@@ -1044,6 +1031,7 @@
             this.WinMMPatch32,
             this.WinMMPatch64,
             this.menuItem15,
+            this.DeleteUserData,
             this.ResetToDefault});
             this.menuItem25.Text = "Tools";
             // 
@@ -1089,11 +1077,31 @@
             this.menuItem15.Index = 5;
             this.menuItem15.Text = "-";
             // 
+            // DeleteUserData
+            // 
+            this.DeleteUserData.Index = 6;
+            this.DeleteUserData.Text = "Delete driver\'s data from user profile";
+            this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
+            // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 6;
+            this.ResetToDefault.Index = 7;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
+            // 
+            // menuItem43
+            // 
+            this.menuItem43.Index = 3;
+            this.menuItem43.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.GiveFeedback,
+            this.reportABugToolStripMenuItem});
+            this.menuItem43.Text = "Feedback";
+            // 
+            // GiveFeedback
+            // 
+            this.GiveFeedback.Index = 0;
+            this.GiveFeedback.Text = "Give feedback about the driver";
+            this.GiveFeedback.Click += new System.EventHandler(this.GiveFeedback_Click);
             // 
             // ThemeCheck
             // 
@@ -1684,7 +1692,7 @@
             this.EL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.EL.UseVisualStyleBackColor = false;
             this.EL.Click += new System.EventHandler(this.EL_Click);
-            this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.ExportListButton);
+            this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.ImportListButton);
             // 
             // LoadToApp
             // 
@@ -1764,7 +1772,7 @@
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
             this.DisableSF.Image = global::KeppySynthConfigurator.Properties.Resources.DisableIcon;
             this.DisableSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DisableSF.Location = new System.Drawing.Point(545, 221);
+            this.DisableSF.Location = new System.Drawing.Point(545, 222);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(89, 23);
             this.DisableSF.TabIndex = 9;
@@ -1772,7 +1780,7 @@
             this.DisableSF.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.DisableSF.UseVisualStyleBackColor = false;
             this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
-            this.DisableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnableDisable);
+            this.DisableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonDisable);
             // 
             // EnableSF
             // 
@@ -1788,7 +1796,7 @@
             this.EnableSF.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.EnableSF.UseVisualStyleBackColor = false;
             this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
-            this.EnableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnableDisable);
+            this.EnableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnable);
             // 
             // List1Override
             // 
@@ -1798,9 +1806,10 @@
             this.List1Override.Enabled = false;
             this.List1Override.Location = new System.Drawing.Point(4, 402);
             this.List1Override.Name = "List1Override";
-            this.List1Override.Size = new System.Drawing.Size(243, 13);
+            this.List1Override.Size = new System.Drawing.Size(412, 13);
             this.List1Override.TabIndex = 31;
-            this.List1Override.Text = "The last soundfont will override the previous ones.";
+            this.List1Override.Text = "The last soundfont will override the previous ones. Loading order is from top to " +
+    "bottom.";
             // 
             // CLi
             // 
@@ -1816,6 +1825,7 @@
             this.CLi.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CLi.UseVisualStyleBackColor = false;
             this.CLi.Click += new System.EventHandler(this.CLi_Click);
+            this.CLi.Paint += new System.Windows.Forms.PaintEventHandler(this.ClearListButton);
             // 
             // MvD
             // 
@@ -2173,6 +2183,7 @@
         private System.Windows.Forms.MenuItem menuItem44;
         private System.Windows.Forms.MenuItem menuItem41;
         private System.Windows.Forms.MenuItem ChangeUpdateBranch;
+        private System.Windows.Forms.MenuItem DeleteUserData;
     }
 }
 

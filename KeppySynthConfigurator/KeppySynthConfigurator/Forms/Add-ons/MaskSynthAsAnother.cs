@@ -23,7 +23,7 @@ namespace KeppySynthConfigurator
             try
             {
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-                int potato = Convert.ToInt32(Settings.GetValue("newdevicename", 3));
+                int potato = Convert.ToInt32(Settings.GetValue("newdevicename", 0));
                 Names.SelectedIndex = potato;
             }
             catch (Exception ex)

@@ -260,5 +260,15 @@ namespace KeppySynthConfigurator
 
             Process.Start(url);
         }
+
+        private void ChangeBranch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SelectBranch frm = new SelectBranch();
+            frm.ShowDialog();
+            frm.Dispose();
+            CurBranch.Text = UpdateSystem.GetCurrentBranch();
+            CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
+            BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
+        }
     }
 }

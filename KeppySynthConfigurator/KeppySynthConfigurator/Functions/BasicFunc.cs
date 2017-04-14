@@ -28,6 +28,9 @@ namespace KeppySynthConfigurator
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool Wow64RevertWow64FsRedirection(IntPtr ptr);
 
+        public static Color SFEnabled = Color.FromArgb(0, 0, 0);
+        public static Color SFDisabled = Color.FromArgb(170, 170, 170);
+
         public static string IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
@@ -443,10 +446,6 @@ namespace KeppySynthConfigurator
                 var matches = System.Text.RegularExpressions.Regex.Matches(SFToStrip, "[0-9]+");
                 return SFToStrip.Substring(SFToStrip.LastIndexOf('|') + 1);
             }
-            else if (SFToStrip.ToLower().IndexOf('@') != -1)
-            {
-                return SFToStrip.Substring(SFToStrip.LastIndexOf('@') + 1);
-            }
             else
             {
                 return SFToStrip;
@@ -461,7 +460,16 @@ namespace KeppySynthConfigurator
                 {
                     foreach (ListViewItem item in KeppySynthConfiguratorMain.Delegate.Lis.Items)
                     {
-                        sw.WriteLine(item.Text.ToString());
+                        String FirstChar;
+
+                        if (item.ForeColor == SFEnabled)
+                            FirstChar = "";
+                        else if (item.ForeColor == SFDisabled)
+                            FirstChar = "@";
+                        else
+                            FirstChar = "";
+
+                        sw.WriteLine(String.Format("{0}{1}", FirstChar, item.Text.ToString()));
                     }
                 }
                 Program.DebugToConsole(false, String.Format("Soundfont list saved: {0}", SelectedList), null);
@@ -1138,6 +1146,14 @@ namespace KeppySynthConfigurator
                 return "Unknown format";
         }
 
+        private static Color ReturnColor(String result)
+        {
+            if (result == "@")
+                return SFDisabled;
+            else
+                return SFEnabled;
+        }
+
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
             if (SelectedList == 1)
@@ -1207,12 +1223,20 @@ namespace KeppySynthConfigurator
                         KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
                         while ((line = r.ReadLine()) != null)
                         {
+                            string result = line.Substring(0, 1);
+                            string newvalue;
+
+                            if (result == "@")
+                                line = line.Remove(0, 1);
+
                             FileInfo file = new FileInfo(StripSFZValues(line));
                             ListViewItem SF = new ListViewItem(new[] {
                                 line,
                                 ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
                                 ReturnSoundFontSize(Path.GetExtension(StripSFZValues(line)), file.Length)
                             });
+
+                            SF.ForeColor = ReturnColor(result);
                             KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
                     }

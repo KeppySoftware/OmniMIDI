@@ -35,6 +35,9 @@ namespace KeppySynthConfigurator
         public SoundFontInfo(String SoundFont)
         {
             InitializeComponent();
+
+            ERROR = false;
+
             LastMIDIPath = KeppySynthConfiguratorMain.SynthPaths.GetValue("lastpathmidimport", Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ToString();
 
             // Here we go
@@ -48,20 +51,6 @@ namespace KeppySynthConfigurator
             {
                 var matches = System.Text.RegularExpressions.Regex.Matches(SoundFont, "[0-9]+");
                 string sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
-                if (!File.Exists(sf))
-                {
-                    Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.infoicon, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
-                    ERROR = true;
-                    Close();
-                }
-                SoundFontT = sf;
-                fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
-                f = new FileInfo(sf);
-                next = sf;
-            }
-            else if (SoundFont.ToLower().IndexOf('@') != -1)
-            {
-                string sf = SoundFont.Substring(SoundFont.LastIndexOf('@') + 1);
                 if (!File.Exists(sf))
                 {
                     Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.infoicon, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);

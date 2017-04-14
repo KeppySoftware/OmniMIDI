@@ -197,6 +197,7 @@ bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_
 void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
+	CheckUp(L"GetDataFromStream");
 	if (!encmode) {
 		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
 			sndbf[i] *= sound_out_volume_float;
