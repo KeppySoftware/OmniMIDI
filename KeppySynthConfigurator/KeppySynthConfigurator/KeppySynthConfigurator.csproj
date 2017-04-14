@@ -147,11 +147,11 @@
     <Compile Include="Forms\SoundFontInfo.Designer.cs">
       <DependentUpon>SoundFontInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SecretDialog.cs">
+    <Compile Include="Forms\Add-ons\ErrorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SecretDialog.Designer.cs">
-      <DependentUpon>SecretDialog.cs</DependentUpon>
+    <Compile Include="Forms\Add-ons\ErrorDialog.Designer.cs">
+      <DependentUpon>ErrorDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateYesNo.cs">
       <SubType>Form</SubType>
@@ -248,8 +248,8 @@
     <EmbeddedResource Include="Forms\Add-ons\VelocityIntervals.resx">
       <DependentUpon>VelocityIntervals.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SecretDialog.resx">
-      <DependentUpon>SecretDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Add-ons\ErrorDialog.resx">
+      <DependentUpon>ErrorDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateSystem\UpdateYesNo.resx">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>

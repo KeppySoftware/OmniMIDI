@@ -40,7 +40,7 @@
             // 
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(461, 16);
+            this.label1.Size = new System.Drawing.Size(461, 42);
             this.label1.TabIndex = 0;
             this.label1.Text = "Change the default soundfont list that Keppy\'s Synthesizer will load at startup.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -81,7 +81,6 @@
             // OK
             // 
             this.OK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.OK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OK.Location = new System.Drawing.Point(398, 107);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
@@ -93,7 +92,6 @@
             // Default
             // 
             this.Default.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Default.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Default.Location = new System.Drawing.Point(294, 107);
             this.Default.Name = "Default";
             this.Default.Size = new System.Drawing.Size(98, 23);
@@ -106,7 +104,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(485, 142);
             this.Controls.Add(this.Default);
             this.Controls.Add(this.OK);

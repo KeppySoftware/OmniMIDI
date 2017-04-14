@@ -85,6 +85,8 @@ namespace KeppySynthConfigurator
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
             CompiledOn.Text = GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Utc).ToString();
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
+            CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
+            BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
 
             OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
             osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));

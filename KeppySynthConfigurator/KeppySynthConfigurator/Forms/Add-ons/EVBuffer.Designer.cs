@@ -39,7 +39,7 @@
             // 
             // OK
             // 
-            this.OK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.OK.Location = new System.Drawing.Point(398, 107);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
@@ -50,7 +50,7 @@
             // 
             // Default
             // 
-            this.Default.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Default.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.Default.Location = new System.Drawing.Point(294, 107);
             this.Default.Name = "Default";
             this.Default.Size = new System.Drawing.Size(98, 23);
@@ -104,7 +104,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(485, 142);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numericUpDown1);

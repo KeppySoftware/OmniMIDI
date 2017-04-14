@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InfoDialog));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.VerLabel = new System.Windows.Forms.Label();
@@ -44,6 +45,8 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.CurBranch = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.CompiledOn = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
             this.BASSVer = new System.Windows.Forms.Label();
@@ -52,8 +55,7 @@
             this.CTC = new System.Windows.Forms.Button();
             this.CFU = new System.Windows.Forms.Button();
             this.DonateBtn = new System.Windows.Forms.Button();
-            this.CurBranch = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -224,6 +226,26 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Driver info";
             // 
+            // CurBranch
+            // 
+            this.CurBranch.AutoSize = true;
+            this.CurBranch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurBranch.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.CurBranch.Location = new System.Drawing.Point(120, 96);
+            this.CurBranch.Name = "CurBranch";
+            this.CurBranch.Size = new System.Drawing.Size(58, 13);
+            this.CurBranch.TabIndex = 9;
+            this.CurBranch.Text = "BRANCH";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 96);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(81, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Update branch:";
+            // 
             // CompiledOn
             // 
             this.CompiledOn.AutoSize = true;
@@ -307,29 +329,16 @@
             this.DonateBtn.UseVisualStyleBackColor = true;
             this.DonateBtn.Click += new System.EventHandler(this.DonateBtn_Click);
             // 
-            // CurBranch
+            // BranchToolTip
             // 
-            this.CurBranch.AutoSize = true;
-            this.CurBranch.Location = new System.Drawing.Point(120, 96);
-            this.CurBranch.Name = "CurBranch";
-            this.CurBranch.Size = new System.Drawing.Size(52, 13);
-            this.CurBranch.TabIndex = 9;
-            this.CurBranch.Text = "BRANCH";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 96);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(81, 13);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "Update branch:";
+            this.BranchToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BranchToolTip.ToolTipTitle = "Branch info";
             // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(382, 371);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
@@ -388,5 +397,6 @@
         private System.Windows.Forms.Button DonateBtn;
         private System.Windows.Forms.Label CurBranch;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolTip BranchToolTip;
     }
 }

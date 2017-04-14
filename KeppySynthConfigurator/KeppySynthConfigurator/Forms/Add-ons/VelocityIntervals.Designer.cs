@@ -89,7 +89,7 @@
             // 
             // ApplyBtn
             // 
-            this.ApplyBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ApplyBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ApplyBtn.Location = new System.Drawing.Point(398, 107);
             this.ApplyBtn.Name = "ApplyBtn";
             this.ApplyBtn.Size = new System.Drawing.Size(75, 23);
@@ -100,7 +100,7 @@
             // 
             // CancelBtn
             // 
-            this.CancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.CancelBtn.Location = new System.Drawing.Point(317, 107);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
@@ -146,7 +146,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(485, 142);
             this.Controls.Add(this.LoVel);
             this.Controls.Add(this.PrevSett);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -100,6 +101,35 @@ namespace KeppySynthConfigurator
             else
                 return "Normal branch";
         }
+
+        public static Color GetCurrentBranchColor()
+        {
+            if (Properties.Settings.Default.UpdateBranch == "canary")
+                return Color.FromArgb(230, 149, 0);
+            else if (Properties.Settings.Default.UpdateBranch == "normal")
+                return SystemColors.ControlText;
+            else if (Properties.Settings.Default.UpdateBranch == "delay")
+                return SystemColors.GrayText;
+            else if (Properties.Settings.Default.UpdateBranch == "choose")
+                return Color.FromArgb(182, 0, 0);
+            else
+                return Color.FromArgb(255, 255, 255);
+        }
+
+        public static string GetCurrentBranchToolTip()
+        {
+            if (Properties.Settings.Default.UpdateBranch == "canary")
+                return "Receive all updates.\nYou may get broken updates that haven't been fully tested.\nDesigned for testers and early adopters.";
+            else if (Properties.Settings.Default.UpdateBranch == "normal")
+                return "Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x).\nRecommended.";
+            else if (Properties.Settings.Default.UpdateBranch == "delay")
+                return "You will only get major releases (Eg. from version x.1.x.x to x.2.x.x).\nFor those who do not wish to update often.\nNot recommended.";
+            else if (Properties.Settings.Default.UpdateBranch == "choose")
+                return "No information, since you didn't chose a branch.";
+            else
+                return "Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x).\nRecommended.";
+        }
+
         public static void CheckForUpdates(bool forced, bool startup)
         {
             bool internetok = IsInternetAvailable();
