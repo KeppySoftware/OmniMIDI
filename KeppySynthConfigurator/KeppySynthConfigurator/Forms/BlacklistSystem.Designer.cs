@@ -1,4 +1,6 @@
-﻿namespace KeppySynthConfigurator
+﻿using System.Windows.Forms;
+
+namespace KeppySynthConfigurator
 {
     partial class KeppySynthBlacklistSystem
     {
@@ -30,10 +32,7 @@
         {
             this.ClearBlacklist = new System.Windows.Forms.Button();
             this.Label13 = new System.Windows.Forms.Label();
-            this.ManualBlackListLabel = new System.Windows.Forms.Label();
-            this.ManualBlackList = new System.Windows.Forms.TextBox();
             this.BlackListDef = new System.Windows.Forms.Label();
-            this.BlackListAdvancedMode = new System.Windows.Forms.CheckBox();
             this.RemoveBlackList = new System.Windows.Forms.Button();
             this.AddBlackList = new System.Windows.Forms.Button();
             this.ProgramsBlackList = new System.Windows.Forms.ListBox();
@@ -48,7 +47,7 @@
             this.ClearBlacklist.Name = "ClearBlacklist";
             this.ClearBlacklist.Size = new System.Drawing.Size(122, 23);
             this.ClearBlacklist.TabIndex = 30;
-            this.ClearBlacklist.Text = "Clear the  list";
+            this.ClearBlacklist.Text = "Clear the list";
             this.ClearBlacklist.UseVisualStyleBackColor = true;
             this.ClearBlacklist.Click += new System.EventHandler(this.ClearBlacklist_Click);
             // 
@@ -62,46 +61,16 @@
             this.Label13.TabIndex = 29;
             this.Label13.Text = "Tip: Names are NOT case sensitive, and spaces are recognized.";
             // 
-            // ManualBlackListLabel
-            // 
-            this.ManualBlackListLabel.Enabled = false;
-            this.ManualBlackListLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.ManualBlackListLabel.Location = new System.Drawing.Point(12, 65);
-            this.ManualBlackListLabel.Name = "ManualBlackListLabel";
-            this.ManualBlackListLabel.Size = new System.Drawing.Size(221, 13);
-            this.ManualBlackListLabel.TabIndex = 28;
-            this.ManualBlackListLabel.Text = "Full path to the program (with .exe extension):";
-            this.ManualBlackListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ManualBlackList
-            // 
-            this.ManualBlackList.Enabled = false;
-            this.ManualBlackList.Location = new System.Drawing.Point(234, 62);
-            this.ManualBlackList.Name = "ManualBlackList";
-            this.ManualBlackList.Size = new System.Drawing.Size(269, 20);
-            this.ManualBlackList.TabIndex = 27;
-            // 
             // BlackListDef
             // 
             this.BlackListDef.AutoSize = true;
             this.BlackListDef.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.BlackListDef.Location = new System.Drawing.Point(12, 16);
+            this.BlackListDef.Location = new System.Drawing.Point(12, 20);
             this.BlackListDef.Name = "BlackListDef";
-            this.BlackListDef.Size = new System.Drawing.Size(239, 13);
+            this.BlackListDef.Size = new System.Drawing.Size(281, 52);
             this.BlackListDef.TabIndex = 26;
-            this.BlackListDef.Text = "Select a program by clicking \'\'Add executable(s)\'\'.";
-            // 
-            // BlackListAdvancedMode
-            // 
-            this.BlackListAdvancedMode.AutoSize = true;
-            this.BlackListAdvancedMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.BlackListAdvancedMode.Location = new System.Drawing.Point(15, 45);
-            this.BlackListAdvancedMode.Name = "BlackListAdvancedMode";
-            this.BlackListAdvancedMode.Size = new System.Drawing.Size(229, 17);
-            this.BlackListAdvancedMode.TabIndex = 25;
-            this.BlackListAdvancedMode.Text = "I want to add the program\'s name by myself";
-            this.BlackListAdvancedMode.UseVisualStyleBackColor = true;
-            this.BlackListAdvancedMode.CheckedChanged += new System.EventHandler(this.BlackListAdvancedMode_CheckedChanged);
+            this.BlackListDef.Text = "Select a program by clicking \'\'Add executable(s)\'\'.\r\n\r\nIf you want to add a progr" +
+    "am by typing its name or its path,\r\nhold SHIFT while clicking the button.";
             // 
             // RemoveBlackList
             // 
@@ -138,6 +107,7 @@
             this.ProgramsBlackList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.ProgramsBlackList.Size = new System.Drawing.Size(685, 272);
             this.ProgramsBlackList.TabIndex = 21;
+            this.ProgramsBlackList.KeyDown += new KeyEventHandler(this.ProgramsBlackList_KeyDown);
             // 
             // AddBlacklistedProgram
             // 
@@ -167,10 +137,7 @@
             this.Controls.Add(this.DefBlackListEdit);
             this.Controls.Add(this.ClearBlacklist);
             this.Controls.Add(this.Label13);
-            this.Controls.Add(this.ManualBlackListLabel);
-            this.Controls.Add(this.ManualBlackList);
             this.Controls.Add(this.BlackListDef);
-            this.Controls.Add(this.BlackListAdvancedMode);
             this.Controls.Add(this.RemoveBlackList);
             this.Controls.Add(this.AddBlackList);
             this.Controls.Add(this.ProgramsBlackList);
@@ -190,10 +157,7 @@
 
         internal System.Windows.Forms.Button ClearBlacklist;
         internal System.Windows.Forms.Label Label13;
-        internal System.Windows.Forms.Label ManualBlackListLabel;
-        internal System.Windows.Forms.TextBox ManualBlackList;
         internal System.Windows.Forms.Label BlackListDef;
-        internal System.Windows.Forms.CheckBox BlackListAdvancedMode;
         internal System.Windows.Forms.Button RemoveBlackList;
         internal System.Windows.Forms.Button AddBlackList;
         internal System.Windows.Forms.ListBox ProgramsBlackList;

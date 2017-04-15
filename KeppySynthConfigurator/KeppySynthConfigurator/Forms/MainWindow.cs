@@ -494,6 +494,28 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void Lis_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
+                {
+                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                    {
+                        String name = Lis.SelectedItems[i].Text.ToString();
+                        Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
+                        Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Functions.ReinitializeList(ex, CurrentList);
+            }
+        }
+
         private void SelectedSFInfo(MouseEventArgs e)
         {
             AvoidSave = true;
@@ -824,7 +846,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
             // And then...
@@ -860,7 +882,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = false;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
             // Additional settings
@@ -889,7 +911,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
             // Additional settings
@@ -910,7 +932,7 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 64;
             MaxCPU.Value = 0;
             Frequency.Text = "22050";
-            XAudioDisable.Checked = true;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
             XAudioDisable_CheckedChanged(null, null);
             bufsize.Value = 0;
             SPFRate.Value = 100;
@@ -948,7 +970,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
             // Additional settings
@@ -977,7 +999,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
             // Additional settings
@@ -1423,7 +1445,8 @@ namespace KeppySynthConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("After checking this, the driver will fall back on using BASS's own audio interface, based on DirectSound, instead of a direct interface with WASAPI, based on XAudio.\n\nUsing DirectSound instead of XAudio could reduce audio hiccups and app freezes on outdated machines, but will also increase the latency by a significant amount.", "\"Use DirectSound\"? What is it?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("After checking this, the driver will fall back on using BASS's own audio interface, based on DirectSound, instead of a direct interface with WASAPI, based on XAudio.\n\nUsing DirectSound instead of XAudio could reduce audio hiccups and app freezes on outdated machines, but will also increase the latency by a significant amount.", 
+                "\"XAudio\" and \"DirectSound\"? What are those?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Frequency_SelectedIndexChanged(object sender, EventArgs e)
@@ -1439,7 +1462,7 @@ namespace KeppySynthConfigurator
 
         private void CheckBuffer()
         {
-            if (!XAudioDisable.Checked)
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
             {
                 Int32[] valuearray = new Int32[10];
                 Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
@@ -1465,9 +1488,14 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            XAudioDisable_CheckedChanged(null, null);
+        }
+
         private void XAudioDisable_CheckedChanged(object sender, EventArgs e)
         {
-            if (XAudioDisable.Checked == true)
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
                 StatusBuf.Visible = false;
                 OutputWAV.Enabled = false;
@@ -1496,7 +1524,7 @@ namespace KeppySynthConfigurator
                     bufsize.Value = 0;
                 }
             }
-            else if (XAudioDisable.Checked == false)
+            else
             {
                 StatusBuf.Visible = true;
                 OutputWAV.Enabled = true;
@@ -1518,8 +1546,8 @@ namespace KeppySynthConfigurator
             if (OutputWAV.Checked == true)
             {
                 StatusBuf.Visible = false;
-                XAudioDisable.Enabled = false;
-                XAudioDisable.Checked = false;
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
                 Label5.Enabled = false;
                 bufsize.Enabled = false;
                 MaxCPU.Enabled = false;
@@ -1532,7 +1560,7 @@ namespace KeppySynthConfigurator
             else if (OutputWAV.Checked == false)
             {
                 StatusBuf.Visible = true;
-                XAudioDisable.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = true;
                 Label5.Enabled = true;
                 bufsize.Enabled = true;
                 MaxCPU.Enabled = true;
@@ -2003,14 +2031,14 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 65;
             Frequency.Text = "48000";
             bufsize.Value = 30;
-            SPFRate.Value = 16;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
             EnableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            XAudioDisable.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
             // And then...

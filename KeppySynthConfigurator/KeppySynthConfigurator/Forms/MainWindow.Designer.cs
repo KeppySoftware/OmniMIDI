@@ -167,7 +167,6 @@
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.Button();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.Button();
             this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
-            this.XAudioDisable = new System.Windows.Forms.CheckBox();
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
             this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.GroupBox5 = new System.Windows.Forms.GroupBox();
@@ -221,6 +220,8 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
+            this.label2 = new System.Windows.Forms.Label();
+            this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1118,13 +1119,14 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.Transparent;
+            this.Settings.Controls.Add(this.AudioEngBox);
+            this.Settings.Controls.Add(this.label2);
             this.Settings.Controls.Add(this.assignSoundfontListToAppToolStripMenuItem);
             this.Settings.Controls.Add(this.changeDefaultSoundfontListToolStripMenuItem);
             this.Settings.Controls.Add(this.SettingsPresetsBtn);
             this.Settings.Controls.Add(this.resetToDefaultToolStripMenuItem);
             this.Settings.Controls.Add(this.applySettingsToolStripMenuItem);
             this.Settings.Controls.Add(this.WhatIsXAudio);
-            this.Settings.Controls.Add(this.XAudioDisable);
             this.Settings.Controls.Add(this.WhatIsOutput);
             this.Settings.Controls.Add(this.OutputWAV);
             this.Settings.Controls.Add(this.GroupBox5);
@@ -1201,25 +1203,13 @@
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.ErrorImage")));
             this.WhatIsXAudio.Image = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.Image")));
-            this.WhatIsXAudio.Location = new System.Drawing.Point(274, 8);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(289, 9);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(21, 17);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.WhatIsXAudio.TabIndex = 37;
             this.WhatIsXAudio.TabStop = false;
             this.WhatIsXAudio.Click += new System.EventHandler(this.WhatIsXAudio_Click);
-            // 
-            // XAudioDisable
-            // 
-            this.XAudioDisable.AutoSize = true;
-            this.XAudioDisable.BackColor = System.Drawing.Color.Transparent;
-            this.XAudioDisable.Location = new System.Drawing.Point(168, 9);
-            this.XAudioDisable.Name = "XAudioDisable";
-            this.XAudioDisable.Size = new System.Drawing.Size(110, 17);
-            this.XAudioDisable.TabIndex = 14;
-            this.XAudioDisable.Text = "Use DirectSound.";
-            this.XAudioDisable.UseVisualStyleBackColor = false;
-            this.XAudioDisable.CheckedChanged += new System.EventHandler(this.XAudioDisable_CheckedChanged);
             // 
             // WhatIsOutput
             // 
@@ -1429,9 +1419,9 @@
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label6.Location = new System.Drawing.Point(6, 133);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(252, 13);
+            this.Label6.Size = new System.Drawing.Size(264, 13);
             this.Label6.TabIndex = 24;
-            this.Label6.Text = "Set the audio frequency for the driver output (In Hz):";
+            this.Label6.Text = "Set the audio frequency for the driver output (In Hertz):";
             // 
             // Frequency
             // 
@@ -1556,41 +1546,39 @@
             // 
             // VolIntView
             // 
-            this.VolIntView.AutoSize = true;
             this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
-            this.VolIntView.Location = new System.Drawing.Point(13, 29);
+            this.VolIntView.Location = new System.Drawing.Point(9, 67);
             this.VolIntView.Name = "VolIntView";
-            this.VolIntView.Size = new System.Drawing.Size(71, 13);
+            this.VolIntView.Size = new System.Drawing.Size(623, 12);
             this.VolIntView.TabIndex = 3;
             this.VolIntView.Text = "Real value: X";
+            this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // VolSimView
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
-            this.VolSimView.Location = new System.Drawing.Point(557, 4);
+            this.VolSimView.Location = new System.Drawing.Point(556, 2);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(78, 38);
+            this.VolSimView.Size = new System.Drawing.Size(83, 30);
             this.VolSimView.TabIndex = 2;
             this.VolSimView.Text = "100%";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.VolSimView.UseCompatibleTextRendering = true;
             this.VolSimView.UseMnemonic = false;
             // 
             // VolStaticLab
             // 
             this.VolStaticLab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolStaticLab.BackColor = System.Drawing.Color.Transparent;
-            this.VolStaticLab.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolStaticLab.Location = new System.Drawing.Point(455, 4);
+            this.VolStaticLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolStaticLab.Location = new System.Drawing.Point(451, 2);
             this.VolStaticLab.Name = "VolStaticLab";
-            this.VolStaticLab.Size = new System.Drawing.Size(112, 38);
+            this.VolStaticLab.Size = new System.Drawing.Size(114, 30);
             this.VolStaticLab.TabIndex = 1;
             this.VolStaticLab.Text = "Volume:";
-            this.VolStaticLab.UseCompatibleTextRendering = true;
             this.VolStaticLab.UseMnemonic = false;
             // 
             // VolTrackBar
@@ -1598,7 +1586,7 @@
             this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.VolTrackBar.BackColor = System.Drawing.Color.White;
-            this.VolTrackBar.Location = new System.Drawing.Point(8, 47);
+            this.VolTrackBar.Location = new System.Drawing.Point(8, 35);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Name = "VolTrackBar";
             this.VolTrackBar.Size = new System.Drawing.Size(625, 45);
@@ -1662,6 +1650,7 @@
             this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
             this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
+            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
             // 
             // SoundFont
             // 
@@ -1952,6 +1941,28 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(161, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.TabIndex = 38;
+            this.label2.Text = "Engine:";
+            // 
+            // AudioEngBox
+            // 
+            this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AudioEngBox.FormattingEnabled = true;
+            this.AudioEngBox.Items.AddRange(new object[] {
+            "XAudio",
+            "DirectSound"});
+            this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
+            this.AudioEngBox.Name = "AudioEngBox";
+            this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
+            this.AudioEngBox.TabIndex = 25;
+            this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2077,7 +2088,6 @@
         public System.Windows.Forms.MenuItem MonophonicFunc;
         private System.Windows.Forms.TabPage Settings;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
-        public System.Windows.Forms.CheckBox XAudioDisable;
         private System.Windows.Forms.PictureBox WhatIsOutput;
         public System.Windows.Forms.CheckBox OutputWAV;
         internal System.Windows.Forms.GroupBox GroupBox5;
@@ -2184,6 +2194,8 @@
         private System.Windows.Forms.MenuItem menuItem41;
         private System.Windows.Forms.MenuItem ChangeUpdateBranch;
         private System.Windows.Forms.MenuItem DeleteUserData;
+        public System.Windows.Forms.ComboBox AudioEngBox;
+        private System.Windows.Forms.Label label2;
     }
 }
 

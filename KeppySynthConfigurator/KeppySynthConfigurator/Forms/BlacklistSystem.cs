@@ -113,29 +113,73 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void BlackListAdvancedMode_CheckedChanged(object sender, EventArgs e)
+        private static DialogResult ShowInputDialog(ref string input)
         {
-            if (BlackListAdvancedMode.Checked == true)
+            System.Drawing.Size size = new System.Drawing.Size(200, 70);
+            Form inputBox = new Form();
+
+            inputBox.StartPosition = FormStartPosition.CenterParent;
+            inputBox.MinimizeBox = false;
+            inputBox.MaximizeBox = false;
+            inputBox.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+
+            inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            inputBox.ClientSize = size;
+            inputBox.Text = "App name/path";
+
+            System.Windows.Forms.TextBox textBox = new TextBox();
+            textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
+            textBox.Location = new System.Drawing.Point(5, 5);
+            textBox.Text = input;
+            inputBox.Controls.Add(textBox);
+
+            Button okButton = new Button();
+            okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            okButton.Name = "okButton";
+            okButton.Size = new System.Drawing.Size(75, 23);
+            okButton.Text = "&OK";
+            okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, 39);
+            inputBox.Controls.Add(okButton);
+
+            Button cancelButton = new Button();
+            cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(75, 23);
+            cancelButton.Text = "&Cancel";
+            cancelButton.Location = new System.Drawing.Point(size.Width - 80, 39);
+            inputBox.Controls.Add(cancelButton);
+
+            inputBox.AcceptButton = okButton;
+            inputBox.CancelButton = cancelButton;
+
+            DialogResult result = inputBox.ShowDialog();
+            input = textBox.Text;
+            return result;
+        }
+
+        private void ProgramsBlackList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
             {
-                BlackListDef.Text = "Type the name of the program in the textbox.";
-                AddBlackList.Text = "Add executable";
-                ManualBlackListLabel.Enabled = true;
-                ManualBlackList.Enabled = true;
-            }
-            else
-            {
-                BlackListDef.Text = "Select a program by clicking \"Add executable(s)\".";
-                AddBlackList.Text = "Add executable(s)";
-                ManualBlackListLabel.Enabled = false;
-                ManualBlackList.Enabled = false;
+                if (ProgramsBlackList.SelectedIndex != -1)
+                {
+                    ProgramsBlackList.Items.RemoveAt(ProgramsBlackList.SelectedIndex);
+                }
+                e.Handled = true;
             }
         }
 
         private void AddBlackList_Click(object sender, EventArgs e)
         {
-            if (BlackListAdvancedMode.Checked == true)
+            if (Control.ModifierKeys == Keys.Shift)
             {
-                ProgramsBlackList.Items.Add(ManualBlackList.Text);
+                String Program = null;
+                ShowInputDialog(ref Program);
+                ProgramsBlackList.Items.Add(Program);
+                if (Program != null || Program != "")
+                {
+                    SaveBlackList();
+                }
             }
             else
             {
@@ -147,12 +191,12 @@ namespace KeppySynthConfigurator
                         RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                         LastBrowserPath = Path.GetDirectoryName(str);
                         SynthPaths.SetValue("lastpathblacklist", LastBrowserPath, RegistryValueKind.String);
-                        SynthPaths.Close();   
+                        SynthPaths.Close();
                         ProgramsBlackList.Items.Add(str);
                     }
+                    SaveBlackList();
                 }
             }
-            SaveBlackList();
         }
 
         private void RemoveBlackList_Click(object sender, EventArgs e)
