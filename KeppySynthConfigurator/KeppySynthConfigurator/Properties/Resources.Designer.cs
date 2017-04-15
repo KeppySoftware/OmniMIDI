@@ -91,16 +91,6 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap donatebtn {
-            get {
-                object obj = ResourceManager.GetObject("donatebtn", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Byte[].
         /// </summary>
         internal static byte[] DRV32 {
@@ -127,15 +117,6 @@ namespace KeppySynthConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("EnableIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream error {
-            get {
-                return ResourceManager.GetStream("error", resourceCulture);
             }
         }
         
@@ -239,16 +220,6 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap KSynthLogo {
             get {
                 object obj = ResourceManager.GetObject("KSynthLogo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap logo_bass {
-            get {
-                object obj = ResourceManager.GetObject("logo_bass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -436,25 +407,6 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sfzcomp {
-            get {
-                object obj = ResourceManager.GetObject("sfzcomp", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream success {
-            get {
-                return ResourceManager.GetStream("success", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap successicon {
             get {
                 object obj = ResourceManager.GetObject("successicon", resourceCulture);
@@ -489,15 +441,6 @@ namespace KeppySynthConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("updateicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream warning {
-            get {
-                return ResourceManager.GetStream("warning", resourceCulture);
             }
         }
         

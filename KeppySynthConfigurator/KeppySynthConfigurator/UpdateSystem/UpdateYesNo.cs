@@ -25,7 +25,7 @@ namespace KeppySynthConfigurator
                 {
                     this.ShowInTaskbar = StartUp;
                 }
-                if (UpdateSystem.IsInternetAvailable())
+                if (internetok)
                 {
                     if (x == null || y == null)
                     {
@@ -84,7 +84,7 @@ namespace KeppySynthConfigurator
 
         private void UpdateYesNo_Load(object sender, EventArgs e)
         {
-            System.Media.SystemSounds.Asterisk.Play();
+            System.Media.SystemSounds.Question.Play();
         }
 
         private void YesBtn_Click(object sender, EventArgs e)

@@ -18,8 +18,6 @@ namespace KeppySynthConfigurator
         Boolean Is32BitMatch = true;
         Boolean Is64BitMatch = true;
         Boolean IsNewVerAvailable = false;
-        Stream OnlyOneError = Properties.Resources.error;
-        Stream TwoError = Properties.Resources.warning;
         IntPtr WOW64Value = IntPtr.Zero;
 
         public DriverSignatureCheckup(String SHA25632, String SHA25664, String NewSHA25632, String NewSHA25664, Boolean Is64Bit)
@@ -110,7 +108,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = String.Format(LatestRelease, "Both drivers are");
                     BothDriverStatus.ForeColor = Color.DarkRed;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     IsNewVerAvailable = true;
                 }
                 else
@@ -118,7 +116,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = String.Format(OriginalRelease, "Both drivers are");
                     BothDriverStatus.ForeColor = Color.DarkRed;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
             else if (!Is32BitMatch)
@@ -128,7 +126,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = String.Format(LatestRelease, "The 32-bit driver is");
                     BothDriverStatus.ForeColor = Color.Peru;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     IsNewVerAvailable = true;
                 }
                 else
@@ -136,7 +134,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = String.Format(OriginalRelease, "The 32-bit driver is");
                     BothDriverStatus.ForeColor = Color.Peru;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
             else if (!Is64BitMatch)
@@ -146,7 +144,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = String.Format(LatestRelease, "The 64-bit driver is");
                     BothDriverStatus.ForeColor = Color.Peru;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     IsNewVerAvailable = true;
                 }
                 else
@@ -154,7 +152,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = String.Format(OriginalRelease, "The 64-bit driver is");
                     BothDriverStatus.ForeColor = Color.Peru;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
             else
@@ -164,7 +162,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = EverythingFineUpd;
                     BothDriverStatus.ForeColor = Color.Blue;
                     BothDriverStatus.Cursor = Cursors.Hand;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     IsNewVerAvailable = true;
                 }
                 else
@@ -172,7 +170,7 @@ namespace KeppySynthConfigurator
                     BothDriverStatus.Text = EverythingFine;
                     BothDriverStatus.ForeColor = Color.Green;
                     BothDriverStatus.Cursor = Cursors.Arrow;
-                    BothDriverStatus.Font = new Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
         }
@@ -181,13 +179,11 @@ namespace KeppySynthConfigurator
         {
             if (!Is32BitMatch && !Is64BitMatch)
             {
-                SoundPlayer snd = new SoundPlayer(TwoError);
-                snd.Play();
+                SystemSounds.Hand.Play();
             }
             else if (!Is32BitMatch || !Is64BitMatch)
             {
-                SoundPlayer snd = new SoundPlayer(OnlyOneError);
-                snd.Play();
+                SystemSounds.Exclamation.Play();
             }
         }
 

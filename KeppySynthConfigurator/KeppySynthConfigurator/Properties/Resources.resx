@@ -133,14 +133,8 @@
   <data name="refreshicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\refreshicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="logo_bass" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\logo_bass.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="nointerneticon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\nointerneticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="donatebtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\donatebtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="noupdateicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\noupdateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -157,23 +151,11 @@
   <data name="what" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\what.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="sfzcomp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\sfzcomp.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Audio\warning.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="wi" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\wi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DRV64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Hashes\DRV64.SHA;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Audio\error.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="success" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Audio\success.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="updatebk" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pictures\updatebk.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

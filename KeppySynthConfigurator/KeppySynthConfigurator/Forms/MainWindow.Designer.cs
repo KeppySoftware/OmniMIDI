@@ -161,6 +161,8 @@
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.AudioEngBox = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.Button();
             this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.Button();
             this.SettingsPresetsBtn = new System.Windows.Forms.Button();
@@ -169,7 +171,7 @@
             this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
             this.WhatIsOutput = new System.Windows.Forms.PictureBox();
             this.OutputWAV = new System.Windows.Forms.CheckBox();
-            this.GroupBox5 = new System.Windows.Forms.GroupBox();
+            this.OutputSettingsBox = new System.Windows.Forms.GroupBox();
             this.StatusBuf = new System.Windows.Forms.PictureBox();
             this.ManualAddBuffer = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
@@ -178,7 +180,7 @@
             this.BufferText = new System.Windows.Forms.Label();
             this.SysResetIgnore = new System.Windows.Forms.CheckBox();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.SynthSettingsBox = new System.Windows.Forms.GroupBox();
             this.MaxCPU = new System.Windows.Forms.NumericUpDown();
             this.Label6 = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
@@ -205,7 +207,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.DisableSF = new System.Windows.Forms.Button();
             this.EnableSF = new System.Windows.Forms.Button();
-            this.List1Override = new System.Windows.Forms.Label();
+            this.ListOverride = new System.Windows.Forms.Label();
             this.CLi = new System.Windows.Forms.Button();
             this.MvD = new System.Windows.Forms.Button();
             this.MvU = new System.Windows.Forms.Button();
@@ -220,16 +222,14 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
-            this.label2 = new System.Windows.Forms.Label();
-            this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
-            this.GroupBox5.SuspendLayout();
+            this.OutputSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SPFRate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.SynthSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
@@ -1129,22 +1129,44 @@
             this.Settings.Controls.Add(this.WhatIsXAudio);
             this.Settings.Controls.Add(this.WhatIsOutput);
             this.Settings.Controls.Add(this.OutputWAV);
-            this.Settings.Controls.Add(this.GroupBox5);
-            this.Settings.Controls.Add(this.groupBox1);
+            this.Settings.Controls.Add(this.OutputSettingsBox);
+            this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Controls.Add(this.VolIntView);
             this.Settings.Controls.Add(this.VolSimView);
             this.Settings.Controls.Add(this.VolStaticLab);
             this.Settings.Controls.Add(this.VolTrackBar);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 417);
+            this.Settings.Size = new System.Drawing.Size(641, 395);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
+            // 
+            // AudioEngBox
+            // 
+            this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AudioEngBox.FormattingEnabled = true;
+            this.AudioEngBox.Items.AddRange(new object[] {
+            "XAudio",
+            "DirectSound"});
+            this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
+            this.AudioEngBox.Name = "AudioEngBox";
+            this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
+            this.AudioEngBox.TabIndex = 25;
+            this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(161, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.TabIndex = 38;
+            this.label2.Text = "Engine:";
             // 
             // assignSoundfontListToAppToolStripMenuItem
             // 
             this.assignSoundfontListToAppToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(168, 385);
+            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(168, 364);
             this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
             this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.assignSoundfontListToAppToolStripMenuItem.TabIndex = 30;
@@ -1155,7 +1177,7 @@
             // changeDefaultSoundfontListToolStripMenuItem
             // 
             this.changeDefaultSoundfontListToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(8, 385);
+            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(8, 364);
             this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
             this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.changeDefaultSoundfontListToolStripMenuItem.TabIndex = 29;
@@ -1166,7 +1188,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(355, 385);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(355, 364);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
             this.SettingsPresetsBtn.TabIndex = 31;
@@ -1177,7 +1199,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(448, 385);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(448, 364);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 32;
@@ -1189,7 +1211,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(541, 385);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(541, 364);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 33;
@@ -1201,8 +1223,7 @@
             // 
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WhatIsXAudio.ErrorImage = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.ErrorImage")));
-            this.WhatIsXAudio.Image = ((System.Drawing.Image)(resources.GetObject("WhatIsXAudio.Image")));
+            this.WhatIsXAudio.ErrorImage = null;
             this.WhatIsXAudio.Location = new System.Drawing.Point(289, 9);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(21, 17);
@@ -1215,8 +1236,7 @@
             // 
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WhatIsOutput.ErrorImage = ((System.Drawing.Image)(resources.GetObject("WhatIsOutput.ErrorImage")));
-            this.WhatIsOutput.Image = ((System.Drawing.Image)(resources.GetObject("WhatIsOutput.Image")));
+            this.WhatIsOutput.ErrorImage = null;
             this.WhatIsOutput.Location = new System.Drawing.Point(131, 8);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(21, 17);
@@ -1237,32 +1257,32 @@
             this.OutputWAV.UseVisualStyleBackColor = false;
             this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
             // 
-            // GroupBox5
+            // OutputSettingsBox
             // 
-            this.GroupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.OutputSettingsBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupBox5.BackColor = System.Drawing.Color.Transparent;
-            this.GroupBox5.Controls.Add(this.StatusBuf);
-            this.GroupBox5.Controls.Add(this.ManualAddBuffer);
-            this.GroupBox5.Controls.Add(this.SincInter);
-            this.GroupBox5.Controls.Add(this.SPFRate);
-            this.GroupBox5.Controls.Add(this.Label4);
-            this.GroupBox5.Controls.Add(this.BufferText);
-            this.GroupBox5.Controls.Add(this.SysResetIgnore);
-            this.GroupBox5.Controls.Add(this.bufsize);
-            this.GroupBox5.Location = new System.Drawing.Point(8, 248);
-            this.GroupBox5.Name = "GroupBox5";
-            this.GroupBox5.Size = new System.Drawing.Size(625, 107);
-            this.GroupBox5.TabIndex = 23;
-            this.GroupBox5.TabStop = false;
-            this.GroupBox5.Text = "Audio output settings";
+            this.OutputSettingsBox.BackColor = System.Drawing.Color.Transparent;
+            this.OutputSettingsBox.Controls.Add(this.StatusBuf);
+            this.OutputSettingsBox.Controls.Add(this.ManualAddBuffer);
+            this.OutputSettingsBox.Controls.Add(this.SincInter);
+            this.OutputSettingsBox.Controls.Add(this.SPFRate);
+            this.OutputSettingsBox.Controls.Add(this.Label4);
+            this.OutputSettingsBox.Controls.Add(this.BufferText);
+            this.OutputSettingsBox.Controls.Add(this.SysResetIgnore);
+            this.OutputSettingsBox.Controls.Add(this.bufsize);
+            this.OutputSettingsBox.Location = new System.Drawing.Point(8, 248);
+            this.OutputSettingsBox.Name = "OutputSettingsBox";
+            this.OutputSettingsBox.Size = new System.Drawing.Size(625, 107);
+            this.OutputSettingsBox.TabIndex = 23;
+            this.OutputSettingsBox.TabStop = false;
+            this.OutputSettingsBox.Text = "Audio output settings";
             // 
             // StatusBuf
             // 
+            this.StatusBuf.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.StatusBuf.BackColor = System.Drawing.Color.Transparent;
             this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
-            this.StatusBuf.ErrorImage = ((System.Drawing.Image)(resources.GetObject("StatusBuf.ErrorImage")));
-            this.StatusBuf.Image = global::KeppySynthConfigurator.Properties.Resources.what;
+            this.StatusBuf.ErrorImage = null;
             this.StatusBuf.Location = new System.Drawing.Point(528, 55);
             this.StatusBuf.Name = "StatusBuf";
             this.StatusBuf.Size = new System.Drawing.Size(21, 17);
@@ -1376,26 +1396,26 @@
             this.bufsize.ValueChanged += new System.EventHandler(this.bufsize_ValueChanged);
             this.bufsize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
-            // groupBox1
+            // SynthSettingsBox
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.SynthSettingsBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox1.Controls.Add(this.MaxCPU);
-            this.groupBox1.Controls.Add(this.Label6);
-            this.groupBox1.Controls.Add(this.Frequency);
-            this.groupBox1.Controls.Add(this.Label5);
-            this.groupBox1.Controls.Add(this.Label3);
-            this.groupBox1.Controls.Add(this.PolyphonyLimit);
-            this.groupBox1.Controls.Add(this.EnableSFX);
-            this.groupBox1.Controls.Add(this.Preload);
-            this.groupBox1.Controls.Add(this.NoteOffCheck);
-            this.groupBox1.Location = new System.Drawing.Point(8, 83);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(625, 159);
-            this.groupBox1.TabIndex = 16;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Synthesizer\'s settings";
+            this.SynthSettingsBox.BackColor = System.Drawing.Color.Transparent;
+            this.SynthSettingsBox.Controls.Add(this.MaxCPU);
+            this.SynthSettingsBox.Controls.Add(this.Label6);
+            this.SynthSettingsBox.Controls.Add(this.Frequency);
+            this.SynthSettingsBox.Controls.Add(this.Label5);
+            this.SynthSettingsBox.Controls.Add(this.Label3);
+            this.SynthSettingsBox.Controls.Add(this.PolyphonyLimit);
+            this.SynthSettingsBox.Controls.Add(this.EnableSFX);
+            this.SynthSettingsBox.Controls.Add(this.Preload);
+            this.SynthSettingsBox.Controls.Add(this.NoteOffCheck);
+            this.SynthSettingsBox.Location = new System.Drawing.Point(8, 83);
+            this.SynthSettingsBox.Name = "SynthSettingsBox";
+            this.SynthSettingsBox.Size = new System.Drawing.Size(625, 159);
+            this.SynthSettingsBox.TabIndex = 16;
+            this.SynthSettingsBox.TabStop = false;
+            this.SynthSettingsBox.Text = "Synthesizer\'s settings";
             // 
             // MaxCPU
             // 
@@ -1546,6 +1566,8 @@
             // 
             // VolIntView
             // 
+            this.VolIntView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
             this.VolIntView.Location = new System.Drawing.Point(9, 67);
@@ -1606,7 +1628,7 @@
             this.List.Controls.Add(this.label1);
             this.List.Controls.Add(this.DisableSF);
             this.List.Controls.Add(this.EnableSF);
-            this.List.Controls.Add(this.List1Override);
+            this.List.Controls.Add(this.ListOverride);
             this.List.Controls.Add(this.CLi);
             this.List.Controls.Add(this.MvD);
             this.List.Controls.Add(this.MvU);
@@ -1615,7 +1637,7 @@
             this.List.Location = new System.Drawing.Point(4, 22);
             this.List.Name = "List";
             this.List.Padding = new System.Windows.Forms.Padding(3);
-            this.List.Size = new System.Drawing.Size(641, 417);
+            this.List.Size = new System.Drawing.Size(641, 416);
             this.List.TabIndex = 0;
             this.List.Text = "Lists editor";
             // 
@@ -1642,15 +1664,15 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(532, 363);
+            this.Lis.Size = new System.Drawing.Size(532, 360);
             this.Lis.TabIndex = 12;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
             this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
+            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
             this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
             this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
-            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
             // 
             // SoundFont
             // 
@@ -1673,7 +1695,7 @@
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.Image = global::KeppySynthConfigurator.Properties.Resources.ExportIcon;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.EL.Location = new System.Drawing.Point(545, 369);
+            this.EL.Location = new System.Drawing.Point(545, 366);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -1705,7 +1727,7 @@
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.Image = global::KeppySynthConfigurator.Properties.Resources.ImportIcon;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IEL.Location = new System.Drawing.Point(545, 340);
+            this.IEL.Location = new System.Drawing.Point(545, 337);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -1787,17 +1809,17 @@
             this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
             this.EnableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnable);
             // 
-            // List1Override
+            // ListOverride
             // 
-            this.List1Override.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.List1Override.AutoSize = true;
-            this.List1Override.BackColor = System.Drawing.Color.Transparent;
-            this.List1Override.Enabled = false;
-            this.List1Override.Location = new System.Drawing.Point(4, 402);
-            this.List1Override.Name = "List1Override";
-            this.List1Override.Size = new System.Drawing.Size(412, 13);
-            this.List1Override.TabIndex = 31;
-            this.List1Override.Text = "The last soundfont will override the previous ones. Loading order is from top to " +
+            this.ListOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ListOverride.AutoSize = true;
+            this.ListOverride.BackColor = System.Drawing.Color.Transparent;
+            this.ListOverride.Enabled = false;
+            this.ListOverride.Location = new System.Drawing.Point(3, 400);
+            this.ListOverride.Name = "ListOverride";
+            this.ListOverride.Size = new System.Drawing.Size(412, 13);
+            this.ListOverride.TabIndex = 31;
+            this.ListOverride.Text = "The last soundfont will override the previous ones. Loading order is from top to " +
     "bottom.";
             // 
             // CLi
@@ -1888,7 +1910,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 443);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 421);
             this.TabsForTheControls.TabIndex = 32;
             // 
             // SettingsPresets
@@ -1941,35 +1963,13 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(161, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
-            this.label2.TabIndex = 38;
-            this.label2.Text = "Engine:";
-            // 
-            // AudioEngBox
-            // 
-            this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.AudioEngBox.FormattingEnabled = true;
-            this.AudioEngBox.Items.AddRange(new object[] {
-            "XAudio",
-            "DirectSound"});
-            this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
-            this.AudioEngBox.Name = "AudioEngBox";
-            this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
-            this.AudioEngBox.TabIndex = 25;
-            this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
-            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(649, 443);
+            this.ClientSize = new System.Drawing.Size(649, 421);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1985,13 +1985,13 @@
             this.Settings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).EndInit();
-            this.GroupBox5.ResumeLayout(false);
-            this.GroupBox5.PerformLayout();
+            this.OutputSettingsBox.ResumeLayout(false);
+            this.OutputSettingsBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SPFRate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.SynthSettingsBox.ResumeLayout(false);
+            this.SynthSettingsBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
@@ -2090,7 +2090,7 @@
         private System.Windows.Forms.PictureBox WhatIsXAudio;
         private System.Windows.Forms.PictureBox WhatIsOutput;
         public System.Windows.Forms.CheckBox OutputWAV;
-        internal System.Windows.Forms.GroupBox GroupBox5;
+        internal System.Windows.Forms.GroupBox OutputSettingsBox;
         public System.Windows.Forms.CheckBox ManualAddBuffer;
         public System.Windows.Forms.CheckBox SincInter;
         public System.Windows.Forms.NumericUpDown SPFRate;
@@ -2098,7 +2098,7 @@
         internal System.Windows.Forms.Label BufferText;
         public System.Windows.Forms.CheckBox SysResetIgnore;
         public System.Windows.Forms.NumericUpDown bufsize;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox SynthSettingsBox;
         public System.Windows.Forms.NumericUpDown MaxCPU;
         internal System.Windows.Forms.Label Label6;
         public System.Windows.Forms.ComboBox Frequency;
@@ -2121,7 +2121,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button DisableSF;
         private System.Windows.Forms.Button EnableSF;
-        private System.Windows.Forms.Label List1Override;
+        private System.Windows.Forms.Label ListOverride;
         private System.Windows.Forms.Button CLi;
         private System.Windows.Forms.Button MvD;
         private System.Windows.Forms.Button MvU;

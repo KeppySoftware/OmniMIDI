@@ -167,6 +167,10 @@ namespace KeppySynthConfigurator
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
 
+                WhatIsOutput.Image = Properties.Resources.what;
+                WhatIsXAudio.Image = Properties.Resources.what;
+                StatusBuf.Image = Properties.Resources.what;
+
                 Functions.InitializeLastPath();
                 SelectedListBox.Text = "List 1";
                 KeppySynthConfiguratorMain.whichone = 1;

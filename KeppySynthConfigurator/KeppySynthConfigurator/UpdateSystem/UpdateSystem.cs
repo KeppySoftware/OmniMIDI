@@ -152,8 +152,45 @@ namespace KeppySynthConfigurator
                     Version.TryParse(Driver.FileVersion.ToString(), out y);
                     if (forced)
                     {
-                        Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                        TriggerUpdateWindow(x, y, newestversion, forced, startup);
+                        if (x > y)
+                        {
+                            if (Properties.Settings.Default.UpdateBranch == "canary")
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                TriggerUpdateWindow(x, y, newestversion, forced, startup);
+                            }
+                            else if (Properties.Settings.Default.UpdateBranch == "normal")
+                            {
+                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision || x.Minor != y.Minor)
+                                {
+                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
+                                }
+                                else
+                                {
+                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                    TriggerUpdateWindow(x, y, Driver.FileVersion, forced, startup);
+                                }
+                            }
+                            else if (Properties.Settings.Default.UpdateBranch == "delay")
+                            {
+                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision)
+                                {
+                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
+                                }
+                                else
+                                {
+                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                    TriggerUpdateWindow(x, y, Driver.FileVersion, forced, startup);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                            TriggerUpdateWindow(x, y, Driver.FileVersion, forced, startup);
+                        }
                     }
                     else
                     {
