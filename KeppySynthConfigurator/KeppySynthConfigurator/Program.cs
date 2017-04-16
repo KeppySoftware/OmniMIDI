@@ -42,13 +42,29 @@ namespace KeppySynthConfigurator
         [STAThread]
         static void Main(String[] args)
         {
+            foreach (String s in args)
+            {
+                if (s.ToLowerInvariant() == "/dbg" || s.ToLowerInvariant() == "/debugwindow")
+                {
+                    AllocConsole();
+                    break;
+                }
+            }
+            if (!File.Exists(String.Format("{0}\\keppysynth\\bass.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))) ||
+                !File.Exists(String.Format("{0}\\keppysynth\\bassmidi.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))))
+            {
+                MissingBASSLibs MissingBASSLib = new MissingBASSLibs("The system was unable to find the required BASS libraries");
+                MissingBASSLib.Source = "BASS libraries not found";
+                DebugToConsole(true, "Can not find BASS libraries", MissingBASSLib);
+                MessageBox.Show("Can not find the required BASS libraries for the configurator to work.\nEnsure that BASS.DLL and BASSMIDI.DLL are present in the configurator's root folder.\nIf they're not, please reinstall the synthesizer.\n\nClick OK to close the configurator.", "Keppy's Synthesizer ~ Configurator - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                return;
+            }
             try
             {
                 RegistryKey rkCurrentUser = Registry.CurrentUser;
                 CopyKey(rkCurrentUser, "SOFTWARE\\Keppy's Driver", "SOFTWARE\\Keppy's Synthesizer");
                 Directory.Move(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\", System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\");
                 Directory.Delete(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\");
-                DoAnyway(args);
             }
             catch
             {
@@ -60,21 +76,25 @@ namespace KeppySynthConfigurator
                     deleteme.Close();
                     sourceKey.Close();
                 }
+            }
+            finally
+            {
                 DoAnyway(args);
             }
         }
 
         public static void DebugToConsole(bool isException, String message, Exception ex)
         {
-            String CurrentTime = DateTime.Now.ToString("HH:mm:ss.fff");
+            System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
+            String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss tt", ci);
             try
             {
                 if (isException)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(String.Format("{0}", CurrentTime));
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(String.Format(" - Exception {0}", ex));
+                    Console.Write(String.Format("{0}", CurrentTime));
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(String.Format(" - {0}", ex));
                     Console.Write(Environment.NewLine);
                 }
                 else
@@ -120,30 +140,30 @@ namespace KeppySynthConfigurator
                 {
                     foreach (String s in args)
                     {
-                        switch (s.Substring(0, 4).ToUpper())
+                        if (s.ToLowerInvariant() == "/asp")
                         {
-                            case "/ASP":
-                                Functions.UserProfileMigration();
-                                return;
-                            case "/REI":
-                                RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                                sourceKey.DeleteSubKeyTree("Keppy's Synthesizer", true);
-                                sourceKey.Close();
-                                UpdateSystem.CheckForUpdates(true, true);
-                                return;
-                            case "/INF":
-                                runmode = 2;
-                                window = 1;
-                                break;
-                            case "/DBG":
-                                runmode = 0;
-                                window = 0;
-                                AllocConsole();
-                                break;
-                            default:
-                                runmode = 0;
-                                window = 0;
-                                break;
+                            Functions.UserProfileMigration();
+                            return;
+                        }
+                        else if (s.ToLowerInvariant() == "/rei")
+                        {
+                            RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
+                            sourceKey.DeleteSubKeyTree("Keppy's Synthesizer", true);
+                            sourceKey.Close();
+                            UpdateSystem.CheckForUpdates(true, true);
+                            return;
+                        }
+                        else if (s.ToLowerInvariant() == "/inf")
+                        {
+                            runmode = 2;
+                            window = 1;
+                            break;
+                        }
+                        else
+                        {
+                            runmode = 0;
+                            window = 0;
+                            break;
                         }
                     }
                     if (Properties.Settings.Default.UpdateBranch == "choose")
@@ -211,5 +231,23 @@ namespace KeppySynthConfigurator
                 RecurseCopyKey(sourceSubKey, destSubKey);
             }
         }
+    }
+}
+
+
+public class MissingBASSLibs : Exception
+{
+    public MissingBASSLibs()
+    {
+    }
+
+    public MissingBASSLibs(string message)
+        : base(message)
+    {
+    }
+
+    public MissingBASSLibs(string message, Exception inner)
+        : base(message, inner)
+    {
     }
 }

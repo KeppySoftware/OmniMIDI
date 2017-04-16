@@ -49,7 +49,7 @@ void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR
 			}
 		}
 	}
-	if (fullvelocity == 1 && velocity != 0)
+	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
 		SETVELOCITY(dwParam1, velocity);
 
 	BYTE statusv = (BYTE)dwParam1;

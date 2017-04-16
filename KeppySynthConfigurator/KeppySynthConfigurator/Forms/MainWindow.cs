@@ -1992,7 +1992,7 @@ namespace KeppySynthConfigurator
                         if (CurrentTheme == 0)
                         {
                             CurrentTheme = 1;
-                            this.Invoke(new MethodInvoker(delegate { List.BackColor = Color.White; }));
+                            this.Invoke(new MethodInvoker(delegate { SoundFontTab.BackColor = Color.White; }));
                             this.Invoke(new MethodInvoker(delegate { Settings.BackColor = Color.White; }));
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
@@ -2002,7 +2002,7 @@ namespace KeppySynthConfigurator
                         if (CurrentTheme == 1)
                         {
                             CurrentTheme = 0;
-                            this.Invoke(new MethodInvoker(delegate { List.BackColor = SystemColors.Control; }));
+                            this.Invoke(new MethodInvoker(delegate { SoundFontTab.BackColor = SystemColors.Control; }));
                             this.Invoke(new MethodInvoker(delegate { Settings.BackColor = SystemColors.Control; }));
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
@@ -2251,6 +2251,8 @@ namespace KeppySynthConfigurator
             frm.ShowDialog();
             frm.Dispose();
         }
+
+        // Credits
 
         private void HAPLink_Click(object sender, EventArgs e)
         {

@@ -19,8 +19,6 @@ namespace KeppySynthConfigurator
         {
             InitializeComponent();
             GetChangelog(version);
-            VersionLabel.Text = String.Format("Changelog for version {0}", version);
-            Text = String.Format("Keppy's Synthesizer - Changelog for {0}", version);
         }
 
         private void ChangelogWindow_Load(object sender, EventArgs e)
@@ -31,6 +29,21 @@ namespace KeppySynthConfigurator
         public bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         {
             return true;
+        }
+
+        private HtmlAgilityPack.HtmlNode ReturnSelectedNode(String version)
+        {
+            ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+            HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+            web.PreRequest += request =>
+            {
+                request.CookieContainer = new System.Net.CookieContainer();
+                return true;
+            };
+            HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", version));
+            return doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body']");
         }
 
         private void GetChangelog(String version)
@@ -46,34 +59,42 @@ namespace KeppySynthConfigurator
                 Version y = null;
                 Version.TryParse(version, out y);
 
-                ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-                ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
-                HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
-                web.PreRequest += request =>
+                Text = String.Format("Keppy's Synthesizer - Changelog for {0}", version);
+                String htmltext = "";
+
+                if (x < y)
                 {
-                    request.CookieContainer = new System.Net.CookieContainer();
-                    return true;
-                };
-                HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", version));
-                HtmlAgilityPack.HtmlNode rateNode = doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body']");
+                    HtmlAgilityPack.HtmlNode rateNode = ReturnSelectedNode(x.ToString());
+                    VersionLabel.Text = String.Format("Changelog for version {0} (Preview)", version);
 
-                String htmltext =
-                    "<html>" +
-                    "<font face=\"Microsoft Sans Serif\">" +
-                    rateNode.InnerHtml;
+                    htmltext = String.Format(
+                        "<html><font face=\"Microsoft Sans Serif\">You're using an unreleased version of the driver. Here's the changelog from version {0}:<br/><hr/><br/>",
+                        x.ToString());
 
-                if (x > y)
-                    htmltext +=
-                        String.Format("<br/><br/>Latest version available: <a href=\"https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}\">{0}</a href>", x.ToString());
+                    htmltext += rateNode.InnerHtml;
 
-                htmltext += "</font></html>";
+                    htmltext += "</font></html>";
+                }
+                else
+                {
+                    VersionLabel.Text = String.Format("Changelog for version {0}", version);
+                    HtmlAgilityPack.HtmlNode rateNode = ReturnSelectedNode(version);
+
+                    htmltext = "<html><font face=\"Microsoft Sans Serif\">" + rateNode.InnerHtml;
+
+                    if (x > y)
+                        htmltext += String.Format("<br/><br/>Latest version available: <a href=\"https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}\">{0}</a href>", x.ToString());
+
+                    htmltext += "</font></html>";
+
+                }
 
                 ChangelogBrowser.DocumentText = htmltext;
             }
             catch
             {
                 UpdateSystem.NoUpdates(false, false);
+                Close();
             }
         }
 
