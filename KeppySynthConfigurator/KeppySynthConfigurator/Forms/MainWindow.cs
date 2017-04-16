@@ -15,6 +15,7 @@ using Microsoft.Win32;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
 using System.Media;
+using System.Net;
 
 namespace KeppySynthConfigurator
 {
@@ -1045,8 +1046,23 @@ namespace KeppySynthConfigurator
 
         private void SeeChangelog_Click(object sender, EventArgs e)
         {
+            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
+            ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString());
+            frm.ShowDialog();
+            frm.Dispose();
+        }
 
-            UpdateSystem.CheckChangelog();
+        private void SeeLatestChangelog_Click(object sender, EventArgs e)
+        {
+            WebClient client = new WebClient();
+            Stream stream = client.OpenRead(UpdateSystem.UpdateTextFile);
+            StreamReader reader = new StreamReader(stream);
+            String newestversion = reader.ReadToEnd();
+            Version x = null;
+            Version.TryParse(newestversion.ToString(), out x);
+            ChangelogWindow frm = new ChangelogWindow(x.ToString());
+            frm.ShowDialog();
+            frm.Dispose();
         }
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2234,6 +2250,26 @@ namespace KeppySynthConfigurator
             SelectBranch frm = new SelectBranch();
             frm.ShowDialog();
             frm.Dispose();
+        }
+
+        private void HAPLink_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.nuget.org/packages/HtmlAgilityPack/");
+        }
+
+        private void BASSLink_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://bass.radio42.com/");
+        }
+
+        private void BASSNetLink_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://bass.radio42.com/");
+        }
+
+        private void FodyCredit_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/Fody");
         }
     }
 }

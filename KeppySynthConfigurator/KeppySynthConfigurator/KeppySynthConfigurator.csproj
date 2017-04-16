@@ -58,6 +58,9 @@
     <Reference Include="Bass.Net">
       <HintPath>.\Bass.Net.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net40-client\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,6 +71,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\ChangelogWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChangelogWindow.Designer.cs">
+      <DependentUpon>ChangelogWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DriverSignatureCheckup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,6 +214,9 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
+    <EmbeddedResource Include="Forms\ChangelogWindow.resx">
+      <DependentUpon>ChangelogWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\FavouritesManager.resx">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </EmbeddedResource>

@@ -136,6 +136,7 @@
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.SeeChangelog = new System.Windows.Forms.MenuItem();
+            this.SeeLatestChangelog = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
@@ -144,6 +145,11 @@
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
+            this.menuItem45 = new System.Windows.Forms.MenuItem();
+            this.HAPLink = new System.Windows.Forms.MenuItem();
+            this.BASSLink = new System.Windows.Forms.MenuItem();
+            this.BASSNetLink = new System.Windows.Forms.MenuItem();
+            this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem25 = new System.Windows.Forms.MenuItem();
             this.menuItem40 = new System.Windows.Forms.MenuItem();
@@ -899,7 +905,7 @@
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 8;
+            this.menuItem42.Index = 9;
             this.menuItem42.Text = "-";
             // 
             // howCanIChangeTheSoundfontListToolStripMenuItem
@@ -922,7 +928,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 7;
+            this.guidesToolStripMenuItem.Index = 8;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -931,13 +937,13 @@
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 10;
+            this.donateToSupportUsToolStripMenuItem.Index = 12;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me and my programs";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 11;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 13;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -948,6 +954,7 @@
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
             this.SeeChangelog,
+            this.SeeLatestChangelog,
             this.menuItem29,
             this.SignatureCheck,
             this.PanicButton,
@@ -955,6 +962,7 @@
             this.guidesToolStripMenuItem,
             this.menuItem42,
             this.menuItem24,
+            this.menuItem45,
             this.donateToSupportUsToolStripMenuItem,
             this.downloadTheSourceCodeToolStripMenuItem});
             this.menuItem3.Text = "?";
@@ -962,34 +970,40 @@
             // SeeChangelog
             // 
             this.SeeChangelog.Index = 2;
-            this.SeeChangelog.Text = "Changelog of the latest release of the synthesizer";
+            this.SeeChangelog.Text = "Changelog of this driver release";
             this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
+            // 
+            // SeeLatestChangelog
+            // 
+            this.SeeLatestChangelog.Index = 3;
+            this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
+            this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
             // 
             // menuItem29
             // 
-            this.menuItem29.Index = 3;
+            this.menuItem29.Index = 4;
             this.menuItem29.Text = "-";
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 4;
+            this.SignatureCheck.Index = 5;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 5;
+            this.PanicButton.Index = 6;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 6;
+            this.menuItem33.Index = 7;
             this.menuItem33.Text = "-";
             // 
             // menuItem24
             // 
-            this.menuItem24.Index = 9;
+            this.menuItem24.Index = 10;
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
@@ -1012,6 +1026,40 @@
             this.KepChannel.Index = 2;
             this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
             this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
+            // 
+            // menuItem45
+            // 
+            this.menuItem45.Index = 11;
+            this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.HAPLink,
+            this.BASSLink,
+            this.BASSNetLink,
+            this.FodyCredit});
+            this.menuItem45.Text = "Credits";
+            // 
+            // HAPLink
+            // 
+            this.HAPLink.Index = 0;
+            this.HAPLink.Text = "HtmlAgilityPack by Simon Mourier";
+            this.HAPLink.Click += new System.EventHandler(this.HAPLink_Click);
+            // 
+            // BASSLink
+            // 
+            this.BASSLink.Index = 1;
+            this.BASSLink.Text = "BASS libraries by Un4seen Developments";
+            this.BASSLink.Click += new System.EventHandler(this.BASSLink_Click);
+            // 
+            // BASSNetLink
+            // 
+            this.BASSNetLink.Index = 2;
+            this.BASSNetLink.Text = "BASS.NET by radio42";
+            this.BASSNetLink.Click += new System.EventHandler(this.BASSNetLink_Click);
+            // 
+            // FodyCredit
+            // 
+            this.FodyCredit.Index = 3;
+            this.FodyCredit.Text = "Fody by Simon Cropp";
+            this.FodyCredit.Click += new System.EventHandler(this.FodyCredit_Click);
             // 
             // MainMenu
             // 
@@ -1137,7 +1185,7 @@
             this.Settings.Controls.Add(this.VolTrackBar);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 395);
+            this.Settings.Size = new System.Drawing.Size(641, 416);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -1664,7 +1712,7 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(532, 360);
+            this.Lis.Size = new System.Drawing.Size(532, 362);
             this.Lis.TabIndex = 12;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -1695,7 +1743,7 @@
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.Image = global::KeppySynthConfigurator.Properties.Resources.ExportIcon;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.EL.Location = new System.Drawing.Point(545, 366);
+            this.EL.Location = new System.Drawing.Point(544, 368);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -1727,7 +1775,7 @@
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.Image = global::KeppySynthConfigurator.Properties.Resources.ImportIcon;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IEL.Location = new System.Drawing.Point(545, 337);
+            this.IEL.Location = new System.Drawing.Point(544, 339);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -1815,7 +1863,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(3, 400);
+            this.ListOverride.Location = new System.Drawing.Point(3, 401);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(412, 13);
             this.ListOverride.TabIndex = 31;
@@ -1910,7 +1958,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 421);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 442);
             this.TabsForTheControls.TabIndex = 32;
             // 
             // SettingsPresets
@@ -1969,7 +2017,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(649, 421);
+            this.ClientSize = new System.Drawing.Size(649, 442);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2196,6 +2244,12 @@
         private System.Windows.Forms.MenuItem DeleteUserData;
         public System.Windows.Forms.ComboBox AudioEngBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.MenuItem SeeLatestChangelog;
+        private System.Windows.Forms.MenuItem menuItem45;
+        private System.Windows.Forms.MenuItem HAPLink;
+        private System.Windows.Forms.MenuItem BASSLink;
+        private System.Windows.Forms.MenuItem BASSNetLink;
+        private System.Windows.Forms.MenuItem FodyCredit;
     }
 }
 
