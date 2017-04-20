@@ -619,7 +619,7 @@ void debug_info() {
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		GetProcessHandleCount(GetCurrentProcess(), &handlecount);
 		SIZE_T ramusage = pmc.WorkingSetSize;
-		int ramusageint = static_cast<int>(ramusage);
+		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
 
 	    currentvoicesint0 = int(currentvoices0);
 		int currentcpuusageint0 = int(currentcpuusage0);
@@ -627,8 +627,11 @@ void debug_info() {
 		// Things
 		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
-		RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&ramusageint, sizeof(ramusageint));
 		RegSetValueEx(hKey, L"handlecount", 0, dwType, (LPBYTE)&handlecount, sizeof(handlecount));
+
+		dwType = REG_QWORD;
+		dwSize = sizeof(QWORD);
+		RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&ramusageint, sizeof(ramusageint));
 
 		for (int i = 0; i <= 15; ++i) {
 			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);

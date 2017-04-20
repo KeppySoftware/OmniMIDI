@@ -93,7 +93,7 @@ namespace KeppySynthDebugWindow
             base.WndProc(ref m);
         }
 
-        private string GetCurrentRAMUsage(Int64 length)
+        private string GetCurrentRAMUsage(UInt64 length)
         {
             string size;
             try
@@ -459,7 +459,7 @@ namespace KeppySynthDebugWindow
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
                     string currentapp = Watchdog.GetValue("currentapp", "None").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
                     string bitapp = Watchdog.GetValue("bit", "...").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
-                    Int64 ramusage = Convert.ToInt64(Debug.GetValue("ramusage", 0).ToString()); // Gets app's working set size in bytes. (Eg. How much the app is using for both RAM and paging file)
+                    UInt64 ramusage = Convert.ToUInt64(Debug.GetValue("ramusage", 0).ToString()); // Gets app's working set size in bytes. (Eg. How much the app is using for both RAM and paging file)
                     Int32 handlecount = Convert.ToInt32(Debug.GetValue("handlecount", 0).ToString()); // Gets app's handles count.
                     Int32 sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
                     string currentappreturn;
