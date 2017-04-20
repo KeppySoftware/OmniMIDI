@@ -357,22 +357,44 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		HKEY hKey;
 		long lResult;
 		int defaultmode;
+		CHAR SynthName[MAXPNAMELEN];
+		WCHAR SynthNameW[MAXPNAMELEN];
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
+		DWORD dwSizeA = sizeof(SynthName);
+		DWORD dwSizeW = sizeof(SynthNameW);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
-		RegQueryValueEx(hKey, L"newdevicename", NULL, &dwType, (LPBYTE)&selectedname, &dwSize);
+		RegQueryValueEx(hKey, L"synthtype", NULL, &dwType, (LPBYTE)&selectedtype, &dwSize);
 		RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
+		dwType = REG_SZ;
+		RegQueryValueExA(hKey, "synthname", NULL, &dwType, (LPBYTE)&SynthName, &dwSizeA);
+		RegQueryValueExW(hKey, L"synthname", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
 		RegCloseKey(hKey);
 
 		if (defaultmidiout == 1)
 			defaultmode = MOD_SWSYNTH;
 		else
-			defaultmode = SynthNamesTypes[selectedname];
+		{
+			if (selectedtype < 0 || selectedtype > 6)
+				selectedtype = 4;
+		}
+
+		defaultmode = SynthNamesTypes[selectedtype];
 
 		if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
 			CreateConsole();
+		}
+
+		if (SynthName == NULL || SynthName == "\0") {
+			ZeroMemory(SynthName, MAXPNAMELEN);
+			strncpy(SynthName, "Keppy's Synthesizer\0", MAXPNAMELEN);
+		}
+
+		if (SynthNameW == NULL || SynthNameW == L"\0") {
+			ZeroMemory(SynthNameW, MAXPNAMELEN);
+			wcsncpy(SynthNameW, L"Keppy's Synthesizer\0", MAXPNAMELEN);
 		}
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
@@ -383,29 +405,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		MIDIOUTCAPS2W * myCaps2W;
 
 		const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6,{ 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
-
-		CHAR SynthName[MAXPNAMELEN];
-		WCHAR SynthNameW[MAXPNAMELEN];
-
-		if (selectedname > (defaultarraysize - 1))
-			selectedname = defaultarraysize - 1;
-		else if (selectedname < 0)
-			selectedname = 0;
-
-		if (shortname == 1) {
-			// CHAR
-			strncpy(SynthName, "KEPSYNTH\0", MAXPNAMELEN);
-
-			// WCHAR
-			wcsncpy(SynthNameW, L"KEPSYNTH\0", MAXPNAMELEN);
-		}
-		else {
-			// CHAR
-			strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
-
-			// WCHAR
-			wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
-		}
 
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
