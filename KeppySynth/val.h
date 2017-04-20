@@ -159,7 +159,7 @@ static int cvvalues[16] =
 static char SynthName[MAXPNAMELEN];
 static char SynthNameW[MAXPNAMELEN];
 static int selectedname = 0;			// Default name
-const int defaultarraysize = 23;		// Default array size
+const int defaultarraysize = 24;		// Default array size
 
 static LPCSTR SynthNames[defaultarraysize] =
 {
@@ -170,6 +170,7 @@ static LPCSTR SynthNames[defaultarraysize] =
 	"BASSMIDI Driver (Port B)\0",
 	"CoolSoft VirtualMIDISynth\0",
 	"Creative OPL3 FM\0",
+	"DOSBOX\0",
 	"Microsoft GS Wavetable Synth\0",
 	"Microsoft Synthesizer\0",
 	"NVIDIA® Wavetable Synthesizer\0",
@@ -197,6 +198,7 @@ static LPCWSTR SynthNamesW[defaultarraysize] =
 	L"BASSMIDI Driver (Port B)\0",
 	L"CoolSoft VirtualMIDISynth\0",
 	L"Creative OPL3 FM\0",
+	L"DOSBOX\0",
 	L"Microsoft GS Wavetable Synth\0",
 	L"Microsoft Synthesizer\0",
 	L"NVIDIA® Wavetable Synthesizer\0",
@@ -224,6 +226,7 @@ static int SynthNamesTypes[defaultarraysize] =
 	MOD_MIDIPORT,						// BASSMIDI Driver (Port B)
 	MOD_SWSYNTH,						// CoolSoft VirtualMIDISynth
 	MOD_FMSYNTH,						// Creative OPL3 FM
+	MOD_MIDIPORT,						// DOSBOX
 	MOD_SWSYNTH,						// Microsoft GS Wavetable Synth
 	MOD_WAVETABLE,						// Microsoft Synthesizer
 	MOD_WAVETABLE,						// NVIDIA® Wavetable Synthesizer

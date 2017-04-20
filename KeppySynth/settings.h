@@ -608,12 +608,18 @@ void debug_info() {
 		long lResult;
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
-		DWORD level, left, right;
+		DWORD level, left, right, handlecount;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		float currentvoices0;
 		int tempo;
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
+
+		PROCESS_MEMORY_COUNTERS_EX pmc;
+		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+		GetProcessHandleCount(GetCurrentProcess(), &handlecount);
+		SIZE_T ramusage = pmc.WorkingSetSize;
+		int ramusageint = static_cast<int>(ramusage);
 
 	    currentvoicesint0 = int(currentvoices0);
 		int currentcpuusageint0 = int(currentcpuusage0);
@@ -621,6 +627,8 @@ void debug_info() {
 		// Things
 		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
+		RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&ramusageint, sizeof(ramusageint));
+		RegSetValueEx(hKey, L"handlecount", 0, dwType, (LPBYTE)&handlecount, sizeof(handlecount));
 
 		for (int i = 0; i <= 15; ++i) {
 			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);

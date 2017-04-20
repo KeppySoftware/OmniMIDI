@@ -24,10 +24,7 @@ namespace KeppySynthConfigurator
             {
                 BASS_DEVICEINFO info = new BASS_DEVICEINFO();
                 DevicesList.Items.Add("Default Windows audio output");
-                Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_NOSPEAKER, IntPtr.Zero);
-                int curdev = Bass.BASS_GetDevice();
-                Bass.BASS_Free();
-                Bass.BASS_GetDeviceInfo(curdev, info);
+                Bass.BASS_GetDeviceInfo(0, info);
                 if (info.ToString() == "")
                 {
                     DefOut.Text = String.Format("Def. Windows audio output: No devices have been found", info.ToString());

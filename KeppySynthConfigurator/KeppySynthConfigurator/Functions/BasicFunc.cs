@@ -598,6 +598,7 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("shortname", 0)) == 1)
                 {
+                    KeppySynthConfiguratorMain.Delegate.MaskSynthesizerAsAnother.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)) == 1)
@@ -776,6 +777,9 @@ namespace KeppySynthConfigurator
 
                 // LEL
                 KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+
+                if (Environment.OSVersion.Version.Major == 10)
+                    KeppySynthConfiguratorMain.Delegate.SpatialSound.Visible = true;
 
                 // And finally, the volume!
                 int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));

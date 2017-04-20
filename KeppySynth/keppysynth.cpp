@@ -392,8 +392,20 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		else if (selectedname < 0)
 			selectedname = 0;
 
-		strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
-		wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
+		if (shortname == 1) {
+			// CHAR
+			strncpy(SynthName, "KEPSYNTH\0", MAXPNAMELEN);
+
+			// WCHAR
+			wcsncpy(SynthNameW, L"KEPSYNTH\0", MAXPNAMELEN);
+		}
+		else {
+			// CHAR
+			strncpy(SynthName, SynthNames[selectedname], MAXPNAMELEN);
+
+			// WCHAR
+			wcsncpy(SynthNameW, SynthNamesW[selectedname], MAXPNAMELEN);
+		}
 
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
@@ -847,6 +859,8 @@ void DoStopClient() {
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&One, sizeof(One));
+	RegSetValueEx(hKey, L"handlecount", 0, dwType, (LPBYTE)&One, sizeof(One));
 	RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&One, 1);
 	for (int i = 0; i <= 15; ++i) {

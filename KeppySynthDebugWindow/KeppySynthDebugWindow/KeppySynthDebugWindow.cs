@@ -9,18 +9,14 @@
 
 using System;
 using System.Management;
-using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic.Devices;
 using System.Text.RegularExpressions;
-using System.IO;
 using Microsoft.Win32;
 
 namespace KeppySynthDebugWindow
@@ -43,6 +39,7 @@ namespace KeppySynthDebugWindow
         RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
         RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
         String LogPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\DebugOutput.txt";
+        String Credits = "Copyright Ⓒ 2011\nKaleidonKep99, Kode54 & Mudlord";
 
         // Windows information
         ComputerInfo CI = new ComputerInfo();
@@ -74,6 +71,10 @@ namespace KeppySynthDebugWindow
         private void KeppySynthDebugWindow_Load(object sender, EventArgs e)
         {
             Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
+            CurrentKSVer.ToolTipTitle = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
+            CurrentKSVer.SetToolTip(KSLogo, Credits);
+            CurrentKSVer.SetToolTip(KSLogoVoc, Credits);
+            CurrentKSVer.SetToolTip(VersionLabel, Credits);
             VersionLabel.Text = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
             GetWindowsInfoData(); // Get info about your Windows installation
             SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
@@ -90,6 +91,182 @@ namespace KeppySynthDebugWindow
                 WinAPI.SetForegroundWindow(Handle);
             }
             base.WndProc(ref m);
+        }
+
+        private string GetCurrentRAMUsage(Int64 length)
+        {
+            string size;
+            try
+            {
+                if (length >= 1099511627776)
+                {
+                    if (length >= 1099511627776 && length < 10995116277760)
+                        size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.00 TB");
+                    else
+                        size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
+                }
+                else if (length >= 1073741824)
+                {
+                    if (length >= 1073741824 && length < 10737418240)
+                        size = (((length / 1024f) / 1024f) / 1024f).ToString("0.00 GB");
+                    else
+                        size = (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
+                }
+                else if (length >= 1048576)
+                {
+                    if (length >= 1048576 && length < 10485760)
+                        size = ((length / 1024f) / 1024f).ToString("0.00 MB");
+                    else
+                        size = ((length / 1024f) / 1024f).ToString("0.0 MB");
+                }
+                else if (length >= 1024)
+                {
+                    if (length >= 1024 && length < 10240)
+                        size = (length / 1024f).ToString("0.00 KB");
+                    else
+                        size = (length / 1024f).ToString("0.0 KB");
+                }
+                else
+                {
+                    if (length >= 1 && length < 1024)
+                        size = (length).ToString("0.00 B");
+                    else
+                        size = (length / 1024f).ToString("0.0 B");
+                }
+            }
+            catch { size = "-"; }
+            return size;
+        }
+
+        private System.Drawing.Bitmap CPUImage()
+        {
+            if (cpumanufacturer == "GenuineIntel")
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're using an Intel CPU.");
+                return Properties.Resources.intel;
+            }
+            else if (cpumanufacturer == "AuthenticAMD")
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're using an AMD CPU.");
+                return Properties.Resources.amd;
+            }
+            else if (cpumanufacturer == "CentaurHauls" || cpumanufacturer == "VIA VIA VIA ")
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're using a VIA CPU.");
+                return Properties.Resources.via;
+            }
+            else if (cpumanufacturer == "VMwareVMware")
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're running the app inside a VMware virtual machine.");
+                return Properties.Resources.vmware;
+            }
+            else if (cpumanufacturer == " lrpepyh vr")
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're running the app inside a Parallels virtual machine.");
+                return Properties.Resources.parallels;
+            }
+            else if (cpumanufacturer == "KVMKVMKVM" || cpumanufacturer.Contains("KVMKVMKVM"))
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're running the app inside a KVM.");
+                return Properties.Resources.kvm;
+            }
+            else if (cpumanufacturer == "Microsoft Hv")
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're running the app inside a Hyper-V virtual machine.");
+                return Properties.Resources.ws2012;
+            }
+            else
+            {
+                CPULogoTT.SetToolTip(CPULogo, "You're using an unknown CPU.");
+                return Properties.Resources.unknown;
+            }
+        }
+
+        private System.Drawing.Bitmap WinImage()
+        {
+            OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
+            osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
+            if (!OSInfo.GetVersionEx(ref osVersionInfo))
+            {
+                WinLogoTT.SetToolTip(WinLogo, "You're using an unknown OS.");
+                return Properties.Resources.unknown;
+            }
+            else
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                if ((p == 4) || (p == 6) || (p == 128))
+                {
+                    WinLogoTT.SetToolTip(WinLogo, "You're using an unknown OS.");
+                    return Properties.Resources.other;
+                }
+                else
+                {
+                    if (Environment.OSVersion.Version.Major == 5)
+                    {
+                        WinLogoTT.SetToolTip(WinLogo, "Upgrade your crap.");
+                        return Properties.Resources.other;
+                    }
+                    if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
+                    {
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2008.");
+                        else
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Vista.");
+
+                        return Properties.Resources.wvista;
+                    }
+                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
+                    {
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2008 R2.");
+                        else
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 7.");
+
+                        return Properties.Resources.w7;
+                    }
+                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
+                    {
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                        {
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2012.");
+                            return Properties.Resources.ws2012;
+                        }
+                        else
+                        {
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 8.");
+                            return Properties.Resources.w8;
+                        }
+                    }
+                    else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
+                    {
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                        {
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2012 R2.");
+                            return Properties.Resources.ws2012;
+                        }
+                        else
+                        {
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 8.1.");
+                            return Properties.Resources.w81;
+                        }
+                    }
+                    else if (Environment.OSVersion.Version.Major == 10)
+                    {
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                        {
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2016.");
+                            return Properties.Resources.ws2016;
+                        }
+                        else
+                        {
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 10.");
+                            return Properties.Resources.w10;
+                        }
+                    }
+                    else
+                        return Properties.Resources.unknown;
+                }
+            }
         }
 
         private string CPUArch(int Value)
@@ -110,8 +287,6 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
-                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
                 String Frequency = "";
                 // Get CPU info
                 foreach (ManagementObject moProcessor in mosProcessor.Get())
@@ -171,63 +346,8 @@ namespace KeppySynthDebugWindow
                        Environment.OSVersion.Version.Build.ToString());
                 }
 
-                if (!OSInfo.GetVersionEx(ref osVersionInfo))
-                {
-                    WinLogo.Image = Properties.Resources.unknown;
-                }
-                else
-                {
-                    int p = (int)Environment.OSVersion.Platform;
-                    if ((p == 4) || (p == 6) || (p == 128))
-                        WinLogo.Image = Properties.Resources.other;
-                    else
-                    {
-                        if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
-                            WinLogo.Image = Properties.Resources.wvista;
-                        else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
-                            WinLogo.Image = Properties.Resources.w7;
-                        else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
-                        {
-                            if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
-                                WinLogo.Image = Properties.Resources.ws2012;
-                            else
-                                WinLogo.Image = Properties.Resources.w8;
-                        }
-                        else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
-                        {
-                            if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
-                                WinLogo.Image = Properties.Resources.ws2012;
-                            else
-                                WinLogo.Image = Properties.Resources.w81;
-                        }
-                        else if (Environment.OSVersion.Version.Major == 10)
-                        {
-                            if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
-                                WinLogo.Image = Properties.Resources.ws2016;
-                            else
-                                WinLogo.Image = Properties.Resources.w10;
-                        }
-                        else
-                            WinLogo.Image = Properties.Resources.unknown;
-                    }
-                }
-
-                if (cpumanufacturer == "GenuineIntel")
-                    CPULogo.Image = Properties.Resources.intel;
-                else if (cpumanufacturer == "AuthenticAMD")
-                    CPULogo.Image = Properties.Resources.amd;
-                else if (cpumanufacturer == "CentaurHauls" || cpumanufacturer == "VIA VIA VIA ")
-                    CPULogo.Image = Properties.Resources.via;
-                else if (cpumanufacturer == "VMwareVMware")
-                    CPULogo.Image = Properties.Resources.vmware;
-                else if (cpumanufacturer == " lrpepyh vr")
-                    CPULogo.Image = Properties.Resources.parallels;
-                else if (cpumanufacturer == "KVMKVMKVM" || cpumanufacturer.Contains("KVMKVMKVM"))
-                    CPULogo.Image = Properties.Resources.kvm;
-                else if (cpumanufacturer == "Microsoft Hv")
-                    CPULogo.Image = Properties.Resources.ws2012;
-                else
-                    CPULogo.Image = Properties.Resources.unknown;
+                WinLogo.Image = WinImage();
+                CPULogo.Image = CPUImage();
 
                 if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture  
 
@@ -339,7 +459,9 @@ namespace KeppySynthDebugWindow
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
                     string currentapp = Watchdog.GetValue("currentapp", "None").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
                     string bitapp = Watchdog.GetValue("bit", "...").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
-                    int sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
+                    Int64 ramusage = Convert.ToInt64(Debug.GetValue("ramusage", 0).ToString()); // Gets app's working set size in bytes. (Eg. How much the app is using for both RAM and paging file)
+                    Int32 handlecount = Convert.ToInt32(Debug.GetValue("handlecount", 0).ToString()); // Gets app's handles count.
+                    Int32 sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
                     string currentappreturn;
                     string bitappreturn;
                     try
@@ -354,6 +476,7 @@ namespace KeppySynthDebugWindow
                         {
                             currentappreturn = System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters());
                         }
+
                         if (bitapp.RemoveGarbageCharacters() == "0")
                         {
                             bitappreturn = "...";
@@ -362,6 +485,9 @@ namespace KeppySynthDebugWindow
                         {
                             bitappreturn = bitapp.RemoveGarbageCharacters();
                         }
+
+                        HCount.Text = String.Format("{0} handles", handlecount);
+                        RAMUsageLabel.Text = GetCurrentRAMUsage(ramusage);                   
                         CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
 
                         // Get current active voices

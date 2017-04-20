@@ -155,6 +155,7 @@
             this.menuItem40 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
             this.AMIDIMapUninstallMenu = new System.Windows.Forms.MenuItem();
+            this.SpatialSound = new System.Windows.Forms.MenuItem();
             this.menuItem39 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
@@ -1076,6 +1077,7 @@
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem22,
             this.menuItem40,
+            this.SpatialSound,
             this.menuItem39,
             this.WinMMPatch32,
             this.WinMMPatch64,
@@ -1104,37 +1106,44 @@
             this.AMIDIMapUninstallMenu.Text = "Uninstall";
             this.AMIDIMapUninstallMenu.Click += new System.EventHandler(this.AMIDIMapUninstallMenu_Click);
             // 
+            // SpatialSound
+            // 
+            this.SpatialSound.Index = 2;
+            this.SpatialSound.Text = "Change spatial sound settings";
+            this.SpatialSound.Visible = false;
+            this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
+            // 
             // menuItem39
             // 
-            this.menuItem39.Index = 2;
+            this.menuItem39.Index = 3;
             this.menuItem39.Text = "-";
             // 
             // WinMMPatch32
             // 
-            this.WinMMPatch32.Index = 3;
+            this.WinMMPatch32.Index = 4;
             this.WinMMPatch32.Text = "Apply the WinMM patch to a 32-bit app";
             this.WinMMPatch32.Click += new System.EventHandler(this.WinMMPatch32_Click);
             // 
             // WinMMPatch64
             // 
-            this.WinMMPatch64.Index = 4;
+            this.WinMMPatch64.Index = 5;
             this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
             this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 5;
+            this.menuItem15.Index = 6;
             this.menuItem15.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 6;
+            this.DeleteUserData.Index = 7;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 7;
+            this.ResetToDefault.Index = 8;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
@@ -2189,7 +2198,6 @@
         private System.Windows.Forms.MenuItem blackMIDIsPresetToolStripMenuItem;
         private System.Windows.Forms.MenuItem chiptunesRetrogamingToolStripMenuItem;
         private System.Windows.Forms.MenuItem keppysSteinwayPianoRealismToolStripMenuItem;
-        private System.Windows.Forms.MenuItem MaskSynthesizerAsAnother;
         private System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
@@ -2250,6 +2258,8 @@
         private System.Windows.Forms.MenuItem BASSLink;
         private System.Windows.Forms.MenuItem BASSNetLink;
         private System.Windows.Forms.MenuItem FodyCredit;
+        public System.Windows.Forms.MenuItem SpatialSound;
+        public System.Windows.Forms.MenuItem MaskSynthesizerAsAnother;
     }
 }
 

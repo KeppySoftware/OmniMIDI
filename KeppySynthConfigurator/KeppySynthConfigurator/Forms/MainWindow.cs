@@ -1609,11 +1609,14 @@ namespace KeppySynthConfigurator
             if (MIDINameNoSpace.Checked == false)
             {
                 SynthSettings.SetValue("shortname", "1", RegistryValueKind.DWord);
+                SynthSettings.SetValue("newdevicename", "0", RegistryValueKind.DWord);
+                MaskSynthesizerAsAnother.Enabled = false;
                 MIDINameNoSpace.Checked = true;
             }
             else
             {
                 SynthSettings.SetValue("shortname", "0", RegistryValueKind.DWord);
+                MaskSynthesizerAsAnother.Enabled = true;
                 MIDINameNoSpace.Checked = false;
             }
         }
@@ -2272,6 +2275,31 @@ namespace KeppySynthConfigurator
         private void FodyCredit_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Fody");
+        }
+
+        private void menuItem46_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BASS_DEVICEINFO info = new BASS_DEVICEINFO();
+                String DeviceID = "0";
+                Bass.BASS_GetDeviceInfo(0, info);
+                for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
+                {
+                    if (info.IsDefault == true)
+                    {
+                        DeviceID = info.driver;
+                        break;
+                    }
+                }
+                Process.Start(
+                    @"C:\Windows\System32\rundll32.exe",
+                    String.Format(@"C:\Windows\System32\shell32.dll,Control_RunDLL C:\Windows\System32\mmsys.cpl ms-mmsys:,{0},spatial", DeviceID));
+            }
+            catch
+            {
+                MessageBox.Show("This function requires Windows 10 Creators Update or newer.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

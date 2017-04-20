@@ -63,5 +63,10 @@ namespace KeppySynthConfigurator
 
             }
         }
+
+        private void Names_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
