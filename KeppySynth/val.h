@@ -154,95 +154,16 @@ static int cvvalues[16] =
 	0,0,0,0,0,0,0,0
 };
 
-
-// Synth names
-static char SynthName[MAXPNAMELEN];
-static char SynthNameW[MAXPNAMELEN];
-static int selectedname = 0;			// Default name
-const int defaultarraysize = 24;		// Default array size
-
-static LPCSTR SynthNames[defaultarraysize] =
+static int selectedtype = 4;
+static int SynthNamesTypes[7] =
 {
-	"Keppy's Synthesizer\0",
-	"AWE64 MIDI Synth\0",
-	"BASSMIDI Driver\0",
-	"BASSMIDI Driver (Port A)\0",
-	"BASSMIDI Driver (Port B)\0",
-	"CoolSoft VirtualMIDISynth\0",
-	"Creative OPL3 FM\0",
-	"DOSBOX\0",
-	"Microsoft GS Wavetable Synth\0",
-	"Microsoft Synthesizer\0",
-	"NVIDIA® Wavetable Synthesizer\0",
-	"SB AWE32 MIDI Synth\0",
-	"SB Live! Synth A\0",
-	"SB Live! Synth B\0",
-	"SoundMAX Wavetable Synth\0",
-	"Timidity++ Driver\0",
-	"USB Audio Device",
-	"VirtualMIDISynth #1\0",
-	"VirtualMIDISynth #2\0",
-	"VirtualMIDISynth #3\0",
-	"VirtualMIDISynth #4\0",
-	"Windows OPL3 Synth\0",
-	"YMF262 Synth Emulator\0",
-	"Yamaha S-YXG50 SoftSynthesizer\0",
-};
-
-static LPCWSTR SynthNamesW[defaultarraysize] =
-{
-	L"Keppy's Synthesizer\0",
-	L"AWE64 MIDI Synth\0",
-	L"BASSMIDI Driver\0",
-	L"BASSMIDI Driver (Port A)\0",
-	L"BASSMIDI Driver (Port B)\0",
-	L"CoolSoft VirtualMIDISynth\0",
-	L"Creative OPL3 FM\0",
-	L"DOSBOX\0",
-	L"Microsoft GS Wavetable Synth\0",
-	L"Microsoft Synthesizer\0",
-	L"NVIDIA® Wavetable Synthesizer\0",
-	L"SB AWE32 MIDI Synth\0",
-	L"SB Live! Synth A\0",
-	L"SB Live! Synth B\0",
-	L"SoundMAX Wavetable Synth\0",
-	L"Timidity++ Driver\0",
-	L"USB Audio Device",
-	L"VirtualMIDISynth #1\0",
-	L"VirtualMIDISynth #2\0",
-	L"VirtualMIDISynth #3\0",
-	L"VirtualMIDISynth #4\0",
-	L"Windows OPL3 Synth\0",
-	L"YMF262 Synth Emulator\0",
-	L"Yamaha S-YXG50 SoftSynthesizer\0",
-};
-
-static int SynthNamesTypes[defaultarraysize] =
-{
-	MOD_MIDIPORT,						// Keppy's Synthesizer
-	MOD_MIDIPORT,						// AWE64 MIDI Synth
-	MOD_MIDIPORT,						// BASSMIDI Driver
-	MOD_MIDIPORT,						// BASSMIDI Driver (Port A)
-	MOD_MIDIPORT,						// BASSMIDI Driver (Port B)
-	MOD_SWSYNTH,						// CoolSoft VirtualMIDISynth
-	MOD_FMSYNTH,						// Creative OPL3 FM
-	MOD_MIDIPORT,						// DOSBOX
-	MOD_SWSYNTH,						// Microsoft GS Wavetable Synth
-	MOD_WAVETABLE,						// Microsoft Synthesizer
-	MOD_WAVETABLE,						// NVIDIA® Wavetable Synthesizer
-	MOD_WAVETABLE,						// SB AWE32 MIDI Synth
-	MOD_WAVETABLE,						// SB Live! Synth A
-	MOD_WAVETABLE,						// SB Live! Synth B
-	MOD_WAVETABLE,						// SoundMAX Wavetable Synth
-	MOD_MIDIPORT,						// Timidity++ Driver
-	MOD_MIDIPORT,						// USB Audio Device
-	MOD_SWSYNTH,						// VirtualMIDISynth #1
-	MOD_SWSYNTH,						// VirtualMIDISynth #2
-	MOD_SWSYNTH,						// VirtualMIDISynth #3
-	MOD_SWSYNTH,						// VirtualMIDISynth #4
-	MOD_FMSYNTH,						// Windows OPL3 Synth
-	MOD_FMSYNTH,						// YMF262 Synth Emulator
-	MOD_WAVETABLE,						// Yamaha S-YXG50 SoftSynthesizer
+	MOD_FMSYNTH,
+	MOD_SYNTH,
+	MOD_WAVETABLE,
+	MOD_MAPPER,
+	MOD_MIDIPORT,
+	MOD_SWSYNTH,
+	MOD_SQSYNTH
 };
 
 // Channels

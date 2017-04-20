@@ -13,6 +13,9 @@ namespace KeppySynthConfigurator
 {
     public partial class MaskSynthAsAnother : Form
     {
+        String PreviousName = "";
+        Int32 PreviousType = 4;
+
         public MaskSynthAsAnother()
         {
             InitializeComponent();
@@ -22,9 +25,11 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-                int potato = Convert.ToInt32(Settings.GetValue("newdevicename", 0));
-                Names.SelectedIndex = potato;
+                PreviousName = KeppySynthConfiguratorMain.SynthSettings.GetValue("synthname", "Keppy's Synthesizer").ToString();
+                PreviousType = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("synthtype", 4));
+                Names.Text = PreviousName;
+                SynthType.SelectedIndex = PreviousType;
+                Names.TextChanged += new System.EventHandler(Names_TextChanged);
             }
             catch (Exception ex)
             {
@@ -34,6 +39,7 @@ namespace KeppySynthConfigurator
 
         private void CancelBtn_Click(object sender, EventArgs e)
         {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", PreviousName, RegistryValueKind.String);
             Close();
         }
 
@@ -41,8 +47,8 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-                Settings.SetValue("newdevicename", Names.SelectedIndex);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SynthType.SelectedIndex, RegistryValueKind.DWord);
                 Close();
             }
             catch (Exception ex)
@@ -58,15 +64,38 @@ namespace KeppySynthConfigurator
             {
                 Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
             }
-            else if (dialogResult == DialogResult.No)
-            {
-
-            }
         }
 
         private void Names_SelectedIndexChanged(object sender, EventArgs e)
         {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
+        }
 
+        private void SynthType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SynthType.SelectedIndex, RegistryValueKind.DWord);
+        }
+
+        private void Names_TextChanged(object sender, EventArgs e)
+        {
+            String TempString = Names.Text;
+            if (TempString.Length >= 32)
+            {
+                TempString = TempString.Remove(TempString.Length - 1);
+                MessageBox.Show("The maximum name length is 32 characters!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", TempString, RegistryValueKind.String);
+                Names.Text = TempString;
+            }
+            else
+            {
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
+            }
+        }
+
+        private void DefName_Click(object sender, EventArgs e)
+        {
+            Names.Text = "Keppy's Synthesizer";
+            SynthType.SelectedIndex = 4;
         }
     }
 }
