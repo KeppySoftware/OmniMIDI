@@ -21,6 +21,8 @@ This driver has unique features, such as:
 
 It's meant for [professional people](#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
 
+_"You'd butter believe it!"_ **-- Butter Boy, the official mascot**
+
 ## What do you mean by "for professional use"?
 Certain functions in this driver are not suited for newbies or for people that don't know how to use programs well.
 <br>
