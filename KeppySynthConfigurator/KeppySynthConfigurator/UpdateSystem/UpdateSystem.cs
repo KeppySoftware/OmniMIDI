@@ -83,6 +83,7 @@ namespace KeppySynthConfigurator
                 }
                 catch (Exception ex)
                 {
+                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "Unknown error", "An error has occurred while trying to show you the latest changelog.\nPlease try again later.\n\nPress OK to continue.", true, ex);
                 }
             }
         }
