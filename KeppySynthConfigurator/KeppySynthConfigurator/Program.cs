@@ -123,7 +123,7 @@ namespace KeppySynthConfigurator
                 Application.SetCompatibleTextRenderingDefault(false);
                 if (!Functions.IsWindowsVistaOrNewer())
                 {
-                    Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
+                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
                     Application.ExitThread();
                 }
                 int runmode = 0;

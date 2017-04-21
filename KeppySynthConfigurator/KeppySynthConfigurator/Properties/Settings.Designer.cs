@@ -34,5 +34,17 @@ namespace KeppySynthConfigurator.Properties {
                 this["UpdateBranch"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ButterBoy {
+            get {
+                return ((bool)(this["ButterBoy"]));
+            }
+            set {
+                this["ButterBoy"] = value;
+            }
+        }
     }
 }

@@ -5,5 +5,8 @@
     <Setting Name="UpdateBranch" Type="System.String" Scope="User">
       <Value Profile="(Default)">choose</Value>
     </Setting>
+    <Setting Name="ButterBoy" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

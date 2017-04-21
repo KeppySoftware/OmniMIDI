@@ -52,7 +52,7 @@
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(14, 17);
+            this.VersionLabel.Location = new System.Drawing.Point(18, 17);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(146, 13);
             this.VersionLabel.TabIndex = 1;

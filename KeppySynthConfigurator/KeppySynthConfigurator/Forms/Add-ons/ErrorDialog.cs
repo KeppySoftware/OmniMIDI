@@ -15,19 +15,36 @@ namespace KeppySynthConfigurator
     {
         System.Media.SystemSound SoundToPlay;
 
-        public SecretDialog(Image icon, System.Media.SystemSound sound, String title, String message)
+        public SecretDialog(Int32 Type, System.Media.SystemSound sound, String title, String message)
         {
             try
             {
                 SoundToPlay = sound;
                 InitializeComponent();
-                CurrentIcon.Image = icon;
+                if (!Properties.Settings.Default.ButterBoy)
+                {
+                    if (Type == 0)
+                        CurrentIcon.Image = Properties.Resources.infoicon;
+                    else if (Type == 1)
+                        CurrentIcon.Image = Properties.Resources.erroricon;
+                    else
+                        CurrentIcon.Image = Properties.Resources.erroricon;
+                }
+                else
+                {
+                    if (Type == 0)
+                        CurrentIcon.Image = Properties.Resources.bbhappy;
+                    else if (Type == 1)
+                        CurrentIcon.Image = Properties.Resources.bbcrying;
+                    else
+                        CurrentIcon.Image = Properties.Resources.bbsad;
+                }
                 Text = String.Format("Keppy's Synthesizer - {0}", title);
                 MessageText.Text = String.Format("{0}", message);
             }
             catch (Exception ex)
             {
-                CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.wi;
+                CurrentIcon.Image = Properties.Resources.wi;
                 Text = "Keppy's Synthesizer - Dialog error";
                 MessageText.Text = "An unknown error has occurred while initializing the window.\nPlease try again later.\n\nPress OK to close this window.";
                 Program.DebugToConsole(true, MessageText.Text, ex);

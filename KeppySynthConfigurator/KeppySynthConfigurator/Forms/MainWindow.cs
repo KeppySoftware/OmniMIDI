@@ -168,6 +168,12 @@ namespace KeppySynthConfigurator
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
 
+                if (!Properties.Settings.Default.ButterBoy)
+                {
+                    EnableBB.Visible = true;
+                    EnableBBS.Visible = true;
+                }
+
                 WhatIsOutput.Image = Properties.Resources.what;
                 WhatIsXAudio.Image = Properties.Resources.what;
                 StatusBuf.Image = Properties.Resources.what;
@@ -206,7 +212,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(null, System.Media.SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
             }
         }
 
@@ -546,7 +552,7 @@ namespace KeppySynthConfigurator
                 }
                 catch (Exception ex)
                 {
-                    Functions.ShowErrorDialog(KeppySynthConfigurator.Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
+                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                     Environment.Exit(-1);
                 }
             }
@@ -698,7 +704,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Hand, "Error", "Error during the import process of the list!", true, ex);
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "Error during the import process of the list!", true, ex);
             }
         }
 
@@ -717,7 +723,7 @@ namespace KeppySynthConfigurator
                 }
                 SaveFile.Close();
                 Program.DebugToConsole(false, String.Format("Exported list {0} to {1}.", CurrentList, ExternalListExport.FileName), null);
-                Functions.ShowErrorDialog(Properties.Resources.infoicon, System.Media.SystemSounds.Question, "Soundfont list exported!", String.Format("Soundfont list exported succesfully to \"{0}\\\"", Path.GetDirectoryName(ExternalListExport.FileName)), false, null);               
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Question, "Soundfont list exported!", String.Format("Soundfont list exported succesfully to \"{0}\\\"", Path.GetDirectoryName(ExternalListExport.FileName)), false, null);               
             }
         }
 
@@ -1960,7 +1966,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(Properties.Resources.erroricon, System.Media.SystemSounds.Asterisk, "Error", "Can not open the Alternative MIDI Mapper applet!", true, ex);
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Can not open the Alternative MIDI Mapper applet!", true, ex);
             }
         }
 
@@ -2028,6 +2034,7 @@ namespace KeppySynthConfigurator
 
             String title = "Keppy's Synthesizer - Troubleshooting";
 
+            String Success = "Super-duper!\n\nHave fun with the driver!";
             String isitworking = "Now test the driver with a MIDI application.\n\nIs it working now?";
             String isitworking2 = "Try again now.\n\nTest the driver with a MIDI application.\n\nIs it working now?";     
             String weak = "Maybe your PC is too weak.\n\nReport your computer specifications to KaleidonKep99, on GitHub, by filling an issue.";
@@ -2070,6 +2077,7 @@ namespace KeppySynthConfigurator
             DialogResult dialogResult = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
+                MessageBox.Show(Success, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 return;
             }
 
@@ -2083,6 +2091,7 @@ namespace KeppySynthConfigurator
             DialogResult dialogResult2 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult2 == DialogResult.Yes)
             {
+                MessageBox.Show(Success, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 return;
             }
 
@@ -2300,6 +2309,15 @@ namespace KeppySynthConfigurator
             {
                 MessageBox.Show("This function requires Windows 10 Creators Update or newer.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void EnableBB_Click(object sender, EventArgs e)
+        {
+            EnableBB.Visible = false;
+            EnableBBS.Visible = false;
+            Properties.Settings.Default.ButterBoy = true;
+            Properties.Settings.Default.Save();
+            MessageBox.Show("Super-duper!\n\nI'm happy that you changed your mind!", "Butter Boy", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

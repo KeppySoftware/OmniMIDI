@@ -36,7 +36,8 @@
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\output\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <Optimize>true</Optimize>
     <WarningLevel>1</WarningLevel>
@@ -343,6 +344,12 @@
     <None Include="Resources\List Editor\EnableIcon.png" />
     <None Include="Resources\List Editor\ExportIcon.png" />
     <Content Include="FodyWeavers.xml" />
+    <None Include="Resources\Mascot\bbangry.png" />
+    <None Include="Resources\Mascot\bbcrying.png" />
+    <None Include="Resources\Mascot\bbevil.png" />
+    <None Include="Resources\Mascot\bbhappy.png" />
+    <None Include="Resources\Mascot\bbsad.png" />
+    <None Include="Resources\Mascot\bbsurprised.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Text\gmlist.txt" />
