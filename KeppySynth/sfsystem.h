@@ -194,16 +194,23 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 					_tcscat(temp, nameptr);
 				}
 				if (name[0] != '@') {
+					int sbank;
+					int spreset;
 					HSOUNDFONT font = BASS_MIDI_FontInit(temp, bass_flags);
 					for (auto it = presets.begin(); it != presets.end(); ++it)
 					{
+						sbank = it->sbank;
+						spreset = it->spreset;
 						if (preload)
 							BASS_MIDI_FontLoad(font, it->spreset, it->sbank);
 						it->font = font;
 						presetList[uDeviceID].push_back(*it);
 					}
 					_soundFonts[uDeviceID].push_back(font);
-					checksferror(nameptr);
+					std::wstring appdatapath = L"This error might have been caused by a missing instrument/preset in the SoundFont.\nPlease check if the instrument/preset you selected exists inside the SoundFont, then try again.\n\nAffected SoundFont: ";
+					appdatapath += nameptr;
+					appdatapath += L"\nAffected bank and preset: Bank " + std::to_wstring(sbank) + L", Preset " + std::to_wstring(spreset);
+					CheckUp(CAUSE, (wchar_t *)appdatapath.c_str());
 				}
 				else {
 					continue;
