@@ -196,14 +196,7 @@ namespace KeppySynthConfigurator
         {
             if (!Is32BitMatch || !Is64BitMatch || IsNewVerAvailable)
             {
-                var p = new System.Diagnostics.Process();
-                p.StartInfo.FileName = Application.ExecutablePath;
-                p.StartInfo.Arguments = "/REI";
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.CreateNoWindow = true;
-                p.Start();
-                Application.ExitThread();
+                UpdateSystem.CheckForUpdates(false, false);
             }
         }
     }

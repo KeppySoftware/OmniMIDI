@@ -162,6 +162,8 @@
             this.menuItem46 = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ResetToDefault = new System.Windows.Forms.MenuItem();
+            this.EnableBBS = new System.Windows.Forms.MenuItem();
+            this.EnableBB = new System.Windows.Forms.MenuItem();
             this.menuItem43 = new System.Windows.Forms.MenuItem();
             this.GiveFeedback = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
@@ -229,8 +231,6 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
-            this.EnableBB = new System.Windows.Forms.MenuItem();
-            this.EnableBBS = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1151,6 +1151,19 @@
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
+            // EnableBBS
+            // 
+            this.EnableBBS.Index = 12;
+            this.EnableBBS.Text = "-";
+            this.EnableBBS.Visible = false;
+            // 
+            // EnableBB
+            // 
+            this.EnableBB.Index = 13;
+            this.EnableBB.Text = "Re-enable Butter Boy";
+            this.EnableBB.Visible = false;
+            this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
+            // 
             // menuItem43
             // 
             this.menuItem43.Index = 3;
@@ -2023,19 +2036,6 @@
             // 
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
-            // 
-            // EnableBB
-            // 
-            this.EnableBB.Index = 13;
-            this.EnableBB.Text = "Re-enable Butter Boy";
-            this.EnableBB.Visible = false;
-            this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
-            // 
-            // EnableBBS
-            // 
-            this.EnableBBS.Index = 12;
-            this.EnableBBS.Text = "-";
-            this.EnableBBS.Visible = false;
             // 
             // KeppySynthConfiguratorMain
             // 
