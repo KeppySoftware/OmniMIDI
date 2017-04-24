@@ -101,9 +101,12 @@ static int sound_out_volume_int = 0x1000;
 static HANDLE hCalcThread = NULL;
 static HANDLE hThread = NULL;
 static HANDLE hThread2 = NULL;
+static HANDLE hThread3 = NULL;
+static HANDLE hThread4 = NULL;
 static unsigned int thrdaddr1;
 static unsigned int thrdaddr2;
 static unsigned int thrdaddr3;
+static unsigned int thrdaddr4;
 
 // Variables
 #include "basserr.h"
@@ -504,10 +507,10 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 }
 
-unsigned WINAPI notescatcher(LPVOID lpV){
+unsigned WINAPI notescatcher(LPVOID lpV) {
 	try {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
-		while (stop_thread == 0){
+		while (stop_thread == 0) {
 			bmsyn_play_some_data();
 			if (oldbuffermode == 1)
 				break;
@@ -526,10 +529,33 @@ unsigned WINAPI notescatcher(LPVOID lpV){
 	}
 }
 
+unsigned WINAPI settingsload(LPVOID lpV) {
+	try {
+		PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
+		while (stop_thread == 0) {
+			Sleep(1);
+			realtime_load_settings();
+			Panic();
+			keybindings();
+			WatchdogCheck();
+			CheckVolume();
+			mixervoid();
+			RevbNChor();
+		}
+		PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
+		stop_thread = 0;
+		_endthreadex(0);
+		return 0;
+	}
+	catch (...) {
+		crashmessage(L"NotesCatcher");
+	}
+}
+
 void separatethreadfordata() {
-	if (hThread2 == NULL) {
+	if (hThread3 == NULL) {
 		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
-		hThread2 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr2);
+		hThread3 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr3);
 		SetPriorityClass(hThread, callprioval[driverprio]);
 		SetThreadPriority(hThread, prioval[driverprio]);
 	}
@@ -767,23 +793,19 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					SetEvent(load_sfevent);
 					opend = 1;
 					reset_synth = 0;
-					hThread = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
-					SetPriorityClass(hThread, callprioval[driverprio]);
-					SetThreadPriority(hThread, prioval[driverprio]);
+					hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
+					SetPriorityClass(hThread2, callprioval[driverprio]);
+					SetThreadPriority(hThread2, prioval[driverprio]);
+					hThread4 = (HANDLE)_beginthreadex(NULL, 0, settingsload, 0, 0, &thrdaddr4);
+					SetPriorityClass(hThread4, callprioval[driverprio]);
+					SetThreadPriority(hThread4, prioval[driverprio]);
 					PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 				}
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == 0){
 				Sleep(10);
-				realtime_load_settings();
 				debug_info();
-				Panic();
-				keybindings();
-				WatchdogCheck();
-				CheckVolume();
-				mixervoid();
-				RevbNChor();
 			}
 			stop_rtthread = 0;
 			if (KSStream)
