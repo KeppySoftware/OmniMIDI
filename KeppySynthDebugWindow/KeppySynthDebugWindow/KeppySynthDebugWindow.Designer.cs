@@ -124,6 +124,8 @@
             this.WinLogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.SonicMode = new System.Windows.Forms.MenuItem();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
@@ -143,6 +145,8 @@
             this.debugwintop,
             this.CopyToClipboard,
             this.menuItem1,
+            this.SonicMode,
+            this.menuItem2,
             this.ExitMenu});
             // 
             // OpenConfigurator
@@ -181,7 +185,7 @@
             // 
             // ExitMenu
             // 
-            this.ExitMenu.Index = 6;
+            this.ExitMenu.Index = 8;
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
             // 
@@ -1092,6 +1096,17 @@
             this.CurrentKSVer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CurrentKSVer.ToolTipTitle = "Keppy\'s Synthesizer VER";
             // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 7;
+            this.menuItem2.Text = "-";
+            // 
+            // SonicMode
+            // 
+            this.SonicMode.Index = 6;
+            this.SonicMode.Text = "Parse debug information every 1ms";
+            this.SonicMode.Click += new System.EventHandler(this.SonicMode_Click);
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1210,6 +1225,8 @@
         private System.Windows.Forms.ToolTip WinLogoTT;
         private System.Windows.Forms.ToolTip CPULogoTT;
         private System.Windows.Forms.ToolTip CurrentKSVer;
+        private System.Windows.Forms.MenuItem SonicMode;
+        private System.Windows.Forms.MenuItem menuItem2;
     }
 }
 

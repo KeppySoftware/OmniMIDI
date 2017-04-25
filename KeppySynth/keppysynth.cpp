@@ -553,11 +553,11 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 }
 
 void separatethreadfordata() {
-	if (hThread3 == NULL) {
+	if (hThread4 == NULL) {
 		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
-		hThread3 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr3);
-		SetPriorityClass(hThread, callprioval[driverprio]);
-		SetThreadPriority(hThread, prioval[driverprio]);
+		hThread4 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr4);
+		SetPriorityClass(hThread4, callprioval[driverprio]);
+		SetThreadPriority(hThread4, prioval[driverprio]);
 	}
 }
 
@@ -796,9 +796,9 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
 					SetPriorityClass(hThread2, callprioval[driverprio]);
 					SetThreadPriority(hThread2, prioval[driverprio]);
-					hThread4 = (HANDLE)_beginthreadex(NULL, 0, settingsload, 0, 0, &thrdaddr4);
-					SetPriorityClass(hThread4, callprioval[driverprio]);
-					SetThreadPriority(hThread4, prioval[driverprio]);
+					hThread3 = (HANDLE)_beginthreadex(NULL, 0, settingsload, 0, 0, &thrdaddr3);
+					SetPriorityClass(hThread3, callprioval[driverprio]);
+					SetThreadPriority(hThread3, prioval[driverprio]);
 					PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 				}
 			}

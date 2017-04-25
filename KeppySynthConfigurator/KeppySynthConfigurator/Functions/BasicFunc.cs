@@ -962,14 +962,14 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
 
                 // Normal settings
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("polyphony", "512", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("polyphony", "500", RegistryValueKind.DWord);
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("cpu", "65", RegistryValueKind.DWord);
                 KeppySynthConfiguratorMain.Delegate.Frequency.Text = "48000";
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("frequency", KeppySynthConfiguratorMain.Delegate.Frequency.Text, RegistryValueKind.DWord);
 
                 // Advanced SynthSettings
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("buflen", "30", RegistryValueKind.DWord);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("tracks", "16", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("sndbfvalue", "100", RegistryValueKind.DWord);
 
                 // Let's not forget about the volume!
                 int VolumeValue = 0;

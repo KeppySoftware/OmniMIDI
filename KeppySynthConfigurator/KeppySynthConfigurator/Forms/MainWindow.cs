@@ -920,7 +920,7 @@ namespace KeppySynthConfigurator
             NoteOffCheck.Checked = false;
             SincInter.Checked = true;
             EnableSFX.Checked = true;
-            SysResetIgnore.Checked = true;
+            SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
@@ -2318,6 +2318,17 @@ namespace KeppySynthConfigurator
             Properties.Settings.Default.ButterBoy = true;
             Properties.Settings.Default.Save();
             MessageBox.Show("Super-duper!\n\nI'm happy that you changed your mind!", "Butter Boy", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        int paintReps = 0;
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            System.Threading.Thread.Sleep(1);
+
+            if (paintReps++ % 500 == 0)
+                Application.DoEvents();
         }
     }
 }
