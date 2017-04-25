@@ -30,7 +30,7 @@ bool depends() {
 	}
 }
 
-void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen) {
+void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, int exlen) {
 	if (turnnoteoffintonoteon == 1) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89))) {
 			int newstatus = status + 0x22;
@@ -77,7 +77,6 @@ int bmsyn_play_some_data(void){
 	else {
 		UINT uMsg;
 		DWORD_PTR	dwParam1;
-		DWORD_PTR   dwParam2;
 
 		UINT evbpoint;
 		int exlen;
@@ -95,7 +94,6 @@ int bmsyn_play_some_data(void){
 
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
-			dwParam2 = evbuf[evbpoint].dwParam2;
 
 			int status = (dwParam1 & 0x000000FF);
 			int note = (dwParam1 & 0x0000FF00) >> 8;
@@ -114,36 +112,13 @@ int bmsyn_play_some_data(void){
 						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
 					}
 					else {
-						playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
+						playnotes(status, note, velocity, dwParam1, exlen);
 					}
 					break;
 				}
-				playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
-				break;
-			case MIM_DATA:
-				if (ignorenotes1) {
-					if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
-						&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
-						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-					}
-					else {
-						playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
-					}
-					break;
-				}
-				playnotes(status, note, velocity, dwParam1, dwParam2, exlen);
+				playnotes(status, note, velocity, dwParam1, exlen);
 				break;
 			case MODM_LONGDATA:
-				if (sysresetignore != 1) {
-					MIDIHDR *hdr = (MIDIHDR*)dwParam1;
-					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-					CheckUp(ERRORCODE, L"LongDataToAudioStream");
-					if (debugmode) {
-						PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
-					}
-				}
-				break;
-			case MIM_LONGDATA:
 				if (sysresetignore != 1) {
 					MIDIHDR *hdr = (MIDIHDR*)dwParam1;
 					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
@@ -159,14 +134,13 @@ int bmsyn_play_some_data(void){
 	}
 }
 
-bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+bool ParseData(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
 	EnterCriticalSection(&mim_section);
 	evbpoint = evbwpoint;
 	if (++evbwpoint >= newevbuffvalue)
 		evbwpoint -= newevbuffvalue;
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
-	evbuf[evbpoint].dwParam2 = dwParam2;
 	LeaveCriticalSection(&mim_section);
 	if (vms2emu == 1) {
 		if (InterlockedIncrement(&evbcount) >= newevbuffvalue) {
@@ -177,18 +151,6 @@ bool modmdata(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWOR
 				}
 				Sleep(1);
 			} while (evbcount >= newevbuffvalue);
-		}
-	}
-	return MMSYSERR_NOERROR;
-}
-
-bool longmodmdata(MIDIHDR *IIMidiHdr, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
-	if (sysresetignore != 1) {
-		MIDIHDR *hdr = (MIDIHDR*)dwParam1;
-		BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-		CheckUp(ERRORCODE, L"LongDataToAudioStream");
-		if (debugmode) {
-			PrintToConsole(FOREGROUND_RED, dwParam1, "Parsed SysEx MIDI event.");
 		}
 	}
 	return MMSYSERR_NOERROR;

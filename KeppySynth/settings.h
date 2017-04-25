@@ -5,7 +5,6 @@ Keppy's Synthesizer settings loading system
 struct evbuf_t{
 	UINT   uMsg;
 	DWORD_PTR	dwParam1;
-	DWORD_PTR	dwParam2;
 };
 
 static struct evbuf_t evbuf[36864];
