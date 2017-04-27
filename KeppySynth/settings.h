@@ -309,6 +309,7 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_SetDevice);
 		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_StreamFree);
+		LOADBASSFUNCTION(BASS_GetCPU);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
@@ -363,7 +364,7 @@ void load_settings()
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"autopanic", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
+		RegQueryValueEx(hKey, L"alternativecpu", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
 		RegQueryValueEx(hKey, L"capframerate", NULL, &dwType, (LPBYTE)&capframerate, &dwSize);
@@ -436,7 +437,7 @@ void realtime_load_settings()
 		int potato;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
-		RegQueryValueEx(hKey, L"autopanic", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
+		RegQueryValueEx(hKey, L"alternativecpu", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"capframerate", NULL, &dwType, (LPBYTE)&capframerate, &dwSize);
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
@@ -486,7 +487,9 @@ void realtime_load_settings()
 			sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 		}
 		// stuff
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+		if (autopanic != 1) 
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 		if (noteoff1) {
 			BASS_ChannelFlags(KSStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
@@ -522,17 +525,17 @@ void realtime_load_settings()
 void Panic() {
 	//Panic system
 	if (autopanic == 1) {
-		if (currentcpuusage0 >= 100.0f && currentcpuusage0 < 150.0f) {
-			int reduceby;
-			if (currentcpuusage0 >= 100.0f && currentcpuusage0 < 110.0f) { reduceby = midivoices / 4; }
-			else if (currentcpuusage0 >= 110.0f && currentcpuusage0 < 120.0f) { reduceby = midivoices / 8; }
-			else if (currentcpuusage0 >= 120.0f && currentcpuusage0 < 130.0f) { reduceby = midivoices / 16; }
-			else if (currentcpuusage0 >= 130.0f && currentcpuusage0 < 140.0f) { reduceby = midivoices / 32; }
-			else if (currentcpuusage0 >= 140.0f && currentcpuusage0 < 150.0f) { reduceby = midivoices / 64; }
-			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, reduceby);
-		}
-		else if (currentcpuusage0 >= 150.0f) {
-			ResetSynth(0);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, 100.0f);
+		float maxcpuf = (float)maxcpu;
+
+		if (currentcpuusage0 >= (maxcpuf - 3.0f)) {
+			int newmidivoices = midivoices - ((midivoices / 8) * (int)(currentcpuusage0 - maxcpuf));
+
+			if (newmidivoices < 1) {
+				newmidivoices = 1;
+			}
+
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, newmidivoices);
 		}
 		else {
 			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
@@ -818,23 +821,6 @@ void keybindings()
 				if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
 					ReloadSFList(8);
 					return;
-				}
-				if (debugmode == 1) {
-					if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(VK_CANCEL) & 0x8000) {
-						COORD topLeft = { 0, 0 };
-						CONSOLE_SCREEN_BUFFER_INFO screen;
-						DWORD written;
-
-						GetConsoleScreenBufferInfo(hConsole, &screen);
-						FillConsoleOutputCharacterA(
-							hConsole, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written
-							);
-						FillConsoleOutputAttribute(
-							hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
-							screen.dwSize.X * screen.dwSize.Y, topLeft, &written
-							);
-						SetConsoleCursorPosition(hConsole, topLeft);
-					}
 				}
 			}
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {

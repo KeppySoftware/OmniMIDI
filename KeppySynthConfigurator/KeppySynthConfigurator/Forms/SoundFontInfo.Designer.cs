@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,13 +48,15 @@
             this.PreviewThread = new System.ComponentModel.BackgroundWorker();
             this.CustomMIDI = new System.Windows.Forms.OpenFileDialog();
             this.RightClickMenu = new System.Windows.Forms.ContextMenu();
-            this.StartNormalPrvw1 = new System.Windows.Forms.MenuItem();
-            this.StartCustomPrvw = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.StartNormalPrvw2 = new System.Windows.Forms.MenuItem();
-            this.StartNormalPrvw3 = new System.Windows.Forms.MenuItem();
             this.LoopYesNo = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.StartNormalPrvw1 = new System.Windows.Forms.MenuItem();
+            this.StartNormalPrvw2 = new System.Windows.Forms.MenuItem();
+            this.StartNormalPrvw3 = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.StartCustomPrvw = new System.Windows.Forms.MenuItem();
+            this.WhatDoesTheSFSay = new System.Windows.Forms.ToolTip(this.components);
+            this.SizeWarning = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -201,9 +204,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LELabel.Location = new System.Drawing.Point(142, 287);
             this.LELabel.Name = "LELabel";
-            this.LELabel.Size = new System.Drawing.Size(296, 13);
+            this.LELabel.Size = new System.Drawing.Size(157, 13);
             this.LELabel.TabIndex = 16;
             this.LELabel.Text = "SAS";
+            this.WhatDoesTheSFSay.SetToolTip(this.LELabel, "Do not trust this info, since it can be modified\r\nby sharing the SoundFont betwee" +
+        "n computers!");
             // 
             // PrvwBtn
             // 
@@ -235,22 +240,22 @@
             this.menuItem1,
             this.StartCustomPrvw});
             // 
+            // LoopYesNo
+            // 
+            this.LoopYesNo.Index = 0;
+            this.LoopYesNo.Text = "Loop";
+            this.LoopYesNo.Click += new System.EventHandler(this.LoopYesNo_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
+            // 
             // StartNormalPrvw1
             // 
             this.StartNormalPrvw1.Index = 2;
             this.StartNormalPrvw1.Text = "Preview with Town";
             this.StartNormalPrvw1.Click += new System.EventHandler(this.StartNormalPrvw_Click);
-            // 
-            // StartCustomPrvw
-            // 
-            this.StartCustomPrvw.Index = 6;
-            this.StartCustomPrvw.Text = "Preview with a custom MIDI...";
-            this.StartCustomPrvw.Click += new System.EventHandler(this.StartCustomPrvw_Click);
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.Index = 5;
-            this.menuItem1.Text = "-";
             // 
             // StartNormalPrvw2
             // 
@@ -264,16 +269,26 @@
             this.StartNormalPrvw3.Text = "Preview with Flourish";
             this.StartNormalPrvw3.Click += new System.EventHandler(this.StartNormalPrvw3_Click);
             // 
-            // LoopYesNo
+            // menuItem1
             // 
-            this.LoopYesNo.Index = 0;
-            this.LoopYesNo.Text = "Loop";
-            this.LoopYesNo.Click += new System.EventHandler(this.LoopYesNo_Click);
+            this.menuItem1.Index = 5;
+            this.menuItem1.Text = "-";
             // 
-            // menuItem3
+            // StartCustomPrvw
             // 
-            this.menuItem3.Index = 1;
-            this.menuItem3.Text = "-";
+            this.StartCustomPrvw.Index = 6;
+            this.StartCustomPrvw.Text = "Preview with a custom MIDI...";
+            this.StartCustomPrvw.Click += new System.EventHandler(this.StartCustomPrvw_Click);
+            // 
+            // WhatDoesTheSFSay
+            // 
+            this.WhatDoesTheSFSay.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            this.WhatDoesTheSFSay.ToolTipTitle = "Date of last edit";
+            // 
+            // SizeWarning
+            // 
+            this.SizeWarning.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            this.SizeWarning.ToolTipTitle = "SoundFont bigger than 2GB";
             // 
             // SoundFontInfo
             // 
@@ -338,5 +353,7 @@
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem LoopYesNo;
         private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.ToolTip WhatDoesTheSFSay;
+        private System.Windows.Forms.ToolTip SizeWarning;
     }
 }

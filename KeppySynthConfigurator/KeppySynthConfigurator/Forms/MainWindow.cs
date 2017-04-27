@@ -1639,12 +1639,12 @@ namespace KeppySynthConfigurator
         {
             if (autopanicmode.Checked == false)
             {
-                SynthSettings.SetValue("autopanic", "1", RegistryValueKind.DWord);
+                SynthSettings.SetValue("alternativecpu", "1", RegistryValueKind.DWord);
                 autopanicmode.Checked = true;
             }
             else
             {
-                SynthSettings.SetValue("autopanic", "0", RegistryValueKind.DWord);
+                SynthSettings.SetValue("alternativecpu", "0", RegistryValueKind.DWord);
                 autopanicmode.Checked = false;
             }
         }

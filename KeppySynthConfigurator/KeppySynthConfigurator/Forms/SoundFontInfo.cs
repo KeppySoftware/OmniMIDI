@@ -82,10 +82,18 @@ namespace KeppySynthConfigurator
             ISFBox.Text = ReturnName(fontinfo.name, next);
             CIBox.Text = ReturnCopyright(fontinfo.copyright);
 
-            SofSFLab.Text = String.Format("{0} bytes ({1}Presets: {2})",
-                f.Length.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")),
-                ReturnSamplesSize(fontinfo.samsize),
-                String.Format("{0} bytes", (f.Length - fontinfo.samsize).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))));
+            if (f.Length > (long)2147483648)
+            {
+                SofSFLab.Font = new Font(SofSFLab.Font, FontStyle.Bold);
+                SofSFLab.ForeColor = Color.DarkRed;
+                SofSFLab.Cursor = Cursors.Help;
+                SizeWarning.SetToolTip(SofSFLab, "SoundFonts bigger than 2GB may not load correctly\non 32-bit applications, cause audio corruptions or even cause loss of data!\n\nBe careful!");
+            }
+
+            SofSFLab.Text = String.Format("{0} (Samples: {1}, Presets: {2})",
+                Functions.ReturnLength(f.Length),
+                Functions.ReturnLength(fontinfo.samsize),
+                Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
 
             SFfLab.Text = Functions.ReturnSoundFontFormatMore(Path.GetExtension(next));
             CommentRich.Text = ReturnComment(fontinfo.comment);

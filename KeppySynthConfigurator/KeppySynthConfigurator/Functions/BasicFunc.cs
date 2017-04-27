@@ -588,7 +588,7 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.hotkeys.Checked = true;
                 }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autopanic", 1)) == 1)
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("alternativecpu", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = true;
                 }
@@ -1058,50 +1058,54 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.LoPrio.Enabled = Status;
         }
 
+        public static string ReturnLength(long length)
+        {
+            try
+            {
+                if (length >= 1099511627776)
+                {
+                    if (length >= 1099511627776 && length < 10995116277760)
+                        return ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.00 TB");
+                    else
+                        return ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
+                }
+                else if (length >= 1073741824)
+                {
+                    if (length >= 1073741824 && length < 10737418240)
+                        return (((length / 1024f) / 1024f) / 1024f).ToString("0.00 GB");
+                    else
+                        return (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
+                }
+                else if (length >= 1048576)
+                {
+                    if (length >= 1048576 && length < 10485760)
+                        return ((length / 1024f) / 1024f).ToString("0.00 MB");
+                    else
+                        return ((length / 1024f) / 1024f).ToString("0.0 MB");
+                }
+                else if (length >= 1024)
+                {
+                    if (length >= 1024 && length < 10240)
+                        return (length / 1024f).ToString("0.00 KB");
+                    else
+                        return (length / 1024f).ToString("0.0 KB");
+                }
+                else
+                {
+                    if (length >= 1 && length < 1024)
+                        return (length).ToString("0.00 B");
+                    else
+                        return (length / 1024f).ToString("0.0 B");
+                }
+            }
+            catch { return "-"; }
+        }
+
         public static string ReturnSoundFontSize(string ext, long length)
         {
             if (ext.ToLowerInvariant() != ".sfz")
             {
-                string size;
-                try
-                {
-                    if (length >= 1099511627776)
-                    {
-                        if (length >= 1099511627776 && length < 10995116277760)
-                            size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.00 TB");
-                        else
-                            size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
-                    }
-                    else if (length >= 1073741824)
-                    {
-                        if (length >= 1073741824 && length < 10737418240)
-                            size = (((length / 1024f) / 1024f) / 1024f).ToString("0.00 GB");
-                        else
-                            size = (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
-                    }
-                    else if (length >= 1048576)
-                    {
-                        if (length >= 1048576 && length < 10485760)
-                            size = ((length / 1024f) / 1024f).ToString("0.00 MB");
-                        else
-                            size = ((length / 1024f) / 1024f).ToString("0.0 MB");
-                    }
-                    else if (length >= 1024)
-                    {
-                        if (length >= 1024 && length < 10240)
-                            size = (length / 1024f).ToString("0.00 KB");
-                        else
-                            size = (length / 1024f).ToString("0.0 KB");
-                    }
-                    else
-                    {
-                        if (length >= 1 && length < 1024)
-                            size = (length).ToString("0.00 B");
-                        else
-                            size = (length / 1024f).ToString("0.0 B");
-                    }
-                }
-                catch { size = "-"; }
+                string size = Functions.ReturnLength(length);
                 return size;
             }
             else

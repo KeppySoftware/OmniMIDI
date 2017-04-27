@@ -727,7 +727,7 @@
             // autopanicmode
             // 
             this.autopanicmode.Index = 4;
-            this.autopanicmode.Text = "Automatic rendering recovery";
+            this.autopanicmode.Text = "Alternative rendering time limiter";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
             // menuItem12
