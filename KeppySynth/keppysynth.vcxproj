@@ -26,6 +26,7 @@
     <ClInclude Include="bansystem.h" />
     <ClInclude Include="basserr.h" />
     <ClInclude Include="bufsystem.h" />
+    <ClInclude Include="drvinit.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />

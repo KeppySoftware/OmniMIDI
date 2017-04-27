@@ -528,7 +528,6 @@ namespace KeppySynthDebugWindow
                         }
                         else if (Tabs.SelectedIndex == 1)
                         {
-
                             String FormatForVoices = "{0} voices";
                             CHV1.Text = String.Format(FormatForVoices, Debug.GetValue("chv1", "0").ToString());
                             CHV2.Text = String.Format(FormatForVoices, Debug.GetValue("chv2", "0").ToString());
@@ -571,22 +570,25 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
-                thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
+                if (Tabs.SelectedIndex == 2)
+                {
+                    Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
+                    thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
 
-                // This thread just takes the available and total memory info from Windows, then outputs them in the 2nd tab
+                    // This thread just takes the available and total memory info from Windows, then outputs them in the 2nd tab
 
-                ComputerInfo CI = new ComputerInfo();
-                ulong avmem = CI.AvailablePhysicalMemory;
-                ulong tlmem = CI.TotalPhysicalMemory;
-                ulong avmemint = avmem / (1024 * 1024);
-                ulong tlmemint = tlmem / (1024 * 1024);
-                double percentage = avmem * 100.0 / tlmem;
+                    ComputerInfo CI = new ComputerInfo();
+                    ulong avmem = CI.AvailablePhysicalMemory;
+                    ulong tlmem = CI.TotalPhysicalMemory;
+                    ulong avmemint = avmem / (1024 * 1024);
+                    ulong tlmemint = tlmem / (1024 * 1024);
+                    double percentage = avmem * 100.0 / tlmem;
 
-                TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-                AM.Text = String.Format("{0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                    TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                    AM.Text = String.Format("{0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
 
-                CI = null;
+                    CI = null;
+                }
 
                 Thread.Sleep(1);
             }
