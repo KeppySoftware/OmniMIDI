@@ -546,6 +546,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			while (stop_rtthread == 0){
 				Sleep(10);
 				debug_info();
+				CheckVolume();
 			}
 			stop_rtthread = 0;
 			if (KSStream)

@@ -86,9 +86,15 @@ BOOL VMSBlackList(){
 	ZeroMemory(vmidisynthdll, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(vmidisynth2exe, sizeof(TCHAR) * MAX_PATH);
 	// Here we go
+#if defined(_WIN64)
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, bassmididrv);
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
 	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+#elif defined(_WIN32)
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, bassmididrv);
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynthdll);
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+#endif
 	PathAppend(bassmididrv, _T("\\bassmididrv\\bassmididrv.dll"));
 	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
@@ -117,8 +123,8 @@ BOOL VMSBlackList(){
 			}
 		}
 		else if (PathFileExists(bassmididrv)) {
-			MessageBox(0, L"Keppy's Synthesizer can NOT work while BASSMIDI Driver is installed.\nPlease uninstall BASSMIDI Driver before utilizing this synthesizer.\n\nClick OK to continue.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			exit(1114);
+			MessageBox(0, L"Keppy's Synthesizer can NOT work while BASSMIDI Driver is installed.\nThe driver will not work until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			return 0x0;
 		}
 		else {
 			return BlackListSystem();

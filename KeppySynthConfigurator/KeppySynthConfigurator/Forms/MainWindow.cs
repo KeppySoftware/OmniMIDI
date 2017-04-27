@@ -896,10 +896,6 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
-            // Additional settings
-            SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
-            ReduceCPUOver.Checked = true;
-
             // And then...
             Functions.SaveSettings();
 
@@ -924,10 +920,6 @@ namespace KeppySynthConfigurator
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
-
-            // Additional settings
-            SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
-            ReduceCPUOver.Checked = true;
 
             // And then...
             Functions.SaveSettings();
@@ -955,10 +947,6 @@ namespace KeppySynthConfigurator
             OutputWAV.Checked = false;
             ManualAddBuffer.Checked = false;
 
-            // Additional settings
-            SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
-            ReduceCPUOver.Checked = true;
-
             // And then...
             Functions.SaveSettings();
 
@@ -984,10 +972,6 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
 
-            // Additional settings
-            SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
-            ReduceCPUOver.Checked = true;
-
             // And then...
             Functions.SaveSettings();
 
@@ -1012,10 +996,6 @@ namespace KeppySynthConfigurator
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             ManualAddBuffer.Checked = false;
-
-            // Additional settings
-            SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
-            ReduceCPUOver.Checked = true;
 
             // And then...
             Functions.SaveSettings();
@@ -1694,20 +1674,6 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
                 autoupdate.Checked = false;
-            }
-        }
-
-        private void ReduceCPUOver_Click(object sender, EventArgs e)
-        {
-            if (ReduceCPUOver.Checked == false)
-            {
-                SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
-                ReduceCPUOver.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
-                ReduceCPUOver.Checked = false;
             }
         }
 

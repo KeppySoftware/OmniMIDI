@@ -29,14 +29,13 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 	try {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 		while (stop_thread == 0) {
-			Sleep(1);
 			realtime_load_settings();
 			Panic();
 			keybindings();
 			WatchdogCheck();
-			CheckVolume();
 			mixervoid();
 			RevbNChor();
+			Sleep(100);
 		}
 		PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
 		stop_thread = 0;

@@ -93,7 +93,6 @@
             this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.MonophonicFunc = new System.Windows.Forms.MenuItem();
             this.FadeoutDisable = new System.Windows.Forms.MenuItem();
-            this.ReduceCPUOver = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
@@ -624,7 +623,6 @@
             this.ChangePitchShift,
             this.MonophonicFunc,
             this.FadeoutDisable,
-            this.ReduceCPUOver,
             this.menuItem16,
             this.useoldbuffersystem,
             this.slowdownnoskip});
@@ -681,26 +679,20 @@
             this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
             this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
             // 
-            // ReduceCPUOver
-            // 
-            this.ReduceCPUOver.Index = 5;
-            this.ReduceCPUOver.Text = "Reduce CPU overhead with DirectSound";
-            this.ReduceCPUOver.Click += new System.EventHandler(this.ReduceCPUOver_Click);
-            // 
             // menuItem16
             // 
-            this.menuItem16.Index = 6;
+            this.menuItem16.Index = 5;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 7;
+            this.useoldbuffersystem.Index = 6;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 8;
+            this.slowdownnoskip.Index = 7;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -2127,7 +2119,6 @@
         public System.Windows.Forms.MenuItem SysExIgnore;
         public System.Windows.Forms.MenuItem AllNotesIgnore;
         public System.Windows.Forms.MenuItem floatingpointaudio;
-        public System.Windows.Forms.MenuItem ReduceCPUOver;
         public System.Windows.Forms.MenuItem useoldbuffersystem;
         public System.Windows.Forms.MenuItem slowdownnoskip;
         public System.Windows.Forms.MenuItem autoupdate;

@@ -655,10 +655,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.AllNotesIgnore.Checked = true;
                     KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
                 }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.ReduceCPUOver.Checked = true;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.slowdownnoskip.Checked = true;
