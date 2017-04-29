@@ -612,9 +612,7 @@ void debug_info() {
 		DWORD dwSize = sizeof(DWORD);
 		DWORD level, left, right, handlecount;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
-		float currentvoices0;
 		int tempo;
-		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES_ACTIVE, &currentvoices0);
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -623,11 +621,9 @@ void debug_info() {
 		SIZE_T ramusage = pmc.WorkingSetSize;
 		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
 
-	    currentvoicesint0 = int(currentvoices0);
 		int currentcpuusageint0 = int(currentcpuusage0);
 
 		// Things
-		RegSetValueEx(hKey, L"currentvoices0", 0, dwType, (LPBYTE)&currentvoicesint0, sizeof(currentvoicesint0));
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
 		RegSetValueEx(hKey, L"handlecount", 0, dwType, (LPBYTE)&handlecount, sizeof(handlecount));
 

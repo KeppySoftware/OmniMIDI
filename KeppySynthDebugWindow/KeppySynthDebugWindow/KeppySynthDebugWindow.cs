@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualBasic.Devices;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
+using System.Drawing;
 
 namespace KeppySynthDebugWindow
 {
@@ -31,6 +32,24 @@ namespace KeppySynthDebugWindow
         static readonly IntPtr TOPMOST = new IntPtr(-1);
         static readonly IntPtr NOTOPMOST = new IntPtr(-2);
         const UInt32 KEEPPOS = 2 | 1;
+
+        // Voices
+        int ch1;
+        int ch2;
+        int ch3;
+        int ch4;
+        int ch5;
+        int ch6;
+        int ch7;
+        int ch8;
+        int ch9;
+        int ch10;
+        int ch11;
+        int ch12;
+        int ch13;
+        int ch14;
+        int ch15;
+        int ch16;
 
         // Debug information
         Int32 DelayParsing = 100;
@@ -398,8 +417,11 @@ namespace KeppySynthDebugWindow
                 sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
                 sb.AppendLine(String.Format("{0} {1}", CMALabel.Text, CMA.Text));
                 sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
+                sb.AppendLine(String.Format("{0} {1}", AvVLabel.Text, AvV.Text));
                 sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
                 sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
+                sb.AppendLine(String.Format("{0} {1}", RAMUsageVLabel.Text, RAMUsageV.Text));
+                sb.AppendLine(String.Format("{0} {1}", HCountVLabel.Text, HCountV.Text));
                 sb.AppendLine("======= Channels  information =======");
                 sb.AppendLine(String.Format("{0} {1}", CHV1L.Text, CHV1.Text));
                 sb.AppendLine(String.Format("{0} {1}", CHV2L.Text, CHV2.Text));
@@ -458,6 +480,36 @@ namespace KeppySynthDebugWindow
             Application.ExitThread(); // R.I.P. debug
         }
 
+        private void UpdateActiveVoicesPerChannel()
+        {
+            ch1 = Convert.ToInt32(Debug.GetValue("chv1", "0").ToString());
+            ch2 = Convert.ToInt32(Debug.GetValue("chv2", "0").ToString());
+            ch3 = Convert.ToInt32(Debug.GetValue("chv3", "0").ToString());
+            ch4 = Convert.ToInt32(Debug.GetValue("chv4", "0").ToString());
+            ch5 = Convert.ToInt32(Debug.GetValue("chv5", "0").ToString());
+            ch6 = Convert.ToInt32(Debug.GetValue("chv6", "0").ToString());
+            ch7 = Convert.ToInt32(Debug.GetValue("chv7", "0").ToString());
+            ch8 = Convert.ToInt32(Debug.GetValue("chv8", "0").ToString());
+            ch9 = Convert.ToInt32(Debug.GetValue("chv9", "0").ToString());
+            ch10 = Convert.ToInt32(Debug.GetValue("chv10", "0").ToString());
+            ch11 = Convert.ToInt32(Debug.GetValue("chv11", "0").ToString());
+            ch12 = Convert.ToInt32(Debug.GetValue("chv12", "0").ToString());
+            ch13 = Convert.ToInt32(Debug.GetValue("chv13", "0").ToString());
+            ch14 = Convert.ToInt32(Debug.GetValue("chv14", "0").ToString());
+            ch15 = Convert.ToInt32(Debug.GetValue("chv15", "0").ToString());
+            ch16 = Convert.ToInt32(Debug.GetValue("chv16", "0").ToString());
+        }
+
+        private string GetActiveVoices()
+        {
+            return String.Format("{0}", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16)).ToString());
+        }
+
+        private string GetAverageVoices()
+        {
+            return String.Format("{0} V/f", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16) / 16.67f).ToString("0.0"));
+        }
+
         private void DebugWorker_DoWork(object sender, DoWorkEventArgs e) // The worker
         {
             while (true)
@@ -495,23 +547,44 @@ namespace KeppySynthDebugWindow
                                 bitappreturn = bitapp.RemoveGarbageCharacters();
                             }
 
-                            HCount.Text = String.Format("{0} handles", handlecount);
-                            RAMUsageLabel.Text = GetCurrentRAMUsage(ramusage);
+                            HCountV.Text = String.Format("{0} handles", handlecount);
+                            RAMUsageV.Text = GetCurrentRAMUsage(ramusage);
                             CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
 
                             // Get current active voices
-                            AV.Text = String.Format("{0}", Debug.GetValue("currentvoices0", "0").ToString());
+                            UpdateActiveVoicesPerChannel();
+                            if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("polyphony", "512")))
+                            {
+                                AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Bold);
+                                AV.ForeColor = Color.DarkRed;
+                            }
+                            else
+                            {
+                                AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Regular);
+                                AV.ForeColor = SystemColors.ControlText;
+                            }
+                            AV.Text = GetActiveVoices();
+                            AvV.Text = GetAverageVoices();
 
                             if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
                             {
+                                RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Italic);
                                 RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.
                             }
                             else
                             {
                                 if (Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
+                                {
+                                    RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
+                                    RT.ForeColor = Color.DarkRed;
                                     RT.Text = String.Format("{0}% (Beyond limit: {1}%)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString());
+                                }
                                 else
+                                {
+                                    RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Regular);
+                                    RT.ForeColor = SystemColors.ControlText;
                                     RT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusage0", "0").ToString()); // Else, it'll give you the info about how many cycles it needs to work.
+                                }
                             }
                             if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 1)
                             {
@@ -528,23 +601,24 @@ namespace KeppySynthDebugWindow
                         }
                         else if (Tabs.SelectedIndex == 1)
                         {
+                            UpdateActiveVoicesPerChannel();
                             String FormatForVoices = "{0} voices";
-                            CHV1.Text = String.Format(FormatForVoices, Debug.GetValue("chv1", "0").ToString());
-                            CHV2.Text = String.Format(FormatForVoices, Debug.GetValue("chv2", "0").ToString());
-                            CHV3.Text = String.Format(FormatForVoices, Debug.GetValue("chv3", "0").ToString());
-                            CHV4.Text = String.Format(FormatForVoices, Debug.GetValue("chv4", "0").ToString());
-                            CHV5.Text = String.Format(FormatForVoices, Debug.GetValue("chv5", "0").ToString());
-                            CHV6.Text = String.Format(FormatForVoices, Debug.GetValue("chv6", "0").ToString());
-                            CHV7.Text = String.Format(FormatForVoices, Debug.GetValue("chv7", "0").ToString());
-                            CHV8.Text = String.Format(FormatForVoices, Debug.GetValue("chv8", "0").ToString());
-                            CHV9.Text = String.Format(FormatForVoices, Debug.GetValue("chv9", "0").ToString());
-                            CHV10.Text = String.Format(FormatForVoices, Debug.GetValue("chv10", "0").ToString());
-                            CHV11.Text = String.Format(FormatForVoices, Debug.GetValue("chv11", "0").ToString());
-                            CHV12.Text = String.Format(FormatForVoices, Debug.GetValue("chv12", "0").ToString());
-                            CHV13.Text = String.Format(FormatForVoices, Debug.GetValue("chv13", "0").ToString());
-                            CHV14.Text = String.Format(FormatForVoices, Debug.GetValue("chv14", "0").ToString());
-                            CHV15.Text = String.Format(FormatForVoices, Debug.GetValue("chv15", "0").ToString());
-                            CHV16.Text = String.Format(FormatForVoices, Debug.GetValue("chv16", "0").ToString());
+                            CHV1.Text = String.Format(FormatForVoices, ch1);
+                            CHV2.Text = String.Format(FormatForVoices, ch2);
+                            CHV3.Text = String.Format(FormatForVoices, ch3);
+                            CHV4.Text = String.Format(FormatForVoices, ch4);
+                            CHV5.Text = String.Format(FormatForVoices, ch5);
+                            CHV6.Text = String.Format(FormatForVoices, ch6);
+                            CHV7.Text = String.Format(FormatForVoices, ch7);
+                            CHV8.Text = String.Format(FormatForVoices, ch8);
+                            CHV9.Text = String.Format(FormatForVoices, ch9);
+                            CHV10.Text = String.Format(FormatForVoices, ch10);
+                            CHV11.Text = String.Format(FormatForVoices, ch11);
+                            CHV12.Text = String.Format(FormatForVoices, ch12);
+                            CHV13.Text = String.Format(FormatForVoices, ch13);
+                            CHV14.Text = String.Format(FormatForVoices, ch14);
+                            CHV15.Text = String.Format(FormatForVoices, ch15);
+                            CHV16.Text = String.Format(FormatForVoices, ch16);
                         }
                         else
                         {

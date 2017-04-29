@@ -44,14 +44,18 @@
             this.debugwintop = new System.Windows.Forms.MenuItem();
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.SonicMode = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.DebugWorker = new System.ComponentModel.BackgroundWorker();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
-            this.HCount = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.RAMUsageLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.AvV = new System.Windows.Forms.Label();
+            this.AvVLabel = new System.Windows.Forms.Label();
+            this.HCountV = new System.Windows.Forms.Label();
+            this.HCountVLabel = new System.Windows.Forms.Label();
+            this.RAMUsageV = new System.Windows.Forms.Label();
+            this.RAMUsageVLabel = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyToClip1 = new System.Windows.Forms.Button();
             this.KSLogo = new System.Windows.Forms.PictureBox();
@@ -124,8 +128,7 @@
             this.WinLogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.SonicMode = new System.Windows.Forms.MenuItem();
+            this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
@@ -183,6 +186,17 @@
             this.menuItem1.Index = 5;
             this.menuItem1.Text = "-";
             // 
+            // SonicMode
+            // 
+            this.SonicMode.Index = 6;
+            this.SonicMode.Text = "Parse debug information every 1ms";
+            this.SonicMode.Click += new System.EventHandler(this.SonicMode_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 7;
+            this.menuItem2.Text = "-";
+            // 
             // ExitMenu
             // 
             this.ExitMenu.Index = 8;
@@ -207,10 +221,12 @@
             // 
             // SynthDbg
             // 
-            this.SynthDbg.Controls.Add(this.HCount);
-            this.SynthDbg.Controls.Add(this.label3);
-            this.SynthDbg.Controls.Add(this.RAMUsageLabel);
-            this.SynthDbg.Controls.Add(this.label1);
+            this.SynthDbg.Controls.Add(this.AvV);
+            this.SynthDbg.Controls.Add(this.AvVLabel);
+            this.SynthDbg.Controls.Add(this.HCountV);
+            this.SynthDbg.Controls.Add(this.HCountVLabel);
+            this.SynthDbg.Controls.Add(this.RAMUsageV);
+            this.SynthDbg.Controls.Add(this.RAMUsageVLabel);
             this.SynthDbg.Controls.Add(this.VersionLabel);
             this.SynthDbg.Controls.Add(this.CopyToClip1);
             this.SynthDbg.Controls.Add(this.KSLogo);
@@ -230,49 +246,75 @@
             this.SynthDbg.Text = "Synth debug info";
             this.SynthDbg.UseVisualStyleBackColor = true;
             // 
-            // HCount
+            // AvV
             // 
-            this.HCount.AutoSize = true;
-            this.HCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HCount.Location = new System.Drawing.Point(128, 96);
-            this.HCount.Name = "HCount";
-            this.HCount.Size = new System.Drawing.Size(13, 13);
-            this.HCount.TabIndex = 39;
-            this.HCount.Text = "0";
-            this.HCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.AvV.AutoSize = true;
+            this.AvV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AvV.Location = new System.Drawing.Point(157, 42);
+            this.AvV.Name = "AvV";
+            this.AvV.Size = new System.Drawing.Size(13, 13);
+            this.AvV.TabIndex = 41;
+            this.AvV.Text = "0";
+            this.AvV.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VoiceAverage.SetToolTip(this.AvV, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
+        "is is an approximation, so pick it with a grain of salt.");
             // 
-            // label3
+            // AvVLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(2, 96);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 13);
-            this.label3.TabIndex = 38;
-            this.label3.Text = "App\'s handles count:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.AvVLabel.AutoSize = true;
+            this.AvVLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AvVLabel.Location = new System.Drawing.Point(2, 42);
+            this.AvVLabel.Name = "AvVLabel";
+            this.AvVLabel.Size = new System.Drawing.Size(156, 13);
+            this.AvVLabel.TabIndex = 40;
+            this.AvVLabel.Text = "Average voices per frame:";
+            this.AvVLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VoiceAverage.SetToolTip(this.AvVLabel, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
+        "is is an approximation, so pick it with a grain of salt.");
             // 
-            // RAMUsageLabel
+            // HCountV
             // 
-            this.RAMUsageLabel.AutoSize = true;
-            this.RAMUsageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RAMUsageLabel.Location = new System.Drawing.Point(139, 78);
-            this.RAMUsageLabel.Name = "RAMUsageLabel";
-            this.RAMUsageLabel.Size = new System.Drawing.Size(32, 13);
-            this.RAMUsageLabel.TabIndex = 37;
-            this.RAMUsageLabel.Text = "0.0 B";
-            this.RAMUsageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.HCountV.AutoSize = true;
+            this.HCountV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HCountV.Location = new System.Drawing.Point(128, 114);
+            this.HCountV.Name = "HCountV";
+            this.HCountV.Size = new System.Drawing.Size(13, 13);
+            this.HCountV.TabIndex = 39;
+            this.HCountV.Text = "0";
+            this.HCountV.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label1
+            // HCountVLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(2, 78);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(137, 13);
-            this.label1.TabIndex = 36;
-            this.label1.Text = "App\'s working set size:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.HCountVLabel.AutoSize = true;
+            this.HCountVLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HCountVLabel.Location = new System.Drawing.Point(2, 114);
+            this.HCountVLabel.Name = "HCountVLabel";
+            this.HCountVLabel.Size = new System.Drawing.Size(126, 13);
+            this.HCountVLabel.TabIndex = 38;
+            this.HCountVLabel.Text = "App\'s handles count:";
+            this.HCountVLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // RAMUsageV
+            // 
+            this.RAMUsageV.AutoSize = true;
+            this.RAMUsageV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RAMUsageV.Location = new System.Drawing.Point(139, 96);
+            this.RAMUsageV.Name = "RAMUsageV";
+            this.RAMUsageV.Size = new System.Drawing.Size(32, 13);
+            this.RAMUsageV.TabIndex = 37;
+            this.RAMUsageV.Text = "0.0 B";
+            this.RAMUsageV.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // RAMUsageVLabel
+            // 
+            this.RAMUsageVLabel.AutoSize = true;
+            this.RAMUsageVLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RAMUsageVLabel.Location = new System.Drawing.Point(2, 96);
+            this.RAMUsageVLabel.Name = "RAMUsageVLabel";
+            this.RAMUsageVLabel.Size = new System.Drawing.Size(137, 13);
+            this.RAMUsageVLabel.TabIndex = 36;
+            this.RAMUsageVLabel.Text = "App\'s working set size:";
+            this.RAMUsageVLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // VersionLabel
             // 
@@ -312,7 +354,7 @@
             // 
             this.DDS.AutoSize = true;
             this.DDS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DDS.Location = new System.Drawing.Point(161, 60);
+            this.DDS.Location = new System.Drawing.Point(161, 78);
             this.DDS.Name = "DDS";
             this.DDS.Size = new System.Drawing.Size(45, 13);
             this.DDS.TabIndex = 15;
@@ -323,7 +365,7 @@
             // 
             this.DDSLabel.AutoSize = true;
             this.DDSLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DDSLabel.Location = new System.Drawing.Point(2, 60);
+            this.DDSLabel.Location = new System.Drawing.Point(2, 78);
             this.DDSLabel.Name = "DDSLabel";
             this.DDSLabel.Size = new System.Drawing.Size(159, 13);
             this.DDSLabel.TabIndex = 14;
@@ -334,7 +376,7 @@
             // 
             this.RT.AutoSize = true;
             this.RT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RT.Location = new System.Drawing.Point(97, 42);
+            this.RT.Location = new System.Drawing.Point(97, 60);
             this.RT.Name = "RT";
             this.RT.Size = new System.Drawing.Size(21, 13);
             this.RT.TabIndex = 13;
@@ -345,7 +387,7 @@
             // 
             this.RTLabel.AutoSize = true;
             this.RTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RTLabel.Location = new System.Drawing.Point(2, 42);
+            this.RTLabel.Location = new System.Drawing.Point(2, 60);
             this.RTLabel.Name = "RTLabel";
             this.RTLabel.Size = new System.Drawing.Size(96, 13);
             this.RTLabel.TabIndex = 12;
@@ -1096,16 +1138,10 @@
             this.CurrentKSVer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CurrentKSVer.ToolTipTitle = "Keppy\'s Synthesizer VER";
             // 
-            // menuItem2
+            // VoiceAverage
             // 
-            this.menuItem2.Index = 7;
-            this.menuItem2.Text = "-";
-            // 
-            // SonicMode
-            // 
-            this.SonicMode.Index = 6;
-            this.SonicMode.Text = "Parse debug information every 1ms";
-            this.SonicMode.Click += new System.EventHandler(this.SonicMode_Click);
+            this.VoiceAverage.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.VoiceAverage.ToolTipTitle = "What does the average mean?";
             // 
             // KeppySynthDebugWindow
             // 
@@ -1218,15 +1254,18 @@
         private System.Windows.Forms.PictureBox KSLogo;
         private System.Windows.Forms.PictureBox KSLogoVoc;
         private System.Windows.Forms.Label VersionLabel;
-        private System.Windows.Forms.Label RAMUsageLabel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label HCount;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label RAMUsageV;
+        private System.Windows.Forms.Label RAMUsageVLabel;
+        private System.Windows.Forms.Label HCountV;
+        private System.Windows.Forms.Label HCountVLabel;
         private System.Windows.Forms.ToolTip WinLogoTT;
         private System.Windows.Forms.ToolTip CPULogoTT;
         private System.Windows.Forms.ToolTip CurrentKSVer;
         private System.Windows.Forms.MenuItem SonicMode;
         private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.Label AvV;
+        private System.Windows.Forms.Label AvVLabel;
+        private System.Windows.Forms.ToolTip VoiceAverage;
     }
 }
 

@@ -506,8 +506,7 @@
             this.menuItem11,
             this.menuItem14,
             this.menuItem12,
-            this.menuItem28,
-            this.menuItem20});
+            this.menuItem28});
             this.menuItem2.Text = "More settings";
             // 
             // hotkeys
@@ -827,7 +826,7 @@
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 15;
+            this.menuItem20.Index = 2;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
             this.UnregDriver,
@@ -1038,13 +1037,13 @@
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 8;
+            this.SignatureCheck.Index = 9;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 7;
+            this.PanicButton.Index = 8;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
@@ -1063,6 +1062,7 @@
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem22,
             this.menuItem40,
+            this.menuItem20,
             this.SpatialSound,
             this.menuItem39,
             this.WinMMPatch32,
@@ -1099,59 +1099,59 @@
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 2;
+            this.SpatialSound.Index = 3;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
             // 
             // menuItem39
             // 
-            this.menuItem39.Index = 3;
+            this.menuItem39.Index = 4;
             this.menuItem39.Text = "-";
             // 
             // WinMMPatch32
             // 
-            this.WinMMPatch32.Index = 4;
+            this.WinMMPatch32.Index = 5;
             this.WinMMPatch32.Text = "Apply the WinMM patch to a 32-bit app";
             this.WinMMPatch32.Click += new System.EventHandler(this.WinMMPatch32_Click);
             // 
             // WinMMPatch64
             // 
-            this.WinMMPatch64.Index = 5;
+            this.WinMMPatch64.Index = 6;
             this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
             this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 6;
+            this.menuItem15.Index = 7;
             this.menuItem15.Text = "-";
             // 
             // menuItem46
             // 
-            this.menuItem46.Index = 9;
+            this.menuItem46.Index = 10;
             this.menuItem46.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 10;
+            this.DeleteUserData.Index = 11;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 11;
+            this.ResetToDefault.Index = 12;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
             // EnableBBS
             // 
-            this.EnableBBS.Index = 12;
+            this.EnableBBS.Index = 13;
             this.EnableBBS.Text = "-";
             this.EnableBBS.Visible = false;
             // 
             // EnableBB
             // 
-            this.EnableBB.Index = 13;
+            this.EnableBB.Index = 14;
             this.EnableBB.Text = "Re-enable Butter Boy";
             this.EnableBB.Visible = false;
             this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
@@ -1735,6 +1735,8 @@
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
             this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
+            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
+            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
             this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
             this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
@@ -1970,6 +1972,7 @@
             // 
             // TabsForTheControls
             // 
+            this.TabsForTheControls.AllowDrop = true;
             this.TabsForTheControls.Controls.Add(this.SoundFontTab);
             this.TabsForTheControls.Controls.Add(this.Settings);
             this.TabsForTheControls.Dock = System.Windows.Forms.DockStyle.Fill;

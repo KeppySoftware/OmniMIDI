@@ -54,7 +54,6 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 
 // Potato
 static float currentcpuusage0;
-static int currentvoicesint0;
 static int isoverrideenabled = 0;
 
 // Main values

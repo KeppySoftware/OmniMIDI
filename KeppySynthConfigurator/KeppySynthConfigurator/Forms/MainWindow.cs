@@ -315,7 +315,7 @@ namespace KeppySynthConfigurator
             if (_itemDnD == null || Lis.SelectedIndices.Count > 1)
                 return;
 
-            Cursor = Cursors.Hand;
+            Cursor = Cursors.UpArrow;
 
             int lastItemBottom = Math.Min(e.Y, Lis.Items[Lis.Items.Count - 1].GetBounds(ItemBoundsPortion.Entire).Bottom - 1);
 
@@ -470,7 +470,7 @@ namespace KeppySynthConfigurator
                 SoundfontImport.InitialDirectory = LastBrowserPath;
                 SoundfontImport.FileName = "";
                 Functions.OpenFileDialogAddCustomPaths(SoundfontImport);
-                if (SoundfontImport.ShowDialog() == DialogResult.OK)
+                if (SoundfontImport.ShowDialog(this) == DialogResult.OK)
                 {
                     Functions.SetLastPath(Path.GetDirectoryName(SoundfontImport.FileNames[0]));
                     Functions.AddSoundfontsToSelectedList(CurrentList, SoundfontImport.FileNames);
@@ -544,7 +544,7 @@ namespace KeppySynthConfigurator
                     SoundFontInfo frm = new SoundFontInfo(Lis.GetItemAt(e.X, e.Y).Text.ToString());
                     if (!SoundFontInfo.ERROR)
                     {
-                        frm.ShowDialog();
+                        frm.ShowDialog(this);
                     }
                     SoundFontInfo.ERROR = false;
                     SoundFontInfo.Quitting = false;
@@ -669,7 +669,7 @@ namespace KeppySynthConfigurator
             {
                 ExternalListImport.FileName = "";
                 ExternalListImport.InitialDirectory = LastImportExportPath;
-                if (ExternalListImport.ShowDialog() == DialogResult.OK)
+                if (ExternalListImport.ShowDialog(this) == DialogResult.OK)
                 {
                     Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListImport.FileNames[0]));
                     foreach (string file in ExternalListImport.FileNames)
@@ -712,7 +712,7 @@ namespace KeppySynthConfigurator
         {
             ExternalListExport.FileName = "";
             ExternalListExport.InitialDirectory = LastImportExportPath;
-            if (ExternalListExport.ShowDialog() == DialogResult.OK)
+            if (ExternalListExport.ShowDialog(this) == DialogResult.OK)
             {
                 Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListExport.FileNames[0]));
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
@@ -1019,14 +1019,14 @@ namespace KeppySynthConfigurator
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthBlacklistSystem frm = new KeppySynthBlacklistSystem();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InfoDialog frm = new InfoDialog(0);
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
@@ -1034,7 +1034,7 @@ namespace KeppySynthConfigurator
         {
             FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
             ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString());
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
@@ -1047,7 +1047,7 @@ namespace KeppySynthConfigurator
             Version x = null;
             Version.TryParse(newestversion.ToString(), out x);
             ChangelogWindow frm = new ChangelogWindow(x.ToString());
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
@@ -1195,42 +1195,42 @@ namespace KeppySynthConfigurator
         private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthEVBuffer frm = new KeppySynthEVBuffer();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthOutputWAVDir frm = new KeppySynthOutputWAVDir();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void changeDefaultSoundfontListToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthFavouritesManager frm = new KeppySynthFavouritesManager();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
@@ -1828,7 +1828,7 @@ namespace KeppySynthConfigurator
         private void RevbNChor_Click(object sender, EventArgs e)
         {
             RevbNChorForm frm = new RevbNChorForm();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
@@ -1879,28 +1879,28 @@ namespace KeppySynthConfigurator
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
             KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)
         {
             KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void ChangePitchShift_Click(object sender, EventArgs e)
         {
             KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
         private void MaskSynthesizerAsAnother_Click(object sender, EventArgs e)
         {
             MaskSynthAsAnother frm = new MaskSynthAsAnother();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
@@ -2226,7 +2226,7 @@ namespace KeppySynthConfigurator
         private void ChangeUpdateBranch_Click(object sender, EventArgs e)
         {
             SelectBranch frm = new SelectBranch();
-            frm.ShowDialog();
+            frm.ShowDialog(this);
             frm.Dispose();
         }
 
