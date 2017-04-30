@@ -93,6 +93,7 @@
             this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.MonophonicFunc = new System.Windows.Forms.MenuItem();
             this.FadeoutDisable = new System.Windows.Forms.MenuItem();
+            this.SleepStateRCO = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
@@ -230,6 +231,7 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
+            this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -622,6 +624,7 @@
             this.ChangePitchShift,
             this.MonophonicFunc,
             this.FadeoutDisable,
+            this.SleepStateRCO,
             this.menuItem16,
             this.useoldbuffersystem,
             this.slowdownnoskip});
@@ -678,20 +681,26 @@
             this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
             this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
             // 
+            // SleepStateRCO
+            // 
+            this.SleepStateRCO.Index = 5;
+            this.SleepStateRCO.Text = "Disable sleep states from the audio rendering thread";
+            this.SleepStateRCO.Click += new System.EventHandler(this.SleepStateRCO_Click);
+            // 
             // menuItem16
             // 
-            this.menuItem16.Index = 5;
+            this.menuItem16.Index = 6;
             this.menuItem16.Text = "-";
             // 
             // useoldbuffersystem
             // 
-            this.useoldbuffersystem.Index = 6;
+            this.useoldbuffersystem.Index = 7;
             this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
             this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 7;
+            this.slowdownnoskip.Index = 8;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1037,13 +1046,13 @@
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 9;
+            this.SignatureCheck.Index = 10;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 8;
+            this.PanicButton.Index = 9;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
@@ -1067,6 +1076,7 @@
             this.menuItem39,
             this.WinMMPatch32,
             this.WinMMPatch64,
+            this.WinMMPatchRmv,
             this.menuItem15,
             this.PanicButton,
             this.SignatureCheck,
@@ -1123,35 +1133,35 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 7;
+            this.menuItem15.Index = 8;
             this.menuItem15.Text = "-";
             // 
             // menuItem46
             // 
-            this.menuItem46.Index = 10;
+            this.menuItem46.Index = 11;
             this.menuItem46.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 11;
+            this.DeleteUserData.Index = 12;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 12;
+            this.ResetToDefault.Index = 13;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
             // EnableBBS
             // 
-            this.EnableBBS.Index = 13;
+            this.EnableBBS.Index = 14;
             this.EnableBBS.Text = "-";
             this.EnableBBS.Visible = false;
             // 
             // EnableBB
             // 
-            this.EnableBB.Index = 14;
+            this.EnableBB.Index = 15;
             this.EnableBB.Text = "Re-enable Butter Boy";
             this.EnableBB.Visible = false;
             this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
@@ -2032,6 +2042,12 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
+            // WinMMPatchRmv
+            // 
+            this.WinMMPatchRmv.Index = 7;
+            this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
+            this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2273,6 +2289,8 @@
         private System.Windows.Forms.MenuItem menuItem46;
         public System.Windows.Forms.MenuItem EnableBBS;
         public System.Windows.Forms.MenuItem EnableBB;
+        public System.Windows.Forms.MenuItem SleepStateRCO;
+        public System.Windows.Forms.MenuItem WinMMPatchRmv;
     }
 }
 

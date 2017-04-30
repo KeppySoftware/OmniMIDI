@@ -74,7 +74,7 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 
 			if (xaudiodisabled == 1) {
 				BASS_ChannelUpdate(KSStream, 0);
-				Sleep(1);
+				if (rco == 1) Sleep(1);
 				CheckUp(ERRORCODE, L"ChannelUpdate");
 			}
 			else {

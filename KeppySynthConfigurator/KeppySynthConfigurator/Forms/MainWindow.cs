@@ -1511,6 +1511,7 @@ namespace KeppySynthConfigurator
                 ManualAddBuffer.Visible = true;
                 ChangeDefaultOutput.Enabled = true;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
+                SleepStateRCO.Enabled = true;
                 if (VolTrackBar.Value > 10000)
                 {
                     VolTrackBar.Value = 10000;
@@ -1539,6 +1540,7 @@ namespace KeppySynthConfigurator
                 ManualAddBuffer.Visible = false;
                 ChangeDefaultOutput.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
+                SleepStateRCO.Enabled = false;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
@@ -1674,6 +1676,20 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
                 autoupdate.Checked = false;
+            }
+        }
+
+        private void SleepStateRCO_Click(object sender, EventArgs e)
+        {
+            if (SleepStateRCO.Checked == true)
+            {
+                SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
+                SleepStateRCO.Checked = false;
+            }
+            else
+            {
+                SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
+                SleepStateRCO.Checked = true;
             }
         }
 
@@ -2201,6 +2217,11 @@ namespace KeppySynthConfigurator
             Functions.ApplyWinMMPatch(true);
         }
 
+        private void WinMMPatchRmv_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void ResetToDefault_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to reinstall the driver?\n\nThe configurator will download the latest installer, and remove all the old registry keys.\nYou'll lose ALL the settings.", "Keppy's Synthesizer - Reinstall the driver from scratch", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -2290,5 +2311,6 @@ namespace KeppySynthConfigurator
             if (paintReps++ % 500 == 0)
                 Application.DoEvents();
         }
+
     }
 }

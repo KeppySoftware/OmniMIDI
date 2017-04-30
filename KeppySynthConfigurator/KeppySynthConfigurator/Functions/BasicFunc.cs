@@ -741,10 +741,19 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = true;
                 }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Checked = false;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Checked = true;
+                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                     if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vmsemu", 0)) == 1)
@@ -763,6 +772,7 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
                 }
@@ -1474,7 +1484,7 @@ namespace KeppySynthConfigurator
                 Properties.Settings.Default.PatchInfoShow = false;
                 Properties.Settings.Default.Save();
                 MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }            
+            }
 
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             TryAgain:
@@ -1532,6 +1542,50 @@ namespace KeppySynthConfigurator
             {
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
                 goto TryAgain;
+            }
+        }
+
+        public static void RemoveWinMMPatch()
+        {
+            OpenFileDialog WinMMDialog = new OpenFileDialog();
+            try
+            {
+                WinMMDialog.Filter = "Executables (*.exe, *.dll)|*.exe;*.dll;";
+                WinMMDialog.Title = "Select an application to unpatch";
+                WinMMDialog.Multiselect = false;
+                WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (WinMMDialog.ShowDialog() == DialogResult.OK)
+                {
+                    String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
+                    String MMName = "midimap.dll";
+                    String MSACMDrvName = "msacm32.drv";
+                    String MSACMName = "msacm32.dll";
+                    String MSADPName = "msapd32.drv";
+                    String WDMAUDDrvName = "wdmaud.drv";
+                    String WDMAUDName = "wdmaud.sys";
+                    String WinMMName = "winmm.dll";
+                    TryAgain:
+                    try
+                    {
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MMName));
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName));
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MSACMName));
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MSADPName));
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName));
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName));
+                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, WinMMName));
+                    }
+                    catch
+                    {
+                        Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                        goto TryAgain;
+                    }
+                    MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch
+            {
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
             }
         }
     }

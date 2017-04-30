@@ -310,8 +310,6 @@
     <None Include="Resources\List Editor\MvUpIcon.png" />
     <None Include="Resources\List Editor\MvDwIcon.png" />
     <None Include="Resources\List Editor\ImportIcon.png" />
-    <None Include="Resources\WinMM64\winmm8.dll" />
-    <None Include="Resources\WinMM32\winmm8.dll" />
     <None Include="Resources\WinMM64\winmm.dll" />
     <None Include="Resources\WinMM64\msadp32.dll" />
     <None Include="Resources\WinMM64\msacm32.dll" />

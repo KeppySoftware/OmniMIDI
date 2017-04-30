@@ -186,11 +186,6 @@ UINT WINAPI midiOutLongMsg(HMIDIOUT hMidiOut,
 	}
 }
 
-DWORD WINAPI timeGetTime(void)
-{
-	return GetTickCount();
-}
-
 UINT WINAPI timeBeginPeriod(UINT wPeriod)
 {
 	return MMSYSERR_NOERROR;
