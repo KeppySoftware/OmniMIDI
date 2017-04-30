@@ -577,7 +577,6 @@ namespace KeppySynthConfigurator
             try
             {
                 // First, the most important settings
-                MessageBox.Show("hold");
                 KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 1)
@@ -1553,22 +1552,12 @@ namespace KeppySynthConfigurator
                     {
                         if (Is64Bit)
                         {
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp64);
                             File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
                             File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
                         }
                         else
                         {
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
                             File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
                             File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
                         }
                         MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

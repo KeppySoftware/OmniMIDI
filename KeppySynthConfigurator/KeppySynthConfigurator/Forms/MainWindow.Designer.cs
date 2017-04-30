@@ -1782,7 +1782,6 @@
             // 
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
-            this.EL.Image = global::KeppySynthConfigurator.Properties.Resources.ExportIcon;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.EL.Location = new System.Drawing.Point(544, 368);
             this.EL.Name = "EL";
@@ -1798,7 +1797,6 @@
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
-            this.LoadToApp.Image = global::KeppySynthConfigurator.Properties.Resources.ReloadIcon;
             this.LoadToApp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadToApp.Location = new System.Drawing.Point(545, 159);
             this.LoadToApp.Name = "LoadToApp";
@@ -1814,7 +1812,6 @@
             // 
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
-            this.IEL.Image = global::KeppySynthConfigurator.Properties.Resources.ImportIcon;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.IEL.Location = new System.Drawing.Point(544, 339);
             this.IEL.Name = "IEL";
@@ -1870,7 +1867,6 @@
             // 
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
-            this.DisableSF.Image = global::KeppySynthConfigurator.Properties.Resources.DisableIcon;
             this.DisableSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DisableSF.Location = new System.Drawing.Point(545, 222);
             this.DisableSF.Name = "DisableSF";
@@ -1886,7 +1882,6 @@
             // 
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableSF.BackColor = System.Drawing.Color.Transparent;
-            this.EnableSF.Image = global::KeppySynthConfigurator.Properties.Resources.EnableIcon;
             this.EnableSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.EnableSF.Location = new System.Drawing.Point(545, 199);
             this.EnableSF.Name = "EnableSF";
@@ -1915,7 +1910,6 @@
             // 
             this.CLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CLi.BackColor = System.Drawing.Color.Transparent;
-            this.CLi.Image = global::KeppySynthConfigurator.Properties.Resources.ClearIcon;
             this.CLi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CLi.Location = new System.Drawing.Point(545, 7);
             this.CLi.Name = "CLi";
@@ -1931,7 +1925,6 @@
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvD.BackColor = System.Drawing.Color.Transparent;
-            this.MvD.Image = global::KeppySynthConfigurator.Properties.Resources.MvDwIcon;
             this.MvD.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.MvD.Location = new System.Drawing.Point(545, 119);
             this.MvD.Name = "MvD";
@@ -1947,7 +1940,6 @@
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvU.BackColor = System.Drawing.Color.Transparent;
-            this.MvU.Image = global::KeppySynthConfigurator.Properties.Resources.MvUpIcon;
             this.MvU.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.MvU.Location = new System.Drawing.Point(545, 97);
             this.MvU.Name = "MvU";
@@ -1963,7 +1955,6 @@
             // 
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RmvSF.BackColor = System.Drawing.Color.Transparent;
-            this.RmvSF.Image = global::KeppySynthConfigurator.Properties.Resources.RmvSFIcon;
             this.RmvSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.RmvSF.Location = new System.Drawing.Point(545, 58);
             this.RmvSF.Name = "RmvSF";
@@ -1979,7 +1970,6 @@
             // 
             this.AddSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddSF.BackColor = System.Drawing.Color.Transparent;
-            this.AddSF.Image = global::KeppySynthConfigurator.Properties.Resources.AddSFIcon;
             this.AddSF.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddSF.Location = new System.Drawing.Point(545, 36);
             this.AddSF.Name = "AddSF";

@@ -285,86 +285,6 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] midimap32 {
-            get {
-                object obj = ResourceManager.GetObject("midimap32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] midimap64 {
-            get {
-                object obj = ResourceManager.GetObject("midimap64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] msacm32 {
-            get {
-                object obj = ResourceManager.GetObject("msacm32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] msacm32drv {
-            get {
-                object obj = ResourceManager.GetObject("msacm32drv", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] msacm64 {
-            get {
-                object obj = ResourceManager.GetObject("msacm64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] msacm64drv {
-            get {
-                object obj = ResourceManager.GetObject("msacm64drv", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] msadp32 {
-            get {
-                object obj = ResourceManager.GetObject("msadp32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] msadp64 {
-            get {
-                object obj = ResourceManager.GetObject("msadp64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap MvDwIcon {
@@ -507,29 +427,9 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Byte[].
         /// </summary>
-        internal static byte[] wdmaud32 {
-            get {
-                object obj = ResourceManager.GetObject("wdmaud32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
         internal static byte[] wdmaud32drv {
             get {
                 object obj = ResourceManager.GetObject("wdmaud32drv", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] wdmaud64 {
-            get {
-                object obj = ResourceManager.GetObject("wdmaud64", resourceCulture);
                 return ((byte[])(obj));
             }
         }
