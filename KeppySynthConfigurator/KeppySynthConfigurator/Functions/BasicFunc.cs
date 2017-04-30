@@ -1469,11 +1469,13 @@ namespace KeppySynthConfigurator
 
         public static void ApplyWinMMPatch(Boolean Is64Bit)
         {
-            Boolean ForceReactOSPatch = false;
-            if (Control.ModifierKeys == Keys.Shift)
+            if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1) && Properties.Settings.Default.PatchInfoShow == true)
             {
-                ForceReactOSPatch = true;
-            }
+                Properties.Settings.Default.PatchInfoShow = false;
+                Properties.Settings.Default.Save();
+                MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }            
+
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             TryAgain:
             try
@@ -1502,65 +1504,25 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
-                        if (ForceReactOSPatch)
+                        if (Is64Bit)
                         {
-                            if (Is64Bit)
-                            {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp64);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
-                            }
-                            else
-                            {
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
-                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
-                            }
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp64);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
                         }
                         else
                         {
-                            if (Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
-                            {
-                                if (Is64Bit)
-                                {
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap64);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm64drv);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm64);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp64);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud64);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm64);
-                                }
-                                else
-                                {
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
-                                }
-                            }
-                            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8"))
-                            {
-                                if (Is64Bit)
-                                {
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm864);
-                                }
-                                else
-                                {
-                                    File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm832);
-                                }
-                            }
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MMName), Properties.Resources.midimap32);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName), Properties.Resources.msacm32drv);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSACMName), Properties.Resources.msacm32);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, MSADPName), Properties.Resources.msadp32);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud32drv);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName), Properties.Resources.wdmaud32);
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WinMMName), Properties.Resources.winmm32);
                         }
                         MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

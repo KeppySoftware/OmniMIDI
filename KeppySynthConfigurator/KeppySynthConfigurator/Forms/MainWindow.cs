@@ -2193,18 +2193,12 @@ namespace KeppySynthConfigurator
 
         private void WinMMPatch32_Click(object sender, EventArgs e)
         {
-            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8") || Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
-                Functions.ApplyWinMMPatch(false);
-            else
-                MessageBox.Show("The patch is not needed on Windows 7 and older!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Functions.ApplyWinMMPatch(false);
         }
 
         private void WinMMPatch64_Click(object sender, EventArgs e)
         {
-            if (Functions.IsWindows8OrNewer().StartsWith("Windows 8") || Functions.IsWindows8OrNewer().StartsWith("Windows 10"))
-                Functions.ApplyWinMMPatch(true);
-            else
-                MessageBox.Show("The patch is not needed on Windows 7 and older!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            Functions.ApplyWinMMPatch(true);
         }
 
         private void ResetToDefault_Click(object sender, EventArgs e)

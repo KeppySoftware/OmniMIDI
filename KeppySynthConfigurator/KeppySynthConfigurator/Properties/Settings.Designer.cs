@@ -46,5 +46,17 @@ namespace KeppySynthConfigurator.Properties {
                 this["ButterBoy"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PatchInfoShow {
+            get {
+                return ((bool)(this["PatchInfoShow"]));
+            }
+            set {
+                this["PatchInfoShow"] = value;
+            }
+        }
     }
 }
