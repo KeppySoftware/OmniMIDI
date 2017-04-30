@@ -157,7 +157,6 @@ namespace KeppySynthConfigurator
             try
             {
                 // SAS THEME HANDLER   
-                BassNet.Registration("kaleidonkep99@outlook.com", "2X203132524822");
                 Bass.LoadMe();
                 Lis.Columns[0].Tag = 7;
                 Lis.Columns[1].Tag = 1;
@@ -174,6 +173,16 @@ namespace KeppySynthConfigurator
                     EnableBBS.Visible = true;
                 }
 
+                CLi.Image = Properties.Resources.ClearIcon;
+                AddSF.Image = Properties.Resources.AddSFIcon;
+                RmvSF.Image = Properties.Resources.RmvSFIcon;
+                MvU.Image = Properties.Resources.MvUpIcon;
+                MvD.Image = Properties.Resources.MvDwIcon;
+                LoadToApp.Image = Properties.Resources.ReloadIcon;
+                EnableSF.Image = Properties.Resources.EnableIcon;
+                DisableSF.Image = Properties.Resources.DisableIcon;
+                IEL.Image = Properties.Resources.ImportIcon;
+                EL.Image = Properties.Resources.ExportIcon;
                 WhatIsOutput.Image = Properties.Resources.what;
                 WhatIsXAudio.Image = Properties.Resources.what;
                 StatusBuf.Image = Properties.Resources.what;
