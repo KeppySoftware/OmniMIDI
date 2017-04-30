@@ -227,43 +227,10 @@ namespace KeppySynthConfigurator
 
         private void ImportSettings_Click(object sender, EventArgs e)
         {
-            try
+            if (ImportSettingsDialog.ShowDialog() == DialogResult.OK)
             {
-                if (ImportSettingsDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string line = File.ReadLines(ImportSettingsDialog.FileName).Skip(2).Take(1).First();
-
-                    if (line == "; Keppy's Synthesizer Settings File")
-                    {
-                        ProcessStartInfo startInfo = new ProcessStartInfo();
-                        startInfo.FileName = "reg.exe";
-                        startInfo.Arguments = String.Format("import \"{0}\"", ImportSettingsDialog.FileName);
-                        startInfo.RedirectStandardOutput = true;
-                        startInfo.RedirectStandardError = true;
-                        startInfo.UseShellExecute = false;
-                        startInfo.CreateNoWindow = true;
-
-                        Process processTemp = new Process();
-                        processTemp.StartInfo = startInfo;
-                        processTemp.EnableRaisingEvents = true;
-                        processTemp.Start();
-                        processTemp.WaitForExit();
-
-                        Functions.LoadSettings();
-
-                        MessageBox.Show("The settings have been imported from the selected registry file!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid registry file!\n\nThis file doesn't contain valid Keppy's Synthesizer settings!!!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    }
-                }
-            }
-            catch
-            {
-                // Something bad happened hehe
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Application.Exit();
+                Functions.ImportSettings(ImportSettingsDialog.FileName);
+                MessageBox.Show("The settings have been imported from the selected registry file!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -2219,7 +2186,7 @@ namespace KeppySynthConfigurator
 
         private void WinMMPatchRmv_Click(object sender, EventArgs e)
         {
-
+            Functions.RemoveWinMMPatch();
         }
 
         private void ResetToDefault_Click(object sender, EventArgs e)

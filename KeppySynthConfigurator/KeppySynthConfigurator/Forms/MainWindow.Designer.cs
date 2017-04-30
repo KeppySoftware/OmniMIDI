@@ -158,6 +158,7 @@
             this.menuItem39 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
+            this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.menuItem46 = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
@@ -231,7 +232,6 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
-            this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1131,6 +1131,12 @@
             this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
             this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
             // 
+            // WinMMPatchRmv
+            // 
+            this.WinMMPatchRmv.Index = 7;
+            this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
+            this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
+            // 
             // menuItem15
             // 
             this.menuItem15.Index = 8;
@@ -1454,11 +1460,16 @@
             // 
             this.bufsize.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.bufsize.Location = new System.Drawing.Point(552, 54);
+            this.bufsize.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.bufsize.Minimum = new decimal(new int[] {
             1,
             0,
             0,
-            -2147483648});
+            0});
             this.bufsize.Name = "bufsize";
             this.bufsize.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.bufsize.Size = new System.Drawing.Size(64, 20);
@@ -1468,7 +1479,7 @@
             1,
             0,
             0,
-            -2147483648});
+            0});
             this.bufsize.ValueChanged += new System.EventHandler(this.bufsize_ValueChanged);
             this.bufsize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
@@ -2041,12 +2052,6 @@
             // 
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
-            // 
-            // WinMMPatchRmv
-            // 
-            this.WinMMPatchRmv.Index = 7;
-            this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
-            this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
             // 
             // KeppySynthConfiguratorMain
             // 

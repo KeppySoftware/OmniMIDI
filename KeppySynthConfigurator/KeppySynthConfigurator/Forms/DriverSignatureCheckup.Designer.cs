@@ -150,6 +150,7 @@
             this.Driver32Status.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.Driver32Status.TabIndex = 8;
             this.Driver32Status.TabStop = false;
+            this.Driver32Status.Click += new System.EventHandler(this.Driver32Status_Click);
             // 
             // Driver64Status
             // 
@@ -161,6 +162,7 @@
             this.Driver64Status.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.Driver64Status.TabIndex = 9;
             this.Driver64Status.TabStop = false;
+            this.Driver64Status.Click += new System.EventHandler(this.Driver64Status_Click);
             // 
             // ClosePls
             // 

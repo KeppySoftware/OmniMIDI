@@ -35,6 +35,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <string.h>
 #include <string>
 #include <tchar.h>
+#include <time.h>
 #include <vector>
 #include <winbase.h>
 #include <windows.h>

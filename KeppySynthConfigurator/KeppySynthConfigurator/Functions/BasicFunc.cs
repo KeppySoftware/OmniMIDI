@@ -577,7 +577,7 @@ namespace KeppySynthConfigurator
             try
             {
                 // First, the most important settings
-                KeppySynthConfiguratorMain.Delegate.bufsize.Minimum = 1;
+                MessageBox.Show("hold");
                 KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 1)
@@ -1012,13 +1012,48 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static void ImportSettings(String filename)
+        {
+            try
+            {
+                string line = File.ReadLines(filename).Skip(2).Take(1).First();
+
+                if (line == "; Keppy's Synthesizer Settings File")
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = "reg.exe";
+                    startInfo.Arguments = String.Format("import \"{0}\"", filename);
+                    startInfo.RedirectStandardOutput = true;
+                    startInfo.RedirectStandardError = true;
+                    startInfo.UseShellExecute = false;
+                    startInfo.CreateNoWindow = true;
+
+                    Process processTemp = new Process();
+                    processTemp.StartInfo = startInfo;
+                    processTemp.EnableRaisingEvents = true;
+                    processTemp.Start();
+                    processTemp.WaitForExit();
+
+                    Functions.LoadSettings();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid registry file!\n\nThis file doesn't contain valid Keppy's Synthesizer settings!!!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Something bad happened hehe
+                Program.DebugToConsole(true, null, ex);
+                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Application.Exit();
+            }
+        }
+
         public static void ExportSettings(String filename)
         {
             try
             {
-                RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-                RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Windows Registry Editor Version 5.00");
 
@@ -1029,7 +1064,12 @@ namespace KeppySynthConfigurator
                 sb.AppendLine(@"[HKEY_CURRENT_USER\SOFTWARE\Keppy's Synthesizer\Settings]");
                 foreach (var keyname in KeppySynthConfiguratorMain.SynthSettings.GetValueNames())
                 {
-                    sb.AppendLine(String.Format("\"{0}\"={1}:{2}", keyname, SynthSettings.GetValueKind(keyname).ToString().ToLower(), Convert.ToInt32(SynthSettings.GetValue(keyname)).ToString("X")));
+                    if (Regex.IsMatch(KeppySynthConfiguratorMain.SynthSettings.GetValue(keyname).ToString(), @"[a-zA-Z]"))
+                        sb.AppendLine(String.Format("\"{0}\"={1}:{2}", keyname, KeppySynthConfiguratorMain.SynthSettings.GetValueKind(keyname).ToString().ToLower(), KeppySynthConfiguratorMain.SynthSettings.GetValue(keyname)));
+                    else if (Regex.IsMatch(KeppySynthConfiguratorMain.SynthSettings.GetValue(keyname).ToString(), @"\d+"))
+                        sb.AppendLine(String.Format("\"{0}\"={1}:{2}", keyname, KeppySynthConfiguratorMain.SynthSettings.GetValueKind(keyname).ToString().ToLower(), Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue(keyname)).ToString("X")));
+                    else
+                        Program.DebugToConsole(false, String.Format("Unknown value detected on {0}", keyname), null);
                 }
 
                 sb.AppendLine("");
@@ -1037,15 +1077,12 @@ namespace KeppySynthConfigurator
                 sb.AppendLine(@"[HKEY_CURRENT_USER\SOFTWARE\Keppy's Synthesizer\Paths]");
                 foreach (var keyname in KeppySynthConfiguratorMain.SynthPaths.GetValueNames())
                 {
-                    sb.AppendLine(String.Format("\"{0}\"=\"{1}\"", keyname, SynthPaths.GetValue(keyname).ToString()));
+                    sb.AppendLine(String.Format("\"{0}\"=\"{1}\"", keyname, KeppySynthConfiguratorMain.SynthPaths.GetValue(keyname).ToString()));
                 }
 
                 sb.AppendLine(Environment.NewLine);
 
                 File.WriteAllText(filename, sb.ToString());
-
-                SynthSettings.Close();
-                SynthPaths.Close();
 
                 Program.DebugToConsole(false, String.Format("Settings exported to: {0}", filename), null);
             }

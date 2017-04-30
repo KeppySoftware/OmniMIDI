@@ -21,23 +21,9 @@ extern "C" __declspec(dllexport) void CompilerID(char * out, int length)
 	strcpy_s(out, length, shacode.c_str());
 }
 
-extern "C" __declspec(dllexport) LPCSTR KepSays()
+extern "C" __declspec(dllexport) void RavioliRavioli()
 {
-	LPCSTR KepSaidWhat[8] =
-	{
-		"VirtualMIDISynth shall copy me no more.",
-		"I am quite a charming guy.",
-		"I don't like salty people, being salty myself."
-		"H3H3 is an awesome YouTuber.",
-		"H3Y B0SS",
-		"Gingeas is the supreme master.",
-		"Welcome to Windows 95.",
-		"Sexy.",
-	};
-
-	int randomwhat = rand() % 8;
-
-	return KepSaidWhat[randomwhat];
+	MessageBox(NULL, L"Give me the formuoli.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 }
 
 #endif 

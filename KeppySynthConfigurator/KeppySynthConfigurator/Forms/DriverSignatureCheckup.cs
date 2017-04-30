@@ -15,6 +15,9 @@ namespace KeppySynthConfigurator
 {
     public partial class DriverSignatureCheckup : Form
     {
+        [DllImport("keppysynth.dll")]
+        private static extern void RavioliRavioli();
+
         Boolean Is32BitMatch = true;
         Boolean Is64BitMatch = true;
         Boolean IsNewVerAvailable = false;
@@ -197,6 +200,28 @@ namespace KeppySynthConfigurator
             if (!Is32BitMatch || !Is64BitMatch || IsNewVerAvailable)
             {
                 UpdateSystem.CheckForUpdates(false, false);
+            }
+        }
+
+        int click32 = 0;
+        private void Driver32Status_Click(object sender, EventArgs e)
+        {
+            click32++;
+            if (click32 == 50)
+            {
+                RavioliRavioli();
+                click32 = 0;
+            }
+        }
+
+        int click64 = 0;
+        private void Driver64Status_Click(object sender, EventArgs e)
+        {
+            click64++;
+            if (click64 == 50)
+            {
+                RavioliRavioli();
+                click64 = 0;
             }
         }
     }
