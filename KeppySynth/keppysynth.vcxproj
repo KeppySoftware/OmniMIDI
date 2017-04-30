@@ -32,6 +32,7 @@
     <ClInclude Include="sfsystem.h" />
     <ClInclude Include="sha256.h" />
     <ClInclude Include="val.h" />
+    <ClInclude Include="winmmfunc.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

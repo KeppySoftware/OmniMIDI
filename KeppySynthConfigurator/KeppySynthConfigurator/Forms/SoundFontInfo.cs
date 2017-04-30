@@ -213,6 +213,66 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void InitializeBASSMIDIStream()
+        {
+            // Init stream
+            ChangePreviewButtonText("Initializing stream...", false);
+            ChangeWindowTitle("Initializing stream...");
+            hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
+                (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? 0 : BASSFlag.BASS_MIDI_NOFX) |
+                (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? 0 : BASSFlag.BASS_MIDI_NOTEOFF1) |
+                (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? 0 : BASSFlag.BASS_MIDI_SINCINTER) |
+                (KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked ? BASSFlag.BASS_SAMPLE_MONO : 0) |
+                BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+            Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_CPU, (int)(KeppySynthConfiguratorMain.Delegate.MaxCPU.Value / 100));
+            System.Threading.Thread.Sleep(50);
+
+            // Init SoundFont
+            ChangePreviewButtonText("Loading SoundFont...", false);
+            ChangeWindowTitle("Loading SoundFont...");
+            BASS_MIDI_FONTEX[] fonts = new BASS_MIDI_FONTEX[1];
+            List<int> termsList = new List<int>();
+            termsList.Reverse();
+
+            if (OriginalSF.ToLower().IndexOf('=') != -1)
+            {
+                var matches = System.Text.RegularExpressions.Regex.Matches(OriginalSF, "[0-9]+");
+                string sf = OriginalSF.Substring(OriginalSF.LastIndexOf('|') + 1);
+                fonts[0].font = BassMidi.BASS_MIDI_FontInit(sf);
+                fonts[0].spreset = Convert.ToInt32(matches[0].ToString());
+                fonts[0].sbank = Convert.ToInt32(matches[1].ToString());
+                fonts[0].dpreset = Convert.ToInt32(matches[2].ToString());
+                fonts[0].dbank = Convert.ToInt32(matches[3].ToString());
+                BassMidi.BASS_MIDI_FontSetVolume(fonts[0].font, 1.0f);
+                BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
+            }
+            else
+            {
+                fonts[0].font = BassMidi.BASS_MIDI_FontInit(OriginalSF);
+                fonts[0].spreset = -1;
+                fonts[0].sbank = -1;
+                fonts[0].dpreset = -1;
+                fonts[0].dbank = 0;
+                BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
+            }
+
+            BassMidi.BASS_MIDI_StreamLoadSamples(hStream);
+        }
+
+        private void InitializeBASSMODStream()
+        {
+            // Init stream
+            ChangePreviewButtonText("Initializing stream...", false);
+            ChangeWindowTitle("Initializing stream...");
+            hStream = Bass.BASS_MusicLoad(MIDIPreview, 0, 0, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
+                (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? 0 : BASSFlag.BASS_MIDI_NOFX) |
+                (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? 0 : BASSFlag.BASS_MIDI_NOTEOFF1) |
+                (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? 0 : BASSFlag.BASS_MIDI_SINCINTER) |
+                (KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked ? BASSFlag.BASS_SAMPLE_MONO : 0) |
+                BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+            System.Threading.Thread.Sleep(50);
+        }
+
         private void PreviewThread_DoWork(object sender, DoWorkEventArgs e)
         {
             try
@@ -221,6 +281,7 @@ namespace KeppySynthConfigurator
                 ChangePreviewButtonText("Initializing BASS...", false);
                 ChangeWindowTitle("Initializing BASS...");
                 Bass.BASS_StreamFree(hStream);
+                Bass.BASS_MusicFree(hStream);
                 Bass.BASS_Free();
                 Bass.BASS_Init(-1, Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.Frequency.Text), BASSInit.BASS_DEVICE_LATENCY, IntPtr.Zero);
                 BASS_INFO info = Bass.BASS_GetInfo();
@@ -230,48 +291,37 @@ namespace KeppySynthConfigurator
                 Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_MIDI_VOICES, Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value));
                 System.Threading.Thread.Sleep(200);
 
-                // Init stream
-                ChangePreviewButtonText("Initializing stream...", false);
-                ChangeWindowTitle("Initializing stream...");
-                hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
-                    (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? 0 : BASSFlag.BASS_MIDI_NOFX) |
-                    (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? 0 : BASSFlag.BASS_MIDI_NOTEOFF1) |
-                    (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? 0 : BASSFlag.BASS_MIDI_SINCINTER) |
-                    (KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked ? BASSFlag.BASS_SAMPLE_MONO : 0) | 
-                    BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
-                Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_CPU, (int)(KeppySynthConfiguratorMain.Delegate.MaxCPU.Value / 100));
-                System.Threading.Thread.Sleep(50);
-
-                // Init SoundFont
-                ChangePreviewButtonText("Loading SoundFont...", false);
-                ChangeWindowTitle("Loading SoundFont...");
-                BASS_MIDI_FONTEX[] fonts = new BASS_MIDI_FONTEX[1];
-                List<int> termsList = new List<int>();
-                termsList.Reverse();
-
-                if (OriginalSF.ToLower().IndexOf('=') != -1)
+                if (Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".xm" 
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".it"
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".s3m"
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".mod"
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".mtm"
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".umx")
                 {
-                    var matches = System.Text.RegularExpressions.Regex.Matches(OriginalSF, "[0-9]+");
-                    string sf = OriginalSF.Substring(OriginalSF.LastIndexOf('|') + 1);
-                    fonts[0].font = BassMidi.BASS_MIDI_FontInit(sf);
-                    fonts[0].spreset = Convert.ToInt32(matches[0].ToString());
-                    fonts[0].sbank = Convert.ToInt32(matches[1].ToString());
-                    fonts[0].dpreset = Convert.ToInt32(matches[2].ToString());
-                    fonts[0].dbank = Convert.ToInt32(matches[3].ToString());
-                    BassMidi.BASS_MIDI_FontSetVolume(fonts[0].font, 1.0f);
-                    BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
+                    InitializeBASSMODStream();
+                }
+                else if (Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".mid"
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".midi"
+                    || Path.GetExtension(MIDIPreview).ToLowerInvariant() == ".rmi")
+                {
+                    InitializeBASSMIDIStream();
                 }
                 else
                 {
-                    fonts[0].font = BassMidi.BASS_MIDI_FontInit(OriginalSF);
-                    fonts[0].spreset = -1;
-                    fonts[0].sbank = -1;
-                    fonts[0].dpreset = -1;
-                    fonts[0].dbank = 0;
-                    BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
+                    MessageBox.Show("This is not a valid MIDI file.\n\nClick OK to abort.", "Keppy's Synthesizer - Preview error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ChangePreviewButtonText("Play SoundFont preview", true);
+                    ChangeWindowTitle("Information about the SoundFont");
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        StartNormalPrvw1.Enabled = true;
+                        StartNormalPrvw2.Enabled = true;
+                        StartNormalPrvw3.Enabled = true;
+                        StartCustomPrvw.Enabled = true;
+                    });
+                    Bass.BASS_Free();
+                    return;
                 }
 
-                BassMidi.BASS_MIDI_StreamLoadSamples(hStream);
                 int howmanytimes = 1;
 
             RestartStream:
@@ -282,17 +332,6 @@ namespace KeppySynthConfigurator
 
                 while (Bass.BASS_ChannelIsActive(hStream) == BASSActive.BASS_ACTIVE_PLAYING)
                 {
-                    float currentcpuusage0 = 0.0f;
-                    int midivoices = (int)KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value;
-                    Bass.BASS_ChannelGetAttribute(hStream, BASSAttribute.BASS_ATTRIB_CPU, ref currentcpuusage0);
-                    int reduceby = 0;
-                    if (currentcpuusage0 >= 100.0f && currentcpuusage0 < 110.0f) { reduceby = (int)midivoices / 4; }
-                    else if (currentcpuusage0 >= 110.0f && currentcpuusage0 < 120.0f) { reduceby = (int)midivoices / 8; }
-                    else if (currentcpuusage0 >= 120.0f && currentcpuusage0 < 130.0f) { reduceby = (int)midivoices / 16; }
-                    else if (currentcpuusage0 >= 130.0f && currentcpuusage0 < 140.0f) { reduceby = (int)midivoices / 32; }
-                    else if (currentcpuusage0 >= 140.0f && currentcpuusage0 < 150.0f) { reduceby = (int)midivoices / 64; }
-                    else if (currentcpuusage0 >= 150.0f) { reduceby = (int)midivoices / 128; }
-                    Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_VOICES, reduceby);
                     Bass.BASS_ChannelUpdate(hStream, 0);
                     if (!IsPreviewEnabled)
                     {
@@ -321,6 +360,8 @@ namespace KeppySynthConfigurator
                 }
 
                 Bass.BASS_StreamFree(hStream);
+                Bass.BASS_MusicFree(hStream);
+                Bass.BASS_Free();
             }
             catch
             {
@@ -373,6 +414,11 @@ namespace KeppySynthConfigurator
             {
                 LoopYesNo.Checked = false;
             }
+        }
+
+        private void CustomMIDI_FileOk(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }

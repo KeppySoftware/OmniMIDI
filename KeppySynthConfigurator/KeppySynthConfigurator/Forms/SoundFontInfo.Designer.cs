@@ -226,8 +226,9 @@
             // 
             // CustomMIDI
             // 
-            this.CustomMIDI.Filter = "MIDI files|*.mid;*.midi;*.rmi";
+            this.CustomMIDI.Filter = "MIDI files|*.mid;*.midi;*.rmi;*.xm;*.it;*.s3m;*.mod;*.mtm;*.umx;";
             this.CustomMIDI.Title = "Select a MIDI...";
+            this.CustomMIDI.FileOk += new System.ComponentModel.CancelEventHandler(this.CustomMIDI_FileOk);
             // 
             // RightClickMenu
             // 

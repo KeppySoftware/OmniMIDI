@@ -730,7 +730,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
 		try {
-			ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			ParseData(evbpoint, MODM_LONGDATA, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 			break;
 		}
@@ -739,7 +739,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 	case MODM_DATA:
 		try {
-			ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			ParseData(evbpoint, MODM_DATA, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			break;
 		}
 		catch (...) {
@@ -775,3 +775,8 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		break;
 	}
 }
+
+#if defined(_WINMMMODE)
+	// WinMM functions
+	#include "winmmfunc.h"
+#endif
