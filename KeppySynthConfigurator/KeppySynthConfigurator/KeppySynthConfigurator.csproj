@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\Add-ons\DefaultASIOAudioOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Add-ons\DefaultASIOAudioOutput.Designer.cs">
+      <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ChangelogWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -216,6 +222,9 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
+    <EmbeddedResource Include="Forms\Add-ons\DefaultASIOAudioOutput.resx">
+      <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChangelogWindow.resx">
       <DependentUpon>ChangelogWindow.cs</DependentUpon>
     </EmbeddedResource>

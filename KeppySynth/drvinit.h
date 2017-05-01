@@ -72,13 +72,17 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 			}
 			else separatethreadfordata();
 
-			if (xaudiodisabled == 1) {
+			if (xaudiodisabled == 0) {
+				AudioRender();
+			}
+			else if (xaudiodisabled == 1) {
 				BASS_ChannelUpdate(KSStream, 0);
 				if (rco == 1) Sleep(1);
 				CheckUp(ERRORCODE, L"ChannelUpdate");
 			}
 			else {
-				AudioRender();
+				_endthreadex(0);
+				return 0;
 			}
 		}
 		catch (...) {
@@ -89,6 +93,11 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
+}
+
+DWORD CALLBACK ASIOPROC1(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
+{
+	return BASS_ChannelGetData(KSStream, buffer, length);
 }
 
 void InitializeBASS(BASS_INFO info) {
@@ -113,9 +122,36 @@ void InitializeBASS(BASS_INFO info) {
 		PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 	}
 	else {
+		if (xaudiodisabled == 2) {
+			if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD)) {
+				BASS_ASIO_SetRate(frequency);
+				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
+				BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+				BASS_ASIO_Start(frames, 0);
+			}
+			else {
+				CheckUp(ERRORCODE, L"KSInitASIO");
+				xaudiodisabled = 1;
+				PrintToConsole(FOREGROUND_RED, 1, "Working...");
+				BASS_GetInfo(&info);
+				PrintToConsole(FOREGROUND_RED, 1, "Got info about the output device...");
+				if (vmsemu == 1) {
+					BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames); // default buffer size = 'minbuf' + additional buffer size
+				}
+				else {
+					BASS_SetConfig(BASS_CONFIG_BUFFER, 10 + info.minbuf); // default buffer size
+				}
+				KSStream = BASS_MIDI_StreamCreate(16, (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
+				CheckUp(ERRORCODE, L"KSStreamCreateDS");
+				BASS_ChannelPlay(KSStream, false);
+				CheckUp(ERRORCODE, L"ChannelPlayDS");
+				PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
+				return;
+			}
+		}
 		PrintToConsole(FOREGROUND_RED, 1, "Working...");
 		KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
-		CheckUp(ERRORCODE, L"KSStreamCreateXA");
+		CheckUp(ERRORCODE, L"KSStreamCreateXA&ASIO");
 		if (noaudiodevices != 1) {
 			PrintToConsole(FOREGROUND_RED, 1, "XAudio stream enabled.");
 		}

@@ -154,6 +154,8 @@ BOOL load_bassfuncs()
 		TCHAR installpath[MAX_PATH] = { 0 };
 		TCHAR bassencpath[MAX_PATH] = { 0 };
 		TCHAR bassencpathalt[MAX_PATH] = { 0 };
+		TCHAR bassasiopath[MAX_PATH] = { 0 };
+		TCHAR bassasiopathalt[MAX_PATH] = { 0 };
 		TCHAR bassmidipath[MAX_PATH] = { 0 };
 		TCHAR bassmidipathalt[MAX_PATH] = { 0 };
 		TCHAR basspath[MAX_PATH] = { 0 };
@@ -170,6 +172,7 @@ BOOL load_bassfuncs()
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, basspathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassasiopathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassxapathalt);
 
@@ -177,12 +180,14 @@ BOOL load_bassfuncs()
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmidi.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
+		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassasio.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
 		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassxa.dll"));
 #elif defined(_WIN32)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
+		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassasio.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
 		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassxa.dll"));
 #endif
@@ -237,6 +242,23 @@ BOOL load_bassfuncs()
 			lstrcat(bassencpath, L"\\bassenc.dll");
 			if (!(bassenc = LoadLibrary(bassencpath))) {
 				DLLLoadError(bassencpath);
+				exit(0);
+			}
+		}
+
+		// BASSASIO
+		if (PathFileExists(bassasiopathalt)) {
+			if (!(bassasio = LoadLibrary(bassasiopathalt))) {
+				DLLLoadError(bassasiopathalt);
+				exit(0);
+			}
+			isoverrideenabled = 1;
+		}
+		else {
+			lstrcat(bassasiopath, installpath);
+			lstrcat(bassasiopath, L"\\bassasio.dll");
+			if (!(bassasio = LoadLibrary(bassasiopath))) {
+				DLLLoadError(bassasiopath);
 				exit(0);
 			}
 		}
@@ -310,6 +332,16 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_StreamFree);
 		LOADBASSFUNCTION(BASS_GetCPU);
+		LOADBASSASIOFUNCTION(BASS_ASIO_Init);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetVolume);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
+		LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
+		LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
+		LOADBASSASIOFUNCTION(BASS_ASIO_Start);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
+		LOADBASSASIOFUNCTION(BASS_ASIO_Free);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
@@ -374,6 +406,7 @@ void load_settings()
 		RegQueryValueEx(hKey, L"turnnoteoffintonoteon", NULL, &dwType, (LPBYTE)&turnnoteoffintonoteon, &dwSize);
 		RegQueryValueEx(hKey, L"fadeoutdisable", NULL, &dwType, (LPBYTE)&fadeoutdisable, &dwSize);
 		RegQueryValueEx(hKey, L"defaultdev", NULL, &dwType, (LPBYTE)&defaultoutput, &dwSize);
+		RegQueryValueEx(hKey, L"defaultAdev", NULL, &dwType, (LPBYTE)&defaultAoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiindev", NULL, &dwType, (LPBYTE)&defaultmidiindev, &dwSize);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
 		RegQueryValueEx(hKey, L"midiinenabled", NULL, &dwType, (LPBYTE)&midiinenabled, &dwSize);

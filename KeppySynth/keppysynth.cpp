@@ -44,11 +44,13 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSDEF(f) (WINAPI *f)
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSENCDEF(f) (WINAPI *f)	
+#define BASSASIODEF(f) (WINAPI *f)
 #define BASS_VSTDEF(f) (WINAPI *f)
 #define BASSXADEF(f) (WINAPI *f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
+#define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 #define LOADBASSXAFUNCTION(f) *((void**)&f)=GetProcAddress(bassxa,#f)
 #define Between(value, a, b) (value <= b && value >= a)
@@ -59,6 +61,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <bass.h>
 #include <bassmidi.h>
 #include <bassenc.h>
+#include <bassasio.h>
 #include <bass_vst.h>
 #include <bassxa.h>
 
@@ -510,11 +513,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 }
 
-void CALLBACK MidiInProc(DWORD device, double time, const BYTE *buffer, DWORD length, void *user)
-{
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, buffer, length); // forward the data to the MIDI stream
-}
-
 unsigned WINAPI threadfunc(LPVOID lpV){
 	try {
 		if (BannedSystemProcess() == TRUE) {
@@ -564,8 +562,10 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			}
 			if (bass) {
 				ResetSynth(0);
+				BASS_ASIO_Free();
 				BASS_Free();
 				FreeLibrary(bass);
+				FreeLibrary(bassasio);
 				bass = 0;
 			}
 			if (sound_driver) {

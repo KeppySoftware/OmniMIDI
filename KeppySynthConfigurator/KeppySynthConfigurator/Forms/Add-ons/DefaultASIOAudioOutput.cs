@@ -8,37 +8,31 @@ using System.Text;
 using System.Windows.Forms;
 // For device info
 using Un4seen.Bass;
+using Un4seen.BassAsio;
 
 namespace KeppySynthConfigurator
 {
-    public partial class KeppySynthDefaultOutput : Form
+    public partial class DefaultASIOAudioOutput : Form
     {
-        public KeppySynthDefaultOutput()
+        public DefaultASIOAudioOutput()
         {
             InitializeComponent();
         }
 
-        private void KeppySynthDefaultOutput_Load(object sender, EventArgs e)
+        private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
         {
             try
             {
-                int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultdev", 0) - 1;
-                BASS_DEVICEINFO info = new BASS_DEVICEINFO();
-                DevicesList.Items.Add("Default Windows audio output");
-                Bass.BASS_GetDeviceInfo(selecteddeviceprev, info);
-                if (info.ToString() == "")
-                {
-                    DefOut.Text = String.Format("Def. Windows audio output: No devices have been found", info.ToString());
-                }
-                else
-                {
-                    DefOut.Text = String.Format("Def. Windows audio output: {0}", info.ToString());
-                }
-                for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
+                int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultAdev", 0);
+                BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
+                BassAsio.BASS_ASIO_GetDeviceInfo(selecteddeviceprev, info);
+                DefOut.Text = String.Format("Def. ASIO output: {0}", info.ToString());
+                for (int n = 0; BassAsio.BASS_ASIO_GetDeviceInfo(n, info); n++)
                 {
                     DevicesList.Items.Add(info.ToString());
                 }
                 DevicesList.SelectedIndex = selecteddeviceprev;
+                BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
             }
             catch (Exception ex)
             {
@@ -50,13 +44,21 @@ namespace KeppySynthConfigurator
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(DevicesList.SelectedIndex);
+            Functions.SetDefaultADevice(DevicesList.SelectedIndex);
+            BassAsio.BASS_ASIO_Free();
+            BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
         }
 
         private void Quit_Click(object sender, EventArgs e)
         {
+            BassAsio.BASS_ASIO_Free();
             Close();
             Dispose();
+        }
+
+        private void DeviceCP_Click(object sender, EventArgs e)
+        {
+            BassAsio.BASS_ASIO_ControlPanel();
         }
     }
 }

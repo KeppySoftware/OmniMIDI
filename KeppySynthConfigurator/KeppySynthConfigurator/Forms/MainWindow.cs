@@ -1427,8 +1427,8 @@ namespace KeppySynthConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("After checking this, the driver will fall back on using BASS's own audio interface, based on DirectSound, instead of a direct interface with WASAPI, based on XAudio.\n\nUsing DirectSound instead of XAudio could reduce audio hiccups and app freezes on outdated machines, but will also increase the latency by a significant amount.", 
-                "\"XAudio\" and \"DirectSound\"? What are those?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("\"Engines\" are used by the driver to interface with your computer's sound card, and output the audio stream to your speakers/headphones.\n\nXAudio is the fastest of them all, but DirectSound can be used too, if your computer isn't able to achieve low latency, or it's too old for this new engine.\n\nIf you're planning to do heavy professional audio editing, you should pick ASIO, which achieves really low latency, at a cost of a bit more CPU usage.", 
+                "What does engines do?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Frequency_SelectedIndexChanged(object sender, EventArgs e)
@@ -1444,7 +1444,7 @@ namespace KeppySynthConfigurator
 
         private void CheckBuffer()
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio" || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
             {
                 Int32[] valuearray = new Int32[10];
                 Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
@@ -1509,10 +1509,18 @@ namespace KeppySynthConfigurator
             }
             else
             {
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
+                {
+                    Label4.Enabled = true;
+                    SPFRate.Enabled = true;
+                }
+                else
+                {
+                    Label4.Enabled = false;
+                    SPFRate.Enabled = false;
+                }
                 StatusBuf.Visible = true;
                 OutputWAV.Enabled = true;
-                Label4.Enabled = true;
-                SPFRate.Enabled = true;
                 ManualAddBuffer.Visible = false;
                 ChangeDefaultOutput.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
@@ -1870,9 +1878,18 @@ namespace KeppySynthConfigurator
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
-            KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
-            frm.ShowDialog(this);
-            frm.Dispose();
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
+            {
+                DefaultASIOAudioOutput frm = new DefaultASIOAudioOutput();
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
+            else
+            {
+                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)

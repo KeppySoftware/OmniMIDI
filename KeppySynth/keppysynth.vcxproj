@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external_packages\bass.h" />
+    <ClInclude Include="..\external_packages\bassasio.h" />
     <ClInclude Include="..\external_packages\bassenc.h" />
     <ClInclude Include="..\external_packages\bassmidi.h" />
     <ClInclude Include="..\external_packages\audiodefs.h" />
