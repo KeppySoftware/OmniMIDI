@@ -46,12 +46,14 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSASIODEF(f) (WINAPI *f)
 #define BASS_VSTDEF(f) (WINAPI *f)
+#define BASSWASAPIDEF(f) (WINAPI *f)
 #define BASSXADEF(f) (WINAPI *f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
+#define LOADBASSWASAPIFUNCTION(f) *((void**)&f)=GetProcAddress(basswasapi,#f)
 #define LOADBASSXAFUNCTION(f) *((void**)&f)=GetProcAddress(bassxa,#f)
 #define Between(value, a, b) (value <= b && value >= a)
 
@@ -63,6 +65,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <bassenc.h>
 #include <bassasio.h>
 #include <bass_vst.h>
+#include <basswasapi.h>
 #include <bassxa.h>
 
 #define MAX_DRIVERS 256

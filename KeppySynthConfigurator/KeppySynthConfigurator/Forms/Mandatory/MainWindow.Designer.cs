@@ -1230,7 +1230,8 @@
             this.AudioEngBox.Items.AddRange(new object[] {
             "XAudio",
             "DirectSound",
-            "ASIO"});
+            "ASIO",
+            "WASAPI"});
             this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(82, 21);

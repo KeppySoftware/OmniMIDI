@@ -35,12 +35,14 @@ static HINSTANCE hinst = NULL;			//main DLL handle
 static HINSTANCE bass = 0;				// bass handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
 static HINSTANCE bassenc = 0;			// bassenc handle
-static HINSTANCE bassasio = 0;			// bassenc handle
+static HINSTANCE bassasio = 0;			// bassasio handle
 static HINSTANCE bassxa = 0;			// bassxa handle
+static HINSTANCE basswasapi = 0;			// basswasapi handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 
 // Potato
 static float currentcpuusage0;
+static float currentcpuusageE0;
 static int isoverrideenabled = 0;
 
 // Main values
@@ -57,6 +59,7 @@ static int defaultmidiindev = 0;		// MIDI Input device
 static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
 static int defaultoutput = 0;			// Default audio output (DSound)
 static int defaultAoutput = 0;			// Default audio output (ASIO)
+static int defaultWoutput = 0;			// Default audio output (WASAPI)
 static int defaultsflist = 1;			// Default soundfont list
 static int driverprio = 0;				// Process priority
 static int encmode = 0;					// Encoder mode

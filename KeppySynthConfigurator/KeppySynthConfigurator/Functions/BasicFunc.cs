@@ -561,14 +561,14 @@ namespace KeppySynthConfigurator
         }
         // NOT SUPPORTED ON XP
 
-        public static void SetDefaultDevice(int dev)
+        public static void SetDefaultDevice(string engine, int dev)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultdev", dev, RegistryValueKind.DWord);
-        }
-
-        public static void SetDefaultADevice(int dev)
-        {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultAdev", dev, RegistryValueKind.DWord);
+            if (engine == "DirectSound")
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultdev", dev, RegistryValueKind.DWord);
+            else if (engine == "ASIO")
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultAdev", dev, RegistryValueKind.DWord);
+            else if (engine == "WASAPI")
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultWdev", dev, RegistryValueKind.DWord);
         }
 
         public static void SetDefaultMIDIInDevice(int dev)
@@ -783,6 +783,14 @@ namespace KeppySynthConfigurator
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
                 {
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
+                    KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
+                }
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
+                {
+                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;

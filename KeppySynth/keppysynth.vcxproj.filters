@@ -66,6 +66,9 @@
     <ClInclude Include="..\external_packages\bassasio.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\external_packages\basswasapi.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

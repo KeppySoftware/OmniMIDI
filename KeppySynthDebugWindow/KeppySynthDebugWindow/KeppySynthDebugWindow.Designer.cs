@@ -129,6 +129,8 @@
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
             this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
+            this.AERT = new System.Windows.Forms.Label();
+            this.AERTLabel = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
@@ -221,6 +223,8 @@
             // 
             // SynthDbg
             // 
+            this.SynthDbg.Controls.Add(this.AERT);
+            this.SynthDbg.Controls.Add(this.AERTLabel);
             this.SynthDbg.Controls.Add(this.AvV);
             this.SynthDbg.Controls.Add(this.AvVLabel);
             this.SynthDbg.Controls.Add(this.HCountV);
@@ -1143,6 +1147,28 @@
             this.VoiceAverage.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.VoiceAverage.ToolTipTitle = "What does the average mean?";
             // 
+            // AERT
+            // 
+            this.AERT.AutoSize = true;
+            this.AERT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AERT.Location = new System.Drawing.Point(170, 78);
+            this.AERT.Name = "AERT";
+            this.AERT.Size = new System.Drawing.Size(21, 13);
+            this.AERT.TabIndex = 43;
+            this.AERT.Text = "0%";
+            this.AERT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // AERTLabel
+            // 
+            this.AERTLabel.AutoSize = true;
+            this.AERTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AERTLabel.Location = new System.Drawing.Point(2, 78);
+            this.AERTLabel.Name = "AERTLabel";
+            this.AERTLabel.Size = new System.Drawing.Size(169, 13);
+            this.AERTLabel.TabIndex = 42;
+            this.AERTLabel.Text = "Audio engine rendering time:";
+            this.AERTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1266,6 +1292,8 @@
         private System.Windows.Forms.Label AvV;
         private System.Windows.Forms.Label AvVLabel;
         private System.Windows.Forms.ToolTip VoiceAverage;
+        private System.Windows.Forms.Label AERT;
+        private System.Windows.Forms.Label AERTLabel;
     }
 }
 

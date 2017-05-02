@@ -419,7 +419,8 @@ namespace KeppySynthDebugWindow
                 sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
                 sb.AppendLine(String.Format("{0} {1}", AvVLabel.Text, AvV.Text));
                 sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
-                sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
+                if ((int)Settings.GetValue("xaudiodisabled", "0") == 2 || (int)Settings.GetValue("xaudiodisabled", "0") == 3) sb.AppendLine(String.Format("{0} {1}", AERTLabel.Text, AERT.Text));
+                else sb.AppendLine(String.Format("{0} {1}", DDSLabel.Text, DDS.Text));
                 sb.AppendLine(String.Format("{0} {1}", RAMUsageVLabel.Text, RAMUsageV.Text));
                 sb.AppendLine(String.Format("{0} {1}", HCountVLabel.Text, HCountV.Text));
                 sb.AppendLine("======= Channels  information =======");
@@ -588,15 +589,34 @@ namespace KeppySynthDebugWindow
                             }
                             if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 1)
                             {
+                                DDSLabel.Visible = true;
+                                DDS.Visible = true;
+                                AERTLabel.Visible = false;
+                                AERT.Visible = false;
                                 DDSLabel.Enabled = false;
                                 DDS.Enabled = false;
                                 DDS.Text = "Unavailable";
                             }
                             else
                             {
-                                DDSLabel.Enabled = true;
-                                DDS.Enabled = true;
-                                DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
+                                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
+                                {
+                                    DDSLabel.Visible = true;
+                                    DDS.Visible = true;
+                                    AERTLabel.Visible = false;
+                                    AERT.Visible = false;
+                                    DDSLabel.Enabled = true;
+                                    DDS.Enabled = true;
+                                    DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
+                                }
+                                else if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2 || Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 3)
+                                {
+                                    DDSLabel.Visible = false;
+                                    DDS.Visible = false;
+                                    AERTLabel.Visible = true;
+                                    AERT.Visible = true;
+                                    AERT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusageE0", "0").ToString());
+                                }
                             }
                         }
                         else if (Tabs.SelectedIndex == 1)

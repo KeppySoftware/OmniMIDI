@@ -73,22 +73,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\Add-ons\DefaultASIOAudioOutput.cs">
+    <Compile Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Add-ons\DefaultASIOAudioOutput.Designer.cs">
+    <Compile Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.Designer.cs">
+      <DependentUpon>DefaultWASAPIAudioOutput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Audio Outputs\DefaultASIOAudioOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Audio Outputs\DefaultASIOAudioOutput.Designer.cs">
       <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ChangelogWindow.cs">
+    <Compile Include="Forms\Mandatory\ChangelogWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ChangelogWindow.Designer.cs">
+    <Compile Include="Forms\Mandatory\ChangelogWindow.Designer.cs">
       <DependentUpon>ChangelogWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DriverSignatureCheckup.cs">
+    <Compile Include="Forms\Mandatory\DriverSignatureCheckup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DriverSignatureCheckup.Designer.cs">
+    <Compile Include="Forms\Mandatory\DriverSignatureCheckup.Designer.cs">
       <DependentUpon>DriverSignatureCheckup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Add-ons\FavouritesManager.cs">
@@ -97,16 +103,16 @@
     <Compile Include="Forms\Add-ons\FavouritesManager.Designer.cs">
       <DependentUpon>FavouritesManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BlacklistSystem.cs">
+    <Compile Include="Forms\Mandatory\BlacklistSystem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BlacklistSystem.Designer.cs">
+    <Compile Include="Forms\Mandatory\BlacklistSystem.Designer.cs">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainWindow.cs">
+    <Compile Include="Forms\Mandatory\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainWindow.Designer.cs">
+    <Compile Include="Forms\Mandatory\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Add-ons\BankNPresetSel.cs">
@@ -163,10 +169,10 @@
       <DependentUpon>DLEngine.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\OSInfo.cs" />
-    <Compile Include="Forms\SoundFontInfo.cs">
+    <Compile Include="Forms\Mandatory\SoundFontInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SoundFontInfo.Designer.cs">
+    <Compile Include="Forms\Mandatory\SoundFontInfo.Designer.cs">
       <DependentUpon>SoundFontInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Add-ons\ErrorDialog.cs">
@@ -183,10 +189,10 @@
     </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
     <Compile Include="Functions\WatchdogFunc.cs" />
-    <Compile Include="Forms\Add-ons\DefaultAudioOutput.cs">
+    <Compile Include="Forms\Audio Outputs\DefaultAudioOutput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Add-ons\DefaultAudioOutput.Designer.cs">
+    <Compile Include="Forms\Audio Outputs\DefaultAudioOutput.Designer.cs">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Add-ons\VelocityIntervals.cs">
@@ -201,10 +207,10 @@
     <Compile Include="Forms\Add-ons\MaskSynthAsAnother.Designer.cs">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\InfoDialog.cs">
+    <Compile Include="Forms\Mandatory\InfoDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\InfoDialog.Designer.cs">
+    <Compile Include="Forms\Mandatory\InfoDialog.Designer.cs">
       <DependentUpon>InfoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\ListViewEx.cs">
@@ -222,10 +228,13 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
-    <EmbeddedResource Include="Forms\Add-ons\DefaultASIOAudioOutput.resx">
+    <EmbeddedResource Include="Forms\Audio Outputs\DefaultASIOAudioOutput.resx">
       <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ChangelogWindow.resx">
+    <EmbeddedResource Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.resx">
+      <DependentUpon>DefaultWASAPIAudioOutput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Mandatory\ChangelogWindow.resx">
       <DependentUpon>ChangelogWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\FavouritesManager.resx">
@@ -234,13 +243,13 @@
     <EmbeddedResource Include="Forms\Add-ons\RevbNChorForm.resx">
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BlacklistSystem.resx">
+    <EmbeddedResource Include="Forms\Mandatory\BlacklistSystem.resx">
       <DependentUpon>BlacklistSystem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DriverSignatureCheckup.resx">
+    <EmbeddedResource Include="Forms\Mandatory\DriverSignatureCheckup.resx">
       <DependentUpon>DriverSignatureCheckup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainWindow.resx">
+    <EmbeddedResource Include="Forms\Mandatory\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\BankNPresetSel.resx">
@@ -267,10 +276,10 @@
     <EmbeddedResource Include="UpdateSystem\DLEngine.resx">
       <DependentUpon>DLEngine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Add-ons\DefaultAudioOutput.resx">
+    <EmbeddedResource Include="Forms\Audio Outputs\DefaultAudioOutput.resx">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SoundFontInfo.resx">
+    <EmbeddedResource Include="Forms\Mandatory\SoundFontInfo.resx">
       <DependentUpon>SoundFontInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\VelocityIntervals.resx">
@@ -285,7 +294,7 @@
     <EmbeddedResource Include="Forms\Add-ons\MaskSynthAsAnother.resx">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\InfoDialog.resx">
+    <EmbeddedResource Include="Forms\Mandatory\InfoDialog.resx">
       <DependentUpon>InfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

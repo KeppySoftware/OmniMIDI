@@ -50,7 +50,7 @@ namespace KeppySynthConfigurator
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(DevicesList.SelectedIndex);
+            Functions.SetDefaultDevice("DirectSound", DevicesList.SelectedIndex);
         }
 
         private void Quit_Click(object sender, EventArgs e)

@@ -894,7 +894,8 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
             // And then...
@@ -912,7 +913,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 0;
             Frequency.Text = "22050";
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
-            XAudioDisable_CheckedChanged(null, null);
+            AudioEngBox_SelectedIndexChanged(null, null);
             bufsize.Value = 0;
             SPFRate.Value = 100;
             Preload.Checked = true;
@@ -945,7 +946,8 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
             // And then...
@@ -970,7 +972,8 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
             // And then...
@@ -1472,11 +1475,6 @@ namespace KeppySynthConfigurator
 
         private void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            XAudioDisable_CheckedChanged(null, null);
-        }
-
-        private void XAudioDisable_CheckedChanged(object sender, EventArgs e)
-        {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
                 StatusBuf.Visible = false;
@@ -1881,6 +1879,12 @@ namespace KeppySynthConfigurator
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
             {
                 DefaultASIOAudioOutput frm = new DefaultASIOAudioOutput();
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
+            {
+                DefaultWASAPIAudioOutput frm = new DefaultWASAPIAudioOutput();
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
