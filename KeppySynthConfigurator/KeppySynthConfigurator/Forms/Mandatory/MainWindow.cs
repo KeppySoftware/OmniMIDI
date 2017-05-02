@@ -1447,7 +1447,9 @@ namespace KeppySynthConfigurator
 
         private void CheckBuffer()
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio" || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio" 
+                || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO"
+                || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
             {
                 Int32[] valuearray = new Int32[10];
                 Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
@@ -1477,6 +1479,7 @@ namespace KeppySynthConfigurator
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
+                menuItem32.Enabled = true;
                 StatusBuf.Visible = false;
                 OutputWAV.Enabled = false;
                 OutputWAV.Checked = false;
@@ -1509,11 +1512,13 @@ namespace KeppySynthConfigurator
             {
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
                 {
+                    menuItem32.Enabled = true;
                     Label4.Enabled = true;
                     SPFRate.Enabled = true;
                 }
                 else
                 {
+                    menuItem32.Enabled = false;
                     Label4.Enabled = false;
                     SPFRate.Enabled = false;
                 }

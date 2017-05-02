@@ -783,6 +783,7 @@ namespace KeppySynthConfigurator
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
                 {
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
+                    KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
@@ -791,6 +792,7 @@ namespace KeppySynthConfigurator
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
                 {
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
+                    KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
@@ -966,6 +968,11 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "2", RegistryValueKind.DWord);
+                }
+                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
+                {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "3", RegistryValueKind.DWord);
                 }
                 Program.DebugToConsole(false, "Done saving settings.", null);
             }

@@ -2224,7 +2224,6 @@
         private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
         private System.Windows.Forms.ToolTip RecommendedBuffer;
-        private System.Windows.Forms.MenuItem menuItem32;
         public System.Windows.Forms.MenuItem bit8audio;
         public System.Windows.Forms.MenuItem bit16audio;
         private System.Windows.Forms.MenuItem OpenSFMainDirectory;
@@ -2288,6 +2287,7 @@
         public System.Windows.Forms.MenuItem EnableBB;
         public System.Windows.Forms.MenuItem SleepStateRCO;
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
+        public System.Windows.Forms.MenuItem menuItem32;
     }
 }
 
