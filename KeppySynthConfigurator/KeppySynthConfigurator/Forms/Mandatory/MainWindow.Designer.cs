@@ -1256,7 +1256,7 @@
             this.assignSoundfontListToAppToolStripMenuItem.TabIndex = 30;
             this.assignSoundfontListToAppToolStripMenuItem.Text = "Assign SoundFont list to app";
             this.assignSoundfontListToAppToolStripMenuItem.UseVisualStyleBackColor = true;
-            this.assignSoundfontListToAppToolStripMenuItem.Click += new System.EventHandler(this.AddSF_Click);
+            this.assignSoundfontListToAppToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem
             // 

@@ -62,9 +62,9 @@ namespace KeppySynthConfigurator
         private string ReturnDriverAssemblyVersion(String FileVersion, Int32 FilePrivatePart)
         {
             if (FilePrivatePart < 1)
-                return String.Format("{0} (No bugfixes yet)", FileVersion, FilePrivatePart);
+                return String.Format("{0}", FileVersion, FilePrivatePart);
             else
-                return String.Format("{0} (Bugfix {1})", FileVersion, FilePrivatePart);
+                return String.Format("{0} (Patch {1})", FileVersion, FilePrivatePart);
         }
 
         private string ReturnBASSAssemblyVersion(String FileVersion, Int32 FilePrivatePart)

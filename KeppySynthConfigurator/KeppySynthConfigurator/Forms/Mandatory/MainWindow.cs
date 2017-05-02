@@ -861,15 +861,16 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 1000;
             MaxCPU.Value = 75;
             Frequency.Text = "44100";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
             EnableSFX.Checked = false;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
+            bufsize.Value = 20;
+            SPFRate.Value = 100;
+            AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
             // And then...
@@ -886,15 +887,15 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 500;
             MaxCPU.Value = 80;
             Frequency.Text = "44100";
-            bufsize.Value = 10;
-            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = true;
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            bufsize.Value = 20;
+            SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
@@ -972,7 +973,9 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
+            bufsize.Value = 15;
+            SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
