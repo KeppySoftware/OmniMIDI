@@ -105,3 +105,15 @@ static TCHAR * errdesc[48] =
 	L"The channel/file has ended.",																				// Error 45
 	L"The device is busy (eg. in 'exclusive' use by another process).",											// Error 46
 };
+
+static TCHAR * errnameWASAPI[2] =
+{
+	L"BASS_ERROR_WASAPI",
+	L"BASS_ERROR_WASAPI_BUFFER",
+};
+
+static TCHAR * errdescWASAPI[2] =
+{
+	L"WASAPI is unavailable, or its DLL is missing.",
+	L"The buffer is too large. You need a really small buffer value for exclusive mode.",
+};

@@ -44,6 +44,8 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                if ((int)KeppySynthConfiguratorMain.SynthSettings.GetValue("wasapiex", 0) == 1) ExAccess.Checked = true;
+
                 int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultWdev", 0) + 2;
                 BASS_WASAPI_DEVICEINFO info = new BASS_WASAPI_DEVICEINFO();
                 DevicesList.Items.Add("Default Windows audio output");
@@ -70,6 +72,18 @@ namespace KeppySynthConfigurator
         {
             Close();
             Dispose();
+        }
+
+        private void ExAccess_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ExAccess.Checked)
+            {
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("wasapiex", 1);
+            }
+            else
+            {
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("wasapiex", 0);
+            }
         }
     }
 }

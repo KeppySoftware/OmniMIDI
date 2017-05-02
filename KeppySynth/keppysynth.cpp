@@ -137,8 +137,14 @@ void basserr(int error, int mode, TCHAR * codeline) {
 		wcscpy(partA, L"\n\nCode line error: ");
 
 	lstrcat(part1, buffer);
-	lstrcat(part2, errname[error]);
-	lstrcat(part3, errdesc[error - 1]);
+	if (error >= -1 && error <= 47) {
+		lstrcat(part2, errname[error]);
+		lstrcat(part3, errdesc[error]);
+	}
+	else if (error >= 5000 && error <= 5001) {
+		lstrcat(part2, errnameWASAPI[error - 5000]);
+		lstrcat(part3, errdescWASAPI[error - 5000]);
+	}
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
 	lstrcat(part1, part4);

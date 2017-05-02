@@ -83,6 +83,7 @@ static int nofx = 0;					// Enable or disable FXs
 static int noteoff1 = 0;				// Note cut INT
 static int oldbuffermode = 0;			// For old-ass PCs
 static int pitchshift = 127;			// Pitch shift
+static int wasapiex = 0;				// Exclusive access to WASAPI device
 static int preload = 0;					// Soundfont preloading
 static int rco = 0;						// Reduce CPU overhead
 static int shortname = 0;				// Use short name or nah

@@ -28,10 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Quit = new System.Windows.Forms.Button();
             this.DefOut = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.DevicesList = new System.Windows.Forms.ComboBox();
+            this.ExAccess = new System.Windows.Forms.CheckBox();
+            this.WASAPIExInfo = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // Quit
@@ -75,11 +78,30 @@
             this.DevicesList.TabIndex = 4;
             this.DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             // 
+            // ExAccess
+            // 
+            this.ExAccess.AutoSize = true;
+            this.ExAccess.Location = new System.Drawing.Point(15, 68);
+            this.ExAccess.Name = "ExAccess";
+            this.ExAccess.Size = new System.Drawing.Size(192, 17);
+            this.ExAccess.TabIndex = 8;
+            this.ExAccess.Text = "Get exclusive access to the device";
+            this.WASAPIExInfo.SetToolTip(this.ExAccess, "The buffer size will not affect WASAPI, when in exclusive mode.\\nChanging it is u" +
+        "seless.");
+            this.ExAccess.UseVisualStyleBackColor = true;
+            this.ExAccess.CheckedChanged += new System.EventHandler(this.ExAccess_CheckedChanged);
+            // 
+            // WASAPIExInfo
+            // 
+            this.WASAPIExInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.WASAPIExInfo.ToolTipTitle = "About the WASAPI exclusive mode";
+            // 
             // DefaultWASAPIAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 98);
+            this.Controls.Add(this.ExAccess);
             this.Controls.Add(this.Quit);
             this.Controls.Add(this.DefOut);
             this.Controls.Add(this.label1);
@@ -102,5 +124,7 @@
         private System.Windows.Forms.Label DefOut;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox DevicesList;
+        private System.Windows.Forms.CheckBox ExAccess;
+        private System.Windows.Forms.ToolTip WASAPIExInfo;
     }
 }

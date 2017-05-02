@@ -154,6 +154,9 @@ void InitializeBASS(BASS_INFO info) {
 	PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+
+	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
+
 	if (bassoutputfinal != 0) {
 		PrintToConsole(FOREGROUND_RED, 1, "Working...");
 		BASS_GetInfo(&info);
@@ -196,7 +199,7 @@ void InitializeBASS(BASS_INFO info) {
 			}
 		}
 		else if (xaudiodisabled == 3) {
-			if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_EVENT, frames, 0, WASAPIPROC1, NULL)) {
+			if (BASS_WASAPI_Init(defaultWoutput, frequency, 0, (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
 				BASS_WASAPI_Start();
 				CheckUp(ERRORCODE, L"KSInitWASAPI");
 			}

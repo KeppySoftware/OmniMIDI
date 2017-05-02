@@ -1513,19 +1513,20 @@ namespace KeppySynthConfigurator
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
                 {
                     menuItem32.Enabled = true;
+                    ChangeDefaultOutput.Enabled = false;
                     Label4.Enabled = true;
                     SPFRate.Enabled = true;
                 }
                 else
                 {
                     menuItem32.Enabled = false;
+                    ChangeDefaultOutput.Enabled = true;
                     Label4.Enabled = false;
                     SPFRate.Enabled = false;
                 }
                 StatusBuf.Visible = true;
                 OutputWAV.Enabled = true;
                 ManualAddBuffer.Visible = false;
-                ChangeDefaultOutput.Enabled = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 SleepStateRCO.Enabled = false;
                 BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
@@ -1533,6 +1534,7 @@ namespace KeppySynthConfigurator
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;
                 bufsize.Value = 15;
+                CheckBuffer();
             }
         }
 
