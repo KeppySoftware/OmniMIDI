@@ -1430,7 +1430,7 @@ namespace KeppySynthConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("\"Engines\" are used by the driver to interface with your computer's sound card, and output the audio stream to your speakers/headphones.\n\nXAudio is the fastest of them all, but DirectSound can be used too, if your computer isn't able to achieve low latency, or it's too old for this new engine.\n\nIf you're planning to do heavy professional audio editing, you should pick ASIO, which achieves really low latency, at a cost of a bit more CPU usage.", 
+            MessageBox.Show("\"Engines\" are used by the driver to interface with your computer's sound card, and output the audio stream to your speakers/headphones.\n\nXAudio is the fastest of them all, but DirectSound can be used too, if your computer isn't able to achieve low latency, or it's too old for this new engine.\n\nIf you're planning to do heavy professional audio editing, you should pick ASIO, which achieves really low latency, at a cost of a bit more CPU usage.\n\nThere's also WASAPI now, which is able to achieve REALLY low latencies with little CPU usage, but \"Exclusive mode\" is needed to get latencies close to 1ms, which will disallow other apps from outputting audio.", 
                 "What does engines do?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

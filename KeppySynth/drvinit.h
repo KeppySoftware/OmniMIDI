@@ -189,10 +189,10 @@ void InitializeBASS(BASS_INFO info) {
 				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
 				BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 				BASS_ASIO_Start(frames, 0);
-				CheckUp(ERRORCODE, L"KSInitASIO");
+				CheckUpASIO(ERRORCODE, L"KSInitASIO");
 			}
 			else {
-				CheckUp(ERRORCODE, L"KSInitASIO");
+				CheckUpASIO(ERRORCODE, L"KSInitASIO");
 				MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
 				xaudiodisabled = 0;
 				InitializeAudioStream();

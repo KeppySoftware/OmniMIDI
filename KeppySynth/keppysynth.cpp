@@ -145,6 +145,10 @@ void basserr(int error, int mode, TCHAR * codeline) {
 		lstrcat(part2, errnameWASAPI[error - 5000]);
 		lstrcat(part3, errdescWASAPI[error - 5000]);
 	}
+	else if (error >= 5200 && error <= 5202) {
+		lstrcat(part2, errnameWASAPI[error - 5200]);
+		lstrcat(part3, errdescWASAPI[error - 5200]);
+	}
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
 	lstrcat(part1, part4);
@@ -167,6 +171,13 @@ void basserr(int error, int mode, TCHAR * codeline) {
 
 void CheckUp(int mode, TCHAR * codeline) {
 	int error = BASS_ErrorGetCode();
+	if (error != 0) {
+		basserr(error, mode, codeline);
+	}
+}
+
+void CheckUpASIO(int mode, TCHAR * codeline) {
+	int error = BASS_ASIO_ErrorGetCode();
 	if (error != 0) {
 		basserr(error, mode, codeline);
 	}

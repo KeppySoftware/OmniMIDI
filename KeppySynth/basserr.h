@@ -117,3 +117,17 @@ static TCHAR * errdescWASAPI[2] =
 	L"WASAPI is unavailable, or its DLL is missing.",
 	L"The buffer is too large. You need a really small buffer value for exclusive mode.",
 };
+
+static TCHAR * errnameXA[3] =
+{
+	L"BASSXA_ERROR_STREAM",
+	L"BASSXA_ERROR_FRAME",
+	L"BASSXA_ERROR_DELETE",
+};
+
+static TCHAR * errdescXA[3] =
+{
+	L"An error has occurred while opening the XAudio stream.",
+	L"An error has occurred while writing a frame to the XAudio stream.",
+	L"An error has occurred while deleting the XAudio stream.", 
+};

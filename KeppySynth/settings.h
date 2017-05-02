@@ -364,6 +364,7 @@ BOOL load_bassfuncs()
 		LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
 		LOADBASSASIOFUNCTION(BASS_ASIO_Start);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
 		LOADBASSASIOFUNCTION(BASS_ASIO_Free);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Init);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_SetVolume);
@@ -469,6 +470,11 @@ void load_settings()
 		if (lovel < 1) { lovel = 1; }
 		if (hivel > 127) { hivel = 127; }
 
+		if (xaudiodisabled == 2 || xaudiodisabled == 3) {
+			vms2emu = 0;
+			oldbuffermode = 0;
+		}
+
 		RegCloseKey(hKey);
 
 		appname();
@@ -513,9 +519,12 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"fadeoutdisable", NULL, &dwType, (LPBYTE)&fadeoutdisable, &dwSize);
 		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
-		RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
-		if (oldbuffermodetemp != oldbuffermode) {
-			ResetSynth(0);
+		if (xaudiodisabled != 2 || xaudiodisabled != 3) {
+			RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
+			RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
+			if (oldbuffermodetemp != oldbuffermode) {
+				ResetSynth(0);
+			}
 		}
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
@@ -527,7 +536,6 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"hivelign", NULL, &dwType, (LPBYTE)&hivel, &dwSize);
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"volumemon", NULL, &dwType, (LPBYTE)&volumemon, &dwSize);
-		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"allnotesignore", NULL, &dwType, (LPBYTE)&allnotesignore, &dwSize);
 		RegQueryValueEx(hKey, L"potato", NULL, &dwType, (LPBYTE)&potato, &dwSize);

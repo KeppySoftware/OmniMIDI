@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.4.15'
+#define Version '4.1.4.16'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -187,6 +187,9 @@ Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "cpu"; ValueData: "75"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "debugmode"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "defaultsflist"; ValueData: "1"; Flags: uninsdeletekey createvalueifdoesntexist
+Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "defaultdev"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
+Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "defaultAdev"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
+Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "defaultWdev"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "encmode"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "extra8lists"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "firstrun"; ValueData: "1"; Flags: createvalueifdoesntexist uninsdeletekey

@@ -86,7 +86,7 @@
             this.ExAccess.Size = new System.Drawing.Size(192, 17);
             this.ExAccess.TabIndex = 8;
             this.ExAccess.Text = "Get exclusive access to the device";
-            this.WASAPIExInfo.SetToolTip(this.ExAccess, "The buffer size will not affect WASAPI, when in exclusive mode.\\nChanging it is u" +
+            this.WASAPIExInfo.SetToolTip(this.ExAccess, "The buffer size will not affect WASAPI, when in exclusive mode.\r\nChanging it is u" +
         "seless.");
             this.ExAccess.UseVisualStyleBackColor = true;
             this.ExAccess.CheckedChanged += new System.EventHandler(this.ExAccess_CheckedChanged);
