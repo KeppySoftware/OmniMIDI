@@ -755,6 +755,8 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0)
                 {
+                    KeppySynthConfiguratorMain.Delegate.Label6.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
@@ -763,6 +765,8 @@ namespace KeppySynthConfigurator
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
+                    KeppySynthConfiguratorMain.Delegate.Label6.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = true;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = true;
@@ -782,6 +786,8 @@ namespace KeppySynthConfigurator
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
                 {
+                    KeppySynthConfiguratorMain.Delegate.Label6.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
@@ -791,6 +797,8 @@ namespace KeppySynthConfigurator
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
                 {
+                    KeppySynthConfiguratorMain.Delegate.Label6.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;

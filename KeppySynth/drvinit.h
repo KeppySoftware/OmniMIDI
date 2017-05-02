@@ -105,6 +105,17 @@ DWORD CALLBACK WASAPIPROC1(void *buffer, DWORD length, void *user)
 	return BASS_ChannelGetData(KSStream, buffer, length);
 }
 
+void InitializeStreamForExternalEngine(DWORD mixfreq) {
+	PrintToConsole(FOREGROUND_RED, 1, "Working...");
+	KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
+	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
+	if (noaudiodevices != 1) {
+		PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
+	}
+	else {
+		PrintToConsole(FOREGROUND_RED, 1, "Dummy stream enabled.");
+	}
+}
 
 void InitializeAudioStream() {
 	int check;
@@ -149,7 +160,7 @@ RETRY:
 	}
 }
 
-void InitializeBASS(BASS_INFO info) {
+void InitializeBASS() {
 	CheckUp(ERRORCODE, L"BASSInit");
 	PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
@@ -157,7 +168,7 @@ void InitializeBASS(BASS_INFO info) {
 
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
 
-	if (bassoutputfinal != 0) {
+	if (bassoutputfinal != 0 || xaudiodisabled == 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "Working...");
 		BASS_GetInfo(&info);
 		PrintToConsole(FOREGROUND_RED, 1, "Got info about the output device...");
@@ -174,16 +185,13 @@ void InitializeBASS(BASS_INFO info) {
 		PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
 	}
 	else {
-		PrintToConsole(FOREGROUND_RED, 1, "Working...");
-		KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), frequency);
-		CheckUp(ERRORCODE, L"KSStreamCreateDEC");
-		if (noaudiodevices != 1) {
-			PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
+		if (xaudiodisabled == 0) {
+			InitializeAudioStream();
+			InitializeStreamForExternalEngine(frequency);
+			CheckUp(ERRORCODE, L"KSInitXA");
 		}
-		else {
-			PrintToConsole(FOREGROUND_RED, 1, "Dummy stream enabled.");
-		}
-		if (xaudiodisabled == 2) {
+		else if (xaudiodisabled == 2) {
+			InitializeStreamForExternalEngine(frequency);
 			if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD)) {
 				BASS_ASIO_SetRate(frequency);
 				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
@@ -199,7 +207,10 @@ void InitializeBASS(BASS_INFO info) {
 			}
 		}
 		else if (xaudiodisabled == 3) {
-			if (BASS_WASAPI_Init(defaultWoutput, frequency, 0, (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
+			BASS_WASAPI_DEVICEINFO infoW;
+			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+			InitializeStreamForExternalEngine(infoW.mixfreq);
+			if (BASS_WASAPI_Init(defaultWoutput, infoW.mixfreq, 0, (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
 				BASS_WASAPI_Start();
 				CheckUp(ERRORCODE, L"KSInitWASAPI");
 			}

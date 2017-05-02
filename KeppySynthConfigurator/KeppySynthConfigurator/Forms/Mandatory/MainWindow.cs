@@ -1448,7 +1448,7 @@ namespace KeppySynthConfigurator
             CheckBuffer();
         }
 
-        private void CheckBuffer()
+        private Int32 CheckBuffer()
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio" 
                 || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO"
@@ -1470,11 +1470,17 @@ namespace KeppySynthConfigurator
 
                 RecommendedBuffer.SetToolTip(
                     StatusBuf, 
-                    String.Format("It is recommended to set a buffer size with {0}Hz audio is between {1} and {2}.",
+                    String.Format("It is recommended to set a buffer size with {0}Hz audio between {1} and {2}.",
                     Frequency.Text, valuearray[4], valuearray[5]));
 
-                BufferText.Text = String.Format( "Set a buffer length for the driver, from 1 to 100 (Optimal range is between {0} and {1}):", 
-                    valuearray[4], valuearray[5]);
+                BufferText.Text = String.Format( "Set a buffer length for the driver, from {0} to {1} (Optimal range is between {2} and {3}):", 
+                    bufsize.Minimum, bufsize.Maximum, valuearray[4], valuearray[5]);
+
+                return valuearray[4];
+            }
+            else
+            {
+                return 0;
             }
         }
 
@@ -1482,6 +1488,8 @@ namespace KeppySynthConfigurator
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
+                Label6.Enabled = true;
+                Frequency.Enabled = true;
                 menuItem32.Enabled = true;
                 StatusBuf.Visible = false;
                 OutputWAV.Enabled = false;
@@ -1497,10 +1505,10 @@ namespace KeppySynthConfigurator
                     VolTrackBar.Value = 10000;
                 }
                 VolTrackBar.Maximum = 10000;
-                BufferText.Text = "Set a additional buffer length for the driver, from 0 to 1000:";
                 bufsize.Minimum = 0;
                 bufsize.Maximum = 1000;
                 bufsize.Enabled = false;
+                BufferText.Text = String.Format("Set an additional buffer length for the driver, from {0} to {1}:", bufsize.Minimum, bufsize.Maximum);
                 if (ManualAddBuffer.Checked == true)
                 {
                     bufsize.Enabled = true;
@@ -1515,6 +1523,8 @@ namespace KeppySynthConfigurator
             {
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
                 {
+                    Label6.Enabled = true;
+                    Frequency.Enabled = true;
                     menuItem32.Enabled = true;
                     ChangeDefaultOutput.Enabled = false;
                     Label4.Enabled = true;
@@ -1522,6 +1532,16 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
+                    if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
+                    {
+                        Label6.Enabled = false;
+                        Frequency.Enabled = false;
+                    }
+                    else
+                    {
+                        Label6.Enabled = true;
+                        Frequency.Enabled = true;
+                    }
                     menuItem32.Enabled = false;
                     ChangeDefaultOutput.Enabled = true;
                     Label4.Enabled = false;
@@ -1532,12 +1552,11 @@ namespace KeppySynthConfigurator
                 ManualAddBuffer.Visible = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 SleepStateRCO.Enabled = false;
-                BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;
-                bufsize.Value = 15;
-                CheckBuffer();
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text != "WASAPI") bufsize.Value = CheckBuffer();
+                else CheckBuffer();
             }
         }
 

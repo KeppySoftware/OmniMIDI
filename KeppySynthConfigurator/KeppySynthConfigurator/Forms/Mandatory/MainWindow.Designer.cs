@@ -2179,7 +2179,6 @@
         public System.Windows.Forms.NumericUpDown bufsize;
         private System.Windows.Forms.GroupBox SynthSettingsBox;
         public System.Windows.Forms.NumericUpDown MaxCPU;
-        internal System.Windows.Forms.Label Label6;
         public System.Windows.Forms.ComboBox Frequency;
         internal System.Windows.Forms.Label Label5;
         internal System.Windows.Forms.Label Label3;
@@ -2288,6 +2287,7 @@
         public System.Windows.Forms.MenuItem SleepStateRCO;
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
         public System.Windows.Forms.MenuItem menuItem32;
+        public System.Windows.Forms.Label Label6;
     }
 }
 

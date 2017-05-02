@@ -549,9 +549,8 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					com_initialized = TRUE;
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-				InitializeAudioStream();
-				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 1, 0, NULL)) {
-					InitializeBASS(info);
+				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 0, 0, NULL)) {
+					InitializeBASS();
 					InitializeBASSVST();
 					if (encmode == 1) {
 						InitializeBASSEnc();
