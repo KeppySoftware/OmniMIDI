@@ -561,13 +561,13 @@ namespace KeppySynthConfigurator
         }
         // NOT SUPPORTED ON XP
 
-        public static void SetDefaultDevice(string engine, int dev)
+        public static void SetDefaultDevice(int engine, int dev)
         {
-            if (engine == "DirectSound")
+            if (engine == 0)
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultdev", dev, RegistryValueKind.DWord);
-            else if (engine == "ASIO")
+            else if (engine == 1)
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultAdev", dev, RegistryValueKind.DWord);
-            else if (engine == "WASAPI")
+            else if (engine == 2)
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultWdev", dev, RegistryValueKind.DWord);
         }
 

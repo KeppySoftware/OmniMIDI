@@ -23,20 +23,22 @@ namespace KeppySynthConfigurator
         {
             if (info.IsDisabled)
             {
-                if (info.IsInput) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Input device, Disabled"));
+                if (info.IsInput) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Unsupported device, Disabled"));
                 else if (!info.IsInput) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Output device, Disabled"));
+                else if (info.IsLoopback) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Loopback device, Disabled"));
             }
             else if (info.IsEnabled)
             {
-                if (info.IsInput) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Input device, Enabled"));
+                if (info.IsInput) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Unsupported device, Enabled"));
                 else if (!info.IsInput) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Output device, Enabled"));
+                else if (info.IsLoopback) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Loopback device, Enabled"));
             }
-            else if (info.IsUnplugged) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Unplugged"));
-            else DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Unknown"));
+            else if (info.IsUnplugged) DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Unplugged device"));
+            else DevicesList.Items.Add(String.Format("{0} ({1})", info.ToString(), "Unknown device"));
 
             if (n == selecteddeviceprev)
             {
-                DefOut.Text = String.Format("Def. WASAPI audio output: {0}", DevicesList.Items[n - 1].ToString());
+                DefOut.Text = String.Format("Def. WASAPI audio output: {0}", DevicesList.Items[n].ToString());
             }
         }
 
@@ -46,18 +48,17 @@ namespace KeppySynthConfigurator
             {
                 if ((int)KeppySynthConfiguratorMain.SynthSettings.GetValue("wasapiex", 0) == 1) ExAccess.Checked = true;
 
-                int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultWdev", 0) + 2;
+                int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultWdev", 0);
                 BASS_WASAPI_DEVICEINFO info = new BASS_WASAPI_DEVICEINFO();
-                DevicesList.Items.Add("Default Windows audio output");
                 for (int n = 0; BassWasapi.BASS_WASAPI_GetDeviceInfo(n, info); n++)
                 {
                     AddLineToList(info, n, selecteddeviceprev);
                 }
-                DevicesList.SelectedIndex = selecteddeviceprev - 1;
+                DevicesList.SelectedIndex = selecteddeviceprev;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.Message.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.ToString(), "Oh no! Keppy's Synthesizer encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
                 Dispose();
             }
@@ -65,7 +66,7 @@ namespace KeppySynthConfigurator
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice("WASAPI", DevicesList.SelectedIndex - 1);
+            Functions.SetDefaultDevice(2, DevicesList.SelectedIndex);
         }
 
         private void Quit_Click(object sender, EventArgs e)
@@ -84,6 +85,11 @@ namespace KeppySynthConfigurator
             {
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("wasapiex", 0);
             }
+        }
+
+        private void ImConfusedHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("The only devices supported by BASSWASAPI for audio output, are the \"Output\" or \"Loopback\".\n\nSearch for the name of your default Windows audio output, and make sure it's an \"Output\" or \"Loopback\" device.\nIf it is, then select it, and you're ready to go.", "Which one of these devices is the right one?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

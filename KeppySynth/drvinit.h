@@ -105,7 +105,7 @@ DWORD CALLBACK WASAPIPROC1(void *buffer, DWORD length, void *user)
 	return BASS_ChannelGetData(KSStream, buffer, length);
 }
 
-void InitializeStreamForExternalEngine(DWORD mixfreq) {
+void InitializeStreamForExternalEngine(INT32 mixfreq) {
 	PrintToConsole(FOREGROUND_RED, 1, "Working...");
 	KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
@@ -122,14 +122,12 @@ void InitializeAudioStream() {
 RETRY:
 	if (xaudiodisabled == 1) {
 		bassoutputfinal = (defaultoutput - 1);
-		if (defaultoutput == 0) {
-			check = 1;
-		}
-		else {
-			check = bassoutputfinal;
-		}
+		if (defaultoutput == 0) check = 1;
+		else check = bassoutputfinal;
+
 		BASS_DEVICEINFO dinfo;
 		BASS_GetDeviceInfo(check, &dinfo);
+
 		if (dinfo.name == NULL || defaultoutput == 1) {
 			bassoutputfinal = 0;
 			noaudiodevices = 1;
@@ -160,15 +158,18 @@ RETRY:
 	}
 }
 
-void InitializeBASS() {
-	CheckUp(ERRORCODE, L"BASSInit");
-	PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");
-	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-
+bool InitializeBASS() {
+	bool init = false;
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
 
-	if (bassoutputfinal != 0 || xaudiodisabled == 1) {
+	if (xaudiodisabled == 1) {
+		InitializeAudioStream();
+		init = BASS_Init(bassoutputfinal, frequency, BASS_DEVICE_LATENCY, 0, NULL);
+		CheckUp(ERRORCODE, L"BASSInit");
+		PrintToConsole(FOREGROUND_RED, 1, "BASS initialized.");
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+
 		PrintToConsole(FOREGROUND_RED, 1, "Working...");
 		BASS_GetInfo(&info);
 		PrintToConsole(FOREGROUND_RED, 1, "Got info about the output device...");
@@ -183,51 +184,68 @@ void InitializeBASS() {
 		BASS_ChannelPlay(KSStream, false);
 		CheckUp(ERRORCODE, L"ChannelPlayDS");
 		PrintToConsole(FOREGROUND_RED, 1, "DirectSound stream enabled and running.");
+		return init;
 	}
-	else {
-		if (xaudiodisabled == 0) {
+	else if (xaudiodisabled == 0) {
+		bassoutputfinal = 0;
+		init = BASS_Init(0, frequency, 0, 0, NULL);
+		CheckUp(ERRORCODE, L"BASSInit");
+		InitializeAudioStream();
+		InitializeStreamForExternalEngine(frequency);
+		CheckUp(ERRORCODE, L"KSInitXA");
+	}
+	else if (xaudiodisabled == 2) {
+		bassoutputfinal = 0;
+		init = BASS_Init(0, frequency, 0, 0, NULL);
+		CheckUp(ERRORCODE, L"BASSInit");
+		InitializeStreamForExternalEngine(frequency);
+		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD)) {
+			BASS_ASIO_SetRate(frequency);
+			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
+			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+			BASS_ASIO_Start(frames, 0);
+			CheckUpASIO(ERRORCODE, L"KSInitASIO");
+		}
+		else {
+			CheckUpASIO(ERRORCODE, L"KSInitASIO");
+			MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+			xaudiodisabled = 0;
+			InitializeAudioStream();
+		}
+	}
+	else if (xaudiodisabled == 3) {
+		BASS_WASAPI_DEVICEINFO infoW;
+
+		BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+		PrintToConsole(FOREGROUND_RED, defaultWoutput, "WASAPI driver number");
+		PrintToConsole(FOREGROUND_RED, infoW.mixfreq, "WASAPI driver frequency");
+
+		// Init the device first
+		init = BASS_Init(0, frequency, 0, 0, NULL);
+		CheckUp(ERRORCODE, L"BASSInit");
+
+		InitializeStreamForExternalEngine(infoW.mixfreq);
+
+		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
+			BASS_WASAPI_Start();
+			CheckUp(ERRORCODE, L"KSInitWASAPI");
+		}
+		else {
+			MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+			xaudiodisabled = 0;
 			InitializeAudioStream();
 			InitializeStreamForExternalEngine(frequency);
 			CheckUp(ERRORCODE, L"KSInitXA");
 		}
-		else if (xaudiodisabled == 2) {
-			InitializeStreamForExternalEngine(frequency);
-			if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD)) {
-				BASS_ASIO_SetRate(frequency);
-				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
-				BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-				BASS_ASIO_Start(frames, 0);
-				CheckUpASIO(ERRORCODE, L"KSInitASIO");
-			}
-			else {
-				CheckUpASIO(ERRORCODE, L"KSInitASIO");
-				MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
-				xaudiodisabled = 0;
-				InitializeAudioStream();
-			}
-		}
-		else if (xaudiodisabled == 3) {
-			BASS_WASAPI_DEVICEINFO infoW;
-			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
-			InitializeStreamForExternalEngine(infoW.mixfreq);
-			if (BASS_WASAPI_Init(defaultWoutput, infoW.mixfreq, 0, (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
-				BASS_WASAPI_Start();
-				CheckUp(ERRORCODE, L"KSInitWASAPI");
-			}
-			else {
-				CheckUp(ERRORCODE, L"KSInitWASAPI");
-				MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
-				xaudiodisabled = 0;
-				InitializeAudioStream();
-			}
-		}
 	}
 	if (!KSStream) {
+		BASS_ASIO_Free();
+		BASS_WASAPI_Free();
 		BASS_StreamFree(KSStream);
 		CheckUp(ERRORCODE, L"StreamFree");
 		KSStream = 0;
 		PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
-		return;
+		return false;
 	}
 	else {
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
@@ -235,7 +253,7 @@ void InitializeBASS() {
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 		CheckUp(ERRORCODE, L"Attributes");
 	}
-	return;
+	return init;
 }
 
 void InitializeBASSVST() {

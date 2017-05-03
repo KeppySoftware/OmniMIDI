@@ -120,6 +120,30 @@ static unsigned int thrdaddr4;
 #include "basserr.h"
 #include "val.h"
 
+void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
+	if (debugmode == 1) {
+		// Set color
+		SetConsoleTextAttribute(hConsole, color);
+
+		// Get time
+		char buff[20];
+		struct tm *sTm;
+		time_t now = time(0);
+		sTm = gmtime(&now);
+		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+
+		// Get error
+		char errorC[MAX_PATH];
+		char descC[MAX_PATH];
+		wcstombs(errorC, error, wcslen(error) + 1);
+		wcstombs(descC, desc, wcslen(desc) + 1);
+		std::cout << std::endl;
+		std::cout << std::endl << buff << " - Keppy's Synthesizer encountered the following error: " << errorC;
+		std::cout << std::endl << buff << " - Description: " << descC;
+		std::cout << std::endl;
+	}
+}
+
 void basserr(int error, int mode, TCHAR * codeline) {
 	TCHAR buffer[MAX_PATH];
 	wsprintfW(buffer, L"%d", error);
@@ -138,16 +162,20 @@ void basserr(int error, int mode, TCHAR * codeline) {
 
 	lstrcat(part1, buffer);
 	if (error >= -1 && error <= 47) {
+		std::wstring s = errdesc[error];
 		lstrcat(part2, errname[error]);
 		lstrcat(part3, errdesc[error]);
+		basserrconsole(FOREGROUND_RED, errname[error], errdesc[error]);
 	}
 	else if (error >= 5000 && error <= 5001) {
 		lstrcat(part2, errnameWASAPI[error - 5000]);
 		lstrcat(part3, errdescWASAPI[error - 5000]);
+		basserrconsole(FOREGROUND_RED, errdescWASAPI[error], errdescWASAPI[error]);
 	}
 	else if (error >= 5200 && error <= 5202) {
-		lstrcat(part2, errnameWASAPI[error - 5200]);
-		lstrcat(part3, errdescWASAPI[error - 5200]);
+		lstrcat(part2, errnameXA[error - 5200]);
+		lstrcat(part3, errdescXA[error - 5200]);
+		basserrconsole(FOREGROUND_RED, errdescXA[error], errdescXA[error]);
 	}
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
@@ -286,15 +314,35 @@ char* StatusType(int status) {
 
 void PrintToConsole(int color, int stage, const char* text) {
 	if (debugmode == 1) {
+		// Set color
 		SetConsoleTextAttribute(hConsole, color);
-		std::cout << std::endl << "(" << stage << ") - " << text;
+
+		// Get time
+		char buff[20];
+		struct tm *sTm;
+		time_t now = time(0);
+		sTm = gmtime(&now);
+		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+
+		// Print to log
+		std::cout << std::endl << buff << " - (" << stage << ") - " << text;
 	}
 }
 
 void PrintEventToConsole(int color, int stage, const char* text, int status, int note, int velocity) {
 	if (debugmode == 1) {
+		// Set color
 		SetConsoleTextAttribute(hConsole, color);
-		std::cout << std::endl << "(" << stage << ") - " << text << " ~ Type = " << StatusType(status) << " | Note = " << note << " | Velocity = " << velocity;
+
+		// Get time
+		char buff[20];
+		struct tm *sTm;
+		time_t now = time(0);
+		sTm = gmtime(&now);
+		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+
+		// Print to log
+		std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = " << StatusType(status) << " | Note = " << note << " | Velocity = " << velocity;
 	}
 }
 
@@ -549,8 +597,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 					com_initialized = TRUE;
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-				if (BASS_Init(bassoutputfinal, frequency, xaudiodisabled ? BASS_DEVICE_LATENCY : 0, 0, NULL)) {
-					InitializeBASS();
+				if (InitializeBASS()) {
 					InitializeBASSVST();
 					if (encmode == 1) {
 						InitializeBASSEnc();

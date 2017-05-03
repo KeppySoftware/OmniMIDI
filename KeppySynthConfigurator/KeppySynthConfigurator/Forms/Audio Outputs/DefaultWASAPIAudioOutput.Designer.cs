@@ -35,6 +35,7 @@
             this.DevicesList = new System.Windows.Forms.ComboBox();
             this.ExAccess = new System.Windows.Forms.CheckBox();
             this.WASAPIExInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.ImConfusedHelp = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // Quit
@@ -96,11 +97,24 @@
             this.WASAPIExInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.WASAPIExInfo.ToolTipTitle = "About the WASAPI exclusive mode";
             // 
+            // ImConfusedHelp
+            // 
+            this.ImConfusedHelp.AutoSize = true;
+            this.ImConfusedHelp.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ImConfusedHelp.Location = new System.Drawing.Point(255, 69);
+            this.ImConfusedHelp.Name = "ImConfusedHelp";
+            this.ImConfusedHelp.Size = new System.Drawing.Size(218, 13);
+            this.ImConfusedHelp.TabIndex = 9;
+            this.ImConfusedHelp.TabStop = true;
+            this.ImConfusedHelp.Text = "Which one of these devices is the right one?";
+            this.ImConfusedHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ImConfusedHelp_LinkClicked);
+            // 
             // DefaultWASAPIAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 98);
+            this.Controls.Add(this.ImConfusedHelp);
             this.Controls.Add(this.ExAccess);
             this.Controls.Add(this.Quit);
             this.Controls.Add(this.DefOut);
@@ -126,5 +140,6 @@
         private System.Windows.Forms.ComboBox DevicesList;
         private System.Windows.Forms.CheckBox ExAccess;
         private System.Windows.Forms.ToolTip WASAPIExInfo;
+        private System.Windows.Forms.LinkLabel ImConfusedHelp;
     }
 }
