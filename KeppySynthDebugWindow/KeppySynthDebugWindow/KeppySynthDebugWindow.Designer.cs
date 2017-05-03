@@ -181,7 +181,7 @@
             // 
             this.CopyToClipboard.Index = 4;
             this.CopyToClipboard.Text = "Copy info from all tabs to clipboard";
-            this.CopyToClipboard.Click += new System.EventHandler(this.CopyToClipboard_Click);
+            this.CopyToClipboard.Click += new System.EventHandler(this.CopyToClip_Click);
             // 
             // menuItem1
             // 

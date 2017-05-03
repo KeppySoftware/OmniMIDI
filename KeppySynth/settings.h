@@ -358,12 +358,14 @@ BOOL load_bassfuncs()
 		LOADBASSASIOFUNCTION(BASS_ASIO_Init);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
 		LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
 		LOADBASSASIOFUNCTION(BASS_ASIO_Start);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
+		LOADBASSASIOFUNCTION(BASS_ASIO_Stop);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
 		LOADBASSASIOFUNCTION(BASS_ASIO_Free);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Init);
@@ -374,6 +376,8 @@ BOOL load_bassfuncs()
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Free);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetDeviceInfo);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetDevice);
+		LOADBASSWASAPIFUNCTION(BASS_WASAPI_PutData);
+		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetLevelEx);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
@@ -666,25 +670,42 @@ void WatchdogCheck()
 }
 
 void CheckVolume() {
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	DWORD left, right;
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 	if (volumemon == 1) {
+		HKEY hKey;
+		long lResult;
+		float levels[2];
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		DWORD left, right;
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		if (xaudiodisabled == 1)
 		{
-			float levels[2];
 			BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
 			left = LOWORD(level); // the left level
 			right = HIWORD(level); // the right level
-			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
-			RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
 		}
+		else if (xaudiodisabled == 2)
+		{
+			float levels[2];
+			levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
+			levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
+			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
+			left = LOWORD(level); // the left level
+			right = HIWORD(level); // the right level
+		}
+		else if (xaudiodisabled == 3)
+		{
+			float levels[2];
+			BASS_WASAPI_GetLevelEx(levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
+			left = LOWORD(level); // the left level
+			right = HIWORD(level); // the right level
+		}
+		RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
+		RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+		RegCloseKey(hKey);
 	}
-	RegCloseKey(hKey);
 }
 
 void debug_info() {

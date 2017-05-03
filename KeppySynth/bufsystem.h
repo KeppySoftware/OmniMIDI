@@ -160,7 +160,7 @@ void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 	CheckUp(ERRORCODE, L"GetDataFromStream");
-	if (!encmode) {
+	if (encmode == 0 && xaudiodisabled == 0) {
 		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
 			sndbf[i] *= sound_out_volume_float;
 		}

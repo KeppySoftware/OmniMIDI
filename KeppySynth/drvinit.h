@@ -199,7 +199,7 @@ bool InitializeBASS() {
 		init = BASS_Init(0, frequency, 0, 0, NULL);
 		CheckUp(ERRORCODE, L"BASSInit");
 		InitializeStreamForExternalEngine(frequency);
-		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD)) {
+		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			BASS_ASIO_SetRate(frequency);
 			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
 			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
@@ -226,7 +226,7 @@ bool InitializeBASS() {
 
 		InitializeStreamForExternalEngine(infoW.mixfreq);
 
-		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
+		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 		}

@@ -352,7 +352,6 @@ namespace KeppySynthMixerWindow
 
         private void VolumeToolTip(string channel, TrackBar trackbar)
         {
-            int percentage;
             VolumeTip.SetToolTip(trackbar, String.Format("{0}: {1}%", channel, trackbar.Value));
         }
 
@@ -503,7 +502,7 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) != 1)
+                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 0)
                 {
                     if (VUStatus != false)
                     {
