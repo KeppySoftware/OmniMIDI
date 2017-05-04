@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,7 @@ namespace KeppySynthConfigurator
                     DevicesList.Items.Add(info.ToString());
                 }
                 DevicesList.SelectedIndex = selecteddeviceprev;
+                MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
                 BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
             }
             catch (Exception ex)
@@ -59,6 +61,11 @@ namespace KeppySynthConfigurator
         private void DeviceCP_Click(object sender, EventArgs e)
         {
             BassAsio.BASS_ASIO_ControlPanel();
+        }
+
+        private void ASIODevicesSupport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/KaleidonKep99/Keppy-s-Synthesizer#asio-support-details");
         }
     }
 }

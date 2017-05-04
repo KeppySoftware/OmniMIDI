@@ -146,8 +146,8 @@ void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
 
 void basserr(int error, int mode, TCHAR * codeline) {
 	TCHAR buffer[MAX_PATH];
+	int e = error + 1;
 	wsprintfW(buffer, L"%d", error);
-	error++;
 	TCHAR part1[MAX_PATH] = L"BASS encountered the error number ";
 	TCHAR part2[MAX_PATH] = L": \"";
 	TCHAR part3[MAX_PATH] = L"\"\n\nExplanation: ";
@@ -156,26 +156,25 @@ void basserr(int error, int mode, TCHAR * codeline) {
 	TCHAR partA[MAX_PATH];
 
 	if (mode == 1)
-		wcscpy(partA, L"\n\nWhat might have caused this error:\n\n");
+		lstrcat(partA, L"\n\nWhat might have caused this error:\n\n");
 	else
-		wcscpy(partA, L"\n\nCode line error: ");
+		lstrcat(partA, L"\n\nCode line error: ");
 
 	lstrcat(part1, buffer);
-	if (error >= -1 && error <= 47) {
-		std::wstring s = errdesc[error];
-		lstrcat(part2, errname[error]);
-		lstrcat(part3, errdesc[error]);
-		basserrconsole(FOREGROUND_RED, errname[error], errdesc[error]);
+	if (e >= 0 && e <= 47) {
+		lstrcat(part2, basserrc[e]);
+		lstrcat(part3, basserrc[e + 47]);
+		basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 47]);
 	}
-	else if (error >= 5000 && error <= 5001) {
-		lstrcat(part2, errnameWASAPI[error - 5000]);
-		lstrcat(part3, errdescWASAPI[error - 5000]);
-		basserrconsole(FOREGROUND_RED, errdescWASAPI[error], errdescWASAPI[error]);
+	else if (e >= 5000 && e <= 5001) {
+		lstrcat(part2, basswasapierrc[e - 5000]);
+		lstrcat(part3, basswasapierrc[e - 5000 + 2]);
+		basserrconsole(FOREGROUND_RED, basswasapierrc[e], basswasapierrc[e - 5000 + 2]);
 	}
-	else if (error >= 5200 && error <= 5202) {
-		lstrcat(part2, errnameXA[error - 5200]);
-		lstrcat(part3, errdescXA[error - 5200]);
-		basserrconsole(FOREGROUND_RED, errdescXA[error], errdescXA[error]);
+	else if (e >= 5200 && e <= 5202) {
+		lstrcat(part2, bassxaerrc[e - 5200]);
+		lstrcat(part3, bassxaerrc[e - 5200 + 3]);
+		basserrconsole(FOREGROUND_RED, bassxaerrc[e - 5200], bassxaerrc[e - 5200 + 3]);
 	}
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
@@ -185,15 +184,67 @@ void basserr(int error, int mode, TCHAR * codeline) {
 	}
 	lstrcat(part1, partA);
 	lstrcat(part1, codeline);
-	MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
 
-	if (error == -1 || 
-		error >= 2 && error <= 10 || 
-		error == 19 ||
-		error >= 24 && error <= 26 ||
-		error == 44)
+	const int result = MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+	switch (result)
 	{
-		exit(error);
+	case IDOK:
+		if (e == -1 ||
+			e >= 2 && e <= 10 ||
+			e == 19 ||
+			e >= 24 && e <= 26 ||
+			e == 44)
+		{
+			exit(error);
+		}
+		break;
+	}
+}
+
+void bassasioerr(int error, int mode, TCHAR * codeline) {
+	TCHAR buffer[MAX_PATH];
+	int e = error + 1;
+	wsprintfW(buffer, L"%d", error);
+	TCHAR part1[MAX_PATH] = L"BASS encountered the error number ";
+	TCHAR part2[MAX_PATH] = L": \"";
+	TCHAR part3[MAX_PATH] = L"\"\n\nExplanation: ";
+	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
+	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
+	TCHAR partA[MAX_PATH];
+	TCHAR partW[MAX_PATH] = L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.";
+
+	if (mode == 1)
+		wcscpy(partA, L"\n\nWhat might have caused this error:\n\n");
+	else
+		wcscpy(partA, L"\n\nCode line error: ");
+
+	lstrcat(part1, buffer);
+	lstrcat(part2, basserrc[e]);
+	lstrcat(part3, basserrc[e + 47]);
+	basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 47]);
+	lstrcat(part1, part2);
+	lstrcat(part1, part3);
+	lstrcat(part1, part4);
+	if (isoverrideenabled == 1) {
+		lstrcat(part1, partE);
+	}
+	lstrcat(part1, partA);
+	lstrcat(part1, codeline);
+	lstrcat(part1, partW);
+
+	const int result = MessageBox(NULL, part1, L"Keppy's Synthesizer - BASSASIO execution error", MB_OK | MB_ICONERROR);
+	switch (result)
+	{
+	case IDOK:
+		if (e == 0 ||
+			e >= 2 && e <= 10 ||
+			e == 19 ||
+			e >= 24 && e <= 26 ||
+			e == 44)
+		{
+			exit(error);
+		}
+		break;
 	}
 }
 
@@ -207,7 +258,7 @@ void CheckUp(int mode, TCHAR * codeline) {
 void CheckUpASIO(int mode, TCHAR * codeline) {
 	int error = BASS_ASIO_ErrorGetCode();
 	if (error != 0) {
-		basserr(error, mode, codeline);
+		bassasioerr(error, mode, codeline);
 	}
 }
 
@@ -614,36 +665,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 				CheckVolume();
 			}
 			stop_rtthread = 0;
-			if (KSStream)
-			{
-				ResetSynth(0);
-				BASS_StreamFree(KSStream);
-				BASS_WASAPI_Stop(true);
-				BASS_ASIO_Stop();
-				KSStream = 0;
-			}
-			if (bassmidi) {
-				ResetSynth(0);
-				FreeFonts(0);
-				FreeLibrary(bassmidi);
-				bassmidi = 0;
-			}
-			if (bass) {
-				ResetSynth(0);
-				BASS_ASIO_Free();
-				BASS_Free();
-				FreeLibrary(bass);
-				FreeLibrary(bassasio);
-				bass = 0;
-			}
-			if (sound_driver) {
-				ResetSynth(0);
-				BASSXA_TerminateAudioStream(sound_driver);
-			}
-			if (com_initialized) {
-				CoUninitialize();
-				com_initialized = FALSE;
-			}
+			FreeUpLibraries();
 			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
 			_endthreadex(0);
 			return 0;

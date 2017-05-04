@@ -8,6 +8,8 @@ unsigned WINAPI notescatcher(LPVOID lpV) {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 		while (stop_thread == 0) {
 			bmsyn_play_some_data();
+			if (capframerate == 1) Sleep(16);
+			else Sleep(1);
 			if (oldbuffermode == 1)
 				break;
 		}
@@ -65,6 +67,8 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 			if (oldbuffermode == 1) {
 				hThread4 = NULL;
 				bmsyn_play_some_data();
+				if (capframerate == 1) Sleep(16);
+				else Sleep(1);
 			}
 			else separatethreadfordata();
 
@@ -93,16 +97,12 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 
 DWORD CALLBACK ASIOPROC1(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
-	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
-	if (data < 0) return 0;
-	else return data;
+	return BASS_ChannelGetData(KSStream, buffer, length);
 }
 
 DWORD CALLBACK WASAPIPROC1(void *buffer, DWORD length, void *user)
 {
-	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
-	if (data < 0) return 0;
-	else return data;
+	return BASS_ChannelGetData(KSStream, buffer, length);
 }
 
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
@@ -158,6 +158,12 @@ RETRY:
 	}
 }
 
+int GetNumberOfCores() {
+	SYSTEM_INFO sysinfo;
+	GetSystemInfo(&sysinfo);
+	return sysinfo.dwNumberOfProcessors;
+}
+
 bool InitializeBASS() {
 	bool init = false;
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
@@ -200,15 +206,21 @@ bool InitializeBASS() {
 		CheckUp(ERRORCODE, L"BASSInit");
 		InitializeStreamForExternalEngine(frequency);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+			BASS_ASIO_SetDSD(true);
 			BASS_ASIO_SetRate(frequency);
+			BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
+			BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
+			BASS_ASIO_ChannelSetRate(FALSE, 0, 0);
+			BASS_ASIO_ChannelSetRate(FALSE, 1, 0);
 			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
 			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-			BASS_ASIO_Start(frames, 0);
+			BASS_ASIO_Start(frames, GetNumberOfCores());
+			MessageBox(NULL, L"ok", L"ok", MB_OK);
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
 		}
 		else {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
-			MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+			MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open ASIO device", MB_OK | MB_ICONERROR);
 			xaudiodisabled = 0;
 			InitializeAudioStream();
 		}
@@ -231,7 +243,7 @@ bool InitializeBASS() {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 		}
 		else {
-			MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+			MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open WASAPI device", MB_OK | MB_ICONERROR);
 			xaudiodisabled = 0;
 			InitializeAudioStream();
 			InitializeStreamForExternalEngine(frequency);
@@ -362,4 +374,59 @@ void SetUpStream() {
 	BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CHANS, 16);
 	BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 	BASS_MIDI_StreamEvent(KSStream, 9, MIDI_EVENT_DRUMS, 1);
+}
+
+void FreeUpLibraries() {
+	if (KSStream)
+	{
+		ResetSynth(0);
+		BASS_WASAPI_Stop(true);
+		BASS_ASIO_Stop();
+		BASS_StreamFree(KSStream);
+		KSStream = 0;
+	}
+	if (bassmidi) {
+		ResetSynth(0);
+		FreeFonts(0);
+		FreeLibrary(bassmidi);
+		bassmidi = 0;
+	}
+	if (bass) {
+		ResetSynth(0);
+		BASS_Free();
+		FreeLibrary(bass);
+		bass = 0;
+	}
+	if (bassenc) {
+		ResetSynth(0);
+		BASS_Encode_Stop(KSStream);
+		FreeLibrary(bassenc);
+		bassenc = 0;
+	}
+	if (bassasio) {
+		ResetSynth(0);
+		BASS_ASIO_Free();
+		FreeLibrary(bassasio);
+		bassasio = 0;
+	}
+	if (basswasapi) {
+		ResetSynth(0);
+		BASS_WASAPI_Free();
+		FreeLibrary(basswasapi);
+		bass = 0;
+	}
+	if (sound_driver) {
+		ResetSynth(0);
+		BASSXA_TerminateAudioStream(sound_driver);
+	}
+	if (bassxa) {
+		ResetSynth(0);
+		BASS_Free();
+		FreeLibrary(bassxa);
+		bassxa = 0;
+	}
+	if (com_initialized) {
+		CoUninitialize();
+		com_initialized = FALSE;
+	}
 }
