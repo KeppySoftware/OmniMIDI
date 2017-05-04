@@ -82,7 +82,7 @@ To compile (and test) the driver, you need:
 - Voicemeeter Virtual ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
 ## Untested ASIO devices
 - ASIO Digidesign Driver
-- ASIO Disigdesign Driver Mbox2
+- ASIO Digidesign Driver Mbox2
 - Avid Mbox ASIO
 - Avid Mbox Mini ASIO
 - Avid Mbox Pro ASIO
