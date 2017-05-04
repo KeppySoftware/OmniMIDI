@@ -73,13 +73,14 @@ To compile (and test) the driver, you need:
 - Windows 7 SP1 or greater (Otherwise, no VS2017 for you)
 
 # ASIO support details
-## Supported ASIO drivers
+## Supported ASIO devices
 - ASIO4ALL *(Almost everything works fine, but closing the MIDI app might get it stuck. Task Manager is required to terminate it.)*
 - FL Studio ASIO *(Almost everything works fine, but opening its control panel leads to a corrupted audio output.)*
 - USB Audio ASIO Driver *(Works fine, but has more latency than local software ASIO drivers.)*
-## Unsupported ASIO drivers
-- Voicemeeter Virtual ASIO
-## Untested ASIO Drivers
+## Unsupported ASIO devices
+- Realtek ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
+- Voicemeeter Virtual ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
+## Untested ASIO devices
 - ASIO Digidesign Driver
 - ASIO Disigdesign Driver Mbox2
 - Avid Mbox ASIO

@@ -215,7 +215,6 @@ bool InitializeBASS() {
 			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
 			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 			BASS_ASIO_Start(frames, GetNumberOfCores());
-			MessageBox(NULL, L"ok", L"ok", MB_OK);
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
 		}
 		else {
