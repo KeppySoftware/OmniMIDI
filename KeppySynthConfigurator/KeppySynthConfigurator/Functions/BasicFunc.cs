@@ -792,7 +792,9 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
@@ -803,7 +805,9 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.SleepStateRCO.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
@@ -957,30 +961,27 @@ namespace KeppySynthConfigurator
                 }
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
                 {
-                    if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
-                    {
-                        KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
-                    }
-                    else
-                    {
-                        KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
-                    }
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
                 }
                 else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
                 }
                 else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "2", RegistryValueKind.DWord);
                 }
                 else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "3", RegistryValueKind.DWord);
+                }
+                if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
+                {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
                 }
                 Program.DebugToConsole(false, "Done saving settings.", null);
             }

@@ -130,6 +130,8 @@ int bmsyn_play_some_data(void){
 				break;
 			}
 		} while (depends());
+		if (capframerate == 1) Sleep(16);
+		else Sleep(1);
 		return 0;
 	}
 }

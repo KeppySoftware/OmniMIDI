@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.Quit = new System.Windows.Forms.Button();
             this.DefOut = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.DevicesList = new System.Windows.Forms.ComboBox();
             this.ExAccess = new System.Windows.Forms.CheckBox();
-            this.WASAPIExInfo = new System.Windows.Forms.ToolTip(this.components);
             this.ImConfusedHelp = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
@@ -87,15 +85,8 @@
             this.ExAccess.Size = new System.Drawing.Size(192, 17);
             this.ExAccess.TabIndex = 8;
             this.ExAccess.Text = "Get exclusive access to the device";
-            this.WASAPIExInfo.SetToolTip(this.ExAccess, "The buffer size will not affect WASAPI, when in exclusive mode.\r\nChanging it is u" +
-        "seless.");
             this.ExAccess.UseVisualStyleBackColor = true;
             this.ExAccess.CheckedChanged += new System.EventHandler(this.ExAccess_CheckedChanged);
-            // 
-            // WASAPIExInfo
-            // 
-            this.WASAPIExInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.WASAPIExInfo.ToolTipTitle = "About the WASAPI exclusive mode";
             // 
             // ImConfusedHelp
             // 
@@ -139,7 +130,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox DevicesList;
         private System.Windows.Forms.CheckBox ExAccess;
-        private System.Windows.Forms.ToolTip WASAPIExInfo;
         private System.Windows.Forms.LinkLabel ImConfusedHelp;
     }
 }

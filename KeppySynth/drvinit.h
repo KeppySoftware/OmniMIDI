@@ -10,10 +10,6 @@ unsigned WINAPI notescatcher(LPVOID lpV) {
 			bmsyn_play_some_data();
 			if (oldbuffermode == 1)
 				break;
-			if (capframerate == 1)
-				Sleep(16);
-			else
-				Sleep(1);
 		}
 		PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 		stop_thread = 0;
@@ -97,12 +93,16 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 
 DWORD CALLBACK ASIOPROC1(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
-	return BASS_ChannelGetData(KSStream, buffer, length);
+	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
+	if (data < 0) return 0;
+	else return data;
 }
 
 DWORD CALLBACK WASAPIPROC1(void *buffer, DWORD length, void *user)
 {
-	return BASS_ChannelGetData(KSStream, buffer, length);
+	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
+	if (data < 0) return 0;
+	else return data;
 }
 
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
@@ -226,7 +226,7 @@ bool InitializeBASS() {
 
 		InitializeStreamForExternalEngine(infoW.mixfreq);
 
-		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), (wasapiex ? 0 : (float)frames), 0, WASAPIPROC1, NULL)) {
+		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIPROC1, NULL)) {
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 		}

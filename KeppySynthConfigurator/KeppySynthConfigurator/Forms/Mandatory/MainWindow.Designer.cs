@@ -2174,7 +2174,6 @@
         public System.Windows.Forms.CheckBox SincInter;
         public System.Windows.Forms.NumericUpDown SPFRate;
         internal System.Windows.Forms.Label Label4;
-        internal System.Windows.Forms.Label BufferText;
         public System.Windows.Forms.CheckBox SysResetIgnore;
         public System.Windows.Forms.NumericUpDown bufsize;
         private System.Windows.Forms.GroupBox SynthSettingsBox;
@@ -2219,7 +2218,6 @@
         private System.Windows.Forms.MenuItem blackMIDIsPresetToolStripMenuItem;
         private System.Windows.Forms.MenuItem chiptunesRetrogamingToolStripMenuItem;
         private System.Windows.Forms.MenuItem keppysSteinwayPianoRealismToolStripMenuItem;
-        private System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
         private System.Windows.Forms.ToolTip RecommendedBuffer;
@@ -2288,6 +2286,8 @@
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
         public System.Windows.Forms.MenuItem menuItem32;
         public System.Windows.Forms.Label Label6;
+        public System.Windows.Forms.Label BufferText;
+        public System.Windows.Forms.PictureBox StatusBuf;
     }
 }
 

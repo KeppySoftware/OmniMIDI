@@ -1536,27 +1536,34 @@ namespace KeppySynthConfigurator
                     {
                         Label6.Enabled = false;
                         Frequency.Enabled = false;
+                        BufferText.Enabled = false;
+                        bufsize.Minimum = 1;
+                        bufsize.Maximum = 100;
+                        bufsize.Enabled = false;
+                        StatusBuf.Visible = false;
+                        StatusBuf.Enabled = false;
                     }
                     else
                     {
                         Label6.Enabled = true;
                         Frequency.Enabled = true;
+                        BufferText.Enabled = true;
+                        bufsize.Minimum = 1;
+                        bufsize.Maximum = 100;
+                        bufsize.Enabled = true;
+                        StatusBuf.Visible = true;
+                        StatusBuf.Enabled = true;
                     }
                     menuItem32.Enabled = false;
                     ChangeDefaultOutput.Enabled = true;
                     Label4.Enabled = false;
                     SPFRate.Enabled = false;
-                }
-                StatusBuf.Visible = true;
+                }     
                 OutputWAV.Enabled = true;
                 ManualAddBuffer.Visible = false;
                 changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
                 SleepStateRCO.Enabled = false;
-                bufsize.Minimum = 1;
-                bufsize.Maximum = 100;
-                bufsize.Enabled = true;
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text != "WASAPI") bufsize.Value = CheckBuffer();
-                else CheckBuffer();
             }
         }
 
