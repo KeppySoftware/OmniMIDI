@@ -868,7 +868,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            bufsize.Value = 20;
+            bufsize.Value = 0;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
@@ -913,9 +913,9 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 64;
             MaxCPU.Value = 0;
             Frequency.Text = "22050";
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
             AudioEngBox_SelectedIndexChanged(null, null);
-            bufsize.Value = 0;
+            bufsize.Value = 20;
             SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
@@ -939,16 +939,16 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 850;
             MaxCPU.Value = 85;
             Frequency.Text = "66150";
-            bufsize.Value = 40;
-            SPFRate.Value = 80;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
+            AudioEngBox_SelectedIndexChanged(null, null);
+            bufsize.Value = 0;
+            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = true;
             SincInter.Checked = true;
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
-            AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
 
             // And then...
@@ -965,8 +965,6 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 1000;
             MaxCPU.Value = 75;
             Frequency.Text = "48000";
-            bufsize.Value = 15;
-            SPFRate.Value = 75;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
@@ -974,7 +972,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            bufsize.Value = 15;
+            bufsize.Value = 0;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
@@ -984,6 +982,32 @@ namespace KeppySynthConfigurator
 
             // Messagebox here
             MessageBox.Show("\"SoundBlaster - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ProLowLatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 1000;
+            MaxCPU.Value = 75;
+            Frequency.Text = "48000";
+            Preload.Checked = true;
+            NoteOffCheck.Checked = false;
+            SincInter.Checked = false;
+            EnableSFX.Checked = true;
+            SysResetIgnore.Checked = false;
+            OutputWAV.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
+            bufsize.Value = 20;
+            SPFRate.Value = 100;
+            AudioEngBox_SelectedIndexChanged(null, null);
+            ManualAddBuffer.Checked = false;
+
+            // And then...
+            Functions.SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("\"Professional environments - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Now, menustrip functions here
@@ -1433,7 +1457,7 @@ namespace KeppySynthConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("\"Engines\" are used by the driver to interface with your computer's sound card, and output the audio stream to your speakers/headphones.\n\nXAudio is the fastest of them all, but DirectSound can be used too, if your computer isn't able to achieve low latency, or it's too old for this new engine.\n\nIf you're planning to do heavy professional audio editing, you should pick ASIO, which achieves really low latency, at a cost of a bit more CPU usage.\n\nThere's also WASAPI now, which is able to achieve REALLY low latencies with little CPU usage, but \"Exclusive mode\" is needed to get latencies close to 1ms, which will disallow other apps from outputting audio.", 
+            MessageBox.Show("\"Engines\" are used by the driver to interface with your computer's sound card, and output the audio stream to your speakers/headphones.\n\nXAudio is the most widely compatible, and it's the best if your computer isn't really that powerful, or it's not able to achieve low latencies.\n\nIf you're planning to do heavy professional audio editing, you should pick ASIO, which achieves really low latencies, at a cost of a bit more CPU usage.\n\nThere's also WASAPI now, which is able to achieve REALLY low latencies with little CPU usage, but \"Exclusive mode\" is needed to get latencies close to 1ms, which will disallow other apps from outputting audio.", 
                 "What does engines do?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1484,87 +1508,73 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void ShowFirstConfiguration()
+        {
+            if (Properties.Settings.Default.RememberConfigureWASAPI)
+            {
+                DialogResult DS = MessageBox.Show("It seems like it's the first time you use WASAPI.\nConfiguring a valid output device is mandatory, before using it.\n\nIf you forget to do so, the MIDI app might crash at startup, or might not output audio at all.\n\nPress Yes to configure it now, or No to do it later.\n\nTo configure the output later, go to \"More settings > Advanced audio settings > Change default audio output\".", "Keppy's Synthesizer - WASAPI", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (DS == DialogResult.Yes)
+                {
+                    DefaultWASAPIAudioOutput frm = new DefaultWASAPIAudioOutput();
+                    frm.ShowDialog(this);
+                    frm.Dispose();
+                }
+                Properties.Settings.Default.RememberConfigureWASAPI = false;
+                Properties.Settings.Default.Save();
+            }
+        }
+
         private void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
             {
                 Label6.Enabled = true;
                 Frequency.Enabled = true;
                 menuItem32.Enabled = true;
-                StatusBuf.Visible = false;
-                OutputWAV.Enabled = false;
-                OutputWAV.Checked = false;
-                Label4.Enabled = false;
-                SPFRate.Enabled = false;
-                ManualAddBuffer.Visible = true;
-                ChangeDefaultOutput.Enabled = true;
-                changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = false;
-                SleepStateRCO.Enabled = true;
-                if (VolTrackBar.Value > 10000)
-                {
-                    VolTrackBar.Value = 10000;
-                }
-                VolTrackBar.Maximum = 10000;
-                bufsize.Minimum = 0;
-                bufsize.Maximum = 1000;
-                bufsize.Enabled = false;
-                BufferText.Text = String.Format("Set an additional buffer length for the driver, from {0} to {1}:", bufsize.Minimum, bufsize.Maximum);
-                if (ManualAddBuffer.Checked == true)
-                {
-                    bufsize.Enabled = true;
-                }
-                else
-                {
-                    bufsize.Enabled = false;
-                    bufsize.Value = 0;
-                }
+                ChangeDefaultOutput.Enabled = false;
+                BufferText.Enabled = true;
+                bufsize.Minimum = 1;
+                bufsize.Maximum = 100;
+                bufsize.Enabled = true;
+                StatusBuf.Visible = true;
+                StatusBuf.Enabled = true;
+                Label4.Enabled = true;
+                SPFRate.Enabled = true;
             }
             else
             {
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
                 {
-                    Label6.Enabled = true;
-                    Frequency.Enabled = true;
-                    menuItem32.Enabled = true;
-                    ChangeDefaultOutput.Enabled = false;
-                    Label4.Enabled = true;
-                    SPFRate.Enabled = true;
+                    ShowFirstConfiguration();
+                    Label6.Enabled = false;
+                    Frequency.Enabled = false;
+                    BufferText.Enabled = false;
+                    bufsize.Minimum = 1;
+                    bufsize.Maximum = 100;
+                    bufsize.Enabled = false;
+                    StatusBuf.Visible = false;
+                    StatusBuf.Enabled = false;
                 }
                 else
                 {
-                    if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
-                    {
-                        Label6.Enabled = false;
-                        Frequency.Enabled = false;
-                        BufferText.Enabled = false;
-                        bufsize.Minimum = 1;
-                        bufsize.Maximum = 100;
-                        bufsize.Enabled = false;
-                        StatusBuf.Visible = false;
-                        StatusBuf.Enabled = false;
-                    }
-                    else
-                    {
-                        Label6.Enabled = true;
-                        Frequency.Enabled = true;
-                        BufferText.Enabled = true;
-                        bufsize.Minimum = 1;
-                        bufsize.Maximum = 100;
-                        bufsize.Enabled = true;
-                        StatusBuf.Visible = true;
-                        StatusBuf.Enabled = true;
-                    }
-                    menuItem32.Enabled = false;
-                    ChangeDefaultOutput.Enabled = true;
-                    Label4.Enabled = false;
-                    SPFRate.Enabled = false;
-                }     
-                OutputWAV.Enabled = true;
-                ManualAddBuffer.Visible = false;
-                changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
-                SleepStateRCO.Enabled = false;
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text != "WASAPI") bufsize.Value = CheckBuffer();
+                    Label6.Enabled = true;
+                    Frequency.Enabled = true;
+                    BufferText.Enabled = true;
+                    bufsize.Minimum = 1;
+                    bufsize.Maximum = 100;
+                    bufsize.Enabled = true;
+                    StatusBuf.Visible = true;
+                    StatusBuf.Enabled = true;
+                }
+                menuItem32.Enabled = false;
+                ChangeDefaultOutput.Enabled = true;
+                Label4.Enabled = false;
+                SPFRate.Enabled = false;
             }
+            OutputWAV.Enabled = true;
+            ManualAddBuffer.Visible = false;
+            changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text != "WASAPI") bufsize.Value = CheckBuffer();
         }
 
         private void OutputWAV_CheckedChanged(object sender, EventArgs e)
@@ -1627,20 +1637,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void useoldbuffersystem_Click(object sender, EventArgs e)
-        {
-            if (useoldbuffersystem.Checked == false)
-            {
-                SynthSettings.SetValue("oldbuffersystem", "1", RegistryValueKind.DWord);
-                useoldbuffersystem.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("oldbuffersystem", "0", RegistryValueKind.DWord);
-                useoldbuffersystem.Checked = false;
-            }
-        }
-
         private void slowdownnoskip_Click(object sender, EventArgs e)
         {
             if (slowdownnoskip.Checked == false)
@@ -1694,20 +1690,6 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
                 autoupdate.Checked = false;
-            }
-        }
-
-        private void SleepStateRCO_Click(object sender, EventArgs e)
-        {
-            if (SleepStateRCO.Checked == true)
-            {
-                SynthSettings.SetValue("rco", "1", RegistryValueKind.DWord);
-                SleepStateRCO.Checked = false;
-            }
-            else
-            {
-                SynthSettings.SetValue("rco", "0", RegistryValueKind.DWord);
-                SleepStateRCO.Checked = true;
             }
         }
 
@@ -1921,12 +1903,6 @@ namespace KeppySynthConfigurator
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
             {
                 DefaultWASAPIAudioOutput frm = new DefaultWASAPIAudioOutput();
-                frm.ShowDialog(this);
-                frm.Dispose();
-            }
-            else
-            {
-                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
@@ -2344,6 +2320,5 @@ namespace KeppySynthConfigurator
             if (paintReps++ % 500 == 0)
                 Application.DoEvents();
         }
-
     }
 }

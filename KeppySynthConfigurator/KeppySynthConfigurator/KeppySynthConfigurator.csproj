@@ -189,12 +189,6 @@
     </Compile>
     <Compile Include="Functions\BasicFunc.cs" />
     <Compile Include="Functions\WatchdogFunc.cs" />
-    <Compile Include="Forms\Audio Outputs\DefaultAudioOutput.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Audio Outputs\DefaultAudioOutput.Designer.cs">
-      <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Add-ons\VelocityIntervals.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -275,9 +269,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateSystem\DLEngine.resx">
       <DependentUpon>DLEngine.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Audio Outputs\DefaultAudioOutput.resx">
-      <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\SoundFontInfo.resx">
       <DependentUpon>SoundFontInfo.cs</DependentUpon>

@@ -77,7 +77,9 @@ To compile (and test) the driver, you need:
 - ASIO4ALL *(Almost everything works fine, but closing the MIDI app might get it stuck. Task Manager is required to terminate it.)*
 - FL Studio ASIO *(Almost everything works fine, but opening its control panel leads to a corrupted audio output.)*
 - USB Audio ASIO Driver *(Works fine, but has more latency than local software ASIO drivers.)*
+- FlexASIO (Almost everything works fine, except the pitch of the output isn't right.)
 ## Unsupported ASIO devices
+- ASIO2WASAPI *(Throws a BASS_ERROR_UNKNOWN exception)*
 - Realtek ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
 - Voicemeeter Virtual ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
 ## Untested ASIO devices

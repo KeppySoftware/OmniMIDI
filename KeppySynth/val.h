@@ -81,7 +81,6 @@ static int noaudiodevices = 0;			// No audio devices flag
 static int nofloat = 1;					// Enable or disable the float engine
 static int nofx = 0;					// Enable or disable FXs
 static int noteoff1 = 0;				// Note cut INT
-static int oldbuffermode = 0;			// For old-ass PCs
 static int pitchshift = 127;			// Pitch shift
 static int wasapiex = 0;				// Exclusive access to WASAPI device
 static int preload = 0;					// Soundfont preloading

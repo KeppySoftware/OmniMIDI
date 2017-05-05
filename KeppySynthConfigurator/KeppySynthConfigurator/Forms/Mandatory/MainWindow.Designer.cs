@@ -93,9 +93,7 @@
             this.ChangePitchShift = new System.Windows.Forms.MenuItem();
             this.MonophonicFunc = new System.Windows.Forms.MenuItem();
             this.FadeoutDisable = new System.Windows.Forms.MenuItem();
-            this.SleepStateRCO = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
-            this.useoldbuffersystem = new System.Windows.Forms.MenuItem();
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.MaskSynthesizerAsAnother = new System.Windows.Forms.MenuItem();
@@ -227,6 +225,7 @@
             this.SettingsPresets = new System.Windows.Forms.ContextMenu();
             this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.SBLowLatToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.ProLowLatToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.blackMIDIsPresetToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -624,9 +623,7 @@
             this.ChangePitchShift,
             this.MonophonicFunc,
             this.FadeoutDisable,
-            this.SleepStateRCO,
             this.menuItem16,
-            this.useoldbuffersystem,
             this.slowdownnoskip});
             this.menuItem11.Text = "Advanced audio settings";
             // 
@@ -681,26 +678,14 @@
             this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
             this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
             // 
-            // SleepStateRCO
-            // 
-            this.SleepStateRCO.Index = 5;
-            this.SleepStateRCO.Text = "Disable sleep states from the audio rendering thread";
-            this.SleepStateRCO.Click += new System.EventHandler(this.SleepStateRCO_Click);
-            // 
             // menuItem16
             // 
-            this.menuItem16.Index = 6;
+            this.menuItem16.Index = 5;
             this.menuItem16.Text = "-";
-            // 
-            // useoldbuffersystem
-            // 
-            this.useoldbuffersystem.Index = 7;
-            this.useoldbuffersystem.Text = "Use the old buffer system (No slowdowns)";
-            this.useoldbuffersystem.Click += new System.EventHandler(this.useoldbuffersystem_Click);
             // 
             // slowdownnoskip
             // 
-            this.slowdownnoskip.Index = 8;
+            this.slowdownnoskip.Index = 6;
             this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
             this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
             // 
@@ -1229,7 +1214,6 @@
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
             "XAudio",
-            "DirectSound",
             "ASIO",
             "WASAPI"});
             this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
@@ -2000,6 +1984,7 @@
             this.SettingsPresets.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.lowLatencyPresetToolStripMenuItem,
             this.SBLowLatToolStripMenuItem,
+            this.ProLowLatToolStripMenuItem,
             this.blackMIDIsPresetToolStripMenuItem,
             this.chiptunesRetrogamingToolStripMenuItem,
             this.keppysSteinwayPianoRealismToolStripMenuItem});
@@ -2016,21 +2001,27 @@
             this.SBLowLatToolStripMenuItem.Text = "Low latency (SoundBlaster)";
             this.SBLowLatToolStripMenuItem.Click += new System.EventHandler(this.SBLowLatToolStripMenuItem_Click);
             // 
+            // ProLowLatToolStripMenuItem
+            // 
+            this.ProLowLatToolStripMenuItem.Index = 2;
+            this.ProLowLatToolStripMenuItem.Text = "Low latency (Professional environments)";
+            this.ProLowLatToolStripMenuItem.Click += new System.EventHandler(this.ProLowLatToolStripMenuItem_Click);
+            // 
             // blackMIDIsPresetToolStripMenuItem
             // 
-            this.blackMIDIsPresetToolStripMenuItem.Index = 2;
+            this.blackMIDIsPresetToolStripMenuItem.Index = 3;
             this.blackMIDIsPresetToolStripMenuItem.Text = "Black MIDIs";
             this.blackMIDIsPresetToolStripMenuItem.Click += new System.EventHandler(this.blackMIDIsPresetToolStripMenuItem_Click);
             // 
             // chiptunesRetrogamingToolStripMenuItem
             // 
-            this.chiptunesRetrogamingToolStripMenuItem.Index = 3;
+            this.chiptunesRetrogamingToolStripMenuItem.Index = 4;
             this.chiptunesRetrogamingToolStripMenuItem.Text = "Chiptunes/Retrogaming";
             this.chiptunesRetrogamingToolStripMenuItem.Click += new System.EventHandler(this.chiptunesRetrogamingToolStripMenuItem_Click);
             // 
             // keppysSteinwayPianoRealismToolStripMenuItem
             // 
-            this.keppysSteinwayPianoRealismToolStripMenuItem.Index = 4;
+            this.keppysSteinwayPianoRealismToolStripMenuItem.Index = 5;
             this.keppysSteinwayPianoRealismToolStripMenuItem.Text = "High fidelity audio (For HQ SoundFonts)";
             this.keppysSteinwayPianoRealismToolStripMenuItem.Click += new System.EventHandler(this.keppysSteinwayPianoRealismToolStripMenuItem_Click);
             // 
@@ -2135,7 +2126,6 @@
         public System.Windows.Forms.MenuItem SysExIgnore;
         public System.Windows.Forms.MenuItem AllNotesIgnore;
         public System.Windows.Forms.MenuItem floatingpointaudio;
-        public System.Windows.Forms.MenuItem useoldbuffersystem;
         public System.Windows.Forms.MenuItem slowdownnoskip;
         public System.Windows.Forms.MenuItem autoupdate;
         public System.Windows.Forms.MenuItem hotkeys;
@@ -2282,12 +2272,12 @@
         private System.Windows.Forms.MenuItem menuItem46;
         public System.Windows.Forms.MenuItem EnableBBS;
         public System.Windows.Forms.MenuItem EnableBB;
-        public System.Windows.Forms.MenuItem SleepStateRCO;
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
         public System.Windows.Forms.MenuItem menuItem32;
         public System.Windows.Forms.Label Label6;
         public System.Windows.Forms.Label BufferText;
         public System.Windows.Forms.PictureBox StatusBuf;
+        private System.Windows.Forms.MenuItem ProLowLatToolStripMenuItem;
     }
 }
 

@@ -211,7 +211,9 @@ void bassasioerr(int error, int mode, TCHAR * codeline) {
 	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
 	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
 	TCHAR partA[MAX_PATH];
-	TCHAR partW[MAX_PATH] = L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.";
+	TCHAR partW1[MAX_PATH] = L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"";
+	TCHAR partW2[MAX_PATH] = L", then, after you're done, restart the MIDI application.";
+	TCHAR partV[MAX_PATH] = L"\n\nThe buffer value might be too small. Please increase it by steps of 1 until it starts working again.";
 
 	if (mode == 1)
 		wcscpy(partA, L"\n\nWhat might have caused this error:\n\n");
@@ -230,7 +232,12 @@ void bassasioerr(int error, int mode, TCHAR * codeline) {
 	}
 	lstrcat(part1, partA);
 	lstrcat(part1, codeline);
-	lstrcat(part1, partW);
+	if (error == 20) lstrcat(part1, partV);
+	else if (error == 37) lstrcat(part1, partV);
+	else {
+		lstrcat(part1, partW1);
+		lstrcat(part1, partW2);
+	}
 
 	const int result = MessageBox(NULL, part1, L"Keppy's Synthesizer - BASSASIO execution error", MB_OK | MB_ICONERROR);
 	switch (result)

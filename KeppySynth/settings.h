@@ -461,7 +461,6 @@ void load_settings()
 		RegQueryValueEx(hKey, L"newevbuffvalue", NULL, &dwType, (LPBYTE)&newevbuffvalue, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"monorendering", NULL, &dwType, (LPBYTE)&monorendering, &dwSize);
-		RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
 		RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
@@ -479,11 +478,6 @@ void load_settings()
 
 		if (lovel < 1) { lovel = 1; }
 		if (hivel > 127) { hivel = 127; }
-
-		if (xaudiodisabled == 2 || xaudiodisabled == 3) {
-			vms2emu = 0;
-			oldbuffermode = 0;
-		}
 
 		RegCloseKey(hKey);
 
@@ -512,7 +506,6 @@ void realtime_load_settings()
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		int vms2emutemp = vms2emu;
-		int oldbuffermodetemp = oldbuffermode;
 		int frequencyttemp = frequency;
 		int potato;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
@@ -529,13 +522,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"fadeoutdisable", NULL, &dwType, (LPBYTE)&fadeoutdisable, &dwSize);
 		RegQueryValueEx(hKey, L"noteoff", NULL, &dwType, (LPBYTE)&noteoff1, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
-		if (xaudiodisabled != 2 || xaudiodisabled != 3) {
-			RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
-			RegQueryValueEx(hKey, L"oldbuffersystem", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
-			if (oldbuffermodetemp != oldbuffermode) {
-				ResetSynth(0);
-			}
-		}
+		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
@@ -561,18 +548,13 @@ void realtime_load_settings()
 		if (hivel > 127) { hivel = 127; }
 		RegCloseKey(hKey);
 		//cake
-		if (xaudiodisabled == 1) {
-			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
+		sound_out_volume_float = (float)volume / 10000.0f;
+		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
+		if (xaudiodisabled == 2) {
+			BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
 		}
-		else {
-			sound_out_volume_float = (float)volume / 10000.0f;
-			sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-			if (xaudiodisabled == 2) {
-				BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
-			}
-			else if (xaudiodisabled == 3) {
-				BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
-			}
+		else if (xaudiodisabled == 3) {
+			BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
 		}
 		// stuff
 		if (autopanic != 1) 
@@ -682,14 +664,7 @@ void CheckVolume() {
 		DWORD dwSize = sizeof(DWORD);
 		DWORD left, right;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
-		if (xaudiodisabled == 1)
-		{
-			BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
-			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
-			left = LOWORD(level); // the left level
-			right = HIWORD(level); // the right level
-		}
-		else if (xaudiodisabled == 2)
+		if (xaudiodisabled == 2)
 		{
 			float levels[2];
 			levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
@@ -805,21 +780,9 @@ void RevbNChor() {
 
 void ReloadSFList(DWORD whichsflist){
 	try {
-		if (xaudiodisabled == 1) {
-			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, 0);
-		}
-		else {
-			sound_out_volume_float = 0.0f / 10000.0f;
-		}
 		ResetSynth(0);
 		Sleep(100);
 		LoadSoundfont(whichsflist);
-		if (xaudiodisabled == 1) {
-			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
-		}
-		else {
-			sound_out_volume_float = (float)volume / 10000.0f;
-		}
 	}
 	catch (...) {
 		crashmessage(L"ReloadSFList");
