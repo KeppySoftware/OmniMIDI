@@ -1508,22 +1508,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void ShowFirstConfiguration()
-        {
-            if (Properties.Settings.Default.RememberConfigureWASAPI)
-            {
-                DialogResult DS = MessageBox.Show("It seems like it's the first time you use WASAPI.\nConfiguring a valid output device is mandatory, before using it.\n\nIf you forget to do so, the MIDI app might crash at startup, or might not output audio at all.\n\nPress Yes to configure it now, or No to do it later.\n\nTo configure the output later, go to \"More settings > Advanced audio settings > Change default audio output\".", "Keppy's Synthesizer - WASAPI", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (DS == DialogResult.Yes)
-                {
-                    DefaultWASAPIAudioOutput frm = new DefaultWASAPIAudioOutput();
-                    frm.ShowDialog(this);
-                    frm.Dispose();
-                }
-                Properties.Settings.Default.RememberConfigureWASAPI = false;
-                Properties.Settings.Default.Save();
-            }
-        }
-
         private void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
@@ -1545,7 +1529,6 @@ namespace KeppySynthConfigurator
             {
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
                 {
-                    ShowFirstConfiguration();
                     Label6.Enabled = false;
                     Frequency.Enabled = false;
                     BufferText.Enabled = false;

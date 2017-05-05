@@ -174,14 +174,24 @@ bool InitializeBASS() {
 		}
 	}
 	else if (xaudiodisabled == 3) {
+		defaultWoutput--;
 		BASS_WASAPI_DEVICEINFO infoW;
 
-		BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+		init = BASS_Init(0, frequency, 0, 0, NULL);
+
+		if (defaultWoutput == -1) {
+			BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
+			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
+			BASS_WASAPI_Free();
+		}
+		else {
+			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+		}
+
 		PrintToConsole(FOREGROUND_RED, defaultWoutput, "WASAPI driver number");
 		PrintToConsole(FOREGROUND_RED, infoW.mixfreq, "WASAPI driver frequency");
 
 		// Init the device first
-		init = BASS_Init(0, frequency, 0, 0, NULL);
 		CheckUp(ERRORCODE, L"BASSInit");
 
 		InitializeStreamForExternalEngine(infoW.mixfreq);

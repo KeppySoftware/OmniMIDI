@@ -58,17 +58,5 @@ namespace KeppySynthConfigurator.Properties {
                 this["PatchInfoShow"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool RememberConfigureWASAPI {
-            get {
-                return ((bool)(this["RememberConfigureWASAPI"]));
-            }
-            set {
-                this["RememberConfigureWASAPI"] = value;
-            }
-        }
     }
 }

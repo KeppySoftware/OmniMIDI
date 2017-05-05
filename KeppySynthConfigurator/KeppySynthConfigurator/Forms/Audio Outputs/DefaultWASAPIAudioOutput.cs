@@ -47,7 +47,7 @@ namespace KeppySynthConfigurator
             try
             {
                 if ((int)KeppySynthConfiguratorMain.SynthSettings.GetValue("wasapiex", 0) == 1) ExAccess.Checked = true;
-
+                DevicesList.Items.Add("Default WASAPI output device");
                 int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultWdev", 0);
                 BASS_WASAPI_DEVICEINFO info = new BASS_WASAPI_DEVICEINFO();
                 for (int n = 0; BassWasapi.BASS_WASAPI_GetDeviceInfo(n, info); n++)
