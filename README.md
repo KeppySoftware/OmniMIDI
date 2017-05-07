@@ -44,6 +44,11 @@ What you can't do:
 - Clone the source code of the driver, and change its name to "(Your name)'s Synthesizer", without actually doing any change to its source code. I mean, why would you do that?
 - Create ports of the driver in different programming languages, but with Windows support. There's already a Windows version, which is this one.
 
+## I'm here just for the WinMM patch. How can I get it without downloading your driver?
+I'm sad that you don't want to download my driver...
+<br />
+But anyway, here it is. [Click me for the direct download](https://github.com/KaleidonKep99/Keppy-s-Synthesizer/raw/master/KeppySynthConfigurator/KeppySynthConfigurator/Resources/WinMMPatch.zip)
+
 ## Required software
 You need this software installed before attempting to run the setup:
 - [Microsoft Visual C++ 2010](https://www.microsoft.com/en-us/download/details.aspx?id=5555) (Install the 64-bit version too if you're using a 64-bit O.S.. Mandatory for BASS_VST to work.)
