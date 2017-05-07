@@ -5,6 +5,10 @@
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with new functions.
 </p>
 
+## Keppy's Updates Server on Discord
+I also post my updates on Discord, to keep everyone up-to-date 24/7!
+Join now here: https://discord.gg/jUaHPrP
+
 ## Reviews
 ### [Gingeas](https://www.youtube.com/user/gingeas), famous YouTuber who uploads Black MIDI videos:
 _"Extremely high utility driver.<br />

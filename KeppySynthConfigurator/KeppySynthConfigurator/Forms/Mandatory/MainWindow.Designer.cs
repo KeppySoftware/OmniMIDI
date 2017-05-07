@@ -231,6 +231,8 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
+            this.menuItem42 = new System.Windows.Forms.MenuItem();
+            this.KSUSJoinNow = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1162,7 +1164,9 @@
             this.menuItem43.Index = 3;
             this.menuItem43.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.GiveFeedback,
-            this.reportABugToolStripMenuItem});
+            this.reportABugToolStripMenuItem,
+            this.menuItem42,
+            this.KSUSJoinNow});
             this.menuItem43.Text = "Feedback";
             // 
             // GiveFeedback
@@ -2036,6 +2040,17 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
+            // menuItem42
+            // 
+            this.menuItem42.Index = 2;
+            this.menuItem42.Text = "-";
+            // 
+            // KSUSJoinNow
+            // 
+            this.KSUSJoinNow.Index = 3;
+            this.KSUSJoinNow.Text = "Join the Keppy\'s Updates Server on Discord";
+            this.KSUSJoinNow.Click += new System.EventHandler(this.KSUSJoinNow_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2278,6 +2293,8 @@
         public System.Windows.Forms.Label BufferText;
         public System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem ProLowLatToolStripMenuItem;
+        private System.Windows.Forms.MenuItem menuItem42;
+        private System.Windows.Forms.MenuItem KSUSJoinNow;
     }
 }
 

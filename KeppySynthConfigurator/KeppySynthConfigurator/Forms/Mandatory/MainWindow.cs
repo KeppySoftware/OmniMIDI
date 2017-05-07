@@ -2246,7 +2246,7 @@ namespace KeppySynthConfigurator
 
         private void BASSLink_Click(object sender, EventArgs e)
         {
-            Process.Start("http://bass.radio42.com/");
+            Process.Start("http://www.un4seen.com/");
         }
 
         private void BASSNetLink_Click(object sender, EventArgs e)
@@ -2257,6 +2257,11 @@ namespace KeppySynthConfigurator
         private void FodyCredit_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Fody");
+        }
+
+        private void KSUSJoinNow_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.gg/jUaHPrP");
         }
 
         private void menuItem46_Click(object sender, EventArgs e)

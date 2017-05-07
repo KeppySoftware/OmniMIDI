@@ -163,8 +163,8 @@ void basserr(int error, int mode, TCHAR * codeline) {
 	lstrcat(part1, buffer);
 	if (e >= 0 && e <= 47) {
 		lstrcat(part2, basserrc[e]);
-		lstrcat(part3, basserrc[e + 47]);
-		basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 47]);
+		lstrcat(part3, basserrc[e + 48]);
+		basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 48]);
 	}
 	else if (e >= 5000 && e <= 5001) {
 		lstrcat(part2, basswasapierrc[e - 5000]);
@@ -222,8 +222,8 @@ void bassasioerr(int error, int mode, TCHAR * codeline) {
 
 	lstrcat(part1, buffer);
 	lstrcat(part2, basserrc[e]);
-	lstrcat(part3, basserrc[e + 47]);
-	basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 47]);
+	lstrcat(part3, basserrc[e + 48]);
+	basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 48]);
 	lstrcat(part1, part2);
 	lstrcat(part1, part3);
 	lstrcat(part1, part4);
