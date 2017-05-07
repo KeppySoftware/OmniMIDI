@@ -64,9 +64,7 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 
 			separatethreadfordata();
 
-			if (xaudiodisabled == 0) {
-				AudioRender();
-			}
+			if (xaudiodisabled == 0) AudioRender();
 			else {
 				_endthreadex(0);
 				return 0;
@@ -135,18 +133,16 @@ bool InitializeBASS() {
 	bool init = false;
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
 
+	// Init BASS first
+	init = BASS_Init(0, frequency, 0, 0, NULL);
+	CheckUp(ERRORCODE, L"BASSInit");
+
 	if (xaudiodisabled == 0) {
-		bassoutputfinal = 0;
-		init = BASS_Init(0, frequency, 0, 0, NULL);
-		CheckUp(ERRORCODE, L"BASSInit");
 		InitializeAudioStream();
 		InitializeStreamForExternalEngine(frequency);
 		CheckUp(ERRORCODE, L"KSInitXA");
 	}
 	else if (xaudiodisabled == 2) {
-		bassoutputfinal = 0;
-		init = BASS_Init(0, frequency, 0, 0, NULL);
-		CheckUp(ERRORCODE, L"BASSInit");
 		InitializeStreamForExternalEngine(frequency);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
@@ -177,8 +173,6 @@ bool InitializeBASS() {
 		defaultWoutput--;
 		BASS_WASAPI_DEVICEINFO infoW;
 
-		init = BASS_Init(0, frequency, 0, 0, NULL);
-
 		if (defaultWoutput == -1) {
 			BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
 			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
@@ -190,9 +184,6 @@ bool InitializeBASS() {
 
 		PrintToConsole(FOREGROUND_RED, defaultWoutput, "WASAPI driver number");
 		PrintToConsole(FOREGROUND_RED, infoW.mixfreq, "WASAPI driver frequency");
-
-		// Init the device first
-		CheckUp(ERRORCODE, L"BASSInit");
 
 		InitializeStreamForExternalEngine(infoW.mixfreq);
 
@@ -345,41 +336,34 @@ void FreeUpLibraries() {
 		KSStream = 0;
 	}
 	if (bassmidi) {
-		ResetSynth(0);
 		FreeFonts(0);
 		FreeLibrary(bassmidi);
 		bassmidi = 0;
 	}
 	if (bass) {
-		ResetSynth(0);
 		BASS_Free();
 		FreeLibrary(bass);
 		bass = 0;
 	}
 	if (bassenc) {
-		ResetSynth(0);
 		BASS_Encode_Stop(KSStream);
 		FreeLibrary(bassenc);
 		bassenc = 0;
 	}
 	if (bassasio) {
-		ResetSynth(0);
 		BASS_ASIO_Free();
 		FreeLibrary(bassasio);
 		bassasio = 0;
 	}
 	if (basswasapi) {
-		ResetSynth(0);
 		BASS_WASAPI_Free();
 		FreeLibrary(basswasapi);
 		bass = 0;
 	}
 	if (sound_driver) {
-		ResetSynth(0);
 		BASSXA_TerminateAudioStream(sound_driver);
 	}
 	if (bassxa) {
-		ResetSynth(0);
 		BASS_Free();
 		FreeLibrary(bassxa);
 		bassxa = 0;
