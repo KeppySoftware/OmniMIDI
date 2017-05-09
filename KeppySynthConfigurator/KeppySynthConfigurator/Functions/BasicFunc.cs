@@ -757,9 +757,9 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
