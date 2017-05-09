@@ -146,20 +146,16 @@ bool InitializeBASS() {
 		InitializeStreamForExternalEngine(frequency);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
-			BASS_ASIO_SetDSD(true);
-			// Do not check for errors, just ignore if DSD isn't supported
-			BASS_ASIO_SetRate(frequency);
-			CheckUpASIO(ERRORCODE, L"KSSetFreqASIO");
 			BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
 			BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
 			CheckUpASIO(ERRORCODE, L"KSChanSetFormatASIO");
-			BASS_ASIO_ChannelSetRate(FALSE, 0, 0);
-			BASS_ASIO_ChannelSetRate(FALSE, 1, 0);
+			BASS_ASIO_ChannelSetRate(FALSE, 0, frequency);
+			BASS_ASIO_ChannelSetRate(FALSE, 1, frequency);
 			CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO");
 			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
 			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 			CheckUpASIO(ERRORCODE, L"KSChanEnableASIO");
-			BASS_ASIO_Start(frames, GetNumberOfCores());
+			BASS_ASIO_Start(0, GetNumberOfCores());
 			CheckUpASIO(ERRORCODE, L"KSStartASIO");
 		}
 		else {

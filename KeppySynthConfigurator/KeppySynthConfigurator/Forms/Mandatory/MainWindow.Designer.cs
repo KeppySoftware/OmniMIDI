@@ -165,6 +165,8 @@
             this.EnableBB = new System.Windows.Forms.MenuItem();
             this.menuItem43 = new System.Windows.Forms.MenuItem();
             this.GiveFeedback = new System.Windows.Forms.MenuItem();
+            this.menuItem42 = new System.Windows.Forms.MenuItem();
+            this.KSUSJoinNow = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
@@ -231,8 +233,6 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
-            this.menuItem42 = new System.Windows.Forms.MenuItem();
-            this.KSUSJoinNow = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1175,6 +1175,17 @@
             this.GiveFeedback.Text = "Give feedback about the driver";
             this.GiveFeedback.Click += new System.EventHandler(this.GiveFeedback_Click);
             // 
+            // menuItem42
+            // 
+            this.menuItem42.Index = 2;
+            this.menuItem42.Text = "-";
+            // 
+            // KSUSJoinNow
+            // 
+            this.KSUSJoinNow.Index = 3;
+            this.KSUSJoinNow.Text = "Join the Keppy\'s Updates Server on Discord";
+            this.KSUSJoinNow.Click += new System.EventHandler(this.KSUSJoinNow_Click);
+            // 
             // ThemeCheck
             // 
             this.ThemeCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ThemeCheck_DoWork);
@@ -2039,17 +2050,6 @@
             // 
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
-            // 
-            // menuItem42
-            // 
-            this.menuItem42.Index = 2;
-            this.menuItem42.Text = "-";
-            // 
-            // KSUSJoinNow
-            // 
-            this.KSUSJoinNow.Index = 3;
-            this.KSUSJoinNow.Text = "Join the Keppy\'s Updates Server on Discord";
-            this.KSUSJoinNow.Click += new System.EventHandler(this.KSUSJoinNow_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
