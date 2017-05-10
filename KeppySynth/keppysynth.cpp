@@ -144,113 +144,62 @@ void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
 	}
 }
 
-void basserr(int error, int mode, TCHAR * codeline) {
-	TCHAR buffer[MAX_PATH];
+void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
+	TCHAR title[MAX_PATH];
+	TCHAR main[33354];
+
+	lstrcat(title, L"Keppy's Synthesizer - ");
+	lstrcat(title, engine);
+	lstrcat(title, L" execution error");
+
 	int e = error + 1;
-	wsprintfW(buffer, L"%d", error);
-	TCHAR part1[MAX_PATH] = L"BASS encountered the error number ";
-	TCHAR part2[MAX_PATH] = L": \"";
-	TCHAR part3[MAX_PATH] = L"\"\n\nExplanation: ";
-	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
-	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
-	TCHAR partA[MAX_PATH];
+	std::wstring ernumb = std::to_wstring(error);
 
-	if (mode == 1)
-		lstrcat(partA, L"\n\nWhat might have caused this error:\n\n");
-	else
-		lstrcat(partA, L"\n\nCode line error: ");
-
-	lstrcat(part1, buffer);
-	if (e >= 0 && e <= 47) {
-		lstrcat(part2, basserrc[e]);
-		lstrcat(part3, basserrc[e + 48]);
+	lstrcat(main, engine);
+	lstrcat(main, L" encountered the following error: ");
+	if (e >= 0 && e <= 48) {
+		lstrcat(main, basserrc[e]);
 		basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 48]);
 	}
 	else if (e >= 5000 && e <= 5001) {
-		lstrcat(part2, basswasapierrc[e - 5000]);
-		lstrcat(part3, basswasapierrc[e - 5000 + 2]);
+		lstrcat(main, basswasapierrc[e - 5000]);
 		basserrconsole(FOREGROUND_RED, basswasapierrc[e], basswasapierrc[e - 5000 + 2]);
 	}
 	else if (e >= 5200 && e <= 5202) {
-		lstrcat(part2, bassxaerrc[e - 5200]);
-		lstrcat(part3, bassxaerrc[e - 5200 + 3]);
+		lstrcat(main, bassxaerrc[e - 5200]);
 		basserrconsole(FOREGROUND_RED, bassxaerrc[e - 5200], bassxaerrc[e - 5200 + 3]);
 	}
-	lstrcat(part1, part2);
-	lstrcat(part1, part3);
-	lstrcat(part1, part4);
-	if (isoverrideenabled == 1) {
-		lstrcat(part1, partE);
-	}
-	lstrcat(part1, partA);
-	lstrcat(part1, codeline);
+	lstrcat(main, L" (E");
+	lstrcat(main, ernumb.c_str());
+	lstrcat(main, L")");
 
-	const int result = MessageBox(NULL, part1, L"Keppy's Synthesizer - BASS execution error", MB_OK | MB_ICONERROR);
+	lstrcat(main, L"\n\nExplanation: ");
+	if (e >= 0 && e <= 48) {
+		lstrcat(main, basserrc[e + 48]);
+	}
+	else if (e >= 5000 && e <= 5001) {
+		lstrcat(main, basswasapierrc[e - 5000 + 2]);
+	}
+	else if (e >= 5200 && e <= 5202) {
+		lstrcat(main, bassxaerrc[e - 5200 + 3]);
+	}
+
+	lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
+	if (isoverrideenabled == 1) lstrcat(main, L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)");
+
+	if (mode == 1) lstrcat(main, L"\n\nWhat might have caused this error:\n\n");
+	else lstrcat(main, L"\n\nCode line error: ");
+	lstrcat(main, codeline);
+
+	if (engine == L"ASIO") {
+		lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+	}
+
+	const int result = MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
 	switch (result)
 	{
 	case IDOK:
-		if (e == -1 ||
-			e >= 2 && e <= 10 ||
-			e == 19 ||
-			e >= 24 && e <= 26 ||
-			e == 44)
-		{
-			exit(error);
-		}
-		break;
-	}
-}
-
-void bassasioerr(int error, int mode, TCHAR * codeline) {
-	TCHAR buffer[MAX_PATH];
-	int e = error + 1;
-	wsprintfW(buffer, L"%d", error);
-	TCHAR part1[MAX_PATH] = L"BASS encountered the error number ";
-	TCHAR part2[MAX_PATH] = L": \"";
-	TCHAR part3[MAX_PATH] = L"\"\n\nExplanation: ";
-	TCHAR part4[MAX_PATH] = L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.";
-	TCHAR partE[MAX_PATH] = L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)";
-	TCHAR partA[MAX_PATH];
-	TCHAR partW1[MAX_PATH] = L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"";
-	TCHAR partW2[MAX_PATH] = L", then, after you're done, restart the MIDI application.";
-	TCHAR partV[MAX_PATH] = L"\n\nThe buffer value might be too small. Please increase it by steps of 1 until it starts working again.";
-
-	if (mode == 1)
-		wcscpy(partA, L"\n\nWhat might have caused this error:\n\n");
-	else
-		wcscpy(partA, L"\n\nCode line error: ");
-
-	lstrcat(part1, buffer);
-	lstrcat(part2, basserrc[e]);
-	lstrcat(part3, basserrc[e + 48]);
-	basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 48]);
-	lstrcat(part1, part2);
-	lstrcat(part1, part3);
-	lstrcat(part1, part4);
-	if (isoverrideenabled == 1) {
-		lstrcat(part1, partE);
-	}
-	lstrcat(part1, partA);
-	lstrcat(part1, codeline);
-	if (error == 20) lstrcat(part1, partV);
-	else if (error == 37) lstrcat(part1, partV);
-	else {
-		lstrcat(part1, partW1);
-		lstrcat(part1, partW2);
-	}
-
-	const int result = MessageBox(NULL, part1, L"Keppy's Synthesizer - BASSASIO execution error", MB_OK | MB_ICONERROR);
-	switch (result)
-	{
-	case IDOK:
-		if (e == 0 ||
-			e >= 2 && e <= 10 ||
-			e == 19 ||
-			e >= 24 && e <= 26 ||
-			e == 44)
-		{
-			exit(error);
-		}
+		if (e == 0 || e >= 2 && e <= 10 || e == 19 || e >= 24 && e <= 26 || e == 44) exit(error);
 		break;
 	}
 }
@@ -258,14 +207,14 @@ void bassasioerr(int error, int mode, TCHAR * codeline) {
 void CheckUp(int mode, TCHAR * codeline) {
 	int error = BASS_ErrorGetCode();
 	if (error != 0) {
-		basserr(error, mode, codeline);
+		ShowError(error, mode, L"BASS", codeline);
 	}
 }
 
 void CheckUpASIO(int mode, TCHAR * codeline) {
 	int error = BASS_ASIO_ErrorGetCode();
 	if (error != 0) {
-		bassasioerr(error, mode, codeline);
+		ShowError(error, mode, L"BASSASIO", codeline);
 	}
 }
 
