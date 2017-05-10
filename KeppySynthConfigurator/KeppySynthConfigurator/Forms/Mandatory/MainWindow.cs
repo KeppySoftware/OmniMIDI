@@ -16,6 +16,7 @@ using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
 using System.Media;
 using System.Net;
+using System.Drawing.Text;
 
 namespace KeppySynthConfigurator
 {
@@ -32,6 +33,9 @@ namespace KeppySynthConfigurator
         private static extern void ReleaseID(StringBuilder SHA256Code, Int32 length);
 
         // Themes handler
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
+        public static PrivateFontCollection privateFontCollection = new PrivateFontCollection();
         public static int CurrentTheme = 0;
 
         // Lists
@@ -132,6 +136,19 @@ namespace KeppySynthConfigurator
         }
 
         // Just stuff to reduce code's length
+        private void InitializeVolumeLabelFont()
+        {
+            byte[] fontData = Properties.Resources.volnum;
+            IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
+            System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+            uint dummy = 0;
+            privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
+            AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
+            System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
+            VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size);
+            VolIntView.Font = new Font(privateFontCollection.Families[0], VolIntView.Font.Size);
+        }
+
         private void SFZCompliant()
         {
             MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -158,6 +175,7 @@ namespace KeppySynthConfigurator
             {
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
+                InitializeVolumeLabelFont();
                 Lis.Columns[0].Tag = 7;
                 Lis.Columns[1].Tag = 1;
                 Lis.Columns[2].Tag = 1;
@@ -210,13 +228,19 @@ namespace KeppySynthConfigurator
             try
             {
                 if (VolTrackBar.Value <= 49)
+                {
+                    VolPercentageSign.ForeColor = Color.Red;
                     VolSimView.ForeColor = Color.Red;
+                }
                 else
+                {
+                    VolPercentageSign.ForeColor = Color.Blue;
                     VolSimView.ForeColor = Color.Blue;
+                }
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
-                VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
-                VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
+                VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000");
+                VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch (Exception ex)

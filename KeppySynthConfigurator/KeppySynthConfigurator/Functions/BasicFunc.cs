@@ -790,11 +790,18 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
                 decimal VolVal = (decimal)VolumeValue / 100;
                 if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
+                {
+
+                    KeppySynthConfiguratorMain.Delegate.VolPercentageSign.ForeColor = Color.Red;
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
+                }
                 else
+                {
+                    KeppySynthConfiguratorMain.Delegate.VolPercentageSign.ForeColor = Color.Blue;
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
-                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
+                }
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000");
+                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }
             catch (Exception ex)
@@ -869,9 +876,6 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("sndbfvalue", KeppySynthConfiguratorMain.Delegate.SPFRate.Value.ToString(), RegistryValueKind.DWord);
 
                 // Let's not forget about the volume!
-                decimal VolVal = (decimal)KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value / 100;
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000"));
-                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("Real value: {0}%", VolVal.ToString("000.00"));
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("volume", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
 
                 // Checkbox stuff yay

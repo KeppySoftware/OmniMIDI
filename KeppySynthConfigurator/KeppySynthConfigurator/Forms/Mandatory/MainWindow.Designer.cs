@@ -202,7 +202,6 @@
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.VolIntView = new System.Windows.Forms.Label();
             this.VolSimView = new System.Windows.Forms.Label();
-            this.VolStaticLab = new System.Windows.Forms.Label();
             this.VolTrackBar = new System.Windows.Forms.TrackBar();
             this.SoundFontTab = new System.Windows.Forms.TabPage();
             this.Lis = new KeppySynthConfigurator.ListViewEx();
@@ -233,6 +232,8 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
+            this.VolPercentageSign = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1201,6 +1202,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.Transparent;
+            this.Settings.Controls.Add(this.label7);
+            this.Settings.Controls.Add(this.VolPercentageSign);
             this.Settings.Controls.Add(this.AudioEngBox);
             this.Settings.Controls.Add(this.label2);
             this.Settings.Controls.Add(this.assignSoundfontListToAppToolStripMenuItem);
@@ -1215,7 +1218,6 @@
             this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Controls.Add(this.VolIntView);
             this.Settings.Controls.Add(this.VolSimView);
-            this.Settings.Controls.Add(this.VolStaticLab);
             this.Settings.Controls.Add(this.VolTrackBar);
             this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Name = "Settings";
@@ -1658,38 +1660,27 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
+            this.VolIntView.Font = new System.Drawing.Font("alarm clock", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolIntView.Location = new System.Drawing.Point(9, 67);
             this.VolIntView.Name = "VolIntView";
             this.VolIntView.Size = new System.Drawing.Size(623, 12);
             this.VolIntView.TabIndex = 3;
-            this.VolIntView.Text = "Real value: X";
+            this.VolIntView.Text = "100.00%";
             this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // VolSimView
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("alarm clock", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
-            this.VolSimView.Location = new System.Drawing.Point(556, 2);
+            this.VolSimView.Location = new System.Drawing.Point(549, 1);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(83, 30);
+            this.VolSimView.Size = new System.Drawing.Size(84, 34);
             this.VolSimView.TabIndex = 2;
-            this.VolSimView.Text = "100%";
+            this.VolSimView.Text = "888";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.VolSimView.UseMnemonic = false;
-            // 
-            // VolStaticLab
-            // 
-            this.VolStaticLab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolStaticLab.BackColor = System.Drawing.Color.Transparent;
-            this.VolStaticLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolStaticLab.Location = new System.Drawing.Point(451, 2);
-            this.VolStaticLab.Name = "VolStaticLab";
-            this.VolStaticLab.Size = new System.Drawing.Size(114, 30);
-            this.VolStaticLab.TabIndex = 1;
-            this.VolStaticLab.Text = "Volume:";
-            this.VolStaticLab.UseMnemonic = false;
             // 
             // VolTrackBar
             // 
@@ -2051,6 +2042,26 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
+            // VolPercentageSign
+            // 
+            this.VolPercentageSign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolPercentageSign.Location = new System.Drawing.Point(618, 20);
+            this.VolPercentageSign.Name = "VolPercentageSign";
+            this.VolPercentageSign.Size = new System.Drawing.Size(15, 13);
+            this.VolPercentageSign.TabIndex = 39;
+            this.VolPercentageSign.Text = "%";
+            this.VolPercentageSign.UseCompatibleTextRendering = true;
+            // 
+            // label7
+            // 
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(458, 8);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(99, 26);
+            this.label7.TabIndex = 40;
+            this.label7.Text = "Volume:";
+            this.label7.UseCompatibleTextRendering = true;
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2192,7 +2203,6 @@
         public System.Windows.Forms.CheckBox NoteOffCheck;
         public System.Windows.Forms.Label VolIntView;
         public System.Windows.Forms.Label VolSimView;
-        public System.Windows.Forms.Label VolStaticLab;
         public System.Windows.Forms.TrackBar VolTrackBar;
         private System.Windows.Forms.TabPage SoundFontTab;
         private System.Windows.Forms.Button EL;
@@ -2295,6 +2305,8 @@
         private System.Windows.Forms.MenuItem ProLowLatToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem42;
         private System.Windows.Forms.MenuItem KSUSJoinNow;
+        private System.Windows.Forms.Label label7;
+        public System.Windows.Forms.Label VolPercentageSign;
     }
 }
 

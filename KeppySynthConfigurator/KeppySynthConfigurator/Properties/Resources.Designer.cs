@@ -427,6 +427,16 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Byte[].
         /// </summary>
+        internal static byte[] volnum {
+            get {
+                object obj = ResourceManager.GetObject("volnum", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
         internal static byte[] wdmaud32drv {
             get {
                 object obj = ResourceManager.GetObject("wdmaud32drv", resourceCulture);
