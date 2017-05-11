@@ -547,18 +547,15 @@ void realtime_load_settings()
 		if (lovel < 1) { lovel = 1; }
 		if (hivel > 127) { hivel = 127; }
 		RegCloseKey(hKey);
+
 		//cake
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-		if (xaudiodisabled == 2) {
-			BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
-		}
-		else if (xaudiodisabled == 3) {
-			BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
-		}
+		if (xaudiodisabled == 2) BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
+		else if (xaudiodisabled == 3) BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
+
 		// stuff
-		if (autopanic != 1) 
-			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+		if (autopanic != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 		if (noteoff1) {

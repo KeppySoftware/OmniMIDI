@@ -171,6 +171,8 @@
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
+            this.VolPercentageSign = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.Button();
@@ -232,8 +234,6 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
-            this.VolPercentageSign = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -1225,6 +1225,28 @@
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(458, 8);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(99, 26);
+            this.label7.TabIndex = 40;
+            this.label7.Text = "Volume:";
+            this.label7.UseCompatibleTextRendering = true;
+            // 
+            // VolPercentageSign
+            // 
+            this.VolPercentageSign.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolPercentageSign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolPercentageSign.Location = new System.Drawing.Point(618, 20);
+            this.VolPercentageSign.Name = "VolPercentageSign";
+            this.VolPercentageSign.Size = new System.Drawing.Size(15, 13);
+            this.VolPercentageSign.TabIndex = 39;
+            this.VolPercentageSign.Text = "%";
+            this.VolPercentageSign.UseCompatibleTextRendering = true;
+            // 
             // AudioEngBox
             // 
             this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1236,7 +1258,7 @@
             this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
-            this.AudioEngBox.TabIndex = 25;
+            this.AudioEngBox.TabIndex = 14;
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
             // 
             // label2
@@ -1660,19 +1682,19 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
-            this.VolIntView.Font = new System.Drawing.Font("alarm clock", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolIntView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolIntView.Location = new System.Drawing.Point(9, 67);
             this.VolIntView.Name = "VolIntView";
             this.VolIntView.Size = new System.Drawing.Size(623, 12);
             this.VolIntView.TabIndex = 3;
-            this.VolIntView.Text = "100.00%";
+            this.VolIntView.Text = "888.88%";
             this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // VolSimView
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("alarm clock", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
             this.VolSimView.Location = new System.Drawing.Point(549, 1);
             this.VolSimView.Name = "VolSimView";
@@ -2041,26 +2063,6 @@
             // 
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
-            // 
-            // VolPercentageSign
-            // 
-            this.VolPercentageSign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolPercentageSign.Location = new System.Drawing.Point(618, 20);
-            this.VolPercentageSign.Name = "VolPercentageSign";
-            this.VolPercentageSign.Size = new System.Drawing.Size(15, 13);
-            this.VolPercentageSign.TabIndex = 39;
-            this.VolPercentageSign.Text = "%";
-            this.VolPercentageSign.UseCompatibleTextRendering = true;
-            // 
-            // label7
-            // 
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(458, 8);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(99, 26);
-            this.label7.TabIndex = 40;
-            this.label7.Text = "Volume:";
-            this.label7.UseCompatibleTextRendering = true;
             // 
             // KeppySynthConfiguratorMain
             // 

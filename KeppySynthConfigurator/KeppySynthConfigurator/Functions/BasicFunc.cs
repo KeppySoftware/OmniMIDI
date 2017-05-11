@@ -741,7 +741,8 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = true;
                 }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0)
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0 ||
+                    Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.Label6.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
@@ -749,6 +750,12 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
+                    {
+                        MessageBox.Show("DirectSound has been deprecated.\nThe driver will automatically switch to XAudio.\n\nPress OK to continue.", "Keppy's Synthesizer - Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        KeppySynthConfiguratorMain.Delegate.bufsize.Value = 20;
+                    }
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
                 {
@@ -761,6 +768,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
                 {
@@ -773,14 +781,12 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
                 }
-
-                // LEL
-                KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
 
                 if (Environment.OSVersion.Version.Major == 10)
                     KeppySynthConfiguratorMain.Delegate.SpatialSound.Visible = true;
@@ -800,7 +806,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.VolPercentageSign.ForeColor = Color.Blue;
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
                 }
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000");
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString();
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }

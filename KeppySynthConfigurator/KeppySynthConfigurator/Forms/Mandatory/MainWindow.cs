@@ -138,15 +138,21 @@ namespace KeppySynthConfigurator
         // Just stuff to reduce code's length
         private void InitializeVolumeLabelFont()
         {
-            byte[] fontData = Properties.Resources.volnum;
-            IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
-            System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
-            uint dummy = 0;
-            privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
-            AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
-            System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
-            VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size);
-            VolIntView.Font = new Font(privateFontCollection.Families[0], VolIntView.Font.Size);
+            try
+            {
+                byte[] fontData = Properties.Resources.volnum;
+                IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
+                System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+                uint dummy = 0;
+                privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
+                AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
+                System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
+                VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void SFZCompliant()
@@ -175,7 +181,6 @@ namespace KeppySynthConfigurator
             {
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
-                InitializeVolumeLabelFont();
                 Lis.Columns[0].Tag = 7;
                 Lis.Columns[1].Tag = 1;
                 Lis.Columns[2].Tag = 1;
@@ -209,6 +214,7 @@ namespace KeppySynthConfigurator
                 SelectedListBox.Text = "List 1";
                 KeppySynthConfiguratorMain.whichone = 1;
 
+                InitializeVolumeLabelFont();
                 Functions.LoadSettings();
 
                 // If /AS is specified, switch to the Settings tab automatically
@@ -227,19 +233,11 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (VolTrackBar.Value <= 49)
-                {
-                    VolPercentageSign.ForeColor = Color.Red;
-                    VolSimView.ForeColor = Color.Red;
-                }
-                else
-                {
-                    VolPercentageSign.ForeColor = Color.Blue;
-                    VolSimView.ForeColor = Color.Blue;
-                }
+                if (VolTrackBar.Value <= 49) VolPercentageSign.ForeColor = VolSimView.ForeColor = Color.Red;
+                else VolPercentageSign.ForeColor = VolSimView.ForeColor = Color.Blue;
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
-                VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString("000");
+                VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString();
                 VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
@@ -892,7 +890,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            bufsize.Value = 0;
+            bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
@@ -965,7 +963,7 @@ namespace KeppySynthConfigurator
             Frequency.Text = "66150";
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
             AudioEngBox_SelectedIndexChanged(null, null);
-            bufsize.Value = 0;
+            bufsize.Value = 20;
             SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = true;
@@ -996,7 +994,7 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            bufsize.Value = 0;
+            bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
             ManualAddBuffer.Checked = false;
