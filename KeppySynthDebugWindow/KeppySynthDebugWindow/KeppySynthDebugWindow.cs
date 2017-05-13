@@ -385,7 +385,7 @@ namespace KeppySynthDebugWindow
                 else
                     Frequency = String.Format("{0}GHz", ((float)cpuclock / 1000).ToString("0.00"));
 
-                COS.Text = String.Format("{0}{1} ({2}, {3})", OSInfo.GetOSName(), OSInfo.GetOSProductType(), FullVersion, bit);
+                COS.Text = String.Format("{0} {1} ({2}, {3})", OSInfo.Name, OSInfo.Edition, FullVersion, bit);
                 CPU.Text = String.Format("{0} ({1} processor)", cpuname, cpubit);
                 CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency);
                 GPU.Text = gpuname;
@@ -812,7 +812,8 @@ namespace KeppySynthDebugWindow
                     CI = null;
                 }
 
-                Thread.Sleep(1);
+                Thread.Sleep(1); // Let it sleep, otherwise it'll eat all ya CPU resources :P
+                MemoryThread.Interval = DelayParsing; 
             }
             catch { }
         }

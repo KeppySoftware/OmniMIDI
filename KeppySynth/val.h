@@ -10,9 +10,6 @@ SHA256 sha256;
 
 extern "C" __declspec(dllexport) void CompilerID(char * out, int length)
 {
-	// Replace this with your signature. You can find a base called signature.bas, in the main directory
-	// of the source code.
-	// The string NEEDS to be 256 chars long. You can use numbers and lowercase/uppercase letters.
 	const char* a =
 	{
 #include "signature.kep"
@@ -21,11 +18,19 @@ extern "C" __declspec(dllexport) void CompilerID(char * out, int length)
 	strcpy_s(out, length, shacode.c_str());
 }
 
+extern "C" __declspec(dllexport) void CompilerVersion(char * out, int length)
+{
+	int msver = _MSC_FULL_VER;
+    char ver[300];
+	sprintf(ver, "MSVC %d", msver);
+	std::string vers = ver;
+	strcpy_s(out, length, vers.c_str());
+}
+
 extern "C" __declspec(dllexport) void RavioliRavioli()
 {
 	MessageBox(NULL, L"Give me the formuoli.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 }
-
 #endif 
 
 // Mandatory values
@@ -37,7 +42,7 @@ static HINSTANCE bass_vst = 0;			// bass_vst handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassasio = 0;			// bassasio handle
 static HINSTANCE bassxa = 0;			// bassxa handle
-static HINSTANCE basswasapi = 0;			// basswasapi handle
+static HINSTANCE basswasapi = 0;		// basswasapi handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 
 // Potato
@@ -47,7 +52,7 @@ static int isoverrideenabled = 0;
 
 // Main values
 static HANDLE hConsole;					// Debug console
-static float *sndbf;
+static float *sndbf;					// Cake
 static int allhotkeys = 0;				// Enable/Disable all the hotkeys
 static int allnotesignore = 0;			// Ignore all MIDI events
 static int alreadyshown = 0;			// Check if the info about the drivers have been already shown.

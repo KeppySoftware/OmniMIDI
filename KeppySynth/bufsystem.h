@@ -160,11 +160,13 @@ void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 	CheckUp(ERRORCODE, L"GetDataFromStream");
-	if (encmode == 0 && xaudiodisabled == 0) {
-		for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-			sndbf[i] *= sound_out_volume_float;
+	if (encmode == 0) {
+		if (xaudiodisabled == 0) {
+			for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+				sndbf[i] *= sound_out_volume_float;
+			}
+			if (!BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT))
+				crashmessage(L"XAWriteFrame");
 		}
-		if (!BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT))
-			crashmessage(L"XAWriteFrame");
 	}
 }

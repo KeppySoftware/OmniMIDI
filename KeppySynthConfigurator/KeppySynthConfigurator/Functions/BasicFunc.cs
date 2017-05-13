@@ -1329,7 +1329,7 @@ namespace KeppySynthConfigurator
             {
                 if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sf1" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sf2" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sfark" | Path.GetExtension(Soundfonts[i]) == ".sfpack".ToLowerInvariant())
                 {
-                    int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i]);
+                    int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i], BASSFlag.BASS_DEFAULT);
                     if (Bass.BASS_ErrorGetCode() != 0)
                     {
                         Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
@@ -1374,7 +1374,7 @@ namespace KeppySynthConfigurator
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".sfz")
                 {
-                    int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i]);
+                    int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i], BASSFlag.BASS_DEFAULT);
                     if (Bass.BASS_ErrorGetCode() != 0)
                     {
                         Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);

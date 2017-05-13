@@ -26,7 +26,7 @@ namespace KeppySynthMixerWindow
         public static uint BringToFrontMessage;
 
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthMixerWindowToFront");
@@ -40,7 +40,7 @@ namespace KeppySynthMixerWindow
             thisProc.PriorityClass = ProcessPriorityClass.Idle;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new KeppySynthMixerWindow());
+            Application.Run(new KeppySynthMixerWindow(args));
             GC.KeepAlive(m);
         }
     }

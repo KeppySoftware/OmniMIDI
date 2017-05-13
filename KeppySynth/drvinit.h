@@ -80,14 +80,18 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 	return 0;
 }
 
-DWORD CALLBACK ASIOPROC1(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
+DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
-	return BASS_ChannelGetData(KSStream, buffer, length);
+	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
+	if (data == -1) data = 0;
+	return data;
 }
 
-DWORD CALLBACK WASAPIPROC1(void *buffer, DWORD length, void *user)
+DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 {
-	return BASS_ChannelGetData(KSStream, buffer, length);
+	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
+	if (data == -1) data = 0;
+	return data;
 }
 
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
@@ -142,6 +146,13 @@ bool InitializeBASS() {
 		InitializeStreamForExternalEngine(frequency);
 		CheckUp(ERRORCODE, L"KSInitXA");
 	}
+	else if (xaudiodisabled == 1) {
+		MessageBox(NULL, L"DirectSound isn't available since version 4.1.4.23.\nPlease select a new engine from the configurator.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - DirectSound is deprecated", MB_OK | MB_ICONERROR);
+		xaudiodisabled = 0;
+		InitializeAudioStream();
+		InitializeStreamForExternalEngine(frequency);
+		CheckUp(ERRORCODE, L"KSInitXA");
+	}
 	else if (xaudiodisabled == 2) {
 		InitializeStreamForExternalEngine(frequency);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
@@ -152,7 +163,7 @@ bool InitializeBASS() {
 			BASS_ASIO_ChannelSetRate(FALSE, 0, frequency);
 			BASS_ASIO_ChannelSetRate(FALSE, 1, frequency);
 			CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO");
-			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOPROC1, 0);
+			BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, 0);
 			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 			CheckUpASIO(ERRORCODE, L"KSChanEnableASIO");
 			BASS_ASIO_Start(0, GetNumberOfCores());
@@ -174,16 +185,11 @@ bool InitializeBASS() {
 			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
 			BASS_WASAPI_Free();
 		}
-		else {
-			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
-		}
-
-		PrintToConsole(FOREGROUND_RED, defaultWoutput, "WASAPI driver number");
-		PrintToConsole(FOREGROUND_RED, infoW.mixfreq, "WASAPI driver frequency");
+		else BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
 
 		InitializeStreamForExternalEngine(infoW.mixfreq);
 
-		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIPROC1, NULL)) {
+		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSStartStreamWASAPI");

@@ -24,9 +24,17 @@ namespace KeppySynthMixerWindow
         public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "cha" };
         public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-        public KeppySynthMixerWindow()
+        public KeppySynthMixerWindow(string[] args)
         {
             InitializeComponent();
+            foreach (String s in args)
+            {
+                if (s.ToLowerInvariant() == "/1980")
+                {
+                    ItsThe80sTheme.Visible = true;
+                    break;
+                }
+            }
         }
 
         public void CPUSpeed()
@@ -122,6 +130,9 @@ namespace KeppySynthMixerWindow
             {
                 int left = Convert.ToInt32(Debug.GetValue("leftvol", 0));
                 int right = Convert.ToInt32(Debug.GetValue("rightvol", 0));
+                var perc = ((double)((left + right) / 2) / 32768) * 100;
+
+                VolLevel.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
 
                 if (Convert.ToInt32(Settings.GetValue("monorendering", 0)) == 1) {
                     Size UseSize = new Size(39, 5);
@@ -234,22 +245,10 @@ namespace KeppySynthMixerWindow
                     VolumeCheck.Interval = 50;
                 }
 
-                if (Properties.Settings.Default.CurrentTheme == 0)
-                {
-                    ClassicTheme.PerformClick();
-                }
-                else if (Properties.Settings.Default.CurrentTheme == 1)
-                {
-                    DarkTheme.PerformClick();
-                }
-                else if (Properties.Settings.Default.CurrentTheme == 2)
-                {
-                    ItsThe80sTheme.PerformClick();
-                }
-                else
-                {
-                    ClassicTheme.PerformClick();
-                }
+                if (Properties.Settings.Default.CurrentTheme == 0) ClassicTheme.PerformClick();
+                else if (Properties.Settings.Default.CurrentTheme == 1) DarkTheme.PerformClick();
+                else if (Properties.Settings.Default.CurrentTheme == 2) ItsThe80sTheme.PerformClick();
+                else ClassicTheme.PerformClick();
             }
             catch (Exception ex)
             {

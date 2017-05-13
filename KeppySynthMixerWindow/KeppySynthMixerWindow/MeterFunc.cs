@@ -126,6 +126,7 @@ namespace KeppySynthMixerWindow
             KeppySynthMixerWindow.Delegate.LLab.ForeColor = MeterTextColor;
             KeppySynthMixerWindow.Delegate.RLab.ForeColor = MeterTextColor;
             KeppySynthMixerWindow.Delegate.SignalLabel.ForeColor = MeterTextColor;
+            KeppySynthMixerWindow.Delegate.VolLevel.ForeColor = MeterTextColor;
 
             // Fonts
             KeppySynthMixerWindow.Delegate.CH1.Font = FontFamily;
@@ -148,6 +149,7 @@ namespace KeppySynthMixerWindow
             KeppySynthMixerWindow.Delegate.LLab.Font = MeterFontFamily;
             KeppySynthMixerWindow.Delegate.RLab.Font = MeterFontFamily;
             KeppySynthMixerWindow.Delegate.SignalLabel.Font = MeterFontFamily;
+            KeppySynthMixerWindow.Delegate.VolLevel.Font = MeterFontFamily;
         }
 
         public static void SetMaximum(int maximum)
