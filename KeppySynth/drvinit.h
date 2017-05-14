@@ -10,6 +10,8 @@ unsigned WINAPI notescatcher(LPVOID lpV) {
 			bmsyn_play_some_data();
 			if (capframerate == 1) Sleep(16);
 			else Sleep(1);
+
+			if (oldbuffermode == 1) break;
 		}
 		PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 		stop_thread = 0;
@@ -43,9 +45,9 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 	}
 }
 
-void separatethreadfordata() {
+void InitializeNotesCatcherThread() {
 	if (hThread4 == NULL) {
-		PrintToConsole(FOREGROUND_RED, 1, "Creating thread for the note catcher...");
+		ResetSynth(1);
 		hThread4 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr4);
 		SetPriorityClass(hThread4, callprioval[driverprio]);
 		SetThreadPriority(hThread4, prioval[driverprio]);
@@ -62,8 +64,6 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 				CheckUp(ERRORCODE, L"AudioEngine");
 			}
 
-			separatethreadfordata();
-
 			if (xaudiodisabled == 0) AudioRender();
 			else {
 				_endthreadex(0);
@@ -75,6 +75,34 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 		}
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread...");
+	stop_thread = 0;
+	_endthreadex(0);
+	return 0;
+}
+
+unsigned WINAPI dsengine(LPVOID lpV) {
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing legacy DirectSound rendering thread...");
+	while (stop_thread == 0) {
+		try {
+			if (reset_synth != 0) {
+				reset_synth = 0;
+				BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+				CheckUp(ERRORCODE, L"DSEngine");
+			}
+
+			if (oldbuffermode == 1) bmsyn_play_some_data();
+			else InitializeNotesCatcherThread();
+
+			BASS_ChannelUpdate(KSStream, 0);
+			CheckUp(ERRORCODE, L"DSEngine");
+
+			Sleep(rco);
+		}
+		catch (...) {
+			crashmessage(L"DSEngine");
+		}
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing legacy DirectSound rendering thread...");
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
@@ -94,9 +122,9 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 	return data;
 }
 
-void InitializeStreamForExternalEngine(INT32 mixfreq) {
+void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
 	PrintToConsole(FOREGROUND_RED, 1, "Working...");
-	KSStream = BASS_MIDI_StreamCreate(16, BASS_STREAM_DECODE | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
+	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
 	if (noaudiodevices != 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
@@ -134,27 +162,35 @@ int GetNumberOfCores() {
 }
 
 bool InitializeBASS() {
-	bool init = false;
+	bool init = FALSE;
+	bool isds = FALSE;
+
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
+	if (xaudiodisabled == 1) isds = TRUE; // DirectSound, init BASS for output device
 
 	// Init BASS first
-	init = BASS_Init(0, frequency, 0, 0, NULL);
+	init = BASS_Init(isds ? -1 : 0, frequency, (isds ? BASS_DEVICE_LATENCY : 0), 0, NULL);
 	CheckUp(ERRORCODE, L"BASSInit");
 
 	if (xaudiodisabled == 0) {
 		InitializeAudioStream();
-		InitializeStreamForExternalEngine(frequency);
+		InitializeStreamForExternalEngine(frequency, TRUE);
+		InitializeNotesCatcherThread();
 		CheckUp(ERRORCODE, L"KSInitXA");
 	}
 	else if (xaudiodisabled == 1) {
-		MessageBox(NULL, L"DirectSound isn't available since version 4.1.4.23.\nPlease select a new engine from the configurator.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - DirectSound is deprecated", MB_OK | MB_ICONERROR);
-		xaudiodisabled = 0;
-		InitializeAudioStream();
-		InitializeStreamForExternalEngine(frequency);
-		CheckUp(ERRORCODE, L"KSInitXA");
+		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+		BASS_GetInfo(&info);
+		BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames);
+		InitializeStreamForExternalEngine(frequency, FALSE);
+		CheckUp(ERRORCODE, L"KSStreamCreateDS");
+		BASS_ChannelPlay(KSStream, false);
+		CheckUp(ERRORCODE, L"ChannelPlayDS");
+		InitializeNotesCatcherThread();
 	}
 	else if (xaudiodisabled == 2) {
-		InitializeStreamForExternalEngine(frequency);
+		InitializeStreamForExternalEngine(frequency, TRUE);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
 			BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
@@ -168,12 +204,16 @@ bool InitializeBASS() {
 			CheckUpASIO(ERRORCODE, L"KSChanEnableASIO");
 			BASS_ASIO_Start(0, GetNumberOfCores());
 			CheckUpASIO(ERRORCODE, L"KSStartASIO");
+			InitializeNotesCatcherThread();
 		}
 		else {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
 			MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open ASIO device", MB_OK | MB_ICONERROR);
 			xaudiodisabled = 0;
 			InitializeAudioStream();
+			InitializeStreamForExternalEngine(frequency, TRUE);
+			InitializeNotesCatcherThread();
+			CheckUp(ERRORCODE, L"KSInitXA");
 		}
 	}
 	else if (xaudiodisabled == 3) {
@@ -187,18 +227,20 @@ bool InitializeBASS() {
 		}
 		else BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
 
-		InitializeStreamForExternalEngine(infoW.mixfreq);
+		InitializeStreamForExternalEngine(infoW.mixfreq, TRUE);
 
 		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
+			InitializeNotesCatcherThread();
 		}
 		else {
 			MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open WASAPI device", MB_OK | MB_ICONERROR);
 			xaudiodisabled = 0;
 			InitializeAudioStream();
-			InitializeStreamForExternalEngine(frequency);
+			InitializeStreamForExternalEngine(frequency, TRUE);
+			InitializeNotesCatcherThread();
 			CheckUp(ERRORCODE, L"KSInitXA");
 		}
 	}
@@ -300,9 +342,17 @@ int CreateThreads() {
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	SetEvent(load_sfevent);
 	reset_synth = 0;
-	hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
-	SetPriorityClass(hThread2, callprioval[driverprio]);
-	SetThreadPriority(hThread2, prioval[driverprio]);
+	if (xaudiodisabled == 1)
+	{
+		hThread2 = (HANDLE)_beginthreadex(NULL, 0, dsengine, 0, 0, &thrdaddr2);
+		SetPriorityClass(hThread2, callprioval[driverprio]);
+		SetThreadPriority(hThread2, prioval[driverprio]);
+	}
+	else {
+		hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
+		SetPriorityClass(hThread2, callprioval[driverprio]);
+		SetThreadPriority(hThread2, prioval[driverprio]);
+	}
 	hThread3 = (HANDLE)_beginthreadex(NULL, 0, settingsload, 0, 0, &thrdaddr3);
 	SetPriorityClass(hThread3, callprioval[driverprio]);
 	SetThreadPriority(hThread3, prioval[driverprio]);

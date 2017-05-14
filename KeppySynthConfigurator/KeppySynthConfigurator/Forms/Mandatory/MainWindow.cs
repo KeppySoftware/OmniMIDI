@@ -1214,6 +1214,34 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void OldBuff_Click(object sender, EventArgs e)
+        {
+            if (!OldBuff.Checked)
+            {
+                OldBuff.Checked = true;
+                Functions.OldBufferMode(1);
+            }
+            else
+            {
+                OldBuff.Checked = false;
+                Functions.OldBufferMode(0);
+            }
+        }
+
+        private void NoSleep_Click(object sender, EventArgs e)
+        {
+            if (!NoSleep.Checked)
+            {
+                NoSleep.Checked = true;
+                Functions.SleepStates(0);
+            }
+            else
+            {
+                NoSleep.Checked = false;
+                Functions.SleepStates(1);
+            }
+        }
+
         private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthEVBuffer frm = new KeppySynthEVBuffer();
@@ -1473,7 +1501,7 @@ namespace KeppySynthConfigurator
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\nXAudio is the most compatible engine and should be used with low-end systems or systems that are not capable of achieving low latencies.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving REALLY low latencies with little CPU usage; however, \"Exclusive mode\" is needed to reach latencies close to 1ms. This, however, will disallow other apps from outputting audio.",
+            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\nXAudio is the most compatible engine and should be used with low-end systems or systems that are not capable of achieving low latencies.\n\nDirectSound is deprecated, and I will not give support for it.\nIf you're encountering issues while using it, switch to XAudio, WASAPI or ASIO.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving REALLY low latencies with little CPU usage; however, \"Exclusive mode\" is needed to reach latencies close to 1ms. This, however, will disallow other apps from outputting audio.",
                 "What are engines?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1520,6 +1548,7 @@ namespace KeppySynthConfigurator
             }
             else
             {
+                BufferText.Text = String.Format("Driver buffer length (in ms, from 1 to 1000):");
                 return 0;
             }
         }
@@ -1528,9 +1557,10 @@ namespace KeppySynthConfigurator
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
             {
-                Label6.Enabled = true;
+                Functions.ShowUnsupportedFeaturs(false);
+                DrvHzLabel.Enabled = true;
                 Frequency.Enabled = true;
-                menuItem32.Enabled = true;
+                TypeOfAudio.Enabled = true;
                 ChangeDefaultOutput.Enabled = false;
                 BufferText.Enabled = true;
                 bufsize.Value = 20;
@@ -1539,19 +1569,39 @@ namespace KeppySynthConfigurator
                 bufsize.Enabled = true;
                 StatusBuf.Visible = true;
                 StatusBuf.Enabled = true;
-                Label4.Enabled = true;
+                SPFLabel.Enabled = true;
                 SPFRate.Enabled = true;
+                bufsize.Value = CheckBuffer();
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+            {
+                Functions.ShowUnsupportedFeaturs(true);
+                DrvHzLabel.Enabled = true;
+                Frequency.Enabled = true;
+                TypeOfAudio.Enabled = true;
+                ChangeDefaultOutput.Enabled = false;
+                BufferText.Enabled = true;
+                bufsize.Value = 20;
+                bufsize.Minimum = 1;
+                bufsize.Maximum = 1000;
+                bufsize.Enabled = true;
+                StatusBuf.Visible = false;
+                StatusBuf.Enabled = false;
+                SPFLabel.Enabled = false;
+                SPFRate.Enabled = false;
+                CheckBuffer();
             }
             else
             {
+                Functions.ShowUnsupportedFeaturs(false);
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
                 {
-                    Label6.Enabled = false;
+                    DrvHzLabel.Enabled = false;
                     Frequency.Enabled = false;
                 }
                 else
                 {
-                    Label6.Enabled = true;
+                    DrvHzLabel.Enabled = true;
                     Frequency.Enabled = true;
                 }
                 BufferText.Enabled = false;
@@ -1560,14 +1610,14 @@ namespace KeppySynthConfigurator
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = false;
-                menuItem32.Enabled = false;
+                TypeOfAudio.Enabled = false;
                 ChangeDefaultOutput.Enabled = true;
-                Label4.Enabled = false;
+                SPFLabel.Enabled = false;
                 SPFRate.Enabled = false;
+                CheckBuffer();
             }
             OutputWAV.Enabled = true;
             changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text != "WASAPI") bufsize.Value = CheckBuffer();
         }
 
         private void OutputWAV_CheckedChanged(object sender, EventArgs e)
@@ -1577,7 +1627,7 @@ namespace KeppySynthConfigurator
                 StatusBuf.Visible = false;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = false;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
-                Label5.Enabled = false;
+                RenderingTimeLabel.Enabled = false;
                 bufsize.Enabled = false;
                 MaxCPU.Enabled = false;
                 BufferText.Enabled = false;
@@ -1590,7 +1640,7 @@ namespace KeppySynthConfigurator
             {
                 StatusBuf.Visible = true;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = true;
-                Label5.Enabled = true;
+                RenderingTimeLabel.Enabled = true;
                 bufsize.Enabled = true;
                 MaxCPU.Enabled = true;
                 BufferText.Enabled = true;

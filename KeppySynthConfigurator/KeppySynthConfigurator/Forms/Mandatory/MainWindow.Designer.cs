@@ -85,7 +85,7 @@
             this.LNPrio = new System.Windows.Forms.MenuItem();
             this.LoPrio = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.menuItem32 = new System.Windows.Forms.MenuItem();
+            this.TypeOfAudio = new System.Windows.Forms.MenuItem();
             this.bit8audio = new System.Windows.Forms.MenuItem();
             this.bit16audio = new System.Windows.Forms.MenuItem();
             this.floatingpointaudio = new System.Windows.Forms.MenuItem();
@@ -114,6 +114,10 @@
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
+            this.UnsupportedFeaturesSep = new System.Windows.Forms.MenuItem();
+            this.UnsupportedFeatures = new System.Windows.Forms.MenuItem();
+            this.OldBuff = new System.Windows.Forms.MenuItem();
+            this.NoSleep = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
             this.UnregDriver = new System.Windows.Forms.MenuItem();
@@ -187,16 +191,16 @@
             this.StatusBuf = new System.Windows.Forms.PictureBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
             this.SPFRate = new System.Windows.Forms.NumericUpDown();
-            this.Label4 = new System.Windows.Forms.Label();
+            this.SPFLabel = new System.Windows.Forms.Label();
             this.BufferText = new System.Windows.Forms.Label();
             this.SysResetIgnore = new System.Windows.Forms.CheckBox();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SynthSettingsBox = new System.Windows.Forms.GroupBox();
             this.MaxCPU = new System.Windows.Forms.NumericUpDown();
-            this.Label6 = new System.Windows.Forms.Label();
+            this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
-            this.Label5 = new System.Windows.Forms.Label();
-            this.Label3 = new System.Windows.Forms.Label();
+            this.RenderingTimeLabel = new System.Windows.Forms.Label();
+            this.VoiceLimitLabel = new System.Windows.Forms.Label();
             this.PolyphonyLimit = new System.Windows.Forms.NumericUpDown();
             this.EnableSFX = new System.Windows.Forms.CheckBox();
             this.Preload = new System.Windows.Forms.CheckBox();
@@ -509,7 +513,9 @@
             this.menuItem11,
             this.menuItem14,
             this.menuItem12,
-            this.menuItem28});
+            this.menuItem28,
+            this.UnsupportedFeaturesSep,
+            this.UnsupportedFeatures});
             this.menuItem2.Text = "More settings";
             // 
             // hotkeys
@@ -620,7 +626,7 @@
             // 
             this.menuItem11.Index = 11;
             this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem32,
+            this.TypeOfAudio,
             this.ChangeDefaultOutput,
             this.ChangePitchShift,
             this.MonophonicFunc,
@@ -629,14 +635,14 @@
             this.slowdownnoskip});
             this.menuItem11.Text = "Advanced audio settings";
             // 
-            // menuItem32
+            // TypeOfAudio
             // 
-            this.menuItem32.Index = 0;
-            this.menuItem32.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.TypeOfAudio.Index = 0;
+            this.TypeOfAudio.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.bit8audio,
             this.bit16audio,
             this.floatingpointaudio});
-            this.menuItem32.Text = "Audio bit depth";
+            this.TypeOfAudio.Text = "Audio bit depth";
             // 
             // bit8audio
             // 
@@ -819,6 +825,33 @@
             this.DebugModeOpenNotepad.Index = 1;
             this.DebugModeOpenNotepad.Text = "Open debug folder on Windows Explorer";
             this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
+            // 
+            // UnsupportedFeaturesSep
+            // 
+            this.UnsupportedFeaturesSep.Index = 15;
+            this.UnsupportedFeaturesSep.Text = "-";
+            this.UnsupportedFeaturesSep.Visible = false;
+            // 
+            // UnsupportedFeatures
+            // 
+            this.UnsupportedFeatures.Index = 16;
+            this.UnsupportedFeatures.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.OldBuff,
+            this.NoSleep});
+            this.UnsupportedFeatures.Text = "Unsupported features";
+            this.UnsupportedFeatures.Visible = false;
+            // 
+            // OldBuff
+            // 
+            this.OldBuff.Index = 0;
+            this.OldBuff.Text = "Enable old buffer (DS)";
+            this.OldBuff.Click += new System.EventHandler(this.OldBuff_Click);
+            // 
+            // NoSleep
+            // 
+            this.NoSleep.Index = 1;
+            this.NoSleep.Text = "Disable sleep states (DS)";
+            this.NoSleep.Click += new System.EventHandler(this.NoSleep_Click);
             // 
             // menuItem20
             // 
@@ -1253,6 +1286,7 @@
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
             "XAudio2",
+            "DirectSound",
             "ASIO",
             "WASAPI"});
             this.AudioEngBox.Location = new System.Drawing.Point(243, 7);
@@ -1372,7 +1406,7 @@
             this.OutputSettingsBox.Controls.Add(this.StatusBuf);
             this.OutputSettingsBox.Controls.Add(this.SincInter);
             this.OutputSettingsBox.Controls.Add(this.SPFRate);
-            this.OutputSettingsBox.Controls.Add(this.Label4);
+            this.OutputSettingsBox.Controls.Add(this.SPFLabel);
             this.OutputSettingsBox.Controls.Add(this.BufferText);
             this.OutputSettingsBox.Controls.Add(this.SysResetIgnore);
             this.OutputSettingsBox.Controls.Add(this.bufsize);
@@ -1430,16 +1464,16 @@
             0});
             this.SPFRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
-            // Label4
+            // SPFLabel
             // 
-            this.Label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Label4.AutoSize = true;
-            this.Label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label4.Location = new System.Drawing.Point(4, 80);
-            this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(336, 13);
-            this.Label4.TabIndex = 26;
-            this.Label4.Text = "\"Samples per frame\" rate (can reduce latency or remove static noises)";
+            this.SPFLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SPFLabel.AutoSize = true;
+            this.SPFLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.SPFLabel.Location = new System.Drawing.Point(4, 80);
+            this.SPFLabel.Name = "SPFLabel";
+            this.SPFLabel.Size = new System.Drawing.Size(336, 13);
+            this.SPFLabel.TabIndex = 26;
+            this.SPFLabel.Text = "\"Samples per frame\" rate (can reduce latency or remove static noises)";
             // 
             // BufferText
             // 
@@ -1498,10 +1532,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SynthSettingsBox.BackColor = System.Drawing.Color.Transparent;
             this.SynthSettingsBox.Controls.Add(this.MaxCPU);
-            this.SynthSettingsBox.Controls.Add(this.Label6);
+            this.SynthSettingsBox.Controls.Add(this.DrvHzLabel);
             this.SynthSettingsBox.Controls.Add(this.Frequency);
-            this.SynthSettingsBox.Controls.Add(this.Label5);
-            this.SynthSettingsBox.Controls.Add(this.Label3);
+            this.SynthSettingsBox.Controls.Add(this.RenderingTimeLabel);
+            this.SynthSettingsBox.Controls.Add(this.VoiceLimitLabel);
             this.SynthSettingsBox.Controls.Add(this.PolyphonyLimit);
             this.SynthSettingsBox.Controls.Add(this.EnableSFX);
             this.SynthSettingsBox.Controls.Add(this.Preload);
@@ -1528,16 +1562,16 @@
             0});
             this.MaxCPU.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
-            // Label6
+            // DrvHzLabel
             // 
-            this.Label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Label6.AutoSize = true;
-            this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label6.Location = new System.Drawing.Point(6, 133);
-            this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(147, 13);
-            this.Label6.TabIndex = 24;
-            this.Label6.Text = "Driver audio frequency (in Hz)";
+            this.DrvHzLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.DrvHzLabel.AutoSize = true;
+            this.DrvHzLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.DrvHzLabel.Location = new System.Drawing.Point(6, 133);
+            this.DrvHzLabel.Name = "DrvHzLabel";
+            this.DrvHzLabel.Size = new System.Drawing.Size(147, 13);
+            this.DrvHzLabel.TabIndex = 24;
+            this.DrvHzLabel.Text = "Driver audio frequency (in Hz)";
             // 
             // Frequency
             // 
@@ -1573,27 +1607,27 @@
             this.Frequency.SelectedIndexChanged += new System.EventHandler(this.Frequency_SelectedIndexChanged);
             this.Frequency.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
-            // Label5
+            // RenderingTimeLabel
             // 
-            this.Label5.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Label5.AutoSize = true;
-            this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label5.Location = new System.Drawing.Point(6, 108);
-            this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(285, 13);
-            this.Label5.TabIndex = 22;
-            this.Label5.Text = "Maximum rendering time percent (percentage, 0 = disabled)";
+            this.RenderingTimeLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.RenderingTimeLabel.AutoSize = true;
+            this.RenderingTimeLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.RenderingTimeLabel.Location = new System.Drawing.Point(6, 108);
+            this.RenderingTimeLabel.Name = "RenderingTimeLabel";
+            this.RenderingTimeLabel.Size = new System.Drawing.Size(285, 13);
+            this.RenderingTimeLabel.TabIndex = 22;
+            this.RenderingTimeLabel.Text = "Maximum rendering time percent (percentage, 0 = disabled)";
             // 
-            // Label3
+            // VoiceLimitLabel
             // 
-            this.Label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Label3.AutoSize = true;
-            this.Label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label3.Location = new System.Drawing.Point(6, 82);
-            this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(187, 13);
-            this.Label3.TabIndex = 20;
-            this.Label3.Text = "Driver voice limit (1 to 100,000 voices)";
+            this.VoiceLimitLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.VoiceLimitLabel.AutoSize = true;
+            this.VoiceLimitLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.VoiceLimitLabel.Location = new System.Drawing.Point(6, 82);
+            this.VoiceLimitLabel.Name = "VoiceLimitLabel";
+            this.VoiceLimitLabel.Size = new System.Drawing.Size(187, 13);
+            this.VoiceLimitLabel.TabIndex = 20;
+            this.VoiceLimitLabel.Text = "Driver voice limit (1 to 100,000 voices)";
             // 
             // PolyphonyLimit
             // 
@@ -2174,14 +2208,14 @@
         internal System.Windows.Forms.GroupBox OutputSettingsBox;
         public System.Windows.Forms.CheckBox SincInter;
         public System.Windows.Forms.NumericUpDown SPFRate;
-        internal System.Windows.Forms.Label Label4;
+        internal System.Windows.Forms.Label SPFLabel;
         public System.Windows.Forms.CheckBox SysResetIgnore;
         public System.Windows.Forms.NumericUpDown bufsize;
         private System.Windows.Forms.GroupBox SynthSettingsBox;
         public System.Windows.Forms.NumericUpDown MaxCPU;
         public System.Windows.Forms.ComboBox Frequency;
-        internal System.Windows.Forms.Label Label5;
-        internal System.Windows.Forms.Label Label3;
+        internal System.Windows.Forms.Label RenderingTimeLabel;
+        internal System.Windows.Forms.Label VoiceLimitLabel;
         public System.Windows.Forms.NumericUpDown PolyphonyLimit;
         public System.Windows.Forms.CheckBox EnableSFX;
         public System.Windows.Forms.CheckBox Preload;
@@ -2283,8 +2317,8 @@
         public System.Windows.Forms.MenuItem EnableBBS;
         public System.Windows.Forms.MenuItem EnableBB;
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
-        public System.Windows.Forms.MenuItem menuItem32;
-        public System.Windows.Forms.Label Label6;
+        public System.Windows.Forms.MenuItem TypeOfAudio;
+        public System.Windows.Forms.Label DrvHzLabel;
         public System.Windows.Forms.Label BufferText;
         public System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem ProLowLatToolStripMenuItem;
@@ -2292,6 +2326,10 @@
         private System.Windows.Forms.MenuItem KSUSJoinNow;
         private System.Windows.Forms.Label VolLabel;
         public System.Windows.Forms.Label VolPercentageSign;
+        public System.Windows.Forms.MenuItem UnsupportedFeaturesSep;
+        public System.Windows.Forms.MenuItem UnsupportedFeatures;
+        public System.Windows.Forms.MenuItem OldBuff;
+        public System.Windows.Forms.MenuItem NoSleep;
     }
 }
 
