@@ -262,6 +262,11 @@ namespace KeppySynthConfigurator
             Process.Start(url);
         }
 
+        private void GTSLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://www.youtube.com/user/gingeas");
+        }
+
         private void ChangeBranch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SelectBranch frm = new SelectBranch();

@@ -123,7 +123,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "OTW mode settings";
+            this.Text = "WAV output settings";
             this.Load += new System.EventHandler(this.KeppyDriverOutputWAVDir_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -171,7 +171,7 @@
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
+            this.VolLabel = new System.Windows.Forms.Label();
             this.VolPercentageSign = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -185,7 +185,6 @@
             this.OutputWAV = new System.Windows.Forms.CheckBox();
             this.OutputSettingsBox = new System.Windows.Forms.GroupBox();
             this.StatusBuf = new System.Windows.Forms.PictureBox();
-            this.ManualAddBuffer = new System.Windows.Forms.CheckBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
             this.SPFRate = new System.Windows.Forms.NumericUpDown();
             this.Label4 = new System.Windows.Forms.Label();
@@ -483,7 +482,7 @@
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 3;
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change OTW directory";
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change WAV output directory";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
@@ -1202,7 +1201,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.Transparent;
-            this.Settings.Controls.Add(this.label7);
+            this.Settings.Controls.Add(this.VolLabel);
             this.Settings.Controls.Add(this.VolPercentageSign);
             this.Settings.Controls.Add(this.AudioEngBox);
             this.Settings.Controls.Add(this.label2);
@@ -1225,17 +1224,17 @@
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
-            // label7
+            // VolLabel
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(508, 15);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(52, 18);
-            this.label7.TabIndex = 40;
-            this.label7.Text = "VOL:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label7.UseCompatibleTextRendering = true;
+            this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLabel.Location = new System.Drawing.Point(508, 15);
+            this.VolLabel.Name = "VolLabel";
+            this.VolLabel.Size = new System.Drawing.Size(52, 18);
+            this.VolLabel.TabIndex = 40;
+            this.VolLabel.Text = "VOL:";
+            this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.VolLabel.UseCompatibleTextRendering = true;
             // 
             // VolPercentageSign
             // 
@@ -1253,10 +1252,10 @@
             this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
-            "XAudio",
+            "XAudio2",
             "ASIO",
             "WASAPI"});
-            this.AudioEngBox.Location = new System.Drawing.Point(204, 7);
+            this.AudioEngBox.Location = new System.Drawing.Point(243, 7);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
             this.AudioEngBox.TabIndex = 14;
@@ -1265,11 +1264,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(161, 10);
+            this.label2.Location = new System.Drawing.Point(171, 10);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.Size = new System.Drawing.Size(72, 13);
             this.label2.TabIndex = 38;
-            this.label2.Text = "Engine:";
+            this.label2.Text = "Audio engine:";
             // 
             // assignSoundfontListToAppToolStripMenuItem
             // 
@@ -1332,7 +1331,7 @@
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = null;
-            this.WhatIsXAudio.Location = new System.Drawing.Point(289, 8);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(328, 8);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(17, 17);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1345,7 +1344,7 @@
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsOutput.ErrorImage = null;
-            this.WhatIsOutput.Location = new System.Drawing.Point(131, 8);
+            this.WhatIsOutput.Location = new System.Drawing.Point(132, 8);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(17, 17);
             this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1359,9 +1358,9 @@
             this.OutputWAV.BackColor = System.Drawing.Color.Transparent;
             this.OutputWAV.Location = new System.Drawing.Point(15, 9);
             this.OutputWAV.Name = "OutputWAV";
-            this.OutputWAV.Size = new System.Drawing.Size(120, 17);
+            this.OutputWAV.Size = new System.Drawing.Size(119, 17);
             this.OutputWAV.TabIndex = 13;
-            this.OutputWAV.Text = "Enable OTW mode.";
+            this.OutputWAV.Text = "Enable .WAV mode";
             this.OutputWAV.UseVisualStyleBackColor = false;
             this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
             // 
@@ -1371,7 +1370,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputSettingsBox.BackColor = System.Drawing.Color.Transparent;
             this.OutputSettingsBox.Controls.Add(this.StatusBuf);
-            this.OutputSettingsBox.Controls.Add(this.ManualAddBuffer);
             this.OutputSettingsBox.Controls.Add(this.SincInter);
             this.OutputSettingsBox.Controls.Add(this.SPFRate);
             this.OutputSettingsBox.Controls.Add(this.Label4);
@@ -1399,21 +1397,6 @@
             this.StatusBuf.TabStop = false;
             this.StatusBuf.Click += new System.EventHandler(this.StatusBuf_Click);
             // 
-            // ManualAddBuffer
-            // 
-            this.ManualAddBuffer.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.ManualAddBuffer.AutoSize = true;
-            this.ManualAddBuffer.CheckAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.ManualAddBuffer.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ManualAddBuffer.Location = new System.Drawing.Point(385, 55);
-            this.ManualAddBuffer.Name = "ManualAddBuffer";
-            this.ManualAddBuffer.Size = new System.Drawing.Size(164, 17);
-            this.ManualAddBuffer.TabIndex = 26;
-            this.ManualAddBuffer.Text = "Set additional buffer manually";
-            this.ManualAddBuffer.UseVisualStyleBackColor = true;
-            this.ManualAddBuffer.Visible = false;
-            this.ManualAddBuffer.CheckedChanged += new System.EventHandler(this.VMSEmu_CheckedChanged);
-            // 
             // SincInter
             // 
             this.SincInter.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -1421,10 +1404,10 @@
             this.SincInter.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SincInter.Location = new System.Drawing.Point(7, 16);
             this.SincInter.Name = "SincInter";
-            this.SincInter.Size = new System.Drawing.Size(566, 17);
+            this.SincInter.Size = new System.Drawing.Size(525, 17);
             this.SincInter.TabIndex = 24;
-            this.SincInter.Text = "Enable sinc interpolation. (Improves sample rate conversion and overall audio qua" +
-    "lity, but increases rendering time.)";
+            this.SincInter.Text = "Enable sinc interpolation (improves sample rate conversion and audio quality, but" +
+    " increases rendering time)";
             this.SincInter.UseVisualStyleBackColor = true;
             // 
             // SPFRate
@@ -1454,10 +1437,9 @@
             this.Label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label4.Location = new System.Drawing.Point(4, 80);
             this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(403, 13);
+            this.Label4.Size = new System.Drawing.Size(336, 13);
             this.Label4.TabIndex = 26;
-            this.Label4.Text = "Set the samples per frame rate (Useful to reduce latency, or to remove static noi" +
-    "ses):";
+            this.Label4.Text = "\"Samples per frame\" rate (can reduce latency or remove static noises)";
             // 
             // BufferText
             // 
@@ -1466,9 +1448,9 @@
             this.BufferText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BufferText.Location = new System.Drawing.Point(4, 57);
             this.BufferText.Name = "BufferText";
-            this.BufferText.Size = new System.Drawing.Size(227, 13);
+            this.BufferText.Size = new System.Drawing.Size(148, 13);
             this.BufferText.TabIndex = 23;
-            this.BufferText.Text = "Set a buffer length for the driver, from 1 to 100:";
+            this.BufferText.Text = "Driver buffer length (1 to 100):";
             // 
             // SysResetIgnore
             // 
@@ -1477,9 +1459,10 @@
             this.SysResetIgnore.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SysResetIgnore.Location = new System.Drawing.Point(7, 34);
             this.SysResetIgnore.Name = "SysResetIgnore";
-            this.SysResetIgnore.Size = new System.Drawing.Size(333, 17);
+            this.SysResetIgnore.Size = new System.Drawing.Size(565, 17);
             this.SysResetIgnore.TabIndex = 25;
-            this.SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged.";
+            this.SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged (might cause issues " +
+    "with program change events)";
             this.SysResetIgnore.UseVisualStyleBackColor = true;
             // 
             // bufsize
@@ -1552,9 +1535,9 @@
             this.Label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label6.Location = new System.Drawing.Point(6, 133);
             this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(264, 13);
+            this.Label6.Size = new System.Drawing.Size(147, 13);
             this.Label6.TabIndex = 24;
-            this.Label6.Text = "Set the audio frequency for the driver output (In Hertz):";
+            this.Label6.Text = "Driver audio frequency (in Hz)";
             // 
             // Frequency
             // 
@@ -1597,9 +1580,9 @@
             this.Label5.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label5.Location = new System.Drawing.Point(6, 108);
             this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(332, 13);
+            this.Label5.Size = new System.Drawing.Size(285, 13);
             this.Label5.TabIndex = 22;
-            this.Label5.Text = "Set the maximum limit for the rendering time (In percent, disabled = 0):";
+            this.Label5.Text = "Maximum rendering time percent (percentage, 0 = disabled)";
             // 
             // Label3
             // 
@@ -1608,9 +1591,9 @@
             this.Label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Label3.Location = new System.Drawing.Point(6, 82);
             this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(278, 13);
+            this.Label3.Size = new System.Drawing.Size(187, 13);
             this.Label3.TabIndex = 20;
-            this.Label3.Text = "Set the voice limit for the driver, from 1 to 100.000 voices:";
+            this.Label3.Text = "Driver voice limit (1 to 100,000 voices)";
             // 
             // PolyphonyLimit
             // 
@@ -1645,9 +1628,9 @@
             this.EnableSFX.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.EnableSFX.Location = new System.Drawing.Point(8, 37);
             this.EnableSFX.Name = "EnableSFX";
-            this.EnableSFX.Size = new System.Drawing.Size(439, 17);
+            this.EnableSFX.Size = new System.Drawing.Size(430, 17);
             this.EnableSFX.TabIndex = 18;
-            this.EnableSFX.Text = "Enable sound effects. (Reverb and chorus, disabling this can reduce the rendering" +
+            this.EnableSFX.Text = "Enable sound effects (i.e. reverb and chorus; disabling this can reduce rendering" +
     " time)";
             this.EnableSFX.UseVisualStyleBackColor = true;
             // 
@@ -1658,10 +1641,10 @@
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Preload.Location = new System.Drawing.Point(8, 17);
             this.Preload.Name = "Preload";
-            this.Preload.Size = new System.Drawing.Size(530, 17);
+            this.Preload.Size = new System.Drawing.Size(461, 17);
             this.Preload.TabIndex = 17;
-            this.Preload.Text = "Enable soundfont preload. (It might introduce delay when starting a MIDI applicat" +
-    "ion on low-end computers)";
+            this.Preload.Text = "Preload SoundFont in memory (might cause a delay depending on computer and SoundF" +
+    "ont)";
             this.Preload.UseVisualStyleBackColor = true;
             // 
             // NoteOffCheck
@@ -1671,10 +1654,10 @@
             this.NoteOffCheck.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.NoteOffCheck.Location = new System.Drawing.Point(8, 57);
             this.NoteOffCheck.Name = "NoteOffCheck";
-            this.NoteOffCheck.Size = new System.Drawing.Size(518, 17);
+            this.NoteOffCheck.Size = new System.Drawing.Size(464, 17);
             this.NoteOffCheck.TabIndex = 19;
-            this.NoteOffCheck.Text = "Only release the oldest instance upon a note off event when there are overlapping" +
-    " instances of the note.";
+            this.NoteOffCheck.Text = "Only release the oldest instance of a note upon note-off event (could increase re" +
+    "ndering time)";
             this.NoteOffCheck.UseVisualStyleBackColor = true;
             // 
             // VolIntView
@@ -1688,18 +1671,18 @@
             this.VolIntView.Name = "VolIntView";
             this.VolIntView.Size = new System.Drawing.Size(623, 12);
             this.VolIntView.TabIndex = 3;
-            this.VolIntView.Text = "888.88%";
+            this.VolIntView.Text = "000.00%";
             this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // VolSimView
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
-            this.VolSimView.Location = new System.Drawing.Point(548, 1);
+            this.VolSimView.Location = new System.Drawing.Point(548, 5);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(84, 34);
+            this.VolSimView.Size = new System.Drawing.Size(79, 28);
             this.VolSimView.TabIndex = 2;
             this.VolSimView.Text = "100";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1916,10 +1899,10 @@
             this.ListOverride.Enabled = false;
             this.ListOverride.Location = new System.Drawing.Point(3, 401);
             this.ListOverride.Name = "ListOverride";
-            this.ListOverride.Size = new System.Drawing.Size(412, 13);
+            this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 31;
-            this.ListOverride.Text = "The last soundfont will override the previous ones. Loading order is from top to " +
-    "bottom.";
+            this.ListOverride.Text = "The last SoundFont will override the ones above it (loading order is from top to " +
+    "bottom).";
             // 
             // CLi
             // 
@@ -2189,7 +2172,6 @@
         private System.Windows.Forms.PictureBox WhatIsOutput;
         public System.Windows.Forms.CheckBox OutputWAV;
         internal System.Windows.Forms.GroupBox OutputSettingsBox;
-        public System.Windows.Forms.CheckBox ManualAddBuffer;
         public System.Windows.Forms.CheckBox SincInter;
         public System.Windows.Forms.NumericUpDown SPFRate;
         internal System.Windows.Forms.Label Label4;
@@ -2308,7 +2290,7 @@
         private System.Windows.Forms.MenuItem ProLowLatToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem42;
         private System.Windows.Forms.MenuItem KSUSJoinNow;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label VolLabel;
         public System.Windows.Forms.Label VolPercentageSign;
     }
 }

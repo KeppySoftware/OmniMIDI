@@ -41,26 +41,29 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <windows.h>
 #include "Resource.h"
 
-#define BASSDEF(f) (WINAPI *f)
-#define BASSMIDIDEF(f) (WINAPI *f)	
-#define BASSENCDEF(f) (WINAPI *f)	
 #define BASSASIODEF(f) (WINAPI *f)
-#define BASS_VSTDEF(f) (WINAPI *f)
+#define BASSDEF(f) (WINAPI *f)
+#define BASSENCDEF(f) (WINAPI *f)	
+#define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSWASAPIDEF(f) (WINAPI *f)
 #define BASSXADEF(f) (WINAPI *f)
+#define BASS_FXDEF(f) (WINAPI *f)
+#define BASS_VSTDEF(f) (WINAPI *f)
+#define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
+#define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
-#define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
-#define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
-#define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 #define LOADBASSWASAPIFUNCTION(f) *((void**)&f)=GetProcAddress(basswasapi,#f)
 #define LOADBASSXAFUNCTION(f) *((void**)&f)=GetProcAddress(bassxa,#f)
+#define LOADBASS_FXFUNCTION(f) *((void**)&f)=GetProcAddress(bass_fx,#f)
+#define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 #define Between(value, a, b) (value <= b && value >= a)
 
 #define ERRORCODE 0
 #define CAUSE 1
 
 #include <bass.h>
+#include <bass_fx.h>
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>

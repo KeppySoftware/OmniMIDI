@@ -147,7 +147,8 @@ namespace KeppySynthConfigurator
                 privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
                 AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
                 System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
-                VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size);
+                VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size, FontStyle.Italic);
+                VolIntView.Font = new Font(privateFontCollection.Families[0], VolIntView.Font.Size, FontStyle.Italic);
             }
             catch (Exception ex)
             {
@@ -855,8 +856,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
-            ManualAddBuffer.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...
             Functions.SaveSettings();
@@ -893,7 +893,6 @@ namespace KeppySynthConfigurator
             bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
-            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -915,11 +914,10 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
             bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
-            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -935,7 +933,7 @@ namespace KeppySynthConfigurator
             PolyphonyLimit.Value = 64;
             MaxCPU.Value = 0;
             Frequency.Text = "22050";
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
             AudioEngBox_SelectedIndexChanged(null, null);
             bufsize.Value = 20;
             SPFRate.Value = 100;
@@ -945,7 +943,6 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -971,7 +968,6 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = true;
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
-            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -997,7 +993,6 @@ namespace KeppySynthConfigurator
             bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
-            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -1023,7 +1018,6 @@ namespace KeppySynthConfigurator
             bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
-            ManualAddBuffer.Checked = false;
 
             // And then...
             Functions.SaveSettings();
@@ -1470,17 +1464,17 @@ namespace KeppySynthConfigurator
         private void WhatIsOutput_Click(object sender, EventArgs e)
         {
             MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" +
-                "You can change the output directory by clicking \"Settings > Change OTW directory\".\n\n" +
-                "(The audio output to the speakers/headphones will be disabled, to avoid corruptions in the audio export.)", 
-                "\"OTW mode\"? What is it?", 
+                "You can change the output directory by clicking \"More settings > Change WAV output directory\".\n\n" +
+                "(The audio output to speakers/headphones will be disabled to avoid corrupting the audio export.)", 
+                "\".WAV mode\"? What is it?", 
                 MessageBoxButtons.OK, MessageBoxIcon.Information);                         
         }
 
         // Brand new XAudio disabler
         private void WhatIsXAudio_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("\"Engines\" are used by the driver to interface with your computer's sound card, and output the audio stream to your speakers/headphones.\n\nXAudio is the most widely compatible, and it's the best if your computer isn't really that powerful, or it's not able to achieve low latencies.\n\nIf you're planning to do heavy professional audio editing, you should pick ASIO, which achieves really low latencies, at a cost of a bit more CPU usage.\n\nThere's also WASAPI now, which is able to achieve REALLY low latencies with little CPU usage, but \"Exclusive mode\" is needed to get latencies close to 1ms, which will disallow other apps from outputting audio.", 
-                "What does engines do?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\nXAudio is the most compatible engine and should be used with low-end systems or systems that are not capable of achieving low latencies.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving REALLY low latencies with little CPU usage; however, \"Exclusive mode\" is needed to reach latencies close to 1ms. This, however, will disallow other apps from outputting audio.",
+                "What are engines?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Frequency_SelectedIndexChanged(object sender, EventArgs e)
@@ -1496,7 +1490,7 @@ namespace KeppySynthConfigurator
 
         private Int32 CheckBuffer()
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio" 
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2" 
                 || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO"
                 || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
             {
@@ -1519,10 +1513,10 @@ namespace KeppySynthConfigurator
                     String.Format("It is recommended to set a buffer size with {0}Hz audio between {1} and {2}.",
                     Frequency.Text, valuearray[4], valuearray[5]));
 
-                BufferText.Text = String.Format( "Set a buffer length for the driver, from {0} to {1} (Optimal range is between {2} and {3}):", 
+                BufferText.Text = String.Format("Driver buffer length ({0} to {1}, optimal range is between {2} and {3}):", 
                     bufsize.Minimum, bufsize.Maximum, valuearray[4], valuearray[5]);
 
-                return valuearray[4];
+                return valuearray[4] + 5;
             }
             else
             {
@@ -1532,13 +1526,14 @@ namespace KeppySynthConfigurator
 
         private void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
             {
                 Label6.Enabled = true;
                 Frequency.Enabled = true;
                 menuItem32.Enabled = true;
                 ChangeDefaultOutput.Enabled = false;
                 BufferText.Enabled = true;
+                bufsize.Value = 20;
                 bufsize.Minimum = 1;
                 bufsize.Maximum = 100;
                 bufsize.Enabled = true;
@@ -1571,7 +1566,6 @@ namespace KeppySynthConfigurator
                 SPFRate.Enabled = false;
             }
             OutputWAV.Enabled = true;
-            ManualAddBuffer.Visible = false;
             changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text != "WASAPI") bufsize.Value = CheckBuffer();
         }
@@ -1582,7 +1576,7 @@ namespace KeppySynthConfigurator
             {
                 StatusBuf.Visible = false;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = false;
-                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
                 Label5.Enabled = false;
                 bufsize.Enabled = false;
                 MaxCPU.Enabled = false;
@@ -1604,18 +1598,6 @@ namespace KeppySynthConfigurator
                 bufsize.Minimum = 1;
                 bufsize.Value = 15;
                 MaxCPU.Value = 75;
-            }
-        }
-
-        private void VMSEmu_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ManualAddBuffer.Checked == true)
-            {
-                bufsize.Enabled = true;
-            }
-            else
-            {
-                bufsize.Enabled = false;
             }
         }
 
@@ -2058,8 +2040,7 @@ namespace KeppySynthConfigurator
             EnableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
-            ManualAddBuffer.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...
             Functions.SaveSettings();

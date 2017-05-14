@@ -86,7 +86,7 @@ namespace KeppySynthConfigurator
         public static void DebugToConsole(bool isException, String message, Exception ex)
         {
             System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
-            String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss tt", ci);
+            String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss.fff tt", ci);
             try
             {
                 if (isException)

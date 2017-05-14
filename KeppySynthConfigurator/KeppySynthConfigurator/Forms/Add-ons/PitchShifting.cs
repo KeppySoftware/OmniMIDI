@@ -30,7 +30,7 @@ namespace KeppySynthConfigurator
         {
             TimerLive.Enabled = false;
 
-            bool[] booleans = new bool[] { CH1.Checked, CH2.Checked, CH3.Checked, CH4.Checked, CH5.Checked, 
+            bool[] booleans = new bool[] { CH1.Checked, CH2.Checked, CH3.Checked, CH4.Checked, CH5.Checked,
                 CH6.Checked, CH7.Checked, CH8.Checked, CH9.Checked, CH10.Checked,
                 CH11.Checked, CH12.Checked, CH13.Checked, CH14.Checked, CH15.Checked, CH16.Checked };
 
@@ -269,7 +269,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                bool[] booleans = new bool[] { CH1.Checked, CH2.Checked, CH3.Checked, CH4.Checked, CH5.Checked, 
+                bool[] booleans = new bool[] { CH1.Checked, CH2.Checked, CH3.Checked, CH4.Checked, CH5.Checked,
                 CH6.Checked, CH7.Checked, CH8.Checked, CH9.Checked, CH10.Checked,
                 CH11.Checked, CH12.Checked, CH13.Checked, CH14.Checked, CH15.Checked, CH16.Checked };
 

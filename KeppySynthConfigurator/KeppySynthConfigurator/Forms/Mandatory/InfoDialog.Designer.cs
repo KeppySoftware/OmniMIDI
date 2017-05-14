@@ -61,6 +61,7 @@
             this.ButterBoyTP = new System.Windows.Forms.ToolTip(this.components);
             this.BBMenu = new System.Windows.Forms.ContextMenu();
             this.DisableBB = new System.Windows.Forms.MenuItem();
+            this.GTSLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Mascot)).BeginInit();
@@ -92,8 +93,9 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(358, 42);
             this.label2.TabIndex = 2;
-            this.label2.Text = "This software is open-source.\r\nRedistribution and use of this code or any derivat" +
-    "ive works are permitted provided that the following conditions are met:";
+            this.label2.Text = "This software is open-source. Powered by\r\nRedistribution and use of this code or " +
+    "any derivative works are permitted provided that the following conditions are me" +
+    "t:";
             // 
             // GitHubLink
             // 
@@ -383,12 +385,25 @@
             this.DisableBB.Text = "How can I disable Butter Boy?";
             this.DisableBB.Click += new System.EventHandler(this.DisableBB_Click);
             // 
+            // GTSLink
+            // 
+            this.GTSLink.AutoSize = true;
+            this.GTSLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.GTSLink.Location = new System.Drawing.Point(212, 101);
+            this.GTSLink.Name = "GTSLink";
+            this.GTSLink.Size = new System.Drawing.Size(38, 13);
+            this.GTSLink.TabIndex = 12;
+            this.GTSLink.TabStop = true;
+            this.GTSLink.Text = "G.T.S.";
+            this.GTSLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GTSLink_LinkClicked);
+            // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(382, 371);
+            this.Controls.Add(this.GTSLink);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
             this.Controls.Add(this.CTC);
@@ -453,5 +468,6 @@
         private System.Windows.Forms.ToolTip ButterBoyTP;
         private System.Windows.Forms.ContextMenu BBMenu;
         private System.Windows.Forms.MenuItem DisableBB;
+        private System.Windows.Forms.LinkLabel GTSLink;
     }
 }

@@ -746,8 +746,7 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.Label6.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio";
-                    KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
@@ -763,7 +762,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
@@ -776,7 +774,6 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
                     KeppySynthConfiguratorMain.Delegate.menuItem32.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
@@ -901,14 +898,6 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
                 }
-                if (KeppySynthConfiguratorMain.Delegate.ManualAddBuffer.Checked == true)
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("vmsemu", "1", RegistryValueKind.DWord);
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("vmsemu", "0", RegistryValueKind.DWord);
-                }
                 if (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked == true)
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("noteoff", "1", RegistryValueKind.DWord);
@@ -933,7 +922,7 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
                 }
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio")
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
                 {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
                 }

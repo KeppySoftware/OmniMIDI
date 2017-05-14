@@ -22,6 +22,7 @@
     <ClInclude Include="..\external_packages\audiodefs.h" />
     <ClInclude Include="..\external_packages\basswasapi.h" />
     <ClInclude Include="..\external_packages\bassxa.h" />
+    <ClInclude Include="..\external_packages\bass_fx.h" />
     <ClInclude Include="..\external_packages\bass_vst.h" />
     <ClInclude Include="..\external_packages\comdecl.h" />
     <ClInclude Include="..\external_packages\mmddk.h" />

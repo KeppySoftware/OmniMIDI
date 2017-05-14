@@ -38,12 +38,13 @@ static sound_out * sound_driver = NULL;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
 static HINSTANCE bass = 0;				// bass handle
+static HINSTANCE bass_fx = 0;			// bass_fx handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
-static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassasio = 0;			// bassasio handle
-static HINSTANCE bassxa = 0;			// bassxa handle
-static HINSTANCE basswasapi = 0;		// basswasapi handle
+static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
+static HINSTANCE basswasapi = 0;		// basswasapi handle
+static HINSTANCE bassxa = 0;			// bassxa handle
 
 // Potato
 static float currentcpuusage0;
