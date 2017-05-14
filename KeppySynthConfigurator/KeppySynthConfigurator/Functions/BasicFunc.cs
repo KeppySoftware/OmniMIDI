@@ -761,6 +761,7 @@ namespace KeppySynthConfigurator
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0)
                 {
+                    ShowUnsupportedFeaturs(true);
                     KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 0;

@@ -584,6 +584,7 @@ namespace KeppySynthDebugWindow
                                     RT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusage0", "0").ToString()); // Else, it'll give you the info about how many cycles it needs to work.
                                 }
                             }
+
                             if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
                             {
                                 DDSLabel.Visible = true;
@@ -594,7 +595,17 @@ namespace KeppySynthDebugWindow
                                 DDS.Enabled = true;
                                 DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
                             }
-                            else if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2 || Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 3)
+                            else if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 1)
+                            {
+                                DDSLabel.Visible = true;
+                                DDS.Visible = true;
+                                AERTLabel.Visible = false;
+                                AERT.Visible = false;
+                                DDSLabel.Enabled = false;
+                                DDS.Enabled = false;
+                                DDS.Text = "Unavailable";
+                            }
+                            else
                             {
                                 DDSLabel.Visible = false;
                                 DDS.Visible = false;
@@ -713,7 +724,18 @@ namespace KeppySynthDebugWindow
                         RT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusage0", "0").ToString()); // Else, it'll give you the info about how many cycles it needs to work.
                     }
                 }
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 1)
+
+                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
+                {
+                    DDSLabel.Visible = true;
+                    DDS.Visible = true;
+                    AERTLabel.Visible = false;
+                    AERT.Visible = false;
+                    DDSLabel.Enabled = true;
+                    DDS.Enabled = true;
+                    DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
+                }
+                else if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 1)
                 {
                     DDSLabel.Visible = true;
                     DDS.Visible = true;
@@ -725,24 +747,11 @@ namespace KeppySynthDebugWindow
                 }
                 else
                 {
-                    if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
-                    {
-                        DDSLabel.Visible = true;
-                        DDS.Visible = true;
-                        AERTLabel.Visible = false;
-                        AERT.Visible = false;
-                        DDSLabel.Enabled = true;
-                        DDS.Enabled = true;
-                        DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
-                    }
-                    else if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2 || Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 3)
-                    {
-                        DDSLabel.Visible = false;
-                        DDS.Visible = false;
-                        AERTLabel.Visible = true;
-                        AERT.Visible = true;
-                        AERT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusageE0", "0").ToString());
-                    }
+                    DDSLabel.Visible = false;
+                    DDS.Visible = false;
+                    AERTLabel.Visible = true;
+                    AERT.Visible = true;
+                    AERT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusageE0", "0").ToString());
                 }
 
                 UpdateActiveVoicesPerChannel();

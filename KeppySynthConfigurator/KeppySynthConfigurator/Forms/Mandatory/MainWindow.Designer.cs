@@ -844,7 +844,7 @@
             // OldBuff
             // 
             this.OldBuff.Index = 0;
-            this.OldBuff.Text = "Enable old buffer (DS)";
+            this.OldBuff.Text = "Enable old buffer (XA, DS)";
             this.OldBuff.Click += new System.EventHandler(this.OldBuff_Click);
             // 
             // NoSleep
@@ -1261,9 +1261,9 @@
             // 
             this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolLabel.Location = new System.Drawing.Point(508, 15);
+            this.VolLabel.Location = new System.Drawing.Point(491, 12);
             this.VolLabel.Name = "VolLabel";
-            this.VolLabel.Size = new System.Drawing.Size(52, 18);
+            this.VolLabel.Size = new System.Drawing.Size(64, 24);
             this.VolLabel.TabIndex = 40;
             this.VolLabel.Text = "VOL:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1307,7 +1307,7 @@
             // assignSoundfontListToAppToolStripMenuItem
             // 
             this.assignSoundfontListToAppToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(167, 384);
+            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(167, 383);
             this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
             this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.assignSoundfontListToAppToolStripMenuItem.TabIndex = 30;
@@ -1318,7 +1318,7 @@
             // changeDefaultSoundfontListToolStripMenuItem
             // 
             this.changeDefaultSoundfontListToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(7, 384);
+            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(7, 383);
             this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
             this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.changeDefaultSoundfontListToolStripMenuItem.TabIndex = 29;
@@ -1329,7 +1329,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 384);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 383);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
             this.SettingsPresetsBtn.TabIndex = 31;
@@ -1340,7 +1340,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 384);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 383);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 32;
@@ -1352,7 +1352,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 384);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 383);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 33;

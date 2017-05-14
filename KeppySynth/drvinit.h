@@ -8,13 +8,12 @@ unsigned WINAPI notescatcher(LPVOID lpV) {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 		while (stop_thread == 0) {
 			bmsyn_play_some_data();
-			if (capframerate == 1) Sleep(16);
-			else Sleep(1);
 
-			if (oldbuffermode == 1) break;
+			if (capframerate == 1) Sleep(16); else Sleep(1);
+			if (xaudiodisabled < 2) { if (oldbuffermode == 1) break; }
 		}
 		PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
-		stop_thread = 0;
+		hThread4 = NULL;
 		_endthreadex(0);
 		return 0;
 	}
@@ -47,7 +46,6 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 
 void InitializeNotesCatcherThread() {
 	if (hThread4 == NULL) {
-		ResetSynth(1);
 		hThread4 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr4);
 		SetPriorityClass(hThread4, callprioval[driverprio]);
 		SetThreadPriority(hThread4, prioval[driverprio]);
@@ -55,54 +53,33 @@ void InitializeNotesCatcherThread() {
 }
 
 unsigned WINAPI audioengine(LPVOID lpV) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread...");
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/XA...");
 	while (stop_thread == 0) {
 		try {
-			if (reset_synth != 0) {
-				reset_synth = 0;
-				BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				CheckUp(ERRORCODE, L"AudioEngine");
-			}
+			if (xaudiodisabled < 2) {
+				if (reset_synth != 0) {
+					reset_synth = 0;
+					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+					CheckUp(ERRORCODE, L"AudioEngine");
+				}
 
-			if (xaudiodisabled == 0) AudioRender();
-			else {
-				_endthreadex(0);
-				return 0;
+				if (oldbuffermode == 1) bmsyn_play_some_data();
+				else InitializeNotesCatcherThread();
+
+				if (xaudiodisabled == 0) AudioRender();
+				else if (xaudiodisabled == 1) {
+					BASS_ChannelUpdate(KSStream, 0);
+					CheckUp(ERRORCODE, L"DSEngine");
+					Sleep(rco);
+				}
 			}
+			else break;
 		}
 		catch (...) {
 			crashmessage(L"AudioEngine");
 		}
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread...");
-	stop_thread = 0;
-	_endthreadex(0);
-	return 0;
-}
-
-unsigned WINAPI dsengine(LPVOID lpV) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing legacy DirectSound rendering thread...");
-	while (stop_thread == 0) {
-		try {
-			if (reset_synth != 0) {
-				reset_synth = 0;
-				BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				CheckUp(ERRORCODE, L"DSEngine");
-			}
-
-			if (oldbuffermode == 1) bmsyn_play_some_data();
-			else InitializeNotesCatcherThread();
-
-			BASS_ChannelUpdate(KSStream, 0);
-			CheckUp(ERRORCODE, L"DSEngine");
-
-			Sleep(rco);
-		}
-		catch (...) {
-			crashmessage(L"DSEngine");
-		}
-	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing legacy DirectSound rendering thread...");
+	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/XA...");
 	stop_thread = 0;
 	_endthreadex(0);
 	return 0;
@@ -342,17 +319,9 @@ int CreateThreads() {
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	SetEvent(load_sfevent);
 	reset_synth = 0;
-	if (xaudiodisabled == 1)
-	{
-		hThread2 = (HANDLE)_beginthreadex(NULL, 0, dsengine, 0, 0, &thrdaddr2);
-		SetPriorityClass(hThread2, callprioval[driverprio]);
-		SetThreadPriority(hThread2, prioval[driverprio]);
-	}
-	else {
-		hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
-		SetPriorityClass(hThread2, callprioval[driverprio]);
-		SetThreadPriority(hThread2, prioval[driverprio]);
-	}
+	hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
+	SetPriorityClass(hThread2, callprioval[driverprio]);
+	SetThreadPriority(hThread2, prioval[driverprio]);
 	hThread3 = (HANDLE)_beginthreadex(NULL, 0, settingsload, 0, 0, &thrdaddr3);
 	SetPriorityClass(hThread3, callprioval[driverprio]);
 	SetThreadPriority(hThread3, prioval[driverprio]);
