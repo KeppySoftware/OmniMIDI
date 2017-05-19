@@ -241,11 +241,11 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (VolTrackBar.Value <= 49) VolPercentageSign.ForeColor = VolSimView.ForeColor = Color.Red;
-                else VolPercentageSign.ForeColor = VolSimView.ForeColor = Color.Blue;
+                if (VolTrackBar.Value <= 49)VolSimView.ForeColor = Color.Red;
+                else VolSimView.ForeColor = Color.Blue;
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
-                VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString();
+                VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
                 VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
@@ -1658,23 +1658,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void MIDINameNoSpace_Click(object sender, EventArgs e)
-        {
-            if (MIDINameNoSpace.Checked == false)
-            {
-                SynthSettings.SetValue("shortname", "1", RegistryValueKind.DWord);
-                SynthSettings.SetValue("newdevicename", "0", RegistryValueKind.DWord);
-                MaskSynthesizerAsAnother.Enabled = false;
-                MIDINameNoSpace.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("shortname", "0", RegistryValueKind.DWord);
-                MaskSynthesizerAsAnother.Enabled = true;
-                MIDINameNoSpace.Checked = false;
-            }
-        }
-
         private void slowdownnoskip_Click(object sender, EventArgs e)
         {
             if (slowdownnoskip.Checked == false)
@@ -1865,17 +1848,17 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void NoteOFFtoON_Click(object sender, EventArgs e)
+        private void Limit88_Click(object sender, EventArgs e)
         {
-            if (NoteOFFtoON.Checked == false)
+            if (Limit88.Checked == false)
             {
-                SynthSettings.SetValue("turnnoteoffintonoteon", "1", RegistryValueKind.DWord);
-                NoteOFFtoON.Checked = true;
+                SynthSettings.SetValue("limit88", "1", RegistryValueKind.DWord);
+                Limit88.Checked = true;
             }
             else
             {
-                SynthSettings.SetValue("turnnoteoffintonoteon", "0", RegistryValueKind.DWord);
-                NoteOFFtoON.Checked = false;
+                SynthSettings.SetValue("limit88", "0", RegistryValueKind.DWord);
+                Limit88.Checked = false;
             }
         }
 

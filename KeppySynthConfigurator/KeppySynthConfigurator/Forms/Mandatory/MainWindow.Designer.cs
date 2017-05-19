@@ -97,14 +97,14 @@
             this.slowdownnoskip = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.MaskSynthesizerAsAnother = new System.Windows.Forms.MenuItem();
-            this.MIDINameNoSpace = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.autopanicmode = new System.Windows.Forms.MenuItem();
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.CapFram = new System.Windows.Forms.MenuItem();
             this.menuItem36 = new System.Windows.Forms.MenuItem();
             this.RevbNChor = new System.Windows.Forms.MenuItem();
-            this.NoteOFFtoON = new System.Windows.Forms.MenuItem();
+            this.menuItem47 = new System.Windows.Forms.MenuItem();
+            this.Limit88 = new System.Windows.Forms.MenuItem();
             this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
             this.SysExIgnore = new System.Windows.Forms.MenuItem();
             this.menuItem27 = new System.Windows.Forms.MenuItem();
@@ -176,7 +176,6 @@
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
             this.VolLabel = new System.Windows.Forms.Label();
-            this.VolPercentageSign = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.Button();
@@ -479,7 +478,7 @@
             // 
             // changeTheSizeOfTheEVBufferToolStripMenuItem
             // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 6;
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 3;
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
             this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
             // 
@@ -703,7 +702,6 @@
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
-            this.MIDINameNoSpace,
             this.menuItem18,
             this.autopanicmode});
             this.menuItem14.Text = "Advanced driver settings";
@@ -714,20 +712,14 @@
             this.MaskSynthesizerAsAnother.Text = "Mask synthesizer as another";
             this.MaskSynthesizerAsAnother.Click += new System.EventHandler(this.MaskSynthesizerAsAnother_Click);
             // 
-            // MIDINameNoSpace
-            // 
-            this.MIDINameNoSpace.Index = 2;
-            this.MIDINameNoSpace.Text = "Use MIDI device name without spaces";
-            this.MIDINameNoSpace.Click += new System.EventHandler(this.MIDINameNoSpace_Click);
-            // 
             // menuItem18
             // 
-            this.menuItem18.Index = 3;
+            this.menuItem18.Index = 2;
             this.menuItem18.Text = "-";
             // 
             // autopanicmode
             // 
-            this.autopanicmode.Index = 4;
+            this.autopanicmode.Index = 3;
             this.autopanicmode.Text = "Alternative rendering time limiter";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
@@ -738,10 +730,11 @@
             this.CapFram,
             this.menuItem36,
             this.RevbNChor,
-            this.NoteOFFtoON,
+            this.changeTheSizeOfTheEVBufferToolStripMenuItem,
+            this.menuItem47,
+            this.Limit88,
             this.AllNotesIgnore,
             this.SysExIgnore,
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem,
             this.menuItem27,
             this.FullVelocityMode,
             this.IgnoreNotes1,
@@ -765,44 +758,49 @@
             this.RevbNChor.Text = "Set reverb and chorus";
             this.RevbNChor.Click += new System.EventHandler(this.RevbNChor_Click);
             // 
-            // NoteOFFtoON
+            // menuItem47
             // 
-            this.NoteOFFtoON.Index = 3;
-            this.NoteOFFtoON.Text = "Ignore NoteOFF events";
-            this.NoteOFFtoON.Click += new System.EventHandler(this.NoteOFFtoON_Click);
+            this.menuItem47.Index = 4;
+            this.menuItem47.Text = "-";
+            // 
+            // Limit88
+            // 
+            this.Limit88.Index = 5;
+            this.Limit88.Text = "Limit key range to 88 keys";
+            this.Limit88.Click += new System.EventHandler(this.Limit88_Click);
             // 
             // AllNotesIgnore
             // 
-            this.AllNotesIgnore.Index = 4;
+            this.AllNotesIgnore.Index = 6;
             this.AllNotesIgnore.Text = "Ignore all MIDI events";
             this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
             // 
             // SysExIgnore
             // 
-            this.SysExIgnore.Index = 5;
+            this.SysExIgnore.Index = 7;
             this.SysExIgnore.Text = "Ignore all SysEx messages";
             this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
             // 
             // menuItem27
             // 
-            this.menuItem27.Index = 7;
+            this.menuItem27.Index = 8;
             this.menuItem27.Text = "-";
             // 
             // FullVelocityMode
             // 
-            this.FullVelocityMode.Index = 8;
+            this.FullVelocityMode.Index = 9;
             this.FullVelocityMode.Text = "Set all events to full velocity";
             this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
             // 
             // IgnoreNotes1
             // 
-            this.IgnoreNotes1.Index = 9;
+            this.IgnoreNotes1.Index = 10;
             this.IgnoreNotes1.Text = "Ignore notes in between two velocity values";
             this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
             // 
             // IgnoreNotesInterval
             // 
-            this.IgnoreNotesInterval.Index = 10;
+            this.IgnoreNotesInterval.Index = 11;
             this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
             this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
             // 
@@ -1235,7 +1233,6 @@
             // 
             this.Settings.BackColor = System.Drawing.Color.Transparent;
             this.Settings.Controls.Add(this.VolLabel);
-            this.Settings.Controls.Add(this.VolPercentageSign);
             this.Settings.Controls.Add(this.AudioEngBox);
             this.Settings.Controls.Add(this.label2);
             this.Settings.Controls.Add(this.assignSoundfontListToAppToolStripMenuItem);
@@ -1260,25 +1257,13 @@
             // VolLabel
             // 
             this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolLabel.Location = new System.Drawing.Point(491, 12);
+            this.VolLabel.Font = new System.Drawing.Font("DSEG14 Classic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLabel.Location = new System.Drawing.Point(505, 10);
             this.VolLabel.Name = "VolLabel";
-            this.VolLabel.Size = new System.Drawing.Size(64, 24);
+            this.VolLabel.Size = new System.Drawing.Size(47, 19);
             this.VolLabel.TabIndex = 40;
             this.VolLabel.Text = "VOL:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VolLabel.UseCompatibleTextRendering = true;
-            // 
-            // VolPercentageSign
-            // 
-            this.VolPercentageSign.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolPercentageSign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolPercentageSign.Location = new System.Drawing.Point(618, 20);
-            this.VolPercentageSign.Name = "VolPercentageSign";
-            this.VolPercentageSign.Size = new System.Drawing.Size(15, 13);
-            this.VolPercentageSign.TabIndex = 39;
-            this.VolPercentageSign.Text = "%";
-            this.VolPercentageSign.UseCompatibleTextRendering = true;
             // 
             // AudioEngBox
             // 
@@ -1701,7 +1686,7 @@
             this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
             this.VolIntView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolIntView.Location = new System.Drawing.Point(9, 67);
+            this.VolIntView.Location = new System.Drawing.Point(9, 68);
             this.VolIntView.Name = "VolIntView";
             this.VolIntView.Size = new System.Drawing.Size(623, 12);
             this.VolIntView.TabIndex = 3;
@@ -1712,13 +1697,13 @@
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("DSEG7 Classic", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
-            this.VolSimView.Location = new System.Drawing.Point(548, 5);
+            this.VolSimView.Location = new System.Drawing.Point(543, 5);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(79, 28);
+            this.VolSimView.Size = new System.Drawing.Size(97, 27);
             this.VolSimView.TabIndex = 2;
-            this.VolSimView.Text = "100";
+            this.VolSimView.Text = "100%";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.VolSimView.UseMnemonic = false;
             // 
@@ -1727,7 +1712,7 @@
             this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.VolTrackBar.BackColor = System.Drawing.Color.White;
-            this.VolTrackBar.Location = new System.Drawing.Point(8, 35);
+            this.VolTrackBar.Location = new System.Drawing.Point(8, 36);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Name = "VolTrackBar";
             this.VolTrackBar.Size = new System.Drawing.Size(625, 45);
@@ -2168,7 +2153,6 @@
         public System.Windows.Forms.MenuItem DebugModePls;
         public System.Windows.Forms.MenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
         public System.Windows.Forms.MenuItem autopanicmode;
-        public System.Windows.Forms.MenuItem MIDINameNoSpace;
         public System.Windows.Forms.MenuItem SysExIgnore;
         public System.Windows.Forms.MenuItem AllNotesIgnore;
         public System.Windows.Forms.MenuItem floatingpointaudio;
@@ -2282,7 +2266,6 @@
         private System.Windows.Forms.MenuItem menuItem35;
         private System.Windows.Forms.MenuItem menuItem38;
         public System.Windows.Forms.MenuItem FullVelocityMode;
-        public System.Windows.Forms.MenuItem NoteOFFtoON;
         private System.Windows.Forms.MenuItem menuItem40;
         private System.Windows.Forms.MenuItem AMIDIMapInstallMenu;
         private System.Windows.Forms.MenuItem AMIDIMapUninstallMenu;
@@ -2325,11 +2308,12 @@
         private System.Windows.Forms.MenuItem menuItem42;
         private System.Windows.Forms.MenuItem KSUSJoinNow;
         private System.Windows.Forms.Label VolLabel;
-        public System.Windows.Forms.Label VolPercentageSign;
         public System.Windows.Forms.MenuItem UnsupportedFeaturesSep;
         public System.Windows.Forms.MenuItem UnsupportedFeatures;
         public System.Windows.Forms.MenuItem OldBuff;
         public System.Windows.Forms.MenuItem NoSleep;
+        private System.Windows.Forms.MenuItem menuItem47;
+        public System.Windows.Forms.MenuItem Limit88;
     }
 }
 

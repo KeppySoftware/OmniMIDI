@@ -610,14 +610,13 @@ namespace KeppySynthConfigurator
                 {
                     KeppySynthConfiguratorMain.Delegate.CapFram.Checked = true;
                 }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("shortname", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.MaskSynthesizerAsAnother.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.MIDINameNoSpace.Checked = true;
-                }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = true;
+                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("limit88", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.Limit88.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)) == 1)
                 {
@@ -630,10 +629,6 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.FullVelocityMode.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("turnnoteoffintonoteon", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.NoteOFFtoON.Checked = true;
                 }
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
@@ -822,15 +817,13 @@ namespace KeppySynthConfigurator
                 if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
                 {
 
-                    KeppySynthConfiguratorMain.Delegate.VolPercentageSign.ForeColor = Color.Red;
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
                 }
                 else
                 {
-                    KeppySynthConfiguratorMain.Delegate.VolPercentageSign.ForeColor = Color.Blue;
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
                 }
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString();
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }

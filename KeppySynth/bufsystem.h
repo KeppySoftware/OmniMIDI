@@ -31,37 +31,33 @@ bool depends() {
 }
 
 void playnotes(int status, int note, int velocity, DWORD_PTR dwParam1, int exlen) {
-	if (turnnoteoffintonoteon == 1) {
-		if ((Between(status, 0x80, 0x8f) && (status != 0x89))) {
-			int newstatus = status + 0x22;
-			SETSTATUS(dwParam1, newstatus);
-		}
-	}
+	// SETSTATUS(dwParam1, status);
 	if (pitchshift != 127) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-			for (int i = 0; i <= 15; ++i) {
-				if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
-					int newnote = (note - 127) + pitchshift;
-					if (newnote > 127) { newnote = 127; }
-					else if (newnote < 0) { newnote = 0; }
-					SETNOTE(dwParam1, newnote);
-				}
+			if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
+				int newnote = (note - 127) + pitchshift;
+				if (newnote > 127) { newnote = 127; }
+				else if (newnote < 0) { newnote = 0; }
+				SETNOTE(dwParam1, newnote);
 			}
 		}
 	}
 	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
-		SETVELOCITY(dwParam1, velocity);
+		SETVELOCITY(dwParam1, 127);
 
 	BYTE statusv = (BYTE)dwParam1;
 	DWORD len;
-	if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)
-		len = 2;
-	else if (statusv < 0xf0 || statusv == 0xf2)
-		len = 3;
-	else
-		len = 1;
+	if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)	len = 2;
+	else if (statusv < 0xf0 || statusv == 0xf2)	len = 3;
+	else len = 1;
 
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+	if (limit88 == 1) {
+		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+			if (note >= 21 && note <= 108) { BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len); }
+		}
+		else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+	}
+	else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 
 	CheckUp(ERRORCODE, L"DataToAudioStream");
 
