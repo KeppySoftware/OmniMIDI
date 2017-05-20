@@ -227,6 +227,7 @@
             this.RmvSF = new System.Windows.Forms.Button();
             this.AddSF = new System.Windows.Forms.Button();
             this.TabsForTheControls = new System.Windows.Forms.TabControl();
+            this.TabImgs = new System.Windows.Forms.ImageList(this.components);
             this.SettingsPresets = new System.Windows.Forms.ContextMenu();
             this.lowLatencyPresetToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.SBLowLatToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -766,7 +767,7 @@
             // Limit88
             // 
             this.Limit88.Index = 5;
-            this.Limit88.Text = "Limit key range to 88 keys";
+            this.Limit88.Text = "Limit key range to 88 keys (Excluding drums)";
             this.Limit88.Click += new System.EventHandler(this.Limit88_Click);
             // 
             // AllNotesIgnore
@@ -789,7 +790,7 @@
             // FullVelocityMode
             // 
             this.FullVelocityMode.Index = 9;
-            this.FullVelocityMode.Text = "Set all events to full velocity";
+            this.FullVelocityMode.Text = "Set all NoteON events to full velocity";
             this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
             // 
             // IgnoreNotes1
@@ -1248,19 +1249,19 @@
             this.Settings.Controls.Add(this.VolIntView);
             this.Settings.Controls.Add(this.VolSimView);
             this.Settings.Controls.Add(this.VolTrackBar);
-            this.Settings.Location = new System.Drawing.Point(4, 22);
+            this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 416);
+            this.Settings.Size = new System.Drawing.Size(641, 415);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
             // VolLabel
             // 
             this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolLabel.Font = new System.Drawing.Font("DSEG14 Classic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolLabel.Location = new System.Drawing.Point(505, 10);
+            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLabel.Location = new System.Drawing.Point(504, 10);
             this.VolLabel.Name = "VolLabel";
-            this.VolLabel.Size = new System.Drawing.Size(47, 19);
+            this.VolLabel.Size = new System.Drawing.Size(50, 19);
             this.VolLabel.TabIndex = 40;
             this.VolLabel.Text = "VOL:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1274,7 +1275,7 @@
             "DirectSound",
             "ASIO",
             "WASAPI"});
-            this.AudioEngBox.Location = new System.Drawing.Point(243, 7);
+            this.AudioEngBox.Location = new System.Drawing.Point(233, 7);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
             this.AudioEngBox.TabIndex = 14;
@@ -1283,7 +1284,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(171, 10);
+            this.label2.Location = new System.Drawing.Point(161, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 13);
             this.label2.TabIndex = 38;
@@ -1292,7 +1293,7 @@
             // assignSoundfontListToAppToolStripMenuItem
             // 
             this.assignSoundfontListToAppToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(167, 383);
+            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(167, 382);
             this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
             this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.assignSoundfontListToAppToolStripMenuItem.TabIndex = 30;
@@ -1303,7 +1304,7 @@
             // changeDefaultSoundfontListToolStripMenuItem
             // 
             this.changeDefaultSoundfontListToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(7, 383);
+            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(7, 382);
             this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
             this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
             this.changeDefaultSoundfontListToolStripMenuItem.TabIndex = 29;
@@ -1314,7 +1315,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 383);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 382);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
             this.SettingsPresetsBtn.TabIndex = 31;
@@ -1325,7 +1326,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 383);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 382);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 32;
@@ -1337,7 +1338,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 383);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 382);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 33;
@@ -1350,9 +1351,9 @@
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = null;
-            this.WhatIsXAudio.Location = new System.Drawing.Point(328, 8);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(316, 9);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
-            this.WhatIsXAudio.Size = new System.Drawing.Size(17, 17);
+            this.WhatIsXAudio.Size = new System.Drawing.Size(16, 16);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.WhatIsXAudio.TabIndex = 37;
             this.WhatIsXAudio.TabStop = false;
@@ -1363,9 +1364,9 @@
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsOutput.ErrorImage = null;
-            this.WhatIsOutput.Location = new System.Drawing.Point(132, 8);
+            this.WhatIsOutput.Location = new System.Drawing.Point(128, 9);
             this.WhatIsOutput.Name = "WhatIsOutput";
-            this.WhatIsOutput.Size = new System.Drawing.Size(17, 17);
+            this.WhatIsOutput.Size = new System.Drawing.Size(16, 16);
             this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.WhatIsOutput.TabIndex = 35;
             this.WhatIsOutput.TabStop = false;
@@ -1408,7 +1409,7 @@
             this.StatusBuf.BackColor = System.Drawing.Color.Transparent;
             this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
             this.StatusBuf.ErrorImage = null;
-            this.StatusBuf.Location = new System.Drawing.Point(532, 55);
+            this.StatusBuf.Location = new System.Drawing.Point(533, 55);
             this.StatusBuf.Name = "StatusBuf";
             this.StatusBuf.Size = new System.Drawing.Size(17, 17);
             this.StatusBuf.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1697,7 +1698,7 @@
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("DSEG7 Classic", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
             this.VolSimView.Location = new System.Drawing.Point(543, 5);
             this.VolSimView.Name = "VolSimView";
@@ -1738,10 +1739,10 @@
             this.SoundFontTab.Controls.Add(this.MvU);
             this.SoundFontTab.Controls.Add(this.RmvSF);
             this.SoundFontTab.Controls.Add(this.AddSF);
-            this.SoundFontTab.Location = new System.Drawing.Point(4, 22);
+            this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(641, 416);
+            this.SoundFontTab.Size = new System.Drawing.Size(641, 415);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -1768,7 +1769,7 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(532, 362);
+            this.Lis.Size = new System.Drawing.Size(532, 361);
             this.Lis.TabIndex = 12;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -1800,7 +1801,7 @@
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.EL.Location = new System.Drawing.Point(544, 368);
+            this.EL.Location = new System.Drawing.Point(544, 367);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -1830,7 +1831,7 @@
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IEL.Location = new System.Drawing.Point(544, 339);
+            this.IEL.Location = new System.Drawing.Point(544, 338);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -1916,7 +1917,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(3, 401);
+            this.ListOverride.Location = new System.Drawing.Point(3, 400);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 31;
@@ -2004,11 +2005,20 @@
             this.TabsForTheControls.Controls.Add(this.SoundFontTab);
             this.TabsForTheControls.Controls.Add(this.Settings);
             this.TabsForTheControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TabsForTheControls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TabsForTheControls.ImageList = this.TabImgs;
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
             this.TabsForTheControls.Size = new System.Drawing.Size(649, 442);
             this.TabsForTheControls.TabIndex = 32;
+            // 
+            // TabImgs
+            // 
+            this.TabImgs.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TabImgs.ImageStream")));
+            this.TabImgs.TransparentColor = System.Drawing.Color.Transparent;
+            this.TabImgs.Images.SetKeyName(0, "listicon.png");
+            this.TabImgs.Images.SetKeyName(1, "gear.png");
             // 
             // SettingsPresets
             // 
@@ -2314,6 +2324,7 @@
         public System.Windows.Forms.MenuItem NoSleep;
         private System.Windows.Forms.MenuItem menuItem47;
         public System.Windows.Forms.MenuItem Limit88;
+        private System.Windows.Forms.ImageList TabImgs;
     }
 }
 

@@ -60,6 +60,7 @@
 README.txt
 
 // Ignore some output files
+KeppySynth/signature.kep
 output/*.config
 output/*.dll
 output/*.manifest
@@ -68,11 +69,11 @@ output/*.vshost.exe
 output/*.xml
 output/64
 output/Copy 64-bit test library.bat
+output/KSDriverRegister.exe
 output/KeppySynthConfigurator.exe
 output/KeppySynthDebugWindow.exe
 output/KeppySynthMixerWindow.exe
 output/KeppySynthWatchdog.exe
 output/KeppysSynthSetup.exe
-output/KSDriverRegister.exe
+output/KeppysSynthUpdate.exe
 output/Test Keppy's Synthesizer Configurator.bat
-KeppySynth/signature.kep

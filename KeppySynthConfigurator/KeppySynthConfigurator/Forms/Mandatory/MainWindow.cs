@@ -218,6 +218,9 @@ namespace KeppySynthConfigurator
                 WhatIsXAudio.Image = Properties.Resources.what;
                 StatusBuf.Image = Properties.Resources.what;
 
+                TabsForTheControls.TabPages[0].ImageIndex = 0;
+                TabsForTheControls.TabPages[1].ImageIndex = 1;
+
                 Functions.InitializeLastPath();
                 SelectedListBox.Text = "List 1";
                 KeppySynthConfiguratorMain.whichone = 1;
@@ -1633,7 +1636,8 @@ namespace KeppySynthConfigurator
             {
                 StatusBuf.Visible = false;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = false;
-                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Items[KeppySynthConfiguratorMain.Delegate.AudioEngBox.FindStringExact("XAudio2")] = ".WAV mode";
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = ".WAV mode";
                 RenderingTimeLabel.Enabled = false;
                 bufsize.Enabled = false;
                 MaxCPU.Enabled = false;
@@ -1647,6 +1651,8 @@ namespace KeppySynthConfigurator
             {
                 StatusBuf.Visible = true;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Items[KeppySynthConfiguratorMain.Delegate.AudioEngBox.FindStringExact(".WAV mode")] = "XAudio2";
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
                 RenderingTimeLabel.Enabled = true;
                 bufsize.Enabled = true;
                 MaxCPU.Enabled = true;

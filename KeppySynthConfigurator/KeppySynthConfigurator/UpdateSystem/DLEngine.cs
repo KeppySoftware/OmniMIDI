@@ -47,7 +47,7 @@ namespace KeppySynthConfigurator.Forms
                         CancelBtn.Visible = false;
                         progressBar1.Size = new Size(271, 23);
                     }
-                    URL = new Uri(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/download/{0}/KeppysSynthSetup.exe", VersionToDownload));
+                    URL = new Uri(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/download/{0}/KeppysSynthUpdate.exe", VersionToDownload));
                 }
                 else
                 {
@@ -59,7 +59,7 @@ namespace KeppySynthConfigurator.Forms
                 {
                     if (test == 0)
                     {
-                        webClient.DownloadFileAsync(URL, String.Format("{0}KeppySynthSetup.exe", Path.GetTempPath()));
+                        webClient.DownloadFileAsync(URL, String.Format("{0}KeppySynthUpdate.exe", Path.GetTempPath()));
                     }
                     else
                     {
@@ -86,7 +86,7 @@ namespace KeppySynthConfigurator.Forms
             if (e.Cancelled)
             {
                 webClient.Dispose();
-                if (File.Exists(Path.GetTempPath() + "KeppySynthSetup.exe")) { File.Delete(Path.GetTempPath() + "KeppySynthSetup.exe"); }
+                if (File.Exists(Path.GetTempPath() + "KeppySynthUpdate.exe")) { File.Delete(Path.GetTempPath() + "KeppySynthUpdate.exe"); }
                 MessageBox.Show("Download aborted.\n\nPress OK to close the download window.", "Keppy's Synthesizer - Download aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Close();
             }
@@ -96,7 +96,7 @@ namespace KeppySynthConfigurator.Forms
                 {
                     try
                     {
-                        Process.Start(Path.GetTempPath() + "KeppySynthSetup.exe");
+                        Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe");
                         Application.ExitThread();
                     }
                     catch

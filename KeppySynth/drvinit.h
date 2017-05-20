@@ -269,7 +269,7 @@ void InitializeBASSEnc() {
 	PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");
 	typedef std::basic_string<TCHAR> tstring;
 	TCHAR encpath[MAX_PATH];
-	TCHAR poop[MAX_PATH];
+	TCHAR confpath[MAX_PATH];
 	TCHAR buffer[MAX_PATH] = { 0 };
 	TCHAR * out;
 	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
@@ -278,17 +278,17 @@ void InitializeBASSEnc() {
 	std::wstring stemp = tstring(out) + L" - Keppy's Synthesizer Output File.wav";
 	LPCWSTR result2 = stemp.c_str();
 	HKEY hKey = 0;
-	DWORD cbValueLength = sizeof(poop);
+	DWORD cbValueLength = sizeof(confpath);
 	DWORD dwType = REG_SZ;
 	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&poop), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+	if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
 		{
 			PathAppend(encpath, result2);
 		}
 	}
 	else {
-		PathAppend(encpath, CString(poop));
+		PathAppend(encpath, confpath);
 		PathAppend(encpath, result2);
 	}
 	RegCloseKey(hKey);
