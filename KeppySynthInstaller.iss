@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.5.8'
+#define Version '4.1.5.9'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -172,9 +172,10 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: de; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
+Name: "registerassociation"; Description: "Associate SoundFont files with the synthesizer"; GroupDescription: "Additional settings:"; Flags: unchecked
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "dx9redist"; Description: "Install DirectX 9.0c Redistributable (June 2010)"; GroupDescription: "Required runtimes"; Flags: checkedonce
+Name: "dx9redist"; Description: "Install DirectX 9.0c Redistributable (June 2010)"; GroupDescription: "Required runtimes:"; Flags: checkedonce
 
 [Registry]
 ; Normal settings
@@ -289,6 +290,8 @@ Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Fl
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 
 Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
+Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Check: Is64BitInstallMode; Tasks: registerassociation
+Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Check: not Is64BitInstallMode; Tasks: registerassociation
 Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml"; Flags: runascurrentuser postinstall waituntilidle shellexec unchecked; Description: "Vote Keppy's Synthesizer on Softpedia"
 
 [UninstallRun]

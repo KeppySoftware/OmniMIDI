@@ -75,6 +75,7 @@ namespace KeppySynthConfigurator
         // Lists
 
         // Work
+        public static List<string> tempList = new List<string> { };
         public static int greenfade = 0;
         public static int openadvanced { get; set; }
         public static int whichone { get; set; }
@@ -108,11 +109,15 @@ namespace KeppySynthConfigurator
                             // do other stuff...
                             break;
                     }
+                    if (Path.GetExtension(s).ToLowerInvariant() == ".sf2" || Path.GetExtension(s).ToLowerInvariant() == ".sfz" || Path.GetExtension(s).ToLowerInvariant() == ".sfpack")
+                    {
+                        tempList.Add(s);
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -227,6 +232,26 @@ namespace KeppySynthConfigurator
 
                 InitializeVolumeLabelFont();
                 Functions.LoadSettings();
+
+                if (tempList.Count > 0)
+                {
+                    foreach (string sf in tempList)
+                    {
+                        using (var tempForm = new AddToWhichList(sf))
+                        {
+                            var result = tempForm.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                CurrentList = tempForm.AddToFollowingList;
+                                SelectedListBox.SelectedIndex = tempForm.Index;
+                                List<string> SoundFontsToImport = new List<string> { };
+                                SoundFontsToImport.Add(sf);
+                                Functions.AddSoundfontsToSelectedList(CurrentList, SoundFontsToImport.ToArray());
+                            }
+                        }
+                    }
+                    Application.ExitThread();
+                }
 
                 // If /AS is specified, switch to the Settings tab automatically
                 if (openadvanced == 1)
@@ -458,8 +483,7 @@ namespace KeppySynthConfigurator
                 else if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
-                    Process.Start(Path.GetDirectoryName(name));
-                    Program.DebugToConsole(false, String.Format("Opened soundfont directory from list: {0}", name), null);
+                    Functions.OpenSFDirectory(name);
                 }
                 else if (howmany > 1)
                 {
@@ -518,16 +542,27 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
+                if (e.KeyCode == Keys.Delete)
                 {
-                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                    if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
                     {
-                        String name = Lis.SelectedItems[i].Text.ToString();
-                        Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
-                        Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
-                        Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
+                        for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                        {
+                            String name = Lis.SelectedItems[i].Text.ToString();
+                            Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
+                            Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
+                            Functions.SaveList(CurrentList);
+                            Functions.TriggerReload();
+                        }
                     }
+                }
+                else if (e.KeyCode == Keys.Up && e.Control)
+                {
+                    MoveListViewItems(Lis, MoveDirection.Up);
+                }
+                else if (e.KeyCode == Keys.Down && e.Control)
+                {
+                    MoveListViewItems(Lis, MoveDirection.Down);
                 }
             }
             catch (Exception ex)
@@ -2350,6 +2385,11 @@ namespace KeppySynthConfigurator
 
             if (paintReps++ % 500 == 0)
                 Application.DoEvents();
+        }
+
+        private void SetAssociationWithSFs_Click(object sender, EventArgs e)
+        {
+            Functions.SetAssociation();
         }
     }
 }

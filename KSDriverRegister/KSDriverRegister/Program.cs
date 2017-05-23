@@ -3,13 +3,16 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Win32;
-using System.Reflection;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace KSDriverRegister
 {
     class Program
     {
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
         public static RegistryKey driver32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
         public static RegistryKey driver64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
         public static RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
@@ -85,6 +88,44 @@ namespace KSDriverRegister
                 {
                     Unregister(false, "x86", clsid32);
                 }
+            }
+            else if (arguments[0] == "/associate")
+            {
+                string ExecutableName = Path.GetFileName(Application.ExecutablePath);
+                string OpenWith = Application.ExecutablePath;
+                string[] extensions = { "sf2", "sfz", "sfpack" };
+                try
+                {
+                    foreach (string ext in extensions)
+                    {
+                        using (RegistryKey User_Classes = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Classes\\", true))
+                        using (RegistryKey User_Ext = User_Classes.CreateSubKey("." + ext))
+                        using (RegistryKey User_AutoFile = User_Classes.CreateSubKey(ext + "_auto_file"))
+                        using (RegistryKey User_AutoFile_Command = User_AutoFile.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command"))
+                        using (RegistryKey ApplicationAssociationToasts = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\ApplicationAssociationToasts\\", true))
+                        using (RegistryKey User_Classes_Applications = User_Classes.CreateSubKey("Applications"))
+                        using (RegistryKey User_Classes_Applications_Exe = User_Classes_Applications.CreateSubKey(ExecutableName))
+                        using (RegistryKey User_Application_Command = User_Classes_Applications_Exe.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command"))
+                        using (RegistryKey User_Explorer = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\." + ext))
+                        using (RegistryKey User_Choice = User_Explorer.OpenSubKey("UserChoice"))
+                        {
+                            User_Classes_Applications_Exe.SetValue("", "SoundFont file", RegistryValueKind.String);
+                            User_Ext.SetValue("", ext + "_auto_file", RegistryValueKind.String);
+                            User_Classes.SetValue("", ext + "_auto_file", RegistryValueKind.String);
+                            User_Classes.CreateSubKey(ext + "_auto_file");
+                            User_AutoFile_Command.SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                            ApplicationAssociationToasts.SetValue(ext + "_auto_file_." + ext, 0);
+                            ApplicationAssociationToasts.SetValue(@"Applications\" + ext + "_." + ext, 0);
+                            User_Application_Command.SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                            User_Explorer.CreateSubKey("OpenWithList").SetValue("a", ExecutableName);
+                            User_Explorer.CreateSubKey("OpenWithProgids").SetValue(ext + "_auto_file", "0");
+                            if (User_Choice != null) User_Explorer.DeleteSubKey("UserChoice");
+                            User_Explorer.CreateSubKey("UserChoice").SetValue("ProgId", @"Applications\" + ExecutableName);
+                        }
+                    }
+                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+                }
+                catch { }
             }
             else if (arguments[0] == "/rmidimap")
             {

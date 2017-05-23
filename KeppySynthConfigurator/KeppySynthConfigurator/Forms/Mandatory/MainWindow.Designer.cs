@@ -162,6 +162,7 @@
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
             this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.SetAssociationWithSFs = new System.Windows.Forms.MenuItem();
             this.menuItem46 = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ResetToDefault = new System.Windows.Forms.MenuItem();
@@ -1065,13 +1066,13 @@
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 10;
+            this.SignatureCheck.Index = 11;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 9;
+            this.PanicButton.Index = 10;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
@@ -1097,6 +1098,7 @@
             this.WinMMPatch64,
             this.WinMMPatchRmv,
             this.menuItem15,
+            this.SetAssociationWithSFs,
             this.PanicButton,
             this.SignatureCheck,
             this.menuItem46,
@@ -1161,32 +1163,38 @@
             this.menuItem15.Index = 8;
             this.menuItem15.Text = "-";
             // 
+            // SetAssociationWithSFs
+            // 
+            this.SetAssociationWithSFs.Index = 9;
+            this.SetAssociationWithSFs.Text = "Set file association with SoundFonts";
+            this.SetAssociationWithSFs.Click += new System.EventHandler(this.SetAssociationWithSFs_Click);
+            // 
             // menuItem46
             // 
-            this.menuItem46.Index = 11;
+            this.menuItem46.Index = 12;
             this.menuItem46.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 12;
+            this.DeleteUserData.Index = 13;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 13;
+            this.ResetToDefault.Index = 14;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
             // EnableBBS
             // 
-            this.EnableBBS.Index = 14;
+            this.EnableBBS.Index = 15;
             this.EnableBBS.Text = "-";
             this.EnableBBS.Visible = false;
             // 
             // EnableBB
             // 
-            this.EnableBB.Index = 15;
+            this.EnableBB.Index = 16;
             this.EnableBB.Text = "Re-enable Butter Boy";
             this.EnableBB.Visible = false;
             this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
@@ -2325,6 +2333,7 @@
         private System.Windows.Forms.MenuItem menuItem47;
         public System.Windows.Forms.MenuItem Limit88;
         private System.Windows.Forms.ImageList TabImgs;
+        private System.Windows.Forms.MenuItem SetAssociationWithSFs;
     }
 }
 

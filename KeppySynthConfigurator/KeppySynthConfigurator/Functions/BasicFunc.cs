@@ -28,6 +28,9 @@ namespace KeppySynthConfigurator
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool Wow64RevertWow64FsRedirection(IntPtr ptr);
 
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
         public static Color SFEnabled = Color.FromArgb(0, 0, 0);
         public static Color SFDisabled = Color.FromArgb(170, 170, 170);
 
@@ -42,20 +45,6 @@ namespace KeppySynthConfigurator
         {
             OperatingSystem OS = Environment.OSVersion;
             return (OS.Version.Major >= 6);
-        }
-
-        public static void UserProfileMigration() // Migrates the Keppy's Synthesizer folder from %localappdata% (Unsupported on XP) to %userprofile% (Supported on XP, now used on Vista+ too)
-        {
-            try
-            {
-                string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Synthesizer\\";
-                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
-                Directory.Move(oldlocation, newlocation);
-            }
-            catch
-            {
-
-            }
         }
 
         // Buffer stuff
@@ -191,10 +180,18 @@ namespace KeppySynthConfigurator
                 string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
                 Directory.Move(oldlocation, newlocation);
             }
-            catch
-            {
+            catch { }
+        }
 
+        public static void UserProfileMigration() // Migrates the Keppy's Synthesizer folder from %localappdata% (Unsupported on XP) to %userprofile% (Supported on XP, now used on Vista+ too)
+        {
+            try
+            {
+                string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Synthesizer\\";
+                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
+                Directory.Move(oldlocation, newlocation);
             }
+            catch { }
         }
 
         public static void OpenSFWithDefaultApp(String SoundFont) // Basically changes the directory's name
@@ -215,6 +212,32 @@ namespace KeppySynthConfigurator
                 else
                 {
                     Process.Start(SoundFont);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        public static void OpenSFDirectory(String SoundFont) // Basically changes the directory's name
+        {
+            try
+            {
+                if (SoundFont.ToLower().IndexOf('=') != -1)
+                {
+                    var matches = System.Text.RegularExpressions.Regex.Matches(SoundFont, "[0-9]+");
+                    string sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
+                    Process.Start(Path.GetDirectoryName(sf));
+                }
+                else if (SoundFont.ToLower().IndexOf('@') != -1)
+                {
+                    string sf = SoundFont.Substring(SoundFont.LastIndexOf('@') + 1);
+                    Process.Start(Path.GetDirectoryName(sf));
+                }
+                else
+                {
+                    Process.Start(Path.GetDirectoryName(SoundFont));
                 }
             }
             catch
@@ -1227,6 +1250,45 @@ namespace KeppySynthConfigurator
                 return "Unknown format";
         }
 
+        public static void SetAssociation()
+        {
+            string ExecutableName = Path.GetFileName(Application.ExecutablePath);
+            string OpenWith = Application.ExecutablePath;
+            string[] extensions = { "sf2", "sfz", "sfpack" };
+            try
+            {
+                foreach (string ext in extensions)
+                {
+                    using (RegistryKey User_Classes = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Classes\\", true))
+                    using (RegistryKey User_Ext = User_Classes.CreateSubKey("." + ext))
+                    using (RegistryKey User_AutoFile = User_Classes.CreateSubKey(ext + "_auto_file"))
+                    using (RegistryKey User_AutoFile_Command = User_AutoFile.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command"))
+                    using (RegistryKey ApplicationAssociationToasts = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\ApplicationAssociationToasts\\", true))
+                    using (RegistryKey User_Classes_Applications = User_Classes.CreateSubKey("Applications"))
+                    using (RegistryKey User_Classes_Applications_Exe = User_Classes_Applications.CreateSubKey(ExecutableName))
+                    using (RegistryKey User_Application_Command = User_Classes_Applications_Exe.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command"))
+                    using (RegistryKey User_Explorer = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\." + ext))
+                    using (RegistryKey User_Choice = User_Explorer.OpenSubKey("UserChoice"))
+                    {
+                        User_Classes_Applications_Exe.SetValue("", "SoundFont file", RegistryValueKind.String);
+                        User_Ext.SetValue("", ext + "_auto_file", RegistryValueKind.String);
+                        User_Classes.SetValue("", ext + "_auto_file", RegistryValueKind.String);
+                        User_Classes.CreateSubKey(ext + "_auto_file");
+                        User_AutoFile_Command.SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                        ApplicationAssociationToasts.SetValue(ext + "_auto_file_." + ext, 0);
+                        ApplicationAssociationToasts.SetValue(@"Applications\" + ext + "_." + ext, 0);
+                        User_Application_Command.SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                        User_Explorer.CreateSubKey("OpenWithList").SetValue("a", ExecutableName);
+                        User_Explorer.CreateSubKey("OpenWithProgids").SetValue(ext + "_auto_file", "0");
+                        if (User_Choice != null) User_Explorer.DeleteSubKey("UserChoice");
+                        User_Explorer.CreateSubKey("UserChoice").SetValue("ProgId", @"Applications\" + ExecutableName);
+                    }
+                }
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+            }
+            catch { }
+        }
+
         private static Color ReturnColor(String result)
         {
             if (result == "@")
@@ -1564,12 +1626,7 @@ namespace KeppySynthConfigurator
                 if (WinMMDialog.ShowDialog() == DialogResult.OK)
                 {
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
-                    String MMName = "midimap.dll";
-                    String MSACMDrvName = "msacm32.drv";
-                    String MSACMName = "msacm32.dll";
-                    String MSADPName = "msapd32.drv";
                     String WDMAUDDrvName = "wdmaud.drv";
-                    String WDMAUDName = "wdmaud.sys";
                     String WinMMName = "winmm.dll";
                     if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x86" && Is64Bit)
                     {

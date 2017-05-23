@@ -10,7 +10,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthUpdate"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.1.5.8'
+#define Version '4.1.5.9'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -157,6 +157,7 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: de; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
+Name: "registerassociation"; Description: "Associate SoundFont files with the synthesizer"; GroupDescription: "Additional settings:"; Flags: unchecked
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
@@ -256,6 +257,8 @@ Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser pos
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 
+Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Check: Is64BitInstallMode; Tasks: registerassociation
+Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Check: not Is64BitInstallMode; Tasks: registerassociation
 Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml"; Flags: runascurrentuser postinstall waituntilidle shellexec unchecked; Description: "Vote Keppy's Synthesizer on Softpedia"
 
 [Messages]

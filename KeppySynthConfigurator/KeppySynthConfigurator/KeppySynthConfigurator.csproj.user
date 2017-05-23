@@ -11,7 +11,8 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <StartArguments>/debugwindow</StartArguments>
+    <StartArguments>
+    </StartArguments>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <EnableSQLServerDebugging>true</EnableSQLServerDebugging>
   </PropertyGroup>
