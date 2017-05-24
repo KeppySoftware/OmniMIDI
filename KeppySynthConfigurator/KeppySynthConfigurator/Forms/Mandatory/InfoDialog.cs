@@ -262,6 +262,11 @@ namespace KeppySynthConfigurator
             Process.Start(url);
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            new BecomeAPatron().ShowDialog();
+        }
+
         private void GTSLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://www.youtube.com/user/gingeas");

@@ -616,29 +616,36 @@ namespace KeppySynthConfigurator
         private enum MoveDirection { Up = -1, Down = 1 };
         private static void MoveListViewItems(ListView sender, MoveDirection direction)
         {
-            int dir = (int)direction;
-            int opp = dir * -1;
-
-            bool valid = sender.SelectedItems.Count > 0 &&
-                            ((direction == MoveDirection.Down && (sender.SelectedItems[sender.SelectedItems.Count - 1].Index < sender.Items.Count - 1))
-                        || (direction == MoveDirection.Up && (sender.SelectedItems[0].Index > 0)));
-
-            if (valid)
+            try
             {
-                foreach (ListViewItem item in sender.SelectedItems)
+                int dir = (int)direction;
+                int opp = dir * -1;
+
+                bool valid = sender.SelectedItems.Count > 0 &&
+                                ((direction == MoveDirection.Down && (sender.SelectedItems[sender.SelectedItems.Count - 1].Index < sender.Items.Count - 1))
+                            || (direction == MoveDirection.Up && (sender.SelectedItems[0].Index > 0)));
+
+                if (valid)
                 {
-                    string str = item.Text;
-                    int index = item.Index + dir;
+                    foreach (ListViewItem item in sender.SelectedItems)
+                    {
+                        string str = item.Text;
+                        int index = item.Index + dir;
 
-                    sender.Items.RemoveAt(item.Index);
-                    sender.Items.Insert(index, item);
+                        sender.Items.RemoveAt(item.Index);
+                        sender.Items.Insert(index, item);
+                    }
+                    Functions.SaveList(CurrentList);
+                    Functions.TriggerReload();
                 }
-                Functions.SaveList(CurrentList);
-                Functions.TriggerReload();
+                else if (valid || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count < 1 || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count > 1)
+                {
+                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
-            else if (valid || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count < 1 || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count > 1)
+            catch (Exception ex)
             {
-                MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Functions.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -1245,6 +1252,11 @@ namespace KeppySynthConfigurator
             Process.Start(url);
         }
 
+        private void patronToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new BecomeAPatron().ShowDialog();
+        }
+
         private void CapFram_Click(object sender, EventArgs e)
         {
             if (!CapFram.Checked)
@@ -1586,14 +1598,14 @@ namespace KeppySynthConfigurator
                     String.Format("It is recommended to set a buffer size with {0}Hz audio between {1} and {2}.",
                     Frequency.Text, valuearray[4], valuearray[5]));
 
-                BufferText.Text = String.Format("Driver buffer length ({0} to {1}, optimal range is between {2} and {3}):", 
+                BufferText.Text = String.Format("Driver buffer length ({0} to {1}, optimal range is between {2} and {3})", 
                     bufsize.Minimum, bufsize.Maximum, valuearray[4], valuearray[5]);
 
                 return valuearray[4] + 5;
             }
             else
             {
-                BufferText.Text = String.Format("Driver buffer length (in ms, from 1 to 1000):");
+                BufferText.Text = String.Format("Driver buffer length (in ms, from 1 to 1000)");
                 return 0;
             }
         }

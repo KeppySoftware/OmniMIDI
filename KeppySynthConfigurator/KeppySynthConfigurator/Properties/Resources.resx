@@ -118,113 +118,89 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="infoicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\infoicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ReloadIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\ReloadIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="whatoverride" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Text\whatoverride.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="wir" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\wir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="winmm64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM64\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="DRV32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Hashes\DRV32.SHA;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="refreshicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\refreshicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="nointerneticon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\nointerneticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="noupdateicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\noupdateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="updateicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\updateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="gmlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Text\gmlist.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="successiconupd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\successiconupd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="what" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\what.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wi" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\wi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DRV64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Hashes\DRV64.SHA;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="updatebk" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\updatebk.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="KSynthLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\KSynthLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="erroriconupd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\erroriconupd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="erroricon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\erroricon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="rollbackicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\rollbackicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="successicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\successicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ppdonate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\ppdonate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wdmaud32drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WinMM32\wdmaud.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bbsurprised" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mascot\bbsurprised.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="winmm32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WinMM32\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="KSynthLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pictures\KSynthLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="wdmaud64drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WinMM64\wdmaud.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="winmm64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WinMM64\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bbhappy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mascot\bbhappy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="AddSFIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\AddSFIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="rollbackicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\rollbackicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="clocklater" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pictures\clocklater.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DRV32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Hashes\DRV32.SHA;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ClearIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\List Editor\ClearIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DisableIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\DisableIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="bbangry" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mascot\bbangry.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EnableIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\List Editor\EnableIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ExportIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\ExportIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ImportIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\ImportIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="MvDwIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\MvDwIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="erroricon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\erroricon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="MvUpIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\List Editor\MvUpIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="RmvSFIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\RmvSFIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="refreshicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\refreshicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ReloadIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\List Editor\ReloadIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bbangry" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbangry.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="AddSFIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\AddSFIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="erroriconupd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\erroriconupd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ppdonate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pictures\ppdonate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bbsad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mascot\bbsad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="updatebk" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pictures\updatebk.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="vollab" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text\vollab.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DRV64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Hashes\DRV64.SHA;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="successicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\successicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="noupdateicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\noupdateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="volnum" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text\volnum.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bbcrying" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Mascot\bbcrying.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -232,19 +208,52 @@
   <data name="bbevil" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Mascot\bbevil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bbhappy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbhappy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="MvDwIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\MvDwIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bbsad" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbsad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="patronbtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pictures\patronbtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bbsurprised" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbsurprised.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="gmlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text\gmlist.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="volnum" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Text\volnum.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="DisableIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\DisableIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="vollab" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Text\vollab.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="RmvSFIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\RmvSFIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="successiconupd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\successiconupd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\wir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="infoicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\infoicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ImportIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\ImportIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="what" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\what.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\List Editor\ExportIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nointerneticon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\nointerneticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="updateicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\updateicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\wi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wdmaud32drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMM32\wdmaud.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="patronsm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pictures\patronsm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

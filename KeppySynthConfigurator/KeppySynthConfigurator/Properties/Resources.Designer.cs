@@ -143,6 +143,16 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap clocklater {
+            get {
+                object obj = ResourceManager.GetObject("clocklater", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DisableIcon {
             get {
                 object obj = ResourceManager.GetObject("DisableIcon", resourceCulture);
@@ -330,6 +340,26 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap ok {
             get {
                 object obj = ResourceManager.GetObject("ok", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap patronbtn {
+            get {
+                object obj = ResourceManager.GetObject("patronbtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap patronsm {
+            get {
+                object obj = ResourceManager.GetObject("patronsm", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

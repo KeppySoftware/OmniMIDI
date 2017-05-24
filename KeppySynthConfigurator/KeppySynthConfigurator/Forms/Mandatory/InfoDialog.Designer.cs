@@ -62,6 +62,7 @@
             this.BBMenu = new System.Windows.Forms.ContextMenu();
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.GTSLink = new System.Windows.Forms.LinkLabel();
+            this.PatreonBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Mascot)).BeginInit();
@@ -397,12 +398,27 @@
             this.GTSLink.Text = "G.T.S.";
             this.GTSLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GTSLink_LinkClicked);
             // 
+            // PatreonBtn
+            // 
+            this.PatreonBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.PatreonBtn.Image = global::KeppySynthConfigurator.Properties.Resources.patronsm;
+            this.PatreonBtn.Location = new System.Drawing.Point(285, 41);
+            this.PatreonBtn.Name = "PatreonBtn";
+            this.PatreonBtn.Size = new System.Drawing.Size(87, 23);
+            this.PatreonBtn.TabIndex = 13;
+            this.PatreonBtn.Text = "Patreon";
+            this.PatreonBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.PatreonBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.PatreonBtn.UseVisualStyleBackColor = true;
+            this.PatreonBtn.Click += new System.EventHandler(this.button1_Click);
+            // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(382, 371);
+            this.Controls.Add(this.PatreonBtn);
             this.Controls.Add(this.GTSLink);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
@@ -469,5 +485,6 @@
         private System.Windows.Forms.ContextMenu BBMenu;
         private System.Windows.Forms.MenuItem DisableBB;
         private System.Windows.Forms.LinkLabel GTSLink;
+        private System.Windows.Forms.Button PatreonBtn;
     }
 }

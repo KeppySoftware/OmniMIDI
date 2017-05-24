@@ -75,9 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions\AddToWhichList.cs">
-      <SubType>Form</SubType>
+    <Compile Include="BecomeAPatron.cs" />
+    <Compile Include="BecomeAPatron.Designer.cs">
+      <DependentUpon>BecomeAPatron.cs</DependentUpon>
     </Compile>
+    <Compile Include="Functions\AddToWhichList.cs" />
     <Compile Include="Functions\AddToWhichList.Designer.cs">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </Compile>
@@ -230,6 +232,9 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
+    <EmbeddedResource Include="BecomeAPatron.resx">
+      <DependentUpon>BecomeAPatron.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Audio Outputs\DefaultASIOAudioOutput.resx">
       <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
@@ -324,6 +329,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\patronbtn.png" />
     <None Include="Resources\List Editor\ReloadIcon.png" />
     <None Include="Resources\List Editor\RmvSFIcon.png" />
     <None Include="Resources\List Editor\MvUpIcon.png" />
@@ -361,6 +367,7 @@
     <None Include="Resources\Mascot\bbhappy.png" />
     <None Include="Resources\Mascot\bbsad.png" />
     <None Include="Resources\Mascot\bbsurprised.png" />
+    <None Include="Resources\clocklater.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Text\gmlist.txt" />

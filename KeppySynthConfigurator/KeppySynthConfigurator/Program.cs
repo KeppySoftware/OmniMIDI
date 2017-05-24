@@ -136,6 +136,7 @@ namespace KeppySynthConfigurator
                     WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
                     return;
                 }
+                TriggerDate();
                 try
                 {
                     foreach (String s in args)
@@ -188,6 +189,49 @@ namespace KeppySynthConfigurator
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        public static void TriggerDate()
+        {
+            DateTime BirthDate = DateTime.Now;
+            Int32 CurrentYear = Convert.ToInt32(BirthDate.ToString("yyyy"));
+            Int32 YearsOld = (CurrentYear - 2015);
+            if (BirthDate.ToString("dd/MM") == "17/05")
+                MessageBox.Show(String.Format("Today, Keppy's Synthesizer turned {0} years old!\n\nThank you fellow user for using it and helping me with the development, and happy anniversary, Keppy's Synthesizer!", YearsOld.ToString()), String.Format("{0} anniversary since the first release of Keppy's Synthesizer", Ordinal(YearsOld)), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else if (BirthDate.ToString("dd/MM") == "05/12")
+                MessageBox.Show("Today is Keppy's birthday! He turned " + (YearsOld).ToString() + " years old!\n\nHappy birthday, you potato!", "Happy birthday to Kepperino", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static string Ordinal(int number)
+        {
+            string suffix = String.Empty;
+
+            int ones = number % 10;
+            int tens = (int)Math.Floor(number / 10M) % 10;
+
+            if (tens == 1)
+            {
+                suffix = "th";
+            }
+            else
+            {
+                switch (ones)
+                {
+                    case 1:
+                        suffix = "st";
+                        break;
+                    case 2:
+                        suffix = "nd";
+                        break;
+                    case 3:
+                        suffix = "rd";
+                        break;
+                    default:
+                        suffix = "th";
+                        break;
+                }
+            }
+            return String.Format("{0}{1}", number, suffix);
         }
 
         public static void ExecuteForm(Int32 runmode, String[] args, Mutex m, Int32 form)

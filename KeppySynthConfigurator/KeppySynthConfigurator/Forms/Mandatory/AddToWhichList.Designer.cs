@@ -92,10 +92,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.DoNotAdd;
             this.ClientSize = new System.Drawing.Size(381, 117);
+            this.ControlBox = false;
             this.Controls.Add(this.DoNotAdd);
             this.Controls.Add(this.AddToList);
             this.Controls.Add(this.ListSel);
             this.Controls.Add(this.InfoMessage);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddToWhichList";

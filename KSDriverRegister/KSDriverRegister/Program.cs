@@ -91,8 +91,8 @@ namespace KSDriverRegister
             }
             else if (arguments[0] == "/associate")
             {
-                string ExecutableName = Path.GetFileName(Application.ExecutablePath);
-                string OpenWith = Application.ExecutablePath;
+                string ExecutableName = "KeppySynthConfigurator.exe";
+                string OpenWith = Path.GetFullPath("KeppySynthConfigurator.exe");
                 string[] extensions = { "sf2", "sfz", "sfpack" };
                 try
                 {

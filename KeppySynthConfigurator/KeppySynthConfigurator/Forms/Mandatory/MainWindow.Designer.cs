@@ -133,9 +133,11 @@
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.howCanIResetTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.guidesToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.patronToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem49 = new System.Windows.Forms.MenuItem();
+            this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.SeeChangelog = new System.Windows.Forms.MenuItem();
             this.SeeLatestChangelog = new System.Windows.Forms.MenuItem();
@@ -144,6 +146,7 @@
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
+            this.menuItem32 = new System.Windows.Forms.MenuItem();
             this.menuItem45 = new System.Windows.Forms.MenuItem();
             this.HAPLink = new System.Windows.Forms.MenuItem();
             this.BASSLink = new System.Windows.Forms.MenuItem();
@@ -156,12 +159,12 @@
             this.menuItem40 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
             this.AMIDIMapUninstallMenu = new System.Windows.Forms.MenuItem();
-            this.SpatialSound = new System.Windows.Forms.MenuItem();
-            this.menuItem39 = new System.Windows.Forms.MenuItem();
+            this.menuItem48 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
             this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
-            this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.SpatialSound = new System.Windows.Forms.MenuItem();
+            this.menuItem39 = new System.Windows.Forms.MenuItem();
             this.SetAssociationWithSFs = new System.Windows.Forms.MenuItem();
             this.menuItem46 = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
@@ -855,7 +858,7 @@
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 2;
+            this.menuItem20.Index = 3;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
             this.UnregDriver,
@@ -946,22 +949,22 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 6;
+            this.guidesToolStripMenuItem.Index = 10;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
             this.howCanIResetTheDriverToolStripMenuItem});
             this.guidesToolStripMenuItem.Text = "Guides";
             // 
-            // donateToSupportUsToolStripMenuItem
+            // patronToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 9;
-            this.donateToSupportUsToolStripMenuItem.Text = "Donate to support me and my programs";
-            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
+            this.patronToSupportUsToolStripMenuItem.Index = 4;
+            this.patronToSupportUsToolStripMenuItem.Text = "Become a patron to support my software";
+            this.patronToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.patronToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 10;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 8;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -971,42 +974,56 @@
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
             this.openUpdaterToolStripMenuItem,
+            this.menuItem49,
+            this.donateToSupportUsToolStripMenuItem,
+            this.patronToSupportUsToolStripMenuItem,
             this.menuItem29,
             this.SeeChangelog,
             this.SeeLatestChangelog,
+            this.downloadTheSourceCodeToolStripMenuItem,
             this.menuItem33,
             this.guidesToolStripMenuItem,
             this.menuItem24,
-            this.menuItem45,
-            this.donateToSupportUsToolStripMenuItem,
-            this.downloadTheSourceCodeToolStripMenuItem});
+            this.menuItem32,
+            this.menuItem45});
             this.menuItem3.Text = "?";
+            // 
+            // menuItem49
+            // 
+            this.menuItem49.Index = 2;
+            this.menuItem49.Text = "-";
+            // 
+            // donateToSupportUsToolStripMenuItem
+            // 
+            this.donateToSupportUsToolStripMenuItem.Index = 3;
+            this.donateToSupportUsToolStripMenuItem.Text = "Donate through PayPal to support my software";
+            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // menuItem29
             // 
-            this.menuItem29.Index = 2;
+            this.menuItem29.Index = 5;
             this.menuItem29.Text = "-";
             // 
             // SeeChangelog
             // 
-            this.SeeChangelog.Index = 3;
+            this.SeeChangelog.Index = 6;
             this.SeeChangelog.Text = "Changelog of this driver release";
             this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
             // 
             // SeeLatestChangelog
             // 
-            this.SeeLatestChangelog.Index = 4;
+            this.SeeLatestChangelog.Index = 7;
             this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
             this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 5;
+            this.menuItem33.Index = 9;
             this.menuItem33.Text = "-";
             // 
             // menuItem24
             // 
-            this.menuItem24.Index = 7;
+            this.menuItem24.Index = 11;
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
@@ -1030,9 +1047,14 @@
             this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
             this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
             // 
+            // menuItem32
+            // 
+            this.menuItem32.Index = 12;
+            this.menuItem32.Text = "-";
+            // 
             // menuItem45
             // 
-            this.menuItem45.Index = 8;
+            this.menuItem45.Index = 13;
             this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HAPLink,
             this.BASSLink,
@@ -1066,13 +1088,13 @@
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 11;
+            this.SignatureCheck.Index = 8;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 10;
+            this.PanicButton.Index = 7;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
@@ -1091,13 +1113,10 @@
             this.menuItem25.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem22,
             this.menuItem40,
+            this.menuItem48,
             this.menuItem20,
             this.SpatialSound,
             this.menuItem39,
-            this.WinMMPatch32,
-            this.WinMMPatch64,
-            this.WinMMPatchRmv,
-            this.menuItem15,
             this.SetAssociationWithSFs,
             this.PanicButton,
             this.SignatureCheck,
@@ -1128,73 +1147,77 @@
             this.AMIDIMapUninstallMenu.Text = "Uninstall";
             this.AMIDIMapUninstallMenu.Click += new System.EventHandler(this.AMIDIMapUninstallMenu_Click);
             // 
+            // menuItem48
+            // 
+            this.menuItem48.Index = 2;
+            this.menuItem48.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.WinMMPatch32,
+            this.WinMMPatch64,
+            this.WinMMPatchRmv});
+            this.menuItem48.Text = "WinMM patch";
+            // 
+            // WinMMPatch32
+            // 
+            this.WinMMPatch32.Index = 0;
+            this.WinMMPatch32.Text = "Apply the WinMM patch to a 32-bit app";
+            this.WinMMPatch32.Click += new System.EventHandler(this.WinMMPatch32_Click);
+            // 
+            // WinMMPatch64
+            // 
+            this.WinMMPatch64.Index = 1;
+            this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
+            this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
+            // 
+            // WinMMPatchRmv
+            // 
+            this.WinMMPatchRmv.Index = 2;
+            this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
+            this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
+            // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 3;
+            this.SpatialSound.Index = 4;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
             // 
             // menuItem39
             // 
-            this.menuItem39.Index = 4;
+            this.menuItem39.Index = 5;
             this.menuItem39.Text = "-";
-            // 
-            // WinMMPatch32
-            // 
-            this.WinMMPatch32.Index = 5;
-            this.WinMMPatch32.Text = "Apply the WinMM patch to a 32-bit app";
-            this.WinMMPatch32.Click += new System.EventHandler(this.WinMMPatch32_Click);
-            // 
-            // WinMMPatch64
-            // 
-            this.WinMMPatch64.Index = 6;
-            this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
-            this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
-            // 
-            // WinMMPatchRmv
-            // 
-            this.WinMMPatchRmv.Index = 7;
-            this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
-            this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
-            // 
-            // menuItem15
-            // 
-            this.menuItem15.Index = 8;
-            this.menuItem15.Text = "-";
             // 
             // SetAssociationWithSFs
             // 
-            this.SetAssociationWithSFs.Index = 9;
+            this.SetAssociationWithSFs.Index = 6;
             this.SetAssociationWithSFs.Text = "Set file association with SoundFonts";
             this.SetAssociationWithSFs.Click += new System.EventHandler(this.SetAssociationWithSFs_Click);
             // 
             // menuItem46
             // 
-            this.menuItem46.Index = 12;
+            this.menuItem46.Index = 9;
             this.menuItem46.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 13;
+            this.DeleteUserData.Index = 10;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 14;
+            this.ResetToDefault.Index = 11;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
             // EnableBBS
             // 
-            this.EnableBBS.Index = 15;
+            this.EnableBBS.Index = 12;
             this.EnableBBS.Text = "-";
             this.EnableBBS.Visible = false;
             // 
             // EnableBB
             // 
-            this.EnableBB.Index = 16;
+            this.EnableBB.Index = 13;
             this.EnableBB.Text = "Re-enable Butter Boy";
             this.EnableBB.Visible = false;
             this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
@@ -2153,7 +2176,7 @@
         private System.Windows.Forms.MenuItem whatsTheBestSettingsForTheBufferToolStripMenuItem;
         private System.Windows.Forms.MenuItem howCanIResetTheDriverToolStripMenuItem;
         private System.Windows.Forms.MenuItem guidesToolStripMenuItem;
-        private System.Windows.Forms.MenuItem donateToSupportUsToolStripMenuItem;
+        private System.Windows.Forms.MenuItem patronToSupportUsToolStripMenuItem;
         private System.Windows.Forms.MenuItem downloadTheSourceCodeToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MainMenu MainMenu;
@@ -2272,7 +2295,6 @@
         private System.Windows.Forms.MenuItem menuItem25;
         private System.Windows.Forms.MenuItem menuItem34;
         public System.Windows.Forms.MenuItem DePrio;
-        private System.Windows.Forms.MenuItem menuItem15;
         private System.Windows.Forms.MenuItem ResetToDefault;
         private System.Windows.Forms.MenuItem menuItem36;
         public System.Windows.Forms.MenuItem CapFram;
@@ -2334,6 +2356,10 @@
         public System.Windows.Forms.MenuItem Limit88;
         private System.Windows.Forms.ImageList TabImgs;
         private System.Windows.Forms.MenuItem SetAssociationWithSFs;
+        private System.Windows.Forms.MenuItem menuItem32;
+        private System.Windows.Forms.MenuItem menuItem48;
+        private System.Windows.Forms.MenuItem menuItem49;
+        private System.Windows.Forms.MenuItem donateToSupportUsToolStripMenuItem;
     }
 }
 
