@@ -75,13 +75,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BecomeAPatron.cs" />
-    <Compile Include="BecomeAPatron.Designer.cs">
-      <DependentUpon>BecomeAPatron.cs</DependentUpon>
+    <Compile Include="Functions\AddToWhichList.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Functions\AddToWhichList.cs" />
-    <Compile Include="Functions\AddToWhichList.Designer.cs">
+    <Compile Include="Functions\AddToWhichList.designer.cs">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Mandatory\BecomeAPatron.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Mandatory\BecomeAPatron.Designer.cs">
+      <DependentUpon>BecomeAPatron.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.cs">
       <SubType>Form</SubType>
@@ -232,7 +236,10 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
-    <EmbeddedResource Include="BecomeAPatron.resx">
+    <EmbeddedResource Include="Functions\AddToWhichList.resx">
+      <DependentUpon>AddToWhichList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Mandatory\BecomeAPatron.resx">
       <DependentUpon>BecomeAPatron.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Audio Outputs\DefaultASIOAudioOutput.resx">
@@ -276,9 +283,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\SFListAssign.resx">
       <DependentUpon>SFListAssign.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Functions\AddToWhichList.resx">
-      <DependentUpon>AddToWhichList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateSystem\SelectBranch.resx">
       <DependentUpon>SelectBranch.cs</DependentUpon>

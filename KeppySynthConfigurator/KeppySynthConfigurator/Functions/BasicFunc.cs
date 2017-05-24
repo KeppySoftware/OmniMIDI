@@ -830,7 +830,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
                 }
 
-                if (Environment.OSVersion.Version.Major == 10)
+                if (Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 15063)
                     KeppySynthConfiguratorMain.Delegate.SpatialSound.Visible = true;
 
                 // And finally, the volume!
