@@ -117,7 +117,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "Something went wrong during the starting process of the configurator.\n\nClick OK to continue.", true, ex);
             }
         }
 
@@ -164,7 +164,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while initializing the volume label's font.", true, ex);
             }
         }
 
@@ -263,7 +263,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
             }
         }
 
@@ -1108,10 +1108,14 @@ namespace KeppySynthConfigurator
 
         private void SeeChangelog_Click(object sender, EventArgs e)
         {
-            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
-            ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString());
-            frm.ShowDialog(this);
-            frm.Dispose();
+            try
+            {
+                FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
+                ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString());
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
+            catch { }
         }
 
         private void SeeLatestChangelog_Click(object sender, EventArgs e)
@@ -1122,9 +1126,13 @@ namespace KeppySynthConfigurator
             String newestversion = reader.ReadToEnd();
             Version x = null;
             Version.TryParse(newestversion.ToString(), out x);
-            ChangelogWindow frm = new ChangelogWindow(x.ToString());
-            frm.ShowDialog(this);
-            frm.Dispose();
+            try
+            {
+                ChangelogWindow frm = new ChangelogWindow(x.ToString());
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
+            catch { }
         }
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)

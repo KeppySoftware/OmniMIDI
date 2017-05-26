@@ -357,7 +357,7 @@ namespace KeppySynthConfigurator
 
         public static void ShowErrorDialog(Int32 Type, System.Media.SystemSound sound, String title, String message, bool IsException, Exception ex)
         {
-            SecretDialog frm = new SecretDialog(Type, sound, title, message);
+            SecretDialog frm = new SecretDialog(Type, sound, title, message, ex);
             Program.DebugToConsole(IsException, null, ex);
             frm.ShowDialog();
             frm.Dispose();
@@ -746,6 +746,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
             }
@@ -862,7 +863,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                // Something bad happened hehe
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while saving the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
             }
@@ -961,7 +962,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                MessageBox.Show("Fatal error during the execution of this program!\n\nPress OK to quit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                 Application.Exit();
             }
         }
@@ -1006,7 +1007,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
                 Application.Exit();
             }
         }

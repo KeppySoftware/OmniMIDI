@@ -33,7 +33,7 @@ namespace KeppySynthConfigurator
                         Text = "Keppy's Synthesizer - No updates found";
                         MessageText.Text = "No updates for Keppy's Synthesizer have been found.\nPlease try again later.\n\nPress OK to close this window.";
                         YesBtn.Visible = false;
-                        ShowChangelogCheck.Visible = false;
+                        ShowChangelog.Visible = false;
                         NoBtn.Text = "OK";
                     }
                     else
@@ -45,12 +45,14 @@ namespace KeppySynthConfigurator
                         {
                             CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.refreshicon;
                             Text = String.Format("Keppy's Synthesizer - Reinstall version ({0})", OnlineVersion);
+                            ShowChangelog.Visible = false;
                             MessageText.Text = String.Format("Would you like to reinstall Keppy's Synthesizer?\nCurrent version online is {0}, the same as yours.\n\nPress Yes to confirm, or No to close the window.", CurrentVersion);
                         }
                         else if (x < y)
                         {
                             CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.rollbackicon;
                             Text = String.Format("Keppy's Synthesizer - Downgrade to version {0}", OnlineVersion);
+                            ShowChangelog.Visible = false;
                             MessageText.Text = String.Format("Are you sure you want to downgrade Keppy's Synthesizer?\nCurrent version online is {0}, you have {1}.\n\nPress Yes to confirm, or No to close the window.", OnlineVersion, CurrentVersion);
                         }
                         else
@@ -67,7 +69,7 @@ namespace KeppySynthConfigurator
                     Text = "Keppy's Synthesizer - Can not check for updates";
                     MessageText.Text = "The configurator can not connect to the GitHub servers.\nCheck your network connection, or contact your system administrator or network service provider.\n\nPress OK to close this window.";
                     YesBtn.Visible = false;
-                    ShowChangelogCheck.Visible = false;
+                    ShowChangelog.Visible = false;
                     NoBtn.Text = "OK";
                 }
             }
@@ -77,7 +79,7 @@ namespace KeppySynthConfigurator
                 Text = "Keppy's Synthesizer - Update error";
                 MessageText.Text = "An unknown error has occurred while initializing the window.\nPlease try again later.\n\nPress OK to close this window.";
                 YesBtn.Visible = false;
-                ShowChangelogCheck.Visible = false;
+                ShowChangelog.Visible = false;
                 NoBtn.Text = "OK";
             }
         }
@@ -89,10 +91,6 @@ namespace KeppySynthConfigurator
 
         private void YesBtn_Click(object sender, EventArgs e)
         {
-            if (ShowChangelogCheck.Checked == true)
-            {
-                Process.Start(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}", OnlineVersion));
-            }
             DialogResult = DialogResult.Yes;
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -103,6 +101,17 @@ namespace KeppySynthConfigurator
             DialogResult = DialogResult.No;
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+        private void ShowChangelog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ChangelogWindow frm = new ChangelogWindow(OnlineVersion);
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
+            catch { }
         }
     }
 }

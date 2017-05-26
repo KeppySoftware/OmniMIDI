@@ -91,9 +91,9 @@ namespace KeppySynthConfigurator
 
                 ChangelogBrowser.DocumentText = htmltext;
             }
-            catch
+            catch (WebException ex)
             {
-                UpdateSystem.NoUpdates(false, false);
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", true, ex);
                 Close();
             }
         }

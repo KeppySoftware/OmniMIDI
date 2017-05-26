@@ -31,12 +31,12 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateYesNo));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ShowChangelogCheck = new System.Windows.Forms.CheckBox();
             this.NoBtn = new System.Windows.Forms.Button();
             this.YesBtn = new System.Windows.Forms.Button();
             this.CurrentIcon = new System.Windows.Forms.PictureBox();
             this.MessageText = new System.Windows.Forms.Label();
             this.ChangelogToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.ShowChangelog = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).BeginInit();
             this.SuspendLayout();
@@ -44,7 +44,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Controls.Add(this.ShowChangelogCheck);
+            this.panel1.Controls.Add(this.ShowChangelog);
             this.panel1.Controls.Add(this.NoBtn);
             this.panel1.Controls.Add(this.YesBtn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -52,17 +52,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(394, 47);
             this.panel1.TabIndex = 0;
-            // 
-            // ShowChangelogCheck
-            // 
-            this.ShowChangelogCheck.AutoSize = true;
-            this.ShowChangelogCheck.Location = new System.Drawing.Point(12, 16);
-            this.ShowChangelogCheck.Name = "ShowChangelogCheck";
-            this.ShowChangelogCheck.Size = new System.Drawing.Size(106, 17);
-            this.ShowChangelogCheck.TabIndex = 2;
-            this.ShowChangelogCheck.Text = "Show changelog";
-            this.ChangelogToolTip.SetToolTip(this.ShowChangelogCheck, "It\'ll open the GitHub page about the new update, in your default web browser.");
-            this.ShowChangelogCheck.UseVisualStyleBackColor = true;
             // 
             // NoBtn
             // 
@@ -112,6 +101,16 @@
             this.ChangelogToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ChangelogToolTip.ToolTipTitle = "Show changelog";
             // 
+            // ShowChangelog
+            // 
+            this.ShowChangelog.Location = new System.Drawing.Point(12, 12);
+            this.ShowChangelog.Name = "ShowChangelog";
+            this.ShowChangelog.Size = new System.Drawing.Size(98, 23);
+            this.ShowChangelog.TabIndex = 2;
+            this.ShowChangelog.Text = "Show changelog";
+            this.ShowChangelog.UseVisualStyleBackColor = true;
+            this.ShowChangelog.Click += new System.EventHandler(this.ShowChangelog_Click);
+            // 
             // UpdateYesNo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -131,7 +130,6 @@
             this.Text = "Keppy\'s Synthesizer - Event here";
             this.Load += new System.EventHandler(this.UpdateYesNo_Load);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).EndInit();
             this.ResumeLayout(false);
 
@@ -140,11 +138,11 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.CheckBox ShowChangelogCheck;
         private System.Windows.Forms.Button NoBtn;
         private System.Windows.Forms.Button YesBtn;
         private System.Windows.Forms.PictureBox CurrentIcon;
         private System.Windows.Forms.Label MessageText;
         private System.Windows.Forms.ToolTip ChangelogToolTip;
+        private System.Windows.Forms.Button ShowChangelog;
     }
 }

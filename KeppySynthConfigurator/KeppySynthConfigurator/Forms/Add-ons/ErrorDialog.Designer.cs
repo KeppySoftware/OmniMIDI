@@ -34,6 +34,8 @@
             this.CurrentIcon = new System.Windows.Forms.PictureBox();
             this.MessageText = new System.Windows.Forms.Label();
             this.ChangelogToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.DebugInfo = new System.Windows.Forms.CheckBox();
+            this.DebugInfoText = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).BeginInit();
             this.SuspendLayout();
@@ -41,6 +43,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.DebugInfo);
             this.panel1.Controls.Add(this.OkBtn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 86);
@@ -71,10 +74,9 @@
             // 
             // MessageText
             // 
-            this.MessageText.Dock = System.Windows.Forms.DockStyle.Right;
             this.MessageText.Location = new System.Drawing.Point(88, 0);
             this.MessageText.Name = "MessageText";
-            this.MessageText.Size = new System.Drawing.Size(306, 86);
+            this.MessageText.Size = new System.Drawing.Size(294, 86);
             this.MessageText.TabIndex = 2;
             this.MessageText.Text = "Message here.";
             this.MessageText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -88,16 +90,41 @@
             this.ChangelogToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ChangelogToolTip.ToolTipTitle = "Show changelog";
             // 
+            // DebugInfo
+            // 
+            this.DebugInfo.AutoSize = true;
+            this.DebugInfo.Location = new System.Drawing.Point(15, 16);
+            this.DebugInfo.Name = "DebugInfo";
+            this.DebugInfo.Size = new System.Drawing.Size(178, 17);
+            this.DebugInfo.TabIndex = 2;
+            this.DebugInfo.Text = "Show debug info about the error";
+            this.DebugInfo.UseVisualStyleBackColor = true;
+            this.DebugInfo.CheckedChanged += new System.EventHandler(this.DebugInfo_CheckedChanged);
+            // 
+            // DebugInfoText
+            // 
+            this.DebugInfoText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.DebugInfoText.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.DebugInfoText.DetectUrls = false;
+            this.DebugInfoText.Location = new System.Drawing.Point(12, 89);
+            this.DebugInfoText.Name = "DebugInfoText";
+            this.DebugInfoText.ReadOnly = true;
+            this.DebugInfoText.Size = new System.Drawing.Size(370, 187);
+            this.DebugInfoText.TabIndex = 0;
+            this.DebugInfoText.Text = "";
+            this.DebugInfoText.Visible = false;
+            // 
             // SecretDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(394, 133);
+            this.Controls.Add(this.DebugInfoText);
             this.Controls.Add(this.MessageText);
             this.Controls.Add(this.CurrentIcon);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SecretDialog";
@@ -107,6 +134,7 @@
             this.Text = "Keppy\'s Synthesizer - Event here";
             this.Load += new System.EventHandler(this.UpdateYesNo_Load);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).EndInit();
             this.ResumeLayout(false);
 
@@ -119,5 +147,7 @@
         private System.Windows.Forms.PictureBox CurrentIcon;
         private System.Windows.Forms.Label MessageText;
         private System.Windows.Forms.ToolTip ChangelogToolTip;
+        private System.Windows.Forms.CheckBox DebugInfo;
+        private System.Windows.Forms.RichTextBox DebugInfoText;
     }
 }
