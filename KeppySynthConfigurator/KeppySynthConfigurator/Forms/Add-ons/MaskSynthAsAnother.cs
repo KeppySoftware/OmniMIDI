@@ -47,9 +47,15 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SynthType.SelectedIndex, RegistryValueKind.DWord);
-                Close();
+                if (Names.Text.Length >= 1)
+                {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("The mask name can not be blank!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -66,11 +72,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void Names_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
-        }
-
         private void SynthType_SelectedIndexChanged(object sender, EventArgs e)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SynthType.SelectedIndex, RegistryValueKind.DWord);
@@ -82,13 +83,8 @@ namespace KeppySynthConfigurator
             if (TempString.Length >= 32)
             {
                 TempString = TempString.Remove(TempString.Length - 1);
-                MessageBox.Show("The maximum name length is 32 characters!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", TempString, RegistryValueKind.String);
+                MessageBox.Show("The maximum length for the mask name is 31 characters!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Names.Text = TempString;
-            }
-            else
-            {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
             }
         }
 

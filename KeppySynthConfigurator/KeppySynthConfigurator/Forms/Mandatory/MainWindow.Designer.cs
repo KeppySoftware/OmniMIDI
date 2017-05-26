@@ -64,17 +64,10 @@
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem19 = new System.Windows.Forms.MenuItem();
             this.enableextra8sf = new System.Windows.Forms.MenuItem();
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
-            this.menuItem21 = new System.Windows.Forms.MenuItem();
-            this.ImportSettings = new System.Windows.Forms.MenuItem();
-            this.ExportSettings = new System.Windows.Forms.MenuItem();
-            this.menuItem44 = new System.Windows.Forms.MenuItem();
-            this.menuItem41 = new System.Windows.Forms.MenuItem();
-            this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
             this.menuItem31 = new System.Windows.Forms.MenuItem();
             this.DePrio = new System.Windows.Forms.MenuItem();
             this.menuItem34 = new System.Windows.Forms.MenuItem();
@@ -84,40 +77,23 @@
             this.NoPrio = new System.Windows.Forms.MenuItem();
             this.LNPrio = new System.Windows.Forms.MenuItem();
             this.LoPrio = new System.Windows.Forms.MenuItem();
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.TypeOfAudio = new System.Windows.Forms.MenuItem();
-            this.bit8audio = new System.Windows.Forms.MenuItem();
-            this.bit16audio = new System.Windows.Forms.MenuItem();
-            this.floatingpointaudio = new System.Windows.Forms.MenuItem();
-            this.ChangeDefaultOutput = new System.Windows.Forms.MenuItem();
-            this.ChangePitchShift = new System.Windows.Forms.MenuItem();
-            this.MonophonicFunc = new System.Windows.Forms.MenuItem();
-            this.FadeoutDisable = new System.Windows.Forms.MenuItem();
-            this.menuItem16 = new System.Windows.Forms.MenuItem();
-            this.slowdownnoskip = new System.Windows.Forms.MenuItem();
+            this.menuItem21 = new System.Windows.Forms.MenuItem();
+            this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.ImportSettings = new System.Windows.Forms.MenuItem();
+            this.ExportSettings = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.MaskSynthesizerAsAnother = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.autopanicmode = new System.Windows.Forms.MenuItem();
-            this.menuItem12 = new System.Windows.Forms.MenuItem();
-            this.CapFram = new System.Windows.Forms.MenuItem();
-            this.menuItem36 = new System.Windows.Forms.MenuItem();
-            this.RevbNChor = new System.Windows.Forms.MenuItem();
-            this.menuItem47 = new System.Windows.Forms.MenuItem();
-            this.Limit88 = new System.Windows.Forms.MenuItem();
-            this.AllNotesIgnore = new System.Windows.Forms.MenuItem();
-            this.SysExIgnore = new System.Windows.Forms.MenuItem();
-            this.menuItem27 = new System.Windows.Forms.MenuItem();
-            this.FullVelocityMode = new System.Windows.Forms.MenuItem();
-            this.IgnoreNotes1 = new System.Windows.Forms.MenuItem();
-            this.IgnoreNotesInterval = new System.Windows.Forms.MenuItem();
+            this.AASMenu = new System.Windows.Forms.MenuItem();
+            this.MEPSMenu = new System.Windows.Forms.MenuItem();
+            this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
-            this.UnsupportedFeaturesSep = new System.Windows.Forms.MenuItem();
-            this.UnsupportedFeatures = new System.Windows.Forms.MenuItem();
-            this.OldBuff = new System.Windows.Forms.MenuItem();
-            this.NoSleep = new System.Windows.Forms.MenuItem();
+            this.menuItem44 = new System.Windows.Forms.MenuItem();
+            this.menuItem41 = new System.Windows.Forms.MenuItem();
+            this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
             this.UnregDriver = new System.Windows.Forms.MenuItem();
@@ -136,6 +112,12 @@
             this.patronToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem45 = new System.Windows.Forms.MenuItem();
+            this.HAPLink = new System.Windows.Forms.MenuItem();
+            this.BASSLink = new System.Windows.Forms.MenuItem();
+            this.BASSNetLink = new System.Windows.Forms.MenuItem();
+            this.FodyCredit = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.menuItem49 = new System.Windows.Forms.MenuItem();
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
@@ -146,12 +128,6 @@
             this.SoftpediaPage = new System.Windows.Forms.MenuItem();
             this.menuItem26 = new System.Windows.Forms.MenuItem();
             this.KepChannel = new System.Windows.Forms.MenuItem();
-            this.menuItem32 = new System.Windows.Forms.MenuItem();
-            this.menuItem45 = new System.Windows.Forms.MenuItem();
-            this.HAPLink = new System.Windows.Forms.MenuItem();
-            this.BASSLink = new System.Windows.Forms.MenuItem();
-            this.BASSNetLink = new System.Windows.Forms.MenuItem();
-            this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
@@ -182,8 +158,8 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.assignSoundfontListToAppToolStripMenuItem = new System.Windows.Forms.Button();
-            this.changeDefaultSoundfontListToolStripMenuItem = new System.Windows.Forms.Button();
+            this.MEPSButton = new System.Windows.Forms.Button();
+            this.AASButton = new System.Windows.Forms.Button();
             this.SettingsPresetsBtn = new System.Windows.Forms.Button();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.Button();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.Button();
@@ -481,12 +457,6 @@
             this.enableextra8sf.Text = "Enable extra 8 soundfont lists";
             this.enableextra8sf.Click += new System.EventHandler(this.enableextra8sf_Click);
             // 
-            // changeTheSizeOfTheEVBufferToolStripMenuItem
-            // 
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Index = 3;
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Text = "Change the size of the EV buffer";
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem.Click += new System.EventHandler(this.changeTheSizeOfTheEVBufferToolStripMenuItem_Click);
-            // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 3;
@@ -508,18 +478,15 @@
             this.manageFolderFavouritesToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
-            this.menuItem21,
-            this.ImportSettings,
-            this.ExportSettings,
-            this.menuItem19,
-            this.menuItem44,
             this.menuItem31,
-            this.menuItem11,
-            this.menuItem14,
+            this.menuItem21,
             this.menuItem12,
-            this.menuItem28,
-            this.UnsupportedFeaturesSep,
-            this.UnsupportedFeatures});
+            this.menuItem19,
+            this.menuItem14,
+            this.AASMenu,
+            this.MEPSMenu,
+            this.menuItem15,
+            this.menuItem28});
             this.menuItem2.Text = "More settings";
             // 
             // hotkeys
@@ -528,46 +495,9 @@
             this.hotkeys.Text = "Enable fast hotkeys in MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
-            // menuItem21
-            // 
-            this.menuItem21.Index = 5;
-            this.menuItem21.Text = "-";
-            // 
-            // ImportSettings
-            // 
-            this.ImportSettings.Index = 6;
-            this.ImportSettings.Text = "Import driver settings";
-            this.ImportSettings.Click += new System.EventHandler(this.ImportSettings_Click);
-            // 
-            // ExportSettings
-            // 
-            this.ExportSettings.Index = 7;
-            this.ExportSettings.Text = "Export driver settings";
-            this.ExportSettings.Click += new System.EventHandler(this.ExportSettings_Click);
-            // 
-            // menuItem44
-            // 
-            this.menuItem44.Index = 9;
-            this.menuItem44.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.autoupdate,
-            this.menuItem41,
-            this.ChangeUpdateBranch});
-            this.menuItem44.Text = "Update settings";
-            // 
-            // menuItem41
-            // 
-            this.menuItem41.Index = 1;
-            this.menuItem41.Text = "-";
-            // 
-            // ChangeUpdateBranch
-            // 
-            this.ChangeUpdateBranch.Index = 2;
-            this.ChangeUpdateBranch.Text = "Change update branch";
-            this.ChangeUpdateBranch.Click += new System.EventHandler(this.ChangeUpdateBranch_Click);
-            // 
             // menuItem31
             // 
-            this.menuItem31.Index = 10;
+            this.menuItem31.Index = 5;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -626,84 +556,34 @@
             this.LoPrio.Text = "Low";
             this.LoPrio.Click += new System.EventHandler(this.LoPrio_Click);
             // 
-            // menuItem11
+            // menuItem21
             // 
-            this.menuItem11.Index = 11;
-            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.TypeOfAudio,
-            this.ChangeDefaultOutput,
-            this.ChangePitchShift,
-            this.MonophonicFunc,
-            this.FadeoutDisable,
-            this.menuItem16,
-            this.slowdownnoskip});
-            this.menuItem11.Text = "Advanced audio settings";
+            this.menuItem21.Index = 6;
+            this.menuItem21.Text = "-";
             // 
-            // TypeOfAudio
+            // menuItem12
             // 
-            this.TypeOfAudio.Index = 0;
-            this.TypeOfAudio.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.bit8audio,
-            this.bit16audio,
-            this.floatingpointaudio});
-            this.TypeOfAudio.Text = "Audio bit depth";
+            this.menuItem12.Index = 7;
+            this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.ImportSettings,
+            this.ExportSettings});
+            this.menuItem12.Text = "Driver\'s registry settings";
             // 
-            // bit8audio
+            // ImportSettings
             // 
-            this.bit8audio.Index = 0;
-            this.bit8audio.Text = "Use 8-bit integer audio rendering";
-            this.bit8audio.Click += new System.EventHandler(this.bit8audio_Click);
+            this.ImportSettings.Index = 0;
+            this.ImportSettings.Text = "Import driver settings";
+            this.ImportSettings.Click += new System.EventHandler(this.ImportSettings_Click);
             // 
-            // bit16audio
+            // ExportSettings
             // 
-            this.bit16audio.Index = 1;
-            this.bit16audio.Text = "Use 16-bit integer audio rendering";
-            this.bit16audio.Click += new System.EventHandler(this.bit16audio_Click);
-            // 
-            // floatingpointaudio
-            // 
-            this.floatingpointaudio.Index = 2;
-            this.floatingpointaudio.Text = "Use 32-bit float audio rendering";
-            this.floatingpointaudio.Click += new System.EventHandler(this.floatingpointaudio_Click);
-            // 
-            // ChangeDefaultOutput
-            // 
-            this.ChangeDefaultOutput.Index = 1;
-            this.ChangeDefaultOutput.Text = "Change default audio output";
-            this.ChangeDefaultOutput.Click += new System.EventHandler(this.ChangeDefaultOutput_Click);
-            // 
-            // ChangePitchShift
-            // 
-            this.ChangePitchShift.Index = 2;
-            this.ChangePitchShift.Text = "Change pitch shifting";
-            this.ChangePitchShift.Click += new System.EventHandler(this.ChangePitchShift_Click);
-            // 
-            // MonophonicFunc
-            // 
-            this.MonophonicFunc.Index = 3;
-            this.MonophonicFunc.Text = "Use monophonic rendering";
-            this.MonophonicFunc.Click += new System.EventHandler(this.MonophonicFunc_Click);
-            // 
-            // FadeoutDisable
-            // 
-            this.FadeoutDisable.Index = 4;
-            this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
-            this.FadeoutDisable.Click += new System.EventHandler(this.FadeoutDisable_Click);
-            // 
-            // menuItem16
-            // 
-            this.menuItem16.Index = 5;
-            this.menuItem16.Text = "-";
-            // 
-            // slowdownnoskip
-            // 
-            this.slowdownnoskip.Index = 6;
-            this.slowdownnoskip.Text = "Slow down playback instead of skipping notes";
-            this.slowdownnoskip.Click += new System.EventHandler(this.slowdownnoskip_Click);
+            this.ExportSettings.Index = 1;
+            this.ExportSettings.Text = "Export driver settings";
+            this.ExportSettings.Click += new System.EventHandler(this.ExportSettings_Click);
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 12;
+            this.menuItem14.Index = 9;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
@@ -728,90 +608,26 @@
             this.autopanicmode.Text = "Alternative rendering time limiter";
             this.autopanicmode.Click += new System.EventHandler(this.autopanicmode_Click);
             // 
-            // menuItem12
+            // AASMenu
             // 
-            this.menuItem12.Index = 13;
-            this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.CapFram,
-            this.menuItem36,
-            this.RevbNChor,
-            this.changeTheSizeOfTheEVBufferToolStripMenuItem,
-            this.menuItem47,
-            this.Limit88,
-            this.AllNotesIgnore,
-            this.SysExIgnore,
-            this.menuItem27,
-            this.FullVelocityMode,
-            this.IgnoreNotes1,
-            this.IgnoreNotesInterval});
-            this.menuItem12.Text = "MIDI events parser settings";
+            this.AASMenu.Index = 10;
+            this.AASMenu.Text = "Advanced audio settings";
+            this.AASMenu.Click += new System.EventHandler(this.AASMenu_Click);
             // 
-            // CapFram
+            // MEPSMenu
             // 
-            this.CapFram.Index = 0;
-            this.CapFram.Text = "Cap input framerate to 60FPS";
-            this.CapFram.Click += new System.EventHandler(this.CapFram_Click);
+            this.MEPSMenu.Index = 11;
+            this.MEPSMenu.Text = "MIDI events parser settings";
+            this.MEPSMenu.Click += new System.EventHandler(this.MEPSMenu_Click);
             // 
-            // menuItem36
+            // menuItem15
             // 
-            this.menuItem36.Index = 1;
-            this.menuItem36.Text = "-";
-            // 
-            // RevbNChor
-            // 
-            this.RevbNChor.Index = 2;
-            this.RevbNChor.Text = "Set reverb and chorus";
-            this.RevbNChor.Click += new System.EventHandler(this.RevbNChor_Click);
-            // 
-            // menuItem47
-            // 
-            this.menuItem47.Index = 4;
-            this.menuItem47.Text = "-";
-            // 
-            // Limit88
-            // 
-            this.Limit88.Index = 5;
-            this.Limit88.Text = "Limit key range to 88 keys (Excluding drums)";
-            this.Limit88.Click += new System.EventHandler(this.Limit88_Click);
-            // 
-            // AllNotesIgnore
-            // 
-            this.AllNotesIgnore.Index = 6;
-            this.AllNotesIgnore.Text = "Ignore all MIDI events";
-            this.AllNotesIgnore.Click += new System.EventHandler(this.AllNotesIgnore_Click);
-            // 
-            // SysExIgnore
-            // 
-            this.SysExIgnore.Index = 7;
-            this.SysExIgnore.Text = "Ignore all SysEx messages";
-            this.SysExIgnore.Click += new System.EventHandler(this.SysExIgnore_Click);
-            // 
-            // menuItem27
-            // 
-            this.menuItem27.Index = 8;
-            this.menuItem27.Text = "-";
-            // 
-            // FullVelocityMode
-            // 
-            this.FullVelocityMode.Index = 9;
-            this.FullVelocityMode.Text = "Set all NoteON events to full velocity";
-            this.FullVelocityMode.Click += new System.EventHandler(this.FullVelocityMode_Click);
-            // 
-            // IgnoreNotes1
-            // 
-            this.IgnoreNotes1.Index = 10;
-            this.IgnoreNotes1.Text = "Ignore notes in between two velocity values";
-            this.IgnoreNotes1.Click += new System.EventHandler(this.IgnoreNotes1_Click);
-            // 
-            // IgnoreNotesInterval
-            // 
-            this.IgnoreNotesInterval.Index = 11;
-            this.IgnoreNotesInterval.Text = "Set velocity range to ignore";
-            this.IgnoreNotesInterval.Click += new System.EventHandler(this.IgnoreNotesInterval_Click);
+            this.menuItem15.Index = 12;
+            this.menuItem15.Text = "-";
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 14;
+            this.menuItem28.Index = 13;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -829,32 +645,25 @@
             this.DebugModeOpenNotepad.Text = "Open debug folder on Windows Explorer";
             this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
             // 
-            // UnsupportedFeaturesSep
+            // menuItem44
             // 
-            this.UnsupportedFeaturesSep.Index = 15;
-            this.UnsupportedFeaturesSep.Text = "-";
-            this.UnsupportedFeaturesSep.Visible = false;
+            this.menuItem44.Index = 4;
+            this.menuItem44.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.autoupdate,
+            this.menuItem41,
+            this.ChangeUpdateBranch});
+            this.menuItem44.Text = "Update settings";
             // 
-            // UnsupportedFeatures
+            // menuItem41
             // 
-            this.UnsupportedFeatures.Index = 16;
-            this.UnsupportedFeatures.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.OldBuff,
-            this.NoSleep});
-            this.UnsupportedFeatures.Text = "Unsupported features";
-            this.UnsupportedFeatures.Visible = false;
+            this.menuItem41.Index = 1;
+            this.menuItem41.Text = "-";
             // 
-            // OldBuff
+            // ChangeUpdateBranch
             // 
-            this.OldBuff.Index = 0;
-            this.OldBuff.Text = "Enable old buffer (XA, DS)";
-            this.OldBuff.Click += new System.EventHandler(this.OldBuff_Click);
-            // 
-            // NoSleep
-            // 
-            this.NoSleep.Index = 1;
-            this.NoSleep.Text = "Disable sleep states (DS)";
-            this.NoSleep.Click += new System.EventHandler(this.NoSleep_Click);
+            this.ChangeUpdateBranch.Index = 2;
+            this.ChangeUpdateBranch.Text = "Change update branch";
+            this.ChangeUpdateBranch.Click += new System.EventHandler(this.ChangeUpdateBranch_Click);
             // 
             // menuItem20
             // 
@@ -918,7 +727,7 @@
             // 
             // openUpdaterToolStripMenuItem
             // 
-            this.openUpdaterToolStripMenuItem.Index = 1;
+            this.openUpdaterToolStripMenuItem.Index = 3;
             this.openUpdaterToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.F2;
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
@@ -949,7 +758,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 10;
+            this.guidesToolStripMenuItem.Index = 13;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -958,13 +767,13 @@
             // 
             // patronToSupportUsToolStripMenuItem
             // 
-            this.patronToSupportUsToolStripMenuItem.Index = 4;
+            this.patronToSupportUsToolStripMenuItem.Index = 7;
             this.patronToSupportUsToolStripMenuItem.Text = "Become a patron to support my software";
             this.patronToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.patronToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 8;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 11;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -973,7 +782,10 @@
             this.menuItem3.Index = 4;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
+            this.menuItem45,
+            this.menuItem11,
             this.openUpdaterToolStripMenuItem,
+            this.menuItem44,
             this.menuItem49,
             this.donateToSupportUsToolStripMenuItem,
             this.patronToSupportUsToolStripMenuItem,
@@ -983,78 +795,12 @@
             this.downloadTheSourceCodeToolStripMenuItem,
             this.menuItem33,
             this.guidesToolStripMenuItem,
-            this.menuItem24,
-            this.menuItem32,
-            this.menuItem45});
+            this.menuItem24});
             this.menuItem3.Text = "?";
-            // 
-            // menuItem49
-            // 
-            this.menuItem49.Index = 2;
-            this.menuItem49.Text = "-";
-            // 
-            // donateToSupportUsToolStripMenuItem
-            // 
-            this.donateToSupportUsToolStripMenuItem.Index = 3;
-            this.donateToSupportUsToolStripMenuItem.Text = "Donate through PayPal to support my software";
-            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
-            // 
-            // menuItem29
-            // 
-            this.menuItem29.Index = 5;
-            this.menuItem29.Text = "-";
-            // 
-            // SeeChangelog
-            // 
-            this.SeeChangelog.Index = 6;
-            this.SeeChangelog.Text = "Changelog of this driver release";
-            this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
-            // 
-            // SeeLatestChangelog
-            // 
-            this.SeeLatestChangelog.Index = 7;
-            this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
-            this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
-            // 
-            // menuItem33
-            // 
-            this.menuItem33.Index = 9;
-            this.menuItem33.Text = "-";
-            // 
-            // menuItem24
-            // 
-            this.menuItem24.Index = 11;
-            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.SoftpediaPage,
-            this.menuItem26,
-            this.KepChannel});
-            this.menuItem24.Text = "Useful links";
-            // 
-            // SoftpediaPage
-            // 
-            this.SoftpediaPage.Index = 0;
-            this.SoftpediaPage.Text = "Keppy\'s Synthesizer Softpedia Page";
-            this.SoftpediaPage.Click += new System.EventHandler(this.SoftpediaPage_Click);
-            // 
-            // menuItem26
-            // 
-            this.menuItem26.Index = 1;
-            this.menuItem26.Text = "-";
-            // 
-            // KepChannel
-            // 
-            this.KepChannel.Index = 2;
-            this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
-            this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
-            // 
-            // menuItem32
-            // 
-            this.menuItem32.Index = 12;
-            this.menuItem32.Text = "-";
             // 
             // menuItem45
             // 
-            this.menuItem45.Index = 13;
+            this.menuItem45.Index = 1;
             this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HAPLink,
             this.BASSLink,
@@ -1085,6 +831,70 @@
             this.FodyCredit.Index = 3;
             this.FodyCredit.Text = "Fody by Simon Cropp";
             this.FodyCredit.Click += new System.EventHandler(this.FodyCredit_Click);
+            // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 2;
+            this.menuItem11.Text = "-";
+            // 
+            // menuItem49
+            // 
+            this.menuItem49.Index = 5;
+            this.menuItem49.Text = "-";
+            // 
+            // donateToSupportUsToolStripMenuItem
+            // 
+            this.donateToSupportUsToolStripMenuItem.Index = 6;
+            this.donateToSupportUsToolStripMenuItem.Text = "Donate through PayPal to support my software";
+            this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
+            // 
+            // menuItem29
+            // 
+            this.menuItem29.Index = 8;
+            this.menuItem29.Text = "-";
+            // 
+            // SeeChangelog
+            // 
+            this.SeeChangelog.Index = 9;
+            this.SeeChangelog.Text = "Changelog of this driver release";
+            this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
+            // 
+            // SeeLatestChangelog
+            // 
+            this.SeeLatestChangelog.Index = 10;
+            this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
+            this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
+            // 
+            // menuItem33
+            // 
+            this.menuItem33.Index = 12;
+            this.menuItem33.Text = "-";
+            // 
+            // menuItem24
+            // 
+            this.menuItem24.Index = 14;
+            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.SoftpediaPage,
+            this.menuItem26,
+            this.KepChannel});
+            this.menuItem24.Text = "Useful links";
+            // 
+            // SoftpediaPage
+            // 
+            this.SoftpediaPage.Index = 0;
+            this.SoftpediaPage.Text = "Keppy\'s Synthesizer Softpedia Page";
+            this.SoftpediaPage.Click += new System.EventHandler(this.SoftpediaPage_Click);
+            // 
+            // menuItem26
+            // 
+            this.menuItem26.Index = 1;
+            this.menuItem26.Text = "-";
+            // 
+            // KepChannel
+            // 
+            this.KepChannel.Index = 2;
+            this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
+            this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
             // 
             // SignatureCheck
             // 
@@ -1267,8 +1077,8 @@
             this.Settings.Controls.Add(this.VolLabel);
             this.Settings.Controls.Add(this.AudioEngBox);
             this.Settings.Controls.Add(this.label2);
-            this.Settings.Controls.Add(this.assignSoundfontListToAppToolStripMenuItem);
-            this.Settings.Controls.Add(this.changeDefaultSoundfontListToolStripMenuItem);
+            this.Settings.Controls.Add(this.MEPSButton);
+            this.Settings.Controls.Add(this.AASButton);
             this.Settings.Controls.Add(this.SettingsPresetsBtn);
             this.Settings.Controls.Add(this.resetToDefaultToolStripMenuItem);
             this.Settings.Controls.Add(this.applySettingsToolStripMenuItem);
@@ -1321,32 +1131,32 @@
             this.label2.TabIndex = 38;
             this.label2.Text = "Audio engine:";
             // 
-            // assignSoundfontListToAppToolStripMenuItem
+            // MEPSButton
             // 
-            this.assignSoundfontListToAppToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.assignSoundfontListToAppToolStripMenuItem.Location = new System.Drawing.Point(167, 382);
-            this.assignSoundfontListToAppToolStripMenuItem.Name = "assignSoundfontListToAppToolStripMenuItem";
-            this.assignSoundfontListToAppToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
-            this.assignSoundfontListToAppToolStripMenuItem.TabIndex = 30;
-            this.assignSoundfontListToAppToolStripMenuItem.Text = "Assign SoundFont list to app";
-            this.assignSoundfontListToAppToolStripMenuItem.UseVisualStyleBackColor = true;
-            this.assignSoundfontListToAppToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
+            this.MEPSButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MEPSButton.Location = new System.Drawing.Point(152, 383);
+            this.MEPSButton.Name = "MEPSButton";
+            this.MEPSButton.Size = new System.Drawing.Size(144, 23);
+            this.MEPSButton.TabIndex = 30;
+            this.MEPSButton.Text = "MIDI events parser settings";
+            this.MEPSButton.UseVisualStyleBackColor = true;
+            this.MEPSButton.Click += new System.EventHandler(this.MEPSMenu_Click);
             // 
-            // changeDefaultSoundfontListToolStripMenuItem
+            // AASButton
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.changeDefaultSoundfontListToolStripMenuItem.Location = new System.Drawing.Point(7, 382);
-            this.changeDefaultSoundfontListToolStripMenuItem.Name = "changeDefaultSoundfontListToolStripMenuItem";
-            this.changeDefaultSoundfontListToolStripMenuItem.Size = new System.Drawing.Size(159, 23);
-            this.changeDefaultSoundfontListToolStripMenuItem.TabIndex = 29;
-            this.changeDefaultSoundfontListToolStripMenuItem.Text = "Change default SoundFont list";
-            this.changeDefaultSoundfontListToolStripMenuItem.UseVisualStyleBackColor = true;
-            this.changeDefaultSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
+            this.AASButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AASButton.Location = new System.Drawing.Point(7, 383);
+            this.AASButton.Name = "AASButton";
+            this.AASButton.Size = new System.Drawing.Size(144, 23);
+            this.AASButton.TabIndex = 29;
+            this.AASButton.Text = "Advanced audio settings";
+            this.AASButton.UseVisualStyleBackColor = true;
+            this.AASButton.Click += new System.EventHandler(this.AASMenu_Click);
             // 
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 382);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 383);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
             this.SettingsPresetsBtn.TabIndex = 31;
@@ -1357,7 +1167,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 382);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 383);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 32;
@@ -1369,7 +1179,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 382);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 383);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 33;
@@ -1832,7 +1642,7 @@
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.EL.Location = new System.Drawing.Point(544, 367);
+            this.EL.Location = new System.Drawing.Point(544, 366);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -1862,7 +1672,7 @@
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IEL.Location = new System.Drawing.Point(544, 338);
+            this.IEL.Location = new System.Drawing.Point(544, 337);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -2113,7 +1923,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(649, 442);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -2184,20 +1994,14 @@
         public System.Windows.Forms.OpenFileDialog ExternalListImport;
         public System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.ComponentModel.BackgroundWorker ThemeCheck;
-        private System.Windows.Forms.MenuItem menuItem11;
-        private System.Windows.Forms.MenuItem menuItem16;
+        private System.Windows.Forms.MenuItem AASMenu;
         private System.Windows.Forms.MenuItem menuItem14;
         private System.Windows.Forms.MenuItem menuItem18;
-        private System.Windows.Forms.MenuItem menuItem12;
+        private System.Windows.Forms.MenuItem MEPSMenu;
         public System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
         public System.Windows.Forms.MenuItem enableextra8sf;
         public System.Windows.Forms.MenuItem DebugModePls;
-        public System.Windows.Forms.MenuItem changeTheSizeOfTheEVBufferToolStripMenuItem;
         public System.Windows.Forms.MenuItem autopanicmode;
-        public System.Windows.Forms.MenuItem SysExIgnore;
-        public System.Windows.Forms.MenuItem AllNotesIgnore;
-        public System.Windows.Forms.MenuItem floatingpointaudio;
-        public System.Windows.Forms.MenuItem slowdownnoskip;
         public System.Windows.Forms.MenuItem autoupdate;
         public System.Windows.Forms.MenuItem hotkeys;
         private System.Windows.Forms.MenuItem menuItem21;
@@ -2218,14 +2022,7 @@
         private System.Windows.Forms.MenuItem SoftpediaPage;
         private System.Windows.Forms.MenuItem menuItem26;
         private System.Windows.Forms.MenuItem KepChannel;
-        public System.Windows.Forms.MenuItem ChangeDefaultOutput;
-        public System.Windows.Forms.MenuItem IgnoreNotes1;
-        private System.Windows.Forms.MenuItem menuItem27;
-        public System.Windows.Forms.MenuItem IgnoreNotesInterval;
-        private System.Windows.Forms.MenuItem ChangePitchShift;
-        public System.Windows.Forms.MenuItem FadeoutDisable;
         private System.Windows.Forms.MenuItem SeeChangelog;
-        public System.Windows.Forms.MenuItem MonophonicFunc;
         private System.Windows.Forms.TabPage Settings;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
         private System.Windows.Forms.PictureBox WhatIsOutput;
@@ -2266,8 +2063,8 @@
         private System.Windows.Forms.TabControl TabsForTheControls;
         private System.Windows.Forms.MenuItem OpenSFDefaultApp;
         private System.Windows.Forms.MenuItem menuItem30;
-        private System.Windows.Forms.Button assignSoundfontListToAppToolStripMenuItem;
-        private System.Windows.Forms.Button changeDefaultSoundfontListToolStripMenuItem;
+        private System.Windows.Forms.Button MEPSButton;
+        private System.Windows.Forms.Button AASButton;
         private System.Windows.Forms.Button SettingsPresetsBtn;
         private System.Windows.Forms.Button resetToDefaultToolStripMenuItem;
         private System.Windows.Forms.Button applySettingsToolStripMenuItem;
@@ -2280,8 +2077,6 @@
         private System.Windows.Forms.MenuItem menuItem28;
         private System.Windows.Forms.MenuItem DebugModeOpenNotepad;
         private System.Windows.Forms.ToolTip RecommendedBuffer;
-        public System.Windows.Forms.MenuItem bit8audio;
-        public System.Windows.Forms.MenuItem bit16audio;
         private System.Windows.Forms.MenuItem OpenSFMainDirectory;
         private System.Windows.Forms.MenuItem SignatureCheck;
         private System.Windows.Forms.MenuItem menuItem33;
@@ -2296,8 +2091,6 @@
         private System.Windows.Forms.MenuItem menuItem34;
         public System.Windows.Forms.MenuItem DePrio;
         private System.Windows.Forms.MenuItem ResetToDefault;
-        private System.Windows.Forms.MenuItem menuItem36;
-        public System.Windows.Forms.MenuItem CapFram;
         public ListViewEx Lis;
         private System.Windows.Forms.ColumnHeader SoundFont;
         private System.Windows.Forms.ColumnHeader SFFormat;
@@ -2305,7 +2098,6 @@
         private System.Windows.Forms.MenuItem menuItem37;
         private System.Windows.Forms.MenuItem menuItem35;
         private System.Windows.Forms.MenuItem menuItem38;
-        public System.Windows.Forms.MenuItem FullVelocityMode;
         private System.Windows.Forms.MenuItem menuItem40;
         private System.Windows.Forms.MenuItem AMIDIMapInstallMenu;
         private System.Windows.Forms.MenuItem AMIDIMapUninstallMenu;
@@ -2317,7 +2109,6 @@
         public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem WinMMPatch32;
         public System.Windows.Forms.MenuItem WinMMPatch64;
-        private System.Windows.Forms.MenuItem RevbNChor;
         private System.Windows.Forms.Timer SavedLabel;
         private System.Windows.Forms.MenuItem menuItem43;
         private System.Windows.Forms.MenuItem GiveFeedback;
@@ -2340,7 +2131,6 @@
         public System.Windows.Forms.MenuItem EnableBBS;
         public System.Windows.Forms.MenuItem EnableBB;
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
-        public System.Windows.Forms.MenuItem TypeOfAudio;
         public System.Windows.Forms.Label DrvHzLabel;
         public System.Windows.Forms.Label BufferText;
         public System.Windows.Forms.PictureBox StatusBuf;
@@ -2348,18 +2138,14 @@
         private System.Windows.Forms.MenuItem menuItem42;
         private System.Windows.Forms.MenuItem KSUSJoinNow;
         private System.Windows.Forms.Label VolLabel;
-        public System.Windows.Forms.MenuItem UnsupportedFeaturesSep;
-        public System.Windows.Forms.MenuItem UnsupportedFeatures;
-        public System.Windows.Forms.MenuItem OldBuff;
-        public System.Windows.Forms.MenuItem NoSleep;
-        private System.Windows.Forms.MenuItem menuItem47;
-        public System.Windows.Forms.MenuItem Limit88;
         private System.Windows.Forms.ImageList TabImgs;
         private System.Windows.Forms.MenuItem SetAssociationWithSFs;
-        private System.Windows.Forms.MenuItem menuItem32;
         private System.Windows.Forms.MenuItem menuItem48;
         private System.Windows.Forms.MenuItem menuItem49;
         private System.Windows.Forms.MenuItem donateToSupportUsToolStripMenuItem;
+        private System.Windows.Forms.MenuItem menuItem15;
+        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem menuItem12;
     }
 }
 

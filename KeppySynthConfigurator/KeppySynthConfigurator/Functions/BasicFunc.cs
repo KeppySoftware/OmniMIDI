@@ -535,7 +535,7 @@ namespace KeppySynthConfigurator
             {
                 KeppySynthConfiguratorMain.LastBrowserPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathsfimport", path);
-                Program.DebugToConsole(false, String.Format("Last Explorer path is: ", path), null);
+                Program.DebugToConsole(false, String.Format("Last Explorer path is: {0}", path), null);
             }
             catch
             {
@@ -549,7 +549,7 @@ namespace KeppySynthConfigurator
             {
                 KeppySynthConfiguratorMain.LastImportExportPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathlistimpexp", path);
-                Program.DebugToConsole(false, String.Format("Last Import/Export path is: ", path), null);
+                Program.DebugToConsole(false, String.Format("Last Import/Export path is: {0}", path), null);
             }
             catch
             {
@@ -563,7 +563,7 @@ namespace KeppySynthConfigurator
             {
                 SoundFontInfo.LastMIDIPath = path;
                 KeppySynthConfiguratorMain.SynthPaths.SetValue("lastpathmidimport", path);
-                Program.DebugToConsole(false, String.Format("Last MIDI preview path is: ", path), null);
+                Program.DebugToConsole(false, String.Format("Last MIDI preview path is: {0}", path), null);
             }
             catch
             {
@@ -587,10 +587,7 @@ namespace KeppySynthConfigurator
                     return;
                 }
             }
-            catch
-            {
-                return;
-            }
+            catch { return; }
         }
         // NOT SUPPORTED ON XP
 
@@ -617,130 +614,43 @@ namespace KeppySynthConfigurator
                 // First, the most important settings
                 KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("polyphony", 512));
                 KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("cpu", 75));
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultmidiout", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allhotkeys", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.hotkeys.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("alternativecpu", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("capframerate", 1)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.CapFram.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.FadeoutDisable.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("limit88", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.Limit88.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.FullVelocityMode.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
                     Functions.ButtonStatus(false);
                     KeppySynthConfiguratorMain.Delegate.DePrio.Checked = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.RTPrio.Checked = true;
-                }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 2)
-                {
                     KeppySynthConfiguratorMain.Delegate.HiPrio.Checked = true;
-                }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 3)
-                {
                     KeppySynthConfiguratorMain.Delegate.HNPrio.Checked = true;
-                }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 4)
-                {
                     KeppySynthConfiguratorMain.Delegate.NoPrio.Checked = true;
-                }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 5)
-                {
                     KeppySynthConfiguratorMain.Delegate.LNPrio.Checked = true;
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.Delegate.LoPrio.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allnotesignore", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.AllNotesIgnore.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.SysExIgnore.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.slowdownnoskip.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.IgnoreNotes1.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.IgnoreNotesInterval.Enabled = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffermode", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.OldBuff.Checked = true;
-                }
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 0)
-                {
-                    KeppySynthConfiguratorMain.Delegate.NoSleep.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = true;
-                }
-                int floatingpointaudioval = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1));
-                if (floatingpointaudioval == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = false;
-                }
-                else if (floatingpointaudioval == 2 || floatingpointaudioval == 0)
-                {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = false;
-                }
-                else if (floatingpointaudioval == 3)
-                {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked = true;
-                    KeppySynthConfiguratorMain.Delegate.bit16audio.Checked = false;
-                    KeppySynthConfiguratorMain.Delegate.bit8audio.Checked = false;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("extra8lists", 0)) == 1)
                 {
                     KeppySynthConfiguratorMain.Delegate.enableextra8sf.Checked = true;
@@ -753,51 +663,43 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 15");
                     KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 16");
                 }
+
                 KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100).ToString();
                 KeppySynthConfiguratorMain.Delegate.SPFRate.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sndbfvalue", 16));
 
                 // Then the filthy checkboxes
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("preload", 1)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.Preload.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("nofx", 0)) == 0)
-                {
                     KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("noteoff", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysresetignore", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("encmode", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = true;
-                }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0)
                 {
-                    ShowUnsupportedFeaturs(true);
                     KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 0;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
                 }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
                 {
-                    ShowUnsupportedFeaturs(true);
                     KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 1;
-                    KeppySynthConfiguratorMain.Delegate.TypeOfAudio.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
                     KeppySynthConfiguratorMain.Delegate.bufsize.Maximum = 1000;
                 }
@@ -806,11 +708,9 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 2;
-                    KeppySynthConfiguratorMain.Delegate.TypeOfAudio.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
@@ -818,17 +718,14 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
-                    KeppySynthConfiguratorMain.Delegate.TypeOfAudio.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.ChangeDefaultOutput.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
                 }
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
-                {
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
-                }
 
                 if (Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 15063)
                     KeppySynthConfiguratorMain.Delegate.SpatialSound.Visible = true;
@@ -837,15 +734,12 @@ namespace KeppySynthConfigurator
                 int VolumeValue = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volume", 10000));
                 KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolumeValue;
                 decimal VolVal = (decimal)VolumeValue / 100;
-                if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
-                {
 
+                if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
-                }
+
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
                 KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
                 Program.DebugToConsole(false, "Done loading settings.", null);
@@ -855,12 +749,6 @@ namespace KeppySynthConfigurator
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
             }
-        }
-
-        public static void ShowUnsupportedFeaturs(bool yesno)
-        {
-            KeppySynthConfiguratorMain.Delegate.UnsupportedFeatures.Visible = yesno;
-            KeppySynthConfiguratorMain.Delegate.UnsupportedFeaturesSep.Visible = yesno;
         }
 
         public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
@@ -932,69 +820,44 @@ namespace KeppySynthConfigurator
 
                 // Checkbox stuff yay
                 if (KeppySynthConfiguratorMain.Delegate.Preload.Checked == true)
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("preload", "1", RegistryValueKind.DWord);
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("preload", "0", RegistryValueKind.DWord);
-                }
+
                 if (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked == true)
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "0", RegistryValueKind.DWord);
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("nofx", "1", RegistryValueKind.DWord);
-                }
+
                 if (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked == true)
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("noteoff", "1", RegistryValueKind.DWord);
-                }
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("noteoff", "1", RegistryValueKind.DWord);            
                 else
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("noteoff", "0", RegistryValueKind.DWord);
-                }
+
                 if (KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked == true)
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sysresetignore", "1", RegistryValueKind.DWord);
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
-                }
+
                 if (KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked == true)
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("encmode", "1", RegistryValueKind.DWord);
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
-                }
+
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
-                }
                 else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
-                }
                 else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "2", RegistryValueKind.DWord);
-                }
                 else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "3", RegistryValueKind.DWord);
-                }
+
                 if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
-                }
                 else
-                {
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
-                }
+
                 Program.DebugToConsole(false, "Done saving settings.", null);
             }
             catch (Exception ex)
@@ -1201,7 +1064,7 @@ namespace KeppySynthConfigurator
             catch { return "-"; }
         }
 
-        public static string ReturnSoundFontSize(string ext, long length)
+        public static string ReturnSoundFontSize(string preset, string ext, long length)
         {
             if (ext.ToLowerInvariant() != ".sfz")
             {
@@ -1210,7 +1073,9 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                return "N/A";
+                long size = SFZInfo.GetSoundFontZSize(preset);
+                if (size > 0) return Functions.ReturnLength(size);
+                else return "N/A";
             }
         }
 
@@ -1378,7 +1243,7 @@ namespace KeppySynthConfigurator
                             ListViewItem SF = new ListViewItem(new[] {
                                 line,
                                 ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
-                                ReturnSoundFontSize(Path.GetExtension(StripSFZValues(line)), file.Length)
+                                ReturnSoundFontSize(StripSFZValues(line), Path.GetExtension(StripSFZValues(line)), file.Length)
                             });
 
                             SF.ForeColor = ReturnColor(result);
@@ -1432,7 +1297,7 @@ namespace KeppySynthConfigurator
                                     ListViewItem SF = new ListViewItem(new[] {
                                         "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
-                                        ReturnSoundFontSize(Path.GetExtension(Soundfonts[i]), file.Length)
+                                        ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
                                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                                 }
@@ -1444,7 +1309,7 @@ namespace KeppySynthConfigurator
                             ListViewItem SF = new ListViewItem(new[] {
                                         Soundfonts[i],
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
-                                        ReturnSoundFontSize(Path.GetExtension(Soundfonts[i]), file.Length)
+                                        ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
                             KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
@@ -1475,7 +1340,7 @@ namespace KeppySynthConfigurator
                                 ListViewItem SF = new ListViewItem(new[] {
                                         "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
-                                        ReturnSoundFontSize(Path.GetExtension(Soundfonts[i]), file.Length)
+                                        ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
                                 KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                             }
@@ -1567,15 +1432,24 @@ namespace KeppySynthConfigurator
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {
                     string line;
+                    KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
+                    KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
                     while ((line = r.ReadLine()) != null)
                     {
-                        string newvaluenosfz = Functions.StripSFZValues(line);
-                        FileInfo file = new FileInfo(newvaluenosfz);
+                        string result = line.Substring(0, 1);
+                        string newvalue;
+
+                        if (result == "@")
+                            line = line.Remove(0, 1);
+
+                        FileInfo file = new FileInfo(StripSFZValues(line));
                         ListViewItem SF = new ListViewItem(new[] {
-                                        newvaluenosfz,
-                                        Functions.ReturnSoundFontFormat(newvaluenosfz),
-                                        Functions.ReturnSoundFontSize(newvaluenosfz, file.Length)
-                                    });
+                                line,
+                                ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
+                                ReturnSoundFontSize(StripSFZValues(line), Path.GetExtension(StripSFZValues(line)), file.Length)
+                            });
+
+                        SF.ForeColor = ReturnColor(result);
                         KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                     }
                 }

@@ -233,6 +233,8 @@ namespace KeppySynthConfigurator
                 InitializeVolumeLabelFont();
                 Functions.LoadSettings();
 
+                AudioEngBox_SelectedIndexChanged(null, null);
+
                 if (tempList.Count > 0)
                 {
                     foreach (string sf in tempList)
@@ -1149,7 +1151,7 @@ namespace KeppySynthConfigurator
 
         private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
         {
-            if (!floatingpointaudio.Checked)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)) != 1)
             {
                 DialogResult dialogResult = MessageBox.Show("LoudMax is useless without 32-bit float audio rendering.\nPlease enable it by going to \"Additional settings > Advanced audio settings > Audio bit depth\".\n\nDo you want to continue anyway?", "Keppy's Synthesizer - LoudMax", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
@@ -1257,60 +1259,21 @@ namespace KeppySynthConfigurator
             new BecomeAPatron().ShowDialog();
         }
 
-        private void CapFram_Click(object sender, EventArgs e)
-        {
-            if (!CapFram.Checked)
-            {
-                CapFram.Checked = true;
-                Functions.SetFramerate(1);
-            }
-            else
-            {
-                CapFram.Checked = false;
-                Functions.SetFramerate(0);
-            }
-        }
-
-        private void OldBuff_Click(object sender, EventArgs e)
-        {
-            if (!OldBuff.Checked)
-            {
-                OldBuff.Checked = true;
-                Functions.OldBufferMode(1);
-            }
-            else
-            {
-                OldBuff.Checked = false;
-                Functions.OldBufferMode(0);
-            }
-        }
-
-        private void NoSleep_Click(object sender, EventArgs e)
-        {
-            if (!NoSleep.Checked)
-            {
-                NoSleep.Checked = true;
-                Functions.SleepStates(0);
-            }
-            else
-            {
-                NoSleep.Checked = false;
-                Functions.SleepStates(1);
-            }
-        }
-
-        private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            KeppySynthEVBuffer frm = new KeppySynthEVBuffer();
-            frm.ShowDialog(this);
-            frm.Dispose();
-        }
-
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthOutputWAVDir frm = new KeppySynthOutputWAVDir();
             frm.ShowDialog(this);
             frm.Dispose();
+        }
+
+        private void AASMenu_Click(object sender, EventArgs e)
+        {
+            new AdvancedAudioSettings().ShowDialog(this);
+        }
+
+        private void MEPSMenu_Click(object sender, EventArgs e)
+        {
+            new MIDIEventsParserSettings().ShowDialog(this);
         }
 
         private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1610,15 +1573,16 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
+        public void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
             {
-                Functions.ShowUnsupportedFeaturs(true);
+                VolIntView.Enabled = true;
+                VolLabel.Enabled = true;
+                VolSimView.Enabled = true;
+                VolTrackBar.Enabled = true;
                 DrvHzLabel.Enabled = true;
                 Frequency.Enabled = true;
-                TypeOfAudio.Enabled = true;
-                ChangeDefaultOutput.Enabled = false;
                 BufferText.Enabled = true;
                 bufsize.Value = 20;
                 bufsize.Minimum = 1;
@@ -1632,11 +1596,12 @@ namespace KeppySynthConfigurator
             }
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
-                Functions.ShowUnsupportedFeaturs(true);
+                VolIntView.Enabled = true;
+                VolLabel.Enabled = true;
+                VolSimView.Enabled = true;
+                VolTrackBar.Enabled = true;
                 DrvHzLabel.Enabled = true;
                 Frequency.Enabled = true;
-                TypeOfAudio.Enabled = true;
-                ChangeDefaultOutput.Enabled = false;
                 BufferText.Enabled = true;
                 bufsize.Value = 20;
                 bufsize.Minimum = 1;
@@ -1650,25 +1615,53 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                Functions.ShowUnsupportedFeaturs(false);
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
                 {
                     DrvHzLabel.Enabled = false;
                     Frequency.Enabled = false;
+                    if ((Int32)SynthSettings.GetValue("wasapiex", 0) == 1)
+                    {
+                        VolIntView.Enabled = false;
+                        VolLabel.Enabled = false;
+                        VolSimView.Enabled = false;
+                        VolTrackBar.Enabled = false;
+                        BufferText.Enabled = true;
+                        StatusBuf.Visible = true;
+                        StatusBuf.Enabled = true;
+                        bufsize.Value = 20;
+                        bufsize.Minimum = 1;
+                        bufsize.Maximum = 100;
+                        bufsize.Enabled = true;
+                    }
+                    else
+                    {
+                        VolIntView.Enabled = true;
+                        VolLabel.Enabled = true;
+                        VolSimView.Enabled = true;
+                        VolTrackBar.Enabled = true;
+                        BufferText.Enabled = false;
+                        StatusBuf.Visible = false;
+                        StatusBuf.Enabled = false;
+                        bufsize.Minimum = 1;
+                        bufsize.Maximum = 100;
+                        bufsize.Enabled = false;
+                    }
                 }
                 else
                 {
+                    VolIntView.Enabled = true;
+                    VolLabel.Enabled = true;
+                    VolSimView.Enabled = true;
+                    VolTrackBar.Enabled = true;
                     DrvHzLabel.Enabled = true;
                     Frequency.Enabled = true;
+                    BufferText.Enabled = false;
+                    StatusBuf.Visible = false;
+                    StatusBuf.Enabled = false;
+                    bufsize.Minimum = 1;
+                    bufsize.Maximum = 100;
+                    bufsize.Enabled = false;
                 }
-                BufferText.Enabled = false;
-                StatusBuf.Visible = false;
-                StatusBuf.Enabled = false;
-                bufsize.Minimum = 1;
-                bufsize.Maximum = 100;
-                bufsize.Enabled = false;
-                TypeOfAudio.Enabled = false;
-                ChangeDefaultOutput.Enabled = true;
                 SPFLabel.Enabled = false;
                 SPFRate.Enabled = false;
                 CheckBuffer();
@@ -1708,20 +1701,6 @@ namespace KeppySynthConfigurator
                 bufsize.Minimum = 1;
                 bufsize.Value = 15;
                 MaxCPU.Value = 75;
-            }
-        }
-
-        private void slowdownnoskip_Click(object sender, EventArgs e)
-        {
-            if (slowdownnoskip.Checked == false)
-            {
-                SynthSettings.SetValue("vms2emu", "1", RegistryValueKind.DWord);
-                slowdownnoskip.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("vms2emu", "0", RegistryValueKind.DWord);
-                slowdownnoskip.Checked = false;
             }
         }
 
@@ -1767,20 +1746,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void FadeoutDisable_Click(object sender, EventArgs e)
-        {
-            if (FadeoutDisable.Checked == false)
-            {
-                SynthSettings.SetValue("fadeoutdisable", "1", RegistryValueKind.DWord);
-                FadeoutDisable.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("fadeoutdisable", "0", RegistryValueKind.DWord);
-                FadeoutDisable.Checked = false;
-            }
-        }
-
         private void enableextra8sf_Click(object sender, EventArgs e)
         {
             if (enableextra8sf.Checked == false)
@@ -1811,117 +1776,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void floatingpointaudio_Click(object sender, EventArgs e)
-        {
-            if (floatingpointaudio.Checked == false)
-            {
-                SynthSettings.SetValue("32bit", "1", RegistryValueKind.DWord);
-                floatingpointaudio.Checked = true;
-                bit16audio.Checked = false;
-                bit8audio.Checked = false;
-            }
-        }
-
-        private void bit16audio_Click(object sender, EventArgs e)
-        {
-            if (bit16audio.Checked == false)
-            {
-                SynthSettings.SetValue("32bit", "2", RegistryValueKind.DWord);
-                floatingpointaudio.Checked = false;
-                bit16audio.Checked = true;
-                bit8audio.Checked = false;
-            }
-        }
-
-        private void bit8audio_Click(object sender, EventArgs e)
-        {
-            if (bit8audio.Checked == false)
-            {
-                SynthSettings.SetValue("32bit", "3", RegistryValueKind.DWord);
-                floatingpointaudio.Checked = false;
-                bit16audio.Checked = false;
-                bit8audio.Checked = true;
-            }
-        }
-
-        private void MonophonicFunc_Click(object sender, EventArgs e)
-        {
-            if (MonophonicFunc.Checked == false)
-            {
-                SynthSettings.SetValue("monorendering", "1", RegistryValueKind.DWord);
-                MonophonicFunc.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("monorendering", "0", RegistryValueKind.DWord);
-                MonophonicFunc.Checked = false;
-            }
-        }
-
-        private void SysExIgnore_Click(object sender, EventArgs e)
-        {
-            if (SysExIgnore.Checked == false)
-            {
-                SynthSettings.SetValue("sysexignore", "1", RegistryValueKind.DWord);
-                SysExIgnore.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("sysexignore", "0", RegistryValueKind.DWord);
-                SysExIgnore.Checked = false;
-            }
-        }
-
-        private void AllNotesIgnore_Click(object sender, EventArgs e)
-        {
-            if (AllNotesIgnore.Checked == false)
-            {
-                SynthSettings.SetValue("allnotesignore", "1", RegistryValueKind.DWord);
-                AllNotesIgnore.Checked = true;
-                SysExIgnore.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("allnotesignore", "0", RegistryValueKind.DWord);
-                AllNotesIgnore.Checked = false;
-            }
-        }
-
-        private void FullVelocityMode_Click(object sender, EventArgs e)
-        {
-            if (FullVelocityMode.Checked == false)
-            {
-                SynthSettings.SetValue("fullvelocity", "1", RegistryValueKind.DWord);
-                FullVelocityMode.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("fullvelocity", "0", RegistryValueKind.DWord);
-                FullVelocityMode.Checked = false;
-            }
-        }
-
-        private void Limit88_Click(object sender, EventArgs e)
-        {
-            if (Limit88.Checked == false)
-            {
-                SynthSettings.SetValue("limit88", "1", RegistryValueKind.DWord);
-                Limit88.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("limit88", "0", RegistryValueKind.DWord);
-                Limit88.Checked = false;
-            }
-        }
-
-        private void RevbNChor_Click(object sender, EventArgs e)
-        {
-            RevbNChorForm frm = new RevbNChorForm();
-            frm.ShowDialog(this);
-            frm.Dispose();
-        }
-
         private void DebugModePls_Click(object sender, EventArgs e)
         {
             if (DebugModePls.Checked == false)
@@ -1950,22 +1804,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void IgnoreNotes1_Click(object sender, EventArgs e)
-        {
-            if (IgnoreNotes1.Checked == false)
-            {
-                SynthSettings.SetValue("ignorenotes1", "1", RegistryValueKind.DWord);
-                IgnoreNotes1.Checked = true;
-                IgnoreNotesInterval.Enabled = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("ignorenotes1", "0", RegistryValueKind.DWord);
-                IgnoreNotes1.Checked = false;
-                IgnoreNotesInterval.Enabled = false;
-            }
-        }
-
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
@@ -1980,20 +1818,6 @@ namespace KeppySynthConfigurator
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
-        }
-
-        private void IgnoreNotesInterval_Click(object sender, EventArgs e)
-        {
-            KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
-            frm.ShowDialog(this);
-            frm.Dispose();
-        }
-
-        private void ChangePitchShift_Click(object sender, EventArgs e)
-        {
-            KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
-            frm.ShowDialog(this);
-            frm.Dispose();
         }
 
         private void MaskSynthesizerAsAnother_Click(object sender, EventArgs e)

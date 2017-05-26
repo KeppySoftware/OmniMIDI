@@ -28,7 +28,6 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 		while (stop_thread == 0) {
 			realtime_load_settings();
 			Panic();
-			keybindings();
 			WatchdogCheck();
 			mixervoid();
 			RevbNChor();

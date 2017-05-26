@@ -278,7 +278,6 @@ namespace KeppySynthConfigurator
     }
 }
 
-
 public class MissingBASSLibs : Exception
 {
     public MissingBASSLibs()

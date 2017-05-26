@@ -175,9 +175,9 @@ namespace KeppySynthConfigurator
             {
                 String Program = null;
                 ShowInputDialog(ref Program);
-                ProgramsBlackList.Items.Add(Program);
                 if (Program != null || Program != "")
                 {
+                    ProgramsBlackList.Items.Add(Program);
                     SaveBlackList();
                 }
             }

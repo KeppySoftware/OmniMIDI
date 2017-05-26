@@ -75,6 +75,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\Mandatory\Advanced Settings\AdvancedAudioSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\AdvancedAudioSettings.Designer.cs">
+      <DependentUpon>AdvancedAudioSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions\AddToWhichList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,11 +171,18 @@
     <Compile Include="Forms\Add-ons\SFListAssign.Designer.cs">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\MIDIEventsParserSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\MIDIEventsParserSettings.Designer.cs">
+      <DependentUpon>MIDIEventsParserSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Functions\SFZInfo.cs" />
     <Compile Include="UpdateSystem\SelectBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +249,12 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
+    <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\AdvancedAudioSettings.resx">
+      <DependentUpon>AdvancedAudioSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\MIDIEventsParserSettings.resx">
+      <DependentUpon>MIDIEventsParserSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Functions\AddToWhichList.resx">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </EmbeddedResource>

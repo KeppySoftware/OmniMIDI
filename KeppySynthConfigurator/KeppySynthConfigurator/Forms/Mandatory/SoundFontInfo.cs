@@ -42,6 +42,7 @@ namespace KeppySynthConfigurator
 
             // Here we go
             String next;
+            String sf = "";
             Int32 fonthandle;
             FileInfo f;
 
@@ -49,8 +50,7 @@ namespace KeppySynthConfigurator
 
             if (SoundFont.ToLower().IndexOf('=') != -1)
             {
-                var matches = System.Text.RegularExpressions.Regex.Matches(SoundFont, "[0-9]+");
-                string sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
+                sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
                 if (!File.Exists(sf))
                 {
                     Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
@@ -64,6 +64,7 @@ namespace KeppySynthConfigurator
             }
             else
             {
+                sf = SoundFont;
                 if (!File.Exists(SoundFont))
                 {
                     Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
@@ -90,10 +91,20 @@ namespace KeppySynthConfigurator
                 SizeWarning.SetToolTip(SofSFLab, "SoundFonts bigger than 2GB may not load correctly\non 32-bit applications, cause audio corruptions or even cause loss of data!\n\nBe careful!");
             }
 
-            SofSFLab.Text = String.Format("{0} (Samples: {1}, Presets: {2})",
-                Functions.ReturnLength(f.Length),
-                Functions.ReturnLength(fontinfo.samsize),
-                Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
+            if (Path.GetExtension(sf).ToLowerInvariant() == ".sfz")
+            {
+                SofSFLab.Text = String.Format("{0} (Samples: {1}, Presets: {2})",
+                                Functions.ReturnLength(f.Length + SFZInfo.GetSoundFontZSize(sf)),
+                                Functions.ReturnLength(SFZInfo.GetSoundFontZSize(sf)),
+                                Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
+            }
+            else
+            {
+                SofSFLab.Text = String.Format("{0} (Samples: {1}, Presets: {2})",
+                                Functions.ReturnLength(f.Length),
+                                Functions.ReturnLength(fontinfo.samsize),
+                                Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
+            }
 
             SFfLab.Text = Functions.ReturnSoundFontFormatMore(Path.GetExtension(next));
             CommentRich.Text = ReturnComment(fontinfo.comment);
@@ -218,12 +229,7 @@ namespace KeppySynthConfigurator
             // Init stream
             ChangePreviewButtonText("Initializing stream...", false);
             ChangeWindowTitle("Initializing stream...");
-            hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
-                (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? 0 : BASSFlag.BASS_MIDI_NOFX) |
-                (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? 0 : BASSFlag.BASS_MIDI_NOTEOFF1) |
-                (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? 0 : BASSFlag.BASS_MIDI_SINCINTER) |
-                (KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked ? BASSFlag.BASS_SAMPLE_MONO : 0) |
-                BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+            hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
             Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_CPU, (int)(KeppySynthConfiguratorMain.Delegate.MaxCPU.Value / 100));
             System.Threading.Thread.Sleep(50);
 
@@ -264,12 +270,7 @@ namespace KeppySynthConfigurator
             // Init stream
             ChangePreviewButtonText("Initializing stream...", false);
             ChangeWindowTitle("Initializing stream...");
-            hStream = Bass.BASS_MusicLoad(MIDIPreview, 0, 0, (KeppySynthConfiguratorMain.Delegate.floatingpointaudio.Checked ? BASSFlag.BASS_SAMPLE_FLOAT : 0) |
-                (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? 0 : BASSFlag.BASS_MIDI_NOFX) |
-                (KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked ? 0 : BASSFlag.BASS_MIDI_NOTEOFF1) |
-                (KeppySynthConfiguratorMain.Delegate.SincInter.Checked ? 0 : BASSFlag.BASS_MIDI_SINCINTER) |
-                (KeppySynthConfiguratorMain.Delegate.MonophonicFunc.Checked ? BASSFlag.BASS_SAMPLE_MONO : 0) |
-                BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+            hStream = Bass.BASS_MusicLoad(MIDIPreview, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
             System.Threading.Thread.Sleep(50);
         }
 

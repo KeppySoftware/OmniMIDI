@@ -85,6 +85,7 @@ namespace KeppySynthConfigurator
             {
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("wasapiex", 0);
             }
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox_SelectedIndexChanged(null, null);
         }
 
         private void ImConfusedHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
