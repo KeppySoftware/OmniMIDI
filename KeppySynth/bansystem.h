@@ -21,19 +21,20 @@ BOOL BlackListSystem(){
 	TCHAR modulename[MAX_PATH];
 	TCHAR fullmodulename[MAX_PATH];
 	// Clears all the tchars
-	ZeroMemory(defaultstring, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(userstring, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(defaultblacklistdirectory, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(userblacklistdirectory, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(modulename, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(fullmodulename, sizeof(TCHAR) * MAX_PATH);
+	ZeroMemory(defaultstring, MAX_PATH);
+	ZeroMemory(userstring, MAX_PATH);
+	ZeroMemory(defaultblacklistdirectory, MAX_PATH);
+	ZeroMemory(userblacklistdirectory, MAX_PATH);
+	ZeroMemory(modulename, MAX_PATH);
+	ZeroMemory(fullmodulename,MAX_PATH);
 	// Start the system
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, defaultblacklistdirectory);
+	_tcscat(defaultblacklistdirectory, L"\\keppysynth\\keppysynth.dbl");
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
 	PathStripPath(modulename);
 	try {
-		if (GetWindowsDirectory(defaultblacklistdirectory, MAX_PATH)) {
-			_tcscat(defaultblacklistdirectory, L"\\keppymididrv.defaultblacklist");
+		if (PathFileExists(defaultblacklistdirectory)) {
 			std::wifstream file(defaultblacklistdirectory);
 			if (file) {
 				// The default blacklist exists, continue
@@ -49,6 +50,10 @@ BOOL BlackListSystem(){
 				MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"Keppy's Synthesizer - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				exit(0);
 			}
+		}
+		else {
+			MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to qu'it.", L"Keppy's Synthesizer - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			exit(0);
 		}
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
 			PathAppend(userblacklistdirectory, _T("\\Keppy's Synthesizer\\blacklist\\keppymididrv.blacklist"));

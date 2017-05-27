@@ -252,13 +252,17 @@ namespace KeppySynthConfigurator
             {
                 if (integer == 0)
                 {
+                    Program.DebugToConsole(false, "Registering driver...", null);
                     var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/registerv");
                     process.WaitForExit();
+                    Program.DebugToConsole(false, "Driver registered.", null);
                 }
                 else
                 {
+                    Program.DebugToConsole(false, "Unregistering driver....", null);
                     var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/unregisterv");
                     process.WaitForExit();
+                    Program.DebugToConsole(false, "Driver unregistered.", null);
                 }
             }
             catch (Exception ex)
@@ -358,7 +362,7 @@ namespace KeppySynthConfigurator
         public static void ShowErrorDialog(Int32 Type, System.Media.SystemSound sound, String title, String message, bool IsException, Exception ex)
         {
             SecretDialog frm = new SecretDialog(Type, sound, title, message, ex);
-            Program.DebugToConsole(IsException, null, ex);
+            Program.DebugToConsole(IsException, message, ex);
             frm.ShowDialog();
             frm.Dispose();
         }
@@ -395,12 +399,14 @@ namespace KeppySynthConfigurator
                 // 32-bit DLL
                 if (!File.Exists(userfolder + "\\LoudMax.dll"))
                 {
-                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit...", loudmax32, 1, false);
+                    Program.DebugToConsole(false, "Downloading LoudMax 32-bit...", null);
+                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit...", loudmax32, null, 1, false);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
                 else
                 {
+                    Program.DebugToConsole(false, "LoudMax 32-bit is already installed.", null);
                     MessageBox.Show("LoudMax 32-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     isalreadyinstalled++;
                 }
@@ -410,12 +416,14 @@ namespace KeppySynthConfigurator
                 {
                     if (!File.Exists(userfolder + "\\LoudMax64.dll"))
                     {
-                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit...", loudmax64, 1, false);
+                        Program.DebugToConsole(false, "Downloading LoudMax 64-bit...", null);
+                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit...", loudmax64, null, 1, false);
                         frm.StartPosition = FormStartPosition.CenterScreen;
                         frm.ShowDialog();
                     }
                     else
                     {
+                        Program.DebugToConsole(false, "LoudMax 64-bit is already installed.", null);
                         MessageBox.Show("LoudMax 64-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         isalreadyinstalled++;
                     }
@@ -442,10 +450,12 @@ namespace KeppySynthConfigurator
                 // 32-bit DLL
                 if (File.Exists(userfolder + "\\LoudMax.dll"))
                 {
+                    Program.DebugToConsole(false, "Uninstalling LoudMax 32-bit...", null);
                     File.Delete(userfolder + "\\LoudMax.dll");
                 }
                 else
                 {
+                    Program.DebugToConsole(false, "LoudMax 32-bit is already uninstalled.", null);
                     MessageBox.Show("LoudMax 32-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     isalreadyuninstalled++;
                 }
@@ -453,10 +463,12 @@ namespace KeppySynthConfigurator
                 // 64-bit DLL
                 if (File.Exists(userfolder + "\\LoudMax64.dll"))
                 {
+                    Program.DebugToConsole(false, "Uninstalling LoudMax 64-bit...", null);
                     File.Delete(userfolder + "\\LoudMax64.dll");
                 }
                 else
                 {
+                    Program.DebugToConsole(false, "LoudMax 64-bit is already uninstalled.", null);
                     MessageBox.Show("LoudMax 64-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     isalreadyuninstalled++;
                 }
@@ -1125,6 +1137,7 @@ namespace KeppySynthConfigurator
             {
                 foreach (string ext in extensions)
                 {
+                    Program.DebugToConsole(false, String.Format("Setting association for {0} files...", ext), null);
                     using (RegistryKey User_Classes = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Classes\\", true))
                     using (RegistryKey User_Ext = User_Classes.CreateSubKey("." + ext))
                     using (RegistryKey User_AutoFile = User_Classes.CreateSubKey(ext + "_auto_file"))
@@ -1150,6 +1163,7 @@ namespace KeppySynthConfigurator
                         User_Explorer.CreateSubKey("UserChoice").SetValue("ProgId", @"Applications\" + ExecutableName);
                     }
                 }
+                Program.DebugToConsole(false, "File association is done.", null);
                 SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
             }
             catch { }
@@ -1370,6 +1384,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                Program.DebugToConsole(false, String.Format("Unknown error has occurred, reinitializing list {0}.", KeppySynthConfiguratorMain.whichone), null);
                 if (KeppySynthConfiguratorMain.SynthPaths.GetValue("lastpathsfimport", null) == null)
                 {
                     Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");
@@ -1527,9 +1542,9 @@ namespace KeppySynthConfigurator
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
                 goto TryAgain;
             }
         }

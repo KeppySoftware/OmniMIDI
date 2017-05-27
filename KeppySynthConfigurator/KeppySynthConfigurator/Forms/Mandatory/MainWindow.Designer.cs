@@ -217,6 +217,11 @@
             this.keppysSteinwayPianoRealismToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.RecommendedBuffer = new System.Windows.Forms.ToolTip(this.components);
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusDoneOr = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -230,6 +235,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
             this.SoundFontTab.SuspendLayout();
             this.TabsForTheControls.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // SoundfontImport
@@ -467,7 +473,7 @@
             // 
             this.changeDefaultSoundfontListToolStripMenuItem1.Index = 4;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
-            this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem1_Click);
+            this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
             // menuItem2
             // 
@@ -916,6 +922,7 @@
             this.menuItem25,
             this.menuItem43,
             this.menuItem3});
+            this.MainMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
             // menuItem25
             // 
@@ -1092,7 +1099,7 @@
             this.Settings.Controls.Add(this.VolTrackBar);
             this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 415);
+            this.Settings.Size = new System.Drawing.Size(641, 396);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -1134,7 +1141,7 @@
             // MEPSButton
             // 
             this.MEPSButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.MEPSButton.Location = new System.Drawing.Point(152, 383);
+            this.MEPSButton.Location = new System.Drawing.Point(152, 364);
             this.MEPSButton.Name = "MEPSButton";
             this.MEPSButton.Size = new System.Drawing.Size(144, 23);
             this.MEPSButton.TabIndex = 30;
@@ -1145,7 +1152,7 @@
             // AASButton
             // 
             this.AASButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AASButton.Location = new System.Drawing.Point(7, 383);
+            this.AASButton.Location = new System.Drawing.Point(7, 364);
             this.AASButton.Name = "AASButton";
             this.AASButton.Size = new System.Drawing.Size(144, 23);
             this.AASButton.TabIndex = 29;
@@ -1156,7 +1163,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 383);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(356, 364);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
             this.SettingsPresetsBtn.TabIndex = 31;
@@ -1167,7 +1174,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 383);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(449, 364);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 32;
@@ -1179,7 +1186,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 383);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 364);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 33;
@@ -1583,7 +1590,7 @@
             this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(641, 415);
+            this.SoundFontTab.Size = new System.Drawing.Size(641, 396);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -1610,7 +1617,7 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(532, 361);
+            this.Lis.Size = new System.Drawing.Size(532, 341);
             this.Lis.TabIndex = 12;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -1642,7 +1649,7 @@
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.EL.Location = new System.Drawing.Point(544, 366);
+            this.EL.Location = new System.Drawing.Point(545, 347);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(89, 30);
             this.EL.TabIndex = 11;
@@ -1672,7 +1679,7 @@
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IEL.Location = new System.Drawing.Point(544, 337);
+            this.IEL.Location = new System.Drawing.Point(545, 318);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(89, 30);
             this.IEL.TabIndex = 10;
@@ -1758,7 +1765,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(3, 400);
+            this.ListOverride.Location = new System.Drawing.Point(3, 380);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 31;
@@ -1843,15 +1850,17 @@
             // TabsForTheControls
             // 
             this.TabsForTheControls.AllowDrop = true;
+            this.TabsForTheControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TabsForTheControls.Controls.Add(this.SoundFontTab);
             this.TabsForTheControls.Controls.Add(this.Settings);
-            this.TabsForTheControls.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabsForTheControls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TabsForTheControls.ImageList = this.TabImgs;
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 442);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 423);
             this.TabsForTheControls.TabIndex = 32;
             // 
             // TabImgs
@@ -1918,6 +1927,53 @@
             this.SavedLabel.Interval = 1;
             this.SavedLabel.Tick += new System.EventHandler(this.SavedLabel_Tick);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StatusLabel,
+            this.StatusDoneOr,
+            this.toolStripStatusLabel2,
+            this.VersionLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 420);
+            this.statusStrip1.MaximumSize = new System.Drawing.Size(0, 22);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(649, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 33;
+            this.statusStrip1.Text = "StatusStripperino";
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(507, 17);
+            this.StatusLabel.Spring = true;
+            this.StatusLabel.Text = "Error.";
+            this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // StatusDoneOr
+            // 
+            this.StatusDoneOr.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusDoneOr.Name = "StatusDoneOr";
+            this.StatusDoneOr.Size = new System.Drawing.Size(51, 17);
+            this.StatusDoneOr.Text = "Nothing";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(13, 17);
+            this.toolStripStatusLabel2.Text = "  ";
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.VersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(63, 17);
+            this.VersionLabel.Text = "Version {0}";
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1925,12 +1981,14 @@
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(649, 442);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Menu = this.MainMenu;
-            this.MinimumSize = new System.Drawing.Size(665, 481);
             this.Name = "KeppySynthConfiguratorMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1953,7 +2011,10 @@
             this.SoundFontTab.ResumeLayout(false);
             this.SoundFontTab.PerformLayout();
             this.TabsForTheControls.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -2146,6 +2207,11 @@
         private System.Windows.Forms.MenuItem menuItem15;
         private System.Windows.Forms.MenuItem menuItem11;
         private System.Windows.Forms.MenuItem menuItem12;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        public System.Windows.Forms.ToolStripStatusLabel StatusLabel;
+        public System.Windows.Forms.ToolStripStatusLabel StatusDoneOr;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel VersionLabel;
     }
 }
 

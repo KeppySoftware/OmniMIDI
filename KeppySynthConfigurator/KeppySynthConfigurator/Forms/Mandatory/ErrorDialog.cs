@@ -41,7 +41,7 @@ namespace KeppySynthConfigurator
                 }
                 Text = String.Format("Keppy's Synthesizer - {0}", title);
                 MessageText.Text = String.Format("{0}", message);
-                DebugInfoText.Text = ex.ToString();
+                try { DebugInfoText.Text = ex.ToString(); } catch { DebugInfo.Visible = false; DebugInfoText.Visible = false; }
             }
             catch (Exception ex2)
             {

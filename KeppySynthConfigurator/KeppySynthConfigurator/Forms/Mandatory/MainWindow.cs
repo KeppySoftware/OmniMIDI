@@ -75,6 +75,7 @@ namespace KeppySynthConfigurator
         // Lists
 
         // Work
+        public static string StatusTemplate = "Last message: {0}";
         public static List<string> tempList = new List<string> { };
         public static int greenfade = 0;
         public static int openadvanced { get; set; }
@@ -199,7 +200,6 @@ namespace KeppySynthConfigurator
                 Lis.Columns[2].Tag = 1;
                 Lis_SizeChanged(Lis, new EventArgs());
                 this.ThemeCheck.RunWorkerAsync();
-                this.Size = new Size(665, 481);
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
 
@@ -208,6 +208,9 @@ namespace KeppySynthConfigurator
                     EnableBB.Visible = true;
                     EnableBBS.Visible = true;
                 }
+
+                FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
+                VersionLabel.Text = String.Format("    Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
 
                 CLi.Image = Properties.Resources.ClearIcon;
                 AddSF.Image = Properties.Resources.AddSFIcon;
@@ -633,6 +636,9 @@ namespace KeppySynthConfigurator
                     {
                         string str = item.Text;
                         int index = item.Index + dir;
+
+                        if (direction == MoveDirection.Up) Program.DebugToConsole(false, String.Format("Moved SoundFont up: {0}", item.Text), null);
+                        else Program.DebugToConsole(false, String.Format("Moved SoundFont down: {0}", item.Text), null);
 
                         sender.Items.RemoveAt(item.Index);
                         sender.Items.Insert(index, item);
@@ -1101,6 +1107,7 @@ namespace KeppySynthConfigurator
 
         private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, String.Format("Showing info about the driver."), null);
             InfoDialog frm = new InfoDialog(0);
             frm.ShowDialog(this);
             frm.Dispose();
@@ -1111,6 +1118,7 @@ namespace KeppySynthConfigurator
             try
             {
                 FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
+                Program.DebugToConsole(false, String.Format("Showing changelog of this release of the driver."), null);
                 ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString());
                 frm.ShowDialog(this);
                 frm.Dispose();
@@ -1128,6 +1136,7 @@ namespace KeppySynthConfigurator
             Version.TryParse(newestversion.ToString(), out x);
             try
             {
+                Program.DebugToConsole(false, String.Format("Showing changelog of release {0} of the driver.", newestversion.ToString()), null);
                 ChangelogWindow frm = new ChangelogWindow(x.ToString());
                 frm.ShowDialog(this);
                 frm.Dispose();
@@ -1137,24 +1146,34 @@ namespace KeppySynthConfigurator
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
+            try
+            {
+                Program.DebugToConsole(false, "Opening the MIDI out setter x86.", null);
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter32.exe");
+            }
+            catch (Exception ex)
+            {
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
+            }
         }
 
         private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
+            try
+            {
+                Program.DebugToConsole(false, "Opening the MIDI out setter x64.", null);
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\midioutsetter64.exe");
+            }
+            catch (Exception ex)
+            {
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
+            }
         }
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                UpdateSystem.CheckForUpdates(true, false);
-            }
-            else
-            {
-                UpdateSystem.CheckForUpdates(false, false);
-            }
+            if (Control.ModifierKeys == Keys.Shift) UpdateSystem.CheckForUpdates(true, false);
+            else UpdateSystem.CheckForUpdates(false, false);
         }
 
         private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
@@ -1206,6 +1225,7 @@ namespace KeppySynthConfigurator
 
         private void GiveFeedback_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening feedback form.", null);
             Process.Start("https://goo.gl/forms/sLlghX6mzr3FWG5i2");
         }
 
@@ -1216,30 +1236,12 @@ namespace KeppySynthConfigurator
             {
                 Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
             }
-            else if (dialogResult == DialogResult.No)
-            {
-
-            }
         }
 
         private void downloadTheSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening Keppy's Synthesizer's GitHub page.", null);
             Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
-        }
-
-        private void visitKeppyStudiosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://keppystudios.com");
-        }
-
-        private void getTheMIDIMapperForWindows8xToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://drive.google.com/file/d/0B05Sp4zxPFR6UW9CQ0RRak85eDA/view?usp=sharing");
-        }
-
-        private void getTheMIDIMapperForWindows10ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://plus.google.com/+RichardForhenson/posts/bkrqUfbV3xz");
         }
 
         private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1259,16 +1261,19 @@ namespace KeppySynthConfigurator
                 "&currency_code=" + currency +
                 "&bn=" + "PP%2dDonationsBF";
 
+            Program.DebugToConsole(false, "Opening PayPal page for donation.", null);
             Process.Start(url);
         }
 
         private void patronToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening Patreon dialog.", null);
             new BecomeAPatron().ShowDialog();
         }
 
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening WAV output dialog.", null);
             KeppySynthOutputWAVDir frm = new KeppySynthOutputWAVDir();
             frm.ShowDialog(this);
             frm.Dispose();
@@ -1276,23 +1281,19 @@ namespace KeppySynthConfigurator
 
         private void AASMenu_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening advanced audio settings.", null);
             new AdvancedAudioSettings().ShowDialog(this);
         }
 
         private void MEPSMenu_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening MIDI events parser settings.", null);
             new MIDIEventsParserSettings().ShowDialog(this);
         }
 
         private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
-            frm.ShowDialog(this);
-            frm.Dispose();
-        }
-
-        private void changeDefaultSoundfontListToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
+            Program.DebugToConsole(false, "Opening default SoundFont list dialog.", null);
             KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
             frm.ShowDialog(this);
             frm.Dispose();
@@ -1300,6 +1301,7 @@ namespace KeppySynthConfigurator
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening SoundFont list assign dialog.", null);
             KeppySynthSFListAssign frm = new KeppySynthSFListAssign();
             frm.ShowDialog(this);
             frm.Dispose();
@@ -1307,6 +1309,7 @@ namespace KeppySynthConfigurator
 
         private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Opening folder favourites dialog.", null);
             KeppySynthFavouritesManager frm = new KeppySynthFavouritesManager();
             frm.ShowDialog(this);
             frm.Dispose();
@@ -1858,6 +1861,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                Program.DebugToConsole(false, "Opening the Alternative MIDI Mapper applet.", null);
                 var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\keppysynth\\amidimap.cpl");
                 process.WaitForExit();
             }
@@ -2154,6 +2158,7 @@ namespace KeppySynthConfigurator
 
         private void ChangeUpdateBranch_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, String.Format("The user wants to change the update branch."), null);
             SelectBranch frm = new SelectBranch();
             frm.ShowDialog(this);
             frm.Dispose();
@@ -2163,26 +2168,31 @@ namespace KeppySynthConfigurator
 
         private void HAPLink_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Showing HAP's NuGet page.", null);
             Process.Start("https://www.nuget.org/packages/HtmlAgilityPack/");
         }
 
         private void BASSLink_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Showing Un4seen Development's homepage.", null);
             Process.Start("http://www.un4seen.com/");
         }
 
         private void BASSNetLink_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Showing BASS.NET's homepage.", null);
             Process.Start("http://bass.radio42.com/");
         }
 
         private void FodyCredit_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Showing Fody's main GitHub page.", null);
             Process.Start("https://github.com/Fody");
         }
 
         private void KSUSJoinNow_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "Creating Discord invite...", null);
             Process.Start("https://discord.gg/jUaHPrP");
         }
 
@@ -2213,6 +2223,7 @@ namespace KeppySynthConfigurator
 
         private void EnableBB_Click(object sender, EventArgs e)
         {
+            Program.DebugToConsole(false, "BB enabled.", null);
             EnableBB.Visible = false;
             EnableBBS.Visible = false;
             Properties.Settings.Default.ButterBoy = true;

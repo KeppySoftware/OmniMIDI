@@ -67,8 +67,10 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 
 				if (xaudiodisabled == 0) AudioRender();
 				else if (xaudiodisabled == 1) {
-					BASS_ChannelUpdate(KSStream, 0);
-					CheckUp(ERRORCODE, L"DSEngine");
+					if (defaultoutput != 0) {
+						BASS_ChannelUpdate(KSStream, 0);
+						CheckUp(ERRORCODE, L"DSEngine");
+					}
 					Sleep(rco);
 				}
 			}
@@ -100,6 +102,7 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 
 void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
 	PrintToConsole(FOREGROUND_RED, 1, "Working...");
+	if (xaudiodisabled == 1 && defaultoutput == 0) isdecode = TRUE;
 	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
 	if (noaudiodevices != 1) {
@@ -142,10 +145,14 @@ bool InitializeBASS() {
 	bool isds = FALSE;
 
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
-	if (xaudiodisabled == 1) isds = TRUE; // DirectSound, init BASS for output device
+	else if (xaudiodisabled == 1) {
+		isds = TRUE; // DirectSound, init BASS for output device
+		defaultoutput--;
+	}
+	
 
 	// Init BASS first
-	init = BASS_Init(isds ? -1 : 0, frequency, (isds ? BASS_DEVICE_LATENCY : 0), 0, NULL);
+	init = BASS_Init(isds ? defaultoutput : 0, frequency, 0, 0, NULL);
 	CheckUp(ERRORCODE, L"BASSInit");
 
 	if (xaudiodisabled == 0) {
@@ -158,11 +165,14 @@ bool InitializeBASS() {
 		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 		BASS_GetInfo(&info);
-		BASS_SetConfig(BASS_CONFIG_BUFFER, info.minbuf + frames);
+		BASS_SetConfig(BASS_CONFIG_BUFFER, frames);
 		InitializeStreamForExternalEngine(frequency, FALSE);
 		CheckUp(ERRORCODE, L"KSStreamCreateDS");
-		BASS_ChannelPlay(KSStream, false);
-		CheckUp(ERRORCODE, L"ChannelPlayDS");
+		if (defaultoutput != 0)
+		{
+			BASS_ChannelPlay(KSStream, false);
+			CheckUp(ERRORCODE, L"ChannelPlayDS");
+		}
 		InitializeNotesCatcherThread();
 	}
 	else if (xaudiodisabled == 2) {

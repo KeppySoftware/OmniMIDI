@@ -83,8 +83,33 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static string Truncate(this string value, int maxChars)
+        {
+            return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
+        }
+
+        public static void ShowLastMessage(String message, Boolean isException)
+        {
+            try
+            {
+                KeppySynthConfiguratorMain.Delegate.StatusLabel.Text = String.Format(KeppySynthConfiguratorMain.StatusTemplate, message).Truncate(90);
+                if (isException)
+                {
+                    KeppySynthConfiguratorMain.Delegate.StatusDoneOr.Text = "Exception";
+                    KeppySynthConfiguratorMain.Delegate.StatusDoneOr.ForeColor = Color.DarkRed;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.StatusDoneOr.Text = "OK";
+                    KeppySynthConfiguratorMain.Delegate.StatusDoneOr.ForeColor = Color.DarkGreen;
+                }
+            }
+            catch { }
+        }
+
         public static void DebugToConsole(bool isException, String message, Exception ex)
         {
+            ShowLastMessage(message, isException);
             System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
             String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss.fff tt", ci);
             try

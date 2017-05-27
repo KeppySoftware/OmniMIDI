@@ -85,7 +85,7 @@ namespace KeppySynthConfigurator
 
             // Initialize blacklist
             BlacklistPath = blacklistnewlocation + "\\Keppy's Synthesizer\\blacklist\\keppymididrv.blacklist";
-            DefBlacklistPath = System.Environment.GetEnvironmentVariable("WINDIR") + "\\keppymididrv.defaultblacklist";
+            DefBlacklistPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\keppysynth.dbl";
 
             if (!System.IO.Directory.Exists(blacklistnewlocation + "\\Keppy's Synthesizer\\blacklist\\"))
             {
@@ -230,37 +230,45 @@ namespace KeppySynthConfigurator
 
         private void DefBlackListEdit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to edit the default list?\nThis is not recommended.\n\n(If you still want to edit it, it's recommended to open the file with Notepad++)", "Editing the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (dialogResult == DialogResult.Yes)
+            if (Control.ModifierKeys == Keys.Shift)
             {
-                System.Diagnostics.Process process = null;
-                System.Diagnostics.ProcessStartInfo processStartInfo;
-                processStartInfo = new System.Diagnostics.ProcessStartInfo();
-                processStartInfo.FileName = "notepad.exe";
-                processStartInfo.Arguments = DefBlacklistPath;
-                processStartInfo.Verb = "runas";
-                processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                processStartInfo.UseShellExecute = true;
-                try
+                DialogResult dialogResultR = MessageBox.Show("Do you want to restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResultR == DialogResult.Yes)
                 {
-                    process = System.Diagnostics.Process.Start(processStartInfo);
-                }
-                catch
-                {
-                    
-                }
-                finally
-                {
-                    if (process != null)
-                    {
-                        process.Dispose();
-                    }
+                    Program.DebugToConsole(false, "Downloading the default blacklist", null);
+                    string dbl = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/output/keppysynth.dbl";
+                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist", dbl, Path.GetDirectoryName(DefBlacklistPath), 1, false);
+                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    frm.ShowDialog();
                 }
             }
-            else if (dialogResult == DialogResult.No)
+            else
             {
-                //do something else
-            }        
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to edit the default list?\nThis is not recommended.\n\n(If you still want to edit it, it's recommended to open the file with Notepad++)", "Editing the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process process = null;
+                    System.Diagnostics.ProcessStartInfo processStartInfo;
+                    processStartInfo = new System.Diagnostics.ProcessStartInfo();
+                    processStartInfo.FileName = "notepad.exe";
+                    processStartInfo.Arguments = DefBlacklistPath;
+                    processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                    processStartInfo.UseShellExecute = true;
+                    try
+                    {
+                        process = System.Diagnostics.Process.Start(processStartInfo);
+                        process.WaitForExit();
+                    }
+                    catch { }
+                    finally
+                    {
+                        if (process != null)
+                        {
+                            process.Dispose();
+                        }
+                    }
+                }
+            }  
         }
     }
 }

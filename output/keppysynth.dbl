@@ -52,6 +52,7 @@ gta_sa.exe
 gui.exe
 hamachi-2-ui.exe
 hamachi-2.exe
+hamachi-ui.exe
 hamachi.exe
 hl2.exe
 hwinfo64.exe
@@ -171,6 +172,7 @@ ts3client_win32.exe
 ts3client_win64.exe
 tv_w32.exe
 tv_w64.exe
+ui32.exe
 utorrentie.exe
 vcpkgsrv.exe
 virtualmidisynth.exe
@@ -182,6 +184,8 @@ volumouse32.exe
 vsc32cnf.exe
 vscvol.exe
 vsetwservice.exe
+wallpaper32.exe
+wallpaper64.exe
 wininit.exe
 winlogon.exe
 wuauclt.exe

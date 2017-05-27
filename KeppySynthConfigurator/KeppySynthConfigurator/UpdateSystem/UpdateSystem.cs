@@ -31,7 +31,7 @@ namespace KeppySynthConfigurator
         {
             if (forced && startup)
             {
-                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}...", newestversion, @"{0}"), null, 0, true);
+                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}...", newestversion, @"{0}"), null, null, 0, true);
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 frm.ShowDialog();
             }
@@ -46,7 +46,7 @@ namespace KeppySynthConfigurator
                 upd.Dispose();
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}...", newestversion, @"{0}"), null, 0, false);
+                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}...", newestversion, @"{0}"), null, null, 0, false);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }

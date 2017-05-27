@@ -151,6 +151,9 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 	TCHAR title[MAX_PATH];
 	TCHAR main[33354];
 
+	ZeroMemory(title, MAX_PATH);
+	ZeroMemory(main, 33354);
+
 	lstrcat(title, L"Keppy's Synthesizer - ");
 	lstrcat(title, engine);
 	lstrcat(title, L" execution error");
@@ -202,7 +205,7 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 	switch (result)
 	{
 	case IDOK:
-		if (e == 0 || e >= 2 && e <= 10 || e == 19 || e >= 24 && e <= 26 || e == 44) exit(error);
+
 		break;
 	}
 }

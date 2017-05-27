@@ -18,16 +18,18 @@ namespace KeppySynthConfigurator.Forms
         String VersionToDownload;
         String FullURL;
         String thestring;
+        String PutWhereHere;
         Uri URL;
         int test;
         bool reinstallbool;
 
-        public DLEngine(String text, String MessageText, String toDL, int what, bool reinstall)
+        public DLEngine(String text, String MessageText, String toDL, String PutWhere, int what, bool reinstall)
         {
             InitializeComponent();
             thestring = MessageText;
             Status.Text = String.Format(thestring, 0);
             VersionToDownload = text;
+            PutWhereHere = PutWhere;
             FullURL = toDL;
             test = what;
             reinstallbool = reinstall;
@@ -61,10 +63,14 @@ namespace KeppySynthConfigurator.Forms
                     {
                         webClient.DownloadFileAsync(URL, String.Format("{0}KeppySynthUpdate.exe", Path.GetTempPath()));
                     }
-                    else
+                    else if (test == 1)
                     {
                         string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
                         webClient.DownloadFileAsync(URL, String.Format("{0}\\{1}", userfolder, FullURL.Split('/').Last()));
+                    }
+                    else
+                    {
+                        webClient.DownloadFileAsync(URL, String.Format("{0}\\{1}", PutWhereHere, FullURL.Split('/').Last()));
                     }
                 }
                 catch

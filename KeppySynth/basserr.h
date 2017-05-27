@@ -2,7 +2,7 @@
 Keppy's Synthesizer errors list
 */
 
-static TCHAR * basserrc[95] =
+static TCHAR * basserrc[96] =
 {
 	L"BASS_ERROR_UNKNOWN",																						// Error -1
 	L"BASS_OK",																									// Error 0
@@ -88,7 +88,7 @@ static TCHAR * basserrc[95] =
 	L"No internet connection could be opened.",																	// Description of error 32
 	L"Couldn't create the file.",																				// Description of error 33
 	L"Effects are not available.",																				// Description of error 34
-	L"The channel is playing."																					// Description of error 35
+	L"The channel is playing.",																					// Description of error 35
 	L"No description available.",																				// Description of error 36
 	L"Requested data is not available.",																		// Description of error 37
 	L"The channel is a \"decoding channel\".",																	// Description of error 38

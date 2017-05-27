@@ -34,15 +34,6 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 0)
                 NoSleep.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0)
-                ChangeDefaultOutput.Enabled = false;
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
-                ChangeDefaultOutput.Enabled = false;
-            else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
-                ChangeDefaultOutput.Enabled = true;
-            else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
-                ChangeDefaultOutput.Enabled = true;
-
             int floatingpointaudioval = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1));
             if (floatingpointaudioval == 1)
                 AudioBitDepth.SelectedIndex = 0;
@@ -53,7 +44,17 @@ namespace KeppySynthConfigurator
             else
                 AudioBitDepth.SelectedIndex = 0;
 
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
+            {
+                OldBuff.Enabled = true;
+                NoSleep.Enabled = false;
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
+            {
+                OldBuff.Enabled = true;
+                NoSleep.Enabled = true;
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
             {
                 OldBuff.Enabled = false;
                 NoSleep.Enabled = false;
@@ -119,7 +120,7 @@ namespace KeppySynthConfigurator
 
         private void NoSleep_CheckedChanged(object sender, EventArgs e)
         {
-            if (!NoSleep.Checked)
+            if (NoSleep.Checked)
                 Functions.SleepStates(0);
             else
                 Functions.SleepStates(1);
@@ -127,7 +128,17 @@ namespace KeppySynthConfigurator
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
+            {
+                MessageBox.Show("XAudio2 automatically switches between devices, when you change the default one through the \"Audio device\" applet in Windows.", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+            {
+                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
+                frm.ShowDialog(this);
+                frm.Dispose();
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
             {
                 DefaultASIOAudioOutput frm = new DefaultASIOAudioOutput();
                 frm.ShowDialog(this);
