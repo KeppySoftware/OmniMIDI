@@ -5,6 +5,9 @@
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with new functions.
 </p>
 
+## Features compared to other MIDI synthesizers
+Click here: [Features compared to other MIDI drivers](#features-compared-to-other-midi-drivers)
+
 ## Keppy's Updates Server on Discord
 I also post my updates on Discord, to keep everyone up-to-date 24/7!
 Join now here: https://discord.gg/jUaHPrP
@@ -53,6 +56,8 @@ I'm sad that you don't want to download my driver...
 <br />
 But anyway, here it is. [Click me for the direct download](https://github.com/KaleidonKep99/Keppy-s-Synthesizer/raw/master/KeppySynthConfigurator/KeppySynthConfigurator/Resources/WinMMPatch.zip)
 
+
+# Requirements for the driver
 ## Required software
 You need this software installed before attempting to run the setup:
 - [Microsoft Visual C++ 2010](https://www.microsoft.com/en-us/download/details.aspx?id=5555) (Install the 64-bit version too if you're using a 64-bit O.S.. Mandatory for BASS_VST to work.)
@@ -81,6 +86,7 @@ To compile (and test) the driver, you need:
 - 768MB of RAM (for both soundfonts and Microsoft Visual Studio 2017)
 - Windows 7 SP1 or greater (Otherwise, no VS2017 for you)
 
+
 # ASIO support details
 ## Supported ASIO devices
 - ASIO4ALL *(Almost everything works fine, but closing the MIDI app might get it stuck. Task Manager is required to terminate it.)*
@@ -100,3 +106,28 @@ To compile (and test) the driver, you need:
 - Digital Design Dance Rack ASIO
 
 **WARNING**: Since I can not test all the ASIO devices available on the market (Mainly because they're not cheap), if you have one, please... Test it with Keppy's Synthesizer, then send me an e-mail about it to [kaleidonkep99@outlook.com](mailto:kaleidonkep99@outlook.com).
+
+# Features compared to other MIDI drivers
+<p align="center">
+
+📋 | Keppy's Synthesizer | VirtualMIDISynth 1.x | VirtualMIDISynth 2.x | BASSMIDI Driver
+------------ | ------------- | ------------- | ------------- | -------------
+Easy-to-use configurator | ✔️ | ✔️ | ✔️ | ❌
+Support for Windows XP | ❌ | ✔️ | ✔️ | ✔️
+Mixer for easy volume<br />changes per MIDI channel | ✔️ | ✔️ | ✔️ | ❌
+Real-time debug information<br>about the audio stream | ✔️ | ❌ | ✔️ | ❌
+Only one MIDI out port<br />with multiple SoundFont lists | ✔️ | ❌ | ❌ | ❌
+User has full<br />control over the audio<br />stream | ✔️ | ❌ | ❌ | ❌
+Updatable without<br />admin permissions | ✔️ | ❌ | ❌ | ❌
+Uses a separate process<br />for audio rendering | ❌ | ❌ | ✔️ | ❌
+Able to achieve extremely<br />low latencies | ✔️ | ❌ | ❌ | ⚠️
+Wide choice of audio engines,<br />from DirectSound to WASAPI | ✔️ | ❌ | ❌ | ⚠️
+Suitable for day-to-day<br />music playback | ✔️<span>*</span> | ✔️ | ✔️ | ✔️
+Suitable for professional<br />music production | ✔️ | ❌ | ❌ | ❌
+
+</p>
+
+✔️: Supported<br />
+⚠️: Partially supported, or implemented in a different way<br />
+❌: Unsupported
+###### * Might require some advanced computer knowledge
