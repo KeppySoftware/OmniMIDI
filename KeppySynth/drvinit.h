@@ -113,22 +113,77 @@ void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
 	}
 }
 
+void InitializeBASSEnc() {
+	PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");
+	typedef std::basic_string<TCHAR> tstring;
+	TCHAR encpath[MAX_PATH];
+	TCHAR confpath[MAX_PATH];
+	TCHAR buffer[MAX_PATH] = { 0 };
+	TCHAR * out;
+	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
+	if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
+	out = PathFindFileName(buffer);
+	std::wstring stemp = tstring(out) + L" - Keppy's Synthesizer Output File.wav";
+	LPCWSTR result2 = stemp.c_str();
+	HKEY hKey = 0;
+	DWORD cbValueLength = sizeof(confpath);
+	DWORD dwType = REG_SZ;
+	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
+		{
+			PathAppend(encpath, result2);
+		}
+	}
+	else {
+		PathAppend(encpath, confpath);
+		PathAppend(encpath, result2);
+	}
+	RegCloseKey(hKey);
+	_bstr_t b(encpath);
+	const char* c = b;
+	const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Synthesizer", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
+	switch (result)
+	{
+	case IDYES:
+		BASS_Encode_Start(KSStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
+		// Error handling
+		CheckUp(ERRORCODE, L"EncoderStart");
+		break;
+	case IDNO:
+		TCHAR configuratorapp[MAX_PATH];
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+		{
+			PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
+			ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
+			exit(0);
+			break;
+		}
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
+}
+
 void InitializeAudioStream() {
 	int check;
 RETRY:
 	if (xaudiodisabled == 0)
 	{
-		if (sound_driver == NULL) {
-			PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
-			sound_driver = BASSXA_CreateAudioStream();
-			if (!BASSXA_InitializeAudioStream(sound_driver, frequency + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
-				xaudiodisabled = 1;
-				PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
-				CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109 ");
-				MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-				goto RETRY;
+		if (encmode == 0) {
+			if (sound_driver == NULL) {
+				PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
+				sound_driver = BASSXA_CreateAudioStream();
+				if (!BASSXA_InitializeAudioStream(sound_driver, frequency + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
+					xaudiodisabled = 1;
+					PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
+					CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109 ");
+					MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+					goto RETRY;
+				}
+				PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 			}
-			PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
+		}
+		else {
+			InitializeBASSEnc();
 		}
 	}
 	else return;
@@ -156,8 +211,8 @@ bool InitializeBASS() {
 	CheckUp(ERRORCODE, L"BASSInit");
 
 	if (xaudiodisabled == 0) {
-		InitializeAudioStream();
 		InitializeStreamForExternalEngine(frequency, TRUE);
+		InitializeAudioStream();
 		InitializeNotesCatcherThread();
 		CheckUp(ERRORCODE, L"KSInitXA");
 	}
@@ -272,56 +327,6 @@ void InitializeBASSVST() {
 	}
 #endif
 
-}
-
-void InitializeBASSEnc() {
-	PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");
-	typedef std::basic_string<TCHAR> tstring;
-	TCHAR encpath[MAX_PATH];
-	TCHAR confpath[MAX_PATH];
-	TCHAR buffer[MAX_PATH] = { 0 };
-	TCHAR * out;
-	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
-	if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
-	out = PathFindFileName(buffer);
-	std::wstring stemp = tstring(out) + L" - Keppy's Synthesizer Output File.wav";
-	LPCWSTR result2 = stemp.c_str();
-	HKEY hKey = 0;
-	DWORD cbValueLength = sizeof(confpath);
-	DWORD dwType = REG_SZ;
-	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
-		{
-			PathAppend(encpath, result2);
-		}
-	}
-	else {
-		PathAppend(encpath, confpath);
-		PathAppend(encpath, result2);
-	}
-	RegCloseKey(hKey);
-	_bstr_t b(encpath);
-	const char* c = b;
-	const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"Keppy's Synthesizer", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
-	switch (result)
-	{
-	case IDYES:
-		BASS_Encode_Start(KSStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
-		// Error handling
-		CheckUp(ERRORCODE, L"EncoderStart");
-		break;
-	case IDNO:
-		TCHAR configuratorapp[MAX_PATH];
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
-		{
-			PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-			ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
-			exit(0);
-			break;
-		}
-	}
-	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
 }
 
 int CreateThreads() {

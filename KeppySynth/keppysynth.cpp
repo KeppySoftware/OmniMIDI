@@ -613,7 +613,6 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (InitializeBASS()) {
 					InitializeBASSVST();
-					if (encmode == 1) InitializeBASSEnc();
 					SetUpStream();
 					LoadSoundFontsToStream();
 					opend = CreateThreads();

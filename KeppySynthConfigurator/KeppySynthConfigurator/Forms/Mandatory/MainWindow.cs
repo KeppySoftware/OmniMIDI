@@ -1584,28 +1584,57 @@ namespace KeppySynthConfigurator
             }
         }
 
+        bool waswav = false;
         public void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
             {
-                VolIntView.Enabled = true;
-                VolLabel.Enabled = true;
-                VolSimView.Enabled = true;
-                VolTrackBar.Enabled = true;
-                DrvHzLabel.Enabled = true;
-                Frequency.Enabled = true;
-                BufferText.Enabled = true;
-                bufsize.Value = 20;
-                bufsize.Minimum = 1;
-                bufsize.Maximum = 100;
-                bufsize.Enabled = true;
-                StatusBuf.Visible = true;
-                StatusBuf.Enabled = true;
-                SPFLabel.Enabled = true;
-                SPFRate.Enabled = true;
-                bufsize.Value = CheckBuffer();
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == ".WAV mode")
+                {
+                    waswav = true;
+                    BufferText.Enabled = false;
+                    DrvHzLabel.Enabled = true;
+                    Frequency.Enabled = true;
+                    MaxCPU.Enabled = false;
+                    MaxCPU.Value = 0;
+                    RenderingTimeLabel.Enabled = false;
+                    SPFLabel.Enabled = false;
+                    SPFRate.Enabled = false;
+                    StatusBuf.Enabled = false;
+                    StatusBuf.Visible = false;
+                    VolIntView.Enabled = false;
+                    VolLabel.Enabled = false;
+                    VolSimView.Enabled = false;
+                    VolTrackBar.Enabled = false;
+                    bufsize.Enabled = false;
+                    bufsize.Maximum = 100;
+                    bufsize.Minimum = 0;
+                    bufsize.Value = 0;
+                }
+                else
+                {
+                    BufferText.Enabled = true;
+                    DrvHzLabel.Enabled = true;
+                    Frequency.Enabled = true;
+                    MaxCPU.Enabled = true;
+                    MaxCPU.Value = 75;
+                    RenderingTimeLabel.Enabled = true;
+                    SPFLabel.Enabled = true;
+                    SPFRate.Enabled = true;
+                    StatusBuf.Enabled = true;
+                    StatusBuf.Visible = true;
+                    VolIntView.Enabled = true;
+                    VolLabel.Enabled = true;
+                    VolSimView.Enabled = true;
+                    VolTrackBar.Enabled = true;
+                    bufsize.Enabled = true;
+                    bufsize.Minimum = 1;
+                    bufsize.Maximum = 100;
+                    if (waswav) { waswav = false; bufsize.Value = CheckBuffer(); }
+                    CheckBuffer();
+                }
             }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
             {
                 VolIntView.Enabled = true;
                 VolLabel.Enabled = true;
@@ -1614,10 +1643,10 @@ namespace KeppySynthConfigurator
                 DrvHzLabel.Enabled = true;
                 Frequency.Enabled = true;
                 BufferText.Enabled = true;
-                bufsize.Value = 20;
-                bufsize.Minimum = 1;
-                bufsize.Maximum = 1000;
                 bufsize.Enabled = true;
+                bufsize.Minimum = 0;
+                bufsize.Maximum = 1000;
+                if (waswav) { waswav = false; bufsize.Value = CheckBuffer(); }
                 StatusBuf.Visible = false;
                 StatusBuf.Enabled = false;
                 SPFLabel.Enabled = false;
@@ -1626,7 +1655,7 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
                 {
                     DrvHzLabel.Enabled = false;
                     Frequency.Enabled = false;
@@ -1639,9 +1668,9 @@ namespace KeppySynthConfigurator
                         BufferText.Enabled = true;
                         StatusBuf.Visible = true;
                         StatusBuf.Enabled = true;
-                        bufsize.Value = 20;
                         bufsize.Minimum = 1;
                         bufsize.Maximum = 100;
+                        if (waswav) { waswav = false; bufsize.Value = CheckBuffer(); }
                         bufsize.Enabled = true;
                     }
                     else
@@ -1655,6 +1684,7 @@ namespace KeppySynthConfigurator
                         StatusBuf.Enabled = false;
                         bufsize.Minimum = 1;
                         bufsize.Maximum = 100;
+                        if (waswav) { waswav = false; bufsize.Value = CheckBuffer(); }
                         bufsize.Enabled = false;
                     }
                 }
@@ -1671,6 +1701,7 @@ namespace KeppySynthConfigurator
                     StatusBuf.Enabled = false;
                     bufsize.Minimum = 1;
                     bufsize.Maximum = 100;
+                    if (waswav) { waswav = false; bufsize.Value = CheckBuffer(); }
                     bufsize.Enabled = false;
                 }
                 SPFLabel.Enabled = false;
@@ -1689,14 +1720,6 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = false;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Items[KeppySynthConfiguratorMain.Delegate.AudioEngBox.FindStringExact("XAudio2")] = ".WAV mode";
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = ".WAV mode";
-                RenderingTimeLabel.Enabled = false;
-                bufsize.Enabled = false;
-                MaxCPU.Enabled = false;
-                BufferText.Enabled = false;
-                bufsize.Enabled = false;
-                bufsize.Minimum = 0;
-                bufsize.Value = 0;
-                MaxCPU.Value = 0;
             }
             else if (OutputWAV.Checked == false)
             {
@@ -1704,14 +1727,6 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Enabled = true;
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Items[KeppySynthConfiguratorMain.Delegate.AudioEngBox.FindStringExact(".WAV mode")] = "XAudio2";
                 KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
-                RenderingTimeLabel.Enabled = true;
-                bufsize.Enabled = true;
-                MaxCPU.Enabled = true;
-                BufferText.Enabled = true;
-                bufsize.Enabled = true;
-                bufsize.Minimum = 1;
-                bufsize.Value = 15;
-                MaxCPU.Value = 75;
             }
         }
 
