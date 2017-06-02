@@ -27,7 +27,7 @@ namespace KeppySynthConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void TriggerUpdateWindow(Version x, Version y, String newestversion, bool forced, bool startup)
+        public static void TriggerUpdateWindow(Version y, Version x, String newestversion, bool forced, bool startup)
         {
             if (forced && startup)
             {
@@ -146,92 +146,93 @@ namespace KeppySynthConfigurator
                     StreamReader reader = new StreamReader(stream);
                     String newestversion = reader.ReadToEnd();
                     FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateFileVersion);
-                    Version x = null;
-                    Version.TryParse(newestversion.ToString(), out x);
-                    Version y = null;
-                    Version.TryParse(Driver.FileVersion.ToString(), out y);
+                    Version DriverOnline = null;
+                    Version.TryParse(newestversion.ToString(), out DriverOnline);
+                    Version DriverCurrent = null;
+                    Version.TryParse(Driver.FileVersion.ToString(), out DriverCurrent);
+
                     if (forced)
                     {
-                        if (x > y)
+                        if (Properties.Settings.Default.UpdateBranch == "canary")
                         {
-                            if (Properties.Settings.Default.UpdateBranch == "canary")
+                            if (DriverCurrent < DriverOnline)
                             {
                                 Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                TriggerUpdateWindow(x, y, newestversion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
                             }
-                            else if (Properties.Settings.Default.UpdateBranch == "normal")
+                            else
                             {
-                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision || x.Minor != y.Minor)
-                                {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                                }
-                                else
-                                {
-                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, Driver.FileVersion, forced, startup);
-                                }
-                            }
-                            else if (Properties.Settings.Default.UpdateBranch == "delay")
-                            {
-                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision)
-                                {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                                }
-                                else
-                                {
-                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, Driver.FileVersion, forced, startup);
-                                }
+                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
                             }
                         }
-                        else
+                        else if (Properties.Settings.Default.UpdateBranch == "normal")
                         {
-                            Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                            TriggerUpdateWindow(x, y, Driver.FileVersion, forced, startup);
+                            if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor || DriverCurrent.Build < DriverOnline.Build)
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                            }
+                            else
+                            {
+                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                            }
+                        }
+                        else if (Properties.Settings.Default.UpdateBranch == "delay")
+                        {
+                            if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it.AAA ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                            }
+                            else
+                            {
+                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                            }
                         }
                     }
                     else
                     {
-                        if (x > y)
+                        if (Properties.Settings.Default.UpdateBranch == "canary")
                         {
-                            if (Properties.Settings.Default.UpdateBranch == "canary")
+                            if (DriverCurrent < DriverOnline)
                             {
                                 Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                TriggerUpdateWindow(x, y, newestversion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
                             }
-                            else if (Properties.Settings.Default.UpdateBranch == "normal")
+                            else
                             {
-                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision || x.Minor != y.Minor)
-                                {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                                }
-                                else
-                                {
-                                    Program.DebugToConsole(false, String.Format("No updates have been found. ({0})", newestversion), null);
-                                    NoUpdates(startup, internetok);
-                                }
-                            }
-                            else if (Properties.Settings.Default.UpdateBranch == "delay")
-                            {
-                                if (x.Major != y.Major || x.MajorRevision != y.MajorRevision)
-                                {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(x, y, newestversion, forced, startup);
-                                }
-                                else
-                                {
-                                    Program.DebugToConsole(false, String.Format("No late updates have been found. ({0})", newestversion), null);
-                                    NoUpdates(startup, internetok);
-                                }
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                NoUpdates(startup, internetok);
                             }
                         }
-                        else
+                        else if (Properties.Settings.Default.UpdateBranch == "normal")
                         {
-                            Program.DebugToConsole(false, String.Format("No updates have been found. ({0})", newestversion), null);
-                            NoUpdates(startup, internetok);
+                            if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor || DriverCurrent.Build < DriverOnline.Build)
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                            }
+                            else
+                            {
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                NoUpdates(startup, internetok);
+                            }
+                        }
+                        else if (Properties.Settings.Default.UpdateBranch == "delay")
+                        {
+                            if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                            }
+                            else
+                            {
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                NoUpdates(startup, internetok);
+                            }
                         }
                     }
                 }

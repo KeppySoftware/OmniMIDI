@@ -105,9 +105,15 @@ namespace KeppySynthConfigurator.Forms
                         Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe");
                         Application.ExitThread();
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, its missing the Win32PE header, or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (ex.GetBaseException() is InvalidOperationException)
+                            MessageBox.Show("Unable to locate the setup!\n\nThe file is missing from your storage or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else if (ex.GetBaseException() is Win32Exception)
+                            MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, or its missing the Win32PE header.\n\nThis usually indicates an issue with your connection.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else if (ex.GetBaseException() is ObjectDisposedException)
+                            MessageBox.Show("The process object has already been disposed.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                         Close();
                     }
                 }

@@ -90,6 +90,8 @@
             this.Controls.Add(this.Status);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximumSize = new System.Drawing.Size(295, 63);
+            this.MinimumSize = new System.Drawing.Size(295, 63);
             this.Name = "DLEngine";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
