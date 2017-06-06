@@ -190,7 +190,6 @@ namespace KeppySynthMixerWindow
             {
                 KeppySynthMixerWindow.Delegate.LED.BackColor = Color.Red;
             }
-
         }
 
         public static void DisableLEDs()

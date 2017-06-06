@@ -166,5 +166,24 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.RV22.Visible = values[21];
             }
         }
+
+        public static void AverageMeter(int left, int right)
+        {
+            int average = (left + right) / 2;
+
+            // For peak indicator
+            if (average == 0)
+            {
+                KeppySynthConfiguratorMain.Delegate.LED.BackColor = Color.Black;
+            }
+            else if (average > 0 && average <= 32767)
+            {
+                KeppySynthConfiguratorMain.Delegate.LED.BackColor = Color.Lime;
+            }
+            else if (average > 32767)
+            {
+                KeppySynthConfiguratorMain.Delegate.LED.BackColor = Color.Red;
+            }
+        }
     }
 }

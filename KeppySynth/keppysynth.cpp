@@ -503,6 +503,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		MIDIOUTCAPSW * myCapsW;
 		MIDIOUTCAPS2A * myCaps2A;
 		MIDIOUTCAPS2W * myCaps2W;
+		WORD Mid = 0x0001;
+		WORD Pid = 0x001B;
 		DWORD CapsSupport = MIDICAPS_VOLUME | MIDICAPS_LRVOLUME | MIDICAPS_CACHE | MIDICAPS_STREAM;
 
 		const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6,{ 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
@@ -510,8 +512,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
 			myCapsA = (MIDIOUTCAPSA *)capsPtr;
-			myCapsA->wMid = 0xffff; //MM_UNMAPPED
-			myCapsA->wPid = 0xffff; //MM_PID_UNMAPPED
+			myCapsA->wMid = Mid;
+			myCapsA->wPid = Pid;
 			memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
 			myCapsA->wVoices = 0;
 			myCapsA->wNotes = 0;
@@ -523,8 +525,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		case (sizeof(MIDIOUTCAPSW)):
 			myCapsW = (MIDIOUTCAPSW *)capsPtr;
-			myCapsW->wMid = 0xffff;
-			myCapsW->wPid = 0xffff;
+			myCapsW->wMid = Mid;
+			myCapsW->wPid = Pid;
 			memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
 			myCapsW->wVoices = 0;
 			myCapsW->wNotes = 0;
@@ -536,8 +538,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		case (sizeof(MIDIOUTCAPS2A)):
 			myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
-			myCaps2A->wMid = 0xffff;
-			myCaps2A->wPid = 0xffff;
+			myCaps2A->wMid = Mid;
+			myCaps2A->wPid = Pid;
 			memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
 			myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
 			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
@@ -552,8 +554,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		case (sizeof(MIDIOUTCAPS2W)):
 			myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
-			myCaps2W->wMid = 0xffff;
-			myCaps2W->wPid = 0xffff;
+			myCaps2W->wMid = Mid;
+			myCaps2W->wPid = Pid;
 			memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
 			myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
 			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
@@ -570,8 +572,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			try {
 				PrintToConsole(FOREGROUND_BLUE, 1, "App is not asking for specific caps. Trying to give Unicode caps...");
 				myCapsW = (MIDIOUTCAPSW *)capsPtr;
-				myCapsW->wMid = 0xffff;
-				myCapsW->wPid = 0xffff;
+				myCapsW->wMid = Mid;
+				myCapsW->wPid = Pid;
 				memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
 				myCapsW->wVoices = 0;
 				myCapsW->wNotes = 0;

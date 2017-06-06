@@ -442,6 +442,35 @@ namespace KeppySynthConfigurator
             OpenSoundFontDirectory();
         }
 
+        private void ShowOutLevel_Click(object sender, EventArgs e)
+        {
+            if (ShowOutLevel.Checked != true)
+            {
+                ShowOutLevel.Checked = true;
+                Properties.Settings.Default.ShowOutputLevel = true;
+                MixerBox.Visible = true;
+                VolumeCheck.Enabled = true;
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                ShowOutLevel.Checked = false;
+                Properties.Settings.Default.ShowOutputLevel = false;
+                MixerBox.Visible = false;
+                VolumeCheck.Enabled = false;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void DisableOLM_Click(object sender, EventArgs e)
+        {
+            ShowOutLevel.Checked = false;
+            Properties.Settings.Default.ShowOutputLevel = false;
+            MixerBox.Visible = false;
+            VolumeCheck.Enabled = false;
+            Properties.Settings.Default.Save();
+        }
+
         private void OpenSoundFont()
         {
             try
@@ -2227,17 +2256,6 @@ namespace KeppySynthConfigurator
             MessageBox.Show("Super-duper!\n\nI'm happy that you changed your mind!", "Butter Boy", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        int paintReps = 0;
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            System.Threading.Thread.Sleep(1);
-
-            if (paintReps++ % 500 == 0)
-                Application.DoEvents();
-        }
-
         private void SetAssociationWithSFs_Click(object sender, EventArgs e)
         {
             Functions.SetAssociation();
@@ -2267,8 +2285,22 @@ namespace KeppySynthConfigurator
                     alreadydone = false;
                     int left = Convert.ToInt32(Mixer.GetValue("leftvol"));
                     int right = Convert.ToInt32(Mixer.GetValue("rightvol"));
-                    MeterFunc.ChangeMeter(0, left);
-                    MeterFunc.ChangeMeter(1, right);
+                    var perc = ((double)((left + right) / 2) / 32768) * 100;
+
+                    VolLevel.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
+
+                    if (Convert.ToInt32(SynthSettings.GetValue("monorendering", 0)) == 1)
+                    {
+                        MeterFunc.ChangeMeter(0, left);
+                        MeterFunc.ChangeMeter(1, 0);
+                        MeterFunc.AverageMeter(left, left);
+                    }
+                    else
+                    {
+                        MeterFunc.ChangeMeter(0, left);
+                        MeterFunc.ChangeMeter(1, right);
+                        MeterFunc.AverageMeter(left, right);
+                    }
                 }
 
                 System.Threading.Thread.Sleep(1);
@@ -2279,24 +2311,28 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void ShowOutLevel_Click(object sender, EventArgs e)
+        int paintReps = 0;
+
+        protected override void OnPaint(PaintEventArgs e)
         {
-            if (ShowOutLevel.Checked != true)
-            {
-                ShowOutLevel.Checked = true;
-                Properties.Settings.Default.ShowOutputLevel = true;
-                MixerBox.Visible = true;
-                VolumeCheck.Enabled = true;
-                Properties.Settings.Default.Save();
-            }
-            else
-            {
-                ShowOutLevel.Checked = false;
-                Properties.Settings.Default.ShowOutputLevel = false;
-                MixerBox.Visible = false;
-                VolumeCheck.Enabled = false;
-                Properties.Settings.Default.Save();
-            }
+            base.OnPaint(e);
+            System.Threading.Thread.Sleep(1);
+
+            if (paintReps++ % 500 == 0)
+                Application.DoEvents();
+        }
+
+        private void Level_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle rect = ((Panel)sender).ClientRectangle;
+            rect.Width--;
+            rect.Height--;
+            e.Graphics.DrawRectangle(Pens.Black, rect);
+        }
+
+        private void applySettingsToolStripMenuItem_Paint(object sender, PaintEventArgs e)
+        {
+            ColorButton(applySettingsToolStripMenuItem, Pens.Green, e);
         }
     }
 }

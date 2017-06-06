@@ -154,6 +154,13 @@
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
             this.MixerBox = new System.Windows.Forms.GroupBox();
+            this.MixerContext = new System.Windows.Forms.ContextMenu();
+            this.OpenMixer = new System.Windows.Forms.MenuItem();
+            this.menuItem19 = new System.Windows.Forms.MenuItem();
+            this.DisableOLM = new System.Windows.Forms.MenuItem();
+            this.VolLevel = new System.Windows.Forms.Label();
+            this.SignalLabel = new System.Windows.Forms.Label();
+            this.LED = new System.Windows.Forms.Panel();
             this.RV22 = new System.Windows.Forms.Panel();
             this.RLab = new System.Windows.Forms.Label();
             this.LV22 = new System.Windows.Forms.Panel();
@@ -212,6 +219,8 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.VolSimView = new System.Windows.Forms.Label();
             this.VolTrackBar = new KnobControl.KnobControl();
+            this.KnobContext = new System.Windows.Forms.ContextMenu();
+            this.FineTuningVolume = new System.Windows.Forms.MenuItem();
             this.SettingsPresetsBtn = new System.Windows.Forms.Button();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.Button();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.Button();
@@ -268,8 +277,6 @@
             this.StatusDoneOr = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.KnobContext = new System.Windows.Forms.ContextMenu();
-            this.FineTuningVolume = new System.Windows.Forms.MenuItem();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
@@ -1139,6 +1146,10 @@
             // 
             // MixerBox
             // 
+            this.MixerBox.ContextMenu = this.MixerContext;
+            this.MixerBox.Controls.Add(this.VolLevel);
+            this.MixerBox.Controls.Add(this.SignalLabel);
+            this.MixerBox.Controls.Add(this.LED);
             this.MixerBox.Controls.Add(this.RV22);
             this.MixerBox.Controls.Add(this.RLab);
             this.MixerBox.Controls.Add(this.LV22);
@@ -1192,23 +1203,82 @@
             this.MixerBox.TabStop = false;
             this.MixerBox.Text = "Output level meter";
             // 
+            // MixerContext
+            // 
+            this.MixerContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.OpenMixer,
+            this.menuItem19,
+            this.DisableOLM});
+            // 
+            // OpenMixer
+            // 
+            this.OpenMixer.Index = 0;
+            this.OpenMixer.Text = "Open the mixer";
+            this.OpenMixer.Click += new System.EventHandler(this.openTheMixerToolStripMenuItem_Click);
+            // 
+            // menuItem19
+            // 
+            this.menuItem19.Index = 1;
+            this.menuItem19.Text = "-";
+            // 
+            // DisableOLM
+            // 
+            this.DisableOLM.Index = 2;
+            this.DisableOLM.Text = "Disable the output level meter";
+            this.DisableOLM.Click += new System.EventHandler(this.DisableOLM_Click);
+            // 
+            // VolLevel
+            // 
+            this.VolLevel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.VolLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLevel.ForeColor = System.Drawing.Color.Black;
+            this.VolLevel.Location = new System.Drawing.Point(20, 53);
+            this.VolLevel.Name = "VolLevel";
+            this.VolLevel.Size = new System.Drawing.Size(23, 10);
+            this.VolLevel.TabIndex = 95;
+            this.VolLevel.Text = "0%";
+            this.VolLevel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // SignalLabel
+            // 
+            this.SignalLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.SignalLabel.AutoSize = true;
+            this.SignalLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SignalLabel.ForeColor = System.Drawing.Color.Black;
+            this.SignalLabel.Location = new System.Drawing.Point(136, 55);
+            this.SignalLabel.Name = "SignalLabel";
+            this.SignalLabel.Size = new System.Drawing.Size(30, 7);
+            this.SignalLabel.TabIndex = 74;
+            this.SignalLabel.Text = "SIGNAL";
+            // 
+            // LED
+            // 
+            this.LED.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.LED.BackColor = System.Drawing.Color.Black;
+            this.LED.Location = new System.Drawing.Point(166, 54);
+            this.LED.Name = "LED";
+            this.LED.Size = new System.Drawing.Size(8, 8);
+            this.LED.TabIndex = 75;
+            this.LED.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
+            // 
             // RV22
             // 
             this.RV22.BackColor = System.Drawing.Color.Red;
-            this.RV22.Location = new System.Drawing.Point(169, 42);
+            this.RV22.Location = new System.Drawing.Point(169, 36);
             this.RV22.Name = "RV22";
             this.RV22.Size = new System.Drawing.Size(5, 16);
             this.RV22.TabIndex = 93;
             this.RV22.Visible = false;
+            this.RV22.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RLab
             // 
             this.RLab.AutoSize = true;
-            this.RLab.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RLab.ForeColor = System.Drawing.Color.Black;
-            this.RLab.Location = new System.Drawing.Point(7, 45);
+            this.RLab.Location = new System.Drawing.Point(5, 38);
             this.RLab.Name = "RLab";
-            this.RLab.Size = new System.Drawing.Size(12, 11);
+            this.RLab.Size = new System.Drawing.Size(15, 13);
             this.RLab.TabIndex = 49;
             this.RLab.Text = "R";
             this.RLab.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1216,20 +1286,21 @@
             // LV22
             // 
             this.LV22.BackColor = System.Drawing.Color.Red;
-            this.LV22.Location = new System.Drawing.Point(169, 23);
+            this.LV22.Location = new System.Drawing.Point(169, 17);
             this.LV22.Name = "LV22";
             this.LV22.Size = new System.Drawing.Size(5, 16);
             this.LV22.TabIndex = 71;
             this.LV22.Visible = false;
+            this.LV22.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LLab
             // 
             this.LLab.AutoSize = true;
-            this.LLab.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LLab.ForeColor = System.Drawing.Color.Black;
-            this.LLab.Location = new System.Drawing.Point(6, 25);
+            this.LLab.Location = new System.Drawing.Point(6, 19);
             this.LLab.Name = "LLab";
-            this.LLab.Size = new System.Drawing.Size(12, 11);
+            this.LLab.Size = new System.Drawing.Size(13, 13);
             this.LLab.TabIndex = 48;
             this.LLab.Text = "L";
             this.LLab.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1237,380 +1308,422 @@
             // RV18
             // 
             this.RV18.BackColor = System.Drawing.Color.DarkSalmon;
-            this.RV18.Location = new System.Drawing.Point(141, 42);
+            this.RV18.Location = new System.Drawing.Point(141, 36);
             this.RV18.Name = "RV18";
             this.RV18.Size = new System.Drawing.Size(5, 16);
             this.RV18.TabIndex = 89;
             this.RV18.Visible = false;
+            this.RV18.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV1
             // 
             this.LV1.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV1.Location = new System.Drawing.Point(22, 23);
+            this.LV1.Location = new System.Drawing.Point(22, 17);
             this.LV1.Name = "LV1";
             this.LV1.Size = new System.Drawing.Size(5, 16);
             this.LV1.TabIndex = 50;
             this.LV1.Visible = false;
+            this.LV1.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV18
             // 
             this.LV18.BackColor = System.Drawing.Color.DarkSalmon;
-            this.LV18.Location = new System.Drawing.Point(141, 23);
+            this.LV18.Location = new System.Drawing.Point(141, 17);
             this.LV18.Name = "LV18";
             this.LV18.Size = new System.Drawing.Size(5, 16);
             this.LV18.TabIndex = 67;
             this.LV18.Visible = false;
+            this.LV18.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV2
             // 
             this.LV2.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV2.Location = new System.Drawing.Point(29, 23);
+            this.LV2.Location = new System.Drawing.Point(29, 17);
             this.LV2.Name = "LV2";
             this.LV2.Size = new System.Drawing.Size(5, 16);
             this.LV2.TabIndex = 51;
             this.LV2.Visible = false;
+            this.LV2.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV21
             // 
             this.RV21.BackColor = System.Drawing.Color.Red;
-            this.RV21.Location = new System.Drawing.Point(162, 42);
+            this.RV21.Location = new System.Drawing.Point(162, 36);
             this.RV21.Name = "RV21";
             this.RV21.Size = new System.Drawing.Size(5, 16);
             this.RV21.TabIndex = 92;
             this.RV21.Visible = false;
+            this.RV21.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV1
             // 
             this.RV1.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV1.Location = new System.Drawing.Point(22, 42);
+            this.RV1.Location = new System.Drawing.Point(22, 36);
             this.RV1.Name = "RV1";
             this.RV1.Size = new System.Drawing.Size(5, 16);
             this.RV1.TabIndex = 72;
             this.RV1.Visible = false;
+            this.RV1.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV21
             // 
             this.LV21.BackColor = System.Drawing.Color.Red;
-            this.LV21.Location = new System.Drawing.Point(162, 23);
+            this.LV21.Location = new System.Drawing.Point(162, 17);
             this.LV21.Name = "LV21";
             this.LV21.Size = new System.Drawing.Size(5, 16);
             this.LV21.TabIndex = 70;
             this.LV21.Visible = false;
+            this.LV21.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV3
             // 
             this.LV3.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV3.Location = new System.Drawing.Point(36, 23);
+            this.LV3.Location = new System.Drawing.Point(36, 17);
             this.LV3.Name = "LV3";
             this.LV3.Size = new System.Drawing.Size(5, 16);
             this.LV3.TabIndex = 52;
             this.LV3.Visible = false;
+            this.LV3.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV13
             // 
             this.RV13.BackColor = System.Drawing.Color.GreenYellow;
-            this.RV13.Location = new System.Drawing.Point(106, 42);
+            this.RV13.Location = new System.Drawing.Point(106, 36);
             this.RV13.Name = "RV13";
             this.RV13.Size = new System.Drawing.Size(5, 16);
             this.RV13.TabIndex = 84;
             this.RV13.Visible = false;
+            this.RV13.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV2
             // 
             this.RV2.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV2.Location = new System.Drawing.Point(29, 42);
+            this.RV2.Location = new System.Drawing.Point(29, 36);
             this.RV2.Name = "RV2";
             this.RV2.Size = new System.Drawing.Size(5, 16);
             this.RV2.TabIndex = 73;
             this.RV2.Visible = false;
+            this.RV2.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV13
             // 
             this.LV13.BackColor = System.Drawing.Color.GreenYellow;
-            this.LV13.Location = new System.Drawing.Point(106, 23);
+            this.LV13.Location = new System.Drawing.Point(106, 17);
             this.LV13.Name = "LV13";
             this.LV13.Size = new System.Drawing.Size(5, 16);
             this.LV13.TabIndex = 62;
             this.LV13.Visible = false;
+            this.LV13.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV4
             // 
             this.LV4.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV4.Location = new System.Drawing.Point(43, 23);
+            this.LV4.Location = new System.Drawing.Point(43, 17);
             this.LV4.Name = "LV4";
             this.LV4.Size = new System.Drawing.Size(5, 16);
             this.LV4.TabIndex = 53;
             this.LV4.Visible = false;
+            this.LV4.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV20
             // 
             this.RV20.BackColor = System.Drawing.Color.Red;
-            this.RV20.Location = new System.Drawing.Point(155, 42);
+            this.RV20.Location = new System.Drawing.Point(155, 36);
             this.RV20.Name = "RV20";
             this.RV20.Size = new System.Drawing.Size(5, 16);
             this.RV20.TabIndex = 91;
             this.RV20.Visible = false;
+            this.RV20.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV3
             // 
             this.RV3.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV3.Location = new System.Drawing.Point(36, 42);
+            this.RV3.Location = new System.Drawing.Point(36, 36);
             this.RV3.Name = "RV3";
             this.RV3.Size = new System.Drawing.Size(5, 16);
             this.RV3.TabIndex = 74;
             this.RV3.Visible = false;
+            this.RV3.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV20
             // 
             this.LV20.BackColor = System.Drawing.Color.Red;
-            this.LV20.Location = new System.Drawing.Point(155, 23);
+            this.LV20.Location = new System.Drawing.Point(155, 17);
             this.LV20.Name = "LV20";
             this.LV20.Size = new System.Drawing.Size(5, 16);
             this.LV20.TabIndex = 69;
             this.LV20.Visible = false;
+            this.LV20.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV9
             // 
             this.LV9.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV9.Location = new System.Drawing.Point(78, 23);
+            this.LV9.Location = new System.Drawing.Point(78, 17);
             this.LV9.Name = "LV9";
             this.LV9.Size = new System.Drawing.Size(5, 16);
             this.LV9.TabIndex = 58;
             this.LV9.Visible = false;
+            this.LV9.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV19
             // 
             this.RV19.BackColor = System.Drawing.Color.Red;
-            this.RV19.Location = new System.Drawing.Point(148, 42);
+            this.RV19.Location = new System.Drawing.Point(148, 36);
             this.RV19.Name = "RV19";
             this.RV19.Size = new System.Drawing.Size(5, 16);
             this.RV19.TabIndex = 90;
             this.RV19.Visible = false;
+            this.RV19.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV4
             // 
             this.RV4.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV4.Location = new System.Drawing.Point(43, 42);
+            this.RV4.Location = new System.Drawing.Point(43, 36);
             this.RV4.Name = "RV4";
             this.RV4.Size = new System.Drawing.Size(5, 16);
             this.RV4.TabIndex = 75;
             this.RV4.Visible = false;
+            this.RV4.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV19
             // 
             this.LV19.BackColor = System.Drawing.Color.Red;
-            this.LV19.Location = new System.Drawing.Point(148, 23);
+            this.LV19.Location = new System.Drawing.Point(148, 17);
             this.LV19.Name = "LV19";
             this.LV19.Size = new System.Drawing.Size(5, 16);
             this.LV19.TabIndex = 68;
             this.LV19.Visible = false;
+            this.LV19.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV5
             // 
             this.LV5.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV5.Location = new System.Drawing.Point(50, 23);
+            this.LV5.Location = new System.Drawing.Point(50, 17);
             this.LV5.Name = "LV5";
             this.LV5.Size = new System.Drawing.Size(5, 16);
             this.LV5.TabIndex = 54;
             this.LV5.Visible = false;
+            this.LV5.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV17
             // 
             this.RV17.BackColor = System.Drawing.Color.Yellow;
-            this.RV17.Location = new System.Drawing.Point(134, 42);
+            this.RV17.Location = new System.Drawing.Point(134, 36);
             this.RV17.Name = "RV17";
             this.RV17.Size = new System.Drawing.Size(5, 16);
             this.RV17.TabIndex = 88;
             this.RV17.Visible = false;
+            this.RV17.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV9
             // 
             this.RV9.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV9.Location = new System.Drawing.Point(78, 42);
+            this.RV9.Location = new System.Drawing.Point(78, 36);
             this.RV9.Name = "RV9";
             this.RV9.Size = new System.Drawing.Size(5, 16);
             this.RV9.TabIndex = 80;
             this.RV9.Visible = false;
+            this.RV9.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV17
             // 
             this.LV17.BackColor = System.Drawing.Color.Yellow;
-            this.LV17.Location = new System.Drawing.Point(134, 23);
+            this.LV17.Location = new System.Drawing.Point(134, 17);
             this.LV17.Name = "LV17";
             this.LV17.Size = new System.Drawing.Size(5, 16);
             this.LV17.TabIndex = 66;
             this.LV17.Visible = false;
+            this.LV17.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV10
             // 
             this.LV10.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV10.Location = new System.Drawing.Point(85, 23);
+            this.LV10.Location = new System.Drawing.Point(85, 17);
             this.LV10.Name = "LV10";
             this.LV10.Size = new System.Drawing.Size(5, 16);
             this.LV10.TabIndex = 59;
             this.LV10.Visible = false;
+            this.LV10.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV8
             // 
             this.RV8.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV8.Location = new System.Drawing.Point(71, 42);
+            this.RV8.Location = new System.Drawing.Point(71, 36);
             this.RV8.Name = "RV8";
             this.RV8.Size = new System.Drawing.Size(5, 16);
             this.RV8.TabIndex = 79;
             this.RV8.Visible = false;
+            this.RV8.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV5
             // 
             this.RV5.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV5.Location = new System.Drawing.Point(50, 42);
+            this.RV5.Location = new System.Drawing.Point(50, 36);
             this.RV5.Name = "RV5";
             this.RV5.Size = new System.Drawing.Size(5, 16);
             this.RV5.TabIndex = 76;
             this.RV5.Visible = false;
+            this.RV5.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV8
             // 
             this.LV8.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV8.Location = new System.Drawing.Point(71, 23);
+            this.LV8.Location = new System.Drawing.Point(71, 17);
             this.LV8.Name = "LV8";
             this.LV8.Size = new System.Drawing.Size(5, 16);
             this.LV8.TabIndex = 57;
             this.LV8.Visible = false;
+            this.LV8.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV6
             // 
             this.LV6.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV6.Location = new System.Drawing.Point(57, 23);
+            this.LV6.Location = new System.Drawing.Point(57, 17);
             this.LV6.Name = "LV6";
             this.LV6.Size = new System.Drawing.Size(5, 16);
             this.LV6.TabIndex = 55;
             this.LV6.Visible = false;
+            this.LV6.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV16
             // 
             this.RV16.BackColor = System.Drawing.Color.Yellow;
-            this.RV16.Location = new System.Drawing.Point(127, 42);
+            this.RV16.Location = new System.Drawing.Point(127, 36);
             this.RV16.Name = "RV16";
             this.RV16.Size = new System.Drawing.Size(5, 16);
             this.RV16.TabIndex = 87;
             this.RV16.Visible = false;
+            this.RV16.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV10
             // 
             this.RV10.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV10.Location = new System.Drawing.Point(85, 42);
+            this.RV10.Location = new System.Drawing.Point(85, 36);
             this.RV10.Name = "RV10";
             this.RV10.Size = new System.Drawing.Size(5, 16);
             this.RV10.TabIndex = 81;
             this.RV10.Visible = false;
+            this.RV10.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV16
             // 
             this.LV16.BackColor = System.Drawing.Color.Yellow;
-            this.LV16.Location = new System.Drawing.Point(127, 23);
+            this.LV16.Location = new System.Drawing.Point(127, 17);
             this.LV16.Name = "LV16";
             this.LV16.Size = new System.Drawing.Size(5, 16);
             this.LV16.TabIndex = 65;
             this.LV16.Visible = false;
+            this.LV16.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV6
             // 
             this.RV6.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV6.Location = new System.Drawing.Point(57, 42);
+            this.RV6.Location = new System.Drawing.Point(57, 36);
             this.RV6.Name = "RV6";
             this.RV6.Size = new System.Drawing.Size(5, 16);
             this.RV6.TabIndex = 77;
             this.RV6.Visible = false;
+            this.RV6.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV12
             // 
             this.RV12.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV12.Location = new System.Drawing.Point(99, 42);
+            this.RV12.Location = new System.Drawing.Point(99, 36);
             this.RV12.Name = "RV12";
             this.RV12.Size = new System.Drawing.Size(5, 16);
             this.RV12.TabIndex = 83;
             this.RV12.Visible = false;
+            this.RV12.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV11
             // 
             this.LV11.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV11.Location = new System.Drawing.Point(92, 23);
+            this.LV11.Location = new System.Drawing.Point(92, 17);
             this.LV11.Name = "LV11";
             this.LV11.Size = new System.Drawing.Size(5, 16);
             this.LV11.TabIndex = 60;
             this.LV11.Visible = false;
+            this.LV11.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV12
             // 
             this.LV12.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV12.Location = new System.Drawing.Point(99, 23);
+            this.LV12.Location = new System.Drawing.Point(99, 17);
             this.LV12.Name = "LV12";
             this.LV12.Size = new System.Drawing.Size(5, 16);
             this.LV12.TabIndex = 61;
             this.LV12.Visible = false;
+            this.LV12.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV11
             // 
             this.RV11.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV11.Location = new System.Drawing.Point(92, 42);
+            this.RV11.Location = new System.Drawing.Point(92, 36);
             this.RV11.Name = "RV11";
             this.RV11.Size = new System.Drawing.Size(5, 16);
             this.RV11.TabIndex = 82;
             this.RV11.Visible = false;
+            this.RV11.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV15
             // 
             this.RV15.BackColor = System.Drawing.Color.Yellow;
-            this.RV15.Location = new System.Drawing.Point(120, 42);
+            this.RV15.Location = new System.Drawing.Point(120, 36);
             this.RV15.Name = "RV15";
             this.RV15.Size = new System.Drawing.Size(5, 16);
             this.RV15.TabIndex = 86;
             this.RV15.Visible = false;
+            this.RV15.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV7
             // 
             this.LV7.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV7.Location = new System.Drawing.Point(64, 23);
+            this.LV7.Location = new System.Drawing.Point(64, 17);
             this.LV7.Name = "LV7";
             this.LV7.Size = new System.Drawing.Size(5, 16);
             this.LV7.TabIndex = 56;
             this.LV7.Visible = false;
+            this.LV7.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV15
             // 
             this.LV15.BackColor = System.Drawing.Color.Yellow;
-            this.LV15.Location = new System.Drawing.Point(120, 23);
+            this.LV15.Location = new System.Drawing.Point(120, 17);
             this.LV15.Name = "LV15";
             this.LV15.Size = new System.Drawing.Size(5, 16);
             this.LV15.TabIndex = 64;
             this.LV15.Visible = false;
+            this.LV15.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV7
             // 
             this.RV7.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV7.Location = new System.Drawing.Point(64, 42);
+            this.RV7.Location = new System.Drawing.Point(64, 36);
             this.RV7.Name = "RV7";
             this.RV7.Size = new System.Drawing.Size(5, 16);
             this.RV7.TabIndex = 78;
             this.RV7.Visible = false;
+            this.RV7.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // RV14
             // 
             this.RV14.BackColor = System.Drawing.Color.Yellow;
-            this.RV14.Location = new System.Drawing.Point(113, 42);
+            this.RV14.Location = new System.Drawing.Point(113, 36);
             this.RV14.Name = "RV14";
             this.RV14.Size = new System.Drawing.Size(5, 16);
             this.RV14.TabIndex = 85;
             this.RV14.Visible = false;
+            this.RV14.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // LV14
             // 
             this.LV14.BackColor = System.Drawing.Color.Yellow;
-            this.LV14.Location = new System.Drawing.Point(113, 23);
+            this.LV14.Location = new System.Drawing.Point(113, 17);
             this.LV14.Name = "LV14";
             this.LV14.Size = new System.Drawing.Size(5, 16);
             this.LV14.TabIndex = 63;
             this.LV14.Visible = false;
+            this.LV14.Paint += new System.Windows.Forms.PaintEventHandler(this.Level_Paint);
             // 
             // EnginesBox
             // 
@@ -1642,7 +1755,7 @@
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsOutput.ErrorImage = null;
-            this.WhatIsOutput.Location = new System.Drawing.Point(130, 20);
+            this.WhatIsOutput.Location = new System.Drawing.Point(173, 20);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(16, 16);
             this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1655,7 +1768,7 @@
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = null;
-            this.WhatIsXAudio.Location = new System.Drawing.Point(169, 45);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(173, 46);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(16, 16);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1748,6 +1861,7 @@
             // VolTrackBar
             // 
             this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.VolTrackBar.ContextMenu = this.KnobContext;
             this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
             this.VolTrackBar.LargeChange = 1000;
             this.VolTrackBar.Location = new System.Drawing.Point(566, 2);
@@ -1759,8 +1873,20 @@
             this.VolTrackBar.Size = new System.Drawing.Size(72, 72);
             this.VolTrackBar.SmallChange = 500;
             this.VolTrackBar.TabIndex = 5;
+            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
             this.VolTrackBar.Value = 0;
             this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
+            // KnobContext
+            // 
+            this.KnobContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.FineTuningVolume});
+            // 
+            // FineTuningVolume
+            // 
+            this.FineTuningVolume.Index = 0;
+            this.FineTuningVolume.Text = "Fine tune the volume knob";
+            this.FineTuningVolume.Click += new System.EventHandler(this.FineTuningVolume_Click);
             // 
             // SettingsPresetsBtn
             // 
@@ -1795,6 +1921,7 @@
             this.applySettingsToolStripMenuItem.Text = "Apply settings";
             this.applySettingsToolStripMenuItem.UseVisualStyleBackColor = true;
             this.applySettingsToolStripMenuItem.Click += new System.EventHandler(this.applySettingsToolStripMenuItem_Click);
+            this.applySettingsToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.applySettingsToolStripMenuItem_Paint);
             // 
             // OutputSettingsBox
             // 
@@ -2012,9 +2139,9 @@
             this.RenderingTimeLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.RenderingTimeLabel.Location = new System.Drawing.Point(6, 108);
             this.RenderingTimeLabel.Name = "RenderingTimeLabel";
-            this.RenderingTimeLabel.Size = new System.Drawing.Size(285, 13);
+            this.RenderingTimeLabel.Size = new System.Drawing.Size(319, 13);
             this.RenderingTimeLabel.TabIndex = 11;
-            this.RenderingTimeLabel.Text = "Maximum rendering time percent (percentage, 0 = disabled)";
+            this.RenderingTimeLabel.Text = "Maximum rendering time percent (percentage, set to 0 to disable it)";
             // 
             // VoiceLimitLabel
             // 
@@ -2171,7 +2298,7 @@
             // 
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(612, 348);
+            this.EL.Location = new System.Drawing.Point(612, 347);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
@@ -2184,7 +2311,7 @@
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
-            this.LoadToApp.Location = new System.Drawing.Point(612, 155);
+            this.LoadToApp.Location = new System.Drawing.Point(612, 156);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(24, 24);
             this.LoadToApp.TabIndex = 9;
@@ -2197,7 +2324,7 @@
             // 
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(612, 319);
+            this.IEL.Location = new System.Drawing.Point(612, 318);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
@@ -2250,7 +2377,7 @@
             // 
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
-            this.DisableSF.Location = new System.Drawing.Point(612, 215);
+            this.DisableSF.Location = new System.Drawing.Point(612, 216);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(24, 24);
             this.DisableSF.TabIndex = 11;
@@ -2263,7 +2390,7 @@
             // 
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableSF.BackColor = System.Drawing.Color.Transparent;
-            this.EnableSF.Location = new System.Drawing.Point(612, 192);
+            this.EnableSF.Location = new System.Drawing.Point(612, 193);
             this.EnableSF.Name = "EnableSF";
             this.EnableSF.Size = new System.Drawing.Size(24, 24);
             this.EnableSF.TabIndex = 10;
@@ -2302,7 +2429,7 @@
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvD.BackColor = System.Drawing.Color.Transparent;
-            this.MvD.Location = new System.Drawing.Point(612, 118);
+            this.MvD.Location = new System.Drawing.Point(612, 119);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(24, 24);
             this.MvD.TabIndex = 8;
@@ -2315,7 +2442,7 @@
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvU.BackColor = System.Drawing.Color.Transparent;
-            this.MvU.Location = new System.Drawing.Point(612, 95);
+            this.MvU.Location = new System.Drawing.Point(612, 96);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(24, 24);
             this.MvU.TabIndex = 7;
@@ -2328,7 +2455,7 @@
             // 
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RmvSF.BackColor = System.Drawing.Color.Transparent;
-            this.RmvSF.Location = new System.Drawing.Point(612, 58);
+            this.RmvSF.Location = new System.Drawing.Point(612, 59);
             this.RmvSF.Name = "RmvSF";
             this.RmvSF.Size = new System.Drawing.Size(24, 24);
             this.RmvSF.TabIndex = 6;
@@ -2341,7 +2468,7 @@
             // 
             this.AddSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddSF.BackColor = System.Drawing.Color.Transparent;
-            this.AddSF.Location = new System.Drawing.Point(612, 35);
+            this.AddSF.Location = new System.Drawing.Point(612, 36);
             this.AddSF.Name = "AddSF";
             this.AddSF.Size = new System.Drawing.Size(24, 24);
             this.AddSF.TabIndex = 5;
@@ -2476,17 +2603,6 @@
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(63, 17);
             this.VersionLabel.Text = "Version {0}";
-            // 
-            // KnobContext
-            // 
-            this.KnobContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.FineTuningVolume});
-            // 
-            // FineTuningVolume
-            // 
-            this.FineTuningVolume.Index = 0;
-            this.FineTuningVolume.Text = "Fine tune the volume knob";
-            this.FineTuningVolume.Click += new System.EventHandler(this.FineTuningVolume_Click);
             // 
             // VolumeCheck
             // 
@@ -2783,6 +2899,13 @@
         public System.Windows.Forms.GroupBox MixerBox;
         private System.Windows.Forms.ToolTip ButtonsDesc;
         private System.Windows.Forms.MenuItem menuItem16;
+        public System.Windows.Forms.Label SignalLabel;
+        public System.Windows.Forms.Panel LED;
+        private System.Windows.Forms.ContextMenu MixerContext;
+        private System.Windows.Forms.MenuItem OpenMixer;
+        private System.Windows.Forms.MenuItem menuItem19;
+        private System.Windows.Forms.MenuItem DisableOLM;
+        public System.Windows.Forms.Label VolLevel;
     }
 }
 

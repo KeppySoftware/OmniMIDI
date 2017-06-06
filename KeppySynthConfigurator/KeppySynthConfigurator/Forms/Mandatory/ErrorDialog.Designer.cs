@@ -34,27 +34,33 @@
             this.CurrentIcon = new System.Windows.Forms.PictureBox();
             this.MessageText = new System.Windows.Forms.Label();
             this.ChangelogToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.DebugInfo = new System.Windows.Forms.CheckBox();
             this.DebugInfoText = new System.Windows.Forms.RichTextBox();
+            this.ExGroup = new System.Windows.Forms.GroupBox();
+            this.SaveLog = new System.Windows.Forms.Button();
+            this.SaveLogDialog = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).BeginInit();
+            this.ExGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Controls.Add(this.DebugInfo);
+            this.panel1.Controls.Add(this.SaveLog);
+            this.panel1.Controls.Add(this.ExGroup);
             this.panel1.Controls.Add(this.OkBtn);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 86);
+            this.panel1.Location = new System.Drawing.Point(0, 89);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(394, 47);
+            this.panel1.Size = new System.Drawing.Size(547, 231);
             this.panel1.TabIndex = 0;
             // 
             // OkBtn
             // 
-            this.OkBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OkBtn.Location = new System.Drawing.Point(307, 12);
+            this.OkBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.OkBtn.Location = new System.Drawing.Point(460, 12);
             this.OkBtn.Name = "OkBtn";
             this.OkBtn.Size = new System.Drawing.Size(75, 23);
             this.OkBtn.TabIndex = 1;
@@ -74,9 +80,11 @@
             // 
             // MessageText
             // 
+            this.MessageText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.MessageText.Location = new System.Drawing.Point(88, 0);
             this.MessageText.Name = "MessageText";
-            this.MessageText.Size = new System.Drawing.Size(294, 86);
+            this.MessageText.Size = new System.Drawing.Size(441, 86);
             this.MessageText.TabIndex = 2;
             this.MessageText.Text = "Message here.";
             this.MessageText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -90,37 +98,55 @@
             this.ChangelogToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ChangelogToolTip.ToolTipTitle = "Show changelog";
             // 
-            // DebugInfo
-            // 
-            this.DebugInfo.AutoSize = true;
-            this.DebugInfo.Location = new System.Drawing.Point(15, 16);
-            this.DebugInfo.Name = "DebugInfo";
-            this.DebugInfo.Size = new System.Drawing.Size(178, 17);
-            this.DebugInfo.TabIndex = 2;
-            this.DebugInfo.Text = "Show debug info about the error";
-            this.DebugInfo.UseVisualStyleBackColor = true;
-            this.DebugInfo.CheckedChanged += new System.EventHandler(this.DebugInfo_CheckedChanged);
-            // 
             // DebugInfoText
             // 
-            this.DebugInfoText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.DebugInfoText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DebugInfoText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DebugInfoText.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.DebugInfoText.DetectUrls = false;
-            this.DebugInfoText.Location = new System.Drawing.Point(12, 89);
+            this.DebugInfoText.Location = new System.Drawing.Point(8, 18);
             this.DebugInfoText.Name = "DebugInfoText";
             this.DebugInfoText.ReadOnly = true;
-            this.DebugInfoText.Size = new System.Drawing.Size(370, 187);
+            this.DebugInfoText.Size = new System.Drawing.Size(419, 187);
             this.DebugInfoText.TabIndex = 0;
             this.DebugInfoText.Text = "";
-            this.DebugInfoText.Visible = false;
+            // 
+            // ExGroup
+            // 
+            this.ExGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExGroup.Controls.Add(this.DebugInfoText);
+            this.ExGroup.Location = new System.Drawing.Point(12, 6);
+            this.ExGroup.Name = "ExGroup";
+            this.ExGroup.Size = new System.Drawing.Size(435, 213);
+            this.ExGroup.TabIndex = 2;
+            this.ExGroup.TabStop = false;
+            this.ExGroup.Text = "Exception reason";
+            // 
+            // SaveLog
+            // 
+            this.SaveLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveLog.Location = new System.Drawing.Point(460, 41);
+            this.SaveLog.Name = "SaveLog";
+            this.SaveLog.Size = new System.Drawing.Size(75, 23);
+            this.SaveLog.TabIndex = 3;
+            this.SaveLog.Text = "Save...";
+            this.SaveLog.UseVisualStyleBackColor = true;
+            this.SaveLog.Click += new System.EventHandler(this.SaveLog_Click);
+            // 
+            // SaveLogDialog
+            // 
+            this.SaveLogDialog.DefaultExt = "*.log";
+            this.SaveLogDialog.Filter = "Log files|*.log";
             // 
             // SecretDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(394, 133);
-            this.Controls.Add(this.DebugInfoText);
+            this.ClientSize = new System.Drawing.Size(547, 320);
             this.Controls.Add(this.MessageText);
             this.Controls.Add(this.CurrentIcon);
             this.Controls.Add(this.panel1);
@@ -134,8 +160,8 @@
             this.Text = "Keppy\'s Synthesizer - Event here";
             this.Load += new System.EventHandler(this.UpdateYesNo_Load);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).EndInit();
+            this.ExGroup.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -147,7 +173,9 @@
         private System.Windows.Forms.PictureBox CurrentIcon;
         private System.Windows.Forms.Label MessageText;
         private System.Windows.Forms.ToolTip ChangelogToolTip;
-        private System.Windows.Forms.CheckBox DebugInfo;
         private System.Windows.Forms.RichTextBox DebugInfoText;
+        private System.Windows.Forms.Button SaveLog;
+        private System.Windows.Forms.GroupBox ExGroup;
+        private System.Windows.Forms.SaveFileDialog SaveLogDialog;
     }
 }

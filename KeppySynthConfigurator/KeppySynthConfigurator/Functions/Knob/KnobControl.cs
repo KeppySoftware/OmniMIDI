@@ -359,12 +359,10 @@ namespace KnobControl
 			this.gOffScreen = Graphics.FromImage(OffScreenImage);	
 
 			// create LinearGradientBrush for creating knob            
-			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(
-				rKnob,Utility.getLightColor(this.BackColor,55),Utility.getDarkColor(this.BackColor,55),LinearGradientMode.ForwardDiagonal);
+			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.SkyBlue, Color.RoyalBlue, LinearGradientMode.BackwardDiagonal);
 			// create LinearGradientBrush for knobPoint                
-			bKnobPoint = new System.Drawing.Drawing2D.LinearGradientBrush(
-				rKnob,Utility.getLightColor(this.BackColor,55),Utility.getDarkColor(this.BackColor,55),LinearGradientMode.ForwardDiagonal);
-		}
+			bKnobPoint = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.Black, Color.DarkGray, LinearGradientMode.BackwardDiagonal);
+        }
 
 		private void KnobControl_Resize(object sender, System.EventArgs e)
 		{
