@@ -676,6 +676,10 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.SelectedListBox.Items.Add("List 16");
                 }
 
+                KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Checked = Properties.Settings.Default.ShowOutputLevel;
+                KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = Properties.Settings.Default.ShowOutputLevel;
+                KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = Properties.Settings.Default.ShowOutputLevel;
+
                 KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100).ToString();
                 KeppySynthConfiguratorMain.Delegate.SPFRate.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sndbfvalue", 16));
 
@@ -752,8 +756,7 @@ namespace KeppySynthConfigurator
                 else
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
 
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
-                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }
             catch (Exception ex)
@@ -910,9 +913,7 @@ namespace KeppySynthConfigurator
                 int VolumeValue = 0;
                 KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = 10000;
                 double x = KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value / 100;
-                VolumeValue = Convert.ToInt32(x);
-                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = VolumeValue.ToString("000\\%");
-                KeppySynthConfiguratorMain.Delegate.VolIntView.Text = "Value: " + KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString("00000");
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}", Math.Round(x, MidpointRounding.AwayFromZero).ToString());
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("volume", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
 
                 // Checkbox stuff yay
@@ -1384,7 +1385,6 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                Program.DebugToConsole(false, String.Format("Unknown error has occurred, reinitializing list {0}.", KeppySynthConfiguratorMain.whichone), null);
                 if (KeppySynthConfiguratorMain.SynthPaths.GetValue("lastpathsfimport", null) == null)
                 {
                     Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths");

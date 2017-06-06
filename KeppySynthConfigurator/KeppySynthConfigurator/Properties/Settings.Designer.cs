@@ -58,5 +58,17 @@ namespace KeppySynthConfigurator.Properties {
                 this["PatchInfoShow"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowOutputLevel {
+            get {
+                return ((bool)(this["ShowOutputLevel"]));
+            }
+            set {
+                this["ShowOutputLevel"] = value;
+            }
+        }
     }
 }

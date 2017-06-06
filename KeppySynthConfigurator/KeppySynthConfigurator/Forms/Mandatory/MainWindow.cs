@@ -83,6 +83,7 @@ namespace KeppySynthConfigurator
         public static string CurrentList { get; set; }
         public static bool AvoidSave = false;
 
+        public static RegistryKey Mixer = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", true);
         public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
         public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
@@ -160,7 +161,6 @@ namespace KeppySynthConfigurator
                 System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr1);
                 System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr2);
                 VolSimView.Font = new Font(privateFontCollection.Families[1], VolSimView.Font.Size, FontStyle.Regular);
-                VolIntView.Font = new Font(privateFontCollection.Families[1], VolIntView.Font.Size, FontStyle.Regular);
                 VolLabel.Font = new Font(privateFontCollection.Families[0], VolLabel.Font.Size, FontStyle.Regular);
             }
             catch (Exception ex)
@@ -226,12 +226,14 @@ namespace KeppySynthConfigurator
                 WhatIsXAudio.Image = Properties.Resources.what;
                 StatusBuf.Image = Properties.Resources.what;
 
+                VolTrackBar.ContextMenu = KnobContext;
+
                 TabsForTheControls.TabPages[0].ImageIndex = 0;
                 TabsForTheControls.TabPages[1].ImageIndex = 1;
 
-                Functions.InitializeLastPath();
-                SelectedListBox.Text = "List 1";
                 KeppySynthConfiguratorMain.whichone = 1;
+                SelectedListBox.Text = "List 1";
+                Functions.InitializeLastPath();
 
                 InitializeVolumeLabelFont();
                 Functions.LoadSettings();
@@ -270,7 +272,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void VolTrackBar_Scroll(object sender, EventArgs e)
+        private void VolTrackBar_Scroll(object sender)
         {
             try
             {
@@ -278,8 +280,7 @@ namespace KeppySynthConfigurator
                 else VolSimView.ForeColor = Color.Blue;
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
-                VolSimView.Text = String.Format("{0}%", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
-                VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
+                VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
                 SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch (Exception ex)
@@ -446,11 +447,7 @@ namespace KeppySynthConfigurator
             try
             {
                 int howmany = Lis.SelectedItems.Count;
-                if (howmany == 0)
-                {
-                    MessageBox.Show("Select a SoundFont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else if (howmany == 1)
+                if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
                     Functions.OpenSFWithDefaultApp(name);
@@ -481,11 +478,7 @@ namespace KeppySynthConfigurator
             try
             {
                 int howmany = Lis.SelectedItems.Count;
-                if (howmany == 0)
-                {
-                    MessageBox.Show("Select a SoundFont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else if (howmany == 1)
+                if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
                     Functions.OpenSFDirectory(name);
@@ -524,17 +517,16 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (Lis.SelectedIndices.Count < 1)
+                if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
                 {
-                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
-                {
-                    String name = Lis.SelectedItems[i].Text.ToString();
-                    Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
-                    Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
-                    Functions.SaveList(CurrentList);
-                    Functions.TriggerReload();
+                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                    {
+                        String name = Lis.SelectedItems[i].Text.ToString();
+                        Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
+                        Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
+                        Functions.SaveList(CurrentList);
+                        Functions.TriggerReload();
+                    }
                 }
             }
             catch (Exception ex)
@@ -646,10 +638,6 @@ namespace KeppySynthConfigurator
                     Functions.SaveList(CurrentList);
                     Functions.TriggerReload();
                 }
-                else if (valid || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count < 1 || KeppySynthConfiguratorMain.Delegate.Lis.SelectedIndices.Count > 1)
-                {
-                    MessageBox.Show("Select a soundfont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
             }
             catch (Exception ex)
             {
@@ -688,30 +676,29 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (Lis.SelectedIndices.Count < 1)
+                if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
                 {
-                    MessageBox.Show("Select a SoundFont first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
-                {
-                    if (Enable)
+                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                     {
-                        if (Lis.SelectedItems[i].ForeColor != Functions.SFEnabled)
+                        if (Enable)
                         {
-                            Lis.SelectedItems[i].ForeColor = Functions.SFEnabled;
-                            Functions.SaveList(CurrentList);
-                            Functions.TriggerReload();
-                            Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
+                            if (Lis.SelectedItems[i].ForeColor != Functions.SFEnabled)
+                            {
+                                Lis.SelectedItems[i].ForeColor = Functions.SFEnabled;
+                                Functions.SaveList(CurrentList);
+                                Functions.TriggerReload();
+                                Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (Lis.SelectedItems[i].ForeColor != Functions.SFDisabled)
+                        else
                         {
-                            Lis.SelectedItems[i].ForeColor = Functions.SFDisabled;
-                            Functions.SaveList(CurrentList);
-                            Functions.TriggerReload();
-                            Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
+                            if (Lis.SelectedItems[i].ForeColor != Functions.SFDisabled)
+                            {
+                                Lis.SelectedItems[i].ForeColor = Functions.SFDisabled;
+                                Functions.SaveList(CurrentList);
+                                Functions.TriggerReload();
+                                Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
+                            }
                         }
                     }
                 }
@@ -1602,7 +1589,6 @@ namespace KeppySynthConfigurator
                     SPFRate.Enabled = false;
                     StatusBuf.Enabled = false;
                     StatusBuf.Visible = false;
-                    VolIntView.Enabled = false;
                     VolLabel.Enabled = false;
                     VolSimView.Enabled = false;
                     VolTrackBar.Enabled = false;
@@ -1623,7 +1609,6 @@ namespace KeppySynthConfigurator
                     SPFRate.Enabled = true;
                     StatusBuf.Enabled = true;
                     StatusBuf.Visible = true;
-                    VolIntView.Enabled = true;
                     VolLabel.Enabled = true;
                     VolSimView.Enabled = true;
                     VolTrackBar.Enabled = true;
@@ -1636,7 +1621,6 @@ namespace KeppySynthConfigurator
             }
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
             {
-                VolIntView.Enabled = true;
                 VolLabel.Enabled = true;
                 VolSimView.Enabled = true;
                 VolTrackBar.Enabled = true;
@@ -1655,13 +1639,12 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
                 {
                     DrvHzLabel.Enabled = false;
                     Frequency.Enabled = false;
                     if ((Int32)SynthSettings.GetValue("wasapiex", 0) == 1)
                     {
-                        VolIntView.Enabled = false;
                         VolLabel.Enabled = false;
                         VolSimView.Enabled = false;
                         VolTrackBar.Enabled = false;
@@ -1675,7 +1658,6 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
-                        VolIntView.Enabled = true;
                         VolLabel.Enabled = true;
                         VolSimView.Enabled = true;
                         VolTrackBar.Enabled = true;
@@ -1690,7 +1672,6 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    VolIntView.Enabled = true;
                     VolLabel.Enabled = true;
                     VolSimView.Enabled = true;
                     VolTrackBar.Enabled = true;
@@ -2260,6 +2241,62 @@ namespace KeppySynthConfigurator
         private void SetAssociationWithSFs_Click(object sender, EventArgs e)
         {
             Functions.SetAssociation();
+        }
+
+        private void FineTuningVolume_Click(object sender, EventArgs e)
+        {
+            new PreciseControlVol(VolTrackBar.Value).ShowDialog();
+        }
+
+        bool alreadydone = false;
+        private void VolumeCheck_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (AudioEngBox.SelectedIndex == 0)
+                {
+                    if (alreadydone != true)
+                    {
+                        MeterFunc.ChangeMeter(0, 0);
+                        MeterFunc.ChangeMeter(1, 0);
+                        alreadydone = true;
+                    }
+                }
+                else
+                {
+                    alreadydone = false;
+                    int left = Convert.ToInt32(Mixer.GetValue("leftvol"));
+                    int right = Convert.ToInt32(Mixer.GetValue("rightvol"));
+                    MeterFunc.ChangeMeter(0, left);
+                    MeterFunc.ChangeMeter(1, right);
+                }
+
+                System.Threading.Thread.Sleep(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void ShowOutLevel_Click(object sender, EventArgs e)
+        {
+            if (ShowOutLevel.Checked != true)
+            {
+                ShowOutLevel.Checked = true;
+                Properties.Settings.Default.ShowOutputLevel = true;
+                MixerBox.Visible = true;
+                VolumeCheck.Enabled = true;
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                ShowOutLevel.Checked = false;
+                Properties.Settings.Default.ShowOutputLevel = false;
+                MixerBox.Visible = false;
+                VolumeCheck.Enabled = false;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Security.Permissions;
 
 namespace KeppySynthConfigurator
 {
@@ -81,6 +82,7 @@ namespace KeppySynthConfigurator
                 Directory.Delete(blacklistoldlocation + "\\Keppy's Synthesizer\\blacklist\\");
             }
 
+            ProgramsBlackList.ContextMenu = BlacklistContext;
             InitializeLastPath();
 
             // Initialize blacklist
@@ -228,47 +230,26 @@ namespace KeppySynthConfigurator
 
         }
 
-        private void DefBlackListEdit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void EDBLi_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to edit the default list?\nThis is not recommended.\n\n(If you still want to edit it, it's recommended to open the file with Notepad++)", "Editing the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
             {
-                DialogResult dialogResultR = MessageBox.Show("Do you want to restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dialogResultR == DialogResult.Yes)
-                {
-                    Program.DebugToConsole(false, "Downloading the default blacklist", null);
-                    string dbl = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/output/keppysynth.dbl";
-                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist", dbl, Path.GetDirectoryName(DefBlacklistPath), 1, false);
-                    frm.StartPosition = FormStartPosition.CenterScreen;
-                    frm.ShowDialog();
-                }
+                Process.Start(DefBlacklistPath);
             }
-            else
+        }
+
+        private void UDBLi_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResultR = MessageBox.Show("Do you want to restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResultR == DialogResult.Yes)
             {
-                DialogResult dialogResult = MessageBox.Show("Are you sure you want to edit the default list?\nThis is not recommended.\n\n(If you still want to edit it, it's recommended to open the file with Notepad++)", "Editing the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    System.Diagnostics.Process process = null;
-                    System.Diagnostics.ProcessStartInfo processStartInfo;
-                    processStartInfo = new System.Diagnostics.ProcessStartInfo();
-                    processStartInfo.FileName = "notepad.exe";
-                    processStartInfo.Arguments = DefBlacklistPath;
-                    processStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                    processStartInfo.UseShellExecute = true;
-                    try
-                    {
-                        process = System.Diagnostics.Process.Start(processStartInfo);
-                        process.WaitForExit();
-                    }
-                    catch { }
-                    finally
-                    {
-                        if (process != null)
-                        {
-                            process.Dispose();
-                        }
-                    }
-                }
-            }  
+                Program.DebugToConsole(false, "Downloading the default blacklist", null);
+                string dbl = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/output/keppysynth.dbl";
+                Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist", dbl, Path.GetDirectoryName(DefBlacklistPath), 1, false);
+                frm.StartPosition = FormStartPosition.CenterScreen;
+                frm.ShowDialog();
+            }
         }
     }
 }

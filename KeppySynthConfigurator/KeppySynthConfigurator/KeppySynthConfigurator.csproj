@@ -87,10 +87,10 @@
     <Compile Include="Forms\Audio Outputs\DefaultAudioOutput.designer.cs">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\AddToWhichList.cs">
+    <Compile Include="Functions\AddToWhichList\AddToWhichList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Functions\AddToWhichList.designer.cs">
+    <Compile Include="Functions\AddToWhichList\AddToWhichList.designer.cs">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Mandatory\BecomeAPatron.cs">
@@ -183,12 +183,22 @@
     <Compile Include="Forms\Mandatory\Advanced Settings\MIDIEventsParserSettings.Designer.cs">
       <DependentUpon>MIDIEventsParserSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Functions\Knob\KnobControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\PreciseControlVol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\PreciseControlVol.designer.cs">
+      <DependentUpon>PreciseControlVol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Functions\Extensions\MeterFunc.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Functions\SFZInfo.cs" />
+    <Compile Include="Functions\Extensions\SFZInfo.cs" />
     <Compile Include="UpdateSystem\SelectBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,7 +211,7 @@
     <Compile Include="UpdateSystem\DLEngine.Designer.cs">
       <DependentUpon>DLEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\OSInfo.cs" />
+    <Compile Include="Functions\Extensions\OSInfo.cs" />
     <Compile Include="Forms\Mandatory\SoundFontInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -220,8 +230,8 @@
     <Compile Include="UpdateSystem\UpdateYesNo.Designer.cs">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\BasicFunc.cs" />
-    <Compile Include="Functions\WatchdogFunc.cs" />
+    <Compile Include="Functions\Extensions\BasicFunc.cs" />
+    <Compile Include="Functions\Extensions\WatchdogFunc.cs" />
     <Compile Include="Forms\Add-ons\VelocityIntervals.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -240,10 +250,10 @@
     <Compile Include="Forms\Mandatory\InfoDialog.Designer.cs">
       <DependentUpon>InfoDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\ListViewEx.cs">
+    <Compile Include="Functions\ListViewEx\ListViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Functions\ListViewEx.Designer.cs">
+    <Compile Include="Functions\ListViewEx\ListViewEx.Designer.cs">
       <DependentUpon>ListViewEx.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -255,6 +265,7 @@
       <DependentUpon>RevbNChorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
+    <Compile Include="Functions\Knob\Utility.cs" />
     <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\AdvancedAudioSettings.resx">
       <DependentUpon>AdvancedAudioSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,7 +275,7 @@
     <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\MIDIEventsParserSettings.resx">
       <DependentUpon>MIDIEventsParserSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Functions\AddToWhichList.resx">
+    <EmbeddedResource Include="Functions\AddToWhichList\AddToWhichList.resx">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\BecomeAPatron.resx">
@@ -311,6 +322,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\SFListAssign.resx">
       <DependentUpon>SFListAssign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\PreciseControlVol.resx">
+      <DependentUpon>PreciseControlVol.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateSystem\SelectBranch.resx">
       <DependentUpon>SelectBranch.cs</DependentUpon>
@@ -361,7 +375,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\patronbtn.png" />
     <None Include="Resources\List Editor\ReloadIcon.png" />
     <None Include="Resources\List Editor\RmvSFIcon.png" />
     <None Include="Resources\List Editor\MvUpIcon.png" />
@@ -399,7 +412,6 @@
     <None Include="Resources\Mascot\bbhappy.png" />
     <None Include="Resources\Mascot\bbsad.png" />
     <None Include="Resources\Mascot\bbsurprised.png" />
-    <None Include="Resources\clocklater.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Text\gmlist.txt" />
