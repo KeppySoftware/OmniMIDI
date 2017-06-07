@@ -1561,23 +1561,11 @@ namespace KeppySynthConfigurator
                 if (WinMMDialog.ShowDialog() == DialogResult.OK)
                 {
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
-                    String MMName = "midimap.dll";
-                    String MSACMDrvName = "msacm32.drv";
-                    String MSACMName = "msacm32.dll";
-                    String MSADPName = "msapd32.drv";
-                    String WDMAUDDrvName = "wdmaud.drv";
-                    String WDMAUDName = "wdmaud.sys";
-                    String WinMMName = "winmm.dll";
+                    String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll" };
                     TryAgain:
                     try
                     {
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MMName));
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MSACMDrvName));
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MSACMName));
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, MSADPName));
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName));
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, WDMAUDName));
-                        File.Delete(String.Format("{0}\\{1}", DirectoryPath, WinMMName));
+                        foreach (String DeleteMe in DeleteTheseFiles) File.Delete(String.Format("{0}\\{1}", DirectoryPath, DeleteMe));
                     }
                     catch
                     {
