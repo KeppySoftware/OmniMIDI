@@ -270,7 +270,7 @@ bool InitializeBASS() {
 
 		InitializeStreamForExternalEngine(infoW.mixfreq, TRUE);
 
-		if (BASS_WASAPI_Init(defaultWoutput, 0, 0, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
+		if (BASS_WASAPI_Init(defaultWoutput, 0, 2, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
