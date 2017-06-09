@@ -50,6 +50,10 @@ bool CheckXAudioInstallation() {
 	return TRUE;
 }
 
+float GetUsage(clock_t start, clock_t end) {
+	return (float)(end - start);
+}
+
 void CopyToClipboard(const std::string &s) {
 	OpenClipboard(0);
 	EmptyClipboard();
@@ -63,6 +67,7 @@ void CopyToClipboard(const std::string &s) {
 	SetClipboardData(CF_TEXT, hg);
 	CloseClipboard();
 	GlobalFree(hg);
+
 }
 
 void ResetSynth(int ischangingbuffermode){
@@ -385,9 +390,10 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_ChannelUpdate);
 		LOADBASSFUNCTION(BASS_ErrorGetCode);
 		LOADBASSFUNCTION(BASS_Free);
-		LOADBASSFUNCTION(BASS_GetCPU);
+		LOADBASSFUNCTION(BASS_GetDevice);
 		LOADBASSFUNCTION(BASS_GetDeviceInfo);
 		LOADBASSFUNCTION(BASS_GetInfo);
+		LOADBASSFUNCTION(BASS_ChannelIsActive);
 		LOADBASSFUNCTION(BASS_Init);
 		LOADBASSFUNCTION(BASS_PluginLoad);
 		LOADBASSFUNCTION(BASS_SetConfig);
@@ -728,6 +734,13 @@ void debug_info() {
 
 		int currentcpuusageint0 = int(currentcpuusage0);
 		int currentcpuusageintE0 = int(currentcpuusageE0);
+		clock_t end = clock();
+		int64_t td1i = int64_t(GetUsage(start1, end));
+		int64_t td2i = int64_t(GetUsage(start2, end));
+		int64_t td3i = int64_t(GetUsage(start3, end));
+		int64_t td4i = int64_t(GetUsage(start4, end));
+
+		if (oldbuffermode == 1) td4i = 0;
 
 		// Things
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
@@ -737,6 +750,10 @@ void debug_info() {
 		dwType = REG_QWORD;
 		dwSize = sizeof(QWORD);
 		RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&ramusageint, sizeof(ramusageint));
+		RegSetValueEx(hKey, L"td1", 0, dwType, (LPBYTE)&td1i, sizeof(td1i));
+		RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&td2i, sizeof(td2i));
+		RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&td3i, sizeof(td3i));
+		RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&td4i, sizeof(td4i));
 
 		for (int i = 0; i <= 15; ++i) {
 			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);

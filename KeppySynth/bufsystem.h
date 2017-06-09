@@ -158,11 +158,15 @@ void AudioRender() {
 	CheckUp(ERRORCODE, L"GetDataFromStream");
 	if (encmode == 0) {
 		if (xaudiodisabled == 0) {
-			for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-				sndbf[i] *= sound_out_volume_float;
+			if (decoded != 1) {
+				for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
+					sndbf[i] *= sound_out_volume_float;
+				}
+				if (!BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT)) {
+					crashmessage(L"XAWriteFrame");
+				}
 			}
-			if (!BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT))
-				crashmessage(L"XAWriteFrame");
+			else return;
 		}
 	}
 }

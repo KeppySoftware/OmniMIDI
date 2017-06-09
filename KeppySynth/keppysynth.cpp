@@ -109,15 +109,18 @@ static float sound_out_volume_float = 1.0;
 static int sound_out_volume_int = 0x1000;
 
 // Threads
-static HANDLE hCalcThread = NULL;
-static HANDLE hThread = NULL;
+static clock_t start1, start2, start3, start4;
+static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
+static HANDLE hCalcThread = NULL;;
 static HANDLE hThread2 = NULL;
 static HANDLE hThread3 = NULL;
 static HANDLE hThread4 = NULL;
+static HANDLE hThreadB = NULL;
 static unsigned int thrdaddr1;
 static unsigned int thrdaddr2;
 static unsigned int thrdaddr3;
 static unsigned int thrdaddr4;
+static unsigned int thrdaddrB;
 
 // Variables
 #include "basserr.h"
@@ -201,12 +204,15 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 		lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
 	}
 
-	const int result = MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
-	switch (result)
-	{
-	case IDOK:
+	MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
 
-		break;
+	if (error == -1 ||
+		error >= 2 && error <= 10 ||
+		error == 19 ||
+		error >= 24 && error <= 26 ||
+		error == 44)
+	{
+		exit(error);
 	}
 }
 
@@ -597,6 +603,21 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 }
 
+void keepstreamsalive(int& opend) {
+	BASS_ChannelIsActive(KSStream);
+	if (BASS_ErrorGetCode() == 5) {
+		PrintToConsole(FOREGROUND_RED, 1, "Something decided to mess up with the driver.");
+		PrintToConsole(FOREGROUND_RED, 1, "Restarting the streams...");
+		stop_thread = 1;
+		if (InitializeBASS()) {
+			InitializeBASSVST();
+			SetUpStream();
+			LoadSoundFontsToStream();
+			opend = CreateThreads();
+		}
+	}
+}
+
 unsigned WINAPI threadfunc(LPVOID lpV){
 	try {
 		if (BannedSystemProcess() == TRUE) {
@@ -622,10 +643,12 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == 0){
-				Sleep(10);
+				start1 = clock();
+				keepstreamsalive(opend);
 				debug_info();
 				keybindings();
 				CheckVolume();
+				Sleep(10);
 			}
 			stop_rtthread = 0;
 			FreeUpLibraries();
@@ -697,6 +720,10 @@ void DoStopClient() {
 
 	RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"td1", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&One, 1);
 	RegCloseKey(hKey);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&One, 1);

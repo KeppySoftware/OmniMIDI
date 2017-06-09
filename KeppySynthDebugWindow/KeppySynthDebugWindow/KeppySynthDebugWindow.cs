@@ -103,11 +103,13 @@ namespace KeppySynthDebugWindow
             CurrentKSVer.ToolTipTitle = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
             CurrentKSVer.SetToolTip(KSLogo, Credits);
             CurrentKSVer.SetToolTip(KSLogoVoc, Credits);
+            CurrentKSVer.SetToolTip(KSLogoThrd, Credits);
             CurrentKSVer.SetToolTip(VersionLabel, Credits);
             VersionLabel.Text = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
             GetWindowsInfoData(); // Get info about your Windows installation
             SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+            ThreadTime.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             DebugWorker.RunWorkerAsync(); // Creates a thread to show the info
         }
@@ -480,32 +482,68 @@ namespace KeppySynthDebugWindow
 
         private void UpdateActiveVoicesPerChannel()
         {
-            ch1 = Convert.ToInt32(Debug.GetValue("chv1", "0").ToString());
-            ch2 = Convert.ToInt32(Debug.GetValue("chv2", "0").ToString());
-            ch3 = Convert.ToInt32(Debug.GetValue("chv3", "0").ToString());
-            ch4 = Convert.ToInt32(Debug.GetValue("chv4", "0").ToString());
-            ch5 = Convert.ToInt32(Debug.GetValue("chv5", "0").ToString());
-            ch6 = Convert.ToInt32(Debug.GetValue("chv6", "0").ToString());
-            ch7 = Convert.ToInt32(Debug.GetValue("chv7", "0").ToString());
-            ch8 = Convert.ToInt32(Debug.GetValue("chv8", "0").ToString());
-            ch9 = Convert.ToInt32(Debug.GetValue("chv9", "0").ToString());
-            ch10 = Convert.ToInt32(Debug.GetValue("chv10", "0").ToString());
-            ch11 = Convert.ToInt32(Debug.GetValue("chv11", "0").ToString());
-            ch12 = Convert.ToInt32(Debug.GetValue("chv12", "0").ToString());
-            ch13 = Convert.ToInt32(Debug.GetValue("chv13", "0").ToString());
-            ch14 = Convert.ToInt32(Debug.GetValue("chv14", "0").ToString());
-            ch15 = Convert.ToInt32(Debug.GetValue("chv15", "0").ToString());
-            ch16 = Convert.ToInt32(Debug.GetValue("chv16", "0").ToString());
+            try
+            {
+                ch1 = Convert.ToInt32(Debug.GetValue("chv1", "0").ToString());
+                ch2 = Convert.ToInt32(Debug.GetValue("chv2", "0").ToString());
+                ch3 = Convert.ToInt32(Debug.GetValue("chv3", "0").ToString());
+                ch4 = Convert.ToInt32(Debug.GetValue("chv4", "0").ToString());
+                ch5 = Convert.ToInt32(Debug.GetValue("chv5", "0").ToString());
+                ch6 = Convert.ToInt32(Debug.GetValue("chv6", "0").ToString());
+                ch7 = Convert.ToInt32(Debug.GetValue("chv7", "0").ToString());
+                ch8 = Convert.ToInt32(Debug.GetValue("chv8", "0").ToString());
+                ch9 = Convert.ToInt32(Debug.GetValue("chv9", "0").ToString());
+                ch10 = Convert.ToInt32(Debug.GetValue("chv10", "0").ToString());
+                ch11 = Convert.ToInt32(Debug.GetValue("chv11", "0").ToString());
+                ch12 = Convert.ToInt32(Debug.GetValue("chv12", "0").ToString());
+                ch13 = Convert.ToInt32(Debug.GetValue("chv13", "0").ToString());
+                ch14 = Convert.ToInt32(Debug.GetValue("chv14", "0").ToString());
+                ch15 = Convert.ToInt32(Debug.GetValue("chv15", "0").ToString());
+                ch16 = Convert.ToInt32(Debug.GetValue("chv16", "0").ToString());
+            }
+            catch
+            {
+                ch1 = 0;
+                ch2 = 0;
+                ch3 = 0;
+                ch4 = 0;
+                ch5 = 0;
+                ch6 = 0;
+                ch7 = 0;
+                ch8 = 0;
+                ch9 = 0;
+                ch10 = 0;
+                ch11 = 0;
+                ch12 = 0;
+                ch13 = 0;
+                ch14 = 0;
+                ch15 = 0;
+                ch16 = 0;
+            }
         }
 
         private string GetActiveVoices()
         {
-            return String.Format("{0}", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16)).ToString());
+            try
+            {
+                return String.Format("{0}", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16)).ToString());
+            }
+            catch
+            {
+                return "0";
+            }
         }
 
         private string GetAverageVoices()
         {
-            return String.Format("{0} V/f", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16) / 16.67f).ToString("0.0"));
+            try
+            {
+                return String.Format("{0} V/f", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16) / 16.67f).ToString("0.0"));
+            }
+            catch
+            {
+                return "0 V/f";
+            }
         }
 
         private void DebugWorker_DoWork(object sender, DoWorkEventArgs e) // The worker
@@ -635,6 +673,13 @@ namespace KeppySynthDebugWindow
                             CHV15.Text = String.Format(FormatForVoices, ch15);
                             CHV16.Text = String.Format(FormatForVoices, ch16);
                         }
+                        else if (Tabs.SelectedIndex == 2)
+                        {
+                            MTRT.Text = String.Format("{0}ms", Debug.GetValue("td1", 0).ToString());
+                            AERTi.Text = String.Format("{0}ms", Debug.GetValue("td2", 0).ToString());
+                            SLRT.Text = String.Format("{0}ms", Debug.GetValue("td3", 0).ToString());
+                            NCRT.Text = String.Format("{0}ms", Debug.GetValue("td4", 0).ToString());
+                        }
                         else
                         {
                             // Nothing
@@ -754,6 +799,11 @@ namespace KeppySynthDebugWindow
                     AERT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusageE0", "0").ToString());
                 }
 
+                MTRT.Text = String.Format("{0}ms", Debug.GetValue("td1", 0).ToString());
+                AERTi.Text = String.Format("{0}ms", Debug.GetValue("td2", 0).ToString());
+                SLRT.Text = String.Format("{0}ms", Debug.GetValue("td3", 0).ToString());
+                NCRT.Text = String.Format("{0}ms", Debug.GetValue("td4", 0).ToString());
+
                 UpdateActiveVoicesPerChannel();
                 String FormatForVoices = "{0} voices";
                 CHV1.Text = String.Format(FormatForVoices, ch1);
@@ -801,7 +851,7 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                if (Tabs.SelectedIndex == 2)
+                if (Tabs.SelectedIndex == 3)
                 {
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     

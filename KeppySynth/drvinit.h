@@ -7,6 +7,7 @@ unsigned WINAPI notescatcher(LPVOID lpV) {
 	try {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 		while (stop_thread == 0) {
+			start4 = clock();
 			bmsyn_play_some_data();
 
 			if (capframerate == 1) Sleep(16); else Sleep(1);
@@ -26,6 +27,7 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 	try {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 		while (stop_thread == 0) {
+			start3 = clock();
 			realtime_load_settings();
 			Panic();
 			WatchdogCheck();
@@ -55,6 +57,7 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/XA...");
 	while (stop_thread == 0) {
 		try {
+			start2 = clock();
 			if (xaudiodisabled < 2) {
 				if (reset_synth != 0) {
 					reset_synth = 0;
@@ -88,6 +91,7 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
+	start2 = clock();
 	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
 	if (data == -1) data = 0;
 	return data;
@@ -95,6 +99,7 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 
 DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 {
+	start2 = clock();
 	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
 	if (data == -1) data = 0;
 	return data;
@@ -195,6 +200,16 @@ int GetNumberOfCores() {
 	return sysinfo.dwNumberOfProcessors;
 }
 
+void GetWASAPIDevice() {
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
+	RegCloseKey(hKey);
+}
+
 bool InitializeBASS() {
 	bool init = FALSE;
 	bool isds = FALSE;
@@ -211,6 +226,7 @@ bool InitializeBASS() {
 	CheckUp(ERRORCODE, L"BASSInit");
 
 	if (xaudiodisabled == 0) {
+		BASSXA_TerminateAudioStream(sound_driver);
 		InitializeStreamForExternalEngine(frequency, TRUE);
 		InitializeAudioStream();
 		InitializeNotesCatcherThread();
@@ -231,6 +247,8 @@ bool InitializeBASS() {
 		InitializeNotesCatcherThread();
 	}
 	else if (xaudiodisabled == 2) {
+		BASS_ASIO_Stop();
+		BASS_ASIO_Free();
 		InitializeStreamForExternalEngine(frequency, TRUE);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
@@ -258,15 +276,24 @@ bool InitializeBASS() {
 		}
 	}
 	else if (xaudiodisabled == 3) {
+		BASS_WASAPI_Stop(true);
+		BASS_WASAPI_Free();
+		GetWASAPIDevice();
 		defaultWoutput--;
 		BASS_WASAPI_DEVICEINFO infoW;
 
 		if (defaultWoutput == -1) {
 			BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
+			CheckUp(ERRORCODE, L"KSReturnInfoPt1CusWASAPI");
 			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
+			CheckUp(ERRORCODE, L"KSReturnInfoPt2CusWASAPI");
 			BASS_WASAPI_Free();
+			CheckUp(ERRORCODE, L"KSReturnInfoPt3CusWASAPI");
 		}
-		else BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+		else {
+			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+			CheckUp(ERRORCODE, L"KSReturnInfoDefWASAPI");
+		}
 
 		InitializeStreamForExternalEngine(infoW.mixfreq, TRUE);
 
@@ -279,6 +306,7 @@ bool InitializeBASS() {
 		else {
 			MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open WASAPI device", MB_OK | MB_ICONERROR);
 			xaudiodisabled = 0;
+			BASSXA_TerminateAudioStream(sound_driver);
 			InitializeAudioStream();
 			InitializeStreamForExternalEngine(frequency, TRUE);
 			InitializeNotesCatcherThread();
