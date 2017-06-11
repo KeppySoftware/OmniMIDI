@@ -2163,11 +2163,6 @@
             0,
             0,
             0});
-            this.PolyphonyLimit.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.PolyphonyLimit.Name = "PolyphonyLimit";
             this.PolyphonyLimit.Size = new System.Drawing.Size(64, 20);
             this.PolyphonyLimit.TabIndex = 10;

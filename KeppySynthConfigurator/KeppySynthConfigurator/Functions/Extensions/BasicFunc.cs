@@ -860,13 +860,13 @@ namespace KeppySynthConfigurator
                 else
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
 
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
+                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
-                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "1", RegistryValueKind.DWord);
-                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
+                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "2", RegistryValueKind.DWord);
-                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
+                else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "3", RegistryValueKind.DWord);
 
                 if (KeppySynthConfiguratorMain.Delegate.SincInter.Checked == true)
