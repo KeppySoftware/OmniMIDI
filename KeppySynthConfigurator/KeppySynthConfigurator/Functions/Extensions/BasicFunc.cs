@@ -391,7 +391,8 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                int isalreadyinstalled = 0;
+                bool bit32 = false;
+                bool bit64 = false;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
                 string loudmax32 = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/external_packages/lib/LoudMax.dll";
                 string loudmax64 = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/external_packages/lib64/LoudMax64.dll";
@@ -402,13 +403,15 @@ namespace KeppySynthConfigurator
                     Program.DebugToConsole(false, "Downloading LoudMax 32-bit...", null);
                     Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit...", loudmax32, null, 1, false);
                     frm.StartPosition = FormStartPosition.CenterScreen;
-                    frm.ShowDialog();
+                    DialogResult IsItOK = frm.ShowDialog();
+                    if (IsItOK == DialogResult.OK) { bit32 = true; }
+                    else { bit32 = false; }
                 }
                 else
                 {
                     Program.DebugToConsole(false, "LoudMax 32-bit is already installed.", null);
                     MessageBox.Show("LoudMax 32-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    isalreadyinstalled++;
+                    bit32 = true;
                 }
 
                 // 64-bit DLL
@@ -419,17 +422,19 @@ namespace KeppySynthConfigurator
                         Program.DebugToConsole(false, "Downloading LoudMax 64-bit...", null);
                         Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit...", loudmax64, null, 1, false);
                         frm.StartPosition = FormStartPosition.CenterScreen;
-                        frm.ShowDialog();
+                        DialogResult IsItOK = frm.ShowDialog();
+                        if (IsItOK == DialogResult.OK) { bit64 = true; }
+                        else { bit64 = false; }
                     }
                     else
                     {
                         Program.DebugToConsole(false, "LoudMax 64-bit is already installed.", null);
                         MessageBox.Show("LoudMax 64-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        isalreadyinstalled++;
+                        bit64 = true;
                     }
                 }
 
-                if (isalreadyinstalled != 2)
+                if (bit32 == true && bit64 == true)
                 {
                     MessageBox.Show("LoudMax successfully installed!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

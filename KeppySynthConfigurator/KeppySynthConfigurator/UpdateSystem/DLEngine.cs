@@ -19,6 +19,7 @@ namespace KeppySynthConfigurator.Forms
         String FullURL;
         String thestring;
         String PutWhereHere;
+        String DeleteThisIfFailed;
         Uri URL;
         int test;
         bool reinstallbool;
@@ -66,16 +67,18 @@ namespace KeppySynthConfigurator.Forms
                     else if (test == 1)
                     {
                         string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
-                        webClient.DownloadFileAsync(URL, String.Format("{0}\\{1}", userfolder, FullURL.Split('/').Last()));
+                        DeleteThisIfFailed = String.Format("{0}\\{1}", userfolder, FullURL.Split('/').Last());
+                        webClient.DownloadFileAsync(URL, DeleteThisIfFailed);
                     }
                     else
                     {
-                        webClient.DownloadFileAsync(URL, String.Format("{0}\\{1}", PutWhereHere, FullURL.Split('/').Last()));
+                        DeleteThisIfFailed = String.Format("{0}\\{1}", PutWhereHere, FullURL.Split('/').Last());
+                        webClient.DownloadFileAsync(URL, DeleteThisIfFailed);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("The configurator can not connect to the GitHub servers.\n\nCheck your network connection, or contact your system administrator or network service provider.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
                 }
             }
         }
@@ -94,6 +97,14 @@ namespace KeppySynthConfigurator.Forms
                 webClient.Dispose();
                 if (File.Exists(Path.GetTempPath() + "KeppySynthUpdate.exe")) { File.Delete(Path.GetTempPath() + "KeppySynthUpdate.exe"); }
                 MessageBox.Show("Download aborted.\n\nPress OK to close the download window.", "Keppy's Synthesizer - Download aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DialogResult = DialogResult.No;
+                Close();
+            }
+            else if (e.Error != null)
+            {
+                MessageBox.Show("The configurator can not connect to the GitHub servers.\n\nCheck your network connection, or contact your system administrator or network service provider.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                try { File.Delete(DeleteThisIfFailed); } catch { }
+                DialogResult = DialogResult.No;
                 Close();
             }
             else
@@ -103,6 +114,7 @@ namespace KeppySynthConfigurator.Forms
                     try
                     {
                         Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe");
+                        DialogResult = DialogResult.OK;
                         Application.ExitThread();
                     }
                     catch (Exception ex)
@@ -114,11 +126,14 @@ namespace KeppySynthConfigurator.Forms
                         else if (ex.GetBaseException() is ObjectDisposedException)
                             MessageBox.Show("The process object has already been disposed.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                        DialogResult = DialogResult.No;
+
                         Close();
                     }
                 }
                 else
                 {
+                    DialogResult = DialogResult.OK;
                     Close();
                 }
             }

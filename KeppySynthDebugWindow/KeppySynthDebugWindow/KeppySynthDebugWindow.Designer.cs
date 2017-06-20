@@ -69,17 +69,6 @@
             this.AVLabel = new System.Windows.Forms.Label();
             this.CMA = new System.Windows.Forms.Label();
             this.CMALabel = new System.Windows.Forms.Label();
-            this.ThreadTime = new System.Windows.Forms.TabPage();
-            this.KSLogoThrd = new System.Windows.Forms.PictureBox();
-            this.CopyToClip2 = new System.Windows.Forms.Button();
-            this.SLRT = new System.Windows.Forms.Label();
-            this.SLRTLabel = new System.Windows.Forms.Label();
-            this.NCRT = new System.Windows.Forms.Label();
-            this.NCRTLabel = new System.Windows.Forms.Label();
-            this.AERTi = new System.Windows.Forms.Label();
-            this.AERTiLabel = new System.Windows.Forms.Label();
-            this.MTRT = new System.Windows.Forms.Label();
-            this.MTRTLabel = new System.Windows.Forms.Label();
             this.ChannelVoices = new System.Windows.Forms.TabPage();
             this.KSLogoVoc = new System.Windows.Forms.PictureBox();
             this.CopyToClip3 = new System.Windows.Forms.Button();
@@ -115,6 +104,17 @@
             this.CHV2L = new System.Windows.Forms.Label();
             this.CHV1 = new System.Windows.Forms.Label();
             this.CHV1L = new System.Windows.Forms.Label();
+            this.ThreadTime = new System.Windows.Forms.TabPage();
+            this.KSLogoThrd = new System.Windows.Forms.PictureBox();
+            this.CopyToClip2 = new System.Windows.Forms.Button();
+            this.SLRT = new System.Windows.Forms.Label();
+            this.SLRTLabel = new System.Windows.Forms.Label();
+            this.NCRT = new System.Windows.Forms.Label();
+            this.NCRTLabel = new System.Windows.Forms.Label();
+            this.AERTi = new System.Windows.Forms.Label();
+            this.AERTiLabel = new System.Windows.Forms.Label();
+            this.MTRT = new System.Windows.Forms.Label();
+            this.MTRTLabel = new System.Windows.Forms.Label();
             this.PCSpecs = new System.Windows.Forms.TabPage();
             this.CPULogo = new System.Windows.Forms.PictureBox();
             this.MT = new System.Windows.Forms.Label();
@@ -145,10 +145,10 @@
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
-            this.ThreadTime.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).BeginInit();
             this.ChannelVoices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).BeginInit();
+            this.ThreadTime.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).BeginInit();
             this.PCSpecs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
@@ -400,6 +400,7 @@
             this.DDS.TabIndex = 15;
             this.DDS.Text = "0 (0 x 4)";
             this.DDS.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.DDS.Visible = false;
             // 
             // DDSLabel
             // 
@@ -477,140 +478,6 @@
             this.CMALabel.TabIndex = 8;
             this.CMALabel.Text = "Current MIDI app:";
             this.CMALabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ThreadTime
-            // 
-            this.ThreadTime.Controls.Add(this.KSLogoThrd);
-            this.ThreadTime.Controls.Add(this.CopyToClip2);
-            this.ThreadTime.Controls.Add(this.SLRT);
-            this.ThreadTime.Controls.Add(this.SLRTLabel);
-            this.ThreadTime.Controls.Add(this.NCRT);
-            this.ThreadTime.Controls.Add(this.NCRTLabel);
-            this.ThreadTime.Controls.Add(this.AERTi);
-            this.ThreadTime.Controls.Add(this.AERTiLabel);
-            this.ThreadTime.Controls.Add(this.MTRT);
-            this.ThreadTime.Controls.Add(this.MTRTLabel);
-            this.ThreadTime.Location = new System.Drawing.Point(4, 22);
-            this.ThreadTime.Name = "ThreadTime";
-            this.ThreadTime.Padding = new System.Windows.Forms.Padding(3);
-            this.ThreadTime.Size = new System.Drawing.Size(424, 180);
-            this.ThreadTime.TabIndex = 3;
-            this.ThreadTime.Text = "Threads time";
-            this.ThreadTime.UseVisualStyleBackColor = true;
-            // 
-            // KSLogoThrd
-            // 
-            this.KSLogoThrd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogoThrd.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogoThrd.Location = new System.Drawing.Point(389, 3);
-            this.KSLogoThrd.Name = "KSLogoThrd";
-            this.KSLogoThrd.Size = new System.Drawing.Size(32, 32);
-            this.KSLogoThrd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogoThrd.TabIndex = 59;
-            this.KSLogoThrd.TabStop = false;
-            // 
-            // CopyToClip2
-            // 
-            this.CopyToClip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip2.Location = new System.Drawing.Point(266, 152);
-            this.CopyToClip2.Name = "CopyToClip2";
-            this.CopyToClip2.Size = new System.Drawing.Size(153, 23);
-            this.CopyToClip2.TabIndex = 58;
-            this.CopyToClip2.Text = "Copy all tabs to clipboard";
-            this.CopyToClip2.UseVisualStyleBackColor = true;
-            this.CopyToClip2.Click += new System.EventHandler(this.CopyToClip_Click);
-            // 
-            // SLRT
-            // 
-            this.SLRT.AutoSize = true;
-            this.SLRT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SLRT.Location = new System.Drawing.Point(155, 42);
-            this.SLRT.Name = "SLRT";
-            this.SLRT.Size = new System.Drawing.Size(26, 13);
-            this.SLRT.TabIndex = 57;
-            this.SLRT.Text = "0ms";
-            this.SLRT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.VoiceAverage.SetToolTip(this.SLRT, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
-        "is is an approximation, so pick it with a grain of salt.");
-            // 
-            // SLRTLabel
-            // 
-            this.SLRTLabel.AutoSize = true;
-            this.SLRTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SLRTLabel.Location = new System.Drawing.Point(2, 42);
-            this.SLRTLabel.Name = "SLRTLabel";
-            this.SLRTLabel.Size = new System.Drawing.Size(154, 13);
-            this.SLRTLabel.TabIndex = 56;
-            this.SLRTLabel.Text = "Settings loader\'s run time:";
-            this.SLRTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.VoiceAverage.SetToolTip(this.SLRTLabel, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
-        "is is an approximation, so pick it with a grain of salt.");
-            // 
-            // NCRT
-            // 
-            this.NCRT.AutoSize = true;
-            this.NCRT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NCRT.Location = new System.Drawing.Point(150, 60);
-            this.NCRT.Name = "NCRT";
-            this.NCRT.Size = new System.Drawing.Size(26, 13);
-            this.NCRT.TabIndex = 49;
-            this.NCRT.Text = "0ms";
-            this.NCRT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // NCRTLabel
-            // 
-            this.NCRTLabel.AutoSize = true;
-            this.NCRTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NCRTLabel.Location = new System.Drawing.Point(2, 60);
-            this.NCRTLabel.Name = "NCRTLabel";
-            this.NCRTLabel.Size = new System.Drawing.Size(149, 13);
-            this.NCRTLabel.TabIndex = 48;
-            this.NCRTLabel.Text = "Notes catcher\'s run time:";
-            this.NCRTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AERTi
-            // 
-            this.AERTi.AutoSize = true;
-            this.AERTi.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AERTi.Location = new System.Drawing.Point(144, 24);
-            this.AERTi.Name = "AERTi";
-            this.AERTi.Size = new System.Drawing.Size(26, 13);
-            this.AERTi.TabIndex = 47;
-            this.AERTi.Text = "0ms";
-            this.AERTi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AERTiLabel
-            // 
-            this.AERTiLabel.AutoSize = true;
-            this.AERTiLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AERTiLabel.Location = new System.Drawing.Point(2, 24);
-            this.AERTiLabel.Name = "AERTiLabel";
-            this.AERTiLabel.Size = new System.Drawing.Size(143, 13);
-            this.AERTiLabel.TabIndex = 46;
-            this.AERTiLabel.Text = "Audio engine\'s run time:";
-            this.AERTiLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // MTRT
-            // 
-            this.MTRT.AutoSize = true;
-            this.MTRT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MTRT.Location = new System.Drawing.Point(137, 6);
-            this.MTRT.Name = "MTRT";
-            this.MTRT.Size = new System.Drawing.Size(26, 13);
-            this.MTRT.TabIndex = 45;
-            this.MTRT.Text = "0ms";
-            this.MTRT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // MTRTLabel
-            // 
-            this.MTRTLabel.AutoSize = true;
-            this.MTRTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MTRTLabel.Location = new System.Drawing.Point(2, 6);
-            this.MTRTLabel.Name = "MTRTLabel";
-            this.MTRTLabel.Size = new System.Drawing.Size(136, 13);
-            this.MTRTLabel.TabIndex = 44;
-            this.MTRTLabel.Text = "Main thread\'s run time:";
-            this.MTRTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ChannelVoices
             // 
@@ -1030,6 +897,140 @@
             this.CHV1L.Text = "Channel 1:";
             this.CHV1L.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // ThreadTime
+            // 
+            this.ThreadTime.Controls.Add(this.KSLogoThrd);
+            this.ThreadTime.Controls.Add(this.CopyToClip2);
+            this.ThreadTime.Controls.Add(this.SLRT);
+            this.ThreadTime.Controls.Add(this.SLRTLabel);
+            this.ThreadTime.Controls.Add(this.NCRT);
+            this.ThreadTime.Controls.Add(this.NCRTLabel);
+            this.ThreadTime.Controls.Add(this.AERTi);
+            this.ThreadTime.Controls.Add(this.AERTiLabel);
+            this.ThreadTime.Controls.Add(this.MTRT);
+            this.ThreadTime.Controls.Add(this.MTRTLabel);
+            this.ThreadTime.Location = new System.Drawing.Point(4, 22);
+            this.ThreadTime.Name = "ThreadTime";
+            this.ThreadTime.Padding = new System.Windows.Forms.Padding(3);
+            this.ThreadTime.Size = new System.Drawing.Size(424, 180);
+            this.ThreadTime.TabIndex = 3;
+            this.ThreadTime.Text = "Threads time";
+            this.ThreadTime.UseVisualStyleBackColor = true;
+            // 
+            // KSLogoThrd
+            // 
+            this.KSLogoThrd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.KSLogoThrd.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogoThrd.Location = new System.Drawing.Point(389, 3);
+            this.KSLogoThrd.Name = "KSLogoThrd";
+            this.KSLogoThrd.Size = new System.Drawing.Size(32, 32);
+            this.KSLogoThrd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogoThrd.TabIndex = 59;
+            this.KSLogoThrd.TabStop = false;
+            // 
+            // CopyToClip2
+            // 
+            this.CopyToClip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CopyToClip2.Location = new System.Drawing.Point(266, 152);
+            this.CopyToClip2.Name = "CopyToClip2";
+            this.CopyToClip2.Size = new System.Drawing.Size(153, 23);
+            this.CopyToClip2.TabIndex = 58;
+            this.CopyToClip2.Text = "Copy all tabs to clipboard";
+            this.CopyToClip2.UseVisualStyleBackColor = true;
+            this.CopyToClip2.Click += new System.EventHandler(this.CopyToClip_Click);
+            // 
+            // SLRT
+            // 
+            this.SLRT.AutoSize = true;
+            this.SLRT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SLRT.Location = new System.Drawing.Point(155, 42);
+            this.SLRT.Name = "SLRT";
+            this.SLRT.Size = new System.Drawing.Size(26, 13);
+            this.SLRT.TabIndex = 57;
+            this.SLRT.Text = "0ms";
+            this.SLRT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VoiceAverage.SetToolTip(this.SLRT, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
+        "is is an approximation, so pick it with a grain of salt.");
+            // 
+            // SLRTLabel
+            // 
+            this.SLRTLabel.AutoSize = true;
+            this.SLRTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SLRTLabel.Location = new System.Drawing.Point(2, 42);
+            this.SLRTLabel.Name = "SLRTLabel";
+            this.SLRTLabel.Size = new System.Drawing.Size(154, 13);
+            this.SLRTLabel.TabIndex = 56;
+            this.SLRTLabel.Text = "Settings loader\'s run time:";
+            this.SLRTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VoiceAverage.SetToolTip(this.SLRTLabel, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
+        "is is an approximation, so pick it with a grain of salt.");
+            // 
+            // NCRT
+            // 
+            this.NCRT.AutoSize = true;
+            this.NCRT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NCRT.Location = new System.Drawing.Point(150, 60);
+            this.NCRT.Name = "NCRT";
+            this.NCRT.Size = new System.Drawing.Size(26, 13);
+            this.NCRT.TabIndex = 49;
+            this.NCRT.Text = "0ms";
+            this.NCRT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // NCRTLabel
+            // 
+            this.NCRTLabel.AutoSize = true;
+            this.NCRTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NCRTLabel.Location = new System.Drawing.Point(2, 60);
+            this.NCRTLabel.Name = "NCRTLabel";
+            this.NCRTLabel.Size = new System.Drawing.Size(149, 13);
+            this.NCRTLabel.TabIndex = 48;
+            this.NCRTLabel.Text = "Notes catcher\'s run time:";
+            this.NCRTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // AERTi
+            // 
+            this.AERTi.AutoSize = true;
+            this.AERTi.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AERTi.Location = new System.Drawing.Point(144, 24);
+            this.AERTi.Name = "AERTi";
+            this.AERTi.Size = new System.Drawing.Size(26, 13);
+            this.AERTi.TabIndex = 47;
+            this.AERTi.Text = "0ms";
+            this.AERTi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // AERTiLabel
+            // 
+            this.AERTiLabel.AutoSize = true;
+            this.AERTiLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AERTiLabel.Location = new System.Drawing.Point(2, 24);
+            this.AERTiLabel.Name = "AERTiLabel";
+            this.AERTiLabel.Size = new System.Drawing.Size(143, 13);
+            this.AERTiLabel.TabIndex = 46;
+            this.AERTiLabel.Text = "Audio engine\'s run time:";
+            this.AERTiLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // MTRT
+            // 
+            this.MTRT.AutoSize = true;
+            this.MTRT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MTRT.Location = new System.Drawing.Point(137, 6);
+            this.MTRT.Name = "MTRT";
+            this.MTRT.Size = new System.Drawing.Size(26, 13);
+            this.MTRT.TabIndex = 45;
+            this.MTRT.Text = "0ms";
+            this.MTRT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // MTRTLabel
+            // 
+            this.MTRTLabel.AutoSize = true;
+            this.MTRTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MTRTLabel.Location = new System.Drawing.Point(2, 6);
+            this.MTRTLabel.Name = "MTRTLabel";
+            this.MTRTLabel.Size = new System.Drawing.Size(136, 13);
+            this.MTRTLabel.TabIndex = 44;
+            this.MTRTLabel.Text = "Main thread\'s run time:";
+            this.MTRTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // PCSpecs
             // 
             this.PCSpecs.Controls.Add(this.CPULogo);
@@ -1335,12 +1336,12 @@
             this.SynthDbg.ResumeLayout(false);
             this.SynthDbg.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
-            this.ThreadTime.ResumeLayout(false);
-            this.ThreadTime.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).EndInit();
             this.ChannelVoices.ResumeLayout(false);
             this.ChannelVoices.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).EndInit();
+            this.ThreadTime.ResumeLayout(false);
+            this.ThreadTime.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).EndInit();
             this.PCSpecs.ResumeLayout(false);
             this.PCSpecs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();

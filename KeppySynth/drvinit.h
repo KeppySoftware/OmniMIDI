@@ -2,7 +2,6 @@
 Keppy's Synthesizer stream init
 */
 
-
 unsigned WINAPI notescatcher(LPVOID lpV) {
 	try {
 		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
@@ -110,6 +109,7 @@ void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
 	if (xaudiodisabled == 1 && defaultoutput == 0) isdecode = TRUE;
 	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
+	CheckUp(ERRORCODE, L"KSStreamSync");
 	if (noaudiodevices != 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
 	}
