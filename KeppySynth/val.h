@@ -103,7 +103,7 @@ static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int ischangingbuffermode = 0;	// Stuff
 static int volumemon = 1;				// Volume monitoring
-static int xaudiodisabled = 0;			// Override the default engine
+static int xaudiodisabled = 3;			// Override the default engine
 
 // Priority values
 static int prioval[7] =

@@ -354,7 +354,6 @@ void InitializeBASSVST() {
 		}
 	}
 #endif
-
 }
 
 int CreateThreads() {

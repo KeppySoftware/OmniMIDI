@@ -394,24 +394,19 @@ namespace KeppySynthConfigurator
                 bool bit32 = false;
                 bool bit64 = false;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
-                string loudmax32 = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/external_packages/lib/LoudMax.dll";
-                string loudmax64 = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/external_packages/lib64/LoudMax64.dll";
 
                 // 32-bit DLL
                 if (!File.Exists(userfolder + "\\LoudMax.dll"))
                 {
-                    Program.DebugToConsole(false, "Downloading LoudMax 32-bit...", null);
-                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 32-bit...", loudmax32, null, 1, false);
-                    frm.StartPosition = FormStartPosition.CenterScreen;
-                    DialogResult IsItOK = frm.ShowDialog();
-                    if (IsItOK == DialogResult.OK) { bit32 = true; }
-                    else { bit32 = false; }
+                    Program.DebugToConsole(false, "Extracting LoudMax 32-bit...", null);
+                    File.WriteAllBytes(String.Format("{0}\\{1}", userfolder, "LoudMax.dll"), Properties.Resources.loudmax32);
+                    Program.DebugToConsole(false, "LoudMax 32-bit is now installed.", null);
+                    bit32 = true;
                 }
                 else
                 {
                     Program.DebugToConsole(false, "LoudMax 32-bit is already installed.", null);
                     MessageBox.Show("LoudMax 32-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    bit32 = true;
                 }
 
                 // 64-bit DLL
@@ -419,29 +414,28 @@ namespace KeppySynthConfigurator
                 {
                     if (!File.Exists(userfolder + "\\LoudMax64.dll"))
                     {
-                        Program.DebugToConsole(false, "Downloading LoudMax 64-bit...", null);
-                        Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading LoudMax 64-bit...", loudmax64, null, 1, false);
-                        frm.StartPosition = FormStartPosition.CenterScreen;
-                        DialogResult IsItOK = frm.ShowDialog();
-                        if (IsItOK == DialogResult.OK) { bit64 = true; }
-                        else { bit64 = false; }
+                        Program.DebugToConsole(false, "Extracting LoudMax 64-bit...", null);
+                        File.WriteAllBytes(String.Format("{0}\\{1}", userfolder, "LoudMax64.dll"), Properties.Resources.loudmax64);
+                        Program.DebugToConsole(false, "LoudMax 64-bit is now installed.", null);
+                        bit64 = true;
                     }
                     else
                     {
                         Program.DebugToConsole(false, "LoudMax 64-bit is already installed.", null);
                         MessageBox.Show("LoudMax 64-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        bit64 = true;
                     }
                 }
+                else { bit32 = true; }
 
                 if (bit32 == true && bit64 == true)
                 {
                     MessageBox.Show("LoudMax successfully installed!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Program.DebugToConsole(false, "LoudMax has been installed properly.", null);
                 }
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "LoudMax Installation", "Crap, an error!\nAre you sure you have a working Internet connection?", true, ex);
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "LoudMax Installation", "Crap, an error!\nAre you sure the files aren't locked?", true, ex);
             }
         }
 
@@ -449,7 +443,8 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                int isalreadyuninstalled = 0;
+                bool bit32 = false;
+                bool bit64 = false;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
 
                 // 32-bit DLL
@@ -457,12 +452,12 @@ namespace KeppySynthConfigurator
                 {
                     Program.DebugToConsole(false, "Uninstalling LoudMax 32-bit...", null);
                     File.Delete(userfolder + "\\LoudMax.dll");
+                    bit32 = true;
                 }
                 else
                 {
                     Program.DebugToConsole(false, "LoudMax 32-bit is already uninstalled.", null);
                     MessageBox.Show("LoudMax 32-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    isalreadyuninstalled++;
                 }
 
                 // 64-bit DLL
@@ -470,15 +465,15 @@ namespace KeppySynthConfigurator
                 {
                     Program.DebugToConsole(false, "Uninstalling LoudMax 64-bit...", null);
                     File.Delete(userfolder + "\\LoudMax64.dll");
+                    bit64 = true;
                 }
                 else
                 {
                     Program.DebugToConsole(false, "LoudMax 64-bit is already uninstalled.", null);
                     MessageBox.Show("LoudMax 64-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    isalreadyuninstalled++;
                 }
 
-                if (isalreadyuninstalled != 2)
+                if (bit32 == true && bit64 == true)
                 {
                     MessageBox.Show("LoudMax successfully uninstalled!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -929,7 +924,7 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("sysresetignore", "0", RegistryValueKind.DWord);
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("encmode", "0", RegistryValueKind.DWord);
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "3", RegistryValueKind.DWord);
 
                 // Reload the settings
                 LoadSettings();

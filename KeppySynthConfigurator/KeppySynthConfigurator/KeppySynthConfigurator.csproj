@@ -193,12 +193,12 @@
       <DependentUpon>PreciseControlVol.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\Extensions\MeterFunc.cs" />
+    <Compile Include="Functions\Extensions\SFZInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Functions\Extensions\SFZInfo.cs" />
     <Compile Include="UpdateSystem\SelectBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -375,6 +375,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\LoudMax\LoudMax64.dll" />
+    <None Include="Resources\LoudMax\LoudMax.dll" />
     <None Include="Resources\List Editor\ReloadIcon.png" />
     <None Include="Resources\List Editor\RmvSFIcon.png" />
     <None Include="Resources\List Editor\MvUpIcon.png" />

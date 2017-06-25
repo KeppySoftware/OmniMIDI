@@ -254,9 +254,7 @@ namespace KeppySynthConfigurator.Properties {
         ///22 Harmonica
         ///23 Tango Accordion
         ///
-        ///Guitar
-        ///24 Acoustic Guitar (nylon)
-        ///25 Aco [stringa troncata]&quot;;.
+        ///Guitar        /// [stringa troncata]&quot;;.
         /// </summary>
         internal static string gmlist {
             get {
@@ -291,6 +289,26 @@ namespace KeppySynthConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("KSynthLogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] loudmax32 {
+            get {
+                object obj = ResourceManager.GetObject("loudmax32", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] loudmax64 {
+            get {
+                object obj = ResourceManager.GetObject("loudmax64", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
