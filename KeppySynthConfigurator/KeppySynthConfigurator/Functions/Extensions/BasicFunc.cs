@@ -246,24 +246,14 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void DriverRegistry(int integer)
+        public static void DriverRegistry()
         {
             try
             {
-                if (integer == 0)
-                {
-                    Program.DebugToConsole(false, "Registering driver...", null);
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/registerv");
-                    process.WaitForExit();
-                    Program.DebugToConsole(false, "Driver registered.", null);
-                }
-                else
-                {
-                    Program.DebugToConsole(false, "Unregistering driver....", null);
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe", "/unregisterv");
-                    process.WaitForExit();
-                    Program.DebugToConsole(false, "Driver unregistered.", null);
-                }
+                Program.DebugToConsole(false, "Opening register/unregister dialog...", null);
+                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KSDriverRegister.exe");
+                process.WaitForExit();
+                Program.DebugToConsole(false, "Done.", null);
             }
             catch (Exception ex)
             {

@@ -1333,12 +1333,7 @@ namespace KeppySynthConfigurator
 
         private void RegDriver_Click(object sender, EventArgs e)
         {
-            Functions.DriverRegistry(0);
-        }
-
-        private void UnregDriver_Click(object sender, EventArgs e)
-        {
-            Functions.DriverRegistry(1);
+            Functions.DriverRegistry();
         }
 
         private void AMIDIMapInstallMenu_Click(object sender, EventArgs e)

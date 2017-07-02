@@ -284,11 +284,11 @@ bool InitializeBASS() {
 
 		if (defaultWoutput == -1) {
 			BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-			CheckUp(ERRORCODE, L"KSReturnInfoPt1CusWASAPI");
+			CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
 			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
-			CheckUp(ERRORCODE, L"KSReturnInfoPt2CusWASAPI");
+			CheckUp(ERRORCODE, L"KSWASAPIGetDeviceInfo");
 			BASS_WASAPI_Free();
-			CheckUp(ERRORCODE, L"KSReturnInfoPt3CusWASAPI");
+			CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
 		}
 		else {
 			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);

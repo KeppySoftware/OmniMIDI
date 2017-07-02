@@ -95,7 +95,6 @@
             this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
-            this.UnregDriver = new System.Windows.Forms.MenuItem();
             this.menuItem23 = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
@@ -730,7 +729,6 @@
             this.menuItem20.Index = 3;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
-            this.UnregDriver,
             this.menuItem23,
             this.PanicButton,
             this.SignatureCheck,
@@ -741,40 +739,34 @@
             // RegDriver
             // 
             this.RegDriver.Index = 0;
-            this.RegDriver.Text = "Register the driver";
+            this.RegDriver.Text = "Register/Unregister the driver";
             this.RegDriver.Click += new System.EventHandler(this.RegDriver_Click);
-            // 
-            // UnregDriver
-            // 
-            this.UnregDriver.Index = 1;
-            this.UnregDriver.Text = "Unregister the driver";
-            this.UnregDriver.Click += new System.EventHandler(this.UnregDriver_Click);
             // 
             // menuItem23
             // 
-            this.menuItem23.Index = 2;
+            this.menuItem23.Index = 1;
             this.menuItem23.Text = "-";
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 3;
+            this.PanicButton.Index = 2;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
             // SignatureCheck
             // 
-            this.SignatureCheck.Index = 4;
+            this.SignatureCheck.Index = 3;
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
             // menuItem16
             // 
-            this.menuItem16.Index = 5;
+            this.menuItem16.Index = 4;
             this.menuItem16.Text = "-";
             // 
             // DLLOverrideFolder
             // 
-            this.DLLOverrideFolder.Index = 6;
+            this.DLLOverrideFolder.Index = 5;
             this.DLLOverrideFolder.Text = "Open folder for DLL override";
             this.DLLOverrideFolder.Click += new System.EventHandler(this.DLLOverrideFolder_Click);
             // 
@@ -2701,7 +2693,6 @@
         public System.Windows.Forms.OpenFileDialog ImportSettingsDialog;
         private System.Windows.Forms.MenuItem menuItem20;
         private System.Windows.Forms.MenuItem RegDriver;
-        private System.Windows.Forms.MenuItem UnregDriver;
         private System.Windows.Forms.MenuItem menuItem22;
         private System.Windows.Forms.MenuItem LoudMaxInstallMenu;
         private System.Windows.Forms.MenuItem LoudMaxUninstallMenu;

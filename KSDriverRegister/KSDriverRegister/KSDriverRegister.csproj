@@ -68,6 +68,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KSDefaultDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KSDefaultDialog.Designer.cs">
+      <DependentUpon>KSDefaultDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -86,6 +92,9 @@
     <Content Include="register.ico" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="KSDefaultDialog.resx">
+      <DependentUpon>KSDefaultDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
