@@ -1114,6 +1114,25 @@ namespace KeppySynthConfigurator
             System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
         }
 
+        private void EnableChanges_Click(object sender, EventArgs e)
+        {
+            if (EnableChanges.Checked == false)
+            {
+                DialogResult dialogResult = MessageBox.Show("This will enable live-changes of settings like the audio engine, the frequency, the audio bit depth and so on.\n\nThis function is currently under development.\n\nI (KaleidonKep99) am not responsible of any data loss you might encounter.", "Enable live changes of some functions", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    EnableChanges.Checked = true;
+                    SynthSettings.SetValue("enablelivechanges", "1", RegistryValueKind.DWord);
+                }
+            }
+            else
+            {
+                EnableChanges.Checked = false;
+                SynthSettings.SetValue("enablelivechanges", "0", RegistryValueKind.DWord);
+            }
+
+        }
+
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             KeppySynthBlacklistSystem frm = new KeppySynthBlacklistSystem();

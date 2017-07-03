@@ -140,13 +140,7 @@ bool ParseData(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 	LeaveCriticalSection(&mim_section);
 	if (vms2emu == 1) {
 		if (InterlockedIncrement(&evbcount) >= evbuffsize) {
-			do
-			{
-				if (debugmode) {
-					std::cout << "Buffer is full, slowing down..." << std::endl << std::flush;;
-				}
-				Sleep(1);
-			} while (evbcount >= evbuffsize);
+			do { Sleep(1); } while (evbcount >= evbuffsize);
 		}
 	}
 	return MMSYSERR_NOERROR;

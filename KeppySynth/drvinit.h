@@ -105,11 +105,16 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 }
 
 void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
+	bool xaudiospecial = FALSE;
+
 	PrintToConsole(FOREGROUND_RED, 1, "Working...");
-	if (xaudiodisabled == 1 && defaultoutput == 0) isdecode = TRUE;
-	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
+
+	if (xaudiodisabled == 1 && defaultoutput == 1) isdecode = TRUE;
+	if (xaudiodisabled == 0) xaudiospecial = TRUE;
+
+	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), xaudiospecial ? 44100 : mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
-	CheckUp(ERRORCODE, L"KSStreamSync");
+	
 	if (noaudiodevices != 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
 	}
@@ -177,13 +182,14 @@ RETRY:
 			if (sound_driver == NULL) {
 				PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
 				sound_driver = BASSXA_CreateAudioStream();
-				if (!BASSXA_InitializeAudioStream(sound_driver, frequency + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
+				if (!BASSXA_InitializeAudioStream(sound_driver, 44100 + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
 					xaudiodisabled = 1;
 					PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
-					CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109 ");
+					CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109\0");
 					MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 					goto RETRY;
 				}
+				BASSXA_ChangeStreamFrequencyRatio(sound_driver, (double)(frequency / 44100));
 				PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 			}
 		}
@@ -210,19 +216,49 @@ void GetWASAPIDevice() {
 	RegCloseKey(hKey);
 }
 
-bool InitializeBASS() {
+bool InitializeBASS(bool restart) {
+	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
+
 	bool init = FALSE;
 	bool isds = FALSE;
+	int wasapioutput = defaultWoutput - 1;
+	int dsoutput = defaultoutput - 1;
 
 	if (xaudiodisabled == 2 || xaudiodisabled == 3) monorendering = 0; // Mono isn't supported
 	else if (xaudiodisabled == 1) {
 		isds = TRUE; // DirectSound, init BASS for output device
-		defaultoutput--;
 	}
-	
 
-	// Init BASS first
-	init = BASS_Init(isds ? defaultoutput : 0, frequency, 0, 0, NULL);
+	PrintToConsole(FOREGROUND_RED, 1, "Settings are valid, continue...");
+
+	if (restart == TRUE) {
+		PrintToConsole(FOREGROUND_RED, 1, "The driver requested to restart the stream.");
+
+		// Free BASS first
+		BASS_WASAPI_Stop(TRUE);
+		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
+
+		BASS_WASAPI_Free();
+		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI terminated.");
+
+		BASS_ASIO_Stop();
+		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+
+		BASS_ASIO_Free();
+		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO terminated.");
+
+		BASS_StreamFree(KSStream);
+		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+
+		BASS_Free();
+		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+
+		isrestartingstream == FALSE;
+	}
+
+	// Init BASS
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
+	init = BASS_Init(isds ? dsoutput : 0, frequency, 0, 0, NULL);
 	CheckUp(ERRORCODE, L"BASSInit");
 
 	if (xaudiodisabled == 0) {
@@ -233,13 +269,14 @@ bool InitializeBASS() {
 		CheckUp(ERRORCODE, L"KSInitXA");
 	}
 	else if (xaudiodisabled == 1) {
+		BASS_ChannelStop(KSStream);
 		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 		BASS_GetInfo(&info);
 		BASS_SetConfig(BASS_CONFIG_BUFFER, frames);
 		InitializeStreamForExternalEngine(frequency, FALSE);
 		CheckUp(ERRORCODE, L"KSStreamCreateDS");
-		if (defaultoutput != 0)
+		if (dsoutput != 0)
 		{
 			BASS_ChannelPlay(KSStream, false);
 			CheckUp(ERRORCODE, L"ChannelPlayDS");
@@ -279,10 +316,9 @@ bool InitializeBASS() {
 		BASS_WASAPI_Stop(true);
 		BASS_WASAPI_Free();
 		GetWASAPIDevice();
-		defaultWoutput--;
 		BASS_WASAPI_DEVICEINFO infoW;
 
-		if (defaultWoutput == -1) {
+		if (wasapioutput == -1) {
 			BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
 			CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
 			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
@@ -291,13 +327,13 @@ bool InitializeBASS() {
 			CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
 		}
 		else {
-			BASS_WASAPI_GetDeviceInfo(defaultWoutput, &infoW);
+			BASS_WASAPI_GetDeviceInfo(wasapioutput, &infoW);
 			CheckUp(ERRORCODE, L"KSReturnInfoDefWASAPI");
 		}
 
 		InitializeStreamForExternalEngine(infoW.mixfreq, TRUE);
 
-		if (BASS_WASAPI_Init(defaultWoutput, 0, 2, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
+		if (BASS_WASAPI_Init(wasapioutput, 0, 2, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
@@ -356,9 +392,17 @@ void InitializeBASSVST() {
 #endif
 }
 
-int CreateThreads() {
+int CreateThreads(bool startup) {
+	Sleep(100);
+	stop_thread = 0;
+	CloseHandle(hThread2);
+	CloseHandle(hThread3);
+	CloseHandle(hThread4);
+	hThread2 = NULL;
+	hThread3 = NULL;
+	hThread4 = NULL;
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
-	SetEvent(load_sfevent);
+	if (startup == TRUE) SetEvent(load_sfevent);
 	reset_synth = 0;
 	hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
 	SetPriorityClass(hThread2, callprioval[driverprio]);

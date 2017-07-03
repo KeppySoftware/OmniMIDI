@@ -420,6 +420,7 @@ BOOL load_bassfuncs()
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_SetVolume);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Start);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Stop);
+		LOADBASSXAFUNCTION(BASSXA_ChangeStreamFrequencyRatio);
 		LOADBASSXAFUNCTION(BASSXA_CreateAudioStream);
 		LOADBASSXAFUNCTION(BASSXA_InitializeAudioStream);
 		LOADBASSXAFUNCTION(BASSXA_TerminateAudioStream);
@@ -457,6 +458,104 @@ void appname() {
 	RegCloseKey(hKey);
 }
 
+void allocate_memory() {
+	try {
+		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
+		if (oldevbuff == 0)
+		{
+			// EVBUFF
+			// Get the total RAM amount installed in your system
+			MEMORYSTATUSEX status;
+			status.dwLength = sizeof(status);
+			GlobalMemoryStatusEx(&status);
+
+#if defined(_WIN64)
+			// Divide it by 128, then remove 16384 for the overhead.
+			evbuffsize = (status.ullTotalPhys / 128) - 16385;
+#elif defined(_WIN32)
+			// Divide it by 1024, then remove 16384 for the overhead.
+			evbuffsize = (status.ullTotalPhys / 1024) - 16385;
+#endif
+
+			/* If the available RAM for the buffer is beyond 2GB, set it to 2GB.
+			32-bit apps can't access more than 2GB of RAM, if they're not large address aware.
+			Also, more than 2GB of RAM for this array is useless... */
+
+			if (evbuffsize > 2147467264)
+				evbuffsize = 2147467264;
+
+			// Size of the EV buffer calculated through from your RAM + 16834 of overhead
+			evbuf = (evbuf_t *)calloc((evbuffsize + 16384), sizeof(evbuf_t *));
+			// EVBUFF
+		}
+		else {
+			evbuffsize = 16384;
+			evbuf = (evbuf_t *)calloc((16384 + 16384), sizeof(evbuf_t *));
+		}
+
+		sndbf = (float *)calloc(newsndbfvalue, sizeof(float *));
+	}
+	catch (...) {
+		crashmessage(L"MemAlloc");
+	}
+}
+
+bool check_device_changes() {
+	try {
+		if (enablelivechanges == 1) {
+			int defaultoutputO = defaultoutput;
+			int defaultAoutputO = defaultAoutput;
+			int defaultWoutputO = defaultWoutput;
+			int frequencyO = frequency;
+			int wasapiexO = wasapiex;
+			int encmodeO = encmode;
+			int monorenderingO = monorendering;
+			int floatrenderingO = floatrendering;
+			int defaultengine = xaudiodisabled;
+
+			HKEY hKey;
+			long lResult;
+			DWORD dwType = REG_DWORD;
+			DWORD dwSize = sizeof(DWORD);
+			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+			RegQueryValueEx(hKey, L"defaultdev", NULL, &dwType, (LPBYTE)&defaultoutput, &dwSize);
+			RegQueryValueEx(hKey, L"defaultAdev", NULL, &dwType, (LPBYTE)&defaultAoutput, &dwSize);
+			RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
+			RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
+			RegQueryValueEx(hKey, L"wasapiex", NULL, &dwType, (LPBYTE)&wasapiex, &dwSize);
+			RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
+			RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
+			RegQueryValueEx(hKey, L"monorendering", NULL, &dwType, (LPBYTE)&monorendering, &dwSize);
+			RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
+
+			if (defaultoutputO != defaultoutput ||
+				defaultAoutputO != defaultAoutput ||
+				defaultWoutputO != defaultWoutput ||
+				frequencyO != frequency ||
+				monorenderingO != monorendering ||
+				floatrenderingO != floatrendering ||
+				defaultengine != xaudiodisabled) {
+				if ((xaudiodisabled == 0 && defaultengine != 0) || (xaudiodisabled != 0 && defaultengine == 0)) {
+					xaudiodisabled = defaultengine;
+					RegSetValueEx(hKey, L"xaudiodisabled", 0, dwType, (LPBYTE)&xaudiodisabled, sizeof(xaudiodisabled));
+				}
+				RegCloseKey(hKey);
+				PrintToConsole(FOREGROUND_BLUE, 1, "Device/Audio engine change detected. Restarting streams...");
+				return TRUE;
+			}
+
+			RegCloseKey(hKey);
+			return FALSE;
+		}
+		else {
+			return FALSE;
+		}
+	}
+	catch (...) {
+		crashmessage(L"DevChange");
+	}
+}
+
 void load_settings()
 {
 	try {
@@ -475,15 +574,16 @@ void load_settings()
 		RegQueryValueEx(hKey, L"fullvelocity", NULL, &dwType, (LPBYTE)&fullvelocity, &dwSize);
 		RegQueryValueEx(hKey, L"limit88", NULL, &dwType, (LPBYTE)&limit88, &dwSize);
 		RegQueryValueEx(hKey, L"fadeoutdisable", NULL, &dwType, (LPBYTE)&fadeoutdisable, &dwSize);
+		RegQueryValueEx(hKey, L"enablelivechanges", NULL, &dwType, (LPBYTE)&enablelivechanges, &dwSize);
 		RegQueryValueEx(hKey, L"defaultdev", NULL, &dwType, (LPBYTE)&defaultoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultAdev", NULL, &dwType, (LPBYTE)&defaultAoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiindev", NULL, &dwType, (LPBYTE)&defaultmidiindev, &dwSize);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
+		RegQueryValueEx(hKey, L"oldevbuff", NULL, &dwType, (LPBYTE)&oldevbuff, &dwSize);
 		RegQueryValueEx(hKey, L"midiinenabled", NULL, &dwType, (LPBYTE)&midiinenabled, &dwSize);
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
-		RegQueryValueEx(hKey, L"oldevbuff", NULL, &dwType, (LPBYTE)&oldevbuff, &dwSize);
 		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
@@ -516,40 +616,6 @@ void load_settings()
 
 		frequencynew = frequency;
 
-		if (oldevbuff == 0)
-		{
-			// EVBUFF
-			// Get the total RAM amount installed in your system
-			MEMORYSTATUSEX status;
-			status.dwLength = sizeof(status);
-			GlobalMemoryStatusEx(&status);
-
-#if defined(_WIN64)
-			// Divide it by 128, then remove 16384 for the overhead.
-			evbuffsize = (status.ullTotalPhys / 128) - 16385;
-#elif defined(_WIN32)
-			// Divide it by 1024, then remove 16384 for the overhead.
-			evbuffsize = (status.ullTotalPhys / 1024) - 16385;
-#endif
-
-			/* If the available RAM for the buffer is beyond 2GB, set it to 2GB.
-			32-bit apps can't access more than 2GB of RAM, if they're not large address aware.
-			Also, more than 2GB of RAM for this array is useless... */
-
-			if (evbuffsize > 2147467264)
-				evbuffsize = 2147467264;
-
-			// Size of the EV buffer calculated through from your RAM + 16834 of overhead
-			evbuf = (evbuf_t *)malloc((evbuffsize + 16384) * sizeof(evbuf_t *));
-			// EVBUFF
-		}
-		else {
-			evbuffsize = 16384;
-			evbuf = (evbuf_t *)malloc((16384 + 16384) * sizeof(evbuf_t *));
-		}
-
-		sndbf = (float *)malloc(newsndbfvalue * sizeof(float));
-
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 
@@ -578,6 +644,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
+		RegQueryValueEx(hKey, L"enablelivechanges", NULL, &dwType, (LPBYTE)&enablelivechanges, &dwSize);
 		RegQueryValueEx(hKey, L"nofx", NULL, &dwType, (LPBYTE)&nofx, &dwSize);
 		RegQueryValueEx(hKey, L"fullvelocity", NULL, &dwType, (LPBYTE)&fullvelocity, &dwSize);
 		RegQueryValueEx(hKey, L"fadeoutdisable", NULL, &dwType, (LPBYTE)&fadeoutdisable, &dwSize);

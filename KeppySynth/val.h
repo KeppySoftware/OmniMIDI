@@ -34,7 +34,7 @@ extern "C" __declspec(dllexport) void RavioliRavioli()
 #endif 
 
 // Mandatory values
-static sound_out * sound_driver = NULL;
+static sound_out * sound_driver = 0;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
 static HINSTANCE bass = 0;				// bass handle
@@ -51,6 +51,7 @@ static float currentcpuusage0;
 static float currentcpuusageE0;
 static int isoverrideenabled = 0;
 static long evbuffsize = 0;
+static BOOL isrestartingstream = FALSE;
 
 // Main values
 static HANDLE hConsole;					// Debug console
@@ -61,10 +62,11 @@ static int alreadyshown = 0;			// Check if the info about the drivers have been 
 static int autopanic = 0;				// Autopanic switch
 static int bassoutputfinal = 0;			// DO NOT TOUCH
 static int capframerate = 1;			// Cap input framerate
+static int enablelivechanges = 0;		// Live changes of crucial parts of the driver
 static int debugmode = 0;				// Debug console
 static int defaultmidiindev = 0;		// MIDI Input device
 static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
-static int defaultoutput = -1;			// Default audio output (DSound)
+static int defaultoutput = 0;			// Default audio output (DSound)
 static int defaultAoutput = 0;			// Default audio output (ASIO)
 static int defaultWoutput = 0;			// Default audio output (WASAPI)
 static int defaultsflist = 1;			// Default soundfont list

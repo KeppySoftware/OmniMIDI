@@ -115,7 +115,6 @@ static HANDLE hCalcThread = NULL;;
 static HANDLE hThread2 = NULL;
 static HANDLE hThread3 = NULL;
 static HANDLE hThread4 = NULL;
-static HANDLE hThreadB = NULL;
 static unsigned int thrdaddr1;
 static unsigned int thrdaddr2;
 static unsigned int thrdaddr3;
@@ -218,14 +217,14 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 
 void CheckUp(int mode, TCHAR * codeline) {
 	int error = BASS_ErrorGetCode();
-	if (error != 0) {
+	if (error != 0 && isrestartingstream == FALSE) {
 		ShowError(error, mode, L"BASS", codeline);
 	}
 }
 
 void CheckUpASIO(int mode, TCHAR * codeline) {
 	int error = BASS_ASIO_ErrorGetCode();
-	if (error != 0) {
+	if (error != 0 && isrestartingstream == FALSE) {
 		ShowError(error, mode, L"BASSASIO", codeline);
 	}
 }
@@ -604,15 +603,16 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
-	if (BASS_ErrorGetCode() == 5) {
-		PrintToConsole(FOREGROUND_RED, 1, "Something decided to mess up with the driver.");
-		PrintToConsole(FOREGROUND_RED, 1, "Restarting the streams...");
+	if (BASS_ErrorGetCode() == 5 || check_device_changes()) {
+		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
+		isrestartingstream = TRUE;
 		stop_thread = 1;
-		if (InitializeBASS()) {
+		if (InitializeBASS(TRUE)) {
 			InitializeBASSVST();
 			SetUpStream();
 			LoadSoundFontsToStream();
-			opend = CreateThreads();
+			CreateThreads(FALSE);
+			Sleep(100);
 		}
 	}
 }
@@ -627,17 +627,18 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			int opend = 0;
 			while (opend == 0) {
 				load_settings();
+				allocate_memory();
 				load_bassfuncs();
 				if (!com_initialized) {
 					if (FAILED(CoInitialize(NULL))) continue;
 					com_initialized = TRUE;
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-				if (InitializeBASS()) {
+				if (InitializeBASS(FALSE)) {
 					InitializeBASSVST();
 					SetUpStream();
 					LoadSoundFontsToStream();
-					opend = CreateThreads();
+					opend = CreateThreads(TRUE);
 				}
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");

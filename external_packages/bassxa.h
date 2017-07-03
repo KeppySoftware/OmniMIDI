@@ -47,6 +47,7 @@ extern "C" {
 	*/
 
 	BASSXASCOPE sound_out * BASSXADEF(BASSXA_CreateAudioStream)();
+	BASSXASCOPE BOOL BASSXADEF(BASSXA_ChangeStreamFrequencyRatio)(sound_out * stream, double ratio);
 	BASSXASCOPE BOOL BASSXADEF(BASSXA_InitializeAudioStream)(sound_out * stream, int frequency, int channels, bool floataudio, int sndbf, int frames);
 	BASSXASCOPE BOOL BASSXADEF(BASSXA_WriteFrame)(sound_out * stream, void* buffer, unsigned int data, bool wait);
 	BASSXASCOPE void BASSXADEF(BASSXA_TerminateAudioStream)(sound_out * stream);
@@ -68,6 +69,7 @@ extern "C" {
 #define BASSXA_ERROR_STREAM			5200 /* Error while opening stream */
 #define BASSXA_ERROR_FRAME		    5201 /* Error while writing frames */
 #define BASSXA_ERROR_DELETE		    5202 /* Can not delete stream */
+#define BASSXA_ERROR_RATIO		    5203 /* Can not change frequency */
 
 #ifdef __cplusplus
 }
