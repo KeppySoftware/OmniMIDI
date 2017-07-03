@@ -8,8 +8,8 @@ struct evbuf_t{
 };
 
 static struct evbuf_t * evbuf;
-static UINT  evbwpoint = 0;
-static UINT  evbrpoint = 0;
+static ULONG  evbwpoint = 0;
+static ULONG  evbrpoint = 0;
 static volatile LONG evbcount = 0;
 static UINT evbsysexpoint;
 
@@ -473,8 +473,11 @@ void allocate_memory() {
 			// Divide it by 128, then remove 16384 for the overhead.
 			evbuffsize = (status.ullTotalPhys / 128) - 16385;
 #elif defined(_WIN32)
+			DWORDLONG totalram32 = status.ullTotalPhys;
+
+			if (totalram32 > 1073741824) totalram32 = 1073741824;
 			// Divide it by 1024, then remove 16384 for the overhead.
-			evbuffsize = (status.ullTotalPhys / 1024) - 16385;
+			evbuffsize = (totalram32 / 128) - 16385;
 #endif
 
 			/* If the available RAM for the buffer is beyond 2GB, set it to 2GB.
