@@ -252,8 +252,6 @@ bool InitializeBASS(bool restart) {
 
 		BASS_Free();
 		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
-
-		isrestartingstream == FALSE;
 	}
 
 	// Init BASS

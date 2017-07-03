@@ -217,14 +217,14 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 
 void CheckUp(int mode, TCHAR * codeline) {
 	int error = BASS_ErrorGetCode();
-	if (error != 0 && isrestartingstream == FALSE) {
+	if (error != 0) {
 		ShowError(error, mode, L"BASS", codeline);
 	}
 }
 
 void CheckUpASIO(int mode, TCHAR * codeline) {
 	int error = BASS_ASIO_ErrorGetCode();
-	if (error != 0 && isrestartingstream == FALSE) {
+	if (error != 0) {
 		ShowError(error, mode, L"BASSASIO", codeline);
 	}
 }
@@ -603,9 +603,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
-	if (BASS_ErrorGetCode() == 5 || check_device_changes()) {
+	if (BASS_ErrorGetCode() == 5) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
-		isrestartingstream = TRUE;
 		stop_thread = 1;
 		if (InitializeBASS(TRUE)) {
 			InitializeBASSVST();

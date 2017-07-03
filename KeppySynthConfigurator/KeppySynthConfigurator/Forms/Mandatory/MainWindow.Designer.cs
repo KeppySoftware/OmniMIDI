@@ -90,9 +90,6 @@
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
-            this.menuItem27 = new System.Windows.Forms.MenuItem();
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.EnableChanges = new System.Windows.Forms.MenuItem();
             this.menuItem44 = new System.Windows.Forms.MenuItem();
             this.menuItem41 = new System.Windows.Forms.MenuItem();
             this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
@@ -548,9 +545,7 @@
             this.menuItem14,
             this.menuItem12,
             this.menuItem15,
-            this.menuItem28,
-            this.menuItem27,
-            this.menuItem11});
+            this.menuItem28});
             this.menuItem2.Text = "More settings";
             // 
             // hotkeys
@@ -709,24 +704,6 @@
             this.DebugModeOpenNotepad.Index = 1;
             this.DebugModeOpenNotepad.Text = "Open debug folder on Windows Explorer";
             this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
-            // 
-            // menuItem27
-            // 
-            this.menuItem27.Index = 13;
-            this.menuItem27.Text = "-";
-            // 
-            // menuItem11
-            // 
-            this.menuItem11.Index = 14;
-            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.EnableChanges});
-            this.menuItem11.Text = "Unfinished functionalities";
-            // 
-            // EnableChanges
-            // 
-            this.EnableChanges.Index = 0;
-            this.EnableChanges.Text = "Enable live changes of some functions";
-            this.EnableChanges.Click += new System.EventHandler(this.EnableChanges_Click);
             // 
             // menuItem44
             // 
@@ -2932,9 +2909,6 @@
         private System.Windows.Forms.MenuItem DisableOLM;
         public System.Windows.Forms.Label VolLevel;
         private System.Windows.Forms.ToolTip Requirements;
-        private System.Windows.Forms.MenuItem menuItem27;
-        private System.Windows.Forms.MenuItem menuItem11;
-        public System.Windows.Forms.MenuItem EnableChanges;
     }
 }
 

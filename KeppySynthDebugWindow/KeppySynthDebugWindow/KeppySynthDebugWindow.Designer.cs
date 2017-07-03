@@ -47,7 +47,6 @@
             this.SonicMode = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
-            this.DebugWorker = new System.ComponentModel.BackgroundWorker();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
             this.AERT = new System.Windows.Forms.Label();
@@ -142,6 +141,7 @@
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
             this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
+            this.DebugInfo = new System.Windows.Forms.Timer(this.components);
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
@@ -217,10 +217,6 @@
             this.ExitMenu.Index = 8;
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
-            // 
-            // DebugWorker
-            // 
-            this.DebugWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DebugWorker_DoWork);
             // 
             // Tabs
             // 
@@ -1318,6 +1314,12 @@
             this.VoiceAverage.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.VoiceAverage.ToolTipTitle = "What does the average mean?";
             // 
+            // DebugInfo
+            // 
+            this.DebugInfo.Enabled = true;
+            this.DebugInfo.Interval = 1;
+            this.DebugInfo.Tick += new System.EventHandler(this.DebugInfo_Tick);
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1357,7 +1359,6 @@
         private System.Windows.Forms.MenuItem CopyToClipboard;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem ExitMenu;
-        private System.ComponentModel.BackgroundWorker DebugWorker;
         private System.Windows.Forms.MenuItem OpenConfigurator;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MenuItem debugwintop;
@@ -1457,6 +1458,7 @@
         private System.Windows.Forms.Label MTRT;
         private System.Windows.Forms.Label MTRTLabel;
         private System.Windows.Forms.PictureBox KSLogoThrd;
+        private System.Windows.Forms.Timer DebugInfo;
     }
 }
 
