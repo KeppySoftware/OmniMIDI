@@ -7,7 +7,7 @@ struct evbuf_t{
 	DWORD_PTR	dwParam1;
 };
 
-static struct evbuf_t evbuf[36864];
+static struct evbuf_t * evbuf;
 static UINT  evbwpoint = 0;
 static UINT  evbrpoint = 0;
 static volatile LONG evbcount = 0;
@@ -483,12 +483,12 @@ void load_settings()
 		RegQueryValueEx(hKey, L"midiinenabled", NULL, &dwType, (LPBYTE)&midiinenabled, &dwSize);
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
+		RegQueryValueEx(hKey, L"oldevbuff", NULL, &dwType, (LPBYTE)&oldevbuff, &dwSize);
 		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
 		RegQueryValueEx(hKey, L"midivolumeoverride", NULL, &dwType, (LPBYTE)&midivolumeoverride, &dwSize);
 		RegQueryValueEx(hKey, L"extra8lists", NULL, &dwType, (LPBYTE)&extra8lists, &dwSize);
-		RegQueryValueEx(hKey, L"newevbuffvalue", NULL, &dwType, (LPBYTE)&newevbuffvalue, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"monorendering", NULL, &dwType, (LPBYTE)&monorendering, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
@@ -516,8 +516,39 @@ void load_settings()
 
 		frequencynew = frequency;
 
-		sndbf = (float *)malloc(newsndbfvalue*sizeof(float));
-		memset(evbuf, newevbuffvalue, sizeof(newevbuffvalue));
+		if (oldevbuff == 0)
+		{
+			// EVBUFF
+			// Get the total RAM amount installed in your system
+			MEMORYSTATUSEX status;
+			status.dwLength = sizeof(status);
+			GlobalMemoryStatusEx(&status);
+
+#if defined(_WIN64)
+			// Divide it by 128, then remove 16384 for the overhead.
+			evbuffsize = (status.ullTotalPhys / 128) - 16385;
+#elif defined(_WIN32)
+			// Divide it by 1024, then remove 16384 for the overhead.
+			evbuffsize = (status.ullTotalPhys / 1024) - 16385;
+#endif
+
+			/* If the available RAM for the buffer is beyond 2GB, set it to 2GB.
+			32-bit apps can't access more than 2GB of RAM, if they're not large address aware.
+			Also, more than 2GB of RAM for this array is useless... */
+
+			if (evbuffsize > 2147467264)
+				evbuffsize = 2147467264;
+
+			// Size of the EV buffer calculated through from your RAM + 16834 of overhead
+			evbuf = (evbuf_t *)malloc((evbuffsize + 16384) * sizeof(evbuf_t *));
+			// EVBUFF
+		}
+		else {
+			evbuffsize = 16384;
+			evbuf = (evbuf_t *)malloc((16384 + 16384) * sizeof(evbuf_t *));
+		}
+
+		sndbf = (float *)malloc(newsndbfvalue * sizeof(float));
 
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);

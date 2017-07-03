@@ -278,6 +278,7 @@
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
+            this.Requirements = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.MixerBox.SuspendLayout();
             this.EnginesBox.SuspendLayout();
@@ -1739,6 +1740,7 @@
             this.OutputWAV.Size = new System.Drawing.Size(119, 17);
             this.OutputWAV.TabIndex = 1;
             this.OutputWAV.Text = "Enable .WAV mode";
+            this.Requirements.SetToolTip(this.OutputWAV, "Changing this setting requires the user to restart the MIDI application.");
             this.OutputWAV.UseVisualStyleBackColor = false;
             this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
             // 
@@ -1790,6 +1792,7 @@
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(82, 21);
             this.AudioEngBox.TabIndex = 2;
+            this.Requirements.SetToolTip(this.AudioEngBox, "Changing this setting requires the user to restart the MIDI application.");
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
             // 
             // AdditionalSettingsBox
@@ -1974,6 +1977,7 @@
             this.SPFRate.Size = new System.Drawing.Size(64, 20);
             this.SPFRate.TabIndex = 20;
             this.SPFRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Requirements.SetToolTip(this.SPFRate, "Changing this setting requires the user to restart the MIDI application.");
             this.SPFRate.Value = new decimal(new int[] {
             100,
             0,
@@ -2035,6 +2039,7 @@
             this.bufsize.Size = new System.Drawing.Size(64, 20);
             this.bufsize.TabIndex = 18;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Requirements.SetToolTip(this.bufsize, "Changing this setting requires the user to restart the MIDI application.");
             this.bufsize.Value = new decimal(new int[] {
             1,
             0,
@@ -2121,6 +2126,7 @@
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 14;
+            this.Requirements.SetToolTip(this.Frequency, "Changing this setting requires the user to restart the MIDI application.");
             this.Frequency.SelectedIndexChanged += new System.EventHandler(this.Frequency_SelectedIndexChanged);
             this.Frequency.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
@@ -2595,6 +2601,16 @@
             // 
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
             // 
+            // Requirements
+            // 
+            this.Requirements.AutomaticDelay = 100;
+            this.Requirements.AutoPopDelay = 10000;
+            this.Requirements.InitialDelay = 100;
+            this.Requirements.IsBalloon = true;
+            this.Requirements.ReshowDelay = 20;
+            this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.Requirements.ToolTipTitle = "Requirement";
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2892,6 +2908,7 @@
         private System.Windows.Forms.MenuItem menuItem19;
         private System.Windows.Forms.MenuItem DisableOLM;
         public System.Windows.Forms.Label VolLevel;
+        private System.Windows.Forms.ToolTip Requirements;
     }
 }
 

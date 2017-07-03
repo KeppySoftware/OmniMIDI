@@ -50,6 +50,7 @@ static HINSTANCE bassxa = 0;			// bassxa handle
 static float currentcpuusage0;
 static float currentcpuusageE0;
 static int isoverrideenabled = 0;
+static long evbuffsize = 0;
 
 // Main values
 static HANDLE hConsole;					// Debug console
@@ -70,6 +71,7 @@ static int defaultsflist = 1;			// Default soundfont list
 static int driverprio = 0;				// Process priority
 static int encmode = 0;					// Encoder mode
 static int fadeoutdisable = 0;			// Disable fade-out
+static int oldevbuff = 0;				// Do not use the RAM-based EV buffer calculation
 static int floatrendering = 1;			// Floating point audio
 static int frames = 0;					// Default
 static int frequency = 0;				// Audio frequency
@@ -81,7 +83,6 @@ static int midiinenabled = 0;			// MIDI Input
 static int midivoices = 0;				// Max voices INT
 static int midivolumeoverride = 0;		// MIDI track volume override
 static int monorendering = 0;			// Mono rendering (Instead of stereo by default)
-static UINT newevbuffvalue = 32768;		// DO NOT TOUCH
 static int newsndbfvalue;				// DO NOT TOUCH
 static int noaudiodevices = 0;			// No audio devices flag
 static int nofloat = 1;					// Enable or disable the float engine

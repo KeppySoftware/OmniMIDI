@@ -84,8 +84,8 @@ int bmsyn_play_some_data(void){
 			EnterCriticalSection(&mim_section);
 			evbpoint = evbrpoint;
 
-			if (++evbrpoint >= newevbuffvalue) {
-				evbrpoint -= newevbuffvalue;
+			if (++evbrpoint >= evbuffsize) {
+				evbrpoint -= evbuffsize;
 			}
 
 			uMsg = evbuf[evbpoint].uMsg;
@@ -133,20 +133,20 @@ int bmsyn_play_some_data(void){
 bool ParseData(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
 	EnterCriticalSection(&mim_section);
 	evbpoint = evbwpoint;
-	if (++evbwpoint >= newevbuffvalue)
-		evbwpoint -= newevbuffvalue;
+	if (++evbwpoint >= evbuffsize)
+		evbwpoint -= evbuffsize;
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	LeaveCriticalSection(&mim_section);
 	if (vms2emu == 1) {
-		if (InterlockedIncrement(&evbcount) >= newevbuffvalue) {
+		if (InterlockedIncrement(&evbcount) >= evbuffsize) {
 			do
 			{
 				if (debugmode) {
 					std::cout << "Buffer is full, slowing down..." << std::endl << std::flush;;
 				}
 				Sleep(1);
-			} while (evbcount >= newevbuffvalue);
+			} while (evbcount >= evbuffsize);
 		}
 	}
 	return MMSYSERR_NOERROR;

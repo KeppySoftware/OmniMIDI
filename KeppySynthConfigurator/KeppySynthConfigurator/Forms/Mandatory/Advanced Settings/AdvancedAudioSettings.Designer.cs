@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.AOS = new System.Windows.Forms.GroupBox();
             this.AudioBitDepth = new System.Windows.Forms.ComboBox();
             this.AudioBitDepthLabel = new System.Windows.Forms.Label();
@@ -42,6 +43,7 @@
             this.ChangeDefaultOutput = new System.Windows.Forms.Button();
             this.OKBtn = new System.Windows.Forms.Button();
             this.CAE = new System.Windows.Forms.Label();
+            this.Requirements = new System.Windows.Forms.ToolTip(this.components);
             this.AOS.SuspendLayout();
             this.ABS.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -74,6 +76,7 @@
             this.AudioBitDepth.Name = "AudioBitDepth";
             this.AudioBitDepth.Size = new System.Drawing.Size(85, 21);
             this.AudioBitDepth.TabIndex = 3;
+            this.Requirements.SetToolTip(this.AudioBitDepth, "Changing this setting requires the user to restart the MIDI application.");
             this.AudioBitDepth.SelectedIndexChanged += new System.EventHandler(this.AudioBitDepth_SelectedIndexChanged);
             // 
             // AudioBitDepthLabel
@@ -84,6 +87,7 @@
             this.AudioBitDepthLabel.Size = new System.Drawing.Size(81, 13);
             this.AudioBitDepthLabel.TabIndex = 2;
             this.AudioBitDepthLabel.Text = "Audio bit depth:";
+            this.Requirements.SetToolTip(this.AudioBitDepthLabel, "Changing this setting requires the user to restart the MIDI application.");
             // 
             // MonophonicFunc
             // 
@@ -94,6 +98,7 @@
             this.MonophonicFunc.Size = new System.Drawing.Size(153, 17);
             this.MonophonicFunc.TabIndex = 1;
             this.MonophonicFunc.Text = "Use monophonic rendering";
+            this.Requirements.SetToolTip(this.MonophonicFunc, "Changing this setting requires the user to restart the MIDI application.");
             this.MonophonicFunc.UseVisualStyleBackColor = true;
             this.MonophonicFunc.CheckedChanged += new System.EventHandler(this.MonophonicFunc_CheckedChanged);
             // 
@@ -186,6 +191,7 @@
             this.ChangeDefaultOutput.Size = new System.Drawing.Size(160, 23);
             this.ChangeDefaultOutput.TabIndex = 0;
             this.ChangeDefaultOutput.Text = "Change default audio output";
+            this.Requirements.SetToolTip(this.ChangeDefaultOutput, "Changing this setting requires the user to restart the MIDI application.");
             this.ChangeDefaultOutput.UseVisualStyleBackColor = true;
             this.ChangeDefaultOutput.Click += new System.EventHandler(this.ChangeDefaultOutput_Click);
             // 
@@ -209,6 +215,16 @@
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 9;
             this.CAE.Text = "Current audio engine: {0}";
+            // 
+            // Requirements
+            // 
+            this.Requirements.AutomaticDelay = 100;
+            this.Requirements.AutoPopDelay = 10000;
+            this.Requirements.InitialDelay = 100;
+            this.Requirements.IsBalloon = true;
+            this.Requirements.ReshowDelay = 20;
+            this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.Requirements.ToolTipTitle = "Requirement";
             // 
             // AdvancedAudioSettings
             // 
@@ -256,5 +272,6 @@
         private System.Windows.Forms.Button ChangeDefaultOutput;
         private System.Windows.Forms.Button OKBtn;
         private System.Windows.Forms.Label CAE;
+        private System.Windows.Forms.ToolTip Requirements;
     }
 }

@@ -147,12 +147,6 @@
     <Compile Include="Forms\Add-ons\BankNPresetSel.Designer.cs">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Add-ons\EVBuffer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Add-ons\EVBuffer.Designer.cs">
-      <DependentUpon>EVBuffer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Add-ons\DefaultSFList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -307,9 +301,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\BankNPresetSel.resx">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Add-ons\EVBuffer.resx">
-      <DependentUpon>EVBuffer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\DefaultSFList.resx">
       <DependentUpon>DefaultSFList.cs</DependentUpon>

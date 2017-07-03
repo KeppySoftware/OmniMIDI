@@ -40,6 +40,9 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
                 SysExIgnore.Checked = true;
 
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldevbuff", 0)) == 1)
+                OldEVBuffMode.Checked = true;
+
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
                 FullVelocityMode.Checked = true;
 
@@ -100,11 +103,12 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("fullvelocity", "0", RegistryValueKind.DWord);
         }
 
-        private void changeTheSizeOfTheEVBufferToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OldEVBuffMode_CheckedChanged(object sender, EventArgs e)
         {
-            KeppySynthEVBuffer frm = new KeppySynthEVBuffer();
-            frm.ShowDialog(this);
-            frm.Dispose();
+            if (OldEVBuffMode.Checked)
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("oldevbuff", "1", RegistryValueKind.DWord);
+            else
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("oldevbuff", "0", RegistryValueKind.DWord);
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)
