@@ -496,7 +496,7 @@ void allocate_memory() {
 			evbuf = (evbuf_t *)calloc((16384 + 16384), sizeof(evbuf_t *));
 		}
 
-		sndbf = (float *)calloc(newsndbfvalue, sizeof(float *));
+		sndbf = (float *)malloc(newsndbfvalue * sizeof(float));
 	}
 	catch (...) {
 		crashmessage(L"MemAlloc");

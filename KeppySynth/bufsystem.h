@@ -130,7 +130,7 @@ int bmsyn_play_some_data(void){
 	}
 }
 
-bool ParseData(UINT evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
 	EnterCriticalSection(&mim_section);
 	evbpoint = evbwpoint;
 	if (++evbwpoint >= evbuffsize)

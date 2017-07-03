@@ -393,16 +393,12 @@ void InitializeBASSVST() {
 }
 
 int CreateThreads(bool startup) {
-	Sleep(100);
-	stop_thread = 0;
-	CloseHandle(hThread2);
-	CloseHandle(hThread3);
-	CloseHandle(hThread4);
-	hThread2 = NULL;
-	hThread3 = NULL;
-	hThread4 = NULL;
-	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	if (startup == TRUE) SetEvent(load_sfevent);
+	else {
+		Sleep(100);
+		stop_thread = 0;
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	reset_synth = 0;
 	hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
 	SetPriorityClass(hThread2, callprioval[driverprio]);

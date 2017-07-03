@@ -793,7 +793,7 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
-	UINT evbpoint;
+	LONG evbpoint;
 	MIDIHDR *IIMidiHdr;
 	struct Driver *driver = &drivers[uDeviceID];
 	int exlen = 0;
