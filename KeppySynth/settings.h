@@ -463,22 +463,25 @@ void allocate_memory() {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
 
 		// EVBUFF
+		MEMORYSTATUSEX status;
+		status.dwLength = sizeof(status);
+		GlobalMemoryStatusEx(&status);
+
+		if (evbuffbyram == 1) {
+			sevbuffsize = status.ullTotalPhys;
+		}
+		else {
+			if (sevbuffsize > status.ullTotalPhys) sevbuffsize = status.ullTotalPhys;
+		}
+
 #if defined(_WIN32)
-		if (evbuffsize > 2147483647) {
+		if (sevbuffsize > 2147483647) {
 			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer is too big, limiting to 2GB...");
-			evbuffsize = 2147483647;
+			sevbuffsize = 2147483647;
 		}
 #endif
 
-		if (evbuffbyram == 1) {
-			MEMORYSTATUSEX status;
-			status.dwLength = sizeof(status);
-			GlobalMemoryStatusEx(&status);
-			sevbuffsize = status.ullTotalPhys;
-		}
-
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
-
 		evbuffsize = sevbuffsize / (unsigned long long)evbuffratio;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");

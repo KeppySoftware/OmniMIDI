@@ -32,14 +32,12 @@ namespace KeppySynthConfigurator
                 if (!GlobalMemoryStatusEx(memStatus)) MessageBox.Show("Unknown error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 installedMemory = memStatus.ullTotalPhys;
 
-                if ((int)KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram", "0") == 1)
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram", "0")) == 1)
                     GetRAMSize.Checked = true;
                 else
                     GetRAMSize.Checked = false;
 
                 BytesVal.Maximum = installedMemory;
-                WarningLabel.Text = String.Format("WARNING:\nLeave at least {0} of RAM available for Windows.",
-                    Functions.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
 
                 PerformCheck();
                 PerformRAMCheck();
@@ -55,18 +53,20 @@ namespace KeppySynthConfigurator
             if (GetRAMSize.Checked == true)
             {
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", "1", Microsoft.Win32.RegistryValueKind.DWord);
+                decimal evbuffratiotemp = Convert.ToDecimal(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffratio", "1"));
                 BytesVal.Enabled = false;
                 RatioVal.Enabled = true;
                 BytesVal.Value = installedMemory;
-                RatioVal.Value = Convert.ToDecimal(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffratio", "1"));
+                if (evbuffratiotemp == 1) RatioVal.Value = 128;
+                else RatioVal.Value = evbuffratiotemp;
             }
             else
             {
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", "0", Microsoft.Win32.RegistryValueKind.DWord);
-                decimal evbuffsizetemp = Convert.ToDecimal(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffsize", "16384"));
+                ulong evbuffsizetemp = Convert.ToUInt64(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffsize", "16384"));
                 BytesVal.Enabled = true;
                 RatioVal.Enabled = false;
-                if (evbuffsizetemp == installedMemory) BytesVal.Value = 16384;
+                if (evbuffsizetemp >= installedMemory) BytesVal.Value = 16384;
                 else BytesVal.Value = evbuffsizetemp;
                 RatioVal.Value = 1;
             }
@@ -74,10 +74,31 @@ namespace KeppySynthConfigurator
 
         private void PerformRAMCheck()
         {
-            long check = (long)(BytesVal.Value / RatioVal.Value);
+            ulong check = (ulong)(BytesVal.Value / RatioVal.Value);
 
-            if (check > (long)(installedMemory / 8)) WarningPanel.Visible = true;
-            else WarningPanel.Visible = false;
+            if (check >= (installedMemory / 8))
+            {
+                if ((check >= installedMemory) || ((RatioVal.Value == 1) && (GetRAMSize.Checked == true)))
+                {
+                    WarningPanel.Visible = true;
+                    WarningSign.Image = KeppySynthConfigurator.Properties.Resources.wir;
+                    WarningLabel.Text = String.Format("ERROR:\nSorry, but no.");
+                    ApplySettings.Enabled = false;
+                }
+                else
+                {
+                    WarningPanel.Visible = true;
+                    WarningSign.Image = KeppySynthConfigurator.Properties.Resources.wi;
+                    WarningLabel.Text = String.Format("WARNING:\nLeave at least {0} of RAM available for Windows.",
+                                                      Functions.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
+                    ApplySettings.Enabled = true;
+                }
+            }
+            else
+            {
+                WarningPanel.Visible = false;
+                ApplySettings.Enabled = true;
+            }
         }
 
         private void GetRAMSize_CheckedChanged(object sender, EventArgs e)
@@ -112,6 +133,7 @@ namespace KeppySynthConfigurator
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffsize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
+            Close();
         }
 
         private void WarningLabel_Click(object sender, EventArgs e)
