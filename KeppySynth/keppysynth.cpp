@@ -330,7 +330,7 @@ char* StatusType(int status) {
 	else { return "Unknown"; }
 }
 
-void PrintToConsole(int color, int stage, const char* text) {
+void PrintToConsole(int color, long stage, const char* text) {
 	if (debugmode == 1) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);

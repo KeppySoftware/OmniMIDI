@@ -37,31 +37,29 @@
             this.AOS = new System.Windows.Forms.GroupBox();
             this.CapFram = new System.Windows.Forms.CheckBox();
             this.Limit88 = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.OS = new System.Windows.Forms.GroupBox();
+            this.EVBufDialog = new System.Windows.Forms.Button();
             this.RevbNChor = new System.Windows.Forms.Button();
             this.IgnoreNotesInterval = new System.Windows.Forms.Button();
             this.CAE = new System.Windows.Forms.Label();
             this.OKBtn = new System.Windows.Forms.Button();
-            this.OldEVBuffMode = new System.Windows.Forms.CheckBox();
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
             this.ABS.SuspendLayout();
             this.AOS.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.OS.SuspendLayout();
             this.SuspendLayout();
             // 
             // ABS
             // 
-            this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ABS.Controls.Add(this.OldEVBuffMode);
             this.ABS.Controls.Add(this.IgnoreNotes);
             this.ABS.Controls.Add(this.FullVelocityMode);
             this.ABS.Controls.Add(this.SysExIgnore);
             this.ABS.Controls.Add(this.AllNotesIgnore);
             this.ABS.Location = new System.Drawing.Point(12, 79);
             this.ABS.Name = "ABS";
-            this.ABS.Size = new System.Drawing.Size(345, 118);
+            this.ABS.Size = new System.Drawing.Size(345, 99);
             this.ABS.TabIndex = 11;
             this.ABS.TabStop = false;
             this.ABS.Text = "Ignore specific stuff/Set full velocity";
@@ -145,18 +143,30 @@
             this.Limit88.UseVisualStyleBackColor = true;
             this.Limit88.CheckedChanged += new System.EventHandler(this.Limit88_CheckedChanged);
             // 
-            // groupBox1
+            // OS
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.OS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.RevbNChor);
-            this.groupBox1.Controls.Add(this.IgnoreNotesInterval);
-            this.groupBox1.Location = new System.Drawing.Point(12, 203);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(345, 48);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Other settings";
+            this.OS.Controls.Add(this.EVBufDialog);
+            this.OS.Controls.Add(this.RevbNChor);
+            this.OS.Controls.Add(this.IgnoreNotesInterval);
+            this.OS.Location = new System.Drawing.Point(12, 184);
+            this.OS.Name = "OS";
+            this.OS.Size = new System.Drawing.Size(345, 75);
+            this.OS.TabIndex = 12;
+            this.OS.TabStop = false;
+            this.OS.Text = "Other settings";
+            // 
+            // EVBufDialog
+            // 
+            this.EVBufDialog.Location = new System.Drawing.Point(90, 44);
+            this.EVBufDialog.Name = "EVBufDialog";
+            this.EVBufDialog.Size = new System.Drawing.Size(162, 23);
+            this.EVBufDialog.TabIndex = 3;
+            this.EVBufDialog.Text = "Change size of the EV buffer";
+            this.EVBufDialog.UseVisualStyleBackColor = true;
+            this.EVBufDialog.Click += new System.EventHandler(this.EVBufDialog_Click);
             // 
             // RevbNChor
             // 
@@ -184,7 +194,7 @@
             this.CAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CAE.AutoSize = true;
             this.CAE.Enabled = false;
-            this.CAE.Location = new System.Drawing.Point(15, 265);
+            this.CAE.Location = new System.Drawing.Point(15, 273);
             this.CAE.Name = "CAE";
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 14;
@@ -193,25 +203,13 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(282, 260);
+            this.OKBtn.Location = new System.Drawing.Point(282, 268);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 13;
             this.OKBtn.Text = "OK";
             this.OKBtn.UseVisualStyleBackColor = true;
             this.OKBtn.Click += new System.EventHandler(this.OKBtn_Click);
-            // 
-            // OldEVBuffMode
-            // 
-            this.OldEVBuffMode.AutoSize = true;
-            this.OldEVBuffMode.Location = new System.Drawing.Point(6, 95);
-            this.OldEVBuffMode.Name = "OldEVBuffMode";
-            this.OldEVBuffMode.Size = new System.Drawing.Size(153, 17);
-            this.OldEVBuffMode.TabIndex = 8;
-            this.OldEVBuffMode.Text = "Enable old EV Buffer mode";
-            this.Requirements.SetToolTip(this.OldEVBuffMode, "Changing this setting requires the user to restart the MIDI application.");
-            this.OldEVBuffMode.UseVisualStyleBackColor = true;
-            this.OldEVBuffMode.CheckedChanged += new System.EventHandler(this.OldEVBuffMode_CheckedChanged);
             // 
             // Requirements
             // 
@@ -227,10 +225,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 295);
+            this.ClientSize = new System.Drawing.Size(369, 303);
             this.Controls.Add(this.ABS);
             this.Controls.Add(this.AOS);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.OS);
             this.Controls.Add(this.CAE);
             this.Controls.Add(this.OKBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -246,7 +244,7 @@
             this.ABS.PerformLayout();
             this.AOS.ResumeLayout(false);
             this.AOS.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.OS.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -261,13 +259,13 @@
         private System.Windows.Forms.GroupBox AOS;
         private System.Windows.Forms.CheckBox CapFram;
         private System.Windows.Forms.CheckBox Limit88;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox OS;
         private System.Windows.Forms.Button IgnoreNotesInterval;
         private System.Windows.Forms.Label CAE;
         private System.Windows.Forms.Button OKBtn;
         private System.Windows.Forms.Button RevbNChor;
         private System.Windows.Forms.CheckBox IgnoreNotes;
-        private System.Windows.Forms.CheckBox OldEVBuffMode;
         private System.Windows.Forms.ToolTip Requirements;
+        private System.Windows.Forms.Button EVBufDialog;
     }
 }

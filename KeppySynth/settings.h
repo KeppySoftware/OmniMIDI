@@ -8,9 +8,9 @@ struct evbuf_t{
 };
 
 static struct evbuf_t * evbuf;
-static ULONG  evbwpoint = 0;
-static ULONG  evbrpoint = 0;
-static volatile LONG evbcount = 0;
+static long long evbwpoint = 0;
+static long long evbrpoint = 0;
+static volatile long long evbcount = 0;
 static UINT evbsysexpoint;
 
 void crashmessage(LPCWSTR part) {
@@ -461,42 +461,36 @@ void appname() {
 void allocate_memory() {
 	try {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
-		if (oldevbuff == 0)
-		{
-			// EVBUFF
-			// Get the total RAM amount installed in your system
+
+		// EVBUFF
+#if defined(_WIN32)
+		if (evbuffsize > 2147483647) {
+			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer is too big, limiting to 2GB...");
+			evbuffsize = 2147483647;
+		}
+#endif
+
+		if (evbuffbyram == 1) {
 			MEMORYSTATUSEX status;
 			status.dwLength = sizeof(status);
 			GlobalMemoryStatusEx(&status);
-
-#if defined(_WIN64)
-			// Divide it by 128, then remove 16384 for the overhead.
-			evbuffsize = status.ullTotalPhys / 128;
-#elif defined(_WIN32)
-			DWORDLONG totalram32 = status.ullTotalPhys;
-
-			if (totalram32 > 4194304) totalram32 = 4194304;
-			// Divide it by 1024, then remove 16384 for the overhead.
-			evbuffsize = totalram32;
-#endif
-
-			/* If the available RAM for the buffer is beyond 2GB, set it to 2GB.
-			32-bit apps can't access more than 2GB of RAM, if they're not large address aware.
-			Also, more than 2GB of RAM for this array is useless... */
-
-			if (evbuffsize > 2147467264)
-				evbuffsize = 2147467264;
-
-			// EVBUFF
-		}
-		else {
-			evbuffsize = 16384;
+			sevbuffsize = status.ullTotalPhys;
 		}
 
+		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
+
+		evbuffsize = sevbuffsize / (unsigned long long)evbuffratio;
+
+		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
 		evbuf = (evbuf_t *)malloc(evbuffsize * sizeof(evbuf_t));
+		PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing EV buffer...");
 		memset(evbuf, 0, sizeof(evbuf_t));
+		PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
+		// EVBUFF
 
+		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
 		sndbf = (float *)malloc(newsndbfvalue * sizeof(float));
+		PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
 	}
 	catch (...) {
 		crashmessage(L"MemAlloc");
@@ -511,7 +505,11 @@ void load_settings()
 		long lResult;
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
+		DWORD qwType = REG_QWORD;
+		DWORD qwSize = sizeof(QWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"evbuffsize", NULL, &qwType, (LPBYTE)&sevbuffsize, &qwSize);
+		RegQueryValueEx(hKey, L"evbuffbyram", NULL, &dwType, (LPBYTE)&evbuffbyram, &dwSize);
 		RegQueryValueEx(hKey, L"alternativecpu", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
@@ -526,7 +524,7 @@ void load_settings()
 		RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiindev", NULL, &dwType, (LPBYTE)&defaultmidiindev, &dwSize);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
-		RegQueryValueEx(hKey, L"oldevbuff", NULL, &dwType, (LPBYTE)&oldevbuff, &dwSize);
+		RegQueryValueEx(hKey, L"evbuffratio", NULL, &dwType, (LPBYTE)&evbuffratio, &dwSize);
 		RegQueryValueEx(hKey, L"midiinenabled", NULL, &dwType, (LPBYTE)&midiinenabled, &dwSize);
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
@@ -552,7 +550,6 @@ void load_settings()
 		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
 		RegQueryValueEx(hKey, L"wasapiex", NULL, &dwType, (LPBYTE)&wasapiex, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
-
 		if (lovel < 1) { lovel = 1; }
 		if (hivel > 127) { hivel = 127; }
 

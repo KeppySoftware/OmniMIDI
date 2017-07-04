@@ -40,9 +40,6 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
                 SysExIgnore.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldevbuff", 0)) == 1)
-                OldEVBuffMode.Checked = true;
-
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
                 FullVelocityMode.Checked = true;
 
@@ -103,26 +100,19 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("fullvelocity", "0", RegistryValueKind.DWord);
         }
 
-        private void OldEVBuffMode_CheckedChanged(object sender, EventArgs e)
-        {
-            if (OldEVBuffMode.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("oldevbuff", "1", RegistryValueKind.DWord);
-            else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("oldevbuff", "0", RegistryValueKind.DWord);
-        }
-
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)
         {
-            KeppySynthVelocityIntervals frm = new KeppySynthVelocityIntervals();
-            frm.ShowDialog(this);
-            frm.Dispose();
+            new KeppySynthVelocityIntervals().ShowDialog();
         }
 
         private void RevbNChor_Click(object sender, EventArgs e)
         {
-            RevbNChorForm frm = new RevbNChorForm();
-            frm.ShowDialog(this);
-            frm.Dispose();
+            new RevbNChorForm().ShowDialog();
+        }
+
+        private void EVBufDialog_Click(object sender, EventArgs e)
+        {
+            new EVBufferManager().ShowDialog();
         }
 
         private void OKBtn_Click(object sender, EventArgs e)

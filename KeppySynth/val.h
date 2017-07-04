@@ -50,7 +50,10 @@ static HINSTANCE bassxa = 0;			// bassxa handle
 static float currentcpuusage0;
 static float currentcpuusageE0;
 static int isoverrideenabled = 0;
-static long evbuffsize = 0;
+static unsigned long long evbuffsize = 16384;
+static unsigned long long sevbuffsize = 16384;
+static int evbuffratio = 1;
+static int evbuffbyram = 0;
 
 // Main values
 static HANDLE hConsole;					// Debug console
@@ -71,7 +74,6 @@ static int defaultsflist = 1;			// Default soundfont list
 static int driverprio = 0;				// Process priority
 static int encmode = 0;					// Encoder mode
 static int fadeoutdisable = 0;			// Disable fade-out
-static int oldevbuff = 0;				// Do not use the RAM-based EV buffer calculation
 static int floatrendering = 1;			// Floating point audio
 static int frames = 0;					// Default
 static int frequency = 0;				// Audio frequency

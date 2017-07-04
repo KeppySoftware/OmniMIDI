@@ -23,7 +23,7 @@ int bmsyn_buf_check(void){
 
 bool depends() {
 	if (vms2emu == 1) {
-		return InterlockedDecrement(&evbcount);
+		return InterlockedDecrement64(&evbcount);
 	}
 	else {
 		return bmsyn_buf_check();
@@ -139,7 +139,7 @@ bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	LeaveCriticalSection(&mim_section);
 	if (vms2emu == 1) {
-		if (InterlockedIncrement(&evbcount) >= evbuffsize) {
+		if (InterlockedIncrement64(&evbcount) >= evbuffsize) {
 			do { Sleep(1); } while (evbcount >= evbuffsize);
 		}
 	}
