@@ -230,6 +230,7 @@
             this.Tabs.SelectedIndex = 0;
             this.Tabs.Size = new System.Drawing.Size(432, 206);
             this.Tabs.TabIndex = 8;
+            this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
             // 
             // SynthDbg
             // 
@@ -1291,7 +1292,6 @@
             // 
             // MemoryThread
             // 
-            this.MemoryThread.Enabled = true;
             this.MemoryThread.Tick += new System.EventHandler(this.MemoryThread_Tick);
             // 
             // WinLogoTT
@@ -1316,8 +1316,6 @@
             // 
             // DebugInfo
             // 
-            this.DebugInfo.Enabled = true;
-            this.DebugInfo.Interval = 1;
             this.DebugInfo.Tick += new System.EventHandler(this.DebugInfo_Tick);
             // 
             // KeppySynthDebugWindow
@@ -1377,7 +1375,6 @@
         private System.Windows.Forms.Label AMLabel;
         private System.Windows.Forms.Label TM;
         private System.Windows.Forms.Label TMLabel;
-        private System.Windows.Forms.Timer MemoryThread;
         private System.Windows.Forms.PictureBox WinLogo;
         private System.Windows.Forms.Label CPU;
         private System.Windows.Forms.Label CPULabel;
@@ -1458,7 +1455,8 @@
         private System.Windows.Forms.Label MTRT;
         private System.Windows.Forms.Label MTRTLabel;
         private System.Windows.Forms.PictureBox KSLogoThrd;
-        private System.Windows.Forms.Timer DebugInfo;
+        public System.Windows.Forms.Timer MemoryThread;
+        public System.Windows.Forms.Timer DebugInfo;
     }
 }
 

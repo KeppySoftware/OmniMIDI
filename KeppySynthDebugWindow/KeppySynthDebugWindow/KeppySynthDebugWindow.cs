@@ -52,7 +52,6 @@ namespace KeppySynthDebugWindow
         int ch16;
 
         // Debug information
-        Int32 DelayParsing = 100;
         string currentapp;
         string bitapp;
         UInt64 ramusage;
@@ -94,7 +93,6 @@ namespace KeppySynthDebugWindow
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true); // AAAAA I hate flickering
-            Form.CheckForIllegalCrossThreadCalls = false; // Didn't want to bother making a delegate, this works too.
         }
 
         private void KeppySynthDebugWindow_Load(object sender, EventArgs e)
@@ -111,6 +109,8 @@ namespace KeppySynthDebugWindow
             ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             ThreadTime.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+            Tabs.SelectedIndex = 1;
+            Tabs.SelectedIndex = 0;
         }
 
         protected override void WndProc(ref Message m)
@@ -711,13 +711,10 @@ namespace KeppySynthDebugWindow
                     double percentage = avmem * 100.0 / tlmem;
 
                     TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-                    AM.Text = String.Format("{0} ({1}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                    AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
 
                     CI = null;
                 }
-
-                Thread.Sleep(1); // Let it sleep, otherwise it'll eat all ya CPU resources :P
-                MemoryThread.Interval = DelayParsing; 
             }
             catch { }
         }
@@ -777,12 +774,14 @@ namespace KeppySynthDebugWindow
             if (!SonicMode.Checked)
             {
                 SonicMode.Checked = true;
-                DelayParsing = 1;
+                DebugInfo.Interval = 1;
+                MemoryThread.Interval = 1;
             }
             else
             {
                 SonicMode.Checked = false;
-                DelayParsing = 100;
+                DebugInfo.Interval = 100;
+                MemoryThread.Interval = 100;
             }
         }
 
@@ -923,13 +922,26 @@ namespace KeppySynthDebugWindow
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                 }
-                DebugInfo.Interval = DelayParsing; // Let it sleep, otherwise it'll eat all ya CPU resources :P
             }
             catch (Exception ex)
             {
                 // If something goes wrong, here's an error handler
                 MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.ExitThread();
+            }
+        }
+
+        private void Tabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Tabs.SelectedIndex == 3)
+            {
+                MemoryThread.Enabled = true;
+                DebugInfo.Enabled = false;
+            }
+            else
+            {
+                MemoryThread.Enabled = false;
+                DebugInfo.Enabled = true;
             }
         }
     }

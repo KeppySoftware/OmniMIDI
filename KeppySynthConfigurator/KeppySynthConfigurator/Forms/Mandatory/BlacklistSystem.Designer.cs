@@ -41,17 +41,18 @@ namespace KeppySynthConfigurator
             this.CBLi = new System.Windows.Forms.MenuItem();
             this.EDBLi = new System.Windows.Forms.Button();
             this.UDBLi = new System.Windows.Forms.Button();
+            this.NoBlockMessage = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // BlackListDef
             // 
-            this.BlackListDef.AutoSize = true;
             this.BlackListDef.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.BlackListDef.Location = new System.Drawing.Point(12, 12);
             this.BlackListDef.Name = "BlackListDef";
-            this.BlackListDef.Size = new System.Drawing.Size(401, 52);
+            this.BlackListDef.Size = new System.Drawing.Size(401, 67);
             this.BlackListDef.TabIndex = 26;
             this.BlackListDef.Text = resources.GetString("BlackListDef.Text");
+            this.BlackListDef.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ProgramsBlackList
             // 
@@ -63,11 +64,11 @@ namespace KeppySynthConfigurator
             this.ProgramsBlackList.FormattingEnabled = true;
             this.ProgramsBlackList.HorizontalScrollbar = true;
             this.ProgramsBlackList.ItemHeight = 15;
-            this.ProgramsBlackList.Location = new System.Drawing.Point(5, 76);
+            this.ProgramsBlackList.Location = new System.Drawing.Point(5, 91);
             this.ProgramsBlackList.Margin = new System.Windows.Forms.Padding(0);
             this.ProgramsBlackList.Name = "ProgramsBlackList";
             this.ProgramsBlackList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ProgramsBlackList.Size = new System.Drawing.Size(685, 302);
+            this.ProgramsBlackList.Size = new System.Drawing.Size(685, 287);
             this.ProgramsBlackList.TabIndex = 21;
             this.ProgramsBlackList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProgramsBlackList_KeyDown);
             // 
@@ -113,7 +114,7 @@ namespace KeppySynthConfigurator
             // EDBLi
             // 
             this.EDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.EDBLi.Location = new System.Drawing.Point(549, 12);
+            this.EDBLi.Location = new System.Drawing.Point(556, 34);
             this.EDBLi.Name = "EDBLi";
             this.EDBLi.Size = new System.Drawing.Size(134, 23);
             this.EDBLi.TabIndex = 32;
@@ -124,7 +125,7 @@ namespace KeppySynthConfigurator
             // UDBLi
             // 
             this.UDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.UDBLi.Location = new System.Drawing.Point(549, 41);
+            this.UDBLi.Location = new System.Drawing.Point(556, 56);
             this.UDBLi.Name = "UDBLi";
             this.UDBLi.Size = new System.Drawing.Size(134, 23);
             this.UDBLi.TabIndex = 33;
@@ -132,12 +133,25 @@ namespace KeppySynthConfigurator
             this.UDBLi.UseVisualStyleBackColor = true;
             this.UDBLi.Click += new System.EventHandler(this.UDBLi_Click);
             // 
+            // NoBlockMessage
+            // 
+            this.NoBlockMessage.AutoSize = true;
+            this.NoBlockMessage.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.NoBlockMessage.Location = new System.Drawing.Point(464, 12);
+            this.NoBlockMessage.Name = "NoBlockMessage";
+            this.NoBlockMessage.Size = new System.Drawing.Size(226, 17);
+            this.NoBlockMessage.TabIndex = 34;
+            this.NoBlockMessage.Text = "Don\'t show message on blocked programs";
+            this.NoBlockMessage.UseVisualStyleBackColor = true;
+            this.NoBlockMessage.CheckedChanged += new System.EventHandler(this.NoBlockMessage_CheckedChanged);
+            // 
             // KeppySynthBlacklistSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(695, 384);
+            this.Controls.Add(this.NoBlockMessage);
             this.Controls.Add(this.UDBLi);
             this.Controls.Add(this.EDBLi);
             this.Controls.Add(this.BlackListDef);
@@ -165,5 +179,6 @@ namespace KeppySynthConfigurator
         private MenuItem CBLi;
         private Button EDBLi;
         private Button UDBLi;
+        private CheckBox NoBlockMessage;
     }
 }

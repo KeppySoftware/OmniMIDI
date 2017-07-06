@@ -62,6 +62,7 @@ static int allhotkeys = 0;				// Enable/Disable all the hotkeys
 static int allnotesignore = 0;			// Ignore all MIDI events
 static int alreadyshown = 0;			// Check if the info about the drivers have been already shown.
 static int autopanic = 0;				// Autopanic switch
+static int noblacklistmsg = 0;			// Disable blacklist message
 static int bassoutputfinal = 0;			// DO NOT TOUCH
 static int capframerate = 1;			// Cap input framerate
 static int debugmode = 0;				// Debug console

@@ -56,16 +56,26 @@ BOOL BlackListSystem(){
 			exit(0);
 		}
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
+			HKEY hKey;
+			long lResult;
+			DWORD dwType = REG_DWORD;
+			DWORD dwSize = sizeof(DWORD);
+			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+			RegQueryValueEx(hKey, L"noblacklistmsg", NULL, &dwType, (LPBYTE)&noblacklistmsg, &dwSize);
+			RegCloseKey(hKey);
+
 			PathAppend(userblacklistdirectory, _T("\\Keppy's Synthesizer\\blacklist\\keppymididrv.blacklist"));
 			std::wifstream file(userblacklistdirectory);
 			OutputDebugString(userblacklistdirectory);
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
 				if (_tcsicmp(modulename, userstring) == 0 || _tcsicmp(fullmodulename, userstring) == 0) {
-					std::wstring modulenamelpcwstr(modulename);
-					std::wstring concatted_stdstr = L"Keppy's Synthesizer - " + modulenamelpcwstr + L" is blacklisted";
-					LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-					MessageBox(NULL, L"This program has been manually blacklisted.\nThe driver will be automatically unloaded.\n\nPress OK to continue.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+					if (noblacklistmsg != 1) {
+						std::wstring modulenamelpcwstr(modulename);
+						std::wstring concatted_stdstr = L"Keppy's Synthesizer - " + modulenamelpcwstr + L" is blacklisted";
+						LPCWSTR messageboxtitle = concatted_stdstr.c_str();
+						MessageBox(NULL, L"This program has been manually blacklisted.\nThe driver will be automatically unloaded.\n\nPress OK to continue.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+					}
 					return 0x0;
 				}
 			}

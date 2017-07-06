@@ -121,6 +121,7 @@
     <value>Add a program to the blacklist by right-clicking it, and selecting "Add executable(s)".
 To add a name manually, hold SHIFT while clicking "Add executable(s)".
 
+
 The blacklist parser is not case sensitive, and spaces are recognized.</value>
   </data>
   <metadata name="AddBlacklistedProgram.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
