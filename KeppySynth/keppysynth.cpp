@@ -477,19 +477,13 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		RegQueryValueExW(hKey, L"synthname", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
 		RegCloseKey(hKey);
 
-		if (defaultmidiout == 1)
-		{
-			defaultmode = MOD_SWSYNTH;
-		}
-		else
-		{
-			if (selectedtype < 0 || selectedtype > 6) selectedtype = 4;
-		}
+		if (defaultmidiout == 1) defaultmode = MOD_SWSYNTH;
+		else if (selectedtype < 0 || selectedtype > 6) selectedtype = 4;
+		else defaultmode = MOD_SWSYNTH;
+
 		defaultmode = SynthNamesTypes[selectedtype];
 
-		if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) {
-			CreateConsole();
-		}
+		if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
 
 		if (strlen(SynthName) < 1) {
 			ZeroMemory(SynthName, MAXPNAMELEN);
@@ -506,10 +500,13 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		MIDIOUTCAPSA * myCapsA;
 		MIDIOUTCAPSW * myCapsW;
 		MIDIOUTCAPS2A * myCaps2A;
+
 		MIDIOUTCAPS2W * myCaps2W;
-		WORD Mid = 0x0001;
-		WORD Pid = 0x001B;
-		DWORD CapsSupport = MIDICAPS_VOLUME | MIDICAPS_LRVOLUME | MIDICAPS_CACHE | MIDICAPS_STREAM;
+		WORD Mid = 0xffff;
+		WORD Pid = 0xffff;
+		WORD maximumvoices = 0xffff;
+		WORD maximumnotes = 0xffff;
+		DWORD CapsSupport = MIDICAPS_VOLUME | MIDICAPS_LRVOLUME | MIDICAPS_CACHE;
 
 		const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6,{ 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
 
@@ -519,8 +516,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCapsA->wMid = Mid;
 			myCapsA->wPid = Pid;
 			memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
-			myCapsA->wVoices = 0;
-			myCapsA->wNotes = 0;
+			myCapsA->wVoices = maximumvoices;
+			myCapsA->wNotes = maximumnotes;
 			myCapsA->wTechnology = defaultmode;
 			myCapsA->wChannelMask = 0xffff;
 			myCapsA->dwSupport = CapsSupport;
@@ -532,8 +529,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCapsW->wMid = Mid;
 			myCapsW->wPid = Pid;
 			memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
-			myCapsW->wVoices = 0;
-			myCapsW->wNotes = 0;
+			myCapsW->wVoices = maximumvoices;
+			myCapsW->wNotes = maximumnotes;
 			myCapsW->wTechnology = defaultmode;
 			myCapsW->wChannelMask = 0xffff;
 			myCapsW->dwSupport = CapsSupport;
@@ -548,8 +545,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
 			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2A->NameGuid = CLSIDKEPSYNTH;
-			myCaps2A->wVoices = 0;
-			myCaps2A->wNotes = 0;
+			myCaps2A->wVoices = maximumvoices;
+			myCaps2A->wNotes = maximumnotes;
 			myCaps2A->wTechnology = defaultmode;
 			myCaps2A->wChannelMask = 0xffff;
 			myCaps2A->dwSupport = CapsSupport;
@@ -564,8 +561,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
 			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2W->NameGuid = CLSIDKEPSYNTH;
-			myCaps2W->wVoices = 0;
-			myCaps2W->wNotes = 0;
+			myCaps2W->wVoices = maximumvoices;
+			myCaps2W->wNotes = maximumnotes;
 			myCaps2W->wTechnology = defaultmode;
 			myCaps2W->wChannelMask = 0xffff;
 			myCaps2W->dwSupport = CapsSupport;
