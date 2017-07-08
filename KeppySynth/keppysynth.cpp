@@ -8,7 +8,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 #include "sha256.h"
 #include "stdafx.h"
-#include <Dbghelp.h>
+#include <dbghelp.h>
 #include <Psapi.h>
 #include <Shlwapi.h>
 #include <Tlhelp32.h>
@@ -39,6 +39,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <vector>
 #include <winbase.h>
 #include <windows.h>
+#include <winnt.h>
 #include "Resource.h"
 
 #define BASSASIODEF(f) (WINAPI *f)
@@ -322,12 +323,58 @@ inline bool DebugFileExists(const std::string& name) {
 	}
 }
 
-char* StatusType(int status) {
-	if (status == 128) { return "Note Off"; }
-	else if (status == 144) { return "Note On"; }
-	else if (status == 176) { return "Polyphonic Key Pressure"; }
-	else if (Between(status, 177, 191)) { return "Channel Reset"; }
-	else { return "Unknown"; }
+void StatusType(int status, char* &statustoprint) {
+	std::string statusstring = "";
+
+	if (Between(status, 0x80, 0xEF)) {
+		if (Between(status, 0x80, 0x8F)) {
+			statusstring += "Note OFF event on channel ";
+			statusstring += std::to_string((status - 0x80));
+		}
+		else if (Between(status, 0x90, 0x9F)) {
+			statusstring += "Note ON event on channel ";
+			statusstring += std::to_string((status - 0x90));
+		}
+		else if (Between(status, 0xA0, 0xAF)) {
+			statusstring += "Polyphonic aftertouch event on channel ";
+			statusstring += std::to_string((status - 0xA0));
+		}
+		else if (Between(status, 0xB0, 0xBF)) {
+			statusstring += "Channel reset on channel ";
+			statusstring += std::to_string((status - 0xB0));
+		}
+		else if (Between(status, 0xC0, 0xCF)) {
+			statusstring += "Program change on channel ";
+			statusstring += std::to_string((status - 0xC0));
+		}
+		else if (Between(status, 0xD0, 0xDF)) {
+			statusstring += "Channel aftertouch event on channel ";
+			statusstring += std::to_string((status - 0xD0));
+		}
+		else if (Between(status, 0xE0, 0xEF)) {
+			statusstring += "Pitch change on channel ";
+			statusstring += std::to_string((status - 0xE0));
+		}
+
+		statustoprint = strdup(statusstring.c_str());
+	}
+	else if (status == 0xF0) statustoprint = "System Exclusive\0";
+	else if (status == 0xF1) statustoprint = "System Common - undefined\0";
+	else if (status == 0xF2) statustoprint = "Sys Com Song Position Pntr\0";
+	else if (status == 0xF3) statustoprint = "Sys Com Song Select\0";
+	else if (status == 0xF4) statustoprint = "System Common - undefined\0";
+	else if (status == 0xF5) statustoprint = "System Common - undefined\0";
+	else if (status == 0xF6) statustoprint = "Sys Com Tune Request\0";
+	else if (status == 0xF7) statustoprint = "Sys Com-end of SysEx (EOX)\0";
+	else if (status == 0xF8) statustoprint = "Sys Real Time Timing Clock\0";
+	else if (status == 0xF9) statustoprint = "Sys Real Time - undefined\0";
+	else if (status == 0xFA) statustoprint = "Sys Real Time Start\0";
+	else if (status == 0xFB) statustoprint = "Sys Real Time Continue\0";
+	else if (status == 0xFC) statustoprint = "Sys Real Time Stop\0";
+	else if (status == 0xFD) statustoprint = "Sys Real Time - undefined\0";
+	else if (status == 0xFE) statustoprint = "Sys Real Time Active Sensing\0";
+	else if (status == 0xFF) statustoprint = "Sys Real Time Sys Reset\0";
+	else statustoprint = "Unknown event\0";
 }
 
 void PrintToConsole(int color, long stage, const char* text) {
@@ -359,8 +406,12 @@ void PrintEventToConsole(int color, int stage, const char* text, int status, int
 		sTm = gmtime(&now);
 		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
 
+		// Get status
+		char* statustoprint = { 0 };
+		StatusType(status, statustoprint);
+
 		// Print to log
-		std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = " << StatusType(status) << " | Note = " << note << " | Velocity = " << velocity;
+		std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = " << statustoprint << " | Note = " << note << " | Velocity = " << velocity;
 	}
 }
 

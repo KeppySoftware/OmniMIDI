@@ -474,11 +474,15 @@ void allocate_memory() {
 			if (sevbuffsize > status.ullTotalPhys) sevbuffsize = status.ullTotalPhys;
 		}
 
-#if defined(_WIN32)
+#if _WIN32 || _WIN64
+#if _WIN64
+		// Nothing
+#else
 		if (sevbuffsize > 2147483647) {
 			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer is too big, limiting to 2GB...");
 			sevbuffsize = 2147483647;
 		}
+#endif
 #endif
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
