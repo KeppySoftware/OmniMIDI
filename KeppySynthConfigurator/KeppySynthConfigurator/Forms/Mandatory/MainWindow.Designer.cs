@@ -68,6 +68,7 @@
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
             this.ShowOutLevel = new System.Windows.Forms.MenuItem();
+            this.EPB = new System.Windows.Forms.MenuItem();
             this.menuItem31 = new System.Windows.Forms.MenuItem();
             this.DePrio = new System.Windows.Forms.MenuItem();
             this.menuItem34 = new System.Windows.Forms.MenuItem();
@@ -539,6 +540,7 @@
             this.manageFolderFavouritesToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.EPB,
             this.menuItem31,
             this.menuItem21,
             this.SpatialSound,
@@ -560,9 +562,15 @@
             this.ShowOutLevel.Text = "Show output level meter";
             this.ShowOutLevel.Click += new System.EventHandler(this.ShowOutLevel_Click);
             // 
+            // EPB
+            // 
+            this.EPB.Index = 6;
+            this.EPB.Text = "Enable performance boost";
+            this.EPB.Click += new System.EventHandler(this.EPB_Click);
+            // 
             // menuItem31
             // 
-            this.menuItem31.Index = 6;
+            this.menuItem31.Index = 7;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -623,19 +631,19 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 7;
+            this.menuItem21.Index = 8;
             this.menuItem21.Text = "-";
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 8;
+            this.SpatialSound.Index = 9;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 9;
+            this.menuItem14.Index = 10;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
@@ -662,7 +670,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 10;
+            this.menuItem12.Index = 11;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ImportSettings,
             this.ExportSettings});
@@ -682,12 +690,12 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 11;
+            this.menuItem15.Index = 12;
             this.menuItem15.Text = "-";
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 12;
+            this.menuItem28.Index = 13;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -1831,7 +1839,7 @@
             // VolLabel
             // 
             this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolLabel.Font = new System.Drawing.Font("DSEG14 Classic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolLabel.Location = new System.Drawing.Point(567, 70);
             this.VolLabel.Name = "VolLabel";
             this.VolLabel.Size = new System.Drawing.Size(34, 16);
@@ -1843,7 +1851,7 @@
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Font = new System.Drawing.Font("DSEG7 Classic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
             this.VolSimView.Location = new System.Drawing.Point(590, 68);
             this.VolSimView.Name = "VolSimView";
@@ -2291,10 +2299,14 @@
             // 
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
+            this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.EL.ForeColor = System.Drawing.Color.Transparent;
             this.EL.Location = new System.Drawing.Point(612, 347);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
+            this.EL.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.EL, "Export SoundFonts list");
             this.EL.UseVisualStyleBackColor = false;
             this.EL.Click += new System.EventHandler(this.EL_Click);
@@ -2304,10 +2316,14 @@
             // 
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
+            this.LoadToApp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.LoadToApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.LoadToApp.ForeColor = System.Drawing.Color.Transparent;
             this.LoadToApp.Location = new System.Drawing.Point(612, 156);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(24, 24);
             this.LoadToApp.TabIndex = 9;
+            this.LoadToApp.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.LoadToApp, "Load SoundFonts list to app");
             this.LoadToApp.UseVisualStyleBackColor = false;
             this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
@@ -2317,10 +2333,14 @@
             // 
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
+            this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.IEL.ForeColor = System.Drawing.Color.Transparent;
             this.IEL.Location = new System.Drawing.Point(612, 318);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
+            this.IEL.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.IEL, "Import SoundFonts list");
             this.IEL.UseVisualStyleBackColor = false;
             this.IEL.Click += new System.EventHandler(this.IEL_Click);
@@ -2370,10 +2390,14 @@
             // 
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
+            this.DisableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.DisableSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DisableSF.ForeColor = System.Drawing.Color.Transparent;
             this.DisableSF.Location = new System.Drawing.Point(612, 216);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(24, 24);
             this.DisableSF.TabIndex = 11;
+            this.DisableSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.DisableSF, "Disable SoundFont(s)");
             this.DisableSF.UseVisualStyleBackColor = false;
             this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
@@ -2383,10 +2407,14 @@
             // 
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableSF.BackColor = System.Drawing.Color.Transparent;
+            this.EnableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.EnableSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.EnableSF.ForeColor = System.Drawing.Color.Transparent;
             this.EnableSF.Location = new System.Drawing.Point(612, 193);
             this.EnableSF.Name = "EnableSF";
             this.EnableSF.Size = new System.Drawing.Size(24, 24);
             this.EnableSF.TabIndex = 10;
+            this.EnableSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.EnableSF, "Enable SoundFont(s)");
             this.EnableSF.UseVisualStyleBackColor = false;
             this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
@@ -2409,10 +2437,14 @@
             // 
             this.CLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CLi.BackColor = System.Drawing.Color.Transparent;
+            this.CLi.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.CLi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CLi.ForeColor = System.Drawing.Color.Transparent;
             this.CLi.Location = new System.Drawing.Point(612, 6);
             this.CLi.Name = "CLi";
             this.CLi.Size = new System.Drawing.Size(24, 24);
             this.CLi.TabIndex = 4;
+            this.CLi.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.CLi, "Clear SoundFont list");
             this.CLi.UseVisualStyleBackColor = false;
             this.CLi.Click += new System.EventHandler(this.CLi_Click);
@@ -2422,10 +2454,14 @@
             // 
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvD.BackColor = System.Drawing.Color.Transparent;
+            this.MvD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.MvD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MvD.ForeColor = System.Drawing.Color.Transparent;
             this.MvD.Location = new System.Drawing.Point(612, 119);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(24, 24);
             this.MvD.TabIndex = 8;
+            this.MvD.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.MvD, "Move SoundFont down");
             this.MvD.UseVisualStyleBackColor = false;
             this.MvD.Click += new System.EventHandler(this.MvD_Click);
@@ -2435,10 +2471,14 @@
             // 
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvU.BackColor = System.Drawing.Color.Transparent;
+            this.MvU.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.MvU.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MvU.ForeColor = System.Drawing.Color.Transparent;
             this.MvU.Location = new System.Drawing.Point(612, 96);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(24, 24);
             this.MvU.TabIndex = 7;
+            this.MvU.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.MvU, "Move SoundFont up");
             this.MvU.UseVisualStyleBackColor = false;
             this.MvU.Click += new System.EventHandler(this.MvU_Click);
@@ -2448,10 +2488,14 @@
             // 
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RmvSF.BackColor = System.Drawing.Color.Transparent;
+            this.RmvSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.RmvSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RmvSF.ForeColor = System.Drawing.Color.Transparent;
             this.RmvSF.Location = new System.Drawing.Point(612, 59);
             this.RmvSF.Name = "RmvSF";
             this.RmvSF.Size = new System.Drawing.Size(24, 24);
             this.RmvSF.TabIndex = 6;
+            this.RmvSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.RmvSF, "Remove SoundFont(s)");
             this.RmvSF.UseVisualStyleBackColor = false;
             this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
@@ -2461,10 +2505,14 @@
             // 
             this.AddSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddSF.BackColor = System.Drawing.Color.Transparent;
+            this.AddSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.AddSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AddSF.ForeColor = System.Drawing.Color.Transparent;
             this.AddSF.Location = new System.Drawing.Point(612, 36);
             this.AddSF.Name = "AddSF";
             this.AddSF.Size = new System.Drawing.Size(24, 24);
             this.AddSF.TabIndex = 5;
+            this.AddSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonsDesc.SetToolTip(this.AddSF, "Add SoundFont(s)");
             this.AddSF.UseVisualStyleBackColor = false;
             this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
@@ -2909,6 +2957,7 @@
         private System.Windows.Forms.MenuItem DisableOLM;
         public System.Windows.Forms.Label VolLevel;
         private System.Windows.Forms.ToolTip Requirements;
+        public System.Windows.Forms.MenuItem EPB;
     }
 }
 

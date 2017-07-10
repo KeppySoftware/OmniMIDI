@@ -63,6 +63,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define ERRORCODE 0
 #define CAUSE 1
 
+static CRITICAL_SECTION midiparsing;
+
 #include <bass.h>
 #include <bass_fx.h>
 #include <bassmidi.h>
@@ -724,6 +726,11 @@ void DoStartClient() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
 		RegCloseKey(hKey);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"improveperf", NULL, &dwType, (LPBYTE)&improveperf, &dwSize);
+		RegCloseKey(hKey);
+
+		if (improveperf == 0) InitializeCriticalSection(&midiparsing);
 		DWORD result;
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
@@ -780,6 +787,7 @@ void DoStopClient() {
 		modm_closed = 1;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
+	if (improveperf == 0) DeleteCriticalSection(&midiparsing);
 }
 
 void DoResetClient(UINT uDeviceID) {

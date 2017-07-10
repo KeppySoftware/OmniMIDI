@@ -9,8 +9,10 @@ Keppy's Synthesizer buffer system
 int bmsyn_buf_check(void){
 	int retval;
 	int retvalemu;
+	if (improveperf == 0) EnterCriticalSection(&midiparsing);
 	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
 	retvalemu = evbcount;
+	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 	if (vms2emu == 1) {
 		return retvalemu;
 	}
@@ -43,6 +45,7 @@ int bmsyn_play_some_data(void){
 			return ~0;
 		}
 		do{
+			if (improveperf == 0) EnterCriticalSection(&midiparsing);
 			evbpoint = evbrpoint;
 
 			if (++evbrpoint >= evbuffsize) {
@@ -51,6 +54,7 @@ int bmsyn_play_some_data(void){
 
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
+			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 			MIDIHDR *hdr = (MIDIHDR*)dwParam1;
 			BYTE statusv = (BYTE)dwParam1;
@@ -102,6 +106,8 @@ int bmsyn_play_some_data(void){
 }
 
 bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+	if (improveperf == 0) EnterCriticalSection(&midiparsing);
+
 	evbpoint = evbwpoint;
 	if (++evbwpoint >= evbuffsize)
 		evbwpoint -= evbuffsize;
@@ -126,6 +132,8 @@ bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
+
+	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 	if (vms2emu == 1) {
 		if (InterlockedIncrement64(&evbcount) >= evbuffsize) {

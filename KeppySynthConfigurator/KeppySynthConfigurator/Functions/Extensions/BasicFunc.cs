@@ -626,6 +626,9 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("alternativecpu", 0)) == 1)
                     KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = true;
 
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("improveperf", 0)) == 1)
+                    KeppySynthConfiguratorMain.Delegate.EPB.Checked = true;
+
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
                     Functions.ButtonStatus(false);

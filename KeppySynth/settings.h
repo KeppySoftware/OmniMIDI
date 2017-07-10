@@ -518,7 +518,6 @@ void allocate_memory() {
 		crashmessage(L"MemAlloc");
 	}
 }
-
 void load_settings()
 {
 	try {

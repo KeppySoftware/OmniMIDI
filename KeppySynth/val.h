@@ -39,6 +39,8 @@ static HWND hWnd;
 static sound_out * sound_driver = 0;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
+static int improveperf = 0;				// Improve performance, reduces compatibility
+
 static HINSTANCE bass = 0;				// bass handle
 static HINSTANCE bass_fx = 0;			// bass_fx handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle

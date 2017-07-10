@@ -212,19 +212,19 @@ namespace KeppySynthConfigurator
                 FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
                 VersionLabel.Text = String.Format("    Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
 
-                CLi.Image = Properties.Resources.ClearIcon;
-                AddSF.Image = Properties.Resources.AddSFIcon;
-                RmvSF.Image = Properties.Resources.RmvSFIcon;
-                MvU.Image = Properties.Resources.MvUpIcon;
-                MvD.Image = Properties.Resources.MvDwIcon;
-                LoadToApp.Image = Properties.Resources.ReloadIcon;
-                EnableSF.Image = Properties.Resources.EnableIcon;
-                DisableSF.Image = Properties.Resources.DisableIcon;
-                IEL.Image = Properties.Resources.ImportIcon;
-                EL.Image = Properties.Resources.ExportIcon;
-                WhatIsOutput.Image = Properties.Resources.what;
-                WhatIsXAudio.Image = Properties.Resources.what;
-                StatusBuf.Image = Properties.Resources.what;
+                CLi.BackgroundImage = Properties.Resources.ClearIcon;
+                AddSF.BackgroundImage = Properties.Resources.AddSFIcon;
+                RmvSF.BackgroundImage = Properties.Resources.RmvSFIcon;
+                MvU.BackgroundImage = Properties.Resources.MvUpIcon;
+                MvD.BackgroundImage = Properties.Resources.MvDwIcon;
+                LoadToApp.BackgroundImage = Properties.Resources.ReloadIcon;
+                EnableSF.BackgroundImage = Properties.Resources.EnableIcon;
+                DisableSF.BackgroundImage = Properties.Resources.DisableIcon;
+                IEL.BackgroundImage = Properties.Resources.ImportIcon;
+                EL.BackgroundImage = Properties.Resources.ExportIcon;
+                WhatIsOutput.BackgroundImage = Properties.Resources.what;
+                WhatIsXAudio.BackgroundImage = Properties.Resources.what;
+                StatusBuf.BackgroundImage = Properties.Resources.what;
 
                 VolTrackBar.ContextMenu = KnobContext;
 
@@ -1313,6 +1313,24 @@ namespace KeppySynthConfigurator
             KeppySynthDefaultSFList frm = new KeppySynthDefaultSFList();
             frm.ShowDialog(this);
             frm.Dispose();
+        }
+
+        private void EPB_Click(object sender, EventArgs e)
+        {
+            if (!EPB.Checked)
+            {
+                DialogResult dialogResult = MessageBox.Show("Enabling this function might break compatibility with some old applications.\nIf you're encountering issues with them, like missing notes and crashes, please disable this function.\n\nClick \"Yes\" to enable the function, or \"No\" to close this dialog.", "Keppy's Synthesizer - Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    EPB.Checked = true;
+                    SynthSettings.SetValue("improveperf", "1", RegistryValueKind.DWord);
+                }
+            }
+            else
+            {
+                EPB.Checked = false;
+                SynthSettings.SetValue("improveperf", "0", RegistryValueKind.DWord);
+            }
         }
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
