@@ -94,7 +94,6 @@ static int driverCount = 0;
 static volatile int OpenCount = 0;
 static volatile int modm_closed = 1;
 
-static CRITICAL_SECTION mim_section;
 static volatile int stop_thread = 0;
 static volatile int stop_rtthread = 0;
 static volatile int reset_synth = 0;
@@ -643,10 +642,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		}
 	}
 	catch (...) {
-		PrintToConsole(FOREGROUND_BLUE, 1, "Fatal error while sharing MIDI caps!!!");
-		exit(-1);
+		PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
+		return MMSYSERR_NOTSUPPORTED;
 	}
-
 }
 
 void keepstreamsalive(int& opend) {
@@ -727,7 +725,6 @@ void DoStartClient() {
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
 		RegCloseKey(hKey);
 		DWORD result;
-		InitializeCriticalSection(&mim_section);
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 		load_sfevent = CreateEvent(
@@ -783,7 +780,6 @@ void DoStopClient() {
 		modm_closed = 1;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
-	DeleteCriticalSection(&mim_section);
 }
 
 void DoResetClient(UINT uDeviceID) {

@@ -469,6 +469,7 @@ void allocate_memory() {
 
 		if (evbuffbyram == 1) {
 			sevbuffsize = status.ullTotalPhys;
+			if (evbuffratio == 1) evbuffratio = 128;
 		}
 		else {
 			if (sevbuffsize > status.ullTotalPhys) sevbuffsize = status.ullTotalPhys;
@@ -484,12 +485,26 @@ void allocate_memory() {
 		}
 #endif
 #endif
+		std::ostringstream st;
+		std::ostringstream nd;
+		std::ostringstream rd;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
-		evbuffsize = sevbuffsize / (unsigned long long)evbuffratio;
+		evbuffsize = (unsigned long long)sevbuffsize / (unsigned long long)evbuffratio;
+
+		st << "EV buffer size: " << sevbuffsize;
+		nd << "EV buffer ratio: " << evbuffratio;
+		rd << "EV buffer final size: " << evbuffsize;
+
+		PrintToConsole(FOREGROUND_BLUE, 1, st.str().c_str());
+		PrintToConsole(FOREGROUND_BLUE, 1, nd.str().c_str());
+		PrintToConsole(FOREGROUND_BLUE, 1, rd.str().c_str());
+
+		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
+		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
-		evbuf = (evbuf_t *)malloc(evbuffsize * sizeof(evbuf_t));
+		evbuf = (evbuf_t *)malloc((unsigned long long)evbuffsize * sizeof(evbuf_t));
 		PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing EV buffer...");
 		memset(evbuf, 0, sizeof(evbuf_t));
 		PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");

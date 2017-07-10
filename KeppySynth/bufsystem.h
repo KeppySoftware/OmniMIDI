@@ -9,10 +9,8 @@ Keppy's Synthesizer buffer system
 int bmsyn_buf_check(void){
 	int retval;
 	int retvalemu;
-	EnterCriticalSection(&mim_section);
 	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
 	retvalemu = evbcount;
-	LeaveCriticalSection(&mim_section);
 	if (vms2emu == 1) {
 		return retvalemu;
 	}
@@ -45,7 +43,6 @@ int bmsyn_play_some_data(void){
 			return ~0;
 		}
 		do{
-			EnterCriticalSection(&mim_section);
 			evbpoint = evbrpoint;
 
 			if (++evbrpoint >= evbuffsize) {
@@ -64,15 +61,24 @@ int bmsyn_play_some_data(void){
 			int note = (dwParam1 & 0x0000FF00) >> 8;
 			int velocity = (dwParam1 & 0x00FF0000) >> 16;
 
-			LeaveCriticalSection(&mim_section);
-			
 			switch (uMsg) {
 			case MODM_DATA:
 				if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)	len = 2;
 				else if (statusv < 0xf0 || statusv == 0xf2)	len = 3;
 				else len = 1;
 
+				if (ignorenotes1) {
+					if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
+						&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+					}
+					else {
+						BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+					}
+					break;
+				}
 				BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+				break;
 
 				CheckUp(ERRORCODE, L"DataToAudioStream");
 
@@ -95,7 +101,15 @@ int bmsyn_play_some_data(void){
 	}
 }
 
-void PushEventToBuffer(LONG evbpoint, UINT uMsg, DWORD_PTR dwParam1, int status, int note, int velocity) {
+bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+	evbpoint = evbwpoint;
+	if (++evbwpoint >= evbuffsize)
+		evbwpoint -= evbuffsize;
+
+	int status = (dwParam1 & 0x000000FF);
+	int note = (dwParam1 & 0x0000FF00) >> 8;
+	int velocity = (dwParam1 & 0x00FF0000) >> 16;
+
 	// SETSTATUS(dwParam1, status);
 	if (pitchshift != 127) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
@@ -113,38 +127,13 @@ void PushEventToBuffer(LONG evbpoint, UINT uMsg, DWORD_PTR dwParam1, int status,
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 
-	LeaveCriticalSection(&mim_section);
-
 	if (vms2emu == 1) {
 		if (InterlockedIncrement64(&evbcount) >= evbuffsize) {
 			do { Sleep(1); } while (evbcount >= evbuffsize);
 		}
 	}
-}
 
-bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
-	EnterCriticalSection(&mim_section);
-	evbpoint = evbwpoint;
-	if (++evbwpoint >= evbuffsize)
-		evbwpoint -= evbuffsize;
-
-	int status = (dwParam1 & 0x000000FF);
-	int note = (dwParam1 & 0x0000FF00) >> 8;
-	int velocity = (dwParam1 & 0x00FF0000) >> 16;
-
-	if (ignorenotes1) {
-		if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144) && ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
-			LeaveCriticalSection(&mim_section);
-			return MMSYSERR_NOERROR;
-		}
-		else {
-			PushEventToBuffer(evbpoint, uMsg, dwParam1, status, note, velocity);
-		}
-	}
-	else {
-		PushEventToBuffer(evbpoint, uMsg, dwParam1, status, note, velocity);
-		return MMSYSERR_NOERROR;
-	}
+	return MMSYSERR_NOERROR;
 }
 
 void AudioRender() {

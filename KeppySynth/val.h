@@ -34,6 +34,8 @@ extern "C" __declspec(dllexport) void RavioliRavioli()
 #endif 
 
 // Mandatory values
+static NOTIFYICONDATA niData;
+static HWND hWnd;
 static sound_out * sound_driver = 0;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
@@ -51,7 +53,7 @@ static float currentcpuusage0;
 static float currentcpuusageE0;
 static int isoverrideenabled = 0;
 static unsigned long long evbuffsize = 16384;
-static unsigned long long sevbuffsize = 16384;
+static unsigned long long sevbuffsize = evbuffsize;
 static int evbuffratio = 1;
 static int evbuffbyram = 0;
 

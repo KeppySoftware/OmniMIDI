@@ -60,9 +60,6 @@
     <ClInclude Include="drvinit.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="winmmfunc.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\bassasio.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -91,5 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ksicon.ico" />
+    <Image Include="..\..\..\KaleidonKep99\Desktop\doggo.ico" />
   </ItemGroup>
 </Project>
