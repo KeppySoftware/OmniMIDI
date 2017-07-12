@@ -19,6 +19,7 @@ unsigned WINAPI notescatcher(LPVOID lpV) {
 	}
 	catch (...) {
 		crashmessage(L"NotesCatcher");
+		throw;
 	}
 }
 
@@ -41,6 +42,7 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 	}
 	catch (...) {
 		crashmessage(L"NotesCatcher");
+		throw;
 	}
 }
 
@@ -68,8 +70,8 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 				else InitializeNotesCatcherThread();
 
 				if (xaudiodisabled == 0) AudioRender();
-				else if (xaudiodisabled == 1) {
-					if (defaultoutput != 0) {
+				else {
+					if (defaultoutput != 1) {
 						BASS_ChannelUpdate(KSStream, 0);
 						CheckUp(ERRORCODE, L"DSEngine");
 					}
@@ -80,6 +82,7 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 		}
 		catch (...) {
 			crashmessage(L"AudioEngine");
+			throw;
 		}
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/XA...");
@@ -109,8 +112,14 @@ void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
 
 	PrintToConsole(FOREGROUND_RED, 1, "Working...");
 
-	if (xaudiodisabled == 1 && defaultoutput == 1) isdecode = TRUE;
-	if (xaudiodisabled == 0) xaudiospecial = TRUE;
+	if (xaudiodisabled == 1) {
+		if (defaultoutput == 1) isdecode = TRUE;
+		else isdecode = FALSE;
+	}
+	else {
+		isdecode = TRUE;
+		if (xaudiodisabled == 1) xaudiospecial = TRUE;
+	}
 
 	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), xaudiospecial ? 44100 : mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");

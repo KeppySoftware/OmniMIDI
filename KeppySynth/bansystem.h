@@ -84,6 +84,7 @@ BOOL BlackListSystem(){
 	}
 	catch (...) {
 		crashmessage(L"BlackListPT2");
+		throw;
 	}
 }
 
@@ -148,6 +149,7 @@ BOOL VMSBlackList(){
 	}
 	catch (...) {
 		crashmessage(L"BlackListPT1");
+		throw;
 	}
 }
 

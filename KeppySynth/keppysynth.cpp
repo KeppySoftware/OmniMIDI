@@ -395,7 +395,7 @@ void PrintToConsole(int color, long stage, const char* text) {
 	}
 }
 
-void PrintEventToConsole(int color, int stage, const char* text, int status, int note, int velocity) {
+void PrintEventToConsole(int color, int stage, bool issysex, const char* text, int status, int note, int velocity) {
 	if (debugmode == 1) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
@@ -412,7 +412,12 @@ void PrintEventToConsole(int color, int stage, const char* text, int status, int
 		StatusType(status, statustoprint);
 
 		// Print to log
-		std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = " << statustoprint << " | Note = " << note << " | Velocity = " << velocity;
+		if (issysex) {
+			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
+		}
+		else {
+			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = " << statustoprint << " | Note = " << note << " | Velocity = " << velocity;
+		}
 	}
 }
 
@@ -707,6 +712,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 	catch (...) {
 		crashmessage(L"DrvMainThread");
 		_endthreadex(0);
+		throw;
 		return 0;
 	}
 }
@@ -869,6 +875,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 		catch (...) {
 			crashmessage(L"LongMODMData");
+			throw;
 		}
 	case MODM_DATA:
 		try {
@@ -877,6 +884,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 		catch (...) {
 			crashmessage(L"MODMData");
+			throw;
 		}
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);

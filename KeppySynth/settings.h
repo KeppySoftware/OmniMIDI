@@ -104,6 +104,7 @@ void LoadSoundfont(int whichsf){
 		}
 		catch (...) {
 			crashmessage(L"SFLoad");
+			throw;
 		}
 	}
 }
@@ -149,6 +150,7 @@ bool LoadSoundfontStartup() {
 		}
 		catch (...) {
 			crashmessage(L"SFLoadStartup");
+			throw;
 		}
 	}
 }
@@ -434,28 +436,35 @@ BOOL load_bassfuncs()
 	}
 	catch (...) {
 		crashmessage(L"BASSDefLoad");
+		throw;
 	}
 }
 
 void appname() {
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_SZ;
-	DWORD dwSize = sizeof(DWORD);
-	TCHAR modulename[MAX_PATH];
-	TCHAR bitapp[MAX_PATH];
-	ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
-	ZeroMemory(bitapp, MAX_PATH * sizeof(TCHAR));
-	GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+	try {
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_SZ;
+		DWORD dwSize = sizeof(DWORD);
+		TCHAR modulename[MAX_PATH];
+		TCHAR bitapp[MAX_PATH];
+		ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
+		ZeroMemory(bitapp, MAX_PATH * sizeof(TCHAR));
+		GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 #if defined(_WIN64)
-	wcscpy(bitapp, L"64-bit");
+		wcscpy(bitapp, L"64-bit");
 #elif defined(_WIN32)
-	wcscpy(bitapp, L"32-bit");
+		wcscpy(bitapp, L"32-bit");
 #endif
-	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&modulename, sizeof(modulename));
-	RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&bitapp, sizeof(bitapp));
-	RegCloseKey(hKey);
+		RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&modulename, sizeof(modulename));
+		RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&bitapp, sizeof(bitapp));
+		RegCloseKey(hKey);
+	}
+	catch (...) {
+		crashmessage(L"AppName");
+		throw;
+	}
 }
 
 void allocate_memory() {
@@ -516,6 +525,7 @@ void allocate_memory() {
 	}
 	catch (...) {
 		crashmessage(L"MemAlloc");
+		throw;
 	}
 }
 void load_settings()
@@ -587,6 +597,7 @@ void load_settings()
 	}
 	catch (...) {
 		crashmessage(L"RegSetLoad");
+		throw;
 	}
 }
 
@@ -675,6 +686,7 @@ void realtime_load_settings()
 	}
 	catch (...) {
 		crashmessage(L"RTSetLoad");
+		throw;
 	}
 }
 
@@ -738,40 +750,47 @@ void WatchdogCheck()
 	}
 	catch (...) {
 		crashmessage(L"WDCheck");
+		throw;
 	}
 }
 
 void CheckVolume() {
-	if (volumemon == 1) {
-		HKEY hKey;
-		long lResult;
-		float levels[2];
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
-		DWORD left, right;
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
+	try {
+		if (volumemon == 1) {
+			HKEY hKey;
+			long lResult;
+			float levels[2];
+			DWORD dwType = REG_DWORD;
+			DWORD dwSize = sizeof(DWORD);
+			DWORD left, right;
+			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 
-		if (xaudiodisabled == 1)
-		{
-			BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
-		}
-		else if (xaudiodisabled == 2)
-		{
-			levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
-			levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
-		}
-		else if (xaudiodisabled == 3)
-		{
-			BASS_WASAPI_GetLevelEx(levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
-		}
+			if (xaudiodisabled == 1)
+			{
+				BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+			}
+			else if (xaudiodisabled == 2)
+			{
+				levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
+				levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
+			}
+			else if (xaudiodisabled == 3)
+			{
+				BASS_WASAPI_GetLevelEx(levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+			}
 
-		DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
-		left = LOWORD(level); // the left level
-		right = HIWORD(level); // the right level
+			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
+			left = LOWORD(level); // the left level
+			right = HIWORD(level); // the right level
 
-		RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
-		RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
-		RegCloseKey(hKey);
+			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
+			RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+			RegCloseKey(hKey);
+		}
+	}
+	catch (...) {
+		crashmessage(L"VolumeMon");
+		throw;
 	}
 }
 
@@ -826,6 +845,7 @@ void debug_info() {
 	}
 	catch (...) {
 		crashmessage(L"DebugRead");
+		throw;
 	}
 }
 
@@ -847,6 +867,7 @@ void mixervoid() {
 	}
 	catch (...) {
 		crashmessage(L"MixerCheck");
+		throw;
 	}
 }
 
@@ -874,6 +895,7 @@ void RevbNChor() {
 	}
 	catch (...) {
 		crashmessage(L"MixerCheck");
+		throw;
 	}
 }
 
@@ -885,6 +907,7 @@ void ReloadSFList(DWORD whichsflist){
 	}
 	catch (...) {
 		crashmessage(L"ReloadSFList");
+		throw;
 	}
 }
 
@@ -1038,5 +1061,6 @@ void keybindings()
 	}
 	catch (...) {
 		crashmessage(L"HotKeysCheck");
+		throw;
 	}
 }

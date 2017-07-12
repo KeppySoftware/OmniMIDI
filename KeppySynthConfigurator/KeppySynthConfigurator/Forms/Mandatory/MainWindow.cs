@@ -224,7 +224,6 @@ namespace KeppySynthConfigurator
                 EL.BackgroundImage = Properties.Resources.ExportIcon;
                 WhatIsOutput.BackgroundImage = Properties.Resources.what;
                 WhatIsXAudio.BackgroundImage = Properties.Resources.what;
-                StatusBuf.BackgroundImage = Properties.Resources.what;
 
                 VolTrackBar.ContextMenu = KnobContext;
 
@@ -1586,15 +1585,15 @@ namespace KeppySynthConfigurator
                 Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
 
                 if (bufsize.Value >= valuearray[0] && bufsize.Value <= valuearray[1])
-                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
+                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wir;
                 else if (bufsize.Value >= valuearray[2] && bufsize.Value <= valuearray[3])
-                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
+                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wi;
                 else if (bufsize.Value >= valuearray[4] && bufsize.Value <= valuearray[5])
-                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.ok;
+                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.ok;
                 else if (bufsize.Value >= valuearray[6] && bufsize.Value <= valuearray[7])
-                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wi;
+                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wi;
                 else if (bufsize.Value >= valuearray[8] && bufsize.Value <= valuearray[9])
-                    StatusBuf.Image = KeppySynthConfigurator.Properties.Resources.wir;
+                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wir;
 
                 RecommendedBuffer.SetToolTip(
                     StatusBuf, 

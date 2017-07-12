@@ -1755,6 +1755,7 @@
             // WhatIsOutput
             // 
             this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
+            this.WhatIsOutput.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsOutput.ErrorImage = null;
             this.WhatIsOutput.Location = new System.Drawing.Point(173, 20);
@@ -1768,6 +1769,7 @@
             // WhatIsXAudio
             // 
             this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
+            this.WhatIsXAudio.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = null;
             this.WhatIsXAudio.Location = new System.Drawing.Point(173, 46);
@@ -1949,8 +1951,10 @@
             // 
             this.StatusBuf.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.StatusBuf.BackColor = System.Drawing.Color.Transparent;
+            this.StatusBuf.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
             this.StatusBuf.ErrorImage = null;
+            this.StatusBuf.InitialImage = null;
             this.StatusBuf.Location = new System.Drawing.Point(533, 55);
             this.StatusBuf.Name = "StatusBuf";
             this.StatusBuf.Size = new System.Drawing.Size(17, 17);
