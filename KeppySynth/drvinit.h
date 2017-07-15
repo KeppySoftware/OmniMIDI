@@ -107,8 +107,8 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 	return data;
 }
 
-void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
-	bool xaudiospecial = FALSE;
+void InitializeStreamForExternalEngine(INT32 mixfreq) {
+	bool isdecode = FALSE;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Working...");
 
@@ -118,10 +118,9 @@ void InitializeStreamForExternalEngine(INT32 mixfreq, BOOL isdecode) {
 	}
 	else {
 		isdecode = TRUE;
-		if (xaudiodisabled == 1) xaudiospecial = TRUE;
 	}
 
-	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), xaudiospecial ? 44100 : mixfreq);
+	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
 	
 	if (noaudiodevices != 1) {
@@ -191,14 +190,13 @@ RETRY:
 			if (sound_driver == NULL) {
 				PrintToConsole(FOREGROUND_RED, 1, "Opening XAudio stream...");
 				sound_driver = BASSXA_CreateAudioStream();
-				if (!BASSXA_InitializeAudioStream(sound_driver, 44100 + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
+				if (!BASSXA_InitializeAudioStream(sound_driver, frequency + 100, (monorendering ? BASSXA_MONO : BASSXA_STEREO), BASSXA_FLOAT, newsndbfvalue, frames)) {
 					xaudiodisabled = 1;
 					PrintToConsole(FOREGROUND_RED, 1, "DirectX 9.0c is not installed! Reverting to DirectSound...");
 					CopyToClipboard("https://www.microsoft.com/en-us/download/details.aspx?id=8109\0");
 					MessageBox(NULL, L"Can not initialize XAudio, DirectX 9.0c is not installed properly!\n\nPress OK to continue.\nThe driver will fallback to DirectSound.\n\nTo fix this, please install the \"DirectX End-User Runtimes (June 2010)\" from the following website:\nhttps://www.microsoft.com/en-us/download/details.aspx?id=8109\n\nThe website has been copied to the clipboard.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 					goto RETRY;
 				}
-				BASSXA_ChangeStreamFrequencyRatio(sound_driver, (double)(frequency / 44100));
 				PrintToConsole(FOREGROUND_RED, 1, "XAudio ready.");
 			}
 		}
@@ -270,7 +268,7 @@ bool InitializeBASS(bool restart) {
 
 	if (xaudiodisabled == 0) {
 		BASSXA_TerminateAudioStream(sound_driver);
-		InitializeStreamForExternalEngine(frequency, TRUE);
+		InitializeStreamForExternalEngine(frequency);
 		InitializeAudioStream();
 		InitializeNotesCatcherThread();
 		CheckUp(ERRORCODE, L"KSInitXA");
@@ -281,7 +279,7 @@ bool InitializeBASS(bool restart) {
 		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 		BASS_GetInfo(&info);
 		BASS_SetConfig(BASS_CONFIG_BUFFER, frames);
-		InitializeStreamForExternalEngine(frequency, FALSE);
+		InitializeStreamForExternalEngine(frequency);
 		CheckUp(ERRORCODE, L"KSStreamCreateDS");
 		if (dsoutput != 0)
 		{
@@ -293,7 +291,7 @@ bool InitializeBASS(bool restart) {
 	else if (xaudiodisabled == 2) {
 		BASS_ASIO_Stop();
 		BASS_ASIO_Free();
-		InitializeStreamForExternalEngine(frequency, TRUE);
+		InitializeStreamForExternalEngine(frequency);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
 			BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
@@ -314,7 +312,7 @@ bool InitializeBASS(bool restart) {
 			MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to XAudio...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open ASIO device", MB_OK | MB_ICONERROR);
 			xaudiodisabled = 0;
 			InitializeAudioStream();
-			InitializeStreamForExternalEngine(frequency, TRUE);
+			InitializeStreamForExternalEngine(frequency);
 			InitializeNotesCatcherThread();
 			CheckUp(ERRORCODE, L"KSInitXA");
 		}
@@ -338,7 +336,7 @@ bool InitializeBASS(bool restart) {
 			CheckUp(ERRORCODE, L"KSReturnInfoDefWASAPI");
 		}
 
-		InitializeStreamForExternalEngine(infoW.mixfreq, TRUE);
+		InitializeStreamForExternalEngine(infoW.mixfreq);
 
 		if (BASS_WASAPI_Init(wasapioutput, 0, 2, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
@@ -351,7 +349,7 @@ bool InitializeBASS(bool restart) {
 			xaudiodisabled = 0;
 			BASSXA_TerminateAudioStream(sound_driver);
 			InitializeAudioStream();
-			InitializeStreamForExternalEngine(frequency, TRUE);
+			InitializeStreamForExternalEngine(frequency);
 			InitializeNotesCatcherThread();
 			CheckUp(ERRORCODE, L"KSInitXA");
 		}

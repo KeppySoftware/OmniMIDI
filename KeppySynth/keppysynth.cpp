@@ -4,6 +4,10 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
+#if !_WIN32
+#error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
+#endif
+
 #pragma comment(lib,"Version.lib")
 
 #include "sha256.h"
