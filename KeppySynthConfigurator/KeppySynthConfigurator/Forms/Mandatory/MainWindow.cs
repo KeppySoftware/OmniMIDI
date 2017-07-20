@@ -1238,6 +1238,11 @@ namespace KeppySynthConfigurator
             });
         }
 
+        private void KSynthWiki_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/wiki");
+        }
+
         private void GiveFeedback_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening feedback form.", null);

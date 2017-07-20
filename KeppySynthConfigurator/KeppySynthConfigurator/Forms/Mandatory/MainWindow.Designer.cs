@@ -146,6 +146,8 @@
             this.EnableBBS = new System.Windows.Forms.MenuItem();
             this.EnableBB = new System.Windows.Forms.MenuItem();
             this.menuItem43 = new System.Windows.Forms.MenuItem();
+            this.KSynthWiki = new System.Windows.Forms.MenuItem();
+            this.menuItem27 = new System.Windows.Forms.MenuItem();
             this.GiveFeedback = new System.Windows.Forms.MenuItem();
             this.menuItem42 = new System.Windows.Forms.MenuItem();
             this.KSUSJoinNow = new System.Windows.Forms.MenuItem();
@@ -815,7 +817,7 @@
             // 
             // reportABugToolStripMenuItem
             // 
-            this.reportABugToolStripMenuItem.Index = 1;
+            this.reportABugToolStripMenuItem.Index = 3;
             this.reportABugToolStripMenuItem.Text = "Report a bug on GitHub";
             this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
             // 
@@ -1090,26 +1092,39 @@
             // 
             this.menuItem43.Index = 3;
             this.menuItem43.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.KSynthWiki,
+            this.menuItem27,
             this.GiveFeedback,
             this.reportABugToolStripMenuItem,
             this.menuItem42,
             this.KSUSJoinNow});
             this.menuItem43.Text = "Feedback";
             // 
+            // KSynthWiki
+            // 
+            this.KSynthWiki.Index = 0;
+            this.KSynthWiki.Text = "Open the \"Keppy\'s Synthesizer Wiki\"";
+            this.KSynthWiki.Click += new System.EventHandler(this.KSynthWiki_Click);
+            // 
+            // menuItem27
+            // 
+            this.menuItem27.Index = 1;
+            this.menuItem27.Text = "-";
+            // 
             // GiveFeedback
             // 
-            this.GiveFeedback.Index = 0;
+            this.GiveFeedback.Index = 2;
             this.GiveFeedback.Text = "Give feedback about the driver";
             this.GiveFeedback.Click += new System.EventHandler(this.GiveFeedback_Click);
             // 
             // menuItem42
             // 
-            this.menuItem42.Index = 2;
+            this.menuItem42.Index = 4;
             this.menuItem42.Text = "-";
             // 
             // KSUSJoinNow
             // 
-            this.KSUSJoinNow.Index = 3;
+            this.KSUSJoinNow.Index = 5;
             this.KSUSJoinNow.Text = "Join the Keppy\'s Updates Server on Discord";
             this.KSUSJoinNow.Click += new System.EventHandler(this.KSUSJoinNow_Click);
             // 
@@ -2962,6 +2977,8 @@
         public System.Windows.Forms.Label VolLevel;
         private System.Windows.Forms.ToolTip Requirements;
         public System.Windows.Forms.MenuItem EPB;
+        private System.Windows.Forms.MenuItem KSynthWiki;
+        private System.Windows.Forms.MenuItem menuItem27;
     }
 }
 

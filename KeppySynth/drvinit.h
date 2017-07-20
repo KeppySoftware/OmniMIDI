@@ -321,24 +321,24 @@ bool InitializeBASS(bool restart) {
 		BASS_WASAPI_Stop(true);
 		BASS_WASAPI_Free();
 		GetWASAPIDevice();
-		BASS_WASAPI_DEVICEINFO infoW;
+		BASS_WASAPI_DEVICEINFO infoDW;
+		BASS_WASAPI_INFO infoW;
 
-		if (wasapioutput == -1) {
-			BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-			CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
-			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoW);
-			CheckUp(ERRORCODE, L"KSWASAPIGetDeviceInfo");
-			BASS_WASAPI_Free();
-			CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
-		}
-		else {
-			BASS_WASAPI_GetDeviceInfo(wasapioutput, &infoW);
-			CheckUp(ERRORCODE, L"KSReturnInfoDefWASAPI");
-		}
+		BASS_WASAPI_Init(wasapioutput, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
+		CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
+		BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
+		CheckUp(ERRORCODE, L"KSWASAPIGetDeviceInfo");
+		BASS_WASAPI_GetInfo(&infoW);
+		CheckUp(ERRORCODE, L"KSWASAPIGetBufInfo");
+		BASS_WASAPI_Free();
+		CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
 
-		InitializeStreamForExternalEngine(infoW.mixfreq);
+		InitializeStreamForExternalEngine(infoDW.mixfreq);
 
-		if (BASS_WASAPI_Init(wasapioutput, 0, 2, BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 0, 0, WASAPIProc, NULL)) {
+		if (BASS_WASAPI_Init(wasapioutput, 0, 2, 
+			BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT), 
+			(wasapiex ? ((float)frames / 1000.0f) : infoW.buflen), 
+			0, WASAPIProc, NULL)) {
 			CheckUp(ERRORCODE, L"KSInitWASAPI");
 			BASS_WASAPI_Start();
 			CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
