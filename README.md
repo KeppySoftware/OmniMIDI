@@ -113,6 +113,7 @@ To compile (and test) the driver, you need:
 📋 | Keppy's Synthesizer | VirtualMIDISynth 1.x | VirtualMIDISynth 2.x | BASSMIDI Driver
 ------------ | ------------- | ------------- | ------------- | -------------
 Easy-to-use configurator | ✔️ | ✔️ | ✔️ | ❌
+Smaller memory footprint | ✔️ | ❌ | ✔️ | ❌
 Support for Windows XP | ❌ | ✔️ | ✔️ | ✔️
 Mixer for easy volume<br />changes per MIDI channel | ✔️ | ✔️ | ✔️ | ❌
 Real-time debug information<br>about the audio stream | ✔️ | ❌ | ✔️ | ❌
