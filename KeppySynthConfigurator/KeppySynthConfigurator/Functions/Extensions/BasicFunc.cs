@@ -1242,21 +1242,38 @@ namespace KeppySynthConfigurator
                         KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
                         while ((line = r.ReadLine()) != null)
                         {
-                            string result = line.Substring(0, 1);
-                            string newvalue;
+                            try
+                            {
+                                string result = line.Substring(0, 1);
+                                string newvalue;
 
-                            if (result == "@")
-                                line = line.Remove(0, 1);
+                                if (result == "@")
+                                    line = line.Remove(0, 1);
 
-                            FileInfo file = new FileInfo(StripSFZValues(line));
-                            ListViewItem SF = new ListViewItem(new[] {
-                                line,
-                                ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
-                                ReturnSoundFontSize(StripSFZValues(line), Path.GetExtension(StripSFZValues(line)), file.Length)
-                            });
+                                FileInfo file = new FileInfo(StripSFZValues(line));
 
-                            SF.ForeColor = ReturnColor(result);
-                            KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
+                                ListViewItem SF = new ListViewItem(new[] {
+                                    line,
+                                    ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
+                                    ReturnSoundFontSize(StripSFZValues(line), Path.GetExtension(StripSFZValues(line)), file.Length)
+                                });
+
+                                SF.ForeColor = ReturnColor(result);
+                                KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
+                            }
+                            catch
+                            {
+                                ListViewItem SF = new ListViewItem(new[] {
+                                    line,
+                                    "Missing",
+                                    "N/A"
+                                });
+                            
+                                SF.ForeColor = Color.Red;
+                                KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
+
+                                Program.DebugToConsole(false, String.Format("{0} is missing.", line), null);
+                            }
                         }
                     }
                 }

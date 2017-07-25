@@ -478,8 +478,12 @@ namespace KeppySynthConfigurator
                 if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
-                    Functions.OpenSFWithDefaultApp(name);
-                    Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
+                    if (File.Exists(name))
+                    {
+                        Functions.OpenSFWithDefaultApp(name);
+                        Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
+                    }
+                    else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
                 }
                 else if (howmany > 1)
                 {
@@ -489,8 +493,12 @@ namespace KeppySynthConfigurator
                         for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                         {
                             String name = Lis.SelectedItems[i].Text.ToString();
-                            Functions.OpenSFWithDefaultApp(name);
-                            Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
+                            if (File.Exists(name))
+                            {
+                                Functions.OpenSFWithDefaultApp(name);
+                                Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
+                            }
+                            else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
                         }
                     }
                 }

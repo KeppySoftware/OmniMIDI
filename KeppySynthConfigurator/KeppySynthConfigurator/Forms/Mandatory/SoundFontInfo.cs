@@ -53,9 +53,11 @@ namespace KeppySynthConfigurator
                 sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
                 if (!File.Exists(sf))
                 {
+
                     Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
                     ERROR = true;
                     Close();
+                    return;
                 }
                 SoundFontT = sf;
                 fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
@@ -70,6 +72,7 @@ namespace KeppySynthConfigurator
                     Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
                     ERROR = true;
                     Close();
+                    return;
                 }
                 SoundFontT = SoundFont;
                 fonthandle = BassMidi.BASS_MIDI_FontInit(SoundFont);
