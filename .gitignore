@@ -46,6 +46,7 @@
 /KeppySynthconfig
 /Release
 /ipch
+/sign
 
 // Ignore SoundFont Packer output
 /sfpacker/*.dll
@@ -78,3 +79,5 @@ output/KeppySynthWatchdog.exe
 output/KeppysSynthSetup.exe
 output/KeppysSynthUpdate.exe
 output/Test Keppy's Synthesizer Configurator.bat
+signruntime.bat
+signsetup.bat

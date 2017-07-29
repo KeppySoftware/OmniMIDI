@@ -39,6 +39,11 @@ My advice for such people is to download CoolSoft VirtualMIDISynth driver from t
 <br />
 It's free, easy-to-use for newbies, and doesn't get updated every 1-2 nanoseconds. (Unlike mine)
 
+## How can I get rid of the annoying SmartScreen block screen and stop Chrome from warning me not to download your driver?
+You can install my self-signed certificate by using the two files here: https://github.com/KaleidonKep99/Keppy-s-Synthesizer/installcert<br />
+I made the sign myself, no one has it except me. So you can trust add it to your trusted certificates by using the small installcert.exe utility.<br />
+*(Be sure that KeppyCert.cer is in the same folder as InstallCert.exe)*
+
 ## Can I use your program's source code for my program?
 Sure you can, but there are a few "rules" you need to follow.
 

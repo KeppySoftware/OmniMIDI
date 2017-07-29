@@ -204,6 +204,19 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void AEr_Click(object sender, EventArgs e)
+        {
+            using (var form = new BlacklistSystemProcesses())
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    string[] val = form.BanThesePlease.ToArray();
+                    foreach (string item in val) ProgramsBlackList.Items.Add(item);
+                }
+            }
+        }
+
         private void RemoveBlackList_Click(object sender, EventArgs e)
         {
             for (int i = ProgramsBlackList.SelectedIndices.Count - 1; i >= 0; i--)

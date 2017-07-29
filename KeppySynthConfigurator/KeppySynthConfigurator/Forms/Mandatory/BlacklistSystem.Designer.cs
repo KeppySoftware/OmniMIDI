@@ -42,6 +42,7 @@ namespace KeppySynthConfigurator
             this.EDBLi = new System.Windows.Forms.Button();
             this.UDBLi = new System.Windows.Forms.Button();
             this.NoBlockMessage = new System.Windows.Forms.CheckBox();
+            this.AEr = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // BlackListDef
@@ -84,6 +85,7 @@ namespace KeppySynthConfigurator
             // 
             this.BlacklistContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AE,
+            this.AEr,
             this.RE,
             this.menuItem3,
             this.CBLi});
@@ -91,23 +93,23 @@ namespace KeppySynthConfigurator
             // AE
             // 
             this.AE.Index = 0;
-            this.AE.Text = "Add executable(s)";
+            this.AE.Text = "Add executable(s) from file";
             this.AE.Click += new System.EventHandler(this.AddBlackList_Click);
             // 
             // RE
             // 
-            this.RE.Index = 1;
+            this.RE.Index = 2;
             this.RE.Text = "Remove executable(s)";
             this.RE.Click += new System.EventHandler(this.RemoveBlackList_Click);
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 2;
+            this.menuItem3.Index = 3;
             this.menuItem3.Text = "-";
             // 
             // CBLi
             // 
-            this.CBLi.Index = 3;
+            this.CBLi.Index = 4;
             this.CBLi.Text = "Clear blacklist";
             this.CBLi.Click += new System.EventHandler(this.ClearBlacklist_Click);
             // 
@@ -145,6 +147,12 @@ namespace KeppySynthConfigurator
             this.NoBlockMessage.UseVisualStyleBackColor = true;
             this.NoBlockMessage.CheckedChanged += new System.EventHandler(this.NoBlockMessage_CheckedChanged);
             // 
+            // AEr
+            // 
+            this.AEr.Index = 1;
+            this.AEr.Text = "Add executable(s) from running processes";
+            this.AEr.Click += new System.EventHandler(this.AEr_Click);
+            // 
             // KeppySynthBlacklistSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -180,5 +188,6 @@ namespace KeppySynthConfigurator
         private Button EDBLi;
         private Button UDBLi;
         private CheckBox NoBlockMessage;
+        private MenuItem AEr;
     }
 }
