@@ -282,6 +282,8 @@
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.SelfSignedCertificate = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.MixerBox.SuspendLayout();
             this.EnginesBox.SuspendLayout();
@@ -991,6 +993,7 @@
             this.menuItem40,
             this.menuItem48,
             this.menuItem20,
+            this.menuItem11,
             this.menuItem39,
             this.SetAssociationWithSFs,
             this.menuItem46,
@@ -1049,41 +1052,41 @@
             // 
             // menuItem39
             // 
-            this.menuItem39.Index = 4;
+            this.menuItem39.Index = 5;
             this.menuItem39.Text = "-";
             // 
             // SetAssociationWithSFs
             // 
-            this.SetAssociationWithSFs.Index = 5;
+            this.SetAssociationWithSFs.Index = 6;
             this.SetAssociationWithSFs.Text = "Set file association with SoundFonts";
             this.SetAssociationWithSFs.Click += new System.EventHandler(this.SetAssociationWithSFs_Click);
             // 
             // menuItem46
             // 
-            this.menuItem46.Index = 6;
+            this.menuItem46.Index = 7;
             this.menuItem46.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 7;
+            this.DeleteUserData.Index = 8;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 8;
+            this.ResetToDefault.Index = 9;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
             // EnableBBS
             // 
-            this.EnableBBS.Index = 9;
+            this.EnableBBS.Index = 10;
             this.EnableBBS.Text = "-";
             this.EnableBBS.Visible = false;
             // 
             // EnableBB
             // 
-            this.EnableBB.Index = 10;
+            this.EnableBB.Index = 11;
             this.EnableBB.Text = "Re-enable Butter Boy";
             this.EnableBB.Visible = false;
             this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
@@ -2678,6 +2681,19 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
             // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 4;
+            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.SelfSignedCertificate});
+            this.menuItem11.Text = "Code signing certificate";
+            // 
+            // SelfSignedCertificate
+            // 
+            this.SelfSignedCertificate.Index = 0;
+            this.SelfSignedCertificate.Text = "Install the self-signed certificate by Keppy";
+            this.SelfSignedCertificate.Click += new System.EventHandler(this.SelfSignedCertificate_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2979,6 +2995,8 @@
         public System.Windows.Forms.MenuItem EPB;
         private System.Windows.Forms.MenuItem KSynthWiki;
         private System.Windows.Forms.MenuItem menuItem27;
+        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem SelfSignedCertificate;
     }
 }
 

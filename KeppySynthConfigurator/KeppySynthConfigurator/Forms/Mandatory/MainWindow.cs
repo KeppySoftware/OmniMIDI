@@ -1865,6 +1865,11 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void SelfSignedCertificate_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/KaleidonKep99/Keppy-s-Synthesizer#how-can-i-get-rid-of-the-annoying-smartscreen-block-screen-and-stop-chrome-from-warning-me-not-to-download-your-driver");
+        }
+
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
