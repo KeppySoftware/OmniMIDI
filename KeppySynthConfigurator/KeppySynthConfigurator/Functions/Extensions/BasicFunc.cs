@@ -650,9 +650,6 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
 
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("autoupdatecheck", 1)) == 1)
-                    KeppySynthConfiguratorMain.Delegate.autoupdate.Checked = true;
-
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("debugmode", 0)) == 1)
                     KeppySynthConfiguratorMain.Delegate.DebugModePls.Checked = true;
 

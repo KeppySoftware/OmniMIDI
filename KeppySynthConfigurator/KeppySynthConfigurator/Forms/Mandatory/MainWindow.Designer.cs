@@ -59,7 +59,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapCpl = new System.Windows.Forms.MenuItem();
-            this.autoupdate = new System.Windows.Forms.MenuItem();
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.enableextra8sf = new System.Windows.Forms.MenuItem();
@@ -92,7 +91,8 @@
             this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
             this.menuItem44 = new System.Windows.Forms.MenuItem();
-            this.menuItem41 = new System.Windows.Forms.MenuItem();
+            this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem32 = new System.Windows.Forms.MenuItem();
             this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
@@ -105,7 +105,6 @@
             this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
             this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.reportABugToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.howCanIChangeTheSoundfontListToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -138,6 +137,8 @@
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
             this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.SelfSignedCertificate = new System.Windows.Forms.MenuItem();
             this.menuItem39 = new System.Windows.Forms.MenuItem();
             this.SetAssociationWithSFs = new System.Windows.Forms.MenuItem();
             this.menuItem46 = new System.Windows.Forms.MenuItem();
@@ -278,12 +279,11 @@
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusDoneOr = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.UpdateStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.SelfSignedCertificate = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.MixerBox.SuspendLayout();
             this.EnginesBox.SuspendLayout();
@@ -499,12 +499,6 @@
             this.AMIDIMapCpl.Visible = false;
             this.AMIDIMapCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
             // 
-            // autoupdate
-            // 
-            this.autoupdate.Index = 0;
-            this.autoupdate.Text = "Automatically check for updates when starting the configurator";
-            this.autoupdate.Click += new System.EventHandler(this.autoupdate_Click);
-            // 
             // menuItem17
             // 
             this.menuItem17.Index = 2;
@@ -719,17 +713,24 @@
             // 
             // menuItem44
             // 
-            this.menuItem44.Index = 2;
+            this.menuItem44.Index = 1;
             this.menuItem44.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.autoupdate,
-            this.menuItem41,
+            this.openUpdaterToolStripMenuItem,
+            this.menuItem32,
             this.ChangeUpdateBranch});
-            this.menuItem44.Text = "Update settings";
+            this.menuItem44.Text = "Updates";
             // 
-            // menuItem41
+            // openUpdaterToolStripMenuItem
             // 
-            this.menuItem41.Index = 1;
-            this.menuItem41.Text = "-";
+            this.openUpdaterToolStripMenuItem.Index = 0;
+            this.openUpdaterToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.F2;
+            this.openUpdaterToolStripMenuItem.Text = "Check for updates";
+            this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            // 
+            // menuItem32
+            // 
+            this.menuItem32.Index = 1;
+            this.menuItem32.Text = "-";
             // 
             // ChangeUpdateBranch
             // 
@@ -810,13 +811,6 @@
             this.informationAboutTheDriverToolStripMenuItem.Text = "Information about the driver";
             this.informationAboutTheDriverToolStripMenuItem.Click += new System.EventHandler(this.informationAboutTheDriverToolStripMenuItem_Click);
             // 
-            // openUpdaterToolStripMenuItem
-            // 
-            this.openUpdaterToolStripMenuItem.Index = 1;
-            this.openUpdaterToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.F2;
-            this.openUpdaterToolStripMenuItem.Text = "Check for updates";
-            this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
-            // 
             // reportABugToolStripMenuItem
             // 
             this.reportABugToolStripMenuItem.Index = 3;
@@ -843,7 +837,7 @@
             // 
             // guidesToolStripMenuItem
             // 
-            this.guidesToolStripMenuItem.Index = 11;
+            this.guidesToolStripMenuItem.Index = 10;
             this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.howCanIChangeTheSoundfontListToolStripMenuItem,
             this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
@@ -852,13 +846,13 @@
             // 
             // patronToSupportUsToolStripMenuItem
             // 
-            this.patronToSupportUsToolStripMenuItem.Index = 5;
+            this.patronToSupportUsToolStripMenuItem.Index = 4;
             this.patronToSupportUsToolStripMenuItem.Text = "Become a patron to support my software";
             this.patronToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.patronToSupportUsToolStripMenuItem_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 9;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 8;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
@@ -867,7 +861,6 @@
             this.menuItem3.Index = 4;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
-            this.openUpdaterToolStripMenuItem,
             this.menuItem44,
             this.menuItem49,
             this.donateToSupportUsToolStripMenuItem,
@@ -884,40 +877,40 @@
             // 
             // menuItem49
             // 
-            this.menuItem49.Index = 3;
+            this.menuItem49.Index = 2;
             this.menuItem49.Text = "-";
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 4;
+            this.donateToSupportUsToolStripMenuItem.Index = 3;
             this.donateToSupportUsToolStripMenuItem.Text = "Donate through PayPal to support my software";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // menuItem29
             // 
-            this.menuItem29.Index = 6;
+            this.menuItem29.Index = 5;
             this.menuItem29.Text = "-";
             // 
             // SeeChangelog
             // 
-            this.SeeChangelog.Index = 7;
+            this.SeeChangelog.Index = 6;
             this.SeeChangelog.Text = "Changelog of this driver release";
             this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
             // 
             // SeeLatestChangelog
             // 
-            this.SeeLatestChangelog.Index = 8;
+            this.SeeLatestChangelog.Index = 7;
             this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
             this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 10;
+            this.menuItem33.Index = 9;
             this.menuItem33.Text = "-";
             // 
             // menuItem24
             // 
-            this.menuItem24.Index = 12;
+            this.menuItem24.Index = 11;
             this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.SoftpediaPage,
             this.menuItem26,
@@ -943,7 +936,7 @@
             // 
             // menuItem45
             // 
-            this.menuItem45.Index = 13;
+            this.menuItem45.Index = 12;
             this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HAPLink,
             this.BASSLink,
@@ -1049,6 +1042,19 @@
             this.WinMMPatchRmv.Index = 2;
             this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
             this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
+            // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 4;
+            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.SelfSignedCertificate});
+            this.menuItem11.Text = "Code signing certificate";
+            // 
+            // SelfSignedCertificate
+            // 
+            this.SelfSignedCertificate.Index = 0;
+            this.SelfSignedCertificate.Text = "Install the self-signed certificate by Keppy";
+            this.SelfSignedCertificate.Click += new System.EventHandler(this.SelfSignedCertificate_Click);
             // 
             // menuItem39
             // 
@@ -2626,6 +2632,7 @@
             this.StatusLabel,
             this.StatusDoneOr,
             this.toolStripStatusLabel2,
+            this.UpdateStatus,
             this.VersionLabel});
             this.StatusStrip.Location = new System.Drawing.Point(0, 420);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
@@ -2639,7 +2646,7 @@
             // 
             this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(507, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(491, 17);
             this.StatusLabel.Spring = true;
             this.StatusLabel.Text = "Error.";
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2653,19 +2660,33 @@
             // 
             // toolStripStatusLabel2
             // 
+            this.toolStripStatusLabel2.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.toolStripStatusLabel2.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             this.toolStripStatusLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(13, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(17, 17);
             this.toolStripStatusLabel2.Text = "  ";
+            // 
+            // UpdateStatus
+            // 
+            this.UpdateStatus.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.UpdateStatus.Image = global::KeppySynthConfigurator.Properties.Resources.ClearIcon;
+            this.UpdateStatus.Name = "UpdateStatus";
+            this.UpdateStatus.Size = new System.Drawing.Size(16, 17);
+            this.UpdateStatus.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            this.UpdateStatus.MouseEnter += new System.EventHandler(this.SetHandCursor);
+            this.UpdateStatus.MouseLeave += new System.EventHandler(this.SetDefaultCursor);
             // 
             // VersionLabel
             // 
-            this.VersionLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.VersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(63, 17);
+            this.VersionLabel.Size = new System.Drawing.Size(59, 17);
             this.VersionLabel.Text = "Version {0}";
+            this.VersionLabel.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            this.VersionLabel.MouseEnter += new System.EventHandler(this.SetHandCursor);
+            this.VersionLabel.MouseLeave += new System.EventHandler(this.SetDefaultCursor);
             // 
             // VolumeCheck
             // 
@@ -2680,19 +2701,6 @@
             this.Requirements.ReshowDelay = 20;
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
-            // 
-            // menuItem11
-            // 
-            this.menuItem11.Index = 4;
-            this.menuItem11.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.SelfSignedCertificate});
-            this.menuItem11.Text = "Code signing certificate";
-            // 
-            // SelfSignedCertificate
-            // 
-            this.SelfSignedCertificate.Index = 0;
-            this.SelfSignedCertificate.Text = "Install the self-signed certificate by Keppy";
-            this.SelfSignedCertificate.Click += new System.EventHandler(this.SelfSignedCertificate_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -2783,7 +2791,6 @@
         public System.Windows.Forms.MenuItem enableextra8sf;
         public System.Windows.Forms.MenuItem DebugModePls;
         public System.Windows.Forms.MenuItem autopanicmode;
-        public System.Windows.Forms.MenuItem autoupdate;
         public System.Windows.Forms.MenuItem hotkeys;
         private System.Windows.Forms.MenuItem menuItem21;
         private System.Windows.Forms.MenuItem ImportSettings;
@@ -2890,7 +2897,6 @@
         private System.Windows.Forms.MenuItem menuItem43;
         private System.Windows.Forms.MenuItem GiveFeedback;
         private System.Windows.Forms.MenuItem menuItem44;
-        private System.Windows.Forms.MenuItem menuItem41;
         private System.Windows.Forms.MenuItem ChangeUpdateBranch;
         private System.Windows.Forms.MenuItem DeleteUserData;
         public System.Windows.Forms.ComboBox AudioEngBox;
@@ -2924,7 +2930,6 @@
         private System.Windows.Forms.StatusStrip StatusStrip;
         public System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         public System.Windows.Forms.ToolStripStatusLabel StatusDoneOr;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel VersionLabel;
         private System.Windows.Forms.Label VolLabel;
         public System.Windows.Forms.Label VolSimView;
@@ -2997,6 +3002,9 @@
         private System.Windows.Forms.MenuItem menuItem27;
         private System.Windows.Forms.MenuItem menuItem11;
         private System.Windows.Forms.MenuItem SelfSignedCertificate;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel UpdateStatus;
+        private System.Windows.Forms.MenuItem menuItem32;
     }
 }
 

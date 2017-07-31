@@ -44,7 +44,6 @@
             this.CloseBtn = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.LELabel = new System.Windows.Forms.Label();
-            this.PrvwBtn = new System.Windows.Forms.Button();
             this.PreviewThread = new System.ComponentModel.BackgroundWorker();
             this.CustomMIDI = new System.Windows.Forms.OpenFileDialog();
             this.RightClickMenu = new System.Windows.Forms.ContextMenu();
@@ -57,6 +56,9 @@
             this.StartCustomPrvw = new System.Windows.Forms.MenuItem();
             this.WhatDoesTheSFSay = new System.Windows.Forms.ToolTip(this.components);
             this.SizeWarning = new System.Windows.Forms.ToolTip(this.components);
+            this.PrvwBtn = new System.Windows.Forms.Button();
+            this.SamF = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -156,8 +158,9 @@
             // 
             // label9
             // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 139);
+            this.label9.Location = new System.Drawing.Point(10, 140);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(54, 13);
             this.label9.TabIndex = 12;
@@ -165,11 +168,9 @@
             // 
             // CommentRich
             // 
-            this.CommentRich.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CommentRich.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CommentRich.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CommentRich.Location = new System.Drawing.Point(142, 136);
+            this.CommentRich.Location = new System.Drawing.Point(142, 137);
             this.CommentRich.Name = "CommentRich";
             this.CommentRich.ReadOnly = true;
             this.CommentRich.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -180,7 +181,7 @@
             // CloseBtn
             // 
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBtn.Location = new System.Drawing.Point(444, 282);
+            this.CloseBtn.Location = new System.Drawing.Point(444, 283);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(75, 23);
             this.CloseBtn.TabIndex = 14;
@@ -192,7 +193,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 287);
+            this.label5.Location = new System.Drawing.Point(10, 288);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 13);
             this.label5.TabIndex = 15;
@@ -202,23 +203,13 @@
             // 
             this.LELabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.LELabel.Location = new System.Drawing.Point(142, 287);
+            this.LELabel.Location = new System.Drawing.Point(142, 288);
             this.LELabel.Name = "LELabel";
             this.LELabel.Size = new System.Drawing.Size(157, 13);
             this.LELabel.TabIndex = 16;
             this.LELabel.Text = "SAS";
             this.WhatDoesTheSFSay.SetToolTip(this.LELabel, "Do not trust this info, since it can be modified\r\nby sharing the SoundFont betwee" +
         "n computers!");
-            // 
-            // PrvwBtn
-            // 
-            this.PrvwBtn.Location = new System.Drawing.Point(305, 282);
-            this.PrvwBtn.Name = "PrvwBtn";
-            this.PrvwBtn.Size = new System.Drawing.Size(133, 23);
-            this.PrvwBtn.TabIndex = 17;
-            this.PrvwBtn.Text = "Play SoundFont preview";
-            this.PrvwBtn.UseVisualStyleBackColor = true;
-            this.PrvwBtn.Click += new System.EventHandler(this.PrvwBtn_Click);
             // 
             // PreviewThread
             // 
@@ -228,7 +219,6 @@
             // 
             this.CustomMIDI.Filter = "MIDI files|*.mid;*.midi;*.rmi;*.xm;*.it;*.s3m;*.mod;*.mtm;*.umx;";
             this.CustomMIDI.Title = "Select a MIDI...";
-            this.CustomMIDI.FileOk += new System.ComponentModel.CancelEventHandler(this.CustomMIDI_FileOk);
             // 
             // RightClickMenu
             // 
@@ -291,13 +281,47 @@
             this.SizeWarning.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
             this.SizeWarning.ToolTipTitle = "SoundFont bigger than 2GB";
             // 
+            // PrvwBtn
+            // 
+            this.PrvwBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.PrvwBtn.Location = new System.Drawing.Point(305, 283);
+            this.PrvwBtn.Name = "PrvwBtn";
+            this.PrvwBtn.Size = new System.Drawing.Size(133, 23);
+            this.PrvwBtn.TabIndex = 17;
+            this.PrvwBtn.Text = "Play SoundFont preview";
+            this.PrvwBtn.UseVisualStyleBackColor = true;
+            this.PrvwBtn.Click += new System.EventHandler(this.PrvwBtn_Click);
+            // 
+            // SamF
+            // 
+            this.SamF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SamF.Location = new System.Drawing.Point(142, 140);
+            this.SamF.Name = "SamF";
+            this.SamF.Size = new System.Drawing.Size(377, 13);
+            this.SamF.TabIndex = 19;
+            this.SamF.Text = "label6";
+            this.SamF.Visible = false;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(10, 140);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(82, 13);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Samples format:";
+            this.label8.Visible = false;
+            // 
             // SoundFontInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(525, 312);
+            this.ClientSize = new System.Drawing.Size(525, 313);
             this.ControlBox = false;
+            this.Controls.Add(this.SamF);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.PrvwBtn);
             this.Controls.Add(this.LELabel);
             this.Controls.Add(this.label5);
@@ -343,7 +367,6 @@
         private System.Windows.Forms.Button CloseBtn;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label LELabel;
-        private System.Windows.Forms.Button PrvwBtn;
         private System.ComponentModel.BackgroundWorker PreviewThread;
         private System.Windows.Forms.OpenFileDialog CustomMIDI;
         private System.Windows.Forms.ContextMenu RightClickMenu;
@@ -356,5 +379,8 @@
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.ToolTip WhatDoesTheSFSay;
         private System.Windows.Forms.ToolTip SizeWarning;
+        private System.Windows.Forms.Button PrvwBtn;
+        private System.Windows.Forms.Label SamF;
+        private System.Windows.Forms.Label label8;
     }
 }

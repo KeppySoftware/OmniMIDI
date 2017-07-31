@@ -130,6 +130,59 @@ namespace KeppySynthConfigurator
                 return "Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x).\nRecommended.";
         }
 
+        public static bool CheckForUpdatesMini()
+        {
+            bool internetok = IsInternetAvailable();
+            if (internetok == false)
+            {
+                return false;
+            }
+            else
+            {
+                try
+                {
+                    WebClient client = new WebClient();
+                    Stream stream = client.OpenRead(UpdateTextFile);
+                    StreamReader reader = new StreamReader(stream);
+                    String newestversion = reader.ReadToEnd();
+                    FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateFileVersion);
+                    Version DriverOnline = null;
+                    Version.TryParse(newestversion.ToString(), out DriverOnline);
+                    Version DriverCurrent = null;
+                    Version.TryParse(Driver.FileVersion.ToString(), out DriverCurrent);
+
+                    if (Properties.Settings.Default.UpdateBranch == "canary")
+                    {
+                        if (DriverCurrent < DriverOnline) return true;
+                        else return false;
+                    }
+                    else if (Properties.Settings.Default.UpdateBranch == "normal")
+                    {
+                        if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
+                        {
+                            if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build)) return true;
+                            else return false;
+                        }
+                        else return false;
+                    }
+                    else if (Properties.Settings.Default.UpdateBranch == "delay")
+                    {
+                        if (DriverCurrent.Major < DriverOnline.Major)
+                        {
+                            if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor)) return true;
+                            else return false;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         public static void CheckForUpdates(bool forced, bool startup)
         {
             bool internetok = IsInternetAvailable();

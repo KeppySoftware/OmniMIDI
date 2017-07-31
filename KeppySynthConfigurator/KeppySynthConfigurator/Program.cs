@@ -261,10 +261,6 @@ namespace KeppySynthConfigurator
 
         public static void ExecuteForm(Int32 runmode, String[] args, Mutex m, Int32 form)
         {
-            if (runmode == 0)
-            {
-                UpdateSystem.CheckForUpdates(false, true);
-            }
             Application.EnableVisualStyles();
             if (form == 0)
                 Application.Run(new KeppySynthConfiguratorMain(args));

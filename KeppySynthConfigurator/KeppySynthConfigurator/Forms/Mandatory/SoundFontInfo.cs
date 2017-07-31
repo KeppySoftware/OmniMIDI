@@ -84,6 +84,7 @@ namespace KeppySynthConfigurator
             FNBox.Text = next;
             ISFBox.Text = ReturnName(fontinfo.name, next);
             CIBox.Text = ReturnCopyright(fontinfo.copyright);
+            SamF.Text = String.Format("{0} ({1})", ReturnSampleType(fontinfo.samtype), fontinfo.samtype);
 
             if (f.Length > (long)2147483648)
             {
@@ -123,38 +124,6 @@ namespace KeppySynthConfigurator
             CIBox.ContextMenu = RightClickMenu;
             CommentRich.ContextMenu = RightClickMenu;
             ContextMenu = RightClickMenu;
-        }
-
-        private string ReturnName(string name, string path)
-        {
-            if (name == null)
-                return Path.GetFileNameWithoutExtension(path);
-            else
-                return name;
-        }
-
-        private string ReturnCopyright(string copyright)
-        {
-            if (copyright == null)
-                return "No copyright info available.";
-            else
-                return copyright;
-        }
-
-        private string ReturnComment(string comment)
-        {
-            if (comment == null)
-                return "No comments available.";
-            else
-                return comment;
-        }
-
-        private string ReturnSamplesSize(int size)
-        {
-            if (size != 0)
-                return String.Format("Samples: {0} bytes, ", size.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-            else
-                return "";
         }
 
         private void CloseBtn_Click(object sender, EventArgs e)
@@ -419,9 +388,76 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void CustomMIDI_FileOk(object sender, CancelEventArgs e)
+        private string ReturnName(string name, string path)
         {
+            if (name == null)
+                return Path.GetFileNameWithoutExtension(path);
+            else
+                return name;
+        }
 
+        private string ReturnCopyright(string copyright)
+        {
+            if (copyright == null)
+                return "No copyright info available.";
+            else
+                return copyright;
+        }
+
+        private string ReturnComment(string comment)
+        {
+            if (comment == null)
+                return "No comments available.";
+            else
+                return comment;
+        }
+
+        private string ReturnSamplesSize(int size)
+        {
+            if (size != 0)
+                return String.Format("Samples: {0} bytes, ", size.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+            else
+                return "";
+        }
+
+        private string ReturnSampleType(int type)
+        {      
+            if (type == 0) return "Waveform Audio File Format";
+            else if (type == 256) return "MO3 format music";
+            else if (type == 65536) return "User sample format";
+            else if (type == 65538) return "OGG Vorbis";
+            else if (type == 65539) return "MPEG-1 Audio Layer I";
+            else if (type == 65540) return "MPEG-1 Audio Layer II/MPEG-2 Audio Layer II";
+            else if (type == 65541) return "MPEG-2 Audio Layer III";
+            else if (type == 65542) return "Audio Interchange File Format";
+            else if (type == 65543) return "Apple CoreAudio";
+            else if (type == 65544) return "Microsoft Media Foundation AAC";
+            else if (type == 66048) return "Compact Disc Digital Audio";
+            else if (type == 66304) return "Windows Media Audio";
+            else if (type == 66305) return "MPEG-2 Audio Layer III over Windows Media Audio";
+            else if (type == 66816) return "WavPack Lossless";
+            else if (type == 66817) return "WavPack Hybrid Lossless";
+            else if (type == 66818) return "WavPack Lossy";
+            else if (type == 66819) return "WavPack Hybrid Lossy";
+            else if (type == 66819) return "WavPack Hybrid Lossy";
+            else if (type == 67072) return "OptimFROG";
+            else if (type == 67328) return "Monkey's Audio";
+            else if (type == 67840) return "Free Lossless Audio Codec";
+            else if (type == 67841) return "Free Lossless Audio Codec Opus";
+            else if (type == 68096) return "Musepack";
+            else if (type == 68352) return "Advanced Audio Coding";
+            else if (type == 68353) return "MPEG-4 Part 14";
+            else if (type == 68608) return "Speex";
+            else if (type == 69120) return "Apple Lossless Audio";
+            else if (type == 69376) return "True Audio";
+            else if (type == 69632) return "Dolby Digital AC-3";
+            else if (type == 69888) return "Audio in video container";
+            else if (type == 70144) return "OGG Opus";
+            else if (type == 126976 || type == 126977) return "CRI Middleware AD-X";
+            else if (type == 262144) return "Waveform Audio File Format (PCM)";
+            else if (type == 327681) return "Waveform Audio File Format (PCM)";
+            else if (type == 327683) return "Waveform Audio File Format (Float)";
+            else return "Unknown format";
         }
     }
 }

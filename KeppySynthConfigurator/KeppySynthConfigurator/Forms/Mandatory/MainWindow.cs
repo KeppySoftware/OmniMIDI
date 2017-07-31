@@ -92,6 +92,7 @@ namespace KeppySynthConfigurator
         public KeppySynthConfiguratorMain(String[] args)
         {
             InitializeComponent();
+            StatusStrip.Padding = new Padding(StatusStrip.Padding.Left, StatusStrip.Padding.Top, StatusStrip.Padding.Left, StatusStrip.Padding.Bottom);
             Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
             this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
@@ -203,6 +204,10 @@ namespace KeppySynthConfigurator
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
 
+                Boolean IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
+                if (IsUpdateAvailable) UpdateStatus.Image = Properties.Resources.updateicon;
+                else UpdateStatus.Image = Properties.Resources.successicon;
+
                 if (!Properties.Settings.Default.ButterBoy)
                 {
                     EnableBB.Visible = true;
@@ -210,7 +215,7 @@ namespace KeppySynthConfigurator
                 }
 
                 FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
-                VersionLabel.Text = String.Format("    Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
+                VersionLabel.Text = String.Format("Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
 
                 CLi.BackgroundImage = Properties.Resources.ClearIcon;
                 AddSF.BackgroundImage = Properties.Resources.AddSFIcon;
@@ -1220,6 +1225,16 @@ namespace KeppySynthConfigurator
             Functions.LoudMaxUninstall();
         }
 
+        private void SetHandCursor(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+
+        private void SetDefaultCursor(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+
         private void DLLOverrideFolder_Click(object sender, EventArgs e)
         {
             if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride"))
@@ -1790,20 +1805,6 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
                 hotkeys.Checked = false;
-            }
-        }
-
-        private void autoupdate_Click(object sender, EventArgs e)
-        {
-            if (autoupdate.Checked == false)
-            {
-                SynthSettings.SetValue("autoupdatecheck", "1", RegistryValueKind.DWord);
-                autoupdate.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("autoupdatecheck", "0", RegistryValueKind.DWord);
-                autoupdate.Checked = false;
             }
         }
 
