@@ -171,6 +171,12 @@ namespace KeppySynthConfigurator
                             Functions.UserProfileMigration();
                             return;
                         }
+                        if (s.ToLowerInvariant() == "/virtualmidisynth" ||
+                            s.ToLowerInvariant() == "/vms")
+                        {
+                            Process.Start("https://www.youtube.com/watch?v=hR2iRL173KI");
+                            return;
+                        }
                         else if (s.ToLowerInvariant() == "/rei")
                         {
                             RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);

@@ -46,6 +46,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <winnt.h>
 #include "Resource.h"
 
+// BLiNX best game
+
 #define BASSASIODEF(f) (WINAPI *f)
 #define BASSDEF(f) (WINAPI *f)
 #define BASSENCDEF(f) (WINAPI *f)	

@@ -356,31 +356,38 @@ namespace KeppySynthConfigurator
 
         private void Lis_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_itemDnD == null || Lis.SelectedIndices.Count > 1)
-                return;
-
-            Cursor = Cursors.UpArrow;
-
-            int lastItemBottom = Math.Min(e.Y, Lis.Items[Lis.Items.Count - 1].GetBounds(ItemBoundsPortion.Entire).Bottom - 1);
-
-            ListViewItem itemOver = Lis.GetItemAt(0, lastItemBottom);
-
-            if (itemOver == null)
-                return;
-
-            Rectangle rc = itemOver.GetBounds(ItemBoundsPortion.Entire);
-            if (e.Y < rc.Top + (rc.Height / 2))
+            try
             {
-                Lis.LineBefore = itemOver.Index;
-                Lis.LineAfter = -1;
-            }
-            else
-            {
-                Lis.LineBefore = -1;
-                Lis.LineAfter = itemOver.Index;
-            }
+                if (sender != null || e != null)
+                {
+                    if (_itemDnD == null || Lis.SelectedIndices.Count > 1)
+                        return;
 
-            Lis.Invalidate();
+                    Cursor = Cursors.UpArrow;
+
+                    int lastItemBottom = Math.Min(e.Y, Lis.Items[Lis.Items.Count - 1].GetBounds(ItemBoundsPortion.Entire).Bottom - 1);
+
+                    ListViewItem itemOver = Lis.GetItemAt(0, lastItemBottom);
+
+                    if (itemOver == null)
+                        return;
+
+                    Rectangle rc = itemOver.GetBounds(ItemBoundsPortion.Entire);
+                    if (e.Y < rc.Top + (rc.Height / 2))
+                    {
+                        Lis.LineBefore = itemOver.Index;
+                        Lis.LineAfter = -1;
+                    }
+                    else
+                    {
+                        Lis.LineBefore = -1;
+                        Lis.LineAfter = itemOver.Index;
+                    }
+                }
+
+                Lis.Invalidate();
+            }
+            catch { Lis.Invalidate(); }
         }
 
         private void Lis_MouseUp(object sender, MouseEventArgs e)
@@ -558,6 +565,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                Lis_MouseDown(null, null);
                 if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
                 {
                     for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)

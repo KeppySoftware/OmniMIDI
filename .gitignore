@@ -79,5 +79,5 @@ output/KeppySynthWatchdog.exe
 output/KeppysSynthSetup.exe
 output/KeppysSynthUpdate.exe
 output/Test Keppy's Synthesizer Configurator.bat
-signruntime.bat
-signsetup.bat
+Sign and compile setup.bat
+Sign runtime.bat
