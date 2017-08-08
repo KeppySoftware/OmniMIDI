@@ -565,7 +565,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                Lis_MouseDown(null, null);
+                Lis_MouseMove(null, null);
                 if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
                 {
                     for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)

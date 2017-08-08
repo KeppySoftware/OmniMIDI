@@ -1450,7 +1450,7 @@ namespace KeppySynthConfigurator
             try
             {
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Your computer doesn't seem to like soundfont lists.\n\nThe configurator encountered an error while trying to save the following list:\n" + selectedlistpath, true, ex);
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Oh snap!\nThe configurator encountered an error while editing the following list:\n" + selectedlistpath, true, ex);
                 KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {

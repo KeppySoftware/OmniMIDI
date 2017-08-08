@@ -246,6 +246,7 @@
             this.Preload = new System.Windows.Forms.CheckBox();
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.SoundFontTab = new System.Windows.Forms.TabPage();
+            this.Separator = new System.Windows.Forms.Label();
             this.Lis = new KeppySynthConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1782,7 +1783,7 @@
             this.WhatIsOutput.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsOutput.ErrorImage = null;
-            this.WhatIsOutput.Location = new System.Drawing.Point(173, 20);
+            this.WhatIsOutput.Location = new System.Drawing.Point(172, 20);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(16, 16);
             this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1796,7 +1797,7 @@
             this.WhatIsXAudio.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
             this.WhatIsXAudio.ErrorImage = null;
-            this.WhatIsXAudio.Location = new System.Drawing.Point(173, 46);
+            this.WhatIsXAudio.Location = new System.Drawing.Point(172, 46);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(16, 16);
             this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -2251,6 +2252,7 @@
             // SoundFontTab
             // 
             this.SoundFontTab.BackColor = System.Drawing.Color.Transparent;
+            this.SoundFontTab.Controls.Add(this.Separator);
             this.SoundFontTab.Controls.Add(this.Lis);
             this.SoundFontTab.Controls.Add(this.EL);
             this.SoundFontTab.Controls.Add(this.LoadToApp);
@@ -2272,6 +2274,17 @@
             this.SoundFontTab.Size = new System.Drawing.Size(641, 396);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
+            // 
+            // Separator
+            // 
+            this.Separator.AutoSize = true;
+            this.Separator.Enabled = false;
+            this.Separator.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Separator.Location = new System.Drawing.Point(159, 6);
+            this.Separator.Name = "Separator";
+            this.Separator.Size = new System.Drawing.Size(14, 20);
+            this.Separator.TabIndex = 15;
+            this.Separator.Text = "|";
             // 
             // Lis
             // 
@@ -2377,7 +2390,7 @@
             // BankPresetOverride
             // 
             this.BankPresetOverride.AutoSize = true;
-            this.BankPresetOverride.Location = new System.Drawing.Point(165, 11);
+            this.BankPresetOverride.Location = new System.Drawing.Point(173, 11);
             this.BankPresetOverride.Name = "BankPresetOverride";
             this.BankPresetOverride.Size = new System.Drawing.Size(355, 17);
             this.BankPresetOverride.TabIndex = 2;
@@ -3005,6 +3018,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel UpdateStatus;
         private System.Windows.Forms.MenuItem menuItem32;
+        private System.Windows.Forms.Label Separator;
     }
 }
 
