@@ -205,8 +205,8 @@ namespace KeppySynthConfigurator
                 Functions.CheckMIDIMapper();
 
                 Boolean IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
-                if (IsUpdateAvailable) UpdateStatus.Image = Properties.Resources.updateicon;
-                else UpdateStatus.Image = Properties.Resources.successicon;
+                if (IsUpdateAvailable) UpdateStatus.Image = Properties.Resources.dlready;
+                else UpdateStatus.Image = Properties.Resources.dlnope;
 
                 if (!Properties.Settings.Default.ButterBoy)
                 {
@@ -2316,12 +2316,18 @@ namespace KeppySynthConfigurator
                     {
                         MeterFunc.ChangeMeter(0, 0);
                         MeterFunc.ChangeMeter(1, 0);
+                        MixerBox.Enabled = false;
                         alreadydone = true;
                     }
                 }
                 else
                 {
-                    alreadydone = false;
+                    if (alreadydone != false)
+                    {
+                        MixerBox.Enabled = true;
+                        alreadydone = false;
+                    }
+
                     int left = Convert.ToInt32(Mixer.GetValue("leftvol"));
                     int right = Convert.ToInt32(Mixer.GetValue("rightvol"));
                     var perc = ((double)((left + right) / 2) / 32768) * 100;

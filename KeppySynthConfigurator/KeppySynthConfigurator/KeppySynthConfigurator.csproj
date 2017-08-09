@@ -80,10 +80,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlacklistSystemProcesses.cs">
+    <Compile Include="Forms\Mandatory\BlacklistSystemProcesses.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BlacklistSystemProcesses.Designer.cs">
+    <Compile Include="Forms\Mandatory\BlacklistSystemProcesses.Designer.cs">
       <DependentUpon>BlacklistSystemProcesses.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Mandatory\Advanced Settings\EVBufferManager.cs">
@@ -277,7 +277,7 @@
     </Compile>
     <Compile Include="UpdateSystem\UpdateSystem.cs" />
     <Compile Include="Functions\Knob\Utility.cs" />
-    <EmbeddedResource Include="BlacklistSystemProcesses.resx">
+    <EmbeddedResource Include="Forms\Mandatory\BlacklistSystemProcesses.resx">
       <DependentUpon>BlacklistSystemProcesses.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\EVBufferManager.resx">
@@ -428,6 +428,8 @@
     <None Include="Resources\Mascot\bbhappy.png" />
     <None Include="Resources\Mascot\bbsad.png" />
     <None Include="Resources\Mascot\bbsurprised.png" />
+    <None Include="Resources\Icons\dlnope.png" />
+    <None Include="Resources\Icons\dlready.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Text\gmlist.txt" />

@@ -2280,7 +2280,7 @@
             this.Separator.AutoSize = true;
             this.Separator.Enabled = false;
             this.Separator.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Separator.Location = new System.Drawing.Point(159, 6);
+            this.Separator.Location = new System.Drawing.Point(160, 6);
             this.Separator.Name = "Separator";
             this.Separator.Size = new System.Drawing.Size(14, 20);
             this.Separator.TabIndex = 15;
@@ -2390,7 +2390,7 @@
             // BankPresetOverride
             // 
             this.BankPresetOverride.AutoSize = true;
-            this.BankPresetOverride.Location = new System.Drawing.Point(173, 11);
+            this.BankPresetOverride.Location = new System.Drawing.Point(174, 11);
             this.BankPresetOverride.Name = "BankPresetOverride";
             this.BankPresetOverride.Size = new System.Drawing.Size(355, 17);
             this.BankPresetOverride.TabIndex = 2;
