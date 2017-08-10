@@ -83,7 +83,7 @@ BOOL BlackListSystem(){
 		return 0x1;
 	}
 	catch (...) {
-		crashmessage(L"BlackListPT2");
+		crashmessage(L"BlackListLoadPT2");
 		throw;
 	}
 }
@@ -148,7 +148,7 @@ BOOL VMSBlackList(){
 		return 0x0;
 	}
 	catch (...) {
-		crashmessage(L"BlackListPT1");
+		crashmessage(L"BlackListLoadPT1");
 		throw;
 	}
 }

@@ -14,14 +14,20 @@ static volatile long long evbcount = 0;
 static UINT evbsysexpoint;
 
 void crashmessage(LPCWSTR part) {
-	TCHAR errormessage[MAX_PATH] = L"The driver encountered a serious error at this point: ";
-	TCHAR clickokmsg[MAX_PATH] = L"\n\nPlease take a screenshot of this messagebox (ALT+PRINT) and send it to KaleidonKep99 through an issue on GitHub.\nClick OK to close the program.";
+	TCHAR errormessage[MAX_PATH] = L"An error has been detected while trying to execute the following action: ";
+	TCHAR clickokmsg[MAX_PATH] = L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
 	lstrcat(errormessage, part);
 	lstrcat(errormessage, clickokmsg);
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Error at \"" << part << "\") - Fatal error during the execution of the driver." << std::endl;
-	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-	exit(0);
+
+	const int result = MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	switch (result)
+	{
+	default:
+		exit(0);
+		return;
+	}
 }
 
 void DLLLoadError(LPCWSTR dll) {
@@ -31,11 +37,17 @@ void DLLLoadError(LPCWSTR dll) {
 	lstrcat(errormessage, clickokmsg);
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
-	MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
-	exit(0);
+
+	const int result = MessageBox(NULL, errormessage, L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
+	switch (result)
+	{
+	default:
+		exit(0);
+		return;
+	}
 }
 
-void DLLLoadError2(LPCWSTR dll) {
+void DLLLoadErrorVST(LPCWSTR dll) {
 	std::cout << "(BASS_VST ERROR: " << dll << ") " << " - Can not load DLL. VC++ 2010 is missing. Skipping..." << std::endl;
 }
 
@@ -336,7 +348,7 @@ BOOL load_bassfuncs()
 		if (PathFileExists(bassvstpathalt)) {
 			if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
 				isbassvstloaded = 0;
-				DLLLoadError2(bassvstpathalt);
+				DLLLoadErrorVST(bassvstpathalt);
 			}
 			else {
 				isbassvstloaded = 1;
@@ -348,7 +360,7 @@ BOOL load_bassfuncs()
 			lstrcat(bassvstpath, L"\\bass_vst.dll");
 			if (!(bass_vst = LoadLibrary(bassvstpath))) {
 				isbassvstloaded = 0;
-				DLLLoadError2(bassvstpath);
+				DLLLoadErrorVST(bassvstpath);
 			}
 			else {
 				isbassvstloaded = 1;
@@ -462,7 +474,7 @@ void appname() {
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"AppName");
+		crashmessage(L"AppNameWrite");
 		throw;
 	}
 }
@@ -749,7 +761,7 @@ void WatchdogCheck()
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"WDCheck");
+		crashmessage(L"ConfigCheck");
 		throw;
 	}
 }
@@ -789,7 +801,7 @@ void CheckVolume() {
 		}
 	}
 	catch (...) {
-		crashmessage(L"VolumeMon");
+		crashmessage(L"VolumeMonWrite");
 		throw;
 	}
 }
@@ -894,7 +906,7 @@ void RevbNChor() {
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"MixerCheck");
+		crashmessage(L"RnCCheck");
 		throw;
 	}
 }
@@ -906,7 +918,7 @@ void ReloadSFList(DWORD whichsflist){
 		LoadSoundfont(whichsflist);
 	}
 	catch (...) {
-		crashmessage(L"ReloadSFList");
+		crashmessage(L"ReloadSFListCheck");
 		throw;
 	}
 }

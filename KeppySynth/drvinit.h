@@ -41,7 +41,7 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 		return 0;
 	}
 	catch (...) {
-		crashmessage(L"NotesCatcher");
+		crashmessage(L"SettingsLoad");
 		throw;
 	}
 }
@@ -81,7 +81,7 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 			else break;
 		}
 		catch (...) {
-			crashmessage(L"AudioEngine");
+			crashmessage(L"AudioEngineRender");
 			throw;
 		}
 	}

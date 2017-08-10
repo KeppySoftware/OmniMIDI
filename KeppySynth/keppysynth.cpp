@@ -880,7 +880,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			break;
 		}
 		catch (...) {
-			crashmessage(L"LongMODMData");
+			crashmessage(L"LongMODMDataParse");
 			throw;
 		}
 	case MODM_DATA:
@@ -889,7 +889,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			break;
 		}
 		catch (...) {
-			crashmessage(L"MODMData");
+			crashmessage(L"MODMDataParse");
 			throw;
 		}
 	case MODM_GETVOLUME: {
