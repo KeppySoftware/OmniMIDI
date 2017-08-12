@@ -166,7 +166,7 @@ namespace KnobControl
 		{
 			Graphics g = e.Graphics;
 			// Set background color of Image...            
-			gOffScreen.Clear(this.BackColor);
+			gOffScreen.Clear(KeppySynthConfigurator.KeppySynthConfiguratorMain.Delegate.Settings.BackColor);
 			// Fill knob Background to give knob effect....
 			gOffScreen.FillEllipse(bKnob,rKnob);
 			// Set antialias effect on                     
@@ -329,12 +329,16 @@ namespace KnobControl
 		/// </summary>
 		private void InitializeComponent()
 		{
-			// 
-			// KnobControl
-			// 
-			this.ImeMode = System.Windows.Forms.ImeMode.On;
-			this.Name = "KnobControl";
-			this.Resize += new System.EventHandler(this.KnobControl_Resize);
+            this.SuspendLayout();
+            // 
+            // KnobControl
+            // 
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.Name = "KnobControl";
+            this.Load += new System.EventHandler(this.KnobControl_Load);
+            this.Resize += new System.EventHandler(this.KnobControl_Resize);
+            this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -433,7 +437,9 @@ namespace KnobControl
 		
 		}
 
-		
-		
-	}
+        private void KnobControl_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

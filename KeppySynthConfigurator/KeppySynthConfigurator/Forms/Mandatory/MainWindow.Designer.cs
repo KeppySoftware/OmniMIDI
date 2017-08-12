@@ -1166,7 +1166,7 @@
             this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 396);
+            this.Settings.Size = new System.Drawing.Size(641, 395);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -1891,6 +1891,8 @@
             // VolTrackBar
             // 
             this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.VolTrackBar.BackgroundImage = global::KeppySynthConfigurator.Properties.Resources.AddSFIcon;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.VolTrackBar.ContextMenu = this.KnobContext;
             this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
             this.VolTrackBar.LargeChange = 1000;
@@ -2271,7 +2273,7 @@
             this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(641, 396);
+            this.SoundFontTab.Size = new System.Drawing.Size(641, 395);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -2309,7 +2311,7 @@
             this.Lis.Location = new System.Drawing.Point(6, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(600, 341);
+            this.Lis.Size = new System.Drawing.Size(600, 340);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -2343,7 +2345,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(612, 347);
+            this.EL.Location = new System.Drawing.Point(612, 346);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
@@ -2377,7 +2379,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(612, 318);
+            this.IEL.Location = new System.Drawing.Point(612, 317);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
@@ -2467,7 +2469,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(3, 380);
+            this.ListOverride.Location = new System.Drawing.Point(3, 379);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 14;
@@ -2572,7 +2574,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 423);
+            this.TabsForTheControls.Size = new System.Drawing.Size(649, 422);
             this.TabsForTheControls.TabIndex = 0;
             // 
             // TabImgs
@@ -2647,7 +2649,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 420);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 419);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -2721,7 +2723,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(649, 442);
+            this.ClientSize = new System.Drawing.Size(649, 441);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -2823,7 +2825,6 @@
         private System.Windows.Forms.MenuItem menuItem26;
         private System.Windows.Forms.MenuItem KepChannel;
         private System.Windows.Forms.MenuItem SeeChangelog;
-        private System.Windows.Forms.TabPage Settings;
         private System.Windows.Forms.PictureBox WhatIsXAudio;
         private System.Windows.Forms.PictureBox WhatIsOutput;
         public System.Windows.Forms.CheckBox OutputWAV;
@@ -3019,6 +3020,7 @@
         private System.Windows.Forms.ToolStripStatusLabel UpdateStatus;
         private System.Windows.Forms.MenuItem menuItem32;
         private System.Windows.Forms.Label Separator;
+        public System.Windows.Forms.TabPage Settings;
     }
 }
 

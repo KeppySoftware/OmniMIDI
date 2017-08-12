@@ -340,6 +340,9 @@
     <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\PreciseControlVol.resx">
       <DependentUpon>PreciseControlVol.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Functions\Knob\KnobControl.resx">
+      <DependentUpon>KnobControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UpdateSystem\SelectBranch.resx">
       <DependentUpon>SelectBranch.cs</DependentUpon>
     </EmbeddedResource>

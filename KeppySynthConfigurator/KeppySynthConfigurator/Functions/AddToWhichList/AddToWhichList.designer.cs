@@ -67,7 +67,7 @@
             // 
             this.AddToList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddToList.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.AddToList.Location = new System.Drawing.Point(294, 82);
+            this.AddToList.Location = new System.Drawing.Point(294, 84);
             this.AddToList.Name = "AddToList";
             this.AddToList.Size = new System.Drawing.Size(75, 23);
             this.AddToList.TabIndex = 2;
@@ -79,7 +79,7 @@
             // 
             this.DoNotAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DoNotAdd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.DoNotAdd.Location = new System.Drawing.Point(213, 82);
+            this.DoNotAdd.Location = new System.Drawing.Point(213, 84);
             this.DoNotAdd.Name = "DoNotAdd";
             this.DoNotAdd.Size = new System.Drawing.Size(75, 23);
             this.DoNotAdd.TabIndex = 3;
@@ -91,7 +91,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.DoNotAdd;
-            this.ClientSize = new System.Drawing.Size(381, 117);
+            this.ClientSize = new System.Drawing.Size(381, 119);
             this.ControlBox = false;
             this.Controls.Add(this.DoNotAdd);
             this.Controls.Add(this.AddToList);

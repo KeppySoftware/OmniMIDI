@@ -36,13 +36,13 @@ namespace KeppySynthConfigurator
             this.AddBlacklistedProgram = new System.Windows.Forms.OpenFileDialog();
             this.BlacklistContext = new System.Windows.Forms.ContextMenu();
             this.AE = new System.Windows.Forms.MenuItem();
+            this.AEr = new System.Windows.Forms.MenuItem();
             this.RE = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.CBLi = new System.Windows.Forms.MenuItem();
             this.EDBLi = new System.Windows.Forms.Button();
             this.UDBLi = new System.Windows.Forms.Button();
             this.NoBlockMessage = new System.Windows.Forms.CheckBox();
-            this.AEr = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // BlackListDef
@@ -96,6 +96,12 @@ namespace KeppySynthConfigurator
             this.AE.Text = "Add executable(s) from file";
             this.AE.Click += new System.EventHandler(this.AddBlackList_Click);
             // 
+            // AEr
+            // 
+            this.AEr.Index = 1;
+            this.AEr.Text = "Add executable(s) from running processes";
+            this.AEr.Click += new System.EventHandler(this.AEr_Click);
+            // 
             // RE
             // 
             this.RE.Index = 2;
@@ -116,23 +122,25 @@ namespace KeppySynthConfigurator
             // EDBLi
             // 
             this.EDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.EDBLi.BackColor = System.Drawing.Color.Transparent;
             this.EDBLi.Location = new System.Drawing.Point(556, 34);
             this.EDBLi.Name = "EDBLi";
             this.EDBLi.Size = new System.Drawing.Size(134, 23);
             this.EDBLi.TabIndex = 32;
             this.EDBLi.Text = "Edit default blacklist";
-            this.EDBLi.UseVisualStyleBackColor = true;
+            this.EDBLi.UseVisualStyleBackColor = false;
             this.EDBLi.Click += new System.EventHandler(this.EDBLi_Click);
             // 
             // UDBLi
             // 
             this.UDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.UDBLi.BackColor = System.Drawing.Color.Transparent;
             this.UDBLi.Location = new System.Drawing.Point(556, 56);
             this.UDBLi.Name = "UDBLi";
             this.UDBLi.Size = new System.Drawing.Size(134, 23);
             this.UDBLi.TabIndex = 33;
             this.UDBLi.Text = "Update default blacklist";
-            this.UDBLi.UseVisualStyleBackColor = true;
+            this.UDBLi.UseVisualStyleBackColor = false;
             this.UDBLi.Click += new System.EventHandler(this.UDBLi_Click);
             // 
             // NoBlockMessage
@@ -147,18 +155,12 @@ namespace KeppySynthConfigurator
             this.NoBlockMessage.UseVisualStyleBackColor = true;
             this.NoBlockMessage.CheckedChanged += new System.EventHandler(this.NoBlockMessage_CheckedChanged);
             // 
-            // AEr
-            // 
-            this.AEr.Index = 1;
-            this.AEr.Text = "Add executable(s) from running processes";
-            this.AEr.Click += new System.EventHandler(this.AEr_Click);
-            // 
             // KeppySynthBlacklistSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(695, 384);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(695, 385);
             this.Controls.Add(this.NoBlockMessage);
             this.Controls.Add(this.UDBLi);
             this.Controls.Add(this.EDBLi);
