@@ -166,7 +166,7 @@ namespace KnobControl
 		{
 			Graphics g = e.Graphics;
 			// Set background color of Image...            
-			gOffScreen.Clear(KeppySynthConfigurator.KeppySynthConfiguratorMain.Delegate.Settings.BackColor);
+			gOffScreen.Clear(this.BackColor);
 			// Fill knob Background to give knob effect....
 			gOffScreen.FillEllipse(bKnob,rKnob);
 			// Set antialias effect on                     

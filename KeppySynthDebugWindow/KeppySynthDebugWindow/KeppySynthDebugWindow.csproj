@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="debugicon.ico" />
+    <None Include="Resources\w9x.png" />
     <None Include="Resources\other.png" />
     <None Include="Resources\vmware.png" />
     <None Include="Resources\parallels.png" />

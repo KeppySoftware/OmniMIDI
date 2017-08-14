@@ -36,7 +36,7 @@ namespace KeppySynthConfigurator
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
         public static PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-        public static int CurrentTheme = 0;
+        public static int CurrentTheme = -1;
 
         // Lists
         public static ListViewItem _itemDnD = null;
@@ -200,7 +200,7 @@ namespace KeppySynthConfigurator
                 Lis.Columns[1].Tag = 1;
                 Lis.Columns[2].Tag = 1;
                 Lis_SizeChanged(Lis, new EventArgs());
-                this.ThemeCheck.RunWorkerAsync();
+                ThemeCheck.RunWorkerAsync();
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
 
@@ -972,6 +972,31 @@ namespace KeppySynthConfigurator
             Program.DebugToConsole(false, "Applied new settings.", null);
         }
 
+        private void MSGSWSEmu_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            VolTrackBar.Value = 10000;
+            PolyphonyLimit.Value = 32;
+            MaxCPU.Value = 75;
+            Frequency.Text = "22050";
+            Preload.Checked = true;
+            NoteOffCheck.Checked = false;
+            SincInter.Checked = false;
+            EnableSFX.Checked = false;
+            SysResetIgnore.Checked = true;
+            OutputWAV.Checked = false;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
+            bufsize.Value = 50;
+            SPFRate.Value = 100;
+            AudioEngBox_SelectedIndexChanged(null, null);
+
+            // And then...
+            Functions.SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("The preset has been applied!\n\nRemember to download the Microsoft GS Wavetable Synth SoundFont for the best \"experience\".", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
@@ -1026,12 +1051,12 @@ namespace KeppySynthConfigurator
         {
             // Set some values...
             VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 64;
+            PolyphonyLimit.Value = 16;
             MaxCPU.Value = 0;
             Frequency.Text = "22050";
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
             AudioEngBox_SelectedIndexChanged(null, null);
-            bufsize.Value = 20;
+            bufsize.Value = 30;
             SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
@@ -1957,27 +1982,29 @@ namespace KeppySynthConfigurator
 
         private void ThemeCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            try
+            while (true)
             {
-                while (true)
+                try
                 {
                     if (VisualStyleInformation.IsEnabledByUser == true)
                     {
-                        if (CurrentTheme == 0)
+                        if (CurrentTheme != 1)
                         {
                             CurrentTheme = 1;
-                            this.Invoke(new MethodInvoker(delegate { SoundFontTab.BackColor = Color.White; }));
-                            this.Invoke(new MethodInvoker(delegate { Settings.BackColor = Color.White; }));
+                            SoundFontTab.Invoke((MethodInvoker)delegate { SoundFontTab.BackColor = Color.White; });
+                            Settings.Invoke((MethodInvoker)delegate { Settings.BackColor = Color.White; });
+                            VolPanel.Invoke((MethodInvoker)delegate { VolPanel.BackColor = Color.White; });
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
                     }
                     else
                     {
-                        if (CurrentTheme == 1)
+                        if (CurrentTheme != 0)
                         {
                             CurrentTheme = 0;
-                            this.Invoke(new MethodInvoker(delegate { SoundFontTab.BackColor = SystemColors.Control; }));
-                            this.Invoke(new MethodInvoker(delegate { Settings.BackColor = SystemColors.Control; }));
+                            SoundFontTab.Invoke((MethodInvoker)delegate { SoundFontTab.BackColor = SystemColors.Control; });
+                            Settings.Invoke((MethodInvoker)delegate { Settings.BackColor = SystemColors.Control; });
+                            VolPanel.Invoke((MethodInvoker)delegate { VolPanel.BackColor = SystemColors.Control; });
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
                     }
@@ -1985,10 +2012,10 @@ namespace KeppySynthConfigurator
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                 }
-            }
-            catch
-            {
-
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
             }
         }
 
@@ -2378,6 +2405,6 @@ namespace KeppySynthConfigurator
         private void applySettingsToolStripMenuItem_Paint(object sender, PaintEventArgs e)
         {
             ColorButton(applySettingsToolStripMenuItem, Pens.Green, e);
-        }
+        } 
     }
 }

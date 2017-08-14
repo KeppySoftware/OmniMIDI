@@ -19,6 +19,7 @@ using Microsoft.VisualBasic.Devices;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using System.Drawing;
+using System.Windows.Forms.VisualStyles;
 
 namespace KeppySynthDebugWindow
 {
@@ -233,7 +234,7 @@ namespace KeppySynthDebugWindow
                 {
                     if (Environment.OSVersion.Version.Major == 5)
                     {
-                        WinLogoTT.SetToolTip(WinLogo, "Upgrade your crap.");
+                        WinLogoTT.SetToolTip(WinLogo, "You're using an unsupported OS.");
                         return Properties.Resources.other;
                     }
                     if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
@@ -243,7 +244,10 @@ namespace KeppySynthDebugWindow
                         else
                             WinLogoTT.SetToolTip(WinLogo, "You're using Windows Vista.");
 
-                        return Properties.Resources.wvista;
+                        if (VisualStyleInformation.IsEnabledByUser == true)
+                            return Properties.Resources.wvista;
+                        else
+                            return Properties.Resources.w9x;
                     }
                     else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1)
                     {
@@ -252,7 +256,10 @@ namespace KeppySynthDebugWindow
                         else
                             WinLogoTT.SetToolTip(WinLogo, "You're using Windows 7.");
 
-                        return Properties.Resources.w7;
+                        if (VisualStyleInformation.IsEnabledByUser == true)
+                            return Properties.Resources.w7;
+                        else
+                            return Properties.Resources.w9x;
                     }
                     else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
                     {
