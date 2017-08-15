@@ -12,10 +12,6 @@ namespace KeppySynthConfigurator
 {
     public partial class EVBufferManager : Form
     {
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
-
         ulong installedMemory;
         string basetextwarning = "WARNING:\nLeave at least {0} of RAM available for the operating system.";
 
@@ -29,7 +25,7 @@ namespace KeppySynthConfigurator
             try
             {
                 MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
-                if (!GlobalMemoryStatusEx(memStatus)) MessageBox.Show("Unknown error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!Functions.GlobalMemoryStatusEx(memStatus)) MessageBox.Show("Unknown error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 installedMemory = memStatus.ullTotalPhys;
 
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram", "0")) == 1)

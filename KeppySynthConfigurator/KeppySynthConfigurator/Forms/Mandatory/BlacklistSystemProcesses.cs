@@ -40,6 +40,7 @@ namespace KeppySynthConfigurator
         {
             RefrLab.Visible = true;
             RunningProcessesList.Items.Clear();
+            ProcessList = Process.GetProcesses();
             GetProcesses();
             System.Threading.Thread.Sleep(100);
             RefrLab.Visible = false;

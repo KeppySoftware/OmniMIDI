@@ -213,6 +213,7 @@ namespace KeppySynthConfigurator
                 {
                     string[] val = form.BanThesePlease.ToArray();
                     foreach (string item in val) ProgramsBlackList.Items.Add(item);
+                    SaveBlackList();
                 }
             }
         }

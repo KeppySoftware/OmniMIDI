@@ -272,7 +272,16 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
+                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.\n\nPress OK to reinstall the driver.", true, ex);
+                var p = new System.Diagnostics.Process();
+                p.StartInfo.FileName = Application.ExecutablePath;
+                p.StartInfo.Arguments = "/REI";
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+                Application.ExitThread();
+                return;
             }
         }
 
@@ -941,18 +950,22 @@ namespace KeppySynthConfigurator
         {
             // Set some values...
             VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 512;
-            MaxCPU.Value = 65;
-            Frequency.Text = "48000";
-            bufsize.Value = 30;
+            PolyphonyLimit.Value = 500;
+            MaxCPU.Value = 75;
+            Frequency.Text = "44100";
+            bufsize.Value = 20;
             SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
-            EnableSFX.Checked = false;
+            EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
+
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
 
             // And then...
             Functions.SaveSettings();
@@ -986,9 +999,13 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
-            bufsize.Value = 50;
+            bufsize.Value = 200;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
+
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 256, 1);
 
             // And then...
             Functions.SaveSettings();
@@ -1015,6 +1032,10 @@ namespace KeppySynthConfigurator
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
 
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+
             // And then...
             Functions.SaveSettings();
 
@@ -1040,6 +1061,10 @@ namespace KeppySynthConfigurator
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
 
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+
             // And then...
             Functions.SaveSettings();
 
@@ -1056,14 +1081,18 @@ namespace KeppySynthConfigurator
             Frequency.Text = "22050";
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
             AudioEngBox_SelectedIndexChanged(null, null);
-            bufsize.Value = 30;
+            bufsize.Value = 50;
             SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
-            EnableSFX.Checked = true;
+            EnableSFX.Checked = false;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
+
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 384, 1);
 
             // And then...
             Functions.SaveSettings();
@@ -1090,6 +1119,10 @@ namespace KeppySynthConfigurator
             SysResetIgnore.Checked = true;
             OutputWAV.Checked = false;
 
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+
             // And then...
             Functions.SaveSettings();
 
@@ -1115,6 +1148,10 @@ namespace KeppySynthConfigurator
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
 
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+
             // And then...
             Functions.SaveSettings();
 
@@ -1139,6 +1176,10 @@ namespace KeppySynthConfigurator
             bufsize.Value = 20;
             SPFRate.Value = 100;
             AudioEngBox_SelectedIndexChanged(null, null);
+
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
 
             // And then...
             Functions.SaveSettings();
@@ -2049,18 +2090,18 @@ namespace KeppySynthConfigurator
 
             // Set some values...
             VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 512;
-            MaxCPU.Value = 65;
-            Frequency.Text = "48000";
-            bufsize.Value = 30;
+            PolyphonyLimit.Value = 500;
+            MaxCPU.Value = 75;
+            Frequency.Text = "44100";
+            bufsize.Value = 20;
             SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
-            EnableSFX.Checked = false;
+            EnableSFX.Checked = true;
             SysResetIgnore.Checked = false;
             OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
 
             // And then...
             Functions.SaveSettings();
@@ -2077,7 +2118,8 @@ namespace KeppySynthConfigurator
 
             // Set some values...
             SynthSettings.SetValue("sndbfvalue", 100, RegistryValueKind.DWord);
-            SynthSettings.SetValue("newevbuffvalue", 16384, RegistryValueKind.DWord);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
 
             DialogResult dialogResult2 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult2 == DialogResult.Yes)
@@ -2090,10 +2132,8 @@ namespace KeppySynthConfigurator
             MessageBox.Show(panic3, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // Set some values...
-            PolyphonyLimit.Value = 350;
-            MaxCPU.Value = 75;
-            Frequency.Text = "44100";
-            bufsize.Value = 40;
+            PolyphonyLimit.Value = 384;
+            MaxCPU.Value = 85;
 
             // And then...
             Functions.SaveSettings();
@@ -2108,8 +2148,10 @@ namespace KeppySynthConfigurator
             // Set some values...
             PolyphonyLimit.Value = 250;
             MaxCPU.Value = 80;
-            Frequency.Text = "32000";
-            bufsize.Value = 50;
+            Frequency.Text = "44100";
+            bufsize.Value = 25;
+            SPFRate.Value = 100;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...
             Functions.SaveSettings();
@@ -2364,7 +2406,7 @@ namespace KeppySynthConfigurator
                     if (Convert.ToInt32(SynthSettings.GetValue("monorendering", 0)) == 1)
                     {
                         MeterFunc.ChangeMeter(0, left);
-                        MeterFunc.ChangeMeter(1, 0);
+                        MeterFunc.ChangeMeter(1, left);
                         MeterFunc.AverageMeter(left, left);
                     }
                     else

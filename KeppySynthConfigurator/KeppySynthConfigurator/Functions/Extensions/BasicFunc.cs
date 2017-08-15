@@ -31,6 +31,10 @@ namespace KeppySynthConfigurator
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+
         public static Color SFEnabled = Color.FromArgb(0, 0, 0);
         public static Color SFDisabled = Color.FromArgb(170, 170, 170);
 
@@ -968,6 +972,49 @@ namespace KeppySynthConfigurator
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                 Application.Exit();
             }
+        }
+
+        /// <summary>
+        /// Changes the advanced audio settings automatically
+        /// </summary>
+        /// <param name="audiodepth">Set the audio depth of the stream. 1 = 32-bit float, 2 = 16-bit integer, 3 = 8-bit integer</param>
+        /// <param name="monorendering">Set the stream to only output to one audio channel. 0 = Disabled, 1 = Enabled</param>
+        /// <param name="fadeoutdisable">Set the fade out for when a note gets killed. 0 = Disabled, 1 = Enabled</param>
+        /// <param name="vms2emu">Set if the driver has to emulate VirtualMIDISynth 2.x (Example: Slowdowns when the EVBuffer is full). 0 = Disabled, 1 = Enabled</param>
+        /// <param name="oldbuffermode">Set if the driver should use the old buffer mode (Only DirectSound and XAudio). 0 = Disabled, 1 = Enabled</param>
+        /// <param name="sleepstates">Set if the driver should disable sleepstates (Only DirectSound). 0 = Disable them, 1 = Keep them enabled</param>
+        public static void ChangeAdvancedAudioSettings(int audiodepth, int monorendering, int fadeoutdisable, int vms2emu, int oldbuffermode, int sleepstates)
+        {
+            // 32bit values: 1 = 32-bit float, 2 = 16-bit integer, 3 = 8-bit integer
+
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", audiodepth, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", monorendering, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", fadeoutdisable, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("vms2emu", vms2emu, RegistryValueKind.DWord);
+            Functions.OldBufferMode(oldbuffermode);
+            Functions.SleepStates(sleepstates);
+        }
+
+        /// <summary>
+        /// Changes the MIDI Event Parser settings automatically
+        /// </summary>
+        /// <param name="capframerate">Set if the driver should cap the input framerate to 60FPS. 0 = Disabled, 1 = Enabled</param>
+        /// <param name="getbuffbyram">Set if the driver should get the EVBuffer size from the RAM. 0 = Disabled, 1 = Enabled</param>
+        /// <param name="buffsize">Set the EVBuffer size (Only when "evbuffbyram" is set to 0).</param>
+        /// <param name="buffratio">Set the EVBuffer division ratio (Only when "evbuffbyram" is set to 1).</param>
+        public static void ChangeMIDIEventParserSettings(int capframerate, int getbuffbyram, int buffsize, int buffratio)
+        {
+            MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
+            if (!GlobalMemoryStatusEx(memStatus)) MessageBox.Show("Unknown error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            Functions.SetFramerate(1);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", getbuffbyram, Microsoft.Win32.RegistryValueKind.DWord);
+
+            if (buffsize < 1) KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffsize", memStatus.ullTotalPhys, Microsoft.Win32.RegistryValueKind.QWord);
+            else KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffsize", buffsize, Microsoft.Win32.RegistryValueKind.QWord);
+
+            if (buffsize > 1) KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", "1", Microsoft.Win32.RegistryValueKind.DWord);
+            else KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", buffratio, Microsoft.Win32.RegistryValueKind.DWord);
         }
 
         public static void ExportSettings(String filename)

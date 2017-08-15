@@ -156,6 +156,12 @@
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.VolPanel = new System.Windows.Forms.Panel();
+            this.VolLabel = new System.Windows.Forms.Label();
+            this.VolTrackBar = new KnobControl.KnobControl();
+            this.KnobContext = new System.Windows.Forms.ContextMenu();
+            this.FineTuningVolume = new System.Windows.Forms.MenuItem();
+            this.VolSimView = new System.Windows.Forms.Label();
             this.MixerBox = new System.Windows.Forms.GroupBox();
             this.MixerContext = new System.Windows.Forms.ContextMenu();
             this.OpenMixer = new System.Windows.Forms.MenuItem();
@@ -219,11 +225,6 @@
             this.AdditionalSettingsBox = new System.Windows.Forms.GroupBox();
             this.AASButton = new System.Windows.Forms.Button();
             this.MEPSButton = new System.Windows.Forms.Button();
-            this.VolLabel = new System.Windows.Forms.Label();
-            this.VolSimView = new System.Windows.Forms.Label();
-            this.VolTrackBar = new KnobControl.KnobControl();
-            this.KnobContext = new System.Windows.Forms.ContextMenu();
-            this.FineTuningVolume = new System.Windows.Forms.MenuItem();
             this.SettingsPresetsBtn = new System.Windows.Forms.Button();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.Button();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.Button();
@@ -289,8 +290,8 @@
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.VolPanel = new System.Windows.Forms.Panel();
             this.Settings.SuspendLayout();
+            this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
@@ -306,7 +307,6 @@
             this.SoundFontTab.SuspendLayout();
             this.TabsForTheControls.SuspendLayout();
             this.StatusStrip.SuspendLayout();
-            this.VolPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // SoundfontImport
@@ -750,8 +750,8 @@
             this.menuItem20.Index = 3;
             this.menuItem20.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.RegDriver,
-            this.menuItem23,
             this.PanicButton,
+            this.menuItem23,
             this.SignatureCheck,
             this.menuItem16,
             this.DLLOverrideFolder});
@@ -765,12 +765,12 @@
             // 
             // menuItem23
             // 
-            this.menuItem23.Index = 1;
+            this.menuItem23.Index = 2;
             this.menuItem23.Text = "-";
             // 
             // PanicButton
             // 
-            this.PanicButton.Index = 2;
+            this.PanicButton.Index = 1;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
             // 
@@ -1173,6 +1173,73 @@
             this.Settings.Size = new System.Drawing.Size(641, 395);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
+            // 
+            // VolPanel
+            // 
+            this.VolPanel.BackColor = System.Drawing.Color.Transparent;
+            this.VolPanel.Controls.Add(this.VolLabel);
+            this.VolPanel.Controls.Add(this.VolTrackBar);
+            this.VolPanel.Controls.Add(this.VolSimView);
+            this.VolPanel.Location = new System.Drawing.Point(564, -1);
+            this.VolPanel.Name = "VolPanel";
+            this.VolPanel.Size = new System.Drawing.Size(76, 88);
+            this.VolPanel.TabIndex = 15;
+            // 
+            // VolLabel
+            // 
+            this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLabel.Location = new System.Drawing.Point(3, 72);
+            this.VolLabel.Name = "VolLabel";
+            this.VolLabel.Size = new System.Drawing.Size(35, 16);
+            this.VolLabel.TabIndex = 3;
+            this.VolLabel.Text = "VOL:";
+            this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.ContextMenu = this.KnobContext;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(7, 3);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.ShowLargeScale = true;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(66, 66);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.TabIndex = 5;
+            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
+            this.VolTrackBar.Value = 0;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
+            // KnobContext
+            // 
+            this.KnobContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.FineTuningVolume});
+            // 
+            // FineTuningVolume
+            // 
+            this.FineTuningVolume.Index = 0;
+            this.FineTuningVolume.Text = "Fine tune the volume knob";
+            this.FineTuningVolume.Click += new System.EventHandler(this.FineTuningVolume_Click);
+            // 
+            // VolSimView
+            // 
+            this.VolSimView.BackColor = System.Drawing.Color.Transparent;
+            this.VolSimView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
+            this.VolSimView.Location = new System.Drawing.Point(0, 70);
+            this.VolSimView.Name = "VolSimView";
+            this.VolSimView.Size = new System.Drawing.Size(76, 18);
+            this.VolSimView.TabIndex = 4;
+            this.VolSimView.Text = "100";
+            this.VolSimView.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.VolSimView.UseMnemonic = false;
             // 
             // MixerBox
             // 
@@ -1999,62 +2066,6 @@
             this.MEPSButton.UseVisualStyleBackColor = true;
             this.MEPSButton.Click += new System.EventHandler(this.MEPSMenu_Click);
             // 
-            // VolLabel
-            // 
-            this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolLabel.Location = new System.Drawing.Point(3, 72);
-            this.VolLabel.Name = "VolLabel";
-            this.VolLabel.Size = new System.Drawing.Size(35, 16);
-            this.VolLabel.TabIndex = 3;
-            this.VolLabel.Text = "VOL:";
-            this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // VolSimView
-            // 
-            this.VolSimView.BackColor = System.Drawing.Color.Transparent;
-            this.VolSimView.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
-            this.VolSimView.Location = new System.Drawing.Point(0, 70);
-            this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(76, 18);
-            this.VolSimView.TabIndex = 4;
-            this.VolSimView.Text = "100";
-            this.VolSimView.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.VolSimView.UseMnemonic = false;
-            // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.ContextMenu = this.KnobContext;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(7, 3);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.ShowLargeScale = true;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(66, 66);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.TabIndex = 5;
-            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
-            this.VolTrackBar.Value = 0;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
-            // 
-            // KnobContext
-            // 
-            this.KnobContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.FineTuningVolume});
-            // 
-            // FineTuningVolume
-            // 
-            this.FineTuningVolume.Index = 0;
-            this.FineTuningVolume.Text = "Fine tune the volume knob";
-            this.FineTuningVolume.Click += new System.EventHandler(this.FineTuningVolume_Click);
-            // 
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -2215,7 +2226,7 @@
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.Requirements.SetToolTip(this.bufsize, "Changing this setting requires the user to restart the MIDI application.");
             this.bufsize.Value = new decimal(new int[] {
-            1,
+            20,
             0,
             0,
             0});
@@ -2252,7 +2263,7 @@
             this.MaxCPU.TabIndex = 12;
             this.MaxCPU.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MaxCPU.Value = new decimal(new int[] {
-            1,
+            75,
             0,
             0,
             0});
@@ -2341,7 +2352,7 @@
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PolyphonyLimit.ThousandsSeparator = true;
             this.PolyphonyLimit.Value = new decimal(new int[] {
-            100000,
+            500,
             0,
             0,
             0});
@@ -2877,17 +2888,6 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
             // 
-            // VolPanel
-            // 
-            this.VolPanel.BackColor = System.Drawing.Color.Transparent;
-            this.VolPanel.Controls.Add(this.VolLabel);
-            this.VolPanel.Controls.Add(this.VolTrackBar);
-            this.VolPanel.Controls.Add(this.VolSimView);
-            this.VolPanel.Location = new System.Drawing.Point(564, -1);
-            this.VolPanel.Name = "VolPanel";
-            this.VolPanel.Size = new System.Drawing.Size(76, 88);
-            this.VolPanel.TabIndex = 15;
-            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2909,6 +2909,7 @@
             this.Text = "Keppy\'s Synthesizer ~ Configurator";
             this.Load += new System.EventHandler(this.KeppySynthConfiguratorMain_Load);
             this.Settings.ResumeLayout(false);
+            this.VolPanel.ResumeLayout(false);
             this.MixerBox.ResumeLayout(false);
             this.MixerBox.PerformLayout();
             this.EnginesBox.ResumeLayout(false);
@@ -2930,7 +2931,6 @@
             this.TabsForTheControls.ResumeLayout(false);
             this.StatusStrip.ResumeLayout(false);
             this.StatusStrip.PerformLayout();
-            this.VolPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

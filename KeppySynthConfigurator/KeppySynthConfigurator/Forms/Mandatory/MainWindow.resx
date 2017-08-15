@@ -141,14 +141,17 @@
   <metadata name="ImportSettingsDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>940, 17</value>
   </metadata>
+  <metadata name="MixerContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 56</value>
+  </metadata>
+  <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>799, 56</value>
+  </metadata>
   <metadata name="KnobContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>550, 56</value>
   </metadata>
   <metadata name="ButtonsDesc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>141, 56</value>
-  </metadata>
-  <metadata name="MixerContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 56</value>
   </metadata>
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>799, 56</value>
@@ -161,7 +164,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAACC
-        CQAAAk1TRnQBSQFMAgEBAgEAAVABBAFQAQQBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        CQAAAk1TRnQBSQFMAgEBAgEAAWABBAFgAQQBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABEAMAAQEBAAEgBgABEBUAAQEDDQERAx0BKgMgAS8DIAEvAyABLwMgAS8DIAEvAyABLwMgAS8DIAEv
         AyABLwMgAS8DHQEqAw0BEQMAAQEPAAEBBAADAgEDAysBQgNUAawDVAGuAy0BRQMCAQMHAAEBjAADBwEJ
         AzUBVwJWAVUBsQJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJY
@@ -218,9 +221,6 @@
   </metadata>
   <metadata name="VolumeCheck.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>673, 56</value>
-  </metadata>
-  <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>799, 56</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>55</value>
