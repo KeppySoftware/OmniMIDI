@@ -171,12 +171,9 @@ namespace KeppySynthConfigurator
             {
                 MIDIPreview = CustomMIDI.FileName;
                 Functions.SetLastMIDIPath(Path.GetDirectoryName(CustomMIDI.FileName));
+                RunWorker();
             }
-            else
-            {
-                return;
-            }
-            RunWorker();
+            else return;
         }
 
         private void PrvwBtn_Click(object sender, EventArgs e)
@@ -200,7 +197,12 @@ namespace KeppySynthConfigurator
             // Init stream
             ChangePreviewButtonText("Initializing stream...", false);
             ChangeWindowTitle("Initializing stream...");
-            hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+            hStream = BassMidi.BASS_MIDI_StreamCreateFile(MIDIPreview, 0L, 0L, 
+                BASSFlag.BASS_SAMPLE_FLOAT |
+                BASSFlag.BASS_SAMPLE_SOFTWARE |
+                (KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked ? BASSFlag.BASS_DEFAULT : BASSFlag.BASS_MIDI_NOFX) |
+                (LoopYesNo.Checked ? BASSFlag.BASS_SAMPLE_LOOP : BASSFlag.BASS_DEFAULT),
+                0);
             Bass.BASS_ChannelSetAttribute(hStream, BASSAttribute.BASS_ATTRIB_MIDI_CPU, (int)(KeppySynthConfiguratorMain.Delegate.MaxCPU.Value / 100));
             System.Threading.Thread.Sleep(50);
 
@@ -208,8 +210,6 @@ namespace KeppySynthConfigurator
             ChangePreviewButtonText("Loading SoundFont...", false);
             ChangeWindowTitle("Loading SoundFont...");
             BASS_MIDI_FONTEX[] fonts = new BASS_MIDI_FONTEX[1];
-            List<int> termsList = new List<int>();
-            termsList.Reverse();
 
             if (OriginalSF.ToLower().IndexOf('=') != -1)
             {
@@ -220,8 +220,6 @@ namespace KeppySynthConfigurator
                 fonts[0].sbank = Convert.ToInt32(matches[1].ToString());
                 fonts[0].dpreset = Convert.ToInt32(matches[2].ToString());
                 fonts[0].dbank = Convert.ToInt32(matches[3].ToString());
-                BassMidi.BASS_MIDI_FontSetVolume(fonts[0].font, 1.0f);
-                BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
             }
             else
             {
@@ -230,9 +228,10 @@ namespace KeppySynthConfigurator
                 fonts[0].sbank = -1;
                 fonts[0].dpreset = -1;
                 fonts[0].dbank = 0;
-                BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
             }
 
+            BassMidi.BASS_MIDI_FontSetVolume(fonts[0].font, 1.0f);
+            BassMidi.BASS_MIDI_StreamSetFonts(hStream, fonts, 1);
             BassMidi.BASS_MIDI_StreamLoadSamples(hStream);
         }
 
@@ -241,7 +240,9 @@ namespace KeppySynthConfigurator
             // Init stream
             ChangePreviewButtonText("Initializing stream...", false);
             ChangeWindowTitle("Initializing stream...");
-            hStream = Bass.BASS_MusicLoad(MIDIPreview, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_SOFTWARE, 0);
+            hStream = Bass.BASS_MusicLoad(MIDIPreview, 0, 0, 
+                BASSFlag.BASS_SAMPLE_FLOAT | BASSFlag.BASS_SAMPLE_SOFTWARE | (LoopYesNo.Checked ? BASSFlag.BASS_SAMPLE_LOOP : BASSFlag.BASS_DEFAULT),
+                0);
             System.Threading.Thread.Sleep(50);
         }
 
@@ -296,8 +297,6 @@ namespace KeppySynthConfigurator
 
                 int howmanytimes = 1;
 
-            RestartStream:
-                CheckPlayTimes(howmanytimes);
                 Bass.BASS_ChannelPlay(hStream, false);
                 ChangePreviewButtonText("Stop SoundFont preview", true);
                 ChangeWindowTitle(String.Format("Playing \"{0}\"", Path.GetFileNameWithoutExtension(MIDIPreview)));
@@ -314,12 +313,6 @@ namespace KeppySynthConfigurator
 
                 if (!Quitting)
                 {
-                    if (LoopYesNo.Checked == true && IsPreviewEnabled == true)
-                    {
-                        howmanytimes++;
-                        goto RestartStream;
-                    }
-
                     ChangePreviewButtonText("Play SoundFont preview", true);
                     ChangeWindowTitle("Information about the SoundFont");
                     this.Invoke((MethodInvoker)delegate
@@ -335,10 +328,7 @@ namespace KeppySynthConfigurator
                 Bass.BASS_MusicFree(hStream);
                 Bass.BASS_Free();
             }
-            catch
-            {
-
-            }
+            catch { }
         }
 
         void ChangePreviewButtonText(String Text, Boolean IsEnabled)
@@ -364,27 +354,19 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void CheckPlayTimes(int times)
-        {
-            if (times == 1000)
-            {
-                MessageBox.Show("Program error.\n\nFUNC: BASSMIDILib::LoopSystem::LoopMIDIForever\nLINE: 300\nINFO: 00000000 00000000", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ignored =>
-                {
-                    throw new IOException("The configurator has been manually crashed to prevent damages to the computer.");
-                }));
-            }
-        }
-
         private void LoopYesNo_Click(object sender, EventArgs e)
         {
             if (!LoopYesNo.Checked)
             {
                 LoopYesNo.Checked = true;
+                if (Bass.BASS_ChannelIsActive(hStream) == BASSActive.BASS_ACTIVE_PLAYING)
+                    Bass.BASS_ChannelFlags(hStream, BASSFlag.BASS_SAMPLE_LOOP, BASSFlag.BASS_SAMPLE_LOOP);
             }
             else
             {
                 LoopYesNo.Checked = false;
+                if (Bass.BASS_ChannelIsActive(hStream) == BASSActive.BASS_ACTIVE_PLAYING)
+                    Bass.BASS_ChannelFlags(hStream, 0, BASSFlag.BASS_SAMPLE_LOOP);
             }
         }
 

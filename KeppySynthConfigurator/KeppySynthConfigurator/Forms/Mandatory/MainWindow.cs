@@ -1006,6 +1006,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 256, 1);
+            Functions.ChangeDriverMask("Microsoft GS Wavetable Synth", 5);
 
             // And then...
             Functions.SaveSettings();
@@ -1035,6 +1036,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
             Functions.SaveSettings();
@@ -1064,6 +1066,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
             Functions.SaveSettings();
@@ -1093,6 +1096,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 384, 1);
+            Functions.ChangeDriverMask("Keppy's Chiptune Emulator", 4);
 
             // And then...
             Functions.SaveSettings();
@@ -1122,6 +1126,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
             Functions.SaveSettings();
@@ -1151,6 +1156,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
             Functions.SaveSettings();
@@ -1180,6 +1186,7 @@ namespace KeppySynthConfigurator
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
             Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
             Functions.SaveSettings();

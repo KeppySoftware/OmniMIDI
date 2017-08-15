@@ -96,8 +96,8 @@
             this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.RegDriver = new System.Windows.Forms.MenuItem();
-            this.menuItem23 = new System.Windows.Forms.MenuItem();
             this.PanicButton = new System.Windows.Forms.MenuItem();
+            this.menuItem23 = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.DLLOverrideFolder = new System.Windows.Forms.MenuItem();
@@ -763,16 +763,16 @@
             this.RegDriver.Text = "Register/Unregister the driver";
             this.RegDriver.Click += new System.EventHandler(this.RegDriver_Click);
             // 
-            // menuItem23
-            // 
-            this.menuItem23.Index = 2;
-            this.menuItem23.Text = "-";
-            // 
             // PanicButton
             // 
             this.PanicButton.Index = 1;
             this.PanicButton.Text = "Start the Keppy\'s Synthesizer troubleshooter";
             this.PanicButton.Click += new System.EventHandler(this.PanicButton_Click);
+            // 
+            // menuItem23
+            // 
+            this.menuItem23.Index = 2;
+            this.menuItem23.Text = "-";
             // 
             // SignatureCheck
             // 

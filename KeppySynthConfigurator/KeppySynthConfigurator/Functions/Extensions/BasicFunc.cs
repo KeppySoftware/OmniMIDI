@@ -985,8 +985,6 @@ namespace KeppySynthConfigurator
         /// <param name="sleepstates">Set if the driver should disable sleepstates (Only DirectSound). 0 = Disable them, 1 = Keep them enabled</param>
         public static void ChangeAdvancedAudioSettings(int audiodepth, int monorendering, int fadeoutdisable, int vms2emu, int oldbuffermode, int sleepstates)
         {
-            // 32bit values: 1 = 32-bit float, 2 = 16-bit integer, 3 = 8-bit integer
-
             KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", audiodepth, RegistryValueKind.DWord);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", monorendering, RegistryValueKind.DWord);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", fadeoutdisable, RegistryValueKind.DWord);
@@ -1015,6 +1013,17 @@ namespace KeppySynthConfigurator
 
             if (buffsize > 1) KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", "1", Microsoft.Win32.RegistryValueKind.DWord);
             else KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", buffratio, Microsoft.Win32.RegistryValueKind.DWord);
+        }
+
+        /// <summary>
+        /// Changes the driver's mask values automatically
+        /// </summary>
+        /// <param name="maskname">Set the mask name.</param>
+        /// <param name="masktype">Set the mask type. 0 = FM, 1 = Generic synth, 2 = Hardware synth, 3 = MIDI Mapper, 4 = Output port, 5 = Software synth, 6 = Square wave synth</param>
+        public static void ChangeDriverMask(string maskname, int masktype)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", maskname, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", masktype, RegistryValueKind.DWord);
         }
 
         public static void ExportSettings(String filename)
