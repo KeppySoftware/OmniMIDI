@@ -182,7 +182,7 @@ namespace KeppySynthConfigurator
                             RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
                             sourceKey.DeleteSubKeyTree("Keppy's Synthesizer", true);
                             sourceKey.Close();
-                            UpdateSystem.CheckForUpdates(true, true);
+                            UpdateSystem.CheckForUpdates(true, true, false);
                             return;
                         }
                         else if (s.ToLowerInvariant() == "/inf")

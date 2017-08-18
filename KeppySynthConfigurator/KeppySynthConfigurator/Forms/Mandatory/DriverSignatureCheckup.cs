@@ -199,7 +199,7 @@ namespace KeppySynthConfigurator
         {
             if (!Is32BitMatch || !Is64BitMatch || IsNewVerAvailable)
             {
-                UpdateSystem.CheckForUpdates(false, false);
+                UpdateSystem.CheckForUpdates(false, false, false);
             }
         }
 

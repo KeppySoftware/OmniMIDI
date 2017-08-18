@@ -234,11 +234,11 @@ namespace KeppySynthConfigurator
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                UpdateSystem.CheckForUpdates(true, false);
+                UpdateSystem.CheckForUpdates(true, false, false);
             }
             else
             {
-                UpdateSystem.CheckForUpdates(false, false);
+                UpdateSystem.CheckForUpdates(false, false, false);
             }
         }
 

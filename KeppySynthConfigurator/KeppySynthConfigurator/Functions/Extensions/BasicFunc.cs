@@ -22,15 +22,19 @@ namespace KeppySynthConfigurator
 {
     class Functions
     {
+        // Disable WoW64 directory redirection
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool Wow64DisableWow64FsRedirection(ref IntPtr ptr);
 
+        // Enable WoW64 directory redirection
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool Wow64RevertWow64FsRedirection(IntPtr ptr);
 
+        // Notify for file association updates
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
+        // Get size of memory
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
@@ -1643,5 +1647,19 @@ namespace KeppySynthConfigurator
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
             }
         }
+    }
+
+    class SoundEvent
+    {
+        // Beep function
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool MessageBeep(uint type);
+
+        public static UInt32 SndBeep = 0xFFFFFFFF;
+        public static UInt32 SndInformation = 0x00000040;
+        public static UInt32 SndWarning = 0x00000030;
+        public static UInt32 SndHand = 0x00000040;
+        public static UInt32 SndQuestion = 0x00000020;
+        public static UInt32 SndOk = 0x00000000;
     }
 }

@@ -15,9 +15,10 @@ namespace KeppySynthConfigurator
 {
     public partial class ChangelogWindow : Form
     {
-        public ChangelogWindow(String version)
+        public ChangelogWindow(String version, Boolean IsItFromTheUpdateWindow)
         {
             InitializeComponent();
+            UpdateBtn.Visible = !IsItFromTheUpdateWindow;
             GetChangelog(version);
         }
 
@@ -114,11 +115,11 @@ namespace KeppySynthConfigurator
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                UpdateSystem.CheckForUpdates(true, false);
+                UpdateSystem.CheckForUpdates(true, false, true);
             }
             else
             {
-                UpdateSystem.CheckForUpdates(false, false);
+                UpdateSystem.CheckForUpdates(false, false, true);
             }
         }
     }

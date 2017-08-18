@@ -14,7 +14,7 @@ namespace KeppySynthConfigurator.Forms
 {
     public partial class DLEngine : Form
     {
-        WebClient webClient;
+        WebClient DLSystem;
         String VersionToDownload;
         String FullURL;
         String thestring;
@@ -23,6 +23,8 @@ namespace KeppySynthConfigurator.Forms
         Uri URL;
         int test;
         bool reinstallbool;
+
+        string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
 
         public DLEngine(String text, String MessageText, String toDL, String PutWhere, int what, bool reinstall)
         {
@@ -38,10 +40,11 @@ namespace KeppySynthConfigurator.Forms
 
         private void KeppySynthUpdateDL_Load(object sender, EventArgs e)
         {
-            using (webClient = new WebClient())
+            using (DLSystem = new WebClient())
             {
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                DLSystem.DownloadProgressChanged += (senderp, ep) => ProgressChanged(senderp, ep);
+                DLSystem.DownloadDataCompleted += (senderd, ed) => Completed(senderd, ed);
+                DLSystem.Proxy = null;
 
                 if (test == 0)
                 {
@@ -54,56 +57,36 @@ namespace KeppySynthConfigurator.Forms
                 }
                 else
                 {
-                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
                     URL = new Uri(FullURL);
                 }
 
-                try
-                {
-                    if (test == 0)
-                    {
-                        webClient.DownloadFileAsync(URL, String.Format("{0}KeppySynthUpdate.exe", Path.GetTempPath()));
-                    }
-                    else if (test == 1)
-                    {
-                        string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
-                        DeleteThisIfFailed = String.Format("{0}\\{1}", userfolder, FullURL.Split('/').Last());
-                        webClient.DownloadFileAsync(URL, DeleteThisIfFailed);
-                    }
-                    else
-                    {
-                        DeleteThisIfFailed = String.Format("{0}\\{1}", PutWhereHere, FullURL.Split('/').Last());
-                        webClient.DownloadFileAsync(URL, DeleteThisIfFailed);
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                }
+                try { DLSystem.DownloadDataAsync(URL); Program.DebugToConsole(false, String.Format(thestring, 0), null); }
+                catch { }
             }
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
-            Status.Text = thestring;
+            Status.Text = String.Format(thestring, 0);
             DLPercent.Text = String.Format("{0}%", e.ProgressPercentage);
         }
 
-        private void Completed(object sender, AsyncCompletedEventArgs e)
+        private void Completed(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Cancelled)
             {
-                webClient.Dispose();
-                if (File.Exists(Path.GetTempPath() + "KeppySynthUpdate.exe")) { File.Delete(Path.GetTempPath() + "KeppySynthUpdate.exe"); }
+                DLSystem.Dispose();
+                Program.DebugToConsole(false, "Update process aborted by the user.", null);
                 MessageBox.Show("Download aborted.\n\nPress OK to close the download window.", "Keppy's Synthesizer - Download aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.No;
                 Close();
             }
             else if (e.Error != null)
             {
+                DLSystem.Dispose();
+                Program.DebugToConsole(false, "An error as occurred while downloading the update.", null);
                 MessageBox.Show("The configurator is unable to download the latest version.\nIt might not be available yet, or you might not be connected to the Internet.\n\nIf your connection is working, wait a few minutes for the update to appear online.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "Keppy's Synthesizer - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                try { File.Delete(DeleteThisIfFailed); } catch { }
                 DialogResult = DialogResult.No;
                 Close();
             }
@@ -113,7 +96,17 @@ namespace KeppySynthConfigurator.Forms
                 {
                     try
                     {
-                        Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe");
+                        byte[] fileData = e.Result;
+
+                        using (FileStream fileStream = new FileStream(String.Format("{0}KeppySynthUpdate.exe", Path.GetTempPath()), FileMode.Create))
+                            fileStream.Write(fileData, 0, fileData.Length);
+
+                        DLSystem.Dispose();
+
+                        Program.DebugToConsole(false, "The update is ready to be installed.", null);
+                        MessageBox.Show("Be sure to save all your data in the apps using Keppy's Synthesizer, before updating.\n\nClick OK when you're ready.", "Keppy's Synthesizer - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe", "/VERYSILENT");
+
                         DialogResult = DialogResult.OK;
                         Application.ExitThread();
                     }
@@ -127,12 +120,30 @@ namespace KeppySynthConfigurator.Forms
                             MessageBox.Show("The process object has already been disposed.", "Keppy's Synthesizer - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                         DialogResult = DialogResult.No;
-
                         Close();
                     }
                 }
+                else if (test == 1)
+                {
+                    byte[] fileData = e.Result;
+
+                    using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}", userfolder, FullURL.Split('/').Last()), FileMode.Create))
+                        fileStream.Write(fileData, 0, fileData.Length);
+
+                    DLSystem.Dispose();
+
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
                 else
                 {
+                    byte[] fileData = e.Result;
+
+                    using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}", PutWhereHere, FullURL.Split('/').Last()), FileMode.Create))
+                        fileStream.Write(fileData, 0, fileData.Length);
+
+                    DLSystem.Dispose();
+
                     DialogResult = DialogResult.OK;
                     Close();
                 }
@@ -141,7 +152,7 @@ namespace KeppySynthConfigurator.Forms
 
         private void CancelBtn_Click(object sender, EventArgs e)
         {
-            webClient.CancelAsync();
+            DLSystem.CancelAsync();
         }
     }
 }

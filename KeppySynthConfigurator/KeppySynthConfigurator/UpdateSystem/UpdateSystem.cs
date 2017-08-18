@@ -27,7 +27,7 @@ namespace KeppySynthConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void TriggerUpdateWindow(Version y, Version x, String newestversion, bool forced, bool startup)
+        public static void TriggerUpdateWindow(Version y, Version x, String newestversion, bool forced, bool startup, bool isitfromthechangelogwindow)
         {
             if (forced && startup)
             {
@@ -37,7 +37,7 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                UpdateYesNo upd = new UpdateYesNo(x, y, true, startup);
+                UpdateYesNo upd = new UpdateYesNo(x, y, true, startup, isitfromthechangelogwindow);
                 if (startup)
                     upd.StartPosition = FormStartPosition.CenterScreen;
                 else
@@ -57,7 +57,7 @@ namespace KeppySynthConfigurator
         {
             if (!startup)
             {
-                UpdateYesNo upd = new UpdateYesNo(null, null, internetok, startup);
+                UpdateYesNo upd = new UpdateYesNo(null, null, internetok, startup, false);
                 upd.StartPosition = FormStartPosition.CenterParent;
                 upd.ShowDialog();
                 upd.Dispose();
@@ -183,7 +183,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void CheckForUpdates(bool forced, bool startup)
+        public static void CheckForUpdates(bool forced, bool startup, bool isitfromthechangelogwindow)
         {
             bool internetok = IsInternetAvailable();
             if (internetok == false)
@@ -211,12 +211,12 @@ namespace KeppySynthConfigurator
                             if (DriverCurrent < DriverOnline)
                             {
                                 Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
                             }
                             else
                             {
                                 Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                             }
                         }
                         else if (Properties.Settings.Default.UpdateBranch == "normal")
@@ -226,18 +226,18 @@ namespace KeppySynthConfigurator
                                 if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
                                 {
                                     Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
                                     Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                                 }
                             }
                             else
                             {
                                 Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                             }
                         }
                         else if (Properties.Settings.Default.UpdateBranch == "delay")
@@ -247,18 +247,18 @@ namespace KeppySynthConfigurator
                                 if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
                                 {
                                     Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
                                     Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                                 }
                             }
                             else
                             {
                                 Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                             }
                         }
                     }
@@ -269,7 +269,7 @@ namespace KeppySynthConfigurator
                             if (DriverCurrent < DriverOnline)
                             {
                                 Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
                             }
                             else
                             {
@@ -284,7 +284,7 @@ namespace KeppySynthConfigurator
                                 if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
                                 {
                                     Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
@@ -305,7 +305,7 @@ namespace KeppySynthConfigurator
                                 if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
                                 {
                                     Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
@@ -321,9 +321,9 @@ namespace KeppySynthConfigurator
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Program.DebugToConsole(false, "An error has occurred while checking for updates.", null);
+                    Program.DebugToConsole(true, "An error has occurred while checking for updates.", ex);
                     NoUpdates(startup, internetok);
                 }
             }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Media;
 
 namespace KeppySynthConfigurator 
 {
@@ -15,8 +16,9 @@ namespace KeppySynthConfigurator
     {
         String OnlineVersion;
         String CurrentVersion;
+        UInt32 SoundToPlay = SoundEvent.SndOk;
 
-        public UpdateYesNo(Version x, Version y, Boolean internetok, Boolean StartUp)
+        public UpdateYesNo(Version x, Version y, Boolean internetok, Boolean StartUp, Boolean IsItFromTheChangelogWindow)
         {
             try
             {
@@ -35,6 +37,7 @@ namespace KeppySynthConfigurator
                         YesBtn.Visible = false;
                         ShowChangelog.Visible = false;
                         NoBtn.Text = "OK";
+                        SoundToPlay = SoundEvent.SndInformation;
                     }
                     else
                     {
@@ -47,6 +50,7 @@ namespace KeppySynthConfigurator
                             Text = String.Format("Keppy's Synthesizer - Reinstall version ({0})", OnlineVersion);
                             ShowChangelog.Visible = false;
                             MessageText.Text = String.Format("Would you like to reinstall Keppy's Synthesizer?\nCurrent version online is {0}, the same as yours.\n\nPress Yes to confirm, or No to close the window.", CurrentVersion);
+                            SoundToPlay = SoundEvent.SndQuestion;
                         }
                         else if (x < y)
                         {
@@ -54,12 +58,15 @@ namespace KeppySynthConfigurator
                             Text = String.Format("Keppy's Synthesizer - Downgrade to version {0}", OnlineVersion);
                             ShowChangelog.Visible = false;
                             MessageText.Text = String.Format("Are you sure you want to downgrade Keppy's Synthesizer?\nCurrent version online is {0}, you have {1}.\n\nPress Yes to confirm, or No to close the window.", OnlineVersion, CurrentVersion);
+                            SoundToPlay = SoundEvent.SndWarning;
                         }
                         else
                         {
                             CurrentIcon.Image = KeppySynthConfigurator.Properties.Resources.updateicon;
                             Text = String.Format("Keppy's Synthesizer - Update found ({0})", OnlineVersion);
+                            ShowChangelog.Visible = !IsItFromTheChangelogWindow;
                             MessageText.Text = String.Format("A new update for Keppy's Synthesizer has been found.\nCurrent version online is {0}, you have {1}.\n\nWould you like to update now?", OnlineVersion, CurrentVersion);
+                            SoundToPlay = SoundEvent.SndQuestion;
                         }
                     }
                 }
@@ -71,6 +78,7 @@ namespace KeppySynthConfigurator
                     YesBtn.Visible = false;
                     ShowChangelog.Visible = false;
                     NoBtn.Text = "OK";
+                    SoundToPlay = SoundEvent.SndHand;
                 }
             }
             catch
@@ -81,12 +89,13 @@ namespace KeppySynthConfigurator
                 YesBtn.Visible = false;
                 ShowChangelog.Visible = false;
                 NoBtn.Text = "OK";
+                SoundToPlay = SoundEvent.SndHand;
             }
         }
 
         private void UpdateYesNo_Load(object sender, EventArgs e)
         {
-            System.Media.SystemSounds.Question.Play();
+            SoundEvent.MessageBeep(SoundToPlay);
         }
 
         private void YesBtn_Click(object sender, EventArgs e)
@@ -107,7 +116,8 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                ChangelogWindow frm = new ChangelogWindow(OnlineVersion);
+                SoundEvent.MessageBeep(SoundToPlay);
+                ChangelogWindow frm = new ChangelogWindow(OnlineVersion, true);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }

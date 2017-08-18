@@ -31,12 +31,12 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateYesNo));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ShowChangelog = new System.Windows.Forms.Button();
             this.NoBtn = new System.Windows.Forms.Button();
             this.YesBtn = new System.Windows.Forms.Button();
             this.CurrentIcon = new System.Windows.Forms.PictureBox();
             this.MessageText = new System.Windows.Forms.Label();
             this.ChangelogToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.ShowChangelog = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).BeginInit();
             this.SuspendLayout();
@@ -52,6 +52,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(394, 47);
             this.panel1.TabIndex = 0;
+            // 
+            // ShowChangelog
+            // 
+            this.ShowChangelog.Location = new System.Drawing.Point(12, 12);
+            this.ShowChangelog.Name = "ShowChangelog";
+            this.ShowChangelog.Size = new System.Drawing.Size(98, 23);
+            this.ShowChangelog.TabIndex = 2;
+            this.ShowChangelog.Text = "Show changelog";
+            this.ShowChangelog.UseVisualStyleBackColor = true;
+            this.ShowChangelog.Click += new System.EventHandler(this.ShowChangelog_Click);
             // 
             // NoBtn
             // 
@@ -101,16 +111,6 @@
             this.ChangelogToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ChangelogToolTip.ToolTipTitle = "Show changelog";
             // 
-            // ShowChangelog
-            // 
-            this.ShowChangelog.Location = new System.Drawing.Point(12, 12);
-            this.ShowChangelog.Name = "ShowChangelog";
-            this.ShowChangelog.Size = new System.Drawing.Size(98, 23);
-            this.ShowChangelog.TabIndex = 2;
-            this.ShowChangelog.Text = "Show changelog";
-            this.ShowChangelog.UseVisualStyleBackColor = true;
-            this.ShowChangelog.Click += new System.EventHandler(this.ShowChangelog_Click);
-            // 
             // UpdateYesNo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -120,7 +120,7 @@
             this.Controls.Add(this.MessageText);
             this.Controls.Add(this.CurrentIcon);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

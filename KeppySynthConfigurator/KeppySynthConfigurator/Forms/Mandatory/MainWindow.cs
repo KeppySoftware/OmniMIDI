@@ -1228,7 +1228,7 @@ namespace KeppySynthConfigurator
             {
                 FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
                 Program.DebugToConsole(false, String.Format("Showing changelog of this release of the driver."), null);
-                ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString());
+                ChangelogWindow frm = new ChangelogWindow(Driver.FileVersion.ToString(), false);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
@@ -1246,7 +1246,7 @@ namespace KeppySynthConfigurator
             try
             {
                 Program.DebugToConsole(false, String.Format("Showing changelog of release {0} of the driver.", newestversion.ToString()), null);
-                ChangelogWindow frm = new ChangelogWindow(x.ToString());
+                ChangelogWindow frm = new ChangelogWindow(x.ToString(), false);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
@@ -1281,8 +1281,8 @@ namespace KeppySynthConfigurator
 
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift) UpdateSystem.CheckForUpdates(true, false);
-            else UpdateSystem.CheckForUpdates(false, false);
+            if (Control.ModifierKeys == Keys.Shift) UpdateSystem.CheckForUpdates(true, false, false);
+            else UpdateSystem.CheckForUpdates(false, false, false);
         }
 
         private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
@@ -1290,15 +1290,9 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)) != 1)
             {
                 DialogResult dialogResult = MessageBox.Show("LoudMax is useless without 32-bit float audio rendering.\nPlease enable it by going to \"Additional settings > Advanced audio settings > Audio bit depth\".\n\nDo you want to continue anyway?", "Keppy's Synthesizer - LoudMax", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    Functions.LoudMaxInstall();
-                }
+                if (dialogResult == DialogResult.Yes) Functions.LoudMaxInstall();
             }
-            else
-            {
-                Functions.LoudMaxInstall();
-            }
+            else Functions.LoudMaxInstall();
         }
 
         private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)
@@ -2454,6 +2448,6 @@ namespace KeppySynthConfigurator
         private void applySettingsToolStripMenuItem_Paint(object sender, PaintEventArgs e)
         {
             ColorButton(applySettingsToolStripMenuItem, Pens.Green, e);
-        } 
+        }
     }
 }
