@@ -19,7 +19,7 @@ namespace KeppySynthConfigurator.Properties {
     // tramite uno strumento quale ResGen o Visual Studio.
     // Per aggiungere o rimuovere un membro, modificare il file con estensione ResX ed eseguire nuovamente ResGen
     // con l'opzione /str oppure ricompilare il progetto VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -274,7 +274,9 @@ namespace KeppySynthConfigurator.Properties {
         ///22 Harmonica
         ///23 Tango Accordion
         ///
-        ///Guitar        /// [stringa troncata]&quot;;.
+        ///Guitar
+        ///24 Acoustic Guitar (nylon)
+        ///25 Aco [stringa troncata]&quot;;.
         /// </summary>
         internal static string gmlist {
             get {
@@ -469,6 +471,19 @@ namespace KeppySynthConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("successiconupd", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a 88.198.45.18
+        ///telemetry@kaleidonkep99
+        ///telemetry
+        ///
+        ///Please do not abuse of the data..
+        /// </summary>
+        internal static string TelemetryLoginData {
+            get {
+                return ResourceManager.GetString("TelemetryLoginData", resourceCulture);
             }
         }
         

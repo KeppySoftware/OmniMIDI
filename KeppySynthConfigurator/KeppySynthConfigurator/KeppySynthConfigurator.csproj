@@ -205,6 +205,13 @@
     </Compile>
     <Compile Include="Functions\Extensions\MeterFunc.cs" />
     <Compile Include="Functions\Extensions\SFZInfo.cs" />
+    <Compile Include="Functions\Telemetry\Telemetry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Functions\Telemetry\Telemetry.designer.cs">
+      <DependentUpon>Telemetry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Functions\Telemetry\TelemetryExt.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -343,6 +350,9 @@
     <EmbeddedResource Include="Functions\Knob\KnobControl.resx">
       <DependentUpon>KnobControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Functions\Telemetry\Telemetry.resx">
+      <DependentUpon>Telemetry.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UpdateSystem\SelectBranch.resx">
       <DependentUpon>SelectBranch.cs</DependentUpon>
     </EmbeddedResource>
@@ -392,6 +402,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Text\TelemetryLoginData.txt" />
     <None Include="Resources\LoudMax\LoudMax64.dll" />
     <None Include="Resources\LoudMax\LoudMax.dll" />
     <None Include="Resources\List Editor\ReloadIcon.png" />
