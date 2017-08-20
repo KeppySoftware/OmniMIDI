@@ -99,7 +99,7 @@ namespace KeppySynthConfigurator
             OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
             osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
 
-            WinName.Text = String.Format("{0} {1} ({2})", OSInfo.Name, OSInfo.Edition, Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
+            WinName.Text = String.Format("{0} ({1})", OSInfo.Name, Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
             {

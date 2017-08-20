@@ -67,7 +67,7 @@ namespace KeppySynthConfigurator
                 }
                 RealGPU = String.Format("{0} ({1} of VRAM)", gpuname, Functions.ReturnLength(gpuvram));
 
-                RealOS = String.Format("{0} {1} ({2})", OSInfo.Name, OSInfo.Edition, Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
+                RealOS = String.Format("{0} ({1})", OSInfo.Name, Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
 
                 if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
                 {
@@ -175,11 +175,12 @@ namespace KeppySynthConfigurator
             TelemetryData.AppendLine("========= Additional feedback =========");
             TelemetryData.AppendLine(String.IsNullOrWhiteSpace(CountryVal.Text) ? "No additional feedback." : AdditionalFeed.Text.ToString());
 
-            TelemetryExt.SendInfoForTelemetry(Encoding.ASCII.GetBytes(TelemetryData.ToString()));
-
-            MessageBox.Show("The data have been sent!\nThank you for collaborating!\n\nPress OK to close this dialog.", "Keppy's Synthesizer - Telemetry complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            CurrentVerKey.Close();
-            Close();
+            if (TelemetryExt.SendInfoForTelemetry(Encoding.ASCII.GetBytes(TelemetryData.ToString())))
+            {
+                MessageBox.Show("The data have been sent!\nThank you for collaborating!\n\nPress OK to close this dialog.", "Keppy's Synthesizer - Telemetry complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CurrentVerKey.Close();
+                Close();
+            }
         }
     }
 }

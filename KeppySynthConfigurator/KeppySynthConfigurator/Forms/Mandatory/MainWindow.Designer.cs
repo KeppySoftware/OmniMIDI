@@ -147,6 +147,8 @@
             this.EnableBBS = new System.Windows.Forms.MenuItem();
             this.EnableBB = new System.Windows.Forms.MenuItem();
             this.menuItem43 = new System.Windows.Forms.MenuItem();
+            this.menuItem47 = new System.Windows.Forms.MenuItem();
+            this.menuItem51 = new System.Windows.Forms.MenuItem();
             this.KSynthWiki = new System.Windows.Forms.MenuItem();
             this.menuItem27 = new System.Windows.Forms.MenuItem();
             this.GiveFeedback = new System.Windows.Forms.MenuItem();
@@ -290,8 +292,6 @@
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.menuItem47 = new System.Windows.Forms.MenuItem();
-            this.menuItem51 = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1119,6 +1119,17 @@
             this.menuItem42,
             this.KSUSJoinNow});
             this.menuItem43.Text = "Feedback";
+            // 
+            // menuItem47
+            // 
+            this.menuItem47.Index = 0;
+            this.menuItem47.Text = "Help Keppy by sending telemetry data";
+            this.menuItem47.Click += new System.EventHandler(this.SendTelemetry_Click);
+            // 
+            // menuItem51
+            // 
+            this.menuItem51.Index = 1;
+            this.menuItem51.Text = "-";
             // 
             // KSynthWiki
             // 
@@ -2891,17 +2902,6 @@
             this.Requirements.ReshowDelay = 20;
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
-            // 
-            // menuItem47
-            // 
-            this.menuItem47.Index = 0;
-            this.menuItem47.Text = "Help Keppy by sending telemetry data";
-            this.menuItem47.Click += new System.EventHandler(this.SendTelemetry_Click);
-            // 
-            // menuItem51
-            // 
-            this.menuItem51.Index = 1;
-            this.menuItem51.Text = "-";
             // 
             // KeppySynthConfiguratorMain
             // 

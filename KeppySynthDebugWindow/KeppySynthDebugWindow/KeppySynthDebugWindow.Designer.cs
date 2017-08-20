@@ -41,7 +41,7 @@
             this.OpenConfigurator = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.OpenAppLocat = new System.Windows.Forms.MenuItem();
-            this.debugwintop = new System.Windows.Forms.MenuItem();
+            this.DebugWinTop = new System.Windows.Forms.MenuItem();
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.SonicMode = new System.Windows.Forms.MenuItem();
@@ -160,7 +160,7 @@
             this.OpenConfigurator,
             this.menuItem3,
             this.OpenAppLocat,
-            this.debugwintop,
+            this.DebugWinTop,
             this.CopyToClipboard,
             this.menuItem1,
             this.SonicMode,
@@ -184,11 +184,11 @@
             this.OpenAppLocat.Text = "Open app location";
             this.OpenAppLocat.Click += new System.EventHandler(this.OpenAppLocat_Click);
             // 
-            // debugwintop
+            // DebugWinTop
             // 
-            this.debugwintop.Index = 3;
-            this.debugwintop.Text = "Keep debug window on top";
-            this.debugwintop.Click += new System.EventHandler(this.debugwintop_Click);
+            this.DebugWinTop.Index = 3;
+            this.DebugWinTop.Text = "Keep debug window on top";
+            this.DebugWinTop.Click += new System.EventHandler(this.DebugWinTop_Click);
             // 
             // CopyToClipboard
             // 
@@ -1359,7 +1359,7 @@
         private System.Windows.Forms.MenuItem ExitMenu;
         private System.Windows.Forms.MenuItem OpenConfigurator;
         private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.MenuItem debugwintop;
+        private System.Windows.Forms.MenuItem DebugWinTop;
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.TabPage SynthDbg;
         private System.Windows.Forms.Label CMALabel;

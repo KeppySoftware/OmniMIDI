@@ -393,7 +393,7 @@ namespace KeppySynthDebugWindow
                 else
                     Frequency = String.Format("{0}GHz", ((float)cpuclock / 1000).ToString("0.00"));
 
-                COS.Text = String.Format("{0} {1} ({2}, {3})", OSInfo.Name, OSInfo.Edition, FullVersion, bit);
+                COS.Text = String.Format("{0} ({1}, {2})", OSInfo.Name, FullVersion, bit);
                 CPU.Text = String.Format("{0} ({1} processor)", cpuname, cpubit);
                 CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency);
                 GPU.Text = gpuname;
@@ -762,16 +762,16 @@ namespace KeppySynthDebugWindow
             if (DoSnap(scn.WorkingArea.Bottom, this.Bottom)) this.Top = scn.WorkingArea.Bottom - this.Height;
         }
 
-        private void debugwintop_Click(object sender, EventArgs e)
+        private void DebugWinTop_Click(object sender, EventArgs e)
         {
-            if (debugwintop.Checked)
+            if (DebugWinTop.Checked)
             {
-                debugwintop.Checked = false;
+                DebugWinTop.Checked = false;
                 SetWindowPos(this.Handle, NOTOPMOST, 0, 0, 0, 0, KEEPPOS);
             }
             else
             {
-                debugwintop.Checked = true;
+                DebugWinTop.Checked = true;
                 SetWindowPos(this.Handle, TOPMOST, 0, 0, 0, 0, KEEPPOS);
             }
         }
