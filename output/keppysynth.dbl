@@ -18,7 +18,12 @@ armsvc.exe
 battle.net launcher.exe
 beservice_ark.exe
 bittorrentie.exe
+cam_v3.exe
+camautoupdate.exe
+camfps.exe
+camservice.exe
 camtasiastudio.exe
+camupdater.exe
 ccc.exe
 cemu.exe
 citra.exe
@@ -39,6 +44,9 @@ dllhost.exe
 doomx64.exe
 doomx64vk.exe
 dreamweaver.exe
+easyhooksvc.exe
+easyhooksvc32.exe
+easyhooksvc64.exe
 explorer.exe
 firefox.exe
 fontdrvhost.exe
