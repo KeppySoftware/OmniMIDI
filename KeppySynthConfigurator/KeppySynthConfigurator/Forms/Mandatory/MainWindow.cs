@@ -24,6 +24,7 @@ namespace KeppySynthConfigurator
     {
         // Delegate for BasicFunc
         public static KeppySynthConfiguratorMain Delegate;
+        public static Boolean IsInternetAvailable = true;
 
         public static string LastBrowserPath { get; set; }
         public static string LastImportExportPath { get; set; }
@@ -194,6 +195,9 @@ namespace KeppySynthConfigurator
         {
             try
             {
+                // Check for updates as soon as the form shows up
+                Shown += CheckUpdatesStartUp;
+
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
                 Lis.Columns[0].Tag = 7;
@@ -203,16 +207,6 @@ namespace KeppySynthConfigurator
                 ThemeCheck.RunWorkerAsync();
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
-
-                Boolean IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
-                if (IsUpdateAvailable) UpdateStatus.Image = Properties.Resources.dlready;
-                else UpdateStatus.Image = Properties.Resources.dlnope;
-
-                if (!Properties.Settings.Default.ButterBoy)
-                {
-                    EnableBB.Visible = true;
-                    EnableBBS.Visible = true;
-                }
 
                 FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
                 VersionLabel.Text = String.Format("Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
@@ -283,6 +277,11 @@ namespace KeppySynthConfigurator
                 Application.ExitThread();
                 return;
             }
+        }
+
+        private void CheckUpdatesStartUp(object sender, EventArgs e)
+        {
+            CheckUpdates.RunWorkerAsync();
         }
 
         private void VolTrackBar_Scroll(object sender)
@@ -583,7 +582,7 @@ namespace KeppySynthConfigurator
                         Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                         Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
                         Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
+                        Functions.TriggerReload(false);
                     }
                 }
             }
@@ -607,7 +606,7 @@ namespace KeppySynthConfigurator
                             Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                             Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
                             Functions.SaveList(CurrentList);
-                            Functions.TriggerReload();
+                            Functions.TriggerReload(false);
                         }
                     }
                 }
@@ -694,7 +693,7 @@ namespace KeppySynthConfigurator
                         sender.Items.Insert(index, item);
                     }
                     Functions.SaveList(CurrentList);
-                    Functions.TriggerReload();
+                    Functions.TriggerReload(false);
                 }
             }
             catch (Exception ex)
@@ -744,7 +743,7 @@ namespace KeppySynthConfigurator
                             {
                                 Lis.SelectedItems[i].ForeColor = Functions.SFEnabled;
                                 Functions.SaveList(CurrentList);
-                                Functions.TriggerReload();
+                                Functions.TriggerReload(false);
                                 Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
                             }
                         }
@@ -754,7 +753,7 @@ namespace KeppySynthConfigurator
                             {
                                 Lis.SelectedItems[i].ForeColor = Functions.SFDisabled;
                                 Functions.SaveList(CurrentList);
-                                Functions.TriggerReload();
+                                Functions.TriggerReload(false);
                                 Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
                             }
                         }
@@ -802,7 +801,7 @@ namespace KeppySynthConfigurator
                             Functions.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
                         }
                         Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
+                        Functions.TriggerReload(false);
                     }
                 }
             }
@@ -949,23 +948,12 @@ namespace KeppySynthConfigurator
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 500;
-            MaxCPU.Value = 75;
-            Frequency.Text = "44100";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = false;
-            EnableSFX.Checked = true;
-            SysResetIgnore.Checked = false;
-            OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
+            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
             Functions.SaveSettings();
@@ -988,20 +976,7 @@ namespace KeppySynthConfigurator
         private void MSGSWSEmu_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 32;
-            MaxCPU.Value = 75;
-            Frequency.Text = "22050";
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = false;
-            EnableSFX.Checked = false;
-            SysResetIgnore.Checked = true;
-            OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
-            bufsize.Value = 200;
-            SPFRate.Value = 100;
-            AudioEngBox_SelectedIndexChanged(null, null);
+            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, 100, true, false, false, false, false, false, 1);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
@@ -1018,20 +993,7 @@ namespace KeppySynthConfigurator
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 1000;
-            MaxCPU.Value = 75;
-            Frequency.Text = "44100";
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = false;
-            EnableSFX.Checked = false;
-            SysResetIgnore.Checked = true;
-            OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
-            AudioEngBox_SelectedIndexChanged(null, null);
+            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 200, 100, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1048,20 +1010,7 @@ namespace KeppySynthConfigurator
         private void lowLatencyPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 500;
-            MaxCPU.Value = 80;
-            Frequency.Text = "44100";
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = true;
-            EnableSFX.Checked = true;
-            SysResetIgnore.Checked = false;
-            OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
-            AudioEngBox_SelectedIndexChanged(null, null);
+            Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, 100, true, false, true, true, false, false, 0);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1078,20 +1027,7 @@ namespace KeppySynthConfigurator
         private void chiptunesRetrogamingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 16;
-            MaxCPU.Value = 0;
-            Frequency.Text = "22050";
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "DirectSound";
-            AudioEngBox_SelectedIndexChanged(null, null);
-            bufsize.Value = 50;
-            SPFRate.Value = 100;
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = false;
-            EnableSFX.Checked = false;
-            SysResetIgnore.Checked = false;
-            OutputWAV.Checked = false;
+            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, 100, true, false, false, false, false, false, 1);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
@@ -1108,20 +1044,7 @@ namespace KeppySynthConfigurator
         private void keppysSteinwayPianoRealismToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 850;
-            MaxCPU.Value = 85;
-            Frequency.Text = "66150";
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            AudioEngBox_SelectedIndexChanged(null, null);
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
-            Preload.Checked = true;
-            NoteOffCheck.Checked = true;
-            SincInter.Checked = true;
-            EnableSFX.Checked = true;
-            SysResetIgnore.Checked = true;
-            OutputWAV.Checked = false;
+            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, 100, true, false, true, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1138,20 +1061,7 @@ namespace KeppySynthConfigurator
         private void SBLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 1000;
-            MaxCPU.Value = 75;
-            Frequency.Text = "48000";
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = false;
-            EnableSFX.Checked = true;
-            SysResetIgnore.Checked = false;
-            OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
-            AudioEngBox_SelectedIndexChanged(null, null);
+            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1168,20 +1078,7 @@ namespace KeppySynthConfigurator
         private void ProLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            VolTrackBar.Value = 10000;
-            PolyphonyLimit.Value = 1000;
-            MaxCPU.Value = 75;
-            Frequency.Text = "48000";
-            Preload.Checked = true;
-            NoteOffCheck.Checked = false;
-            SincInter.Checked = false;
-            EnableSFX.Checked = true;
-            SysResetIgnore.Checked = false;
-            OutputWAV.Checked = false;
-            KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "ASIO";
-            bufsize.Value = 20;
-            SPFRate.Value = 100;
-            AudioEngBox_SelectedIndexChanged(null, null);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, 100, true, false, false, true, false, false, 2);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
@@ -1883,6 +1780,21 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void AutoLoad_Click(object sender, EventArgs e)
+        {
+            if (AutoLoad.Checked == false)
+            {
+                Properties.Settings.Default.AutoLoadList = true;
+                AutoLoad.Checked = true;
+            }
+            else
+            {
+                Properties.Settings.Default.AutoLoadList = false;
+                AutoLoad.Checked = false;
+            }
+            Properties.Settings.Default.Save();
+        }
+
         private void enableextra8sf_Click(object sender, EventArgs e)
         {
             if (enableextra8sf.Checked == false)
@@ -1974,6 +1886,16 @@ namespace KeppySynthConfigurator
             SettingsPresets.Show(SettingsPresetsBtn, new System.Drawing.Point(1, 20));
         }
 
+        private void ImportPres_Click(object sender, EventArgs e)
+        {
+            Functions.ImportPreset();
+        }
+
+        private void ExportPres_Click(object sender, EventArgs e)
+        {
+            Functions.ExportPreset();
+        }
+
         private void SetSynthDefault_Click(object sender, EventArgs e)
         {
             if (!SetSynthDefault.Checked)
@@ -2059,6 +1981,51 @@ namespace KeppySynthConfigurator
                     MessageBox.Show(ex.ToString());
                 }
             }
+        }
+
+        private void CheckUpdates_DoWork(object sender, DoWorkEventArgs e)
+        {
+            this.Invoke((MethodInvoker)delegate 
+            {
+                SetDefaultCursor(sender, null);
+
+                UpdateStatus.Click -= CheckUpdatesStartUp;
+                VersionLabel.Click -= CheckUpdatesStartUp;
+
+                UpdateStatus.Image = Properties.Resources.ReloadIcon;
+                UpdateStatus.Enabled = false;
+                VersionLabel.Enabled = false;
+                CheckForUpdatesMenu.Enabled = false;
+            });
+
+            String IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
+
+            if (IsUpdateAvailable == "yes") this.Invoke((MethodInvoker)delegate 
+            {
+                UpdateStatus.Click += openUpdaterToolStripMenuItem_Click;
+                VersionLabel.Click += openUpdaterToolStripMenuItem_Click;
+
+                UpdateStatus.Image = Properties.Resources.dlready;
+                UpdateStatus.Enabled = true;
+                VersionLabel.Enabled = true;
+                CheckForUpdatesMenu.Enabled = true;
+            });
+            else if (IsUpdateAvailable == "no") this.Invoke((MethodInvoker)delegate
+            {
+                UpdateStatus.Click += CheckUpdatesStartUp;
+                VersionLabel.Click += CheckUpdatesStartUp;
+
+                UpdateStatus.Image = Properties.Resources.dlnope;
+                UpdateStatus.Enabled = true;
+                VersionLabel.Enabled = true;
+                CheckForUpdatesMenu.Enabled = true;
+            });
+            else this.Invoke((MethodInvoker)delegate {
+                UpdateStatus.Image = Properties.Resources.ClearIcon;
+                UpdateStatus.Enabled = false;
+                VersionLabel.Enabled = false;
+                CheckForUpdatesMenu.Enabled = false;
+            });
         }
 
         // Troubleshooter
@@ -2353,16 +2320,6 @@ namespace KeppySynthConfigurator
             {
                 MessageBox.Show("This function requires Windows 10 Creators Update or newer.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void EnableBB_Click(object sender, EventArgs e)
-        {
-            Program.DebugToConsole(false, "BB enabled.", null);
-            EnableBB.Visible = false;
-            EnableBBS.Visible = false;
-            Properties.Settings.Default.ButterBoy = true;
-            Properties.Settings.Default.Save();
-            MessageBox.Show("Super-duper!\n\nI'm happy that you changed your mind!", "Butter Boy", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void SetAssociationWithSFs_Click(object sender, EventArgs e)

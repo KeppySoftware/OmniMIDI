@@ -90,7 +90,7 @@
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
-            this.menuItem44 = new System.Windows.Forms.MenuItem();
+            this.CheckForUpdatesMenu = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem32 = new System.Windows.Forms.MenuItem();
             this.ChangeUpdateBranch = new System.Windows.Forms.MenuItem();
@@ -144,8 +144,6 @@
             this.menuItem46 = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ResetToDefault = new System.Windows.Forms.MenuItem();
-            this.EnableBBS = new System.Windows.Forms.MenuItem();
-            this.EnableBB = new System.Windows.Forms.MenuItem();
             this.menuItem43 = new System.Windows.Forms.MenuItem();
             this.menuItem47 = new System.Windows.Forms.MenuItem();
             this.menuItem51 = new System.Windows.Forms.MenuItem();
@@ -158,6 +156,10 @@
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.ExportPres = new System.Windows.Forms.Button();
+            this.SeparatorPres = new System.Windows.Forms.Label();
+            this.ImportPres = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.VolPanel = new System.Windows.Forms.Panel();
             this.VolLabel = new System.Windows.Forms.Label();
             this.VolTrackBar = new KnobControl.KnobControl();
@@ -292,6 +294,10 @@
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
+            this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
+            this.ExportPresetDialog = new System.Windows.Forms.SaveFileDialog();
+            this.ImportPresetDialog = new System.Windows.Forms.OpenFileDialog();
+            this.AutoLoad = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -510,12 +516,12 @@
             // 
             // menuItem17
             // 
-            this.menuItem17.Index = 2;
+            this.menuItem17.Index = 3;
             this.menuItem17.Text = "-";
             // 
             // manageFolderFavouritesToolStripMenuItem
             // 
-            this.manageFolderFavouritesToolStripMenuItem.Index = 3;
+            this.manageFolderFavouritesToolStripMenuItem.Index = 4;
             this.manageFolderFavouritesToolStripMenuItem.Text = "Manage folder favourites";
             this.manageFolderFavouritesToolStripMenuItem.Click += new System.EventHandler(this.manageFolderFavouritesToolStripMenuItem_Click);
             // 
@@ -527,13 +533,13 @@
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 4;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 5;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change WAV output directory";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 5;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 6;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
@@ -542,6 +548,7 @@
             this.menuItem2.Index = 1;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.hotkeys,
+            this.AutoLoad,
             this.ShowOutLevel,
             this.menuItem17,
             this.manageFolderFavouritesToolStripMenuItem,
@@ -565,19 +572,19 @@
             // 
             // ShowOutLevel
             // 
-            this.ShowOutLevel.Index = 1;
+            this.ShowOutLevel.Index = 2;
             this.ShowOutLevel.Text = "Show output level meter";
             this.ShowOutLevel.Click += new System.EventHandler(this.ShowOutLevel_Click);
             // 
             // EPB
             // 
-            this.EPB.Index = 6;
+            this.EPB.Index = 7;
             this.EPB.Text = "Enable performance boost";
             this.EPB.Click += new System.EventHandler(this.EPB_Click);
             // 
             // menuItem31
             // 
-            this.menuItem31.Index = 7;
+            this.menuItem31.Index = 8;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -638,19 +645,19 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 8;
+            this.menuItem21.Index = 9;
             this.menuItem21.Text = "-";
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 9;
+            this.SpatialSound.Index = 10;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 10;
+            this.menuItem14.Index = 11;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
@@ -677,7 +684,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 11;
+            this.menuItem12.Index = 12;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ImportSettings,
             this.ExportSettings});
@@ -697,12 +704,12 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 12;
+            this.menuItem15.Index = 13;
             this.menuItem15.Text = "-";
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 13;
+            this.menuItem28.Index = 14;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -720,14 +727,14 @@
             this.DebugModeOpenNotepad.Text = "Open debug folder on Windows Explorer";
             this.DebugModeOpenNotepad.Click += new System.EventHandler(this.DebugModeOpenNotepad_Click);
             // 
-            // menuItem44
+            // CheckForUpdatesMenu
             // 
-            this.menuItem44.Index = 1;
-            this.menuItem44.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.CheckForUpdatesMenu.Index = 1;
+            this.CheckForUpdatesMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.openUpdaterToolStripMenuItem,
             this.menuItem32,
             this.ChangeUpdateBranch});
-            this.menuItem44.Text = "Updates";
+            this.CheckForUpdatesMenu.Text = "Updates";
             // 
             // openUpdaterToolStripMenuItem
             // 
@@ -870,7 +877,7 @@
             this.menuItem3.Index = 4;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
-            this.menuItem44,
+            this.CheckForUpdatesMenu,
             this.menuItem49,
             this.donateToSupportUsToolStripMenuItem,
             this.patronToSupportUsToolStripMenuItem,
@@ -1000,9 +1007,7 @@
             this.SetAssociationWithSFs,
             this.menuItem46,
             this.DeleteUserData,
-            this.ResetToDefault,
-            this.EnableBBS,
-            this.EnableBB});
+            this.ResetToDefault});
             this.menuItem25.Text = "Tools";
             // 
             // menuItem40
@@ -1093,19 +1098,6 @@
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
-            // EnableBBS
-            // 
-            this.EnableBBS.Index = 10;
-            this.EnableBBS.Text = "-";
-            this.EnableBBS.Visible = false;
-            // 
-            // EnableBB
-            // 
-            this.EnableBB.Index = 11;
-            this.EnableBB.Text = "Re-enable Butter Boy";
-            this.EnableBB.Visible = false;
-            this.EnableBB.Click += new System.EventHandler(this.EnableBB_Click);
-            // 
             // menuItem43
             // 
             this.menuItem43.Index = 3;
@@ -1174,6 +1166,10 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.Transparent;
+            this.Settings.Controls.Add(this.ExportPres);
+            this.Settings.Controls.Add(this.SeparatorPres);
+            this.Settings.Controls.Add(this.ImportPres);
+            this.Settings.Controls.Add(this.label3);
             this.Settings.Controls.Add(this.VolPanel);
             this.Settings.Controls.Add(this.MixerBox);
             this.Settings.Controls.Add(this.EnginesBox);
@@ -1185,9 +1181,52 @@
             this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(641, 395);
+            this.Settings.Size = new System.Drawing.Size(643, 394);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
+            // 
+            // ExportPres
+            // 
+            this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExportPres.Location = new System.Drawing.Point(210, 364);
+            this.ExportPres.Name = "ExportPres";
+            this.ExportPres.Size = new System.Drawing.Size(58, 23);
+            this.ExportPres.TabIndex = 50;
+            this.ExportPres.Text = "Export";
+            this.ExportPres.UseVisualStyleBackColor = true;
+            this.ExportPres.Click += new System.EventHandler(this.ExportPres_Click);
+            // 
+            // SeparatorPres
+            // 
+            this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SeparatorPres.Enabled = false;
+            this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SeparatorPres.Location = new System.Drawing.Point(137, 364);
+            this.SeparatorPres.Name = "SeparatorPres";
+            this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
+            this.SeparatorPres.TabIndex = 49;
+            this.SeparatorPres.Text = "|";
+            // 
+            // ImportPres
+            // 
+            this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ImportPres.Location = new System.Drawing.Point(149, 364);
+            this.ImportPres.Name = "ImportPres";
+            this.ImportPres.Size = new System.Drawing.Size(58, 23);
+            this.ImportPres.TabIndex = 48;
+            this.ImportPres.Text = "Import";
+            this.ImportPres.UseVisualStyleBackColor = true;
+            this.ImportPres.Click += new System.EventHandler(this.ImportPres_Click);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 369);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(45, 13);
+            this.label3.TabIndex = 47;
+            this.label3.Text = "Presets:";
             // 
             // VolPanel
             // 
@@ -1195,7 +1234,7 @@
             this.VolPanel.Controls.Add(this.VolLabel);
             this.VolPanel.Controls.Add(this.VolTrackBar);
             this.VolPanel.Controls.Add(this.VolSimView);
-            this.VolPanel.Location = new System.Drawing.Point(564, -1);
+            this.VolPanel.Location = new System.Drawing.Point(563, -1);
             this.VolPanel.Name = "VolPanel";
             this.VolPanel.Size = new System.Drawing.Size(76, 88);
             this.VolPanel.TabIndex = 15;
@@ -1308,7 +1347,7 @@
             this.MixerBox.Controls.Add(this.RV7);
             this.MixerBox.Controls.Add(this.RV14);
             this.MixerBox.Controls.Add(this.LV14);
-            this.MixerBox.Location = new System.Drawing.Point(378, 3);
+            this.MixerBox.Location = new System.Drawing.Point(377, 3);
             this.MixerBox.Name = "MixerBox";
             this.MixerBox.Size = new System.Drawing.Size(183, 75);
             this.MixerBox.TabIndex = 46;
@@ -1976,7 +2015,7 @@
             this.EnginesBox.Controls.Add(this.WhatIsXAudio);
             this.EnginesBox.Controls.Add(this.label2);
             this.EnginesBox.Controls.Add(this.AudioEngBox);
-            this.EnginesBox.Location = new System.Drawing.Point(8, 3);
+            this.EnginesBox.Location = new System.Drawing.Point(7, 3);
             this.EnginesBox.Name = "EnginesBox";
             this.EnginesBox.Size = new System.Drawing.Size(199, 75);
             this.EnginesBox.TabIndex = 0;
@@ -2052,7 +2091,7 @@
             // 
             this.AdditionalSettingsBox.Controls.Add(this.AASButton);
             this.AdditionalSettingsBox.Controls.Add(this.MEPSButton);
-            this.AdditionalSettingsBox.Location = new System.Drawing.Point(213, 3);
+            this.AdditionalSettingsBox.Location = new System.Drawing.Point(212, 3);
             this.AdditionalSettingsBox.Name = "AdditionalSettingsBox";
             this.AdditionalSettingsBox.Size = new System.Drawing.Size(159, 75);
             this.AdditionalSettingsBox.TabIndex = 1;
@@ -2084,18 +2123,18 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(7, 364);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(56, 364);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
-            this.SettingsPresetsBtn.Size = new System.Drawing.Size(92, 23);
+            this.SettingsPresetsBtn.Size = new System.Drawing.Size(82, 23);
             this.SettingsPresetsBtn.TabIndex = 21;
-            this.SettingsPresetsBtn.Text = "Settings presets";
+            this.SettingsPresetsBtn.Text = "Pre-made↓";
             this.SettingsPresetsBtn.UseVisualStyleBackColor = true;
             this.SettingsPresetsBtn.Click += new System.EventHandler(this.SettingsPresetsBtn_Click);
             // 
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(444, 364);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(445, 364);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 22;
@@ -2107,7 +2146,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 364);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(543, 364);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 23;
@@ -2128,9 +2167,9 @@
             this.OutputSettingsBox.Controls.Add(this.BufferText);
             this.OutputSettingsBox.Controls.Add(this.SysResetIgnore);
             this.OutputSettingsBox.Controls.Add(this.bufsize);
-            this.OutputSettingsBox.Location = new System.Drawing.Point(8, 249);
+            this.OutputSettingsBox.Location = new System.Drawing.Point(7, 249);
             this.OutputSettingsBox.Name = "OutputSettingsBox";
-            this.OutputSettingsBox.Size = new System.Drawing.Size(625, 107);
+            this.OutputSettingsBox.Size = new System.Drawing.Size(627, 107);
             this.OutputSettingsBox.TabIndex = 3;
             this.OutputSettingsBox.TabStop = false;
             this.OutputSettingsBox.Text = "Audio output settings";
@@ -2143,7 +2182,7 @@
             this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
             this.StatusBuf.ErrorImage = null;
             this.StatusBuf.InitialImage = null;
-            this.StatusBuf.Location = new System.Drawing.Point(533, 55);
+            this.StatusBuf.Location = new System.Drawing.Point(535, 55);
             this.StatusBuf.Name = "StatusBuf";
             this.StatusBuf.Size = new System.Drawing.Size(17, 17);
             this.StatusBuf.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -2167,7 +2206,7 @@
             // SPFRate
             // 
             this.SPFRate.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.SPFRate.Location = new System.Drawing.Point(552, 77);
+            this.SPFRate.Location = new System.Drawing.Point(554, 77);
             this.SPFRate.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2223,7 +2262,7 @@
             // bufsize
             // 
             this.bufsize.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.bufsize.Location = new System.Drawing.Point(552, 54);
+            this.bufsize.Location = new System.Drawing.Point(554, 54);
             this.bufsize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2262,9 +2301,9 @@
             this.SynthSettingsBox.Controls.Add(this.EnableSFX);
             this.SynthSettingsBox.Controls.Add(this.Preload);
             this.SynthSettingsBox.Controls.Add(this.NoteOffCheck);
-            this.SynthSettingsBox.Location = new System.Drawing.Point(8, 84);
+            this.SynthSettingsBox.Location = new System.Drawing.Point(7, 84);
             this.SynthSettingsBox.Name = "SynthSettingsBox";
-            this.SynthSettingsBox.Size = new System.Drawing.Size(625, 159);
+            this.SynthSettingsBox.Size = new System.Drawing.Size(627, 159);
             this.SynthSettingsBox.TabIndex = 2;
             this.SynthSettingsBox.TabStop = false;
             this.SynthSettingsBox.Text = "Synthesizer\'s settings";
@@ -2272,7 +2311,7 @@
             // MaxCPU
             // 
             this.MaxCPU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.MaxCPU.Location = new System.Drawing.Point(552, 104);
+            this.MaxCPU.Location = new System.Drawing.Point(554, 104);
             this.MaxCPU.Name = "MaxCPU";
             this.MaxCPU.Size = new System.Drawing.Size(64, 20);
             this.MaxCPU.TabIndex = 12;
@@ -2322,7 +2361,7 @@
             "11025",
             "8000",
             "4000"});
-            this.Frequency.Location = new System.Drawing.Point(552, 128);
+            this.Frequency.Location = new System.Drawing.Point(554, 128);
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 14;
@@ -2355,7 +2394,7 @@
             // PolyphonyLimit
             // 
             this.PolyphonyLimit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.PolyphonyLimit.Location = new System.Drawing.Point(552, 80);
+            this.PolyphonyLimit.Location = new System.Drawing.Point(554, 80);
             this.PolyphonyLimit.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -2434,7 +2473,7 @@
             this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(641, 395);
+            this.SoundFontTab.Size = new System.Drawing.Size(643, 394);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -2443,7 +2482,7 @@
             this.Separator.AutoSize = true;
             this.Separator.Enabled = false;
             this.Separator.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Separator.Location = new System.Drawing.Point(160, 6);
+            this.Separator.Location = new System.Drawing.Point(159, 6);
             this.Separator.Name = "Separator";
             this.Separator.Size = new System.Drawing.Size(14, 20);
             this.Separator.TabIndex = 15;
@@ -2469,10 +2508,10 @@
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
-            this.Lis.Location = new System.Drawing.Point(6, 36);
+            this.Lis.Location = new System.Drawing.Point(5, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(600, 340);
+            this.Lis.Size = new System.Drawing.Size(602, 340);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -2506,7 +2545,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(612, 346);
+            this.EL.Location = new System.Drawing.Point(613, 346);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
@@ -2523,7 +2562,7 @@
             this.LoadToApp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LoadToApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoadToApp.ForeColor = System.Drawing.Color.Transparent;
-            this.LoadToApp.Location = new System.Drawing.Point(612, 156);
+            this.LoadToApp.Location = new System.Drawing.Point(613, 156);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(24, 24);
             this.LoadToApp.TabIndex = 9;
@@ -2540,7 +2579,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(612, 317);
+            this.IEL.Location = new System.Drawing.Point(613, 317);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
@@ -2553,7 +2592,7 @@
             // BankPresetOverride
             // 
             this.BankPresetOverride.AutoSize = true;
-            this.BankPresetOverride.Location = new System.Drawing.Point(174, 11);
+            this.BankPresetOverride.Location = new System.Drawing.Point(173, 11);
             this.BankPresetOverride.Name = "BankPresetOverride";
             this.BankPresetOverride.Size = new System.Drawing.Size(355, 17);
             this.BankPresetOverride.TabIndex = 2;
@@ -2575,7 +2614,7 @@
             "List 6",
             "List 7",
             "List 8"});
-            this.SelectedListBox.Location = new System.Drawing.Point(101, 8);
+            this.SelectedListBox.Location = new System.Drawing.Point(100, 8);
             this.SelectedListBox.Name = "SelectedListBox";
             this.SelectedListBox.Size = new System.Drawing.Size(57, 21);
             this.SelectedListBox.TabIndex = 1;
@@ -2584,7 +2623,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 12);
+            this.label1.Location = new System.Drawing.Point(8, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(87, 13);
             this.label1.TabIndex = 0;
@@ -2597,7 +2636,7 @@
             this.DisableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.DisableSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DisableSF.ForeColor = System.Drawing.Color.Transparent;
-            this.DisableSF.Location = new System.Drawing.Point(612, 216);
+            this.DisableSF.Location = new System.Drawing.Point(613, 216);
             this.DisableSF.Name = "DisableSF";
             this.DisableSF.Size = new System.Drawing.Size(24, 24);
             this.DisableSF.TabIndex = 11;
@@ -2614,7 +2653,7 @@
             this.EnableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EnableSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EnableSF.ForeColor = System.Drawing.Color.Transparent;
-            this.EnableSF.Location = new System.Drawing.Point(612, 193);
+            this.EnableSF.Location = new System.Drawing.Point(613, 193);
             this.EnableSF.Name = "EnableSF";
             this.EnableSF.Size = new System.Drawing.Size(24, 24);
             this.EnableSF.TabIndex = 10;
@@ -2630,7 +2669,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(3, 379);
+            this.ListOverride.Location = new System.Drawing.Point(2, 380);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 14;
@@ -2644,7 +2683,7 @@
             this.CLi.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CLi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CLi.ForeColor = System.Drawing.Color.Transparent;
-            this.CLi.Location = new System.Drawing.Point(612, 6);
+            this.CLi.Location = new System.Drawing.Point(613, 6);
             this.CLi.Name = "CLi";
             this.CLi.Size = new System.Drawing.Size(24, 24);
             this.CLi.TabIndex = 4;
@@ -2661,7 +2700,7 @@
             this.MvD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvD.ForeColor = System.Drawing.Color.Transparent;
-            this.MvD.Location = new System.Drawing.Point(612, 119);
+            this.MvD.Location = new System.Drawing.Point(613, 119);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(24, 24);
             this.MvD.TabIndex = 8;
@@ -2678,7 +2717,7 @@
             this.MvU.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvU.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvU.ForeColor = System.Drawing.Color.Transparent;
-            this.MvU.Location = new System.Drawing.Point(612, 96);
+            this.MvU.Location = new System.Drawing.Point(613, 96);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(24, 24);
             this.MvU.TabIndex = 7;
@@ -2695,7 +2734,7 @@
             this.RmvSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.RmvSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RmvSF.ForeColor = System.Drawing.Color.Transparent;
-            this.RmvSF.Location = new System.Drawing.Point(612, 59);
+            this.RmvSF.Location = new System.Drawing.Point(613, 59);
             this.RmvSF.Name = "RmvSF";
             this.RmvSF.Size = new System.Drawing.Size(24, 24);
             this.RmvSF.TabIndex = 6;
@@ -2712,7 +2751,7 @@
             this.AddSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.AddSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddSF.ForeColor = System.Drawing.Color.Transparent;
-            this.AddSF.Location = new System.Drawing.Point(612, 36);
+            this.AddSF.Location = new System.Drawing.Point(613, 36);
             this.AddSF.Name = "AddSF";
             this.AddSF.Size = new System.Drawing.Size(24, 24);
             this.AddSF.TabIndex = 5;
@@ -2735,7 +2774,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(649, 422);
+            this.TabsForTheControls.Size = new System.Drawing.Size(651, 421);
             this.TabsForTheControls.TabIndex = 0;
             // 
             // TabImgs
@@ -2835,7 +2874,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 419);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 420);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -2874,7 +2913,7 @@
             this.UpdateStatus.Image = global::KeppySynthConfigurator.Properties.Resources.ClearIcon;
             this.UpdateStatus.Name = "UpdateStatus";
             this.UpdateStatus.Size = new System.Drawing.Size(16, 17);
-            this.UpdateStatus.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            this.UpdateStatus.Click += new System.EventHandler(this.CheckUpdatesStartUp);
             this.UpdateStatus.MouseEnter += new System.EventHandler(this.SetHandCursor);
             this.UpdateStatus.MouseLeave += new System.EventHandler(this.SetDefaultCursor);
             // 
@@ -2885,7 +2924,7 @@
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(59, 17);
             this.VersionLabel.Text = "Version {0}";
-            this.VersionLabel.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
+            this.VersionLabel.Click += new System.EventHandler(this.CheckUpdatesStartUp);
             this.VersionLabel.MouseEnter += new System.EventHandler(this.SetHandCursor);
             this.VersionLabel.MouseLeave += new System.EventHandler(this.SetDefaultCursor);
             // 
@@ -2903,13 +2942,32 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
             // 
+            // CheckUpdates
+            // 
+            this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
+            // 
+            // ExportPresetDialog
+            // 
+            this.ExportPresetDialog.Filter = "Preset files|*.kspr";
+            // 
+            // ImportPresetDialog
+            // 
+            this.ImportPresetDialog.Filter = "Preset files|*.kspr";
+            // 
+            // AutoLoad
+            // 
+            this.AutoLoad.Index = 1;
+            this.AutoLoad.Text = "Reload list automatically after editing it";
+            this.AutoLoad.Click += new System.EventHandler(this.AutoLoad_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(649, 441);
+            this.ClientSize = new System.Drawing.Size(649, 442);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -2924,6 +2982,7 @@
             this.Text = "Keppy\'s Synthesizer ~ Configurator";
             this.Load += new System.EventHandler(this.KeppySynthConfiguratorMain_Load);
             this.Settings.ResumeLayout(false);
+            this.Settings.PerformLayout();
             this.VolPanel.ResumeLayout(false);
             this.MixerBox.ResumeLayout(false);
             this.MixerBox.PerformLayout();
@@ -3097,7 +3156,7 @@
         private System.Windows.Forms.Timer SavedLabel;
         private System.Windows.Forms.MenuItem menuItem43;
         private System.Windows.Forms.MenuItem GiveFeedback;
-        private System.Windows.Forms.MenuItem menuItem44;
+        private System.Windows.Forms.MenuItem CheckForUpdatesMenu;
         private System.Windows.Forms.MenuItem ChangeUpdateBranch;
         private System.Windows.Forms.MenuItem DeleteUserData;
         public System.Windows.Forms.ComboBox AudioEngBox;
@@ -3112,8 +3171,6 @@
         public System.Windows.Forms.MenuItem MaskSynthesizerAsAnother;
         private System.Windows.Forms.MenuItem menuItem29;
         private System.Windows.Forms.MenuItem menuItem46;
-        public System.Windows.Forms.MenuItem EnableBBS;
-        public System.Windows.Forms.MenuItem EnableBB;
         public System.Windows.Forms.MenuItem WinMMPatchRmv;
         public System.Windows.Forms.Label DrvHzLabel;
         public System.Windows.Forms.Label BufferText;
@@ -3215,6 +3272,14 @@
         private System.Windows.Forms.Panel VolPanel;
         private System.Windows.Forms.MenuItem menuItem47;
         private System.Windows.Forms.MenuItem menuItem51;
+        private System.ComponentModel.BackgroundWorker CheckUpdates;
+        private System.Windows.Forms.Button ExportPres;
+        private System.Windows.Forms.Label SeparatorPres;
+        private System.Windows.Forms.Button ImportPres;
+        private System.Windows.Forms.Label label3;
+        public System.Windows.Forms.SaveFileDialog ExportPresetDialog;
+        public System.Windows.Forms.OpenFileDialog ImportPresetDialog;
+        public System.Windows.Forms.MenuItem AutoLoad;
     }
 }
 

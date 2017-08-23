@@ -73,66 +73,6 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bbangry {
-            get {
-                object obj = ResourceManager.GetObject("bbangry", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap bbcrying {
-            get {
-                object obj = ResourceManager.GetObject("bbcrying", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap bbevil {
-            get {
-                object obj = ResourceManager.GetObject("bbevil", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap bbhappy {
-            get {
-                object obj = ResourceManager.GetObject("bbhappy", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap bbsad {
-            get {
-                object obj = ResourceManager.GetObject("bbsad", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap bbsurprised {
-            get {
-                object obj = ResourceManager.GetObject("bbsurprised", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ClearIcon {
             get {
                 object obj = ResourceManager.GetObject("ClearIcon", resourceCulture);
@@ -476,10 +416,8 @@ namespace KeppySynthConfigurator.Properties {
         
         /// <summary>
         ///   Cerca una stringa localizzata simile a 88.198.45.18
-        ///telemetry@kaleidonkep99
-        ///telemetry
-        ///
-        ///Please do not abuse of the data..
+        ///keppysynthtm@kaleidonkep99
+        ///keppysynthtm.
         /// </summary>
         internal static string TelemetryLoginData {
             get {

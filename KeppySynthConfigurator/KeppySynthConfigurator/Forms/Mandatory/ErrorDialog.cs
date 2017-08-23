@@ -21,24 +21,14 @@ namespace KeppySynthConfigurator
             {
                 SoundToPlay = sound;
                 InitializeComponent();
-                if (!Properties.Settings.Default.ButterBoy)
-                {
-                    if (Type == 0)
-                        CurrentIcon.Image = Properties.Resources.infoicon;
-                    else if (Type == 1)
-                        CurrentIcon.Image = Properties.Resources.erroricon;
-                    else
-                        CurrentIcon.Image = Properties.Resources.erroricon;
-                }
+
+                if (Type == 0)
+                    CurrentIcon.Image = Properties.Resources.infoicon;
+                else if (Type == 1)
+                    CurrentIcon.Image = Properties.Resources.erroricon;
                 else
-                {
-                    if (Type == 0)
-                        CurrentIcon.Image = Properties.Resources.bbhappy;
-                    else if (Type == 1)
-                        CurrentIcon.Image = Properties.Resources.bbcrying;
-                    else
-                        CurrentIcon.Image = Properties.Resources.bbsad;
-                }
+                    CurrentIcon.Image = Properties.Resources.erroricon;
+
                 Text = String.Format("Keppy's Synthesizer - {0}", title);
                 MessageText.Text = String.Format("{0}", message);
                 try { DebugInfoText.Text = ex.ToString(); }

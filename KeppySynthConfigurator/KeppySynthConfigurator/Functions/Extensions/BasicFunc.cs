@@ -522,16 +522,18 @@ namespace KeppySynthConfigurator
         // -------------------------
         // Soundfont lists functions
 
-        public static void TriggerReload() // Tells Keppy's Synthesizer to load a specific list
+        public static void TriggerReload(Boolean forced) // Tells Keppy's Synthesizer to load a specific list
         {
             try
             {
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.Watchdog.GetValue("currentsflist")) == KeppySynthConfiguratorMain.whichone)
+                if (Properties.Settings.Default.AutoLoadList || forced)
                 {
-                    KeppySynthConfiguratorMain.Watchdog.SetValue("rel" + KeppySynthConfiguratorMain.whichone.ToString(), "1", RegistryValueKind.DWord);
+                    if (Convert.ToInt32(KeppySynthConfiguratorMain.Watchdog.GetValue("currentsflist")) == KeppySynthConfiguratorMain.whichone)
+                        KeppySynthConfiguratorMain.Watchdog.SetValue("rel" + KeppySynthConfiguratorMain.whichone.ToString(), "1", RegistryValueKind.DWord);
+
+                    Program.DebugToConsole(false, String.Format("(Re)Loaded soundfont list {0}.", KeppySynthConfiguratorMain.whichone), null);
+                    KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
                 }
-                Program.DebugToConsole(false, String.Format("(Re)Loaded soundfont list {0}.", KeppySynthConfiguratorMain.whichone), null);
-                KeppySynthConfiguratorMain.Delegate.Lis.Refresh();
             }
             catch
             {
@@ -677,6 +679,8 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Checked = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = Properties.Settings.Default.ShowOutputLevel;
+
+                KeppySynthConfiguratorMain.Delegate.AutoLoad.Checked = Properties.Settings.Default.AutoLoadList;
 
                 KeppySynthConfiguratorMain.Delegate.Frequency.Text = KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100).ToString();
                 KeppySynthConfiguratorMain.Delegate.SPFRate.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sndbfvalue", 16));
@@ -978,6 +982,44 @@ namespace KeppySynthConfigurator
             }
         }
 
+        // Presets system
+
+        /// <summary>
+        /// Applies the values for the presets
+        /// </summary>
+        /// <param name="volume">Set the volume</param>
+        /// <param name="voices">Set the maximum voices</param>
+        /// <param name="maxcpu">Set the maximum rendering time allowed</param>
+        /// <param name="frequency">Change the frequency</param>
+        /// <param name="bufsize">Change the buffer value</param>
+        /// <param name="spfrate">Change the samples per frame value</param>
+        /// <param name="preload">Enable or disable the soundfont preload</param>
+        /// <param name="noteoffcheck">Enable or disable the check for oldest instances of notes</param>
+        /// <param name="sincinter">Enable or disable the sinc interpolation</param>
+        /// <param name="enablesfx">Enable or disable the audio effects</param>
+        /// <param name="sysresetignore">Ignore or accept SysEx events</param>
+        /// <param name="outputwav">Enable or disable the output to WAV mode</param>
+        /// <param name="audioengine">Select the audio engine. 0 = XAudio2, 1 = DirectSound, 2 = ASIO, 3 = WASAPI</param>
+        public static void ApplyPresetValues(
+            int volume, int voices, int maxcpu, int frequency, int bufsize,
+            int spfrate, bool preload, bool noteoffcheck, bool sincinter, bool enablesfx,
+            bool sysresetignore, bool outputwav, int audioengine)
+        {
+            KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = volume;
+            KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = voices;
+            KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = maxcpu;
+            KeppySynthConfiguratorMain.Delegate.Frequency.Text = frequency.ToString();
+            KeppySynthConfiguratorMain.Delegate.Preload.Checked = preload;
+            KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = noteoffcheck;
+            KeppySynthConfiguratorMain.Delegate.SincInter.Checked = sincinter;
+            KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = enablesfx;
+            KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = sysresetignore;
+            KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = outputwav;
+            KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = audioengine;
+            KeppySynthConfiguratorMain.Delegate.bufsize.Value = bufsize;
+            KeppySynthConfiguratorMain.Delegate.SPFRate.Value = spfrate;
+        }
+
         /// <summary>
         /// Changes the advanced audio settings automatically
         /// </summary>
@@ -1029,6 +1071,163 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", maskname, RegistryValueKind.String);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", masktype, RegistryValueKind.DWord);
         }
+
+        public static void ImportPreset()
+        {
+            String PresetTitle = "";
+            Boolean dummy = false;
+            try
+            {
+                if (KeppySynthConfiguratorMain.Delegate.ImportPresetDialog.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string x in File.ReadLines(KeppySynthConfiguratorMain.Delegate.ImportPresetDialog.FileName, Encoding.UTF8))
+                    {
+                        try
+                        {
+                            // Normal settings
+                            if (SettingName(x) == "ConfName") PresetTitle = SettingValue(x);
+                            else if (SettingName(x) == "Volume") KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "OutputWAV") KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked = Boolean.TryParse(SettingValue(x), out dummy);
+                            else if (SettingName(x) == "AudioEngine") KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "Preload") KeppySynthConfiguratorMain.Delegate.Preload.Checked = Boolean.TryParse(SettingValue(x), out dummy);
+                            else if (SettingName(x) == "NoteOff") KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = Boolean.TryParse(SettingValue(x), out dummy);
+                            else if (SettingName(x) == "VoiceLimit") KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "MaxCPU") KeppySynthConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "Frequency") KeppySynthConfiguratorMain.Delegate.Frequency.Text = SettingValue(x);
+                            else if (SettingName(x) == "SincInter") KeppySynthConfiguratorMain.Delegate.SincInter.Checked = Boolean.TryParse(SettingValue(x), out dummy);
+                            else if (SettingName(x) == "IgnoreSysEx") KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = Boolean.TryParse(SettingValue(x), out dummy);
+                            else if (SettingName(x) == "BufferLength") KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "SPFRate") KeppySynthConfiguratorMain.Delegate.SPFRate.Value = Convert.ToInt32(SettingValue(x));
+                            // Advanced audio settings
+                            else if (SettingName(x) == "AudioDepth") KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "MonoRendering") KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "FadeOutDisable") KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "SlowdownPlayback") KeppySynthConfiguratorMain.SynthSettings.SetValue("vms2emu", SettingValue(x), RegistryValueKind.DWord);
+
+                            // MIDI events parser settings
+                            else if (SettingName(x) == "EVBufferByRAM") KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "EVBufferSize") KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffsize", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "EVBufferRatio") KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", SettingValue(x), RegistryValueKind.DWord);
+
+                            // Driver mask
+                            else if (SettingName(x) == "SynthName") KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", SettingValue(x), RegistryValueKind.String);
+                            else if (SettingName(x) == "SynthType") KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SettingValue(x), RegistryValueKind.DWord);
+                        }
+                        catch (Exception ex) {
+                            Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Error", "Invalid preset!", false, ex);
+
+                            // Set some values...
+                            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
+
+                            // Advanced settings here...
+                            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+                            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+                            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
+
+                            // And then...
+                            Functions.SaveSettings();
+
+                            // Messagebox here
+                            Program.DebugToConsole(false, "Settings restored.", null);
+
+                            return;
+                        }
+                    }
+
+                    MessageBox.Show(
+                        String.Format("The preset \"{0}\" has been applied.", Path.GetFileNameWithoutExtension(KeppySynthConfiguratorMain.Delegate.ImportPresetDialog.FileName)),
+                        "Keppy's Synthesizer - Import preset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Something bad happened hehe
+                Program.DebugToConsole(true, null, ex);
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
+                Application.Exit();
+            }
+        }
+
+        public static void ExportPreset()
+        {
+            try
+            {
+                if (KeppySynthConfiguratorMain.Delegate.ExportPresetDialog.ShowDialog() == DialogResult.OK)
+                {
+                    StringBuilder SettingsToText = new StringBuilder();
+
+                    SettingsToText.AppendLine(String.Format("ConfName = {0}", Path.GetFileNameWithoutExtension(KeppySynthConfiguratorMain.Delegate.ExportPresetDialog.FileName)));
+                    SettingsToText.AppendLine();
+                    SettingsToText.AppendLine("// Normal settings");
+                    SettingsToText.AppendLine(String.Format("Volume = {0}", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value));
+                    SettingsToText.AppendLine(String.Format("OutputWAV = {0}", KeppySynthConfiguratorMain.Delegate.OutputWAV.Checked));
+                    SettingsToText.AppendLine(String.Format("AudioEngine = {0}", KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex));
+                    SettingsToText.AppendLine(String.Format("Preload = {0}", KeppySynthConfiguratorMain.Delegate.Preload.Checked));
+                    SettingsToText.AppendLine(String.Format("NoteOff = {0}", KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked));
+                    SettingsToText.AppendLine(String.Format("VoiceLimit = {0}", KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value));
+                    SettingsToText.AppendLine(String.Format("MaxCPU = {0}", KeppySynthConfiguratorMain.Delegate.MaxCPU.Value));
+                    SettingsToText.AppendLine(String.Format("Frequency = {0}", KeppySynthConfiguratorMain.Delegate.Frequency.Text));
+                    SettingsToText.AppendLine(String.Format("SincInter = {0}", KeppySynthConfiguratorMain.Delegate.SincInter.Checked));
+                    SettingsToText.AppendLine(String.Format("IgnoreSysEx = {0}", KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked));
+                    SettingsToText.AppendLine(String.Format("BufferLength = {0}", KeppySynthConfiguratorMain.Delegate.bufsize.Value));
+                    SettingsToText.AppendLine(String.Format("SPFRate = {0}", KeppySynthConfiguratorMain.Delegate.SPFRate.Value));
+                    SettingsToText.AppendLine();
+                    SettingsToText.AppendLine("// Advanced audio settings");
+                    SettingsToText.AppendLine(String.Format("AudioDepth = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit")));
+                    SettingsToText.AppendLine(String.Format("MonoRendering = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering")));
+                    SettingsToText.AppendLine(String.Format("FadeOutDisable = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable")));
+                    SettingsToText.AppendLine(String.Format("SlowdownPlayback = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu")));
+                    SettingsToText.AppendLine();
+                    SettingsToText.AppendLine("// MIDI events parser settings");
+                    SettingsToText.AppendLine(String.Format("EVBufferByRAM = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram")));
+                    SettingsToText.AppendLine(String.Format("EVBufferSize = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffsize")));
+                    SettingsToText.AppendLine(String.Format("EVBufferRatio = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffratio")));
+                    SettingsToText.AppendLine();
+                    SettingsToText.AppendLine("// Driver mask");
+                    SettingsToText.AppendLine(String.Format("SynthName = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("synthname")));
+                    SettingsToText.AppendLine(String.Format("SynthType = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("synthtype")));
+
+                    File.WriteAllText(KeppySynthConfiguratorMain.Delegate.ExportPresetDialog.FileName, SettingsToText.ToString());
+
+                    MessageBox.Show(
+                        String.Format("The preset \"{0}\" has been saved to:\n\n{1}",
+                        Path.GetFileNameWithoutExtension(KeppySynthConfiguratorMain.Delegate.ExportPresetDialog.FileName),
+                        KeppySynthConfiguratorMain.Delegate.ExportPresetDialog.FileName), 
+                        "Keppy's Synthesizer - Export preset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Something bad happened hehe
+                Program.DebugToConsole(true, null, ex);
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
+                Application.Exit();
+            }
+        }
+
+        /// <summary>
+        /// Set setting's name
+        /// </summary>
+        public static string SettingName(string value)
+        {
+            int A = value.IndexOf(" = ");
+            if (A == -1) return "";
+            return value.Substring(0, A);
+        }
+
+        /// <summary>
+        /// Get setting's value
+        /// </summary>
+        public static string SettingValue(string value)
+        {
+            int A = value.LastIndexOf(" = ");
+            if (A == -1) return "";
+            int A2 = A + (" = ").Length;
+            if (A2 >= value.Length) return "";
+            return value.Substring(A2);
+        }
+
+        // End of the preset system
 
         public static void ExportSettings(String filename)
         {
@@ -1397,7 +1596,7 @@ namespace KeppySynthConfigurator
                             KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
                         Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
+                        Functions.TriggerReload(false);
                     }
                     Program.DebugToConsole(false, String.Format("Added soundfont to list: {0}", Soundfonts[i]), null);
                 }
@@ -1429,7 +1628,7 @@ namespace KeppySynthConfigurator
                             }
                         }
                         Functions.SaveList(CurrentList);
-                        Functions.TriggerReload();
+                        Functions.TriggerReload(false);
                     }
                     Program.DebugToConsole(false, String.Format("Added soundfont to list: {0}", Soundfonts[i]), null);
                 }

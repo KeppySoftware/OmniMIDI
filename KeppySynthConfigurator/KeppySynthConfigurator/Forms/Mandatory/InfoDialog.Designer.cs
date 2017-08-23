@@ -44,7 +44,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.Mascot = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ChangeBranch = new System.Windows.Forms.LinkLabel();
             this.CurBranch = new System.Windows.Forms.Label();
@@ -58,14 +57,11 @@
             this.CFU = new System.Windows.Forms.Button();
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.ButterBoyTP = new System.Windows.Forms.ToolTip(this.components);
-            this.BBMenu = new System.Windows.Forms.ContextMenu();
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.GTSLink = new System.Windows.Forms.LinkLabel();
             this.PatreonBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Mascot)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -213,25 +209,11 @@
             this.label8.TabIndex = 2;
             this.label8.Text = "Name:";
             // 
-            // Mascot
-            // 
-            this.Mascot.Image = global::KeppySynthConfigurator.Properties.Resources.bbhappy;
-            this.Mascot.Location = new System.Drawing.Point(310, 10);
-            this.Mascot.Name = "Mascot";
-            this.Mascot.Size = new System.Drawing.Size(48, 45);
-            this.Mascot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.Mascot.TabIndex = 12;
-            this.Mascot.TabStop = false;
-            this.ButterBoyTP.SetToolTip(this.Mascot, "Hello!\r\nMy name is Butter Boy, and I\'m the official KS mascot!\r\n\r\n(Idea by ThatGr" +
-        "eekGuy, drawing by Sir Spork)");
-            this.Mascot.Visible = false;
-            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.Mascot);
             this.groupBox1.Controls.Add(this.ChangeBranch);
             this.groupBox1.Controls.Add(this.CurBranch);
             this.groupBox1.Controls.Add(this.label9);
@@ -370,21 +352,10 @@
             this.BranchToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BranchToolTip.ToolTipTitle = "Branch info";
             // 
-            // ButterBoyTP
-            // 
-            this.ButterBoyTP.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.ButterBoyTP.ToolTipTitle = "Who am I?";
-            // 
-            // BBMenu
-            // 
-            this.BBMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.DisableBB});
-            // 
             // DisableBB
             // 
-            this.DisableBB.Index = 0;
-            this.DisableBB.Text = "How can I disable Butter Boy?";
-            this.DisableBB.Click += new System.EventHandler(this.DisableBB_Click);
+            this.DisableBB.Index = -1;
+            this.DisableBB.Text = "";
             // 
             // GTSLink
             // 
@@ -443,7 +414,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Mascot)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -480,9 +450,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolTip BranchToolTip;
         private System.Windows.Forms.LinkLabel ChangeBranch;
-        private System.Windows.Forms.PictureBox Mascot;
-        private System.Windows.Forms.ToolTip ButterBoyTP;
-        private System.Windows.Forms.ContextMenu BBMenu;
         private System.Windows.Forms.MenuItem DisableBB;
         private System.Windows.Forms.LinkLabel GTSLink;
         private System.Windows.Forms.Button PatreonBtn;

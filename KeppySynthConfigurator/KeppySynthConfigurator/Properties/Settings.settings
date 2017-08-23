@@ -5,14 +5,14 @@
     <Setting Name="UpdateBranch" Type="System.String" Scope="User">
       <Value Profile="(Default)">choose</Value>
     </Setting>
-    <Setting Name="ButterBoy" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="PatchInfoShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ShowOutputLevel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoLoadList" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

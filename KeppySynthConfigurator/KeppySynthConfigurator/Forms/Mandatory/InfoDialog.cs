@@ -87,14 +87,6 @@ namespace KeppySynthConfigurator
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
-            Mascot.ContextMenu = BBMenu;
-
-            if (Properties.Settings.Default.ButterBoy)
-            {
-                Mascot.Visible = true;
-                Mascot.MouseLeave += Mascot_MouseLeave;
-                Mascot.MouseHover += Mascot_MouseHover;
-            }
 
             OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
             osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
@@ -280,44 +272,6 @@ namespace KeppySynthConfigurator
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
-        }
-
-        private void Mascot_MouseHover(object sender, EventArgs e)
-        {
-            Mascot.Image = Properties.Resources.bbsurprised;
-        }
-        private void Mascot_MouseLeave(object sender, EventArgs e)
-        {
-            Mascot.Image = Properties.Resources.bbhappy;
-        }
-
-        private void DisableBB_Click(object sender, EventArgs e)
-        {
-            Mascot.MouseLeave -= Mascot_MouseLeave;
-            Mascot.MouseHover -= Mascot_MouseHover;
-            Mascot.Image = Properties.Resources.bbsad;
-            Refresh();
-            DialogResult dialogResult = MessageBox.Show("Aw!\n\nAre you sure you want to disable me?\nI'm not as annoying as Clippy, I swear!", "Butter Boy", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResult == DialogResult.Yes)
-            {
-                KeppySynthConfiguratorMain.Delegate.EnableBB.Visible = true;
-                KeppySynthConfiguratorMain.Delegate.EnableBBS.Visible = true;
-                Mascot.Visible = false;
-                Properties.Settings.Default.ButterBoy = false;
-                Properties.Settings.Default.Save();
-                MessageBox.Show("Butter Boy has been disabled, you can turn it back on by going on \"Tools\".", "Keppy's Synthesizer- Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                KeppySynthConfiguratorMain.Delegate.EnableBB.Visible = false;
-                KeppySynthConfiguratorMain.Delegate.EnableBBS.Visible = false;
-                Mascot.Image = Properties.Resources.bbhappy;
-                Properties.Settings.Default.ButterBoy = true;
-                Properties.Settings.Default.Save();
-                MessageBox.Show("Super-duper!\n\nI'm happy that you changed your mind!", "Butter Boy", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Mascot.MouseLeave += Mascot_MouseLeave;
-                Mascot.MouseHover += Mascot_MouseHover;
-            }
         }
     }
 }

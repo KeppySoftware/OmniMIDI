@@ -32,8 +32,6 @@
             this.BecomeAPatronNow = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.DontShowAnymore = new System.Windows.Forms.Button();
-            this.ButterBoy = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.ButterBoy)).BeginInit();
             this.SuspendLayout();
             // 
             // BecomeAPatronNow
@@ -50,8 +48,6 @@
             this.BecomeAPatronNow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BecomeAPatronNow.UseVisualStyleBackColor = true;
             this.BecomeAPatronNow.Click += new System.EventHandler(this.BecomeAPatronNow_Click);
-            this.BecomeAPatronNow.MouseLeave += new System.EventHandler(this.BecomeAPatronNow_MouseLeave);
-            this.BecomeAPatronNow.MouseHover += new System.EventHandler(this.BecomeAPatronNow_MouseHover);
             // 
             // label1
             // 
@@ -78,19 +74,6 @@
             this.DontShowAnymore.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.DontShowAnymore.UseVisualStyleBackColor = true;
             this.DontShowAnymore.Click += new System.EventHandler(this.DontShowAnymore_Click);
-            this.DontShowAnymore.MouseLeave += new System.EventHandler(this.DontShowAnymore_MouseLeave);
-            this.DontShowAnymore.MouseHover += new System.EventHandler(this.DontShowAnymore_MouseHover);
-            // 
-            // ButterBoy
-            // 
-            this.ButterBoy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButterBoy.Image = global::KeppySynthConfigurator.Properties.Resources.bbhappy;
-            this.ButterBoy.Location = new System.Drawing.Point(284, 139);
-            this.ButterBoy.Name = "ButterBoy";
-            this.ButterBoy.Size = new System.Drawing.Size(48, 45);
-            this.ButterBoy.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.ButterBoy.TabIndex = 9;
-            this.ButterBoy.TabStop = false;
             // 
             // BecomeAPatron
             // 
@@ -98,7 +81,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(344, 241);
             this.ControlBox = false;
-            this.Controls.Add(this.ButterBoy);
             this.Controls.Add(this.BecomeAPatronNow);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DontShowAnymore);
@@ -110,9 +92,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Become a patron to keep the project alive";
-            ((System.ComponentModel.ISupportInitialize)(this.ButterBoy)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -121,6 +101,5 @@
         private System.Windows.Forms.Button BecomeAPatronNow;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button DontShowAnymore;
-        private System.Windows.Forms.PictureBox ButterBoy;
     }
 }

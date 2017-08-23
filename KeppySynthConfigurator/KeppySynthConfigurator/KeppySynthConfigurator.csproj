@@ -110,10 +110,10 @@
     <Compile Include="Functions\AddToWhichList\AddToWhichList.designer.cs">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Mandatory\BecomeAPatron.cs">
+    <Compile Include="Forms\Add-ons\BecomeAPatron.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Mandatory\BecomeAPatron.Designer.cs">
+    <Compile Include="Forms\Add-ons\BecomeAPatron.Designer.cs">
       <DependentUpon>BecomeAPatron.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.cs">
@@ -302,7 +302,7 @@
     <EmbeddedResource Include="Functions\AddToWhichList\AddToWhichList.resx">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Mandatory\BecomeAPatron.resx">
+    <EmbeddedResource Include="Forms\Add-ons\BecomeAPatron.resx">
       <DependentUpon>BecomeAPatron.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Audio Outputs\DefaultASIOAudioOutput.resx">
@@ -436,12 +436,6 @@
     <None Include="Resources\List Editor\EnableIcon.png" />
     <None Include="Resources\List Editor\ExportIcon.png" />
     <None Include="FodyWeavers.xml" />
-    <None Include="Resources\Mascot\bbangry.png" />
-    <None Include="Resources\Mascot\bbcrying.png" />
-    <None Include="Resources\Mascot\bbevil.png" />
-    <None Include="Resources\Mascot\bbhappy.png" />
-    <None Include="Resources\Mascot\bbsad.png" />
-    <None Include="Resources\Mascot\bbsurprised.png" />
     <None Include="Resources\Icons\dlnope.png" />
     <None Include="Resources\Icons\dlready.png" />
     <Content Include="Resources\Icons\gear.ico" />

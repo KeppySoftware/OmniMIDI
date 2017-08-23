@@ -130,12 +130,12 @@ namespace KeppySynthConfigurator
                 return "Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x).\nRecommended.";
         }
 
-        public static bool CheckForUpdatesMini()
+        public static string CheckForUpdatesMini()
         {
             bool internetok = IsInternetAvailable();
             if (internetok == false)
             {
-                return false;
+                return "nointernet";
             }
             else
             {
@@ -153,32 +153,32 @@ namespace KeppySynthConfigurator
 
                     if (Properties.Settings.Default.UpdateBranch == "canary")
                     {
-                        if (DriverCurrent < DriverOnline) return true;
-                        else return false;
+                        if (DriverCurrent < DriverOnline) return "yes";
+                        else return "no";
                     }
                     else if (Properties.Settings.Default.UpdateBranch == "normal")
                     {
                         if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
                         {
-                            if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build)) return true;
-                            else return false;
+                            if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build)) return "yes";
+                            else return "no";
                         }
-                        else return false;
+                        else return "no";
                     }
                     else if (Properties.Settings.Default.UpdateBranch == "delay")
                     {
                         if (DriverCurrent.Major < DriverOnline.Major)
                         {
-                            if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor)) return true;
-                            else return false;
+                            if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor)) return "yes";
+                            else return "no";
                         }
-                        else return false;
+                        else return "no";
                     }
-                    else return false;
+                    else return "no";
                 }
                 catch
                 {
-                    return false;
+                    return "no";
                 }
             }
         }

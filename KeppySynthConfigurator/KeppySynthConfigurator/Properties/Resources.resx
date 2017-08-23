@@ -127,9 +127,6 @@
   <data name="winmm64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WinMM64\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bbsurprised" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbsurprised.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="winmm32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WinMM32\winmm.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -138,9 +135,6 @@
   </data>
   <data name="wdmaud64drv" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WinMM64\wdmaud.drv;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="bbhappy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbhappy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="rollbackicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\rollbackicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -153,9 +147,6 @@
   </data>
   <data name="ClearIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\List Editor\ClearIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bbangry" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbangry.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EnableIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\List Editor\EnableIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -181,9 +172,6 @@
   <data name="ppdonate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pictures\ppdonate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bbsad" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbsad.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="updatebk" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pictures\updatebk.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -201,12 +189,6 @@
   </data>
   <data name="volnum" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Text\volnum.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="bbcrying" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbcrying.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bbevil" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mascot\bbevil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="MvDwIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\List Editor\MvDwIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
