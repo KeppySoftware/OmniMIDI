@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -13,6 +14,7 @@ namespace KeppySynthConfigurator
 {
     class TelemetryExt
     {
+        public static CultureInfo cultureTelemetry = new CultureInfo("de-DE");
         public static Random RandomID = new Random();
 
         public static bool SendInfoForTelemetry(byte[] data)
@@ -35,7 +37,7 @@ namespace KeppySynthConfigurator
 
                 // Upload data
                 Uri furi = new Uri(String.Format("ftp://{0}/{1}/{2}", Data[0], Environment.UserName, String.Format("{0}_{1}_{2}_({3}).txt",
-                    Environment.UserName, DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString(), RandomID.Next(0, 2147483647).ToString("0000000000"))));
+                    Environment.UserName, DateTime.Now.ToString("dd MMMM yyyy", cultureTelemetry), DateTime.Now.ToLongTimeString(), RandomID.Next(0, 2147483647).ToString("0000000000"))));
                 FtpWebRequest FileFTP = (FtpWebRequest)FtpWebRequest.Create(furi);
                 FileFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
                 FileFTP.Method = WebRequestMethods.Ftp.UploadFile;

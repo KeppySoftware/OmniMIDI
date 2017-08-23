@@ -66,6 +66,7 @@
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
+            this.AutoLoad = new System.Windows.Forms.MenuItem();
             this.ShowOutLevel = new System.Windows.Forms.MenuItem();
             this.EPB = new System.Windows.Forms.MenuItem();
             this.menuItem31 = new System.Windows.Forms.MenuItem();
@@ -297,7 +298,6 @@
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ExportPresetDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportPresetDialog = new System.Windows.Forms.OpenFileDialog();
-            this.AutoLoad = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -569,6 +569,12 @@
             this.hotkeys.Index = 0;
             this.hotkeys.Text = "Enable fast hotkeys in MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
+            // 
+            // AutoLoad
+            // 
+            this.AutoLoad.Index = 1;
+            this.AutoLoad.Text = "Reload list automatically after editing it";
+            this.AutoLoad.Click += new System.EventHandler(this.AutoLoad_Click);
             // 
             // ShowOutLevel
             // 
@@ -1181,7 +1187,7 @@
             this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(643, 394);
+            this.Settings.Size = new System.Drawing.Size(643, 395);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
@@ -2134,7 +2140,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(445, 364);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(444, 364);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 22;
@@ -2146,7 +2152,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(543, 364);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 364);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 23;
@@ -2473,7 +2479,7 @@
             this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(643, 394);
+            this.SoundFontTab.Size = new System.Drawing.Size(643, 395);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -2511,7 +2517,7 @@
             this.Lis.Location = new System.Drawing.Point(5, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(602, 340);
+            this.Lis.Size = new System.Drawing.Size(602, 343);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -2545,7 +2551,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(613, 346);
+            this.EL.Location = new System.Drawing.Point(613, 349);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
@@ -2579,7 +2585,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(613, 317);
+            this.IEL.Location = new System.Drawing.Point(613, 320);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
@@ -2669,7 +2675,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(2, 380);
+            this.ListOverride.Location = new System.Drawing.Point(2, 382);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 14;
@@ -2774,7 +2780,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(651, 421);
+            this.TabsForTheControls.Size = new System.Drawing.Size(651, 422);
             this.TabsForTheControls.TabIndex = 0;
             // 
             // TabImgs
@@ -2874,7 +2880,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 420);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 421);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -2954,12 +2960,6 @@
             // 
             this.ImportPresetDialog.Filter = "Preset files|*.kspr";
             // 
-            // AutoLoad
-            // 
-            this.AutoLoad.Index = 1;
-            this.AutoLoad.Text = "Reload list automatically after editing it";
-            this.AutoLoad.Click += new System.EventHandler(this.AutoLoad_Click);
-            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2967,7 +2967,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(649, 442);
+            this.ClientSize = new System.Drawing.Size(649, 443);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -2975,6 +2975,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(665, 502);
             this.Menu = this.MainMenu;
             this.Name = "KeppySynthConfiguratorMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;

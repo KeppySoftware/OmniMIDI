@@ -132,9 +132,12 @@ namespace KeppySynthConfigurator
 
         public static string CheckForUpdatesMini()
         {
+            Program.DebugToConsole(false, "Checking for updates...", null);
+
             bool internetok = IsInternetAvailable();
             if (internetok == false)
             {
+                Program.DebugToConsole(false, "No Internet available.", null);
                 return "nointernet";
             }
             else
@@ -153,15 +156,31 @@ namespace KeppySynthConfigurator
 
                     if (Properties.Settings.Default.UpdateBranch == "canary")
                     {
-                        if (DriverCurrent < DriverOnline) return "yes";
-                        else return "no";
+                        if (DriverCurrent < DriverOnline)
+                        {
+                            Program.DebugToConsole(false, String.Format("New version found. ({0})", newestversion), null);
+                            return "yes";
+                        }
+                        else
+                        {
+                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                            return "no";
+                        }
                     }
                     else if (Properties.Settings.Default.UpdateBranch == "normal")
                     {
                         if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
                         {
-                            if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build)) return "yes";
-                            else return "no";
+                            if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. ({0})", newestversion), null);
+                                return "yes";
+                            }
+                            else
+                            {
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                return "no";
+                            }
                         }
                         else return "no";
                     }
@@ -169,15 +188,32 @@ namespace KeppySynthConfigurator
                     {
                         if (DriverCurrent.Major < DriverOnline.Major)
                         {
-                            if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor)) return "yes";
-                            else return "no";
+                            if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
+                            {
+                                Program.DebugToConsole(false, String.Format("New version found. ({0})", newestversion), null);
+                                return "yes";
+                            }
+                            else
+                            {
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                return "no";
+                            }
                         }
-                        else return "no";
+                        else
+                        {
+                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                            return "no";
+                        }
                     }
-                    else return "no";
+                    else
+                    {
+                        Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                        return "no";
+                    }
                 }
                 catch
                 {
+                    Program.DebugToConsole(false, "Error while checking for updates.", null);
                     return "no";
                 }
             }

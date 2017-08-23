@@ -2412,7 +2412,8 @@ namespace KeppySynthConfigurator
             DialogResult dialogResult = MessageBox.Show("Would you like to participate in KS's Telemetry?\n\n" +
                 "The telemetry (user statistics) conducted by the app will be used to improve the application and help " +
                 "the developer fix problems in the future.\nIn order for telemetry to be registered, " +
-                "Keppy's Synthesizer requires your username/nickname (to identify you), your CPU, GPU, RAM, and operating system.\n" +
+                "Keppy's Synthesizer requires your username/nickname (to identify you), your CPU, GPU, RAM, and operating system." +
+                "It will also read your MAC Address, to prevent spammers from abusing the feature.\n" +
                 "These statistics will be kept completely anonymous and will not be disclosed.\n\n" +
                 "Email is optional, but if you do not provide it, I will be unable to contact you.\n\nClick \"Yes\" if you'd like to join, or click \"No\" if you don't want to.",
                 "Telemetry - Disclaimer", MessageBoxButtons.YesNo, MessageBoxIcon.Information);

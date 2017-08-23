@@ -53,6 +53,8 @@
             this.HelpProvider = new System.Windows.Forms.HelpProvider();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.AdditionalFeed = new System.Windows.Forms.RichTextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.SoundCards = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -155,8 +157,11 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.SoundCards);
+            this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.InstGPUVal);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.OSVal);
@@ -169,7 +174,7 @@
             this.groupBox2.Location = new System.Drawing.Point(12, 143);
             this.groupBox2.Name = "groupBox2";
             this.HelpProvider.SetShowHelp(this.groupBox2, true);
-            this.groupBox2.Size = new System.Drawing.Size(372, 125);
+            this.groupBox2.Size = new System.Drawing.Size(372, 153);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "PC specifications";
@@ -257,7 +262,7 @@
             // OkBtn
             // 
             this.OkBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OkBtn.Location = new System.Drawing.Point(534, 279);
+            this.OkBtn.Location = new System.Drawing.Point(534, 307);
             this.OkBtn.Name = "OkBtn";
             this.OkBtn.Size = new System.Drawing.Size(75, 23);
             this.OkBtn.TabIndex = 7;
@@ -268,7 +273,7 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(453, 279);
+            this.CancelBtn.Location = new System.Drawing.Point(453, 307);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
             this.CancelBtn.TabIndex = 8;
@@ -280,7 +285,7 @@
             // 
             this.LetUserEditSpecs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LetUserEditSpecs.AutoSize = true;
-            this.LetUserEditSpecs.Location = new System.Drawing.Point(12, 283);
+            this.LetUserEditSpecs.Location = new System.Drawing.Point(12, 311);
             this.LetUserEditSpecs.Name = "LetUserEditSpecs";
             this.LetUserEditSpecs.Size = new System.Drawing.Size(128, 17);
             this.LetUserEditSpecs.TabIndex = 9;
@@ -292,7 +297,7 @@
             // 
             this.DiscLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DiscLabel.AutoSize = true;
-            this.DiscLabel.Location = new System.Drawing.Point(392, 284);
+            this.DiscLabel.Location = new System.Drawing.Point(392, 312);
             this.DiscLabel.Name = "DiscLabel";
             this.DiscLabel.Size = new System.Drawing.Size(55, 13);
             this.DiscLabel.TabIndex = 10;
@@ -302,11 +307,13 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.AdditionalFeed);
             this.groupBox3.Location = new System.Drawing.Point(390, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(219, 256);
+            this.groupBox3.Size = new System.Drawing.Size(219, 284);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Additional feedback";
@@ -318,15 +325,36 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AdditionalFeed.Location = new System.Drawing.Point(6, 15);
             this.AdditionalFeed.Name = "AdditionalFeed";
-            this.AdditionalFeed.Size = new System.Drawing.Size(207, 235);
+            this.AdditionalFeed.Size = new System.Drawing.Size(207, 263);
             this.AdditionalFeed.TabIndex = 0;
             this.AdditionalFeed.Text = "";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(6, 124);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(154, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Select your default sound card:";
+            // 
+            // SoundCards
+            // 
+            this.SoundCards.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SoundCards.FormattingEnabled = true;
+            this.SoundCards.Items.AddRange(new object[] {
+            "No device selected"});
+            this.SoundCards.Location = new System.Drawing.Point(166, 121);
+            this.SoundCards.Name = "SoundCards";
+            this.SoundCards.Size = new System.Drawing.Size(196, 21);
+            this.SoundCards.TabIndex = 10;
             // 
             // Telemetry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(621, 314);
+            this.ClientSize = new System.Drawing.Size(621, 342);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.DiscLabel);
             this.Controls.Add(this.LetUserEditSpecs);
@@ -381,5 +409,7 @@
         private System.Windows.Forms.HelpProvider HelpProvider;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox AdditionalFeed;
+        private System.Windows.Forms.ComboBox SoundCards;
+        private System.Windows.Forms.Label label9;
     }
 }
