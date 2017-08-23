@@ -22,6 +22,12 @@ namespace KeppySynthConfigurator
         FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
         UInt64 TotalRAM = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
+
+        String MACAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()
+                          where nic.OperationalStatus == OperationalStatus.Up
+                          select nic.GetPhysicalAddress().ToString()
+                       ).FirstOrDefault();
+
         String RealCPU = "";
         String RealRAM = "";
         String RealGPU = "";
@@ -128,6 +134,13 @@ namespace KeppySynthConfigurator
 
         private void OkBtn_Click(object sender, EventArgs e)
         {
+            if (TelemetryExt.IsUserBanned())
+            {
+                MessageBox.Show("You're banned from using the telemetry feature.", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
+
             // Do a check first
             if (String.IsNullOrWhiteSpace(NicknameVal.Text))
             {
@@ -171,11 +184,6 @@ namespace KeppySynthConfigurator
             this.Enabled = false;
 
             StringBuilder TelemetryData = new StringBuilder();
-
-            var MACAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()
-                           where nic.OperationalStatus == OperationalStatus.Up
-                           select nic.GetPhysicalAddress().ToString()
-                           ).FirstOrDefault();
 
             TelemetryData.AppendLine(String.Format("Telemetry data sent by {0} in {1}, through Keppy's Synthesizer {2}.", 
                 NicknameVal.Text, DateTime.Now.ToString(), String.Format("{0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart)));

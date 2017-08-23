@@ -70,5 +70,17 @@ namespace KeppySynthConfigurator.Properties {
                 this["AutoLoadList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TelemetryAlreadySeen {
+            get {
+                return ((bool)(this["TelemetryAlreadySeen"]));
+            }
+            set {
+                this["TelemetryAlreadySeen"] = value;
+            }
+        }
     }
 }
