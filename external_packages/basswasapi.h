@@ -1,6 +1,6 @@
 /*
 	BASSWASAPI 2.4 C/C++ header file
-	Copyright (c) 2009-2015 Un4seen Developments Ltd.
+	Copyright (c) 2009-2017 Un4seen Developments Ltd.
 
 	See the BASSWASAPI.CHM file for more detailed documentation
 */
@@ -72,6 +72,8 @@ typedef struct {
 #define BASS_WASAPI_AUTOFORMAT	2
 #define BASS_WASAPI_BUFFER		4
 #define BASS_WASAPI_EVENT		16
+#define BASS_WASAPI_SAMPLES		32
+#define BASS_WASAPI_DITHER		64
 
 // BASS_WASAPI_INFO "format"
 #define BASS_WASAPI_FORMAT_FLOAT	0
@@ -104,6 +106,7 @@ user   : The 'user' parameter given when calling BASS_WASAPI_SetNotify */
 #define BASS_WASAPI_NOTIFY_DISABLED		1
 #define BASS_WASAPI_NOTIFY_DEFOUTPUT	2
 #define BASS_WASAPI_NOTIFY_DEFINPUT		3
+#define BASS_WASAPI_NOTIFY_FAIL			0x100
 
 DWORD BASSWASAPIDEF(BASS_WASAPI_GetVersion)();
 BOOL BASSWASAPIDEF(BASS_WASAPI_SetNotify)(WASAPINOTIFYPROC *proc, void *user);

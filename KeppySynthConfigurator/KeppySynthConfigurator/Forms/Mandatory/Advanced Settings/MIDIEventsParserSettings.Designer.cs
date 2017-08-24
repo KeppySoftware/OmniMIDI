@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.ABS = new System.Windows.Forms.GroupBox();
+            this.MT32Mode = new System.Windows.Forms.CheckBox();
             this.IgnoreNotes = new System.Windows.Forms.CheckBox();
             this.FullVelocityMode = new System.Windows.Forms.CheckBox();
             this.SysExIgnore = new System.Windows.Forms.CheckBox();
@@ -51,18 +52,32 @@
             // 
             // ABS
             // 
-            this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ABS.Controls.Add(this.MT32Mode);
             this.ABS.Controls.Add(this.IgnoreNotes);
             this.ABS.Controls.Add(this.FullVelocityMode);
             this.ABS.Controls.Add(this.SysExIgnore);
             this.ABS.Controls.Add(this.AllNotesIgnore);
             this.ABS.Location = new System.Drawing.Point(12, 79);
             this.ABS.Name = "ABS";
-            this.ABS.Size = new System.Drawing.Size(345, 99);
+            this.ABS.Size = new System.Drawing.Size(345, 118);
             this.ABS.TabIndex = 11;
             this.ABS.TabStop = false;
             this.ABS.Text = "Ignore specific stuff/Set full velocity";
+            // 
+            // MT32Mode
+            // 
+            this.MT32Mode.AutoSize = true;
+            this.MT32Mode.Enabled = false;
+            this.MT32Mode.Location = new System.Drawing.Point(6, 95);
+            this.MT32Mode.Name = "MT32Mode";
+            this.MT32Mode.Size = new System.Drawing.Size(140, 17);
+            this.MT32Mode.TabIndex = 8;
+            this.MT32Mode.Text = "Enable the MT-32 mode";
+            this.MT32Mode.UseVisualStyleBackColor = true;
+            this.MT32Mode.CheckedChanged += new System.EventHandler(this.MT32Mode_CheckedChanged);
             // 
             // IgnoreNotes
             // 
@@ -145,13 +160,12 @@
             // 
             // OS
             // 
-            this.OS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.OS.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OS.Controls.Add(this.EVBufDialog);
             this.OS.Controls.Add(this.RevbNChor);
             this.OS.Controls.Add(this.IgnoreNotesInterval);
-            this.OS.Location = new System.Drawing.Point(12, 184);
+            this.OS.Location = new System.Drawing.Point(12, 203);
             this.OS.Name = "OS";
             this.OS.Size = new System.Drawing.Size(345, 75);
             this.OS.TabIndex = 12;
@@ -194,7 +208,7 @@
             this.CAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CAE.AutoSize = true;
             this.CAE.Enabled = false;
-            this.CAE.Location = new System.Drawing.Point(15, 273);
+            this.CAE.Location = new System.Drawing.Point(15, 292);
             this.CAE.Name = "CAE";
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 14;
@@ -203,7 +217,7 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(282, 268);
+            this.OKBtn.Location = new System.Drawing.Point(282, 287);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 13;
@@ -225,7 +239,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 303);
+            this.ClientSize = new System.Drawing.Size(369, 322);
             this.Controls.Add(this.ABS);
             this.Controls.Add(this.AOS);
             this.Controls.Add(this.OS);
@@ -267,5 +281,6 @@
         private System.Windows.Forms.CheckBox IgnoreNotes;
         private System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.Button EVBufDialog;
+        private System.Windows.Forms.CheckBox MT32Mode;
     }
 }

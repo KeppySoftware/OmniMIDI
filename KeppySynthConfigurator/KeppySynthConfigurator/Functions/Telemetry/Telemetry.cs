@@ -191,11 +191,10 @@ namespace KeppySynthConfigurator
             TelemetryData.AppendLine("========= Personal information =========");
             TelemetryData.AppendLine(String.Format("Name: {0} (Windows username: {1}, Computer name: {2})", NicknameVal.Text, Environment.UserName, Environment.MachineName));
             TelemetryData.AppendLine(String.Format("E-mail: {0}", EmailVal.Text));
-            TelemetryData.AppendLine(String.Format("Name: {0}", String.IsNullOrWhiteSpace(AgeVal.Text) ? "Not specified" : AgeVal.Text));
-            TelemetryData.AppendLine(String.Format("Name: {0}", String.IsNullOrWhiteSpace(CountryVal.Text) ? "Not specified" : CountryVal.Text));
+            TelemetryData.AppendLine(String.Format("Age: {0}", String.IsNullOrWhiteSpace(AgeVal.Text) ? "Not specified" : AgeVal.Text));
+            TelemetryData.AppendLine(String.Format("Country: {0}", String.IsNullOrWhiteSpace(CountryVal.Text) ? "Not specified" : CountryVal.Text));
             TelemetryData.AppendLine();
             TelemetryData.AppendLine("========= PC specifications =========");
-            TelemetryData.AppendLine(String.Format("Processor: {0}\nReal value: {1}\n", InstCPUVal.Text, RealCPU));
             TelemetryData.AppendLine(String.Format("Processor: {0}\nReal value: {1}\n", InstCPUVal.Text, RealCPU));
             TelemetryData.AppendLine(String.Format("Installed RAM: {0}\nReal value: {1}\n", InstRAMVal.Text, RealRAM));
             TelemetryData.AppendLine(String.Format("Operating system: {0}\nReal value: {1}\n", OSVal.Text, String.Format("{0}, {1}", RealOS, RealPatch)));
@@ -203,9 +202,8 @@ namespace KeppySynthConfigurator
             TelemetryData.AppendLine(String.Format("MAC Address: {0}", MACAddress));
             TelemetryData.AppendLine();
             TelemetryData.AppendLine("========= Sound devices list =========");
-            foreach (ManagementObject obj in mosSound.Get()) TelemetryData.AppendLine(obj["Name"].ToString());
-            TelemetryData.AppendLine();
             TelemetryData.AppendLine(String.Format("Default device: {0}", SoundCards.Text.ToString()));
+            foreach (ManagementObject obj in mosSound.Get()) TelemetryData.AppendLine(obj["Name"].ToString());
             TelemetryData.AppendLine();
             TelemetryData.AppendLine("========= Additional feedback =========");
             TelemetryData.AppendLine(String.IsNullOrWhiteSpace(AdditionalFeed.Text) ? "No additional feedback." : AdditionalFeed.Text.ToString());

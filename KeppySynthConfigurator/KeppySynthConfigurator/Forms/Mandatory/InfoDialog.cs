@@ -77,6 +77,8 @@ namespace KeppySynthConfigurator
 
         private void InfoDialog_Load(object sender, EventArgs e)
         {
+            if (!KeppySynthConfiguratorMain.IsInternetAvailable) CFU.Visible = false;
+
             ComputerInfo CI = new ComputerInfo();
             String Version = String.Format("{0}.{1}.{2}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart);
             VerLabel.Text = String.Format("Keppy's Synthesizer {0}\n\nCopyright Ⓒ 2011\nKaleidonKep99, Kode54 && Mudlord", Version, DateTime.Now.Year.ToString());

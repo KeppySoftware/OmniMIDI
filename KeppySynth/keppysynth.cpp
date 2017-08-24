@@ -277,43 +277,40 @@ bool GetVersionInfo(
 	return false;
 }
 
-LPCWSTR ReturnAppName() {
+LPCWSTR ReturnAppName(void) {
 	// Get app name
-	typedef std::basic_string<TCHAR> tstring;
-	TCHAR buffer[MAX_PATH] = { 0 };
+	TCHAR buffer[MAX_PATH];
 	TCHAR * out;
-	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
-	if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
+	GetModuleFileName(NULL, buffer, MAX_PATH);
 	out = PathFindFileName(buffer);
-	std::wstring stemp = tstring(out) + L" - Debug Output.txt";
-	return stemp.c_str();
+
+	TCHAR final[MAX_PATH];
+	_stprintf(final, _T("%s  - Debug Output.txt"), out);
+
+	return final;
 }
 
 void CreateConsole() {
-	// Create file and start console output
-	LPCWSTR appname = ReturnAppName();
-	TCHAR installpath[MAX_PATH] = { 0 };
-	TCHAR pathfortext[MAX_PATH];
-	char pathfortextchar[500];
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, pathfortext);
-	PathAppend(pathfortext, _T("\\Keppy's Synthesizer\\debug\\"));
-	CreateDirectory(pathfortext, NULL);
-	PathAppend(pathfortext, appname);
-	GetModuleFileName(hinst, installpath, MAX_PATH);
-	PathRemoveFileSpec(installpath);
-	lstrcat(installpath, L"\\keppysynth.dll");
-	int major2;
-	int minor2;
-	int build;
-	int revision;
-	int number = 1;
-	GetVersionInfo(installpath, major2, minor2, build, revision);
 	if (alreadyshown != 1) {
-		wcstombs(pathfortextchar, pathfortext, 500);
-		freopen(pathfortextchar, "w", stdout);
+		MessageBox(NULL, L"You're running the driver in debug mode.", L"Keppy's Synthesizer - Notice", MB_ICONWARNING | MB_OK);
+
+		// Create file and start console output
+		LPCWSTR appname = ReturnAppName();
+		TCHAR installpath[MAX_PATH];
+		TCHAR pathfortext[MAX_PATH];
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, pathfortext);
+		PathAppend(pathfortext, _T("\\Keppy's Synthesizer\\debug\\"));
+		CreateDirectory(pathfortext, NULL);
+		PathAppend(pathfortext, appname);
+		GetModuleFileName(hinst, installpath, MAX_PATH);
+		PathRemoveFileSpec(installpath);
+		lstrcat(installpath, L"\\keppysynth.dll");
+		int major, minor, build, revision;
+		GetVersionInfo(installpath, major, minor, build, revision);
+		_wfreopen(pathfortext, L"w", stdout);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTitle(L"Keppy's Synthesizer Debug Console");
-		std::cout << "Keppy's Synthesizer Version " << major2 << "." << minor2 << "." << build << "." << revision;
+		std::cout << "Keppy's Synthesizer Version " << major << "." << minor << "." << build << "." << revision;
 		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
 		std::cout << std::endl;
 		alreadyshown = 1;

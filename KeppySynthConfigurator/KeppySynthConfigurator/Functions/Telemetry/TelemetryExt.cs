@@ -7,6 +7,7 @@ using System.Linq;
 using System.Management;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -14,6 +15,7 @@ namespace KeppySynthConfigurator
 {
     class TelemetryExt
     {
+        static Guid GuidKey;
         static String[] Data = Properties.Resources.TelemetryLoginData.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
         static CultureInfo cultureTelemetry = new CultureInfo("en-US");
         static Random RandomID = new Random();

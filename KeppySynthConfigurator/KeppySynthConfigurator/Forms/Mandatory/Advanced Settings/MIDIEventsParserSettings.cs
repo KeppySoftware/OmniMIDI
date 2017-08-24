@@ -43,6 +43,9 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
                 FullVelocityMode.Checked = true;
 
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("mt32mode", 0)) == 1)
+                MT32Mode.Checked = true;
+
             CAE.Text = String.Format(CAE.Text, KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text);
         }
 
@@ -98,6 +101,14 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("fullvelocity", "1", RegistryValueKind.DWord);
             else
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("fullvelocity", "0", RegistryValueKind.DWord);
+        }
+
+        private void MT32Mode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (MT32Mode.Checked)
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("mt32mode", "1", RegistryValueKind.DWord);
+            else
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("mt32mode", "0", RegistryValueKind.DWord);
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)

@@ -95,7 +95,7 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 {
 	start2 = clock();
 	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
-	if (data == -1) data = 0;
+	if (data == -1) return 0;
 	return data;
 }
 
@@ -103,7 +103,7 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 {
 	start2 = clock();
 	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
-	if (data == -1) data = 0;
+	if (data == -1) return 0;
 	return data;
 }
 

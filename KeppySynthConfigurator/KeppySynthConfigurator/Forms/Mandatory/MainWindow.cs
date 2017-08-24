@@ -24,7 +24,7 @@ namespace KeppySynthConfigurator
     {
         // Delegate for BasicFunc
         public static KeppySynthConfiguratorMain Delegate;
-        public static Boolean IsInternetAvailable = true;
+        public static Boolean IsInternetAvailable = false;
 
         public static string LastBrowserPath { get; set; }
         public static string LastImportExportPath { get; set; }
@@ -952,7 +952,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
@@ -980,7 +980,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 256, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 256, 1);
             Functions.ChangeDriverMask("Microsoft GS Wavetable Synth", 5);
 
             // And then...
@@ -997,7 +997,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
@@ -1014,7 +1014,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
@@ -1031,7 +1031,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 384, 1);
             Functions.ChangeDriverMask("Keppy's Chiptune Emulator", 4);
 
             // And then...
@@ -1048,7 +1048,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
@@ -1065,7 +1065,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
@@ -1082,7 +1082,7 @@ namespace KeppySynthConfigurator
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
 
             // And then...
@@ -1090,6 +1090,23 @@ namespace KeppySynthConfigurator
 
             // Messagebox here
             MessageBox.Show("\"Professional environments - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void MT32Mode_Click(object sender, EventArgs e)
+        {
+            // Set some values...
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, 100, true, false, false, true, false, false, 2);
+
+            // Advanced settings here...
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
+            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
+
+            // And then...
+            Functions.SaveSettings();
+
+            // Messagebox here
+            MessageBox.Show("\"Roland MT-32 Mode\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // Now, menustrip functions here
@@ -1995,6 +2012,7 @@ namespace KeppySynthConfigurator
                 UpdateStatus.Image = Properties.Resources.ReloadIcon;
                 UpdateStatus.Enabled = false;
                 VersionLabel.Enabled = false;
+                IsInternetAvailable = false;
                 CheckForUpdatesMenu.Enabled = false;
             });
 
@@ -2008,6 +2026,7 @@ namespace KeppySynthConfigurator
                 UpdateStatus.Image = Properties.Resources.dlready;
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
+                IsInternetAvailable = true;
                 CheckForUpdatesMenu.Enabled = true;
             });
             else if (IsUpdateAvailable == "no") this.Invoke((MethodInvoker)delegate
@@ -2018,12 +2037,14 @@ namespace KeppySynthConfigurator
                 UpdateStatus.Image = Properties.Resources.dlnope;
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
+                IsInternetAvailable = true;
                 CheckForUpdatesMenu.Enabled = true;
             });
             else this.Invoke((MethodInvoker)delegate {
                 UpdateStatus.Image = Properties.Resources.ClearIcon;
                 UpdateStatus.Enabled = false;
                 VersionLabel.Enabled = false;
+                IsInternetAvailable = false;
                 CheckForUpdatesMenu.Enabled = false;
             });
         }
@@ -2087,7 +2108,7 @@ namespace KeppySynthConfigurator
             // Set some values...
             SynthSettings.SetValue("sndbfvalue", 100, RegistryValueKind.DWord);
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
-            Functions.ChangeMIDIEventParserSettings(0, 0, 16384, 1);
+            Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
 
             DialogResult dialogResult2 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult2 == DialogResult.Yes)

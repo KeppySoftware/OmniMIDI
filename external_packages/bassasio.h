@@ -1,6 +1,6 @@
 /*
 	BASSASIO 1.4 C/C++ header file
-	Copyright (c) 2005-2014 Un4seen Developments Ltd.
+	Copyright (c) 2005-2017 Un4seen Developments Ltd.
 
 	See the BASSASIO.CHM file for more detailed documentation
 */
@@ -69,6 +69,7 @@ typedef struct {
 #define BASS_ASIO_FORMAT_FLOAT		19 // 32-bit floating-point
 #define BASS_ASIO_FORMAT_DSD_LSB	32 // DSD (LSB 1st)
 #define BASS_ASIO_FORMAT_DSD_MSB	33 // DSD (MSB 1st)
+#define BASS_ASIO_FORMAT_DITHER		0x100 // flag: apply dither when converting from floating-point to integer
 
 // BASS_ASIO_ChannelReset flags
 #define BASS_ASIO_RESET_ENABLE	1 // disable channel
@@ -113,6 +114,7 @@ BOOL BASSASIODEF(BASS_ASIO_SetDevice)(DWORD device);
 DWORD BASSASIODEF(BASS_ASIO_GetDevice)();
 BOOL BASSASIODEF(BASS_ASIO_Init)(DWORD device, DWORD flags);
 BOOL BASSASIODEF(BASS_ASIO_Free)();
+BOOL BASSASIODEF(BASS_ASIO_Lock)(BOOL lock);
 BOOL BASSASIODEF(BASS_ASIO_SetNotify)(ASIONOTIFYPROC *proc, void *user);
 BOOL BASSASIODEF(BASS_ASIO_ControlPanel)();
 BOOL BASSASIODEF(BASS_ASIO_GetInfo)(BASS_ASIO_INFO *info);
