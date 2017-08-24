@@ -834,12 +834,7 @@ void debug_info() {
 		int64_t td3i = int64_t(GetUsage(start3, end));
 		int64_t td4i = int64_t(GetUsage(start4, end));
 
-		double rate = BASS_ASIO_GetRate();
-		CheckUpASIO(ERRORCODE, L"KSGetRateASIO");
-		long inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
-		CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO");
-		long outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
-		CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO");
+
 
 		if (oldbuffermode == 1) td4i = 1;
 
@@ -855,8 +850,18 @@ void debug_info() {
 		RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&td2i, sizeof(td2i));
 		RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&td3i, sizeof(td3i));
 		RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&td4i, sizeof(td4i));
-		RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&inlatency, sizeof(inlatency));
-		RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&outlatency, sizeof(outlatency));
+
+		if (xaudiodisabled == 2) {
+			double rate = BASS_ASIO_GetRate();
+			CheckUpASIO(ERRORCODE, L"KSGetRateASIO");
+			long inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
+			CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO");
+			long outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
+			CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO");
+
+			RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&inlatency, sizeof(inlatency));
+			RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&outlatency, sizeof(outlatency));
+		}
 
 		for (int i = 0; i <= 15; ++i) {
 			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
