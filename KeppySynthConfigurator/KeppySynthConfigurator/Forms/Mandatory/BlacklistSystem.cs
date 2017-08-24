@@ -258,12 +258,12 @@ namespace KeppySynthConfigurator
 
         private void UDBLi_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResultR = MessageBox.Show("Do you want to restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dialogResultR = MessageBox.Show("Do you want to update/restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResultR == DialogResult.Yes)
             {
                 Program.DebugToConsole(false, "Downloading the default blacklist", null);
                 string dbl = "https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/output/keppysynth.dbl";
-                Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist", dbl, Path.GetDirectoryName(DefBlacklistPath), 1, false);
+                Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist", dbl, Path.GetDirectoryName(DefBlacklistPath), 2, false);
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 frm.ShowDialog();
             }

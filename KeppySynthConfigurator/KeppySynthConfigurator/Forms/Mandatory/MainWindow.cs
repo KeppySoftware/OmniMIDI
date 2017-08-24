@@ -993,7 +993,7 @@ namespace KeppySynthConfigurator
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 200, 100, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
