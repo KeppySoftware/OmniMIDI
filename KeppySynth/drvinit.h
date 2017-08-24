@@ -223,6 +223,14 @@ void GetWASAPIDevice() {
 	RegCloseKey(hKey);
 }
 
+void ASIOControlPanel() {
+	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
+		if (xaudiodisabled == 2) {
+			BASS_ASIO_ControlPanel();
+		}
+	}
+}
+
 bool InitializeBASS(bool restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
 
@@ -243,21 +251,27 @@ bool InitializeBASS(bool restart) {
 
 		// Free BASS first
 		BASS_WASAPI_Stop(TRUE);
+		CheckUp(ERRORCODE, L"KSStopWASAPI");
 		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
 
 		BASS_WASAPI_Free();
+		CheckUp(ERRORCODE, L"KSFreeWASAPI");
 		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI terminated.");
 
 		BASS_ASIO_Stop();
+		CheckUp(ERRORCODE, L"KSStopASIO");
 		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
 
 		BASS_ASIO_Free();
+		CheckUp(ERRORCODE, L"KSFreeASIO");
 		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO terminated.");
 
 		BASS_StreamFree(KSStream);
+		CheckUp(ERRORCODE, L"KSStreamFreeBASS");
 		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
 
 		BASS_Free();
+		CheckUp(ERRORCODE, L"KSFreeBASS");
 		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
 	}
 
@@ -289,8 +303,12 @@ bool InitializeBASS(bool restart) {
 		InitializeNotesCatcherThread();
 	}
 	else if (xaudiodisabled == 2) {
+		BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
+		CheckUp(ERRORCODE, L"KSResetChannelASIO");
 		BASS_ASIO_Stop();
+		CheckUp(ERRORCODE, L"KSStopASIO");
 		BASS_ASIO_Free();
+		CheckUp(ERRORCODE, L"KSFreeASIO");
 		InitializeStreamForExternalEngine(frequency);
 		if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 			CheckUpASIO(ERRORCODE, L"KSInitASIO");
@@ -438,8 +456,13 @@ void FreeUpLibraries() {
 	{
 		ResetSynth(0);
 		BASS_WASAPI_Stop(true);
+		CheckUp(ERRORCODE, L"KSStopWASAPI");
+		BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
+		CheckUp(ERRORCODE, L"KSResetChannelASIO");
 		BASS_ASIO_Stop();
+		CheckUp(ERRORCODE, L"KSStopASIO");
 		BASS_StreamFree(KSStream);
+		CheckUp(ERRORCODE, L"KSStreamFreeBASS");
 		KSStream = 0;
 	}
 	if (bassmidi) {
@@ -447,31 +470,35 @@ void FreeUpLibraries() {
 		FreeLibrary(bassmidi);
 		bassmidi = 0;
 	}
-	if (bass) {
-		BASS_Free();
-		FreeLibrary(bass);
-		bass = 0;
-	}
 	if (bassenc) {
 		BASS_Encode_Stop(KSStream);
+		CheckUp(ERRORCODE, L"KSFreeBASSenc");
 		FreeLibrary(bassenc);
 		bassenc = 0;
 	}
+	if (bass) {
+		BASS_Free();
+		CheckUp(ERRORCODE, L"KSFreeBASS");
+		FreeLibrary(bass);
+		bass = 0;
+	}
 	if (bassasio) {
 		BASS_ASIO_Free();
+		CheckUp(ERRORCODE, L"KSFreeASIO");
 		FreeLibrary(bassasio);
 		bassasio = 0;
 	}
 	if (basswasapi) {
 		BASS_WASAPI_Free();
+		CheckUp(ERRORCODE, L"KSFreeWASAPI");
 		FreeLibrary(basswasapi);
 		bass = 0;
 	}
 	if (sound_driver) {
 		BASSXA_TerminateAudioStream(sound_driver);
+		CheckUp(ERRORCODE, L"KSFreeXA");
 	}
 	if (bassxa) {
-		BASS_Free();
 		FreeLibrary(bassxa);
 		bassxa = 0;
 	}

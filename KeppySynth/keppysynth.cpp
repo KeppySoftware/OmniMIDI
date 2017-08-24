@@ -310,6 +310,8 @@ void CreateConsole() {
 		_wfreopen(pathfortext, L"w", stdout);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTitle(L"Keppy's Synthesizer Debug Console");
+		std::cout << "Be the change that you wish to see in the world.";
+		std::cout << std::endl;
 		std::cout << "Keppy's Synthesizer Version " << major << "." << minor << "." << build << "." << revision;
 		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
 		std::cout << std::endl;
@@ -784,6 +786,8 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&One, 1);
+	RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&One, sizeof(One));
+	RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&One, sizeof(One));
 	RegCloseKey(hKey);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
 	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&One, 1);

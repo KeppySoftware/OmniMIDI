@@ -872,6 +872,8 @@ namespace KeppySynthDebugWindow
                             DDS.Visible = true;
                             AERTLabel.Visible = false;
                             AERT.Visible = false;
+                            ASIOLLabel.Visible = false;
+                            ASIOL.Visible = false;
                             DDSLabel.Enabled = true;
                             DDS.Enabled = true;
                             DDS.Text = String.Format("{0} ({1} x 4)", (sndbfvalue * 4), sndbfvalue);
@@ -882,9 +884,21 @@ namespace KeppySynthDebugWindow
                             DDS.Visible = true;
                             AERTLabel.Visible = false;
                             AERT.Visible = false;
+                            ASIOLLabel.Visible = false;
+                            ASIOL.Visible = false;
                             DDSLabel.Enabled = false;
                             DDS.Enabled = false;
                             DDS.Text = "Unavailable";
+                        }
+                        else if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2)
+                        {
+                            DDSLabel.Visible = false;
+                            DDS.Visible = false;
+                            AERTLabel.Visible = false;
+                            AERT.Visible = false;
+                            ASIOLLabel.Visible = true;
+                            ASIOL.Visible = true;
+                            ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", Debug.GetValue("asioinlatency", "0").ToString(), Debug.GetValue("asiooutlatency", "0").ToString());
                         }
                         else
                         {
@@ -892,6 +906,8 @@ namespace KeppySynthDebugWindow
                             DDS.Visible = false;
                             AERTLabel.Visible = true;
                             AERT.Visible = true;
+                            ASIOLLabel.Visible = false;
+                            ASIOL.Visible = false;
                             AERT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusageE0", "0").ToString());
                         }
                     }

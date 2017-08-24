@@ -142,6 +142,8 @@
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
             this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
+            this.ASIOL = new System.Windows.Forms.Label();
+            this.ASIOLLabel = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
@@ -234,6 +236,8 @@
             // 
             // SynthDbg
             // 
+            this.SynthDbg.Controls.Add(this.ASIOL);
+            this.SynthDbg.Controls.Add(this.ASIOLLabel);
             this.SynthDbg.Controls.Add(this.AERT);
             this.SynthDbg.Controls.Add(this.AERTLabel);
             this.SynthDbg.Controls.Add(this.AvV);
@@ -1318,6 +1322,28 @@
             // 
             this.DebugInfo.Tick += new System.EventHandler(this.DebugInfo_Tick);
             // 
+            // ASIOL
+            // 
+            this.ASIOL.AutoSize = true;
+            this.ASIOL.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ASIOL.Location = new System.Drawing.Point(131, 78);
+            this.ASIOL.Name = "ASIOL";
+            this.ASIOL.Size = new System.Drawing.Size(113, 13);
+            this.ASIOL.TabIndex = 45;
+            this.ASIOL.Text = "Input 0ms, Output 0ms";
+            this.ASIOL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ASIOLLabel
+            // 
+            this.ASIOLLabel.AutoSize = true;
+            this.ASIOLLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ASIOLLabel.Location = new System.Drawing.Point(2, 78);
+            this.ASIOLLabel.Name = "ASIOLLabel";
+            this.ASIOLLabel.Size = new System.Drawing.Size(130, 13);
+            this.ASIOLLabel.TabIndex = 44;
+            this.ASIOLLabel.Text = "ASIO driver\'s latency:";
+            this.ASIOLLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1457,6 +1483,8 @@
         private System.Windows.Forms.PictureBox KSLogoThrd;
         public System.Windows.Forms.Timer MemoryThread;
         public System.Windows.Forms.Timer DebugInfo;
+        private System.Windows.Forms.Label ASIOL;
+        private System.Windows.Forms.Label ASIOLLabel;
     }
 }
 

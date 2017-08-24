@@ -379,7 +379,8 @@ BOOL load_bassfuncs()
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
+		LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
+		LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
 		LOADBASSASIOFUNCTION(BASS_ASIO_Free);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
@@ -833,7 +834,14 @@ void debug_info() {
 		int64_t td3i = int64_t(GetUsage(start3, end));
 		int64_t td4i = int64_t(GetUsage(start4, end));
 
-		if (oldbuffermode == 1) td4i = 0;
+		double rate = BASS_ASIO_GetRate();
+		CheckUpASIO(ERRORCODE, L"KSGetRateASIO");
+		long inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
+		CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO");
+		long outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
+		CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO");
+
+		if (oldbuffermode == 1) td4i = 1;
 
 		// Things
 		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
@@ -847,6 +855,8 @@ void debug_info() {
 		RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&td2i, sizeof(td2i));
 		RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&td3i, sizeof(td3i));
 		RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&td4i, sizeof(td4i));
+		RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&inlatency, sizeof(inlatency));
+		RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&outlatency, sizeof(outlatency));
 
 		for (int i = 0; i <= 15; ++i) {
 			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
@@ -920,14 +930,6 @@ void ReloadSFList(DWORD whichsflist){
 	catch (...) {
 		crashmessage(L"ReloadSFListCheck");
 		throw;
-	}
-}
-
-void ASIOControlPanel() {
-	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
-		if (xaudiodisabled == 2) {
-			BASS_ASIO_ControlPanel();
-		}
 	}
 }
 
