@@ -46,7 +46,7 @@ namespace KeppySynthConfigurator
                 "Keppy's Synthesizer requires your username/nickname (to identify you), your CPU, GPU, RAM, and operating system." +
                 "It will also read your MAC Address, to prevent spammers from abusing the feature.\n" +
                 "These statistics will be kept completely anonymous and will not be disclosed.\n\n" +
-                "Email is optional, but if you do not provide it, I will be unable to contact you",
+                "Email is optional, but if you do not provide it, I will be unable to contact you.",
                 "Telemetry - Disclaimer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -208,7 +208,7 @@ namespace KeppySynthConfigurator
             TelemetryData.AppendLine("========= Additional feedback =========");
             TelemetryData.AppendLine(String.IsNullOrWhiteSpace(AdditionalFeed.Text) ? "No additional feedback." : AdditionalFeed.Text.ToString());
 
-            if (TelemetryExt.SendInfoForTelemetry(Encoding.ASCII.GetBytes(TelemetryData.ToString())))
+            if (TelemetryExt.SendInfoForTelemetry(Encoding.ASCII.GetBytes(TelemetryData.ToString()), TelemetryData.ToString(), BugReport.Checked))
             {
                 MessageBox.Show("The data have been sent!\nThank you for collaborating!\n\nPress OK to close this dialog.", "Keppy's Synthesizer - Telemetry complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

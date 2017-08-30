@@ -17,6 +17,7 @@ using Un4seen.Bass.AddOn.Midi;
 using System.Media;
 using System.Net;
 using System.Drawing.Text;
+using Un4seen.BassAsio;
 
 namespace KeppySynthConfigurator
 {
@@ -465,6 +466,7 @@ namespace KeppySynthConfigurator
         {
             if (ShowOutLevel.Checked != true)
             {
+                SynthSettings.SetValue("volumemon", "1", RegistryValueKind.DWord);
                 ShowOutLevel.Checked = true;
                 Properties.Settings.Default.ShowOutputLevel = true;
                 MixerBox.Visible = true;
@@ -1632,6 +1634,11 @@ namespace KeppySynthConfigurator
         bool waswav = false;
         public void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            AudioEngBoxTrigger(false);
+        }
+
+        private void AudioEngBoxTrigger(bool save)
+        {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
             {
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == ".WAV mode")
@@ -1730,6 +1737,19 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
+
+                    int numbdev;
+                    BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
+                    for (numbdev = 0; BassAsio.BASS_ASIO_GetDeviceInfo(numbdev, info); numbdev++) ;
+
+                    if (numbdev < 1)
+                    {
+                        Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to switch to WASAPI.", false, null);
+                        KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
+                        AudioEngBoxTrigger(true);
+                        return;
+                    }
+
                     VolLabel.Enabled = true;
                     VolSimView.Enabled = true;
                     VolTrackBar.Enabled = true;
@@ -1749,6 +1769,7 @@ namespace KeppySynthConfigurator
             }
             OutputWAV.Enabled = true;
             changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
+            if (save) KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
         }
 
         private void OutputWAV_CheckedChanged(object sender, EventArgs e)

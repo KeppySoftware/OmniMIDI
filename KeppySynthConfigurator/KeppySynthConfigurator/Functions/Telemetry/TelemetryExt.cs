@@ -72,36 +72,43 @@ namespace KeppySynthConfigurator
             catch { return true; }
         }
 
-        public static bool SendInfoForTelemetry(byte[] data)
+        public static bool SendInfoForTelemetry(byte[] data, string dataraw, bool githubissue)
         {
             try
             {
-                try
+                if (githubissue)
                 {
-                    // Create folder
-                    Uri duri = new Uri(String.Format("ftp://{0}/{1}", Data[0], Environment.UserName));
-                    FtpWebRequest DirectoryFTP = (FtpWebRequest)FtpWebRequest.Create(duri);
-                    DirectoryFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
-                    DirectoryFTP.Method = WebRequestMethods.Ftp.MakeDirectory;
-                    FtpWebResponse DirectoryResponse = (FtpWebResponse)DirectoryFTP.GetResponse();
-                    DirectoryResponse.Close();
+                    // todo
                 }
-                catch { }
+                else
+                {
+                    try
+                    {
+                        // Create folder
+                        Uri duri = new Uri(String.Format("ftp://{0}/{1}", Data[0], Environment.UserName));
+                        FtpWebRequest DirectoryFTP = (FtpWebRequest)FtpWebRequest.Create(duri);
+                        DirectoryFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
+                        DirectoryFTP.Method = WebRequestMethods.Ftp.MakeDirectory;
+                        FtpWebResponse DirectoryResponse = (FtpWebResponse)DirectoryFTP.GetResponse();
+                        DirectoryResponse.Close();
+                    }
+                    catch { }
 
-                // Upload data
-                Uri furi = new Uri(String.Format("ftp://{0}/{1}/{2}", Data[0], Environment.UserName, String.Format("{0}_{1}_{2}_({3}).txt",
-                    Environment.UserName, DateTime.Now.ToString("dd MMMM yyyy", cultureTelemetry), DateTime.Now.ToLongTimeString(), RandomID.Next(0, 2147483647).ToString("0000000000"))));
-                FtpWebRequest FileFTP = (FtpWebRequest)FtpWebRequest.Create(furi);
-                FileFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
-                FileFTP.Method = WebRequestMethods.Ftp.UploadFile;
-                FileFTP.KeepAlive = false;
-                FileFTP.UsePassive = true;
+                    // Upload data
+                    Uri furi = new Uri(String.Format("ftp://{0}/{1}/{2}", Data[0], Environment.UserName, String.Format("{0}_{1}_{2}_({3}).txt",
+                        Environment.UserName, DateTime.Now.ToString("dd MMMM yyyy", cultureTelemetry), DateTime.Now.ToLongTimeString(), RandomID.Next(0, 2147483647).ToString("0000000000"))));
+                    FtpWebRequest FileFTP = (FtpWebRequest)FtpWebRequest.Create(furi);
+                    FileFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
+                    FileFTP.Method = WebRequestMethods.Ftp.UploadFile;
+                    FileFTP.KeepAlive = false;
+                    FileFTP.UsePassive = true;
 
-                using (Stream stOut = FileFTP.GetRequestStream()) stOut.Write(data, 0, data.Length);
+                    using (Stream stOut = FileFTP.GetRequestStream()) stOut.Write(data, 0, data.Length);
 
-                // Close data connection
-                FtpWebResponse FileResponse = (FtpWebResponse)FileFTP.GetResponse();
-                FileResponse.Close();
+                    // Close data connection
+                    FtpWebResponse FileResponse = (FtpWebResponse)FileFTP.GetResponse();
+                    FileResponse.Close();
+                }
 
                 return true;
             }

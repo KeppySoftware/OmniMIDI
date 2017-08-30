@@ -38,6 +38,8 @@
             this.AgeVal = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.SoundCards = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.InstGPUVal = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.OSVal = new System.Windows.Forms.TextBox();
@@ -53,8 +55,7 @@
             this.HelpProvider = new System.Windows.Forms.HelpProvider();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.AdditionalFeed = new System.Windows.Forms.RichTextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.SoundCards = new System.Windows.Forms.ComboBox();
+            this.BugReport = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -178,6 +179,27 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "PC specifications";
+            // 
+            // SoundCards
+            // 
+            this.SoundCards.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SoundCards.FormattingEnabled = true;
+            this.SoundCards.Items.AddRange(new object[] {
+            "No device selected"});
+            this.SoundCards.Location = new System.Drawing.Point(166, 121);
+            this.SoundCards.Name = "SoundCards";
+            this.SoundCards.Size = new System.Drawing.Size(196, 21);
+            this.SoundCards.TabIndex = 10;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(6, 124);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(154, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Select your default sound card:";
             // 
             // InstGPUVal
             // 
@@ -329,32 +351,23 @@
             this.AdditionalFeed.TabIndex = 0;
             this.AdditionalFeed.Text = "";
             // 
-            // label9
+            // BugReport
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(6, 124);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(154, 13);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "Select your default sound card:";
-            // 
-            // SoundCards
-            // 
-            this.SoundCards.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SoundCards.FormattingEnabled = true;
-            this.SoundCards.Items.AddRange(new object[] {
-            "No device selected"});
-            this.SoundCards.Location = new System.Drawing.Point(166, 121);
-            this.SoundCards.Name = "SoundCards";
-            this.SoundCards.Size = new System.Drawing.Size(196, 21);
-            this.SoundCards.TabIndex = 10;
+            this.BugReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BugReport.Location = new System.Drawing.Point(426, 260);
+            this.BugReport.Name = "BugReport";
+            this.BugReport.Size = new System.Drawing.Size(154, 36);
+            this.BugReport.TabIndex = 11;
+            this.BugReport.Text = "Check if this is a bug report";
+            this.BugReport.UseVisualStyleBackColor = true;
+            this.BugReport.Visible = false;
             // 
             // Telemetry
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(621, 342);
+            this.Controls.Add(this.BugReport);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.DiscLabel);
             this.Controls.Add(this.LetUserEditSpecs);
@@ -411,5 +424,6 @@
         private System.Windows.Forms.RichTextBox AdditionalFeed;
         private System.Windows.Forms.ComboBox SoundCards;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox BugReport;
     }
 }

@@ -35,12 +35,14 @@
             this.DeviceCP = new System.Windows.Forms.Button();
             this.MaxThreads = new System.Windows.Forms.Label();
             this.ASIODevicesSupport = new System.Windows.Forms.LinkLabel();
+            this.StatusLab = new System.Windows.Forms.Label();
+            this.Status = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(487, 62);
+            this.Quit.Location = new System.Drawing.Point(432, 87);
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 7;
@@ -50,9 +52,10 @@
             // 
             // DefOut
             // 
-            this.DefOut.Location = new System.Drawing.Point(12, 41);
+            this.DefOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DefOut.Location = new System.Drawing.Point(11, 70);
             this.DefOut.Name = "DefOut";
-            this.DefOut.Size = new System.Drawing.Size(399, 13);
+            this.DefOut.Size = new System.Drawing.Size(339, 13);
             this.DefOut.TabIndex = 6;
             this.DefOut.Text = "Default Windows output: NaN";
             // 
@@ -73,14 +76,14 @@
             this.DevicesList.FormattingEnabled = true;
             this.DevicesList.Location = new System.Drawing.Point(95, 11);
             this.DevicesList.Name = "DevicesList";
-            this.DevicesList.Size = new System.Drawing.Size(466, 21);
+            this.DevicesList.Size = new System.Drawing.Size(414, 21);
             this.DevicesList.TabIndex = 4;
             this.DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             // 
             // DeviceCP
             // 
             this.DeviceCP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeviceCP.Location = new System.Drawing.Point(332, 62);
+            this.DeviceCP.Location = new System.Drawing.Point(277, 87);
             this.DeviceCP.Name = "DeviceCP";
             this.DeviceCP.Size = new System.Drawing.Size(149, 23);
             this.DeviceCP.TabIndex = 8;
@@ -92,7 +95,7 @@
             // 
             this.MaxThreads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MaxThreads.AutoSize = true;
-            this.MaxThreads.Location = new System.Drawing.Point(12, 67);
+            this.MaxThreads.Location = new System.Drawing.Point(11, 92);
             this.MaxThreads.Name = "MaxThreads";
             this.MaxThreads.Size = new System.Drawing.Size(230, 13);
             this.MaxThreads.TabIndex = 9;
@@ -103,7 +106,7 @@
             this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ASIODevicesSupport.AutoSize = true;
             this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.ASIODevicesSupport.Location = new System.Drawing.Point(411, 41);
+            this.ASIODevicesSupport.Location = new System.Drawing.Point(356, 70);
             this.ASIODevicesSupport.Name = "ASIODevicesSupport";
             this.ASIODevicesSupport.Size = new System.Drawing.Size(153, 13);
             this.ASIODevicesSupport.TabIndex = 10;
@@ -111,11 +114,29 @@
             this.ASIODevicesSupport.Text = "List of supported ASIO devices";
             this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
             // 
+            // StatusLab
+            // 
+            this.StatusLab.Location = new System.Drawing.Point(11, 36);
+            this.StatusLab.Name = "StatusLab";
+            this.StatusLab.Size = new System.Drawing.Size(40, 13);
+            this.StatusLab.TabIndex = 11;
+            this.StatusLab.Text = "Status: NaN";
+            // 
+            // Status
+            // 
+            this.Status.Location = new System.Drawing.Point(48, 36);
+            this.Status.Name = "Status";
+            this.Status.Size = new System.Drawing.Size(461, 13);
+            this.Status.TabIndex = 12;
+            this.Status.Text = "NaN";
+            // 
             // DefaultASIOAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(573, 96);
+            this.ClientSize = new System.Drawing.Size(518, 121);
+            this.Controls.Add(this.Status);
+            this.Controls.Add(this.StatusLab);
             this.Controls.Add(this.ASIODevicesSupport);
             this.Controls.Add(this.MaxThreads);
             this.Controls.Add(this.DeviceCP);
@@ -144,5 +165,7 @@
         private System.Windows.Forms.Button DeviceCP;
         private System.Windows.Forms.Label MaxThreads;
         private System.Windows.Forms.LinkLabel ASIODevicesSupport;
+        private System.Windows.Forms.Label StatusLab;
+        private System.Windows.Forms.Label Status;
     }
 }

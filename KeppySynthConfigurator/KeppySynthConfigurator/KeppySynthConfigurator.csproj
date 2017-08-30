@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KeppySynthConfigurator</RootNamespace>
     <AssemblyName>KeppySynthConfigurator</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -438,6 +438,7 @@
     <None Include="FodyWeavers.xml" />
     <None Include="Resources\Icons\dlnope.png" />
     <None Include="Resources\Icons\dlready.png" />
+    <None Include="Functions\Telemetry\BugReportTemplate.txt" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Text\gmlist.txt" />

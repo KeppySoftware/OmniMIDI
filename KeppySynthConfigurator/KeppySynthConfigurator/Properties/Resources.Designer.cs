@@ -71,6 +71,20 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a {
+        ///  &quot;title&quot;: &quot;{0}&apos;s bug report&quot;,
+        ///  &quot;body&quot;: &quot;{1}&quot;,
+        ///  &quot;assignee&quot;: &quot;KaleidonKep99&quot;,
+        ///  ]
+        ///}.
+        /// </summary>
+        internal static string BugReportTemplate {
+            get {
+                return ResourceManager.GetString("BugReportTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap ClearIcon {
@@ -417,7 +431,7 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una stringa localizzata simile a 88.198.45.18
         ///keppysynthtm@kaleidonkep99
-        ///keppysynthtm.
+        ///keptmsynth2309**.
         /// </summary>
         internal static string TelemetryLoginData {
             get {
