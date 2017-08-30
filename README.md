@@ -1,6 +1,5 @@
-﻿# Keppy's Synthesizer: A MIDI driver for professional use
 <p align="center">
-  <a href="http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml#status"><img src="http://s1.softpedia-static.com/_img/sp100free.png?1" /></a>
+  <img src="http://i.imgur.com/bN82DXL.png">
   <br />
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with new functions.
 </p>
@@ -135,3 +134,7 @@ Suitable for professional<br />music production | ✔️ | ❌ | ❌ | ❌
 ⚠️: Partially supported, or implemented in a different way<br />
 ❌: Unsupported
 ###### * Might require some advanced computer knowledge
+
+<p align="center">
+  <a href="http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml#status"><img src="http://s1.softpedia-static.com/_img/sp100free.png?1" /></a>
+</p>
