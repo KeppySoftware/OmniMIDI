@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://i.imgur.com/bN82DXL.png">
+  <img src="http://i.imgur.com/gZwDTi0.png">
   <br />
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with new functions.
 </p>
