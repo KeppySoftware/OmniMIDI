@@ -36,7 +36,6 @@ extern "C" __declspec(dllexport) void RavioliRavioli()
 // Mandatory values
 static NOTIFYICONDATA niData;
 static HWND hWnd;
-static sound_out * sound_driver = 0;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
 static int improveperf = 0;				// Improve performance, reduces compatibility
@@ -48,7 +47,6 @@ static HINSTANCE bassasio = 0;			// bassasio handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE basswasapi = 0;		// basswasapi handle
-static HINSTANCE bassxa = 0;			// bassxa handle
 
 // Potato
 static float currentcpuusage0;
@@ -75,9 +73,11 @@ static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or ne
 static int defaultoutput = 0;			// Default audio output (DSound)
 static int defaultAoutput = 0;			// Default audio output (ASIO)
 static int defaultWoutput = 0;			// Default audio output (WASAPI)
+static int DSoutput = 0;				// Audio output (DSound)
+static int ASIOoutput = 0;				// Audio output (ASIO)
+static int WASAPIoutput = 0;			// Audio output (WASAPI)
 static int defaultsflist = 1;			// Default soundfont list
 static int driverprio = 0;				// Process priority
-static int encmode = 0;					// Encoder mode
 static int fadeoutdisable = 0;			// Disable fade-out
 static int floatrendering = 1;			// Floating point audio
 static int frames = 0;					// Default
@@ -91,7 +91,6 @@ static int midivoices = 0;				// Max voices INT
 static int midivolumeoverride = 0;		// MIDI track volume override
 static int monorendering = 0;			// Mono rendering (Instead of stereo by default)
 static int newsndbfvalue;				// DO NOT TOUCH
-static int noaudiodevices = 0;			// No audio devices flag
 static int nofloat = 1;					// Enable or disable the float engine
 static int nofx = 0;					// Enable or disable FXs
 static int noteoff1 = 0;				// Note cut INT
@@ -103,6 +102,7 @@ static int preload = 0;					// Soundfont preloading
 static int rco = 0;						// Reduce CPU overhead
 static int shortname = 0;				// Use short name or nah
 static int sinc = 0;					// Sinc
+static int livechange = 0;				// Live changes
 static int sysexignore = 0;				// Ignore SysEx events
 static int sysresetignore = 0;			// Ignore sysex messages
 static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
@@ -111,7 +111,8 @@ static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int ischangingbuffermode = 0;	// Stuff
 static int volumemon = 1;				// Volume monitoring
-static int xaudiodisabled = 3;			// Override the default engine
+static int currentengine = 3;			// Current engine
+static int restartvalue = 0;			// How many times you changed the settings in real-time
 
 // Priority values
 static int prioval[7] =

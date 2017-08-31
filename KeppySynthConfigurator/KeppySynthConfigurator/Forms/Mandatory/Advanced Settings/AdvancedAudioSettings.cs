@@ -46,7 +46,7 @@ namespace KeppySynthConfigurator
 
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
             {
-                OldBuff.Enabled = true;
+                OldBuff.Enabled = false;
                 NoSleep.Enabled = false;
             }
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)

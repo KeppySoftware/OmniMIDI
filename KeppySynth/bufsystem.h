@@ -85,7 +85,6 @@ int bmsyn_play_some_data(void){
 						}
 						else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 						PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", status, note, velocity);
-						CheckUp(ERRORCODE, L"DataToAudioStream");
 					}
 					break;
 				}
@@ -97,13 +96,11 @@ int bmsyn_play_some_data(void){
 				}
 				else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 				PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", status, note, velocity);
-				CheckUp(ERRORCODE, L"DataToAudioStream");
 				break;
 			case MODM_LONGDATA:
 				if (sysresetignore != 1) {
 					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
 					PrintEventToConsole(FOREGROUND_GREEN, (DWORD)hdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0);
-					CheckUp(ERRORCODE, L"LongDataToAudioStream");
 				}
 				break;
 			}
@@ -154,18 +151,4 @@ bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
-	CheckUp(ERRORCODE, L"GetDataFromStream");
-	if (encmode == 0) {
-		if (xaudiodisabled == 0) {
-			if (decoded != 1) {
-				for (unsigned i = 0, j = decoded / sizeof(float); i < j; i++) {
-					sndbf[i] *= sound_out_volume_float;
-				}
-				if (!BASSXA_WriteFrame(sound_driver, sndbf, decoded, BASSXA_FRAMEWAIT)) {
-					crashmessage(L"XAWriteFrame");
-				}
-			}
-			else return;
-		}
-	}
 }

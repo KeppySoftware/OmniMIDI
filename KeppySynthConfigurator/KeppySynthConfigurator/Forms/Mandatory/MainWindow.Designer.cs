@@ -222,9 +222,8 @@
             this.RV14 = new System.Windows.Forms.Panel();
             this.LV14 = new System.Windows.Forms.Panel();
             this.EnginesBox = new System.Windows.Forms.GroupBox();
-            this.OutputWAV = new System.Windows.Forms.CheckBox();
-            this.WhatIsOutput = new System.Windows.Forms.PictureBox();
-            this.WhatIsXAudio = new System.Windows.Forms.PictureBox();
+            this.WhatIsXAudio = new System.Windows.Forms.LinkLabel();
+            this.WhatIsOutput = new System.Windows.Forms.LinkLabel();
             this.label2 = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.AdditionalSettingsBox = new System.Windows.Forms.GroupBox();
@@ -303,8 +302,6 @@
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
             this.EnginesBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).BeginInit();
             this.AdditionalSettingsBox.SuspendLayout();
             this.OutputSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).BeginInit();
@@ -2017,9 +2014,8 @@
             // 
             // EnginesBox
             // 
-            this.EnginesBox.Controls.Add(this.OutputWAV);
-            this.EnginesBox.Controls.Add(this.WhatIsOutput);
             this.EnginesBox.Controls.Add(this.WhatIsXAudio);
+            this.EnginesBox.Controls.Add(this.WhatIsOutput);
             this.EnginesBox.Controls.Add(this.label2);
             this.EnginesBox.Controls.Add(this.AudioEngBox);
             this.EnginesBox.Location = new System.Drawing.Point(7, 3);
@@ -2029,50 +2025,34 @@
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Engine settings";
             // 
-            // OutputWAV
+            // WhatIsXAudio
             // 
-            this.OutputWAV.BackColor = System.Drawing.Color.Transparent;
-            this.OutputWAV.Location = new System.Drawing.Point(11, 20);
-            this.OutputWAV.Name = "OutputWAV";
-            this.OutputWAV.Size = new System.Drawing.Size(119, 17);
-            this.OutputWAV.TabIndex = 1;
-            this.OutputWAV.Text = "Enable .WAV mode";
-            this.Requirements.SetToolTip(this.OutputWAV, "Changing this setting requires the user to restart the MIDI application.");
-            this.OutputWAV.UseVisualStyleBackColor = false;
-            this.OutputWAV.CheckedChanged += new System.EventHandler(this.OutputWAV_CheckedChanged);
+            this.WhatIsXAudio.AutoSize = true;
+            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsXAudio.Location = new System.Drawing.Point(141, 51);
+            this.WhatIsXAudio.Name = "WhatIsXAudio";
+            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
+            this.WhatIsXAudio.TabIndex = 16;
+            this.WhatIsXAudio.TabStop = true;
+            this.WhatIsXAudio.Text = "Engines?";
+            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
             // 
             // WhatIsOutput
             // 
-            this.WhatIsOutput.BackColor = System.Drawing.Color.Transparent;
-            this.WhatIsOutput.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.WhatIsOutput.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WhatIsOutput.ErrorImage = null;
-            this.WhatIsOutput.Location = new System.Drawing.Point(172, 20);
+            this.WhatIsOutput.AutoSize = true;
+            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsOutput.Location = new System.Drawing.Point(8, 51);
             this.WhatIsOutput.Name = "WhatIsOutput";
-            this.WhatIsOutput.Size = new System.Drawing.Size(16, 16);
-            this.WhatIsOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.WhatIsOutput.TabIndex = 35;
-            this.WhatIsOutput.TabStop = false;
-            this.WhatIsOutput.Click += new System.EventHandler(this.WhatIsOutput_Click);
-            // 
-            // WhatIsXAudio
-            // 
-            this.WhatIsXAudio.BackColor = System.Drawing.Color.Transparent;
-            this.WhatIsXAudio.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.WhatIsXAudio.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WhatIsXAudio.ErrorImage = null;
-            this.WhatIsXAudio.Location = new System.Drawing.Point(172, 46);
-            this.WhatIsXAudio.Name = "WhatIsXAudio";
-            this.WhatIsXAudio.Size = new System.Drawing.Size(16, 16);
-            this.WhatIsXAudio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.WhatIsXAudio.TabIndex = 37;
-            this.WhatIsXAudio.TabStop = false;
-            this.WhatIsXAudio.Click += new System.EventHandler(this.WhatIsXAudio_Click);
+            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
+            this.WhatIsOutput.TabIndex = 15;
+            this.WhatIsOutput.TabStop = true;
+            this.WhatIsOutput.Text = "What\'s WAV mode?";
+            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 46);
+            this.label2.Location = new System.Drawing.Point(9, 23);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 13);
             this.label2.TabIndex = 1;
@@ -2083,13 +2063,13 @@
             this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
-            "XAudio2",
+            ".WAV mode",
             "DirectSound",
             "ASIO",
             "WASAPI"});
-            this.AudioEngBox.Location = new System.Drawing.Point(80, 43);
+            this.AudioEngBox.Location = new System.Drawing.Point(81, 20);
             this.AudioEngBox.Name = "AudioEngBox";
-            this.AudioEngBox.Size = new System.Drawing.Size(85, 21);
+            this.AudioEngBox.Size = new System.Drawing.Size(107, 21);
             this.AudioEngBox.TabIndex = 2;
             this.Requirements.SetToolTip(this.AudioEngBox, "Changing this setting requires the user to restart the MIDI application.");
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
@@ -2108,7 +2088,7 @@
             // AASButton
             // 
             this.AASButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AASButton.Location = new System.Drawing.Point(7, 17);
+            this.AASButton.Location = new System.Drawing.Point(7, 18);
             this.AASButton.Name = "AASButton";
             this.AASButton.Size = new System.Drawing.Size(145, 23);
             this.AASButton.TabIndex = 3;
@@ -2997,8 +2977,6 @@
             this.MixerBox.PerformLayout();
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.WhatIsOutput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.WhatIsXAudio)).EndInit();
             this.AdditionalSettingsBox.ResumeLayout(false);
             this.OutputSettingsBox.ResumeLayout(false);
             this.OutputSettingsBox.PerformLayout();
@@ -3080,9 +3058,6 @@
         private System.Windows.Forms.MenuItem menuItem26;
         private System.Windows.Forms.MenuItem KepChannel;
         private System.Windows.Forms.MenuItem SeeChangelog;
-        private System.Windows.Forms.PictureBox WhatIsXAudio;
-        private System.Windows.Forms.PictureBox WhatIsOutput;
-        public System.Windows.Forms.CheckBox OutputWAV;
         internal System.Windows.Forms.GroupBox OutputSettingsBox;
         public System.Windows.Forms.CheckBox SincInter;
         public System.Windows.Forms.NumericUpDown SPFRate;
@@ -3290,6 +3265,8 @@
         public System.Windows.Forms.OpenFileDialog ImportPresetDialog;
         public System.Windows.Forms.MenuItem AutoLoad;
         private System.Windows.Forms.MenuItem menuItem44;
+        private System.Windows.Forms.LinkLabel WhatIsXAudio;
+        private System.Windows.Forms.LinkLabel WhatIsOutput;
     }
 }
 

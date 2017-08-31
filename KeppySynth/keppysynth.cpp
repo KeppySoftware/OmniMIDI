@@ -53,7 +53,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSWASAPIDEF(f) (WINAPI *f)
-#define BASSXADEF(f) (WINAPI *f)
 #define BASS_FXDEF(f) (WINAPI *f)
 #define BASS_VSTDEF(f) (WINAPI *f)
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
@@ -61,7 +60,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSWASAPIFUNCTION(f) *((void**)&f)=GetProcAddress(basswasapi,#f)
-#define LOADBASSXAFUNCTION(f) *((void**)&f)=GetProcAddress(bassxa,#f)
 #define LOADBASS_FXFUNCTION(f) *((void**)&f)=GetProcAddress(bass_fx,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 #define Between(value, a, b) (value <= b && value >= a)
@@ -78,7 +76,6 @@ static CRITICAL_SECTION midiparsing;
 #include <bassasio.h>
 #include <bass_vst.h>
 #include <basswasapi.h>
-#include <bassxa.h>
 
 #define MAX_DRIVERS 256
 #define MAX_CLIENTS 256 // Per driver
@@ -661,15 +658,15 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
-	if (BASS_ErrorGetCode() == 5) {
+	if (BASS_ErrorGetCode() == 5 || livechange == 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 		stop_thread = 1;
+		load_settings(TRUE);
 		if (InitializeBASS(TRUE)) {
 			InitializeBASSVST();
 			SetUpStream();
 			LoadSoundFontsToStream();
-			CreateThreads(FALSE);
-			Sleep(100);
+			opend = CreateThreads(FALSE);
 		}
 	}
 }
@@ -683,7 +680,7 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 		else {
 			int opend = 0;
 			while (opend == 0) {
-				load_settings();
+				load_settings(FALSE);
 				allocate_memory();
 				load_bassfuncs();
 				if (!com_initialized) {

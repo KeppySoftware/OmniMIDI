@@ -7,7 +7,7 @@
 #define Configurator "KeppySynthConfigurator"
 #define Copyright 'Copyright (c) 2011 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.'
 #define DebugWindow "KeppySynthDebugWindow"
-#define Description 'User-mode MIDI driver based on the BASS libraries'
+#define Description "Keppy's Synthesizer, User-Mode Windows MIDI Driver"
 #define DriverRegister "KSDriverRegister"
 #define Email 'kaleidonkep99@outlook.com'
 #define InstallDir "keppysynth"
@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.4.1.0'
+#define Version '4.4.1.1'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -104,7 +104,6 @@ Source: "{#lib64}\bassflac.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass
 Source: "{#lib64}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib64}\bassopus.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib64}\basswv.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "{#lib64}\bassxa.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassxa.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib32}\amidimap.cpl"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "amidimap.cpl"; Flags: uninsrestartdelete comparetimestamp; Check: Is64BitInstallMode
 Source: "{#lib32}\bass.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib32}\bass_fx.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass_fx.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
@@ -117,7 +116,6 @@ Source: "{#lib32}\bassflac.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: 
 Source: "{#lib32}\bassmidi.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib32}\bassopus.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#lib32}\basswv.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
-Source: "{#lib32}\bassxa.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassxa.dll"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "output\keppysynth.dbl"; DestDir: "{syswow64}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 
 ; 32-bit libs
@@ -133,12 +131,10 @@ Source: "{#lib32}\bassflac.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass
 Source: "{#lib32}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "{#lib32}\bassopus.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "{#lib32}\basswv.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
-Source: "{#lib32}\bassxa.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassxa.dll"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "output\keppysynth.dbl"; DestDir: "{sys}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 
 ; Generic for all the OSes
 Source: "LICENSE.TXT"; DestDir: "{%USERPROFILE}\{#ProductName}"; Flags: replacesameversion ignoreversion
-Source: "dxwebsetup.exe"; DestDir: "{tmp}"; DestName: "dxwebsetup.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,5.01sp3; Tasks: dx9redist
 
 [Dirs]
 ; 64-bit OS
@@ -176,7 +172,6 @@ Name: de; MessagesFile: "compiler:Default.isl"
 Name: "registerassociation"; Description: "Associate SoundFont files with the synthesizer"; GroupDescription: "Additional settings:"; Flags: unchecked
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "dx9redist"; Description: "Install DirectX 9.0c Redistributable (June 2010)"; GroupDescription: "Required runtimes:"; Flags: checkedonce
 
 [Registry]
 ; Normal settings
@@ -293,7 +288,6 @@ Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; 
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/ASP"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Moving stuff from ""LocalAppdata"" to ""UserProfile""..."; Check: not Is64BitInstallMode
 
-Filename: "{tmp}\dxwebsetup.exe"; Parameters: "/q /r:n"; Flags: waituntilterminated; StatusMsg: "Installing DirectX Redistributable (Jun 2010), please wait..."; Tasks: dx9redist
 Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Check: Is64BitInstallMode; Tasks: registerassociation
 Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Check: not Is64BitInstallMode; Tasks: registerassociation
 Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml"; Flags: runascurrentuser postinstall waituntilidle shellexec unchecked; Description: "Vote Keppy's Synthesizer on Softpedia"

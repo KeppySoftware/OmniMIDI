@@ -155,9 +155,9 @@
             this.OldBuff.AutoSize = true;
             this.OldBuff.Location = new System.Drawing.Point(6, 38);
             this.OldBuff.Name = "OldBuff";
-            this.OldBuff.Size = new System.Drawing.Size(276, 17);
+            this.OldBuff.Size = new System.Drawing.Size(250, 17);
             this.OldBuff.TabIndex = 4;
-            this.OldBuff.Text = "Enable the old buffer system (Unsupported, XA && DS)";
+            this.OldBuff.Text = "Enable the old buffer system (Unsupported, DS)";
             this.OldBuff.UseVisualStyleBackColor = true;
             this.OldBuff.CheckedChanged += new System.EventHandler(this.OldBuff_CheckedChanged);
             // 

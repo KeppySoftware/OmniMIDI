@@ -9,9 +9,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\external_packages\audiodefs.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="bansystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -52,9 +49,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="sha256.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\external_packages\bassxa.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="drvinit.h">

@@ -94,76 +94,66 @@ void ResetSynth(int ischangingbuffermode){
 }
 
 void LoadSoundfont(int whichsf){
-	if (noaudiodevices == 1) {
-		// Do nothing
+	try {
+		PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
+		TCHAR config[MAX_PATH];
+		BASS_MIDI_FONT * mf;
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		FreeFonts(0);
+		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+		RegCloseKey(hKey);
+		LoadFonts(0, sflistloadme[whichsf - 1]);
+		BASS_MIDI_StreamLoadSamples(KSStream);
+		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
-	else {
-		try {
-			PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
-			TCHAR config[MAX_PATH];
-			BASS_MIDI_FONT * mf;
-			HKEY hKey;
-			long lResult;
-			DWORD dwType = REG_DWORD;
-			DWORD dwSize = sizeof(DWORD);
-			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-			FreeFonts(0);
-			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
-			RegCloseKey(hKey);
-			LoadFonts(0, sflistloadme[whichsf - 1]);
-			BASS_MIDI_StreamLoadSamples(KSStream);
-			PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
-		}
-		catch (...) {
-			crashmessage(L"SFLoad");
-			throw;
-		}
+	catch (...) {
+		crashmessage(L"SFLoad");
+		throw;
 	}
 }
 
 bool LoadSoundfontStartup() {
-	if (noaudiodevices == 1) {
-		return TRUE;
-	}
-	else {
-		try {
-			int done = 0;
-			TCHAR modulename[MAX_PATH];
-			TCHAR fullmodulename[MAX_PATH];
-			GetModuleFileName(NULL, modulename, MAX_PATH);
-			GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-			PathStripPath(modulename);
+	try {
+		int done = 0;
+		TCHAR modulename[MAX_PATH];
+		TCHAR fullmodulename[MAX_PATH];
+		GetModuleFileName(NULL, modulename, MAX_PATH);
+		GetModuleFileName(NULL, fullmodulename, MAX_PATH);
+		PathStripPath(modulename);
 
-			for (int i = 0; i <= 15; ++i) {
-				SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
-				SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
-				_tcscat(sflistloadme[i], sfdirs[i]);
-				_tcscat(listsloadme[i], listsanalyze[i]);
-				std::wifstream file(listsloadme[i]);
-				if (file) {
-					TCHAR defaultstring[MAX_PATH];
-					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-					{
-						if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-							LoadSoundfont(i + 1);
-							done = 1;
-							PrintToConsole(FOREGROUND_RED, i, "Found it");
-						}
+		for (int i = 0; i <= 15; ++i) {
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
+			_tcscat(sflistloadme[i], sfdirs[i]);
+			_tcscat(listsloadme[i], listsanalyze[i]);
+			std::wifstream file(listsloadme[i]);
+			if (file) {
+				TCHAR defaultstring[MAX_PATH];
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(i + 1);
+						done = 1;
+						PrintToConsole(FOREGROUND_RED, i, "Found it");
 					}
 				}
 			}
+		}
 
-			if (done == 1) {
-				return TRUE;
-			}
-			else {
-				return FALSE;
-			}
+		if (done == 1) {
+			return TRUE;
 		}
-		catch (...) {
-			crashmessage(L"SFLoadStartup");
-			throw;
+		else {
+			return FALSE;
 		}
+	}
+	catch (...) {
+		crashmessage(L"SFLoadStartup");
+		throw;
 	}
 }
 
@@ -310,23 +300,6 @@ BOOL load_bassfuncs()
 			}
 		}
 
-		// BASSXA
-		if (PathFileExists(bassxapathalt)) {
-			if (!(bassxa = LoadLibrary(bassxapathalt))) {
-				DLLLoadError(bassxapathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(bassxapath, installpath);
-			lstrcat(bassxapath, L"\\bassxa.dll");
-			if (!(bassxa = LoadLibrary(bassxapath))) {
-				DLLLoadError(bassxapath);
-				exit(0);
-			}
-		}
-
 		// BASS_FX
 		if (PathFileExists(bassfxpathalt)) {
 			if (!(bass_fx = LoadLibrary(bassfxpathalt))) {
@@ -378,6 +351,7 @@ BOOL load_bassfuncs()
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetFormat);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
+		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
@@ -436,10 +410,6 @@ BOOL load_bassfuncs()
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_SetVolume);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Start);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Stop);
-		LOADBASSXAFUNCTION(BASSXA_CreateAudioStream);
-		LOADBASSXAFUNCTION(BASSXA_InitializeAudioStream);
-		LOADBASSXAFUNCTION(BASSXA_TerminateAudioStream);
-		LOADBASSXAFUNCTION(BASSXA_WriteFrame);
 		LOADBASS_FXFUNCTION(BASS_FX_TempoCreate);
 		if (isbassvstloaded == 1) {
 			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
@@ -541,10 +511,11 @@ void allocate_memory() {
 		throw;
 	}
 }
-void load_settings()
+void load_settings(bool streamreload)
 {
 	try {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
+		int zero = 0;
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -552,8 +523,12 @@ void load_settings()
 		DWORD qwType = REG_QWORD;
 		DWORD qwSize = sizeof(QWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"evbuffsize", NULL, &qwType, (LPBYTE)&sevbuffsize, &qwSize);
-		RegQueryValueEx(hKey, L"evbuffbyram", NULL, &dwType, (LPBYTE)&evbuffbyram, &dwSize);
+		if (!streamreload) {
+			RegQueryValueEx(hKey, L"evbuffsize", NULL, &qwType, (LPBYTE)&sevbuffsize, &qwSize);
+			RegQueryValueEx(hKey, L"evbuffbyram", NULL, &dwType, (LPBYTE)&evbuffbyram, &dwSize);
+			RegQueryValueEx(hKey, L"evbuffratio", NULL, &dwType, (LPBYTE)&evbuffratio, &dwSize);
+			RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
+		}
 		RegQueryValueEx(hKey, L"alternativecpu", NULL, &dwType, (LPBYTE)&autopanic, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"buflen", NULL, &dwType, (LPBYTE)&frames, &dwSize);
@@ -568,10 +543,8 @@ void load_settings()
 		RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiindev", NULL, &dwType, (LPBYTE)&defaultmidiindev, &dwSize);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
-		RegQueryValueEx(hKey, L"evbuffratio", NULL, &dwType, (LPBYTE)&evbuffratio, &dwSize);
 		RegQueryValueEx(hKey, L"midiinenabled", NULL, &dwType, (LPBYTE)&midiinenabled, &dwSize);
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
-		RegQueryValueEx(hKey, L"encmode", NULL, &dwType, (LPBYTE)&encmode, &dwSize);
 		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
 		RegQueryValueEx(hKey, L"frequency", NULL, &dwType, (LPBYTE)&frequency, &dwSize);
 		RegQueryValueEx(hKey, L"ignorenotes1", NULL, &dwType, (LPBYTE)&ignorenotes1, &dwSize);
@@ -582,7 +555,6 @@ void load_settings()
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
 		RegQueryValueEx(hKey, L"oldbuffermode", NULL, &dwType, (LPBYTE)&oldbuffermode, &dwSize);
 		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
-		RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
 		RegQueryValueEx(hKey, L"lovelign", NULL, &dwType, (LPBYTE)&lovel, &dwSize);
 		RegQueryValueEx(hKey, L"hivelign", NULL, &dwType, (LPBYTE)&hivel, &dwSize);
 		RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
@@ -591,9 +563,11 @@ void load_settings()
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"allnotesignore", NULL, &dwType, (LPBYTE)&allnotesignore, &dwSize);
-		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&xaudiodisabled, &dwSize);
+		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&currentengine, &dwSize);
 		RegQueryValueEx(hKey, L"wasapiex", NULL, &dwType, (LPBYTE)&wasapiex, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+		RegSetValueEx(hKey, L"livechange", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+
 		if (lovel < 1) { lovel = 1; }
 		if (hivel > 127) { hivel = 127; }
 
@@ -617,6 +591,7 @@ void load_settings()
 void realtime_load_settings()
 {
 	try {
+		int zero = 0;
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -652,7 +627,7 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"volumemon", NULL, &dwType, (LPBYTE)&volumemon, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"allnotesignore", NULL, &dwType, (LPBYTE)&allnotesignore, &dwSize);
-		RegQueryValueEx(hKey, L"potato", NULL, &dwType, (LPBYTE)&potato, &dwSize);
+		RegQueryValueEx(hKey, L"livechange", NULL, &dwType, (LPBYTE)&livechange, &dwSize);
 		if (vms2emutemp != vms2emu) {
 			ResetSynth(1);
 		}
@@ -663,9 +638,9 @@ void realtime_load_settings()
 		//cake
 		sound_out_volume_float = (float)volume / 10000.0f;
 		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-		if (xaudiodisabled == 1) BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
-		else if (xaudiodisabled == 2) BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
-		else if (xaudiodisabled == 3) BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
+		if (currentengine == 1) BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
+		else if (currentengine == 2) BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
+		else if (currentengine == 3) BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
 
 		// stuff
 		if (autopanic != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
@@ -728,7 +703,7 @@ void Panic() {
 }
 
 int AudioRenderingType(int value) {
-	if (xaudiodisabled == 2 || xaudiodisabled == 3) return BASS_SAMPLE_FLOAT;
+	if (currentengine == 2 || currentengine == 3) return BASS_SAMPLE_FLOAT;
 	else {
 		if (value == 1)
 			return BASS_SAMPLE_FLOAT;
@@ -778,16 +753,16 @@ void CheckVolume() {
 			DWORD left, right;
 			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 
-			if (xaudiodisabled == 1)
+			if (currentengine == 1)
 			{
 				BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 			}
-			else if (xaudiodisabled == 2)
+			else if (currentengine == 2)
 			{
 				levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
 				levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
 			}
-			else if (xaudiodisabled == 3)
+			else if (currentengine == 3)
 			{
 				BASS_WASAPI_GetLevelEx(levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 			}
@@ -817,8 +792,8 @@ void debug_info() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		int tempo;
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
-		if (xaudiodisabled == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
-		else if (xaudiodisabled == 3) currentcpuusageE0 = BASS_WASAPI_GetCPU();
+		if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
+		else if (currentengine == 3) currentcpuusageE0 = BASS_WASAPI_GetCPU();
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
@@ -851,7 +826,7 @@ void debug_info() {
 		RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&td3i, sizeof(td3i));
 		RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&td4i, sizeof(td4i));
 
-		if (xaudiodisabled == 2) {
+		if (currentengine == 2) {
 			double rate = BASS_ASIO_GetRate();
 			CheckUpASIO(ERRORCODE, L"KSGetRateASIO");
 			long inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
@@ -1044,7 +1019,7 @@ void keybindings()
 				}
 			}
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
-				if (xaudiodisabled == 2) {
+				if (currentengine == 2) {
 					BASS_ASIO_ControlPanel();
 				}
 				else {

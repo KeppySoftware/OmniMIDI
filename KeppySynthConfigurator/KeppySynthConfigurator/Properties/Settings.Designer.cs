@@ -82,5 +82,14 @@ namespace KeppySynthConfigurator.Properties {
                 this["TelemetryAlreadySeen"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsItPreRelease {
+            get {
+                return ((bool)(this["IsItPreRelease"]));
+            }
+        }
     }
 }
