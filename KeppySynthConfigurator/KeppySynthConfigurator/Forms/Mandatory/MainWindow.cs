@@ -950,7 +950,7 @@ namespace KeppySynthConfigurator
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -978,7 +978,7 @@ namespace KeppySynthConfigurator
         private void MSGSWSEmu_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, 100, true, false, false, false, false, false, 1);
+            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, true, false, false, false, false, false, 1);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
@@ -995,7 +995,7 @@ namespace KeppySynthConfigurator
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1012,7 +1012,7 @@ namespace KeppySynthConfigurator
         private void lowLatencyPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, 100, true, false, true, true, false, false, 0);
+            Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, true, false, true, true, false, false, 0);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1029,7 +1029,7 @@ namespace KeppySynthConfigurator
         private void chiptunesRetrogamingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, 100, true, false, false, false, false, false, 1);
+            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, true, false, false, false, false, false, 1);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
@@ -1046,7 +1046,7 @@ namespace KeppySynthConfigurator
         private void keppysSteinwayPianoRealismToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, 100, true, false, true, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, true, false, true, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1063,7 +1063,7 @@ namespace KeppySynthConfigurator
         private void SBLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, 100, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, true, false, false, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1080,7 +1080,7 @@ namespace KeppySynthConfigurator
         private void ProLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, 100, true, false, false, true, false, false, 2);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, true, false, false, 2);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
@@ -1097,7 +1097,7 @@ namespace KeppySynthConfigurator
         private void MT32Mode_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, 100, true, false, false, true, false, false, 2);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, true, false, false, 2);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
@@ -1586,49 +1586,6 @@ namespace KeppySynthConfigurator
         private void Frequency_SelectedIndexChanged(object sender, EventArgs e)
         {
             CurrentIndexFreq = Frequency.SelectedIndex;
-            CheckBuffer();
-        }
-
-        private void bufsize_ValueChanged(object sender, EventArgs e)
-        {
-            CheckBuffer();
-        }
-
-        private Int32 CheckBuffer()
-        {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2" 
-                || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO"
-                || KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
-            {
-                Int32[] valuearray = new Int32[10];
-                Functions.ChangeRecommendedBuffer(CurrentIndexFreq, out valuearray);
-
-                if (bufsize.Value >= valuearray[0] && bufsize.Value <= valuearray[1])
-                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wir;
-                else if (bufsize.Value >= valuearray[2] && bufsize.Value <= valuearray[3])
-                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wi;
-                else if (bufsize.Value >= valuearray[4] && bufsize.Value <= valuearray[5])
-                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.ok;
-                else if (bufsize.Value >= valuearray[6] && bufsize.Value <= valuearray[7])
-                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wi;
-                else if (bufsize.Value >= valuearray[8] && bufsize.Value <= valuearray[9])
-                    StatusBuf.BackgroundImage = KeppySynthConfigurator.Properties.Resources.wir;
-
-                RecommendedBuffer.SetToolTip(
-                    StatusBuf, 
-                    String.Format("It is recommended to set a buffer size with {0}Hz audio between {1} and {2}.",
-                    Frequency.Text, valuearray[4], valuearray[5]));
-
-                BufferText.Text = String.Format("Driver buffer length ({0} to {1}, optimal range is between {2} and {3})", 
-                    bufsize.Minimum, bufsize.Maximum, valuearray[4], valuearray[5]);
-
-                return valuearray[4] + 5;
-            }
-            else
-            {
-                BufferText.Text = String.Format("Driver buffer length (in ms, from 1 to 1000)");
-                return 0;
-            }
         }
 
         public void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1644,19 +1601,13 @@ namespace KeppySynthConfigurator
                 DrvHzLabel.Enabled = true;
                 Frequency.Enabled = true;
                 MaxCPU.Enabled = false;
-                MaxCPU.Value = 0;
                 RenderingTimeLabel.Enabled = false;
-                SPFLabel.Enabled = false;
-                SPFRate.Enabled = false;
                 StatusBuf.Enabled = false;
                 StatusBuf.Visible = false;
                 VolLabel.Enabled = false;
                 VolSimView.Enabled = false;
                 VolTrackBar.Enabled = false;
                 bufsize.Enabled = false;
-                bufsize.Maximum = 100;
-                bufsize.Minimum = 0;
-                bufsize.Value = 0;
             }
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
             {
@@ -1668,14 +1619,8 @@ namespace KeppySynthConfigurator
                 MaxCPU.Enabled = true;
                 BufferText.Enabled = true;
                 bufsize.Enabled = true;
-                bufsize.Minimum = 0;
-                bufsize.Maximum = 1000;
-                bufsize.Value = CheckBuffer();
                 StatusBuf.Visible = false;
                 StatusBuf.Enabled = false;
-                SPFLabel.Enabled = false;
-                SPFRate.Enabled = false;
-                CheckBuffer();
             }
             else
             {
@@ -1691,9 +1636,6 @@ namespace KeppySynthConfigurator
                         BufferText.Enabled = true;
                         StatusBuf.Visible = true;
                         StatusBuf.Enabled = true;
-                        bufsize.Minimum = 1;
-                        bufsize.Maximum = 100;
-                        bufsize.Value = CheckBuffer();
                         bufsize.Enabled = true;
                     }
                     else
@@ -1704,9 +1646,6 @@ namespace KeppySynthConfigurator
                         BufferText.Enabled = false;
                         StatusBuf.Visible = false;
                         StatusBuf.Enabled = false;
-                        bufsize.Minimum = 1;
-                        bufsize.Maximum = 100;
-                        bufsize.Value = CheckBuffer();
                         bufsize.Enabled = false;
                     }
                 }
@@ -1733,14 +1672,8 @@ namespace KeppySynthConfigurator
                     BufferText.Enabled = false;
                     StatusBuf.Visible = false;
                     StatusBuf.Enabled = false;
-                    bufsize.Minimum = 1;
-                    bufsize.Maximum = 100;
-                    bufsize.Value = CheckBuffer();
                     bufsize.Enabled = false;
                 }
-                SPFLabel.Enabled = false;
-                SPFRate.Enabled = false;
-                CheckBuffer();
             }
             changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
             if (save) KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
@@ -1830,6 +1763,20 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("debugmode", "0", RegistryValueKind.DWord);
                 DebugModePls.Checked = false;
+            }
+        }
+
+        private void LiveChangesTrigger_Click(object sender, EventArgs e)
+        {
+            if (LiveChangesTrigger.Checked == false)
+            {
+                Properties.Settings.Default.LiveChanges = true;
+                LiveChangesTrigger.Checked = true;
+            }
+            else
+            {
+                Properties.Settings.Default.LiveChanges = true;
+                LiveChangesTrigger.Checked = false;
             }
         }
 
@@ -2060,7 +2007,6 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 75;
             Frequency.Text = "44100";
             bufsize.Value = 20;
-            SPFRate.Value = 100;
             Preload.Checked = true;
             NoteOffCheck.Checked = false;
             SincInter.Checked = false;
@@ -2115,7 +2061,6 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 80;
             Frequency.Text = "44100";
             bufsize.Value = 25;
-            SPFRate.Value = 100;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...

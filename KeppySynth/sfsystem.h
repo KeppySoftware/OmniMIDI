@@ -2,18 +2,6 @@
 Keppy's Synthesizer soundfont lists loading system
 */
 
-char * tocharpls(const TCHAR * widechar)
-{
-	int size = 0;
-	while ((const char *)widechar[size] != ""){
-		size++;
-	}
-	size++;
-	char * charpointer = new char[size];
-	wcstombs(charpointer, widechar, size);
-	return charpointer;
-}
-
 static void FreeFonts(UINT uDeviceID)
 {
 	unsigned i;

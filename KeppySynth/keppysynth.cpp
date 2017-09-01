@@ -100,6 +100,8 @@ static volatile int OpenCount = 0;
 static volatile int modm_closed = 1;
 
 static volatile int stop_thread = 0;
+static volatile int stop_athread = 0;
+static volatile int stop_sthread = 0;
 static volatile int stop_rtthread = 0;
 static volatile int reset_synth = 0;
 static DWORD processPriority;
@@ -107,6 +109,8 @@ static HANDLE load_sfevent = NULL;
 
 static HSTREAM KSStream = 0;
 static BASS_INFO info;
+static BASS_WASAPI_DEVICEINFO infoDW;
+static BASS_WASAPI_INFO infoW;
 
 static BOOL com_initialized = FALSE;
 static BOOL sound_out_float = FALSE;
@@ -120,11 +124,7 @@ static HANDLE hCalcThread = NULL;;
 static HANDLE hThread2 = NULL;
 static HANDLE hThread3 = NULL;
 static HANDLE hThread4 = NULL;
-static unsigned int thrdaddr1;
-static unsigned int thrdaddr2;
-static unsigned int thrdaddr3;
-static unsigned int thrdaddr4;
-static unsigned int thrdaddrB;
+static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE;
 
 // Variables
 #include "basserr.h"
@@ -660,13 +660,15 @@ void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
 	if (BASS_ErrorGetCode() == 5 || livechange == 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
-		stop_thread = 1;
+		CloseThreads();
 		load_settings(TRUE);
-		if (InitializeBASS(TRUE)) {
+		if (!com_initialized) { if (!FAILED(CoInitialize(NULL))) com_initialized = TRUE; }
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+		if (InitializeBASS(FALSE)) {
 			InitializeBASSVST();
 			SetUpStream();
 			LoadSoundFontsToStream();
-			opend = CreateThreads(FALSE);
+			opend = CreateThreads(TRUE);
 		}
 	}
 }
@@ -674,7 +676,7 @@ void keepstreamsalive(int& opend) {
 unsigned WINAPI threadfunc(LPVOID lpV){
 	try {
 		if (BannedSystemProcess() == TRUE) {
-			_endthreadex(0);
+			_endthread();
 			return 0;
 		}
 		else {
@@ -707,13 +709,13 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			stop_rtthread = 0;
 			FreeUpLibraries();
 			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-			_endthreadex(0);
+			_endthread();
 			return 0;
 		}
 	}
 	catch (...) {
 		crashmessage(L"DrvMainThread");
-		_endthreadex(0);
+		_endthread();
 		throw;
 		return 0;
 	}
@@ -748,7 +750,7 @@ void DoStartClient() {
 			FALSE,              // initial state is nonsignaled
 			TEXT("SoundFontEvent")  // object name
 			);
-		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, 0, 0, &thrdaddr1);
+		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, NULL, 0, NULL);
 		SetPriorityClass(hCalcThread, callprioval[driverprio]);
 		SetThreadPriority(hCalcThread, prioval[driverprio]);
 		result = WaitForSingleObject(load_sfevent, INFINITE);
@@ -792,6 +794,7 @@ void DoStopClient() {
 	RegCloseKey(hKey);
 	if (modm_closed == 0){
 		stop_thread = 1;
+		stop_rtthread = 1;
 		WaitForSingleObject(hCalcThread, INFINITE);
 		CloseHandle(hCalcThread);
 		modm_closed = 1;

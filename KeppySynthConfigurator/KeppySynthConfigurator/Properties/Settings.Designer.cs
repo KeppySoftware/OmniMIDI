@@ -91,5 +91,17 @@ namespace KeppySynthConfigurator.Properties {
                 return ((bool)(this["IsItPreRelease"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LiveChanges {
+            get {
+                return ((bool)(this["LiveChanges"]));
+            }
+            set {
+                this["LiveChanges"] = value;
+            }
+        }
     }
 }

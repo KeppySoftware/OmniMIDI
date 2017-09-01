@@ -153,6 +153,8 @@
       <OpenMPSupport>true</OpenMPSupport>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <OmitDefaultLibName>false</OmitDefaultLibName>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

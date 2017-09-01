@@ -44,6 +44,9 @@ namespace KeppySynthConfigurator
                 DevicesList.SelectedIndex = selecteddeviceprev;
                 MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
                 BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
+
+                DeviceTrigger();
+                DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             }
             catch (Exception ex)
             {

@@ -2,31 +2,33 @@
 Keppy's Synthesizer stream init
 */
 
-unsigned WINAPI notescatcher(LPVOID lpV) {
-	try {
-		PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
-		while (stop_thread == 0) {
+DWORD WINAPI notescatcher(LPVOID lpV) {
+	hThread4Running = TRUE;
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
+	while (stop_thread == 0) {
+		try {
 			start4 = clock();
 			bmsyn_play_some_data();
 
 			if (capframerate == 1) Sleep(16); else Sleep(1);
 			if (currentengine < 2) { if (oldbuffermode == 1) break; }
 		}
-		PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
-		hThread4 = NULL;
-		_endthreadex(0);
-		return 0;
+		catch (...) {
+			crashmessage(L"NotesCatcher");
+			throw;
+		}
 	}
-	catch (...) {
-		crashmessage(L"NotesCatcher");
-		throw;
-	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
+	hThread4Running = FALSE;
+	ExitThread(0);
+	return 0;
 }
 
 unsigned WINAPI settingsload(LPVOID lpV) {
-	try {
-		PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
-		while (stop_thread == 0) {
+	hThread3Running = TRUE;
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
+	while (stop_thread == 0) {
+		try {
 			start3 = clock();
 			realtime_load_settings();
 			Panic();
@@ -35,26 +37,26 @@ unsigned WINAPI settingsload(LPVOID lpV) {
 			RevbNChor();
 			Sleep(100);
 		}
-		PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
-		stop_thread = 0;
-		_endthreadex(0);
-		return 0;
+		catch (...) {
+			crashmessage(L"SettingsLoad");
+			throw;
+		}
 	}
-	catch (...) {
-		crashmessage(L"SettingsLoad");
-		throw;
-	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
+	hThread3Running = FALSE;
+	ExitThread(0);
+	return 0;
 }
 
 void InitializeNotesCatcherThread() {
 	if (hThread4 == NULL) {
-		hThread4 = (HANDLE)_beginthreadex(NULL, 0, notescatcher, 0, 0, &thrdaddr4);
-		SetPriorityClass(hThread4, callprioval[driverprio]);
+		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, NULL);
 		SetThreadPriority(hThread4, prioval[driverprio]);
 	}
 }
 
-unsigned WINAPI audioengine(LPVOID lpV) {
+unsigned WINAPI audioengine(LPVOID lpParam) {
+	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	while (stop_thread == 0) {
 		try {
@@ -84,8 +86,8 @@ unsigned WINAPI audioengine(LPVOID lpV) {
 		}
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
-	stop_thread = 0;
-	_endthreadex(0);
+	hThread2Running = FALSE;
+	ExitThread(0);
 	return 0;
 }
 
@@ -118,6 +120,7 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 		isdecode = TRUE;
 	}
 
+	if (KSStream) BASS_StreamFree(KSStream);
 	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
 	
@@ -172,10 +175,10 @@ void InitializeBASSEnc() {
 		{
 			PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
 			ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
-			exit(0);
-			break;
+			delete configuratorapp;
 		}
 	}
+
 	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
 }
 
@@ -201,8 +204,6 @@ void InitializeWASAPI() {
 	currentengine = 3;
 
 	GetWASAPIDevice();
-	BASS_WASAPI_DEVICEINFO infoDW;
-	BASS_WASAPI_INFO infoW;
 
 	BASS_WASAPI_Init(WASAPIoutput, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
 	CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
@@ -222,14 +223,12 @@ void InitializeWASAPI() {
 		CheckUp(ERRORCODE, L"KSInitWASAPI");
 		BASS_WASAPI_Start();
 		CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
-		InitializeNotesCatcherThread();
 	}
 	else {
 		MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to BASSEnc...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open WASAPI device", MB_OK | MB_ICONERROR);
 		currentengine = 0;
 		InitializeStreamForExternalEngine(frequency);
 		InitializeBASSEnc();
-		InitializeNotesCatcherThread();
 		CheckUp(ERRORCODE, L"KSInitEnc");
 	}
 }
@@ -237,7 +236,6 @@ void InitializeWASAPI() {
 void InitializeDirectSound() {
 	currentengine = 1;
 
-	BASS_ChannelStop(KSStream);
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 	BASS_GetInfo(&info);
@@ -249,7 +247,6 @@ void InitializeDirectSound() {
 		BASS_ChannelPlay(KSStream, false);
 		CheckUp(ERRORCODE, L"KSChannelPlayDS");
 	}
-	InitializeNotesCatcherThread();
 }
 
 void InitializeWAVEnc() {
@@ -257,19 +254,11 @@ void InitializeWAVEnc() {
 
 	InitializeStreamForExternalEngine(frequency);
 	InitializeBASSEnc();
-	InitializeNotesCatcherThread();
 	CheckUp(ERRORCODE, L"KSInitEnc");
 }
 
 void InitializeASIO() {
 	currentengine = 2;
-
-	BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
-	CheckUp(ERRORCODE, L"KSResetChannelASIO");
-	BASS_ASIO_Stop();
-	CheckUp(ERRORCODE, L"KSStopASIO");
-	BASS_ASIO_Free();
-	CheckUp(ERRORCODE, L"KSFreeASIO");
 
 	InitializeStreamForExternalEngine(frequency);
 	if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
@@ -286,9 +275,8 @@ void InitializeASIO() {
 		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, 0);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 		CheckUpASIO(ERRORCODE, L"KSChanEnableASIO");
-		BASS_ASIO_Start(0, 0);
+		BASS_ASIO_Start(0, 2);
 		CheckUpASIO(ERRORCODE, L"KSStartASIO");
-		InitializeNotesCatcherThread();
 	}
 	else {
 		CheckUpASIO(ERRORCODE, L"KSInitASIO");
@@ -319,26 +307,32 @@ bool InitializeBASS(bool restart) {
 	if (restart == TRUE) {
 		PrintToConsole(FOREGROUND_RED, 1, "The driver requested to restart the stream.");
 		if (currentengine == 0) restartvalue++;
-
-		// Free BASS
-		BASS_WASAPI_Stop(TRUE);
-		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
-
-		BASS_WASAPI_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI terminated.");
-
-		BASS_ASIO_Stop();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
-
-		BASS_ASIO_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO terminated.");
-
-		BASS_StreamFree(KSStream);
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
-
-		BASS_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
 	}
+
+	// Free BASS
+	BASS_WASAPI_Stop(TRUE);
+	PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
+
+	BASS_WASAPI_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI freed.");
+
+	BASS_ASIO_Stop();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+
+	BASS_ASIO_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
+
+	BASS_ChannelStop(KSStream);
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stream stopped.");
+
+	BASS_StreamFree(KSStream);
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+
+	BASS_Stop();
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
+
+	BASS_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
 
 	// Init BASS
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
@@ -359,23 +353,36 @@ bool InitializeBASS(bool restart) {
 	}
 	
 	if (!KSStream) {
-		BASS_ASIO_Free();
-		CheckUpASIO(ERRORCODE, L"KSStreamFreeASIO");
+		// Free BASS
+		BASS_WASAPI_Stop(TRUE);
+		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
+
 		BASS_WASAPI_Free();
-		CheckUp(ERRORCODE, L"KSStreamFreeWASAPI");
+		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI terminated.");
+
+		BASS_ASIO_Stop();
+		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+
+		BASS_ASIO_Free();
+		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO terminated.");
+
 		BASS_StreamFree(KSStream);
-		CheckUp(ERRORCODE, L"KSStreamFree");
+		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+
+		BASS_Free();
+		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+
 		KSStream = 0;
 		PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
 		return false;
 	}
 	else {
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-		CheckUp(ERRORCODE, L"KSAttributes");
+		CheckUp(ERRORCODE, L"KSAttributes1");
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-		CheckUp(ERRORCODE, L"KSAttributes");
+		CheckUp(ERRORCODE, L"KSAttributes2");
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
-		CheckUp(ERRORCODE, L"KSAttributes");
+		CheckUp(ERRORCODE, L"KSAttributes3");
 	}
 	return init;
 }
@@ -388,8 +395,8 @@ void InitializeBASSVST() {
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, loudmaxdll64);
 	PathAppend(loudmaxdll, _T("\\Keppy's Synthesizer\\LoudMax.dll"));
 	PathAppend(loudmaxdll64, _T("\\Keppy's Synthesizer\\LoudMax64.dll"));
-	const char *LMDLL = T2A(loudmaxdll);
-	const char *LMDLL64 = T2A(loudmaxdll64);
+    char *LMDLL = T2A(loudmaxdll);
+	char *LMDLL64 = T2A(loudmaxdll64);
 #if defined(_WIN64)
 	if (PathFileExists(loudmaxdll64)) {
 		if (isbassvstloaded == 1) {
@@ -405,20 +412,39 @@ void InitializeBASSVST() {
 #endif
 }
 
+void CloseThreads() {
+	stop_thread = 1;
+
+	WaitForSingleObject(hThread2, INFINITE);
+	CloseHandle(hThread2);
+	hThread2 = NULL;
+
+	WaitForSingleObject(hThread3, INFINITE);
+	CloseHandle(hThread3);
+	hThread3 = NULL;
+
+	WaitForSingleObject(hThread4, INFINITE);
+	CloseHandle(hThread4);
+	hThread4 = NULL;
+
+	stop_thread = 0;
+}
+
 int CreateThreads(bool startup) {
 	if (startup == TRUE) SetEvent(load_sfevent);
-	else {
-		Sleep(100);
-		stop_thread = 0;
-	}
+
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
+
 	reset_synth = 0;
-	hThread2 = (HANDLE)_beginthreadex(NULL, 0, audioengine, 0, 0, &thrdaddr2);
-	SetPriorityClass(hThread2, callprioval[driverprio]);
+	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)audioengine, NULL, 0, NULL);
 	SetThreadPriority(hThread2, prioval[driverprio]);
-	hThread3 = (HANDLE)_beginthreadex(NULL, 0, settingsload, 0, 0, &thrdaddr3);
-	SetPriorityClass(hThread3, callprioval[driverprio]);
+	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)settingsload, NULL, 0, NULL);
 	SetThreadPriority(hThread3, prioval[driverprio]);
+	if (currentengine > 1) {
+		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, NULL);
+		SetThreadPriority(hThread4, prioval[driverprio]);
+	}
+
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 	return 1;
 }

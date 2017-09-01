@@ -142,6 +142,7 @@ bool LoadSoundfontStartup() {
 					}
 				}
 			}
+			file.close();
 		}
 
 		if (done == 1) {
@@ -381,6 +382,7 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_ChannelUpdate);
 		LOADBASSFUNCTION(BASS_ErrorGetCode);
 		LOADBASSFUNCTION(BASS_Free);
+		LOADBASSFUNCTION(BASS_Stop);
 		LOADBASSFUNCTION(BASS_GetDevice);
 		LOADBASSFUNCTION(BASS_GetDeviceInfo);
 		LOADBASSFUNCTION(BASS_GetInfo);
@@ -808,8 +810,6 @@ void debug_info() {
 		int64_t td2i = int64_t(GetUsage(start2, end));
 		int64_t td3i = int64_t(GetUsage(start3, end));
 		int64_t td4i = int64_t(GetUsage(start4, end));
-
-
 
 		if (oldbuffermode == 1) td4i = 1;
 

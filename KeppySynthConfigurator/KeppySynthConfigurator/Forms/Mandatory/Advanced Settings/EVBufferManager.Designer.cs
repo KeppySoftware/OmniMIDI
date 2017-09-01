@@ -41,10 +41,13 @@
             this.WarningLabel = new System.Windows.Forms.Label();
             this.WarningSign = new System.Windows.Forms.PictureBox();
             this.ResetSettings = new System.Windows.Forms.Button();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.ExemptRealTime = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.BytesVal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RatioVal)).BeginInit();
             this.WarningPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WarningSign)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -215,11 +218,30 @@
             this.ResetSettings.UseVisualStyleBackColor = true;
             this.ResetSettings.Click += new System.EventHandler(this.ResetSettings_Click);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ExemptRealTime});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 205);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(423, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 10;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // ExemptRealTime
+            // 
+            this.ExemptRealTime.Enabled = false;
+            this.ExemptRealTime.Name = "ExemptRealTime";
+            this.ExemptRealTime.Size = new System.Drawing.Size(226, 17);
+            this.ExemptRealTime.Text = "You can\'t change this setting in real-time.";
+            // 
             // EVBufferManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 205);
+            this.ClientSize = new System.Drawing.Size(423, 227);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.ResetSettings);
             this.Controls.Add(this.WarningPanel);
             this.Controls.Add(this.GetRAMSize);
@@ -244,6 +266,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.RatioVal)).EndInit();
             this.WarningPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.WarningSign)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,5 +288,7 @@
         private System.Windows.Forms.PictureBox WarningSign;
         private System.Windows.Forms.Label WarningLabel;
         private System.Windows.Forms.Button ResetSettings;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel ExemptRealTime;
     }
 }

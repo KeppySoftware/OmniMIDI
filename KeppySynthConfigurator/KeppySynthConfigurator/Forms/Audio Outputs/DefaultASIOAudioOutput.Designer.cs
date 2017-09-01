@@ -78,7 +78,6 @@
             this.DevicesList.Name = "DevicesList";
             this.DevicesList.Size = new System.Drawing.Size(414, 21);
             this.DevicesList.TabIndex = 4;
-            this.DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             // 
             // DeviceCP
             // 
@@ -148,6 +147,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DefaultASIOAudioOutput";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change default ASIO output";
             this.Load += new System.EventHandler(this.DefaultASIOAudioOutput_Load);

@@ -75,7 +75,6 @@
             this.DevicesList.Name = "DevicesList";
             this.DevicesList.Size = new System.Drawing.Size(458, 21);
             this.DevicesList.TabIndex = 4;
-            this.DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             // 
             // ExAccess
             // 
