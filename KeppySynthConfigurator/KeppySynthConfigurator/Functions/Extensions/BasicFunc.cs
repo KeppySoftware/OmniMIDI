@@ -621,6 +621,57 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.SynthSettings.SetValue("defaultmidiindev", dev, RegistryValueKind.DWord);
         }
 
+        public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
+        {
+            RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
+            if (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "keppysynth\\amidimap.cpl")
+            {
+                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = true;
+                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                if (!Environment.Is64BitOperatingSystem)
+                {
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
+                }
+                KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = false;
+            }
+            else
+            {
+                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = false;
+                if (Environment.OSVersion.Version.Major > 6)
+                {
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
+                    KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = true;
+                }
+                if (!Environment.Is64BitOperatingSystem)
+                {
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
+                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
+                }
+            }
+        }
+
+        public static int PreviousEngine = 0;
+        public static int PreviousFrequency = 0;
+        public static int PreviousBuffer = 0;
         public static void LoadSettings() // Loads the settings from the registry
         {
             // ======= Load settings from the registry
@@ -707,7 +758,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 0;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
 
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
@@ -718,7 +769,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                     KeppySynthConfiguratorMain.Delegate.bufsize.Maximum = 1000;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
@@ -729,7 +780,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
                 {
@@ -739,7 +790,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen"));
+                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
 
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
@@ -759,6 +810,11 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
 
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
+
+                PreviousEngine = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0);
+                PreviousFrequency = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100);
+                PreviousBuffer = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50);
+
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }
             catch (Exception ex)
@@ -766,54 +822,6 @@ namespace KeppySynthConfigurator
                 Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings();
-            }
-        }
-
-        public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
-        {
-            RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
-            if (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "keppysynth\\amidimap.cpl")
-            {
-                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = true;
-                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                if (!Environment.Is64BitOperatingSystem)
-                {
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
-                }
-                KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = false;
-            }
-            else
-            {
-                KeppySynthConfiguratorMain.Delegate.AMIDIMapCpl.Visible = false;
-                if (Environment.OSVersion.Version.Major > 6)
-                {
-                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
-                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-                    KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = true;
-                }
-                if (!Environment.Is64BitOperatingSystem)
-                {
-                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
-                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                    KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
-                }
             }
         }
 
@@ -870,7 +878,22 @@ namespace KeppySynthConfigurator
                 else
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
 
-                if (Properties.Settings.Default.LiveChanges) KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
+                if (Properties.Settings.Default.LiveChanges)
+                {
+                    if (PreviousEngine != KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex ||
+                        PreviousFrequency != Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.Frequency.Text) ||
+                        PreviousBuffer != (int)KeppySynthConfiguratorMain.Delegate.bufsize.Value)
+                    {
+                        if (Convert.ToInt32(KeppySynthConfiguratorMain.Mixer.GetValue("handlecount", 0)) != 0)
+                        {
+                            DialogResult dialogResult = MessageBox.Show("Some changes you made require a restart of the audio engine.\n\nDo you want to restart it?", "Keppy's Synthesizer - Live changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            if (dialogResult == DialogResult.Yes) KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
+                        }
+                        PreviousEngine = KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex;
+                        PreviousFrequency = Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.Frequency.Text);
+                        PreviousBuffer = (int)KeppySynthConfiguratorMain.Delegate.bufsize.Value;
+                    }
+                }
 
                 Program.DebugToConsole(false, "Done saving settings.", null);
             }
@@ -1863,5 +1886,32 @@ namespace KeppySynthConfigurator
         public static UInt32 SndHand = 0x00000040;
         public static UInt32 SndQuestion = 0x00000020;
         public static UInt32 SndOk = 0x00000000;
+    }
+}
+
+namespace System.Windows.Forms
+{
+    // Hand cursor fix by Harnido-San (https://stackoverflow.com/users/1805892/hamido-san)
+
+    public class LinkLabelEx : LinkLabel
+    {
+        private const int IDC_HAND = 32649;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
+
+        public static readonly Cursor SystemHandCursor = new Cursor(LoadCursor(IntPtr.Zero, IDC_HAND));
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            // If the base class decided to show the ugly hand cursor
+            if (OverrideCursor == Cursors.Hand)
+            {
+                // Show the system hand cursor instead
+                OverrideCursor = SystemHandCursor;
+            }
+        }
     }
 }

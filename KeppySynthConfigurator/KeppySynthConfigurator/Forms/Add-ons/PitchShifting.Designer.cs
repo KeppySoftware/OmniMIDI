@@ -68,7 +68,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.CH10Quest = new System.Windows.Forms.LinkLabel();
+            this.CH10Quest = new System.Windows.Forms.LinkLabelEx();
             this.LiveBtn = new System.Windows.Forms.CheckBox();
             this.CheckA = new System.Windows.Forms.Button();
             this.UncheckA = new System.Windows.Forms.Button();
@@ -584,7 +584,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.LinkLabel CH10Quest;
+        private System.Windows.Forms.LinkLabelEx CH10Quest;
         private System.Windows.Forms.CheckBox LiveBtn;
         private System.Windows.Forms.Button CheckA;
         private System.Windows.Forms.Button UncheckA;

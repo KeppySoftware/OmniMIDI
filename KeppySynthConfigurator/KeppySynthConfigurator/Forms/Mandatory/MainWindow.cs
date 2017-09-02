@@ -1218,7 +1218,7 @@ namespace KeppySynthConfigurator
 
         private void SetHandCursor(object sender, EventArgs e)
         {
-            Cursor = Cursors.Hand;
+            Cursor = System.Windows.Forms.LinkLabelEx.SystemHandCursor;
         }
 
         private void SetDefaultCursor(object sender, EventArgs e)
@@ -1770,8 +1770,23 @@ namespace KeppySynthConfigurator
         {
             if (LiveChangesTrigger.Checked == false)
             {
-                Properties.Settings.Default.LiveChanges = true;
-                LiveChangesTrigger.Checked = true;
+                if (Properties.Settings.Default.LiveChangesDisclaimer == true)
+                {
+                    DialogResult dialogResult = MessageBox.Show("Don't play too much with the live changes feature." +
+                        "\n\nDoing so could lead to unexpected data loss and application crashes, please be careful with it." +
+                        "\n\nClick \"Yes\" to enable the feature.", "Keppy's Synthesizer - Live changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Properties.Settings.Default.LiveChangesDisclaimer = false;
+                        Properties.Settings.Default.LiveChanges = true;
+                        LiveChangesTrigger.Checked = true;
+                    }
+                }
+                else
+                {
+                    Properties.Settings.Default.LiveChanges = true;
+                    LiveChangesTrigger.Checked = true;
+                }
             }
             else
             {
@@ -2370,6 +2385,16 @@ namespace KeppySynthConfigurator
                 }
             }
             else new Telemetry().ShowDialog();
+        }
+
+        private void WhatIsXAudio_Click(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+        private void WhatIsOutput_Click(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
         }
     }
 }

@@ -85,7 +85,7 @@ namespace KeppySynthConfigurator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsItPreRelease {
             get {
                 return ((bool)(this["IsItPreRelease"]));
@@ -101,6 +101,18 @@ namespace KeppySynthConfigurator.Properties {
             }
             set {
                 this["LiveChanges"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LiveChangesDisclaimer {
+            get {
+                return ((bool)(this["LiveChangesDisclaimer"]));
+            }
+            set {
+                this["LiveChangesDisclaimer"] = value;
             }
         }
     }

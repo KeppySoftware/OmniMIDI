@@ -33,8 +33,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.VerLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.GitHubLink = new System.Windows.Forms.LinkLabel();
-            this.LicenseFile = new System.Windows.Forms.LinkLabel();
+            this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
+            this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -45,7 +45,7 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabel();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.CompiledOn = new System.Windows.Forms.Label();
@@ -58,7 +58,7 @@
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
-            this.GTSLink = new System.Windows.Forms.LinkLabel();
+            this.GTSLink = new System.Windows.Forms.LinkLabelEx();
             this.PatreonBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -426,8 +426,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label VerLabel;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.LinkLabel GitHubLink;
-        private System.Windows.Forms.LinkLabel LicenseFile;
+        private System.Windows.Forms.LinkLabelEx GitHubLink;
+        private System.Windows.Forms.LinkLabelEx LicenseFile;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
@@ -449,9 +449,9 @@
         private System.Windows.Forms.Label CurBranch;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolTip BranchToolTip;
-        private System.Windows.Forms.LinkLabel ChangeBranch;
+        private System.Windows.Forms.LinkLabelEx ChangeBranch;
         private System.Windows.Forms.MenuItem DisableBB;
-        private System.Windows.Forms.LinkLabel GTSLink;
+        private System.Windows.Forms.LinkLabelEx GTSLink;
         private System.Windows.Forms.Button PatreonBtn;
     }
 }

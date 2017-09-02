@@ -223,8 +223,8 @@
             this.RV14 = new System.Windows.Forms.Panel();
             this.LV14 = new System.Windows.Forms.Panel();
             this.EnginesBox = new System.Windows.Forms.GroupBox();
-            this.WhatIsXAudio = new System.Windows.Forms.LinkLabel();
-            this.WhatIsOutput = new System.Windows.Forms.LinkLabel();
+            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
+            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
             this.label2 = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.AdditionalSettingsBox = new System.Windows.Forms.GroupBox();
@@ -564,7 +564,7 @@
             // LiveChangesTrigger
             // 
             this.LiveChangesTrigger.Index = 0;
-            this.LiveChangesTrigger.Text = "Enable live changes for all the settings (Beta)";
+            this.LiveChangesTrigger.Text = "Enable live changes for all the settings";
             this.LiveChangesTrigger.Click += new System.EventHandler(this.LiveChangesTrigger_Click);
             // 
             // hotkeys
@@ -1190,14 +1190,14 @@
             this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(643, 394);
+            this.Settings.Size = new System.Drawing.Size(643, 395);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
             // ExportPres
             // 
             this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExportPres.Location = new System.Drawing.Point(210, 362);
+            this.ExportPres.Location = new System.Drawing.Point(210, 363);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(58, 23);
             this.ExportPres.TabIndex = 50;
@@ -1210,7 +1210,7 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(137, 362);
+            this.SeparatorPres.Location = new System.Drawing.Point(137, 363);
             this.SeparatorPres.Name = "SeparatorPres";
             this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
             this.SeparatorPres.TabIndex = 49;
@@ -1219,7 +1219,7 @@
             // ImportPres
             // 
             this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ImportPres.Location = new System.Drawing.Point(149, 362);
+            this.ImportPres.Location = new System.Drawing.Point(149, 363);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(58, 23);
             this.ImportPres.TabIndex = 48;
@@ -1231,7 +1231,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 367);
+            this.label3.Location = new System.Drawing.Point(11, 368);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 47;
@@ -2130,7 +2130,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(56, 362);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(56, 363);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(82, 23);
             this.SettingsPresetsBtn.TabIndex = 21;
@@ -2141,7 +2141,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(444, 362);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(444, 363);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 22;
@@ -2153,7 +2153,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 362);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 363);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 23;
@@ -2447,7 +2447,7 @@
             this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(643, 394);
+            this.SoundFontTab.Size = new System.Drawing.Size(643, 395);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -2485,7 +2485,7 @@
             this.Lis.Location = new System.Drawing.Point(5, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(602, 342);
+            this.Lis.Size = new System.Drawing.Size(602, 341);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -2520,7 +2520,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(613, 348);
+            this.EL.Location = new System.Drawing.Point(613, 347);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
@@ -2556,7 +2556,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(613, 319);
+            this.IEL.Location = new System.Drawing.Point(613, 318);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
@@ -2759,7 +2759,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(651, 421);
+            this.TabsForTheControls.Size = new System.Drawing.Size(651, 422);
             this.TabsForTheControls.TabIndex = 0;
             // 
             // TabImgs
@@ -3254,8 +3254,8 @@
         public System.Windows.Forms.OpenFileDialog ImportPresetDialog;
         public System.Windows.Forms.MenuItem AutoLoad;
         private System.Windows.Forms.MenuItem menuItem44;
-        private System.Windows.Forms.LinkLabel WhatIsXAudio;
-        private System.Windows.Forms.LinkLabel WhatIsOutput;
+        private System.Windows.Forms.LinkLabelEx WhatIsXAudio;
+        private System.Windows.Forms.LinkLabelEx WhatIsOutput;
         private System.Windows.Forms.Button ChangeMask;
         public System.Windows.Forms.MenuItem LiveChangesTrigger;
     }

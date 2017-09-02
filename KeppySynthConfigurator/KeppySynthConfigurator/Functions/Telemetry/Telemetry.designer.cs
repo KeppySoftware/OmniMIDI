@@ -51,7 +51,7 @@
             this.OkBtn = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
             this.LetUserEditSpecs = new System.Windows.Forms.CheckBox();
-            this.DiscLabel = new System.Windows.Forms.LinkLabel();
+            this.DiscLabel = new System.Windows.Forms.LinkLabelEx();
             this.HelpProvider = new System.Windows.Forms.HelpProvider();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.AdditionalFeed = new System.Windows.Forms.RichTextBox();
@@ -418,7 +418,7 @@
         private System.Windows.Forms.Button OkBtn;
         private System.Windows.Forms.Button CancelBtn;
         private System.Windows.Forms.CheckBox LetUserEditSpecs;
-        private System.Windows.Forms.LinkLabel DiscLabel;
+        private System.Windows.Forms.LinkLabelEx DiscLabel;
         private System.Windows.Forms.HelpProvider HelpProvider;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox AdditionalFeed;

@@ -33,7 +33,7 @@
             this.Names = new System.Windows.Forms.ComboBox();
             this.OK = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
-            this.AddNewNamePl0x = new System.Windows.Forms.LinkLabel();
+            this.AddNewNamePl0x = new System.Windows.Forms.LinkLabelEx();
             this.DefName = new System.Windows.Forms.Button();
             this.SynthType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -201,7 +201,7 @@
         private System.Windows.Forms.ComboBox Names;
         private System.Windows.Forms.Button OK;
         private System.Windows.Forms.Button CancelBtn;
-        private System.Windows.Forms.LinkLabel AddNewNamePl0x;
+        private System.Windows.Forms.LinkLabelEx AddNewNamePl0x;
         private System.Windows.Forms.Button DefName;
         private System.Windows.Forms.ComboBox SynthType;
         private System.Windows.Forms.Label label3;

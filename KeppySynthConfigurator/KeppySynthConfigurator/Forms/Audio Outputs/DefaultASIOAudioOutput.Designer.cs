@@ -34,7 +34,7 @@
             this.DevicesList = new System.Windows.Forms.ComboBox();
             this.DeviceCP = new System.Windows.Forms.Button();
             this.MaxThreads = new System.Windows.Forms.Label();
-            this.ASIODevicesSupport = new System.Windows.Forms.LinkLabel();
+            this.ASIODevicesSupport = new System.Windows.Forms.LinkLabelEx();
             this.StatusLab = new System.Windows.Forms.Label();
             this.Status = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -165,7 +165,7 @@
         private System.Windows.Forms.ComboBox DevicesList;
         private System.Windows.Forms.Button DeviceCP;
         private System.Windows.Forms.Label MaxThreads;
-        private System.Windows.Forms.LinkLabel ASIODevicesSupport;
+        private System.Windows.Forms.LinkLabelEx ASIODevicesSupport;
         private System.Windows.Forms.Label StatusLab;
         private System.Windows.Forms.Label Status;
     }

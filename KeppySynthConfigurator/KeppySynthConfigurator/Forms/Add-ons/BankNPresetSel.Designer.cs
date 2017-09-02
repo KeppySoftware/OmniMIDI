@@ -36,7 +36,7 @@
             this.PresetVal = new System.Windows.Forms.NumericUpDown();
             this.SelectedSFLabel = new System.Windows.Forms.Label();
             this.CancelBtn = new System.Windows.Forms.Button();
-            this.WikipediaLink = new System.Windows.Forms.LinkLabel();
+            this.WikipediaLink = new System.Windows.Forms.LinkLabelEx();
             this.DesBankVal = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -264,7 +264,7 @@
         private System.Windows.Forms.NumericUpDown PresetVal;
         private System.Windows.Forms.Label SelectedSFLabel;
         private System.Windows.Forms.Button CancelBtn;
-        private System.Windows.Forms.LinkLabel WikipediaLink;
+        private System.Windows.Forms.LinkLabelEx WikipediaLink;
         private System.Windows.Forms.NumericUpDown DesBankVal;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;

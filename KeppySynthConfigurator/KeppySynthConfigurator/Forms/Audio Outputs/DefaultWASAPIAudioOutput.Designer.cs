@@ -33,7 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.DevicesList = new System.Windows.Forms.ComboBox();
             this.ExAccess = new System.Windows.Forms.CheckBox();
-            this.ImConfusedHelp = new System.Windows.Forms.LinkLabel();
+            this.ImConfusedHelp = new System.Windows.Forms.LinkLabelEx();
             this.SuspendLayout();
             // 
             // Quit
@@ -129,6 +129,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox DevicesList;
         private System.Windows.Forms.CheckBox ExAccess;
-        private System.Windows.Forms.LinkLabel ImConfusedHelp;
+        private System.Windows.Forms.LinkLabelEx ImConfusedHelp;
     }
 }
