@@ -95,20 +95,23 @@ void ResetSynth(int ischangingbuffermode){
 
 void LoadSoundfont(int whichsf){
 	try {
-		PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
-		TCHAR config[MAX_PATH];
-		BASS_MIDI_FONT * mf;
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-		FreeFonts(0);
-		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
-		RegCloseKey(hKey);
-		LoadFonts(0, sflistloadme[whichsf - 1]);
-		BASS_MIDI_StreamLoadSamples(KSStream);
-		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
+		if (vstimode == FALSE)
+		{
+			PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
+			TCHAR config[MAX_PATH];
+			BASS_MIDI_FONT * mf;
+			HKEY hKey;
+			long lResult;
+			DWORD dwType = REG_DWORD;
+			DWORD dwSize = sizeof(DWORD);
+			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+			FreeFonts(0);
+			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+			RegCloseKey(hKey);
+			LoadFonts(0, sflistloadme[whichsf - 1]);
+			BASS_MIDI_StreamLoadSamples(KSStream);
+			PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
+		}
 	}
 	catch (...) {
 		crashmessage(L"SFLoad");
@@ -118,38 +121,41 @@ void LoadSoundfont(int whichsf){
 
 bool LoadSoundfontStartup() {
 	try {
-		int done = 0;
-		TCHAR modulename[MAX_PATH];
-		TCHAR fullmodulename[MAX_PATH];
-		GetModuleFileName(NULL, modulename, MAX_PATH);
-		GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-		PathStripPath(modulename);
+		if (vstimode == FALSE)
+		{
+			int done = 0;
+			TCHAR modulename[MAX_PATH];
+			TCHAR fullmodulename[MAX_PATH];
+			GetModuleFileName(NULL, modulename, MAX_PATH);
+			GetModuleFileName(NULL, fullmodulename, MAX_PATH);
+			PathStripPath(modulename);
 
-		for (int i = 0; i <= 15; ++i) {
-			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
-			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
-			_tcscat(sflistloadme[i], sfdirs[i]);
-			_tcscat(listsloadme[i], listsanalyze[i]);
-			std::wifstream file(listsloadme[i]);
-			if (file) {
-				TCHAR defaultstring[MAX_PATH];
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-						LoadSoundfont(i + 1);
-						done = 1;
-						PrintToConsole(FOREGROUND_RED, i, "Found it");
+			for (int i = 0; i <= 15; ++i) {
+				SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
+				SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
+				_tcscat(sflistloadme[i], sfdirs[i]);
+				_tcscat(listsloadme[i], listsanalyze[i]);
+				std::wifstream file(listsloadme[i]);
+				if (file) {
+					TCHAR defaultstring[MAX_PATH];
+					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+					{
+						if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+							LoadSoundfont(i + 1);
+							done = 1;
+							PrintToConsole(FOREGROUND_RED, i, "Found it");
+						}
 					}
 				}
+				file.close();
 			}
-			file.close();
-		}
 
-		if (done == 1) {
-			return TRUE;
-		}
-		else {
-			return FALSE;
+			if (done == 1) {
+				return TRUE;
+			}
+			else {
+				return FALSE;
+			}
 		}
 	}
 	catch (...) {
@@ -415,6 +421,10 @@ BOOL load_bassfuncs()
 		LOADBASS_FXFUNCTION(BASS_FX_TempoCreate);
 		if (isbassvstloaded == 1) {
 			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
+			LOADBASS_VSTFUNCTION(BASS_VST_ChannelFree);
+			LOADBASS_VSTFUNCTION(BASS_VST_ChannelCreate);
+			LOADBASS_VSTFUNCTION(BASS_VST_ProcessEvent);
+			LOADBASS_VSTFUNCTION(BASS_VST_ProcessEventRaw);
 		}
 		PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
 		return TRUE;

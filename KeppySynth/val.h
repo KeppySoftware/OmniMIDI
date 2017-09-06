@@ -35,7 +35,6 @@ extern "C" __declspec(dllexport) void RavioliRavioli()
 
 // Mandatory values
 static NOTIFYICONDATA niData;
-static HWND hWnd;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
 static int improveperf = 0;				// Improve performance, reduces compatibility
@@ -47,6 +46,8 @@ static HINSTANCE bassasio = 0;			// bassasio handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE basswasapi = 0;		// basswasapi handle
+
+static bool vstimode = FALSE;
 
 // Potato
 static float currentcpuusage0;

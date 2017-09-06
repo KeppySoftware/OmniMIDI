@@ -24,7 +24,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 	return 0;
 }
 
-unsigned WINAPI settingsload(LPVOID lpV) {
+DWORD WINAPI settingsload(LPVOID lpV) {
 	hThread3Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	while (stop_thread == 0) {
@@ -55,7 +55,7 @@ void InitializeNotesCatcherThread() {
 	}
 }
 
-unsigned WINAPI audioengine(LPVOID lpParam) {
+DWORD WINAPI audioengine(LPVOID lpParam) {
 	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	while (stop_thread == 0) {
@@ -107,10 +107,41 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 	return data;
 }
 
+void InitializeVSTi(INT32 mixfreq, bool isdecode, LPCWSTR pathtchar, char * pathchar) {
+	/* Currently under construction :P
+	if (PathFileExists(pathtchar) && isbassvstloaded == 1) {
+		PrintToConsole(FOREGROUND_RED, 1, "VSTi found. Loading...");
+		KSStream = BASS_VST_ChannelCreate(mixfreq, (monorendering ? 1 : 2), pathchar, (isdecode ? BASS_STREAM_DECODE : 0) | AudioRenderingType(floatrendering) | (sinc ? BASS_MIDI_SINCINTER : 0));
+		CheckUp(ERRORCODE, L"KSStreamVSTInit");
+		vstimode = TRUE;
+		PrintToConsole(FOREGROUND_RED, 1, "VSTi initialized.");
+	}
+	else {
+		vstimode = FALSE;
+		if (isbassvstloaded == 1) PrintToConsole(FOREGROUND_RED, 1, "VSTi not found. Skipping...");
+		else PrintToConsole(FOREGROUND_RED, 1, "BASS_VST hasn't been loaded in memory.");
+	}
+	*/
+
+	vstimode = FALSE;
+}
+
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
+	// USES_CONVERSION;
+	// TCHAR vsti32dll[MAX_PATH];
+	// TCHAR vsti64dll[MAX_PATH];
 	bool isdecode = FALSE;
 
-	PrintToConsole(FOREGROUND_RED, 1, "Working...");
+	PrintToConsole(FOREGROUND_RED, 1, "Creating stream for external engine...");
+
+	/* Currently under construction :P
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, vsti32dll);
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, vsti64dll);
+	PathAppend(vsti32dll, _T("\\Keppy's Synthesizer\\vsti32.dll"));
+	PathAppend(vsti64dll, _T("\\Keppy's Synthesizer\\vsti64.dll"));
+	char *VSTI32 = T2A(vsti32dll);
+	char *VSTI64 = T2A(vsti64dll);
+	*/
 
 	if (currentengine == 1) {
 		if (defaultoutput == 1) isdecode = TRUE;
@@ -120,8 +151,19 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 		isdecode = TRUE;
 	}
 
-	if (KSStream) BASS_StreamFree(KSStream);
-	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
+	if (KSStream) {
+		// if (isbassvstloaded == 1) BASS_VST_ChannelFree(KSStream);
+		BASS_StreamFree(KSStream);
+	}
+
+#if defined(_WIN64)
+	// InitializeVSTi(mixfreq, isdecode, vsti64dll, VSTI64);
+#elif defined(_WIN32)
+	// InitializeVSTi(mixfreq, isdecode, vsti32dll, VSTI32);
+#endif
+
+	if (vstimode == FALSE) KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
+
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
 	
 	PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
@@ -377,12 +419,14 @@ bool InitializeBASS(bool restart) {
 		return false;
 	}
 	else {
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-		CheckUp(ERRORCODE, L"KSAttributes1");
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-		CheckUp(ERRORCODE, L"KSAttributes2");
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
-		CheckUp(ERRORCODE, L"KSAttributes3");
+		if (vstimode == FALSE) {
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+			CheckUp(ERRORCODE, L"KSAttributes1");
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+			CheckUp(ERRORCODE, L"KSAttributes2");
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
+			CheckUp(ERRORCODE, L"KSAttributes3");
+		}
 	}
 	return init;
 }
@@ -436,14 +480,16 @@ int CreateThreads(bool startup) {
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 
 	reset_synth = 0;
-	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)audioengine, NULL, 0, NULL);
+	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)audioengine, NULL, 0, (LPDWORD)thrdaddr2);
 	SetThreadPriority(hThread2, prioval[driverprio]);
-	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)settingsload, NULL, 0, NULL);
+	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)settingsload, NULL, 0, (LPDWORD)thrdaddr3);
 	SetThreadPriority(hThread3, prioval[driverprio]);
 	if (currentengine > 1) {
-		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, NULL);
+		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
 		SetThreadPriority(hThread4, prioval[driverprio]);
 	}
+
+	SetPriorityClass(hThread3, callprioval[driverprio]);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 	return 1;

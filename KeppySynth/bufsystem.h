@@ -64,6 +64,7 @@ int bmsyn_play_some_data(void){
 			int status = (dwParam1 & 0x000000FF);
 			int note = (dwParam1 & 0x0000FF00) >> 8;
 			int velocity = (dwParam1 & 0x00FF0000) >> 16;
+			int channel = (dwParam1 & 0xFF000000) >> 24;
 
 			switch (uMsg) {
 			case MODM_DATA:
@@ -79,28 +80,54 @@ int bmsyn_play_some_data(void){
 					else {
 						if (limit88 == 1) {
 							if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-								if (note >= 21 && note <= 108) { BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len); }
+								if (note >= 21 && note <= 108) {
+									if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+									else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+									PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+								}
 							}
-							else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+							else {
+								if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+								else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+								PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+							}
 						}
-						else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-						PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", status, note, velocity);
+						else {
+							if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+							else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+							PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+						}
 					}
 					break;
 				}
-				if (limit88 == 1) {
-					if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-						if (note >= 21 && note <= 108) { BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len); }
+				else {
+					if (limit88 == 1) {
+						if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+							if (note >= 21 && note <= 108) {
+								if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+								else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+								PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+							}
+							else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+						}
+						else {
+							if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+							else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+							PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+						}
 					}
-					else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+					else {
+						if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+						else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+						PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+					}
 				}
-				else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-				PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", status, note, velocity);
 				break;
 			case MODM_LONGDATA:
 				if (sysresetignore != 1) {
-					BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-					PrintEventToConsole(FOREGROUND_GREEN, (DWORD)hdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0);
+					if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, hdr->lpData, hdr->dwBytesRecorded);
+					else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
+					PrintEventToConsole(FOREGROUND_GREEN, (DWORD)hdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
 				}
 				break;
 			}
@@ -119,6 +146,7 @@ bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 	int status = (dwParam1 & 0x000000FF);
 	int note = (dwParam1 & 0x0000FF00) >> 8;
 	int velocity = (dwParam1 & 0x00FF0000) >> 16;
+	int channel = (dwParam1 & 0xFF000000) >> 24;
 
 	// SETSTATUS(dwParam1, status);
 	if (pitchshift != 127) {

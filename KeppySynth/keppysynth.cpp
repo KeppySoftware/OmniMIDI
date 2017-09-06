@@ -107,7 +107,7 @@ static volatile int reset_synth = 0;
 static DWORD processPriority;
 static HANDLE load_sfevent = NULL;
 
-static HSTREAM KSStream = 0;
+static int KSStream = 0;
 static BASS_INFO info;
 static BASS_WASAPI_DEVICEINFO infoDW;
 static BASS_WASAPI_INFO infoW;
@@ -120,10 +120,14 @@ static int sound_out_volume_int = 0x1000;
 // Threads
 static clock_t start1, start2, start3, start4;
 static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
-static HANDLE hCalcThread = NULL;;
+static HANDLE hCalcThread = NULL;
 static HANDLE hThread2 = NULL;
 static HANDLE hThread3 = NULL;
 static HANDLE hThread4 = NULL;
+static unsigned int thrdaddrC;
+static unsigned int thrdaddr2;
+static unsigned int thrdaddr3;
+static unsigned int thrdaddr4;
 static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE;
 
 // Variables
@@ -397,7 +401,7 @@ void PrintToConsole(int color, long stage, const char* text) {
 	}
 }
 
-void PrintEventToConsole(int color, int stage, bool issysex, const char* text, int status, int note, int velocity) {
+void PrintEventToConsole(int color, int stage, bool issysex, const char* text, int channel, int status, int note, int velocity) {
 	if (debugmode == 1) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
@@ -418,7 +422,7 @@ void PrintEventToConsole(int color, int stage, bool issysex, const char* text, i
 			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
 		}
 		else {
-			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = " << statustoprint << " | Note = " << note << " | Velocity = " << velocity;
+			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Channel = " << statustoprint << " | Type = " << statustoprint << " | Note = " << note << " | Velocity = " << velocity;
 		}
 	}
 }
@@ -673,7 +677,17 @@ void keepstreamsalive(int& opend) {
 	}
 }
 
-unsigned WINAPI threadfunc(LPVOID lpV){
+BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
+	DWORD process;
+	GetWindowThreadProcessId(hWnd, &process);
+	if (GetCurrentProcessId() == process) {
+		MessageBox(hWnd, L"I loaded your dll!", L"it's me", MB_OK);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+DWORD WINAPI threadfunc(LPVOID lpV){
 	try {
 		if (BannedSystemProcess() == TRUE) {
 			_endthread();
@@ -709,13 +723,13 @@ unsigned WINAPI threadfunc(LPVOID lpV){
 			stop_rtthread = 0;
 			FreeUpLibraries();
 			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-			_endthread();
+			ExitThread(0);
 			return 0;
 		}
 	}
 	catch (...) {
 		crashmessage(L"DrvMainThread");
-		_endthread();
+		ExitThread(0);
 		throw;
 		return 0;
 	}
@@ -750,8 +764,7 @@ void DoStartClient() {
 			FALSE,              // initial state is nonsignaled
 			TEXT("SoundFontEvent")  // object name
 			);
-		hCalcThread = (HANDLE)_beginthreadex(NULL, 0, threadfunc, NULL, 0, NULL);
-		SetPriorityClass(hCalcThread, callprioval[driverprio]);
+		hCalcThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadfunc, NULL, 0, (LPDWORD)thrdaddrC);
 		SetThreadPriority(hCalcThread, prioval[driverprio]);
 		result = WaitForSingleObject(load_sfevent, INFINITE);
 		if (result == WAIT_OBJECT_0)
