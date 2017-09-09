@@ -50,8 +50,8 @@ namespace KeppySynthConfigurator
                     break;
                 }
             }
-            if (!File.Exists(String.Format("{0}\\keppysynth\\bass.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))) ||
-                !File.Exists(String.Format("{0}\\keppysynth\\bassmidi.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))))
+            if (!File.Exists("bass.dll") ||
+                !File.Exists("bassmidi.dll"))
             {
                 MissingBASSLibs MissingBASSLib = new MissingBASSLibs("The system was unable to find the required BASS libraries");
                 MissingBASSLib.Source = "BASS libraries not found";

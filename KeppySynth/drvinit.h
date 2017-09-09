@@ -2,12 +2,35 @@
 Keppy's Synthesizer stream init
 */
 
+void MT32SetInstruments() {
+	if (mt32mode == 1) {
+		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_PROGRAM, 0);
+		BASS_MIDI_StreamEvent(KSStream, 1, MIDI_EVENT_PROGRAM, 36);
+		BASS_MIDI_StreamEvent(KSStream, 2, MIDI_EVENT_PROGRAM, 48);
+		BASS_MIDI_StreamEvent(KSStream, 3, MIDI_EVENT_PROGRAM, 61);
+		BASS_MIDI_StreamEvent(KSStream, 4, MIDI_EVENT_PROGRAM, 66);
+		BASS_MIDI_StreamEvent(KSStream, 5, MIDI_EVENT_PROGRAM, 96);
+		BASS_MIDI_StreamEvent(KSStream, 6, MIDI_EVENT_PROGRAM, 76);
+		BASS_MIDI_StreamEvent(KSStream, 7, MIDI_EVENT_PROGRAM, 76);
+		BASS_MIDI_StreamEvent(KSStream, 8, MIDI_EVENT_PROGRAM, 55);
+		BASS_MIDI_StreamEvent(KSStream, 9, MIDI_EVENT_PROGRAM, 35);
+		BASS_MIDI_StreamEvent(KSStream, 10, MIDI_EVENT_PROGRAM, 0);
+		BASS_MIDI_StreamEvent(KSStream, 11, MIDI_EVENT_PROGRAM, 0);
+		BASS_MIDI_StreamEvent(KSStream, 12, MIDI_EVENT_PROGRAM, 0);
+		BASS_MIDI_StreamEvent(KSStream, 13, MIDI_EVENT_PROGRAM, 0);
+		BASS_MIDI_StreamEvent(KSStream, 14, MIDI_EVENT_PROGRAM, 0);
+		BASS_MIDI_StreamEvent(KSStream, 15, MIDI_EVENT_PROGRAM, 0);
+	}
+}
+
 DWORD WINAPI notescatcher(LPVOID lpV) {
 	hThread4Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 	while (stop_thread == 0) {
 		try {
 			start4 = clock();
+
+			MT32SetInstruments();
 			bmsyn_play_some_data();
 
 			if (capframerate == 1) Sleep(16); else Sleep(1);

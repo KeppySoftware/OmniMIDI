@@ -10,7 +10,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthUpdate"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.4.1.4'
+#define Version '4.4.1.5'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -19,6 +19,9 @@
 
 [Setup]
 AllowCancelDuringInstall=True
+AlwaysShowDirOnReadyPage=True
+AlwaysShowGroupOnReadyPage=True
+AppComments={#Description}     
 AppContact={#Email}
 AppCopyright={#Copyright}
 AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
@@ -28,21 +31,29 @@ AppPublisherURL={#Link}
 AppSupportURL={#Link}/issues
 AppUpdatesURL={#Link}/releases
 AppVersion={#Version}
-AppComments={#Description}     
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 CloseApplications=yes
+Compression=lzma2/ultra64
 CompressionThreads=2
-CreateAppDir=False
+CreateAppDir=FalseCreateUninstallRegKey=no
 DefaultGroupName={#ProductName}
+DisableDirPage=auto
+FlatComponentsList=False
 InternalCompressLevel=ultra64
+LanguageDetectionMethod=none
 LicenseFile=license.txt
 MinVersion=0,6.0.6001sp2
 OutputBaseFilename={#OutputName}
+PrivilegesRequired=lowest
 SetupIconFile=midiicon.ico
 ShowLanguageDialog=no
 SolidCompression=yes
 TimeStampsInUTC=True
+Uninstallable=no
+UpdateUninstallLogAppName=no
+UsePreviousAppDir=yes
+UsePreviousSetupType=False
 VersionInfoCompany={#Author}
 VersionInfoCopyright={#Copyright}
 VersionInfoDescription={#Description}
@@ -50,17 +61,8 @@ VersionInfoProductName={#ProductName}
 VersionInfoProductTextVersion={#Version}
 VersionInfoTextVersion={#Description}
 VersionInfoVersion={#Version}
-UsePreviousAppDir=yes
-UsePreviousSetupType=False
-AlwaysShowGroupOnReadyPage=True
-AlwaysShowDirOnReadyPage=True
 WizardImageFile=scripts\image.bmp
 WizardSmallImageFile=scripts\smallimage.bmp
-LanguageDetectionMethod=none
-Compression=lzma2/ultra64
-FlatComponentsList=False
-PrivilegesRequired=lowest
-Uninstallable=no
 
 [Files]
 ; 64-bit OS
@@ -171,6 +173,7 @@ Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "autoupdatecheck"; ValueData: "1"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "buflen"; ValueData: "30"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "cpu"; ValueData: "75"; Flags: uninsdeletekey createvalueifdoesntexist
+Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "capframerate"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "debugmode"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "defaultAdev"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; ValueType: dword; ValueName: "defaultWdev"; ValueData: "0"; Flags: uninsdeletekey createvalueifdoesntexist

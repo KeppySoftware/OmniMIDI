@@ -1566,21 +1566,19 @@ namespace KeppySynthConfigurator
             }
         }
 
-        // Brand new output mode
-        private void WhatIsOutput_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" +
-                "You can change the output directory by clicking \"More settings > Change WAV output directory\".\n\n" +
-                "(The audio output to speakers/headphones will be disabled to avoid corrupting the audio export.)", 
-                "\".WAV mode\"? What is it?", 
-                MessageBoxButtons.OK, MessageBoxIcon.Information);                         
-        }
-
-        // Brand new XAudio disabler
-        private void WhatIsXAudio_Click(object sender, EventArgs e)
+        private void WhatIsXAudio_Click(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\n.WAV mode allows you to export the audio to WAV files. More info by clicking \"What's .WAV mode?\".\n\nDirectSound is deprecated, and I will not give support for it.\nIf you're encountering issues while using it, switch to WASAPI or ASIO.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving REALLY low latencies with little CPU usage; however, \"Exclusive mode\" is needed to reach latencies close to 1ms. This, however, will disallow other apps from outputting audio.",
                 "What are engines?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void WhatIsOutput_Click(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("If you check this option, the driver will create a WAV file on your desktop, called \"(programname).exe - Keppy's Synthesizer Output File.wav\".\n\n" +
+                "You can change the output directory by clicking \"More settings > Change WAV output directory\".\n\n" +
+                "(The audio output to speakers/headphones will be disabled to avoid corrupting the audio export.)",
+                "\".WAV mode\"? What is it?",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Frequency_SelectedIndexChanged(object sender, EventArgs e)
@@ -2385,16 +2383,6 @@ namespace KeppySynthConfigurator
                 }
             }
             else new Telemetry().ShowDialog();
-        }
-
-        private void WhatIsXAudio_Click(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        private void WhatIsOutput_Click(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
         }
     }
 }

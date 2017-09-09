@@ -15,7 +15,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthSetup"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.4.1.4'
+#define Version '4.4.1.5'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -24,6 +24,9 @@
 
 [Setup]
 AllowCancelDuringInstall=True
+AlwaysShowDirOnReadyPage=True
+AlwaysShowGroupOnReadyPage=True
+AppComments={#Description}     
 AppContact={#Email}
 AppCopyright={#Copyright}
 AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
@@ -33,14 +36,17 @@ AppPublisherURL={#Link}
 AppSupportURL={#Link}/issues
 AppUpdatesURL={#Link}/releases
 AppVersion={#Version}
-AppComments={#Description}     
 ArchitecturesAllowed=x86 x64
 ArchitecturesInstallIn64BitMode=x64
 CloseApplications=yes
+Compression=lzma2/ultra64
 CompressionThreads=2
 CreateAppDir=False
 DefaultGroupName={#ProductName}
+DisableDirPage=auto
+FlatComponentsList=False
 InternalCompressLevel=ultra64
+LanguageDetectionMethod=none
 LicenseFile=license.txt
 MinVersion=0,6.0.6001sp2
 OutputBaseFilename={#OutputName}
@@ -52,6 +58,7 @@ UninstallDisplayIcon={syswow64}\{#InstallDir}\{#Configurator}.exe
 UninstallDisplayName={#ProductName} {#Version} (Uninstall only)
 UninstallDisplaySize=8241947
 UninstallFilesDir={syswow64}\{#InstallDir}\
+UsePreviousSetupType=False
 VersionInfoCompany={#Author}
 VersionInfoCopyright={#Copyright}
 VersionInfoDescription={#Description}
@@ -59,14 +66,8 @@ VersionInfoProductName={#ProductName}
 VersionInfoProductTextVersion={#Version}
 VersionInfoTextVersion={#Description}
 VersionInfoVersion={#Version}
-UsePreviousSetupType=False
-AlwaysShowGroupOnReadyPage=True
-AlwaysShowDirOnReadyPage=True
 WizardImageFile=scripts\image.bmp
 WizardSmallImageFile=scripts\smallimage.bmp
-LanguageDetectionMethod=none
-Compression=lzma2/ultra64
-FlatComponentsList=False
 
 [Files]
 ; 64-bit OS
@@ -172,6 +173,7 @@ Name: de; MessagesFile: "compiler:Default.isl"
 Name: "registerassociation"; Description: "Associate SoundFont files with the synthesizer"; GroupDescription: "Additional settings:"; Flags: unchecked
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "uninstalluserdata"; Description: "Associate SoundFont files with the synthesizer"; GroupDescription: "Additional settings:"; Flags: unchecked
 
 [Registry]
 ; Normal settings
@@ -325,6 +327,18 @@ SetupWindowTitle=Setup - %1 {#Version}
 #ifdef use_msiproduct
 #include "scripts\products\msiproduct.iss"
 #endif
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usUninstall then
+  begin
+    if MsgBox('Do you want to delete your SoundFont lists too?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then 
+    begin
+        DelTree(ExpandConstant('{%USERPROFILE}\Keppy''s Synthesizer'), True, True, True);
+        MsgBox('Your data has been deleted.', mbInformation, MB_OK);    
+    end;
+  end;
+end;
 
 function InitializeSetup(): boolean;
 

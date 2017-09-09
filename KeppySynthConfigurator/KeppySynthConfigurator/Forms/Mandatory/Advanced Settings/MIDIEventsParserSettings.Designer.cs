@@ -70,7 +70,6 @@
             // MT32Mode
             // 
             this.MT32Mode.AutoSize = true;
-            this.MT32Mode.Enabled = false;
             this.MT32Mode.Location = new System.Drawing.Point(6, 95);
             this.MT32Mode.Name = "MT32Mode";
             this.MT32Mode.Size = new System.Drawing.Size(140, 17);
