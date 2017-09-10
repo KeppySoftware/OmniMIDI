@@ -96,8 +96,10 @@
             // 
             this.EmailVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.HelpProvider.SetHelpString(this.EmailVal, "This field is not mandatory, but it\'s required for me to be able to contact you.");
             this.EmailVal.Location = new System.Drawing.Point(89, 43);
             this.EmailVal.Name = "EmailVal";
+            this.HelpProvider.SetShowHelp(this.EmailVal, true);
             this.EmailVal.Size = new System.Drawing.Size(273, 20);
             this.EmailVal.TabIndex = 3;
             // 
@@ -124,8 +126,10 @@
             // 
             this.CountryVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.HelpProvider.SetHelpString(this.CountryVal, "These fields are not mandatory.");
             this.CountryVal.Location = new System.Drawing.Point(89, 95);
             this.CountryVal.Name = "CountryVal";
+            this.HelpProvider.SetShowHelp(this.CountryVal, true);
             this.CountryVal.Size = new System.Drawing.Size(273, 20);
             this.CountryVal.TabIndex = 7;
             // 
@@ -142,8 +146,10 @@
             // 
             this.AgeVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.HelpProvider.SetHelpString(this.AgeVal, "These fields are not mandatory.");
             this.AgeVal.Location = new System.Drawing.Point(89, 69);
             this.AgeVal.Name = "AgeVal";
+            this.HelpProvider.SetShowHelp(this.AgeVal, true);
             this.AgeVal.Size = new System.Drawing.Size(273, 20);
             this.AgeVal.TabIndex = 5;
             // 
@@ -182,17 +188,22 @@
             // 
             // SoundCards
             // 
+            this.SoundCards.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SoundCards.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SoundCards.FormattingEnabled = true;
+            this.HelpProvider.SetHelpString(this.SoundCards, "This field is not mandatory, but it can help me optimize the driver for your plat" +
+        "form.");
             this.SoundCards.Items.AddRange(new object[] {
             "No device selected"});
             this.SoundCards.Location = new System.Drawing.Point(166, 121);
             this.SoundCards.Name = "SoundCards";
+            this.HelpProvider.SetShowHelp(this.SoundCards, true);
             this.SoundCards.Size = new System.Drawing.Size(196, 21);
             this.SoundCards.TabIndex = 10;
             // 
             // label9
             // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(6, 124);
@@ -206,8 +217,11 @@
             this.InstGPUVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InstGPUVal.Enabled = false;
+            this.HelpProvider.SetHelpString(this.InstGPUVal, "These fields are mandatory, to allow me to optimize the driver for your platform." +
+        "");
             this.InstGPUVal.Location = new System.Drawing.Point(130, 95);
             this.InstGPUVal.Name = "InstGPUVal";
+            this.HelpProvider.SetShowHelp(this.InstGPUVal, true);
             this.InstGPUVal.Size = new System.Drawing.Size(232, 20);
             this.InstGPUVal.TabIndex = 7;
             // 
@@ -226,8 +240,11 @@
             this.OSVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OSVal.Enabled = false;
+            this.HelpProvider.SetHelpString(this.OSVal, "These fields are mandatory, to allow me to optimize the driver for your platform." +
+        "");
             this.OSVal.Location = new System.Drawing.Point(130, 69);
             this.OSVal.Name = "OSVal";
+            this.HelpProvider.SetShowHelp(this.OSVal, true);
             this.OSVal.Size = new System.Drawing.Size(232, 20);
             this.OSVal.TabIndex = 5;
             // 
@@ -246,8 +263,11 @@
             this.InstCPUVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InstCPUVal.Enabled = false;
+            this.HelpProvider.SetHelpString(this.InstCPUVal, "These fields are mandatory, to allow me to optimize the driver for your platform." +
+        "");
             this.InstCPUVal.Location = new System.Drawing.Point(130, 17);
             this.InstCPUVal.Name = "InstCPUVal";
+            this.HelpProvider.SetShowHelp(this.InstCPUVal, true);
             this.InstCPUVal.Size = new System.Drawing.Size(232, 20);
             this.InstCPUVal.TabIndex = 2;
             // 
@@ -266,8 +286,11 @@
             this.InstRAMVal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InstRAMVal.Enabled = false;
+            this.HelpProvider.SetHelpString(this.InstRAMVal, "These fields are mandatory, to allow me to optimize the driver for your platform." +
+        "");
             this.InstRAMVal.Location = new System.Drawing.Point(130, 43);
             this.InstRAMVal.Name = "InstRAMVal";
+            this.HelpProvider.SetShowHelp(this.InstRAMVal, true);
             this.InstRAMVal.Size = new System.Drawing.Size(232, 20);
             this.InstRAMVal.TabIndex = 3;
             // 
@@ -345,8 +368,10 @@
             this.AdditionalFeed.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.HelpProvider.SetHelpString(this.AdditionalFeed, "Add additional feedback here.");
             this.AdditionalFeed.Location = new System.Drawing.Point(6, 15);
             this.AdditionalFeed.Name = "AdditionalFeed";
+            this.HelpProvider.SetShowHelp(this.AdditionalFeed, true);
             this.AdditionalFeed.Size = new System.Drawing.Size(207, 263);
             this.AdditionalFeed.TabIndex = 0;
             this.AdditionalFeed.Text = "";

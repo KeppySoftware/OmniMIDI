@@ -15,9 +15,18 @@ namespace KeppySynthConfigurator
 {
     public partial class Telemetry : Form
     {
+        public const string Disclaimer = "The telemetry (user statistics) conducted by the app will be used to improve the application and help " +
+                "the developer fix problems in the future.\n\nIn order for telemetry to be registered, " +
+                "Keppy's Synthesizer requires your username/nickname (to identify you), your CPU, GPU, RAM, and operating system.\n" +
+                "It will also read your MAC Address, to prevent spammers from abusing the feature, and automatically generate a Hardware ID by parsing info from your computer components.\n\n" +
+                "These statistics will be kept completely anonymous and will not be disclosed.\n" +
+                "E-mail is optional, but if you do not provide it, I will be unable to contact you.";
+
+        static ManagementScope scope = new ManagementScope("\\\\" + Environment.MachineName + "\\root\\cimv2");
         ManagementObjectSearcher mosSound = new ManagementObjectSearcher("SELECT * FROM Win32_SoundDevice");
         ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Processor");
         ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_VideoController");
+        ManagementObject mosMotherboard = new ManagementObject(scope, new ManagementPath("Win32_BaseBoard.Tag=\"Base Board\""), new ObjectGetOptions());
         RegistryKey CurrentVerKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
         FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll");
         UInt64 TotalRAM = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
@@ -41,13 +50,7 @@ namespace KeppySynthConfigurator
 
         private void DiscLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("The telemetry (user statistics) conducted by the app will be used to improve the application and help " +
-                "the developer fix problems in the future.\nIn order for telemetry to be registered, " +
-                "Keppy's Synthesizer requires your username/nickname (to identify you), your CPU, GPU, RAM, and operating system." +
-                "It will also read your MAC Address, to prevent spammers from abusing the feature.\n" +
-                "These statistics will be kept completely anonymous and will not be disclosed.\n\n" +
-                "Email is optional, but if you do not provide it, I will be unable to contact you.",
-                "Telemetry - Disclaimer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Disclaimer, "Telemetry - Disclaimer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Telemetry_Load(object sender, EventArgs e)
@@ -96,7 +99,7 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
-                        RealPatch = String.Format("{0}.{1}.{2} (Metro)",
+                        RealPatch = String.Format("{0}.{1}.{2} (Modern UI)",
                             Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
                             Environment.OSVersion.Version.Build);
                     }
@@ -134,10 +137,25 @@ namespace KeppySynthConfigurator
 
         private void OkBtn_Click(object sender, EventArgs e)
         {
-            if (TelemetryExt.IsUserBanned())
+            Enabled = false;
+
+            Int32 UserStatus = TelemetryExt.IsUserBanned();
+            if (UserStatus != TelemetryStatus.USER_OK)
             {
-                MessageBox.Show("You're banned from using the telemetry feature.", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
+                if (UserStatus == TelemetryStatus.USER_BANNED)
+                {
+                    MessageBox.Show(
+                        String.Format("You're not allowed to send telemetry data.{0}", TelemetryStatus.Debug ? String.Format("\n\nReason: {0}", TelemetryStatus.Reasons[TelemetryStatus.TypeOfBan]) : ""),
+                        "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Enabled = true;
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("Unable to run the telemetry.\n\nPlease try again later.", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Enabled = true;
+                }
+
                 return;
             }
 
@@ -145,6 +163,7 @@ namespace KeppySynthConfigurator
             if (String.IsNullOrWhiteSpace(NicknameVal.Text))
             {
                 MessageBox.Show("Please use a valid (nick)name!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Enabled = true;
                 return;
             }
 
@@ -172,6 +191,7 @@ namespace KeppySynthConfigurator
                 MessageBox.Show("Your PC specifications are mandatory!\nYou can't remove them.", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 LetUserEditSpecs.Checked = false;
                 LetUserEditSpecs_CheckedChanged(sender, e);
+                Enabled = true;
                 return;
             }
 
@@ -180,8 +200,6 @@ namespace KeppySynthConfigurator
                 DialogResult dialogResult = MessageBox.Show("Without specifying your default sound card, I will be hard for me to troubleshoot the issue.\n\nAre you sure you would like to continue sending telemetry data without specifying your default sound card?", "Keppy's Synthesizer - Telemetry warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.No) return;
             }
-
-            this.Enabled = false;
 
             StringBuilder TelemetryData = new StringBuilder();
 
@@ -195,10 +213,11 @@ namespace KeppySynthConfigurator
             TelemetryData.AppendLine(String.Format("Country: {0}", String.IsNullOrWhiteSpace(CountryVal.Text) ? "Not specified" : CountryVal.Text));
             TelemetryData.AppendLine();
             TelemetryData.AppendLine("========= PC specifications =========");
-            TelemetryData.AppendLine(String.Format("Processor: {0}\nReal value: {1}\n", InstCPUVal.Text, RealCPU));
+            TelemetryData.AppendLine(String.Format("Processor: {0}\nReal value: {1}", InstCPUVal.Text, RealCPU));
             TelemetryData.AppendLine(String.Format("Installed RAM: {0}\nReal value: {1}\n", InstRAMVal.Text, RealRAM));
             TelemetryData.AppendLine(String.Format("Operating system: {0}\nReal value: {1}\n", OSVal.Text, String.Format("{0}, {1}", RealOS, RealPatch)));
             TelemetryData.AppendLine(String.Format("Graphics card: {0}\nReal value: {1}\n", InstGPUVal.Text, RealGPU));
+            TelemetryData.AppendLine(String.Format("Unique PC HWID: {0}", TelemetryExt.ParseHWID()));
             TelemetryData.AppendLine(String.Format("MAC Address: {0}", MACAddress));
             TelemetryData.AppendLine();
             TelemetryData.AppendLine("========= Sound devices list =========");
