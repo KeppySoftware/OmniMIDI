@@ -77,13 +77,13 @@ To use the driver, you need at least:
 ## Recommended system requirements for smooth Black MIDIs playback
 To use the driver, you need at least:
 - A quad-core CPU running at 2.4GHz (x86_64 compliant)
-- 4096MB of RAM
+- 4GB of RAM
 - Windows 10 with WinMM patch (Included in the driver's configurator, for easy installation)
 
 ## Minimum system requirements for driver compiling
 To compile (and test) the driver, you need:
 - Microsoft Visual Studio 2017
-- Inno Setup 5.5.6 (It's recommended to install Inno Setup Studio and the Inno Setup Pack)
+- Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - A dual-core CPU (Hyper-Threading) running at 1.0GHz (With SSE2 and CMPXCHG16b instructions support, for Microsoft Visual Studio 2017)
 - 768MB of RAM (for both soundfonts and Microsoft Visual Studio 2017)
 - Windows 7 SP1 or greater (Otherwise, no VS2017 for you)
@@ -94,11 +94,12 @@ To compile (and test) the driver, you need:
 - ASIO4ALL *(Almost everything works fine, but closing the MIDI app might get it stuck. Task Manager is required to terminate it.)*
 - FL Studio ASIO *(Almost everything works fine, but changing the buffer size from its control panel leads to a corrupted audio output. Restarting the app fixes the issue.)*
 - USB Audio ASIO Driver *(Works fine, but has more latency than local software ASIO drivers.)*
-- FlexASIO (Almost everything works fine, except the pitch of the output isn't right.)
+- FlexASIO *(Almost everything works fine, except the pitch of the output isn't right.)*
+- Voicemeeter Virtual ASIO *(Will throw a BASS_ERROR_NOTAVAIL exception but still work)*
+- JACK ASIO Driver
 ## Unsupported ASIO devices
 - ASIO2WASAPI *(Throws a BASS_ERROR_UNKNOWN exception)*
 - Realtek ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
-- Voicemeeter Virtual ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
 ## Untested ASIO devices
 - ASIO Digidesign Driver
 - ASIO Digidesign Driver Mbox2
