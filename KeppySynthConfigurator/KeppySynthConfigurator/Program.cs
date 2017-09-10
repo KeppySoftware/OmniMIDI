@@ -50,14 +50,19 @@ namespace KeppySynthConfigurator
                     break;
                 }
             }
-            if (!File.Exists("bass.dll") ||
-                !File.Exists("bassmidi.dll"))
+            if (!File.Exists(String.Format("{0}\\keppysynth\\bass.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))) ||
+                !File.Exists(String.Format("{0}\\keppysynth\\bassmidi.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))))
             {
-                MissingBASSLibs MissingBASSLib = new MissingBASSLibs("The system was unable to find the required BASS libraries");
-                MissingBASSLib.Source = "BASS libraries not found";
-                DebugToConsole(true, "Can not find BASS libraries", MissingBASSLib);
-                MessageBox.Show("Can not find the required BASS libraries for the configurator to work.\nEnsure that BASS.DLL and BASSMIDI.DLL are present in the configurator's root folder.\nIf they're not, please reinstall the synthesizer.\n\nClick OK to close the configurator.", "Keppy's Synthesizer ~ Configurator - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                return;
+                DebugToConsole(false, "Can not find BASS libraries, trying to sideload them from the local directory...", null);
+                if (!File.Exists(String.Format("bass.dll")) ||
+                    !File.Exists(String.Format("bassmidi.dll")))
+                {
+                    MissingBASSLibs MissingBASSLib = new MissingBASSLibs("The system was unable to find the required BASS libraries");
+                    MissingBASSLib.Source = "BASS libraries not found";
+                    DebugToConsole(true, "Can not find BASS libraries", MissingBASSLib);
+                    MessageBox.Show("Can not find the required BASS libraries for the configurator to work.\nEnsure that BASS.DLL and BASSMIDI.DLL are present in the configurator's root folder.\nIf they're not, please reinstall the synthesizer.\n\nClick OK to close the configurator.", "Keppy's Synthesizer ~ Configurator - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    return;
+                }
             }
             try
             {

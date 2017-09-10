@@ -164,6 +164,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.VolPanel = new System.Windows.Forms.Panel();
             this.VolLabel = new System.Windows.Forms.Label();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.KnobContext = new System.Windows.Forms.ContextMenu();
             this.FineTuningVolume = new System.Windows.Forms.MenuItem();
             this.VolSimView = new System.Windows.Forms.Label();
@@ -222,6 +223,8 @@
             this.RV14 = new System.Windows.Forms.Panel();
             this.LV14 = new System.Windows.Forms.Panel();
             this.EnginesBox = new System.Windows.Forms.GroupBox();
+            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
+            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
             this.label2 = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.AdditionalSettingsBox = new System.Windows.Forms.GroupBox();
@@ -249,6 +252,10 @@
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.SoundFontTab = new System.Windows.Forms.TabPage();
             this.Separator = new System.Windows.Forms.Label();
+            this.Lis = new KeppySynthConfigurator.ListViewEx();
+            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EL = new System.Windows.Forms.Button();
             this.LoadToApp = new System.Windows.Forms.Button();
             this.IEL = new System.Windows.Forms.Button();
@@ -290,13 +297,6 @@
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ExportPresetDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportPresetDialog = new System.Windows.Forms.OpenFileDialog();
-            this.Lis = new KeppySynthConfigurator.ListViewEx();
-            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.VolTrackBar = new KnobControl.KnobControl();
-            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
-            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1259,6 +1259,26 @@
             this.VolLabel.Text = "VOLUME:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.ContextMenu = this.KnobContext;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.ShowLargeScale = true;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(79, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.TabIndex = 5;
+            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
+            this.VolTrackBar.Value = 0;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
             // KnobContext
             // 
             this.KnobContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -2010,6 +2030,30 @@
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Engine settings";
             // 
+            // WhatIsXAudio
+            // 
+            this.WhatIsXAudio.AutoSize = true;
+            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
+            this.WhatIsXAudio.Name = "WhatIsXAudio";
+            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
+            this.WhatIsXAudio.TabIndex = 16;
+            this.WhatIsXAudio.TabStop = true;
+            this.WhatIsXAudio.Text = "Engines?";
+            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
+            // 
+            // WhatIsOutput
+            // 
+            this.WhatIsOutput.AutoSize = true;
+            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
+            this.WhatIsOutput.Name = "WhatIsOutput";
+            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
+            this.WhatIsOutput.TabIndex = 15;
+            this.WhatIsOutput.TabStop = true;
+            this.WhatIsOutput.Text = "What\'s WAV mode?";
+            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -2417,6 +2461,56 @@
             this.Separator.Size = new System.Drawing.Size(14, 20);
             this.Separator.TabIndex = 15;
             this.Separator.Text = "|";
+            // 
+            // Lis
+            // 
+            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.Lis.AllowDrop = true;
+            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Lis.BackColor = System.Drawing.Color.White;
+            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.SoundFont,
+            this.SFFormat,
+            this.SFSize});
+            this.Lis.FullRowSelect = true;
+            this.Lis.GridLines = true;
+            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.Lis.HideSelection = false;
+            this.Lis.LabelWrap = false;
+            this.Lis.LineAfter = -1;
+            this.Lis.LineBefore = -1;
+            this.Lis.Location = new System.Drawing.Point(5, 36);
+            this.Lis.Name = "Lis";
+            this.Lis.ShowGroups = false;
+            this.Lis.Size = new System.Drawing.Size(602, 341);
+            this.Lis.TabIndex = 3;
+            this.Lis.UseCompatibleStateImageBehavior = false;
+            this.Lis.View = System.Windows.Forms.View.Details;
+            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
+            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
+            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
+            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
+            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
+            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
+            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
+            // 
+            // SoundFont
+            // 
+            this.SoundFont.Text = "SoundFont";
+            this.SoundFont.Width = 393;
+            // 
+            // SFFormat
+            // 
+            this.SFFormat.Text = "Format";
+            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // SFSize
+            // 
+            this.SFSize.Text = "Size";
+            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // EL
             // 
@@ -2846,100 +2940,6 @@
             // ImportPresetDialog
             // 
             this.ImportPresetDialog.Filter = "Preset files|*.kspr";
-            // 
-            // Lis
-            // 
-            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.Lis.AllowDrop = true;
-            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Lis.BackColor = System.Drawing.Color.White;
-            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.SoundFont,
-            this.SFFormat,
-            this.SFSize});
-            this.Lis.FullRowSelect = true;
-            this.Lis.GridLines = true;
-            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.Lis.HideSelection = false;
-            this.Lis.LabelWrap = false;
-            this.Lis.LineAfter = -1;
-            this.Lis.LineBefore = -1;
-            this.Lis.Location = new System.Drawing.Point(5, 36);
-            this.Lis.Name = "Lis";
-            this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(602, 341);
-            this.Lis.TabIndex = 3;
-            this.Lis.UseCompatibleStateImageBehavior = false;
-            this.Lis.View = System.Windows.Forms.View.Details;
-            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
-            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
-            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
-            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
-            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
-            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
-            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
-            // 
-            // SoundFont
-            // 
-            this.SoundFont.Text = "SoundFont";
-            this.SoundFont.Width = 393;
-            // 
-            // SFFormat
-            // 
-            this.SFFormat.Text = "Format";
-            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SFSize
-            // 
-            this.SFSize.Text = "Size";
-            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.ContextMenu = this.KnobContext;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.ShowLargeScale = true;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(79, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.TabIndex = 5;
-            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
-            this.VolTrackBar.Value = 0;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
-            // 
-            // WhatIsXAudio
-            // 
-            this.WhatIsXAudio.AutoSize = true;
-            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
-            this.WhatIsXAudio.Name = "WhatIsXAudio";
-            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
-            this.WhatIsXAudio.TabIndex = 16;
-            this.WhatIsXAudio.TabStop = true;
-            this.WhatIsXAudio.Text = "Engines?";
-            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
-            // 
-            // WhatIsOutput
-            // 
-            this.WhatIsOutput.AutoSize = true;
-            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
-            this.WhatIsOutput.Name = "WhatIsOutput";
-            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
-            this.WhatIsOutput.TabIndex = 15;
-            this.WhatIsOutput.TabStop = true;
-            this.WhatIsOutput.Text = "What\'s WAV mode?";
-            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
             // 
             // KeppySynthConfiguratorMain
             // 

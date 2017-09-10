@@ -90,7 +90,10 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				}
 
-				if (oldbuffermode == 1) bmsyn_play_some_data();
+				if (oldbuffermode == 1) {
+					MT32SetInstruments();
+					bmsyn_play_some_data();
+				}
 				else InitializeNotesCatcherThread();
 
 				if (currentengine == 0) AudioRender();
