@@ -1082,10 +1082,12 @@ namespace KeppySynthConfigurator
         /// </summary>
         /// <param name="maskname">Set the mask name.</param>
         /// <param name="masktype">Set the mask type. 0 = FM, 1 = Generic synth, 2 = Hardware synth, 3 = MIDI Mapper, 4 = Output port, 5 = Software synth, 6 = Square wave synth</param>
-        public static void ChangeDriverMask(string maskname, int masktype)
+        public static void ChangeDriverMask(string maskname, int masktype, int vid, int pid)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", maskname, RegistryValueKind.String);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", masktype, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("vid", vid, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", pid, RegistryValueKind.DWord);
         }
 
         public static void ImportPreset()
@@ -1143,7 +1145,7 @@ namespace KeppySynthConfigurator
                             // Advanced settings here...
                             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
                             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
-                            Functions.ChangeDriverMask("Keppy's Synthesizer", 4);
+                            Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
                             // And then...
                             Functions.SaveSettings();

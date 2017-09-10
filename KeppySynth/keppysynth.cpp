@@ -8,6 +8,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
 #endif
 
+#define VC_EXTRALEAN
+
 #pragma comment(lib,"Version.lib")
 
 #include "sha256.h"
@@ -492,8 +494,8 @@ LRESULT DoDriverConfiguration() {
 	TCHAR configuratorapp[MAX_PATH];
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 	{
-		PathAppend(configuratorapp, _T("\\keppydrv\\KeppyDriverConfigurator.exe"));
-		ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
+		PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthConfigurator.exe"));
+		ShellExecute(NULL, L"open", configuratorapp, L"/AST", NULL, SW_SHOWNORMAL);
 		return DRVCNF_OK;
 	}
 	return DRVCNF_CANCEL;
@@ -524,6 +526,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		HKEY hKey;
 		long lResult;
 		int defaultmode;
+		WORD VID = 0x0000;
+		WORD PID = 0x0000;
 		CHAR SynthName[MAXPNAMELEN];
 		WCHAR SynthNameW[MAXPNAMELEN];
 		DWORD dwType = REG_DWORD;
@@ -535,6 +539,9 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
 		RegQueryValueEx(hKey, L"synthtype", NULL, &dwType, (LPBYTE)&selectedtype, &dwSize);
 		RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
+		dwType = REG_DWORD;
+		RegQueryValueEx(hKey, L"vid", NULL, &dwType, (LPBYTE)&VID, &dwSize);
+		RegQueryValueEx(hKey, L"pid", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 		dwType = REG_SZ;
 		RegQueryValueExA(hKey, "synthname", NULL, &dwType, (LPBYTE)&SynthName, &dwSizeA);
 		RegQueryValueExW(hKey, L"synthname", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
@@ -565,8 +572,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		MIDIOUTCAPS2A * myCaps2A;
 
 		MIDIOUTCAPS2W * myCaps2W;
-		WORD Mid = 0xffff;
-		WORD Pid = 0xffff;
 		WORD maximumvoices = 0xffff;
 		WORD maximumnotes = 0xffff;
 		DWORD CapsSupport = MIDICAPS_VOLUME | MIDICAPS_LRVOLUME | MIDICAPS_CACHE;
@@ -576,8 +581,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
 			myCapsA = (MIDIOUTCAPSA *)capsPtr;
-			myCapsA->wMid = Mid;
-			myCapsA->wPid = Pid;
+			myCapsA->wMid = VID;
+			myCapsA->wPid = PID;
 			memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
 			myCapsA->wVoices = maximumvoices;
 			myCapsA->wNotes = maximumnotes;
@@ -589,8 +594,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		case (sizeof(MIDIOUTCAPSW)):
 			myCapsW = (MIDIOUTCAPSW *)capsPtr;
-			myCapsW->wMid = Mid;
-			myCapsW->wPid = Pid;
+			myCapsW->wMid = VID;
+			myCapsW->wPid = PID;
 			memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
 			myCapsW->wVoices = maximumvoices;
 			myCapsW->wNotes = maximumnotes;
@@ -602,8 +607,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		case (sizeof(MIDIOUTCAPS2A)):
 			myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
-			myCaps2A->wMid = Mid;
-			myCaps2A->wPid = Pid;
+			myCaps2A->wMid = VID;
+			myCaps2A->wPid = PID;
 			memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
 			myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
 			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
@@ -618,8 +623,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		case (sizeof(MIDIOUTCAPS2W)):
 			myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
-			myCaps2W->wMid = Mid;
-			myCaps2W->wPid = Pid;
+			myCaps2W->wMid = VID;
+			myCaps2W->wPid = PID;
 			memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
 			myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
 			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
@@ -636,8 +641,8 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			try {
 				PrintToConsole(FOREGROUND_BLUE, 1, "App is not asking for specific caps. Trying to give Unicode caps...");
 				myCapsW = (MIDIOUTCAPSW *)capsPtr;
-				myCapsW->wMid = Mid;
-				myCapsW->wPid = Pid;
+				myCapsW->wMid = VID;
+				myCapsW->wPid = PID;
 				memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
 				myCapsW->wVoices = 0;
 				myCapsW->wNotes = 0;

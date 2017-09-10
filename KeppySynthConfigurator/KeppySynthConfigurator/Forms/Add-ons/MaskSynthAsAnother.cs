@@ -14,7 +14,9 @@ namespace KeppySynthConfigurator
     public partial class MaskSynthAsAnother : Form
     {
         String PreviousName = "";
-        Int32 PreviousType = 4;
+        Int32 PreviousType = 0;
+        Int32 PreviousVID = 0;
+        Int32 PreviousPID = 0;
 
         public MaskSynthAsAnother()
         {
@@ -27,8 +29,12 @@ namespace KeppySynthConfigurator
             {
                 PreviousName = KeppySynthConfiguratorMain.SynthSettings.GetValue("synthname", "Keppy's Synthesizer").ToString();
                 PreviousType = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("synthtype", 4));
+                PreviousVID = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vid", 0xFFFF));
+                PreviousPID = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("pid", 0x000A));
                 Names.Text = PreviousName;
                 SynthType.SelectedIndex = PreviousType;
+                VIDValue.Value = PreviousVID;
+                PIDValue.Value = PreviousPID;
                 Names.TextChanged += new System.EventHandler(Names_TextChanged);
             }
             catch (Exception ex)
@@ -40,6 +46,9 @@ namespace KeppySynthConfigurator
         private void CancelBtn_Click(object sender, EventArgs e)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", PreviousName, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", PreviousType, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("vid", PreviousVID, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", PreviousPID, RegistryValueKind.String);
             Close();
         }
 
@@ -72,9 +81,24 @@ namespace KeppySynthConfigurator
             }
         }
 
+        private void VIDPIDList_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://pcidatabase.com");
+        }
+
         private void SynthType_SelectedIndexChanged(object sender, EventArgs e)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SynthType.SelectedIndex, RegistryValueKind.DWord);
+        }
+
+        private void VIDValue_ValueChanged(object sender, EventArgs e)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("vid", VIDValue.Value, RegistryValueKind.DWord);
+        }
+
+        private void PIDValue_ValueChanged(object sender, EventArgs e)
+        {
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", PIDValue.Value, RegistryValueKind.DWord);
         }
 
         private void Names_TextChanged(object sender, EventArgs e)
@@ -92,6 +116,18 @@ namespace KeppySynthConfigurator
         {
             Names.Text = "Keppy's Synthesizer";
             SynthType.SelectedIndex = 4;
+            VIDValue.Value = 0xFFFF;
+            PIDValue.Value = 0x000A;
+            VIDValue_ValueChanged(sender, e);
+            PIDValue_ValueChanged(sender, e);
+        }
+    }
+
+    public partial class HexNumericUpDown : NumericUpDown
+    {
+        protected override void UpdateEditText()
+        {
+            base.Text = string.Format(@"0x{0:X4}", (Int32)base.Value);
         }
     }
 }

@@ -37,6 +37,13 @@
             this.DefName = new System.Windows.Forms.Button();
             this.SynthType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.VIDValue = new KeppySynthConfigurator.HexNumericUpDown();
+            this.PIDValue = new KeppySynthConfigurator.HexNumericUpDown();
+            this.VIDPIDList = new System.Windows.Forms.LinkLabelEx();
+            ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PIDValue)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -53,7 +60,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(94, 77);
+            this.label2.Location = new System.Drawing.Point(91, 77);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 2;
@@ -86,7 +93,7 @@
             "Windows OPL3 Synth",
             "YMF262 Synth Emulator",
             "Yamaha S-YXG50 SoftSynthesizer"});
-            this.Names.Location = new System.Drawing.Point(159, 74);
+            this.Names.Location = new System.Drawing.Point(156, 74);
             this.Names.Name = "Names";
             this.Names.Size = new System.Drawing.Size(241, 21);
             this.Names.TabIndex = 3;
@@ -95,7 +102,7 @@
             // OK
             // 
             this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OK.Location = new System.Drawing.Point(398, 147);
+            this.OK.Location = new System.Drawing.Point(398, 189);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
             this.OK.TabIndex = 4;
@@ -106,7 +113,7 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(317, 147);
+            this.CancelBtn.Location = new System.Drawing.Point(317, 189);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
             this.CancelBtn.TabIndex = 5;
@@ -119,7 +126,7 @@
             this.AddNewNamePl0x.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AddNewNamePl0x.AutoSize = true;
             this.AddNewNamePl0x.LinkColor = System.Drawing.Color.Teal;
-            this.AddNewNamePl0x.Location = new System.Drawing.Point(17, 152);
+            this.AddNewNamePl0x.Location = new System.Drawing.Point(7, 201);
             this.AddNewNamePl0x.Name = "AddNewNamePl0x";
             this.AddNewNamePl0x.Size = new System.Drawing.Size(186, 13);
             this.AddNewNamePl0x.TabIndex = 6;
@@ -130,7 +137,7 @@
             // DefName
             // 
             this.DefName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DefName.Location = new System.Drawing.Point(236, 147);
+            this.DefName.Location = new System.Drawing.Point(236, 189);
             this.DefName.Name = "DefName";
             this.DefName.Size = new System.Drawing.Size(75, 23);
             this.DefName.TabIndex = 7;
@@ -150,7 +157,7 @@
             "Output port",
             "Software synth",
             "Square wave internal synth"});
-            this.SynthType.Location = new System.Drawing.Point(159, 98);
+            this.SynthType.Location = new System.Drawing.Point(156, 98);
             this.SynthType.Name = "SynthType";
             this.SynthType.Size = new System.Drawing.Size(241, 21);
             this.SynthType.TabIndex = 9;
@@ -159,18 +166,92 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(100, 101);
+            this.label3.Location = new System.Drawing.Point(97, 101);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Mask type:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(128, 149);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "PID:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(128, 125);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(28, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "VID:";
+            // 
+            // VIDValue
+            // 
+            this.VIDValue.Hexadecimal = true;
+            this.VIDValue.Location = new System.Drawing.Point(156, 123);
+            this.VIDValue.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.VIDValue.Name = "VIDValue";
+            this.VIDValue.Size = new System.Drawing.Size(241, 20);
+            this.VIDValue.TabIndex = 13;
+            this.VIDValue.Value = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.VIDValue.ValueChanged += new System.EventHandler(this.VIDValue_ValueChanged);
+            // 
+            // PIDValue
+            // 
+            this.PIDValue.Hexadecimal = true;
+            this.PIDValue.Location = new System.Drawing.Point(156, 147);
+            this.PIDValue.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.PIDValue.Name = "PIDValue";
+            this.PIDValue.Size = new System.Drawing.Size(241, 20);
+            this.PIDValue.TabIndex = 14;
+            this.PIDValue.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.PIDValue.ValueChanged += new System.EventHandler(this.PIDValue_ValueChanged);
+            // 
+            // VIDPIDList
+            // 
+            this.VIDPIDList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.VIDPIDList.AutoSize = true;
+            this.VIDPIDList.LinkColor = System.Drawing.Color.Teal;
+            this.VIDPIDList.Location = new System.Drawing.Point(7, 185);
+            this.VIDPIDList.Name = "VIDPIDList";
+            this.VIDPIDList.Size = new System.Drawing.Size(167, 13);
+            this.VIDPIDList.TabIndex = 15;
+            this.VIDPIDList.TabStop = true;
+            this.VIDPIDList.Text = "Vendor and product IDs database";
+            this.VIDPIDList.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.VIDPIDList_LinkClicked);
             // 
             // MaskSynthAsAnother
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(485, 182);
+            this.ClientSize = new System.Drawing.Size(485, 224);
+            this.Controls.Add(this.VIDPIDList);
+            this.Controls.Add(this.PIDValue);
+            this.Controls.Add(this.VIDValue);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.SynthType);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.DefName);
@@ -189,6 +270,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Mask synthesizer as another";
             this.Load += new System.EventHandler(this.MaskSynthAsAnother_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PIDValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -205,5 +288,10 @@
         private System.Windows.Forms.Button DefName;
         private System.Windows.Forms.ComboBox SynthType;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private HexNumericUpDown VIDValue;
+        private HexNumericUpDown PIDValue;
+        private System.Windows.Forms.LinkLabelEx VIDPIDList;
     }
 }
