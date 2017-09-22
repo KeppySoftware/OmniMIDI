@@ -1457,42 +1457,8 @@ namespace KeppySynthConfigurator
 
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
-            if (SelectedList == 1)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List1Path;
-            else if (SelectedList == 2)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List2Path;
-            else if (SelectedList == 3)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List3Path;
-            else if (SelectedList == 4)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List4Path;
-            else if (SelectedList == 5)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List5Path;
-            else if (SelectedList == 6)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List6Path;
-            else if (SelectedList == 7)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List7Path;
-            else if (SelectedList == 8)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List8Path;
-            else if (SelectedList == 9)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List9Path;
-            else if (SelectedList == 10)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List10Path;
-            else if (SelectedList == 11)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List11Path;
-            else if (SelectedList == 12)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List12Path;
-            else if (SelectedList == 13)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List13Path;
-            else if (SelectedList == 14)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List14Path;
-            else if (SelectedList == 15)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List15Path;
-            else if (SelectedList == 16)
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List16Path;
-            else
-                KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.List1Path;
-
-            KeppySynthConfiguratorMain.whichone = SelectedList;
+            KeppySynthConfiguratorMain.CurrentList = KeppySynthConfiguratorMain.ListsPath[SelectedList];
+            KeppySynthConfiguratorMain.whichone = SelectedList + 1;
             String WhichList = KeppySynthConfiguratorMain.CurrentList;
 
             try
@@ -1500,13 +1466,13 @@ namespace KeppySynthConfigurator
                 if (!System.IO.Directory.Exists(KeppySynthConfiguratorMain.AbsolutePath))
                 {
                     Directory.CreateDirectory(KeppySynthConfiguratorMain.AbsolutePath);
-                    Directory.CreateDirectory(KeppySynthConfiguratorMain.ListsPath);
+                    Directory.CreateDirectory(KeppySynthConfiguratorMain.PathToAllLists);
                     File.Create(WhichList).Dispose();
                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
                 }
-                if (!System.IO.Directory.Exists(KeppySynthConfiguratorMain.ListsPath))
+                if (!System.IO.Directory.Exists(KeppySynthConfiguratorMain.PathToAllLists))
                 {
-                    Directory.CreateDirectory(KeppySynthConfiguratorMain.ListsPath);
+                    Directory.CreateDirectory(KeppySynthConfiguratorMain.PathToAllLists);
                     File.Create(WhichList).Dispose();
                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
                 }
@@ -1568,7 +1534,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
                     Functions.ShowErrorDialog(0, System.Media.SystemSounds.Question, "Information", "The soundfont list was missing, so the configurator automatically created it for you.", false, null);
                 }
-                Program.DebugToConsole(false, String.Format("Switched to soundfont list {0}.", SelectedList), null);
+                Program.DebugToConsole(false, String.Format("Switched to soundfont list {0}.", SelectedList + 1), null);
             }
             catch (Exception ex)
             {

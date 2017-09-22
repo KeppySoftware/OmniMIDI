@@ -16,24 +16,26 @@ namespace KeppySynthConfigurator
         public string LastBrowserPath { get; set; }
 
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-
-        public string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\applists";
-        public string List1Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidi.applist";
-        public string List2Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidib.applist";
-        public string List3Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidic.applist";
-        public string List4Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidid.applist";
-        public string List5Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidie.applist";
-        public string List6Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidif.applist";
-        public string List7Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidig.applist";
-        public string List8Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidih.applist";
-        public string List9Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidii.applist";
-        public string List10Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidij.applist";
-        public string List11Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidik.applist";
-        public string List12Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidil.applist";
-        public string List13Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidim.applist";
-        public string List14Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidin.applist";
-        public string List15Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidio.applist";
-        public string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidip.applist";
+        public static string PathToAllLists = soundfontnewlocation + "\\Keppy's Synthesizer\\applists";
+        public string[] ListsPath = new string[]
+        {
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidi.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidib.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidic.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidid.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidie.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidif.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidig.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidih.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidii.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidij.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidik.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidil.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidim.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidin.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidio.applist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\applists\\keppymidip.applist"
+        };
 
         public int whichone { get; set; }
 
@@ -54,34 +56,15 @@ namespace KeppySynthConfigurator
                 SelectedListBox.Items.Add("List 15");
                 SelectedListBox.Items.Add("List 16");
             }
-            else
-            {
-
-            }
-        }
-
-        private Control WhoTriggeredMe(object sender)
-        {
-            ToolStripItem menuItem = sender as ToolStripItem;
-            if (menuItem != null)
-            {
-                ContextMenuStrip owner = menuItem.Owner as ContextMenuStrip;
-                if (owner != null)
-                {
-                    Control sourceControl = owner.SourceControl; // sourceControl.Name is the shit
-                    return sourceControl;
-                }
-            }
-            return null;
         }
 
         private void ChangeList(string WhichList)
         {
             try
             {
-                if (!System.IO.Directory.Exists(ListsPath))
+                if (!System.IO.Directory.Exists(PathToAllLists))
                 {
-                    Directory.CreateDirectory(ListsPath);
+                    Directory.CreateDirectory(PathToAllLists);
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
                     return;
@@ -196,7 +179,6 @@ namespace KeppySynthConfigurator
 
         private void addAnAppToTheListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Control LeControl = WhoTriggeredMe(sender);
             AddApp.InitialDirectory = LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
@@ -213,7 +195,6 @@ namespace KeppySynthConfigurator
 
         private void addAnAppToTheListAppNameOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Control LeControl = WhoTriggeredMe(sender);
             AddApp.InitialDirectory = LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
@@ -226,114 +207,19 @@ namespace KeppySynthConfigurator
 
         private void removeSelectedAppsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Control LeControl = WhoTriggeredMe(sender);
-            RemoveAppFromList(LeControl.Name);
+            RemoveAppFromList(ListsPath[SelectedListBox.SelectedIndex]);
         }
 
         private void clearListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Control LeControl = WhoTriggeredMe(sender);
             ClearAppList();
         }
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SelectedListBox.Text == "List 1")
-            {
-                CurrentList = List1Path;
-                whichone = 1;
-                ChangeList(List1Path);
-            }
-            else if (SelectedListBox.Text == "List 2")
-            {
-                CurrentList = List2Path;
-                whichone = 2;
-                ChangeList(List2Path);
-            }
-            else if (SelectedListBox.Text == "List 3")
-            {
-                CurrentList = List3Path;
-                whichone = 3;
-                ChangeList(List3Path);
-            }
-            else if (SelectedListBox.Text == "List 4")
-            {
-                CurrentList = List4Path;
-                whichone = 4;
-                ChangeList(List4Path);
-            }
-            else if (SelectedListBox.Text == "List 5")
-            {
-                CurrentList = List5Path;
-                whichone = 5;
-                ChangeList(List5Path);
-            }
-            else if (SelectedListBox.Text == "List 6")
-            {
-                CurrentList = List6Path;
-                whichone = 6;
-                ChangeList(List6Path);
-            }
-            else if (SelectedListBox.Text == "List 7")
-            {
-                CurrentList = List7Path;
-                whichone = 7;
-                ChangeList(List7Path);
-            }
-            else if (SelectedListBox.Text == "List 8")
-            {
-                CurrentList = List8Path;
-                whichone = 8;
-                ChangeList(List8Path);
-            }
-            else if (SelectedListBox.Text == "List 9")
-            {
-                CurrentList = List9Path;
-                whichone = 9;
-                ChangeList(List9Path);
-            }
-            else if (SelectedListBox.Text == "List 10")
-            {
-                CurrentList = List10Path;
-                whichone = 10;
-                ChangeList(List10Path);
-            }
-            else if (SelectedListBox.Text == "List 11")
-            {
-                CurrentList = List11Path;
-                whichone = 11;
-                ChangeList(List11Path);
-            }
-            else if (SelectedListBox.Text == "List 12")
-            {
-                CurrentList = List12Path;
-                whichone = 12;
-                ChangeList(List12Path);
-            }
-            else if (SelectedListBox.Text == "List 13")
-            {
-                CurrentList = List13Path;
-                whichone = 13;
-                ChangeList(List13Path);
-            }
-            else if (SelectedListBox.Text == "List 14")
-            {
-                CurrentList = List14Path;
-                whichone = 14;
-                ChangeList(List14Path);
-            }
-            else if (SelectedListBox.Text == "List 15")
-            {
-                CurrentList = List15Path;
-                whichone = 15;
-                ChangeList(List15Path);
-            }
-            else if (SelectedListBox.Text == "List 16")
-            {
-                CurrentList = List16Path;
-                whichone = 16;
-                ChangeList(List16Path);
-            }
+            CurrentList = ListsPath[SelectedListBox.SelectedIndex];
+            whichone = SelectedListBox.SelectedIndex + 1;
+            ChangeList(CurrentList);
         }
     }
 }

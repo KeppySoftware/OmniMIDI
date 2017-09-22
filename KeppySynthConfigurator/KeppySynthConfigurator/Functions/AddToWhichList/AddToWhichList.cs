@@ -39,40 +39,7 @@ namespace KeppySynthConfigurator
 
         private void AddToList_Click(object sender, EventArgs e)
         {
-            if (ListSel.SelectedIndex == 0)
-                AddToFollowingList = KeppySynthConfiguratorMain.List1Path;
-            else if (ListSel.SelectedIndex == 1)
-                AddToFollowingList = KeppySynthConfiguratorMain.List2Path;
-            else if (ListSel.SelectedIndex == 2)
-                AddToFollowingList = KeppySynthConfiguratorMain.List3Path;
-            else if (ListSel.SelectedIndex == 3)
-                AddToFollowingList = KeppySynthConfiguratorMain.List4Path;
-            else if (ListSel.SelectedIndex == 4)
-                AddToFollowingList = KeppySynthConfiguratorMain.List5Path;
-            else if (ListSel.SelectedIndex == 5)
-                AddToFollowingList = KeppySynthConfiguratorMain.List6Path;
-            else if (ListSel.SelectedIndex == 6)
-                AddToFollowingList = KeppySynthConfiguratorMain.List7Path;
-            else if (ListSel.SelectedIndex == 7)
-                AddToFollowingList = KeppySynthConfiguratorMain.List8Path;
-            else if (ListSel.SelectedIndex == 8)
-                AddToFollowingList = KeppySynthConfiguratorMain.List9Path;
-            else if (ListSel.SelectedIndex == 9)
-                AddToFollowingList = KeppySynthConfiguratorMain.List10Path;
-            else if (ListSel.SelectedIndex == 10)
-                AddToFollowingList = KeppySynthConfiguratorMain.List11Path;
-            else if (ListSel.SelectedIndex == 11)
-                AddToFollowingList = KeppySynthConfiguratorMain.List12Path;
-            else if (ListSel.SelectedIndex == 12)
-                AddToFollowingList = KeppySynthConfiguratorMain.List13Path;
-            else if (ListSel.SelectedIndex == 13)
-                AddToFollowingList = KeppySynthConfiguratorMain.List14Path;
-            else if (ListSel.SelectedIndex == 14)
-                AddToFollowingList = KeppySynthConfiguratorMain.List15Path;
-            else if (ListSel.SelectedIndex == 15)
-                AddToFollowingList = KeppySynthConfiguratorMain.List16Path;
-            else
-                AddToFollowingList = KeppySynthConfiguratorMain.List1Path;
+            AddToFollowingList = KeppySynthConfiguratorMain.ListsPath[ListSel.SelectedIndex];
 
             Index = ListSel.SelectedIndex;
 

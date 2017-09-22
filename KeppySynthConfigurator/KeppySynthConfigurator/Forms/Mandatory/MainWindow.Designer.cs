@@ -2779,7 +2779,7 @@
             // 
             this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(491, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(460, 17);
             this.StatusLabel.Spring = true;
             this.StatusLabel.Text = "Error.";
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

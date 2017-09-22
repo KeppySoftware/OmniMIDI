@@ -54,27 +54,29 @@ namespace KeppySynthConfigurator
         // Buffer stuff
         public int CurrentIndexFreq { get; set; }
 
-        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE");
-
-        public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
-        public static string ListsPath = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
-        public static string List1Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidi.sflist";
-        public static string List2Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidib.sflist";
-        public static string List3Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidic.sflist";
-        public static string List4Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidid.sflist";
-        public static string List5Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidie.sflist";
-        public static string List6Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidif.sflist";
-        public static string List7Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidig.sflist";
-        public static string List8Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidih.sflist";
-        public static string List9Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidii.sflist";
-        public static string List10Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidij.sflist";
-        public static string List11Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidik.sflist";
-        public static string List12Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidil.sflist";
-        public static string List13Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidim.sflist";
-        public static string List14Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidin.sflist";
-        public static string List15Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidio.sflist";
-        public static string List16Path = soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist";
         // Lists
+        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE");
+        public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
+        public static string PathToAllLists = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
+        public static string[] ListsPath = new string[]
+        {
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidi.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidib.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidic.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidid.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidie.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidif.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidig.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidih.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidii.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidij.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidik.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidil.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidim.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidin.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidio.sflist",
+            soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidip.sflist"
+        };
 
         // Work
         public static string StatusTemplate = "Last message: {0}";
@@ -231,7 +233,7 @@ namespace KeppySynthConfigurator
                 TabsForTheControls.TabPages[1].ImageIndex = 1;
 
                 KeppySynthConfiguratorMain.whichone = 1;
-                SelectedListBox.Text = "List 1";
+                SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
                 Functions.InitializeLastPath();
 
                 InitializeVolumeLabelFont();
@@ -889,7 +891,9 @@ namespace KeppySynthConfigurator
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.ChangeList(SelectedListBox.SelectedIndex + 1);
+            Functions.ChangeList(SelectedListBox.SelectedIndex);
+            Properties.Settings.Default.LastListSelected = SelectedListBox.SelectedIndex;
+            Properties.Settings.Default.Save();
         }
 
         private void Lis_DragDrop(object sender, DragEventArgs e)
@@ -1947,6 +1951,7 @@ namespace KeppySynthConfigurator
                 VersionLabel.Click -= CheckUpdatesStartUp;
 
                 UpdateStatus.Image = Properties.Resources.ReloadIcon;
+                informationAboutTheDriverToolStripMenuItem.Enabled = false;
                 UpdateStatus.Enabled = false;
                 VersionLabel.Enabled = false;
                 IsInternetAvailable = false;
@@ -1961,6 +1966,7 @@ namespace KeppySynthConfigurator
                 VersionLabel.Click += openUpdaterToolStripMenuItem_Click;
 
                 UpdateStatus.Image = Properties.Resources.dlready;
+                informationAboutTheDriverToolStripMenuItem.Enabled = true;
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
                 IsInternetAvailable = true;
@@ -1972,6 +1978,7 @@ namespace KeppySynthConfigurator
                 VersionLabel.Click += CheckUpdatesStartUp;
 
                 UpdateStatus.Image = Properties.Resources.dlnope;
+                informationAboutTheDriverToolStripMenuItem.Enabled = true;
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
                 IsInternetAvailable = true;
@@ -1979,6 +1986,7 @@ namespace KeppySynthConfigurator
             });
             else this.Invoke((MethodInvoker)delegate {
                 UpdateStatus.Image = Properties.Resources.ClearIcon;
+                informationAboutTheDriverToolStripMenuItem.Enabled = false;
                 UpdateStatus.Enabled = false;
                 VersionLabel.Enabled = false;
                 IsInternetAvailable = false;
