@@ -279,7 +279,7 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
-            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusDoneOr = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.UpdateStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -290,6 +290,7 @@
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ExportPresetDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportPresetDialog = new System.Windows.Forms.OpenFileDialog();
+            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Lis = new KeppySynthConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -2763,6 +2764,7 @@
             // 
             this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusLabel,
+            this.Status,
             this.StatusDoneOr,
             this.toolStripStatusLabel2,
             this.UpdateStatus,
@@ -2775,14 +2777,14 @@
             this.StatusStrip.TabIndex = 33;
             this.StatusStrip.Text = "StatusStripperino";
             // 
-            // StatusLabel
+            // Status
             // 
-            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(460, 17);
-            this.StatusLabel.Spring = true;
-            this.StatusLabel.Text = "Error.";
-            this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Status.Name = "Status";
+            this.Status.Size = new System.Drawing.Size(416, 17);
+            this.Status.Spring = true;
+            this.Status.Text = "Error.";
+            this.Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusDoneOr
             // 
@@ -2846,6 +2848,13 @@
             // ImportPresetDialog
             // 
             this.ImportPresetDialog.Filter = "Preset files|*.kspr";
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(75, 17);
+            this.StatusLabel.Text = "Last message:";
             // 
             // Lis
             // 
@@ -3159,7 +3168,7 @@
         private System.Windows.Forms.MenuItem menuItem15;
         private System.Windows.Forms.MenuItem menuItem12;
         private System.Windows.Forms.StatusStrip StatusStrip;
-        public System.Windows.Forms.ToolStripStatusLabel StatusLabel;
+        public System.Windows.Forms.ToolStripStatusLabel Status;
         public System.Windows.Forms.ToolStripStatusLabel StatusDoneOr;
         private System.Windows.Forms.ToolStripStatusLabel VersionLabel;
         private System.Windows.Forms.Label VolLabel;
@@ -3258,6 +3267,7 @@
         private System.Windows.Forms.LinkLabelEx WhatIsOutput;
         private System.Windows.Forms.Button ChangeMask;
         public System.Windows.Forms.MenuItem LiveChangesTrigger;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
     }
 }
 

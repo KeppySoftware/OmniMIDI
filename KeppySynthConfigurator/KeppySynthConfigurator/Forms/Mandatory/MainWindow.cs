@@ -79,7 +79,7 @@ namespace KeppySynthConfigurator
         };
 
         // Work
-        public static string StatusTemplate = "Last message: {0}";
+        public static string StatusTemplate = "{0}";
         public static List<string> tempList = new List<string> { };
         public static int greenfade = 0;
         public static int openadvanced { get; set; }

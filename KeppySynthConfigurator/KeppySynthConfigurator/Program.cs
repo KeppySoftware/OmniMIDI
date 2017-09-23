@@ -97,7 +97,7 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                KeppySynthConfiguratorMain.Delegate.StatusLabel.Text = String.Format(KeppySynthConfiguratorMain.StatusTemplate, message).Truncate(90);
+                KeppySynthConfiguratorMain.Delegate.Status.Text = String.Format(KeppySynthConfiguratorMain.StatusTemplate, message).Truncate(90);
                 if (isException)
                 {
                     KeppySynthConfiguratorMain.Delegate.StatusDoneOr.Text = "Exception";

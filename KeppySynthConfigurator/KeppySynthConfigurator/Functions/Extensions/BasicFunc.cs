@@ -1135,6 +1135,8 @@ namespace KeppySynthConfigurator
                             // Driver mask
                             else if (SettingName(x) == "SynthName") KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", SettingValue(x), RegistryValueKind.String);
                             else if (SettingName(x) == "SynthType") KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "VID") KeppySynthConfiguratorMain.SynthSettings.SetValue("vid", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "PID") KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", SettingValue(x), RegistryValueKind.DWord);
                         }
                         catch (Exception ex) {
                             Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Error", "Invalid preset!", false, ex);
@@ -1194,26 +1196,28 @@ namespace KeppySynthConfigurator
                     SettingsToText.AppendLine(String.Format("Volume = {0}", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value));
                     SettingsToText.AppendLine();
                     SettingsToText.AppendLine("// Advanced audio settings");
-                    SettingsToText.AppendLine(String.Format("AudioDepth = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit")));
-                    SettingsToText.AppendLine(String.Format("FadeOutDisable = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable")));
-                    SettingsToText.AppendLine(String.Format("MonoRendering = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering")));
-                    SettingsToText.AppendLine(String.Format("SlowdownPlayback = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu")));
+                    SettingsToText.AppendLine(String.Format("AudioDepth = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)));
+                    SettingsToText.AppendLine(String.Format("FadeOutDisable = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)));
+                    SettingsToText.AppendLine(String.Format("MonoRendering = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)));
+                    SettingsToText.AppendLine(String.Format("SlowdownPlayback = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)));
                     SettingsToText.AppendLine();
                     SettingsToText.AppendLine("// MIDI events parser settings");
-                    SettingsToText.AppendLine(String.Format("CapFramerate = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("capframerate")));
-                    SettingsToText.AppendLine(String.Format("EVBufferByRAM = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram")));
-                    SettingsToText.AppendLine(String.Format("EVBufferRatio = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffratio")));
-                    SettingsToText.AppendLine(String.Format("EVBufferSize = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffsize")));
-                    SettingsToText.AppendLine(String.Format("FullVelocityMode = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity")));
-                    SettingsToText.AppendLine(String.Format("IgnoreAllNotes = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("allnotesignore")));
-                    SettingsToText.AppendLine(String.Format("IgnoreNotes = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1")));
-                    SettingsToText.AppendLine(String.Format("Limit88 = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("limit88")));
-                    SettingsToText.AppendLine(String.Format("MT32Mode = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("mt32mode")));
-                    SettingsToText.AppendLine(String.Format("SysExIgnore = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore")));
+                    SettingsToText.AppendLine(String.Format("CapFramerate = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("capframerate", 0)));
+                    SettingsToText.AppendLine(String.Format("EVBufferByRAM = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram", 0)));
+                    SettingsToText.AppendLine(String.Format("EVBufferRatio = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffratio", 1)));
+                    SettingsToText.AppendLine(String.Format("EVBufferSize = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffsize", 16384)));
+                    SettingsToText.AppendLine(String.Format("FullVelocityMode = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)));
+                    SettingsToText.AppendLine(String.Format("IgnoreAllNotes = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("allnotesignore", 0)));
+                    SettingsToText.AppendLine(String.Format("IgnoreNotes = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1", 1)));
+                    SettingsToText.AppendLine(String.Format("Limit88 = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("limit88", 0)));
+                    SettingsToText.AppendLine(String.Format("MT32Mode = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("mt32mode", 0)));
+                    SettingsToText.AppendLine(String.Format("SysExIgnore = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)));
                     SettingsToText.AppendLine();
                     SettingsToText.AppendLine("// Driver mask");
-                    SettingsToText.AppendLine(String.Format("SynthName = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("synthname")));
-                    SettingsToText.AppendLine(String.Format("SynthType = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("synthtype")));
+                    SettingsToText.AppendLine(String.Format("SynthName = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("synthname", "Keppy's Synthesizer")));
+                    SettingsToText.AppendLine(String.Format("SynthType = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("synthtype", 4)));
+                    SettingsToText.AppendLine(String.Format("VID = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("vid", 0xFFFF)));
+                    SettingsToText.AppendLine(String.Format("PID = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("pid", 0x000A)));
 
                     File.WriteAllText(KeppySynthConfiguratorMain.Delegate.ExportPresetDialog.FileName, SettingsToText.ToString());
 
