@@ -4,6 +4,7 @@ adobe audition cc.exe
 adobe premiere pro.exe
 adobe qt32 server.exe
 adobeupdateservice.exe
+aeadisrv.exe
 aertsr64.exe
 afterfx.exe
 agr32svc.exe
@@ -28,6 +29,7 @@ camtasiastudio.exe
 camupdater.exe
 ccc.exe
 cemu.exe
+chgbmode.exe
 citra.exe
 citraqt.exe
 compil32.exe
@@ -49,6 +51,7 @@ dreamweaver.exe
 easyhooksvc.exe
 easyhooksvc32.exe
 easyhooksvc64.exe
+evteng.exe
 explorer.exe
 firefox.exe
 fontdrvhost.exe
@@ -64,12 +67,16 @@ hamachi-2-ui.exe
 hamachi-2.exe
 hamachi-ui.exe
 hamachi.exe
+hkcmd.exe
+hkeyapp.exe
 hl2.exe
 hwinfo64.exe
 hwinfomonitor.exe
 iclouddrive.exe
 icloudphotos.exe
 icloudservices.exe
+ifrmewrk.exe
+igfxtray.exe
 imgburn.exe
 ipodservice.exe
 ipoverusbsvc.exe
@@ -137,6 +144,7 @@ ravbg64.exe
 ravcpl.exe
 ravcpl32.exe
 ravcpl64.exe
+regsrvc.exe
 rthdcpl.exe
 rustclient.exe
 samp.exe
@@ -160,6 +168,7 @@ sndvol.exe
 sndvol32.exe
 softube plug-ins control (x64).exe
 softube plug-ins control.exe
+soundmax.exe
 spoolsv.exe
 stdrt.exe
 steam.exe
@@ -200,6 +209,8 @@ wallpaper32.exe
 wallpaper64.exe
 wininit.exe
 winlogon.exe
+wisptis.exe
+wlanext.exe
 wuauclt.exe
 wudfhost.exe
 xboxstat.exe
