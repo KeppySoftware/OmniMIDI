@@ -232,6 +232,7 @@
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.Button();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.Button();
             this.OutputSettingsBox = new System.Windows.Forms.GroupBox();
+            this.ChangeFromWindows = new System.Windows.Forms.LinkLabel();
             this.StatusBuf = new System.Windows.Forms.PictureBox();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
@@ -279,6 +280,7 @@
             this.chiptunesRetrogamingToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.SavedLabel = new System.Windows.Forms.Timer(this.components);
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
+            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusDoneOr = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -290,7 +292,6 @@
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ExportPresetDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportPresetDialog = new System.Windows.Forms.OpenFileDialog();
-            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Lis = new KeppySynthConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1191,14 +1192,14 @@
             this.Settings.Controls.Add(this.SynthSettingsBox);
             this.Settings.Location = new System.Drawing.Point(4, 23);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(643, 395);
+            this.Settings.Size = new System.Drawing.Size(643, 310);
             this.Settings.TabIndex = 4;
             this.Settings.Text = "Settings";
             // 
             // ExportPres
             // 
             this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExportPres.Location = new System.Drawing.Point(210, 363);
+            this.ExportPres.Location = new System.Drawing.Point(210, 278);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(58, 23);
             this.ExportPres.TabIndex = 50;
@@ -1211,7 +1212,7 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(137, 363);
+            this.SeparatorPres.Location = new System.Drawing.Point(137, 278);
             this.SeparatorPres.Name = "SeparatorPres";
             this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
             this.SeparatorPres.TabIndex = 49;
@@ -1220,7 +1221,7 @@
             // ImportPres
             // 
             this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ImportPres.Location = new System.Drawing.Point(149, 363);
+            this.ImportPres.Location = new System.Drawing.Point(149, 278);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(58, 23);
             this.ImportPres.TabIndex = 48;
@@ -1232,7 +1233,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 368);
+            this.label3.Location = new System.Drawing.Point(11, 283);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 47;
@@ -2087,7 +2088,7 @@
             // SettingsPresetsBtn
             // 
             this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SettingsPresetsBtn.Location = new System.Drawing.Point(56, 363);
+            this.SettingsPresetsBtn.Location = new System.Drawing.Point(56, 278);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(82, 23);
             this.SettingsPresetsBtn.TabIndex = 21;
@@ -2098,7 +2099,7 @@
             // resetToDefaultToolStripMenuItem
             // 
             this.resetToDefaultToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(444, 363);
+            this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(444, 278);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.resetToDefaultToolStripMenuItem.TabIndex = 22;
@@ -2110,7 +2111,7 @@
             // 
             this.applySettingsToolStripMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.applySettingsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 363);
+            this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(542, 278);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(92, 23);
             this.applySettingsToolStripMenuItem.TabIndex = 23;
@@ -2124,6 +2125,7 @@
             this.OutputSettingsBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputSettingsBox.BackColor = System.Drawing.Color.Transparent;
+            this.OutputSettingsBox.Controls.Add(this.ChangeFromWindows);
             this.OutputSettingsBox.Controls.Add(this.StatusBuf);
             this.OutputSettingsBox.Controls.Add(this.DrvHzLabel);
             this.OutputSettingsBox.Controls.Add(this.Frequency);
@@ -2137,6 +2139,19 @@
             this.OutputSettingsBox.TabIndex = 3;
             this.OutputSettingsBox.TabStop = false;
             this.OutputSettingsBox.Text = "Audio output settings";
+            // 
+            // ChangeFromWindows
+            // 
+            this.ChangeFromWindows.AutoSize = true;
+            this.ChangeFromWindows.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ChangeFromWindows.Location = new System.Drawing.Point(336, 58);
+            this.ChangeFromWindows.Name = "ChangeFromWindows";
+            this.ChangeFromWindows.Size = new System.Drawing.Size(217, 13);
+            this.ChangeFromWindows.TabIndex = 39;
+            this.ChangeFromWindows.TabStop = true;
+            this.ChangeFromWindows.Text = "Change it from the Windows audio settings >";
+            this.ChangeFromWindows.Visible = false;
+            this.ChangeFromWindows.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeFromWindows_LinkClicked);
             // 
             // StatusBuf
             // 
@@ -2404,7 +2419,7 @@
             this.SoundFontTab.Location = new System.Drawing.Point(4, 23);
             this.SoundFontTab.Name = "SoundFontTab";
             this.SoundFontTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SoundFontTab.Size = new System.Drawing.Size(643, 395);
+            this.SoundFontTab.Size = new System.Drawing.Size(643, 394);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
             // 
@@ -2427,7 +2442,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(613, 347);
+            this.EL.Location = new System.Drawing.Point(613, 346);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 13;
@@ -2463,7 +2478,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(613, 318);
+            this.IEL.Location = new System.Drawing.Point(613, 317);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 12;
@@ -2555,7 +2570,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(2, 380);
+            this.ListOverride.Location = new System.Drawing.Point(2, 379);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 14;
@@ -2666,7 +2681,7 @@
             this.TabsForTheControls.Location = new System.Drawing.Point(0, 0);
             this.TabsForTheControls.Name = "TabsForTheControls";
             this.TabsForTheControls.SelectedIndex = 0;
-            this.TabsForTheControls.Size = new System.Drawing.Size(651, 422);
+            this.TabsForTheControls.Size = new System.Drawing.Size(651, 421);
             this.TabsForTheControls.TabIndex = 0;
             // 
             // TabImgs
@@ -2777,6 +2792,13 @@
             this.StatusStrip.TabIndex = 33;
             this.StatusStrip.Text = "StatusStripperino";
             // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(75, 17);
+            this.StatusLabel.Text = "Last message:";
+            // 
             // Status
             // 
             this.Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2849,13 +2871,6 @@
             // 
             this.ImportPresetDialog.Filter = "Preset files|*.kspr";
             // 
-            // StatusLabel
-            // 
-            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(75, 17);
-            this.StatusLabel.Text = "Last message:";
-            // 
             // Lis
             // 
             this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -2879,7 +2894,7 @@
             this.Lis.Location = new System.Drawing.Point(5, 36);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(602, 341);
+            this.Lis.Size = new System.Drawing.Size(602, 340);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -3268,6 +3283,7 @@
         private System.Windows.Forms.Button ChangeMask;
         public System.Windows.Forms.MenuItem LiveChangesTrigger;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
+        private System.Windows.Forms.LinkLabel ChangeFromWindows;
     }
 }
 

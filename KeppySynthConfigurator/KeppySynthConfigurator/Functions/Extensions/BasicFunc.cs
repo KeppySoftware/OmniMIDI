@@ -1306,6 +1306,31 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static void OpenAdvancedAudioSettings(String TabToOpen, String ErrorNoWork)
+        {
+            try
+            {
+                BASS_DEVICEINFO info = new BASS_DEVICEINFO();
+                String DeviceID = "0";
+                Bass.BASS_GetDeviceInfo(0, info);
+                for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
+                {
+                    if (info.IsDefault == true)
+                    {
+                        DeviceID = info.driver;
+                        break;
+                    }
+                }
+                Process.Start(
+                    @"C:\Windows\System32\rundll32.exe",
+                    String.Format(@"C:\Windows\System32\shell32.dll,Control_RunDLL C:\Windows\System32\mmsys.cpl ms-mmsys:,{0},{1}", DeviceID, TabToOpen));
+            }
+            catch
+            {
+                MessageBox.Show(ErrorNoWork, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public static void ButtonStatus(Boolean Status)
         {
             KeppySynthConfiguratorMain.Delegate.RTPrio.Enabled = Status;

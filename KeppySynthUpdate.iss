@@ -10,7 +10,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthUpdate"
 #define ProductName "Keppy's Synthesizer"
-#define Version '4.4.2.1'
+#define Version '4.4.2.2'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -267,3 +267,6 @@ Filename: "http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesize
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
 ExitSetupMessage=The MIDI driver hasn't been installed yet.%n%nAre you sure you want to quit?
 SetupWindowTitle=Setup - %1 {#Version}
+EntryAbortRetryIgnore=Click Retry to try again, Ignore to proceed anyway, or Abort to cancel installation.%n%nIf after retrying, the Setup is still unable to replace the file, please use the full installer.
+FileAbortRetryIgnore2=Click Retry to try again, Ignore to proceed anyway (not recommended), or Abort to cancel installation.%n%nIf after retrying, the Setup is still unable to replace the file, please use the full installer.
+FileAbortRetryIgnore=Click Retry to try again, Ignore to skip this file (not recommended), or Abort to cancel installation.%n%nIf after retrying, the Setup is still unable to replace the file, please use the full installer.
