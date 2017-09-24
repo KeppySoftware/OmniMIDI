@@ -619,5 +619,10 @@ namespace KeppySynthMixerWindow
                 VolumeCheck.Interval = 50;
             }
         }
+
+        private void OInst_Click(object sender, EventArgs e)
+        {
+            new OverrideInstruments().ShowDialog();
+        }
     }
 }

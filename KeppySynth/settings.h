@@ -692,6 +692,20 @@ void realtime_load_settings()
 	}
 }
 
+void LoadCustomInstruments() {
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\ChanOverride", 0, KEY_ALL_ACCESS, &hKey);
+	RegQueryValueEx(hKey, L"overrideinstruments", NULL, &dwType, (LPBYTE)&overrideinstruments, &dwSize);
+	for (int i = 0; i <= 15; ++i) {
+		RegQueryValueEx(hKey, cbankname[i], NULL, &dwType, (LPBYTE)&cbank[i], &dwSize);
+		RegQueryValueEx(hKey, cpresetname[i], NULL, &dwType, (LPBYTE)&cpreset[i], &dwSize);
+	}
+	RegCloseKey(hKey);
+}
+
 void Panic() {
 	//Panic system
 	if (autopanic == 1) {

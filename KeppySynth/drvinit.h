@@ -21,6 +21,14 @@ void MT32SetInstruments() {
 		BASS_MIDI_StreamEvent(KSStream, 14, MIDI_EVENT_PROGRAM, 0);
 		BASS_MIDI_StreamEvent(KSStream, 15, MIDI_EVENT_PROGRAM, 0);
 	}
+	else {
+		if (overrideinstruments == 1) {
+			for (int i = 0; i <= 15; ++i) {
+				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_BANK, cbank[i]);
+				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
+			}
+		}
+	}
 }
 
 DWORD WINAPI notescatcher(LPVOID lpV) {

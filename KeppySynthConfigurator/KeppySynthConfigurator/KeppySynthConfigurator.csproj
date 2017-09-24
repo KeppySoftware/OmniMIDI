@@ -158,10 +158,10 @@
     <Compile Include="Forms\Mandatory\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Add-ons\BankNPresetSel.cs">
+    <Compile Include="Forms\Mandatory\BankNPresetSel.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Add-ons\BankNPresetSel.Designer.cs">
+    <Compile Include="Forms\Mandatory\BankNPresetSel.Designer.cs">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Add-ons\DefaultSFList.cs">
@@ -329,7 +329,7 @@
     <EmbeddedResource Include="Forms\Mandatory\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Add-ons\BankNPresetSel.resx">
+    <EmbeddedResource Include="Forms\Mandatory\BankNPresetSel.resx">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\DefaultSFList.resx">

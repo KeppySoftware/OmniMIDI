@@ -101,6 +101,7 @@ static int nofloat = 1;					// Enable or disable the float engine
 static int nofx = 0;					// Enable or disable FXs
 static int noteoff1 = 0;				// Note cut INT
 static int oldbuffermode = 0;			// For old-ass PCs
+static int overrideinstruments = 0;		// Override channel instruments
 static int pitchshift = 127;			// Pitch shift
 static int preload = 0;					// Soundfont preloading
 static int rco = 0;						// Reduce CPU overhead
@@ -149,6 +150,12 @@ static LPCWSTR cnames[16] =
 	L"ch9", L"ch10", L"ch11", L"ch12", L"ch13", L"ch14", L"ch15", L"ch16"
 };
 
+static int cvvalues[16] =
+{
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0
+};
+
 // Channels voices
 static LPCWSTR cvnames[16] =
 {
@@ -156,10 +163,29 @@ static LPCWSTR cvnames[16] =
 	L"chv9", L"chv10", L"chv11", L"chv12", L"chv13", L"chv14", L"chv15", L"chv16"
 };
 
-static int cvvalues[16] =
+// Channels instruments/banks
+static LPCWSTR cbankname[16] =
 {
-	0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0
+	L"bc1", L"bc2", L"bc3", L"bc4", L"bc5", L"bc6", L"bc7", L"bc8",
+	L"bc9", L"bcd", L"bc11", L"bc12", L"bc13", L"bc14", L"bc15", L"bc16"
+};
+
+static LPCWSTR cpresetname[16] =
+{
+	L"pc1", L"pc2", L"pc3", L"pc4", L"pc5", L"pc6", L"pc7", L"pc8",
+	L"pc9", L"pcd", L"pc11", L"pc12", L"pc13", L"pc14", L"pc15", L"pc16"
+};
+
+static int cbank[16] =
+{
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0
+};
+
+static int cpreset[16] =
+{
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0
 };
 
 static int selectedtype = 4;

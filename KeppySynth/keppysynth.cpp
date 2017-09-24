@@ -721,6 +721,7 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 				start1 = clock();
 				keepstreamsalive(opend);
 				debug_info();
+				LoadCustomInstruments();
 				keybindings();
 				CheckVolume();
 				Sleep(10);

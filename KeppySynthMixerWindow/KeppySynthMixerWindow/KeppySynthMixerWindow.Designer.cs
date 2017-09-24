@@ -137,6 +137,8 @@
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.CheckIfXAudio = new System.Windows.Forms.Timer(this.components);
+            this.OInst = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -1223,6 +1225,8 @@
             // 
             this.menuItem3.Index = 1;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.OInst,
+            this.menuItem7,
             this.menuItem8,
             this.menuItem9,
             this.VolumeMonitor,
@@ -1235,7 +1239,7 @@
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 0;
+            this.menuItem8.Index = 2;
             this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ClassicTheme,
             this.DarkTheme,
@@ -1265,44 +1269,44 @@
             // 
             // menuItem9
             // 
-            this.menuItem9.Index = 1;
+            this.menuItem9.Index = 3;
             this.menuItem9.Text = "-";
             // 
             // VolumeMonitor
             // 
-            this.VolumeMonitor.Index = 2;
+            this.VolumeMonitor.Index = 4;
             this.VolumeMonitor.Shortcut = System.Windows.Forms.Shortcut.F10;
             this.VolumeMonitor.Text = "Enable volume monitoring";
             this.VolumeMonitor.Click += new System.EventHandler(this.VolumeMonitor_Click);
             // 
             // menuItem5
             // 
-            this.menuItem5.Index = 3;
+            this.menuItem5.Index = 5;
             this.menuItem5.Shortcut = System.Windows.Forms.Shortcut.F11;
             this.menuItem5.Text = "Enable volume boost";
             this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
             // 
             // ReduceDelayVol
             // 
-            this.ReduceDelayVol.Index = 4;
+            this.ReduceDelayVol.Index = 6;
             this.ReduceDelayVol.Text = "Reduce volume check delay";
             this.ReduceDelayVol.Click += new System.EventHandler(this.ReduceDelayVol_Click);
             // 
             // menuItem4
             // 
-            this.menuItem4.Index = 5;
+            this.menuItem4.Index = 7;
             this.menuItem4.Text = "-";
             // 
             // resetToDefaultToolStripMenuItem
             // 
-            this.resetToDefaultToolStripMenuItem.Index = 6;
+            this.resetToDefaultToolStripMenuItem.Index = 8;
             this.resetToDefaultToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
             this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
             this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
             // 
             // muteToolStripMenuItem
             // 
-            this.muteToolStripMenuItem.Index = 7;
+            this.muteToolStripMenuItem.Index = 9;
             this.muteToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlM;
             this.muteToolStripMenuItem.Text = "Mute";
             this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
@@ -1312,6 +1316,17 @@
             this.CheckIfXAudio.Enabled = true;
             this.CheckIfXAudio.Interval = 10;
             this.CheckIfXAudio.Tick += new System.EventHandler(this.CheckIfXAudio_Tick);
+            // 
+            // OInst
+            // 
+            this.OInst.Index = 0;
+            this.OInst.Text = "Override instruments";
+            this.OInst.Click += new System.EventHandler(this.OInst_Click);
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 1;
+            this.menuItem7.Text = "-";
             // 
             // KeppySynthMixerWindow
             // 
@@ -1495,6 +1510,8 @@
         private System.Windows.Forms.MenuItem ItsThe80sTheme;
         private System.Windows.Forms.MenuItem ReduceDelayVol;
         public System.Windows.Forms.Label VolLevel;
+        private System.Windows.Forms.MenuItem OInst;
+        private System.Windows.Forms.MenuItem menuItem7;
     }
 }
 
