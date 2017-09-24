@@ -116,6 +116,15 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.MT32IsEnabled = new System.Windows.Forms.Label();
             this.CheckMT32 = new System.Windows.Forms.Timer(this.components);
+            this.ImportConfig = new System.Windows.Forms.Button();
+            this.ExportConfig = new System.Windows.Forms.Button();
+            this.SetBCAll = new System.Windows.Forms.NumericUpDown();
+            this.label49 = new System.Windows.Forms.Label();
+            this.SetPCAll = new System.Windows.Forms.NumericUpDown();
+            this.label50 = new System.Windows.Forms.Label();
+            this.ControlsBox = new System.Windows.Forms.GroupBox();
+            this.ExportDialog = new System.Windows.Forms.SaveFileDialog();
+            this.ImportDialog = new System.Windows.Forms.OpenFileDialog();
             this.ChannelsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PC16)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BC16)).BeginInit();
@@ -149,6 +158,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.BC2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PC1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BC1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SetBCAll)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SetPCAll)).BeginInit();
+            this.ControlsBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -1093,7 +1105,7 @@
             // 
             this.SaveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveBtn.Location = new System.Drawing.Point(371, 432);
+            this.SaveBtn.Location = new System.Drawing.Point(389, 432);
             this.SaveBtn.Name = "SaveBtn";
             this.SaveBtn.Size = new System.Drawing.Size(75, 23);
             this.SaveBtn.TabIndex = 2;
@@ -1103,10 +1115,9 @@
             // 
             // EnableOrNot
             // 
-            this.EnableOrNot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.EnableOrNot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableOrNot.AutoSize = true;
-            this.EnableOrNot.Location = new System.Drawing.Point(293, 409);
+            this.EnableOrNot.Location = new System.Drawing.Point(25, 110);
             this.EnableOrNot.Name = "EnableOrNot";
             this.EnableOrNot.Size = new System.Drawing.Size(156, 17);
             this.EnableOrNot.TabIndex = 3;
@@ -1117,7 +1128,7 @@
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(290, 432);
+            this.CancelBtn.Location = new System.Drawing.Point(307, 432);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
             this.CancelBtn.TabIndex = 4;
@@ -1128,7 +1139,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(324, 12);
+            this.linkLabel1.Location = new System.Drawing.Point(71, 12);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(125, 13);
             this.linkLabel1.TabIndex = 5;
@@ -1141,7 +1152,7 @@
             this.MT32IsEnabled.AutoSize = true;
             this.MT32IsEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MT32IsEnabled.ForeColor = System.Drawing.Color.Red;
-            this.MT32IsEnabled.Location = new System.Drawing.Point(305, 343);
+            this.MT32IsEnabled.Location = new System.Drawing.Point(324, 372);
             this.MT32IsEnabled.Name = "MT32IsEnabled";
             this.MT32IsEnabled.Size = new System.Drawing.Size(123, 52);
             this.MT32IsEnabled.TabIndex = 6;
@@ -1154,15 +1165,111 @@
             this.CheckMT32.Enabled = true;
             this.CheckMT32.Tick += new System.EventHandler(this.CheckMT32_Tick);
             // 
+            // ImportConfig
+            // 
+            this.ImportConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ImportConfig.Location = new System.Drawing.Point(7, 132);
+            this.ImportConfig.Name = "ImportConfig";
+            this.ImportConfig.Size = new System.Drawing.Size(90, 24);
+            this.ImportConfig.TabIndex = 8;
+            this.ImportConfig.Text = "Import config";
+            this.ImportConfig.UseVisualStyleBackColor = true;
+            this.ImportConfig.Click += new System.EventHandler(this.ImportConfig_Click);
+            // 
+            // ExportConfig
+            // 
+            this.ExportConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExportConfig.Location = new System.Drawing.Point(103, 132);
+            this.ExportConfig.Name = "ExportConfig";
+            this.ExportConfig.Size = new System.Drawing.Size(90, 24);
+            this.ExportConfig.TabIndex = 7;
+            this.ExportConfig.Text = "Export config";
+            this.ExportConfig.UseVisualStyleBackColor = true;
+            this.ExportConfig.Click += new System.EventHandler(this.ExportConfig_Click);
+            // 
+            // SetBCAll
+            // 
+            this.SetBCAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SetBCAll.Location = new System.Drawing.Point(155, 31);
+            this.SetBCAll.Maximum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            0});
+            this.SetBCAll.Name = "SetBCAll";
+            this.SetBCAll.Size = new System.Drawing.Size(38, 20);
+            this.SetBCAll.TabIndex = 81;
+            this.SetBCAll.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.SetBCAll.ValueChanged += new System.EventHandler(this.SetBCAll_ValueChanged);
+            // 
+            // label49
+            // 
+            this.label49.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(72, 34);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(83, 13);
+            this.label49.TabIndex = 80;
+            this.label49.Text = "Set all banks to:";
+            // 
+            // SetPCAll
+            // 
+            this.SetPCAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SetPCAll.Location = new System.Drawing.Point(155, 57);
+            this.SetPCAll.Maximum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            0});
+            this.SetPCAll.Name = "SetPCAll";
+            this.SetPCAll.Size = new System.Drawing.Size(38, 20);
+            this.SetPCAll.TabIndex = 83;
+            this.SetPCAll.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.SetPCAll.ValueChanged += new System.EventHandler(this.SetPCAll_ValueChanged);
+            // 
+            // label50
+            // 
+            this.label50.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(67, 60);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(88, 13);
+            this.label50.TabIndex = 82;
+            this.label50.Text = "Set all presets to:";
+            // 
+            // ControlsBox
+            // 
+            this.ControlsBox.Controls.Add(this.EnableOrNot);
+            this.ControlsBox.Controls.Add(this.ImportConfig);
+            this.ControlsBox.Controls.Add(this.linkLabel1);
+            this.ControlsBox.Controls.Add(this.SetPCAll);
+            this.ControlsBox.Controls.Add(this.ExportConfig);
+            this.ControlsBox.Controls.Add(this.label49);
+            this.ControlsBox.Controls.Add(this.label50);
+            this.ControlsBox.Controls.Add(this.SetBCAll);
+            this.ControlsBox.Location = new System.Drawing.Point(282, 12);
+            this.ControlsBox.Name = "ControlsBox";
+            this.ControlsBox.Size = new System.Drawing.Size(200, 164);
+            this.ControlsBox.TabIndex = 80;
+            this.ControlsBox.TabStop = false;
+            this.ControlsBox.Text = "Control";
+            // 
+            // ExportDialog
+            // 
+            this.ExportDialog.Filter = "Config files|*.ksmpr";
+            // 
+            // ImportDialog
+            // 
+            this.ImportDialog.Filter = "Config files|*.ksmpr";
+            // 
             // OverrideInstruments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(458, 466);
+            this.ClientSize = new System.Drawing.Size(493, 466);
+            this.Controls.Add(this.ControlsBox);
             this.Controls.Add(this.MT32IsEnabled);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.CancelBtn);
-            this.Controls.Add(this.EnableOrNot);
             this.Controls.Add(this.SaveBtn);
             this.Controls.Add(this.ChannelsBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -1208,6 +1315,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.BC2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PC1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BC1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SetBCAll)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SetPCAll)).EndInit();
+            this.ControlsBox.ResumeLayout(false);
+            this.ControlsBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1302,5 +1413,14 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label MT32IsEnabled;
         private System.Windows.Forms.Timer CheckMT32;
+        private System.Windows.Forms.Button ImportConfig;
+        private System.Windows.Forms.Button ExportConfig;
+        private System.Windows.Forms.NumericUpDown SetBCAll;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.NumericUpDown SetPCAll;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.GroupBox ControlsBox;
+        public System.Windows.Forms.SaveFileDialog ExportDialog;
+        public System.Windows.Forms.OpenFileDialog ImportDialog;
     }
 }

@@ -115,8 +115,205 @@ namespace KeppySynthMixerWindow
         private void CancelBtn_Click(object sender, EventArgs e)
         {
             CheckMT32.Enabled = false;
-            ChanOverride.Close();
             Close();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var helpFile = Path.Combine(Path.GetTempPath(), "help.txt");
+            File.WriteAllText(helpFile, Properties.Resources.gmlist);
+            Process.Start(helpFile);
+        }
+
+        private void ImportConfig_Click(object sender, EventArgs e)
+        {
+            String PresetTitle = "";
+            try
+            {
+                if (ImportDialog.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string x in File.ReadLines(ImportDialog.FileName, Encoding.UTF8))
+                    {
+                        try
+                        {
+                            // Title
+                            if (SettingName(x) == "ConfName") PresetTitle = SettingValue(x);
+
+                            // Banks
+                            else if (SettingName(x) == "BC1") BC1.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC2") BC2.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC3") BC3.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC4") BC4.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC5") BC5.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC6") BC6.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC7") BC7.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC8") BC8.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC9") BC9.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BCD") BCD.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC11") BC11.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC12") BC12.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC13") BC13.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC14") BC14.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC15") BC15.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "BC16") BC16.Value = Convert.ToInt32(SettingValue(x));
+
+                            // Presets
+                            else if (SettingName(x) == "PC1") PC1.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC2") PC2.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC3") PC3.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC4") PC4.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC5") PC5.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC6") PC6.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC7") PC7.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC8") PC8.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC9") PC9.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PCD") PCD.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC11") PC11.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC12") PC12.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC13") PC13.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC14") PC14.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC15") PC15.Value = Convert.ToInt32(SettingValue(x));
+                            else if (SettingName(x) == "PC16") PC16.Value = Convert.ToInt32(SettingValue(x));
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(
+                                "Fatal error",
+                                String.Format("Invalid preset!\n\nException:\n{0}", ex.ToString()),
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                                );
+
+                            return;
+                        }
+                    }
+
+                    MessageBox.Show(
+                        String.Format("The setting file \"{0}\" has been applied.", PresetTitle),
+                        "Keppy's Synthesizer - Import settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Something bad happened hehe
+                MessageBox.Show(
+                    "Fatal error",
+                    String.Format("Fatal error during the execution of the program.\n\nPress OK to quit.\n\nException:\n{0}", ex.ToString()),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+
+                Application.Exit();
+            }
+        }
+
+        private void ExportConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ExportDialog.ShowDialog() == DialogResult.OK)
+                {
+                    StringBuilder SettingsToText = new StringBuilder();
+
+                    SettingsToText.AppendLine(String.Format("ConfName = {0}", Path.GetFileNameWithoutExtension(ExportDialog.FileName)));
+                    SettingsToText.AppendLine();
+                    SettingsToText.AppendLine("// Banks");
+                    SettingsToText.AppendLine(String.Format("BC1 = {0}", BC1.Value));
+                    SettingsToText.AppendLine(String.Format("BC2 = {0}", BC2.Value));
+                    SettingsToText.AppendLine(String.Format("BC3 = {0}", BC3.Value));
+                    SettingsToText.AppendLine(String.Format("BC4 = {0}", BC4.Value));
+                    SettingsToText.AppendLine(String.Format("BC5 = {0}", BC5.Value));
+                    SettingsToText.AppendLine(String.Format("BC6 = {0}", BC6.Value));
+                    SettingsToText.AppendLine(String.Format("BC7 = {0}", BC7.Value));
+                    SettingsToText.AppendLine(String.Format("BC8 = {0}", BC8.Value));
+                    SettingsToText.AppendLine(String.Format("BC9 = {0}", BC9.Value));
+                    SettingsToText.AppendLine(String.Format("BCD = {0}", BCD.Value));
+                    SettingsToText.AppendLine(String.Format("BC11 = {0}", BC11.Value));
+                    SettingsToText.AppendLine(String.Format("BC12 = {0}", BC12.Value));
+                    SettingsToText.AppendLine(String.Format("BC13 = {0}", BC13.Value));
+                    SettingsToText.AppendLine(String.Format("BC14 = {0}", BC14.Value));
+                    SettingsToText.AppendLine(String.Format("BC15 = {0}", BC15.Value));
+                    SettingsToText.AppendLine(String.Format("BC16 = {0}", BC16.Value));
+                    SettingsToText.AppendLine();
+                    SettingsToText.AppendLine("// Presets");
+                    SettingsToText.AppendLine(String.Format("PC1 = {0}", PC1.Value));
+                    SettingsToText.AppendLine(String.Format("PC2 = {0}", PC2.Value));
+                    SettingsToText.AppendLine(String.Format("PC3 = {0}", PC3.Value));
+                    SettingsToText.AppendLine(String.Format("PC4 = {0}", PC4.Value));
+                    SettingsToText.AppendLine(String.Format("PC5 = {0}", PC5.Value));
+                    SettingsToText.AppendLine(String.Format("PC6 = {0}", PC6.Value));
+                    SettingsToText.AppendLine(String.Format("PC7 = {0}", PC7.Value));
+                    SettingsToText.AppendLine(String.Format("PC8 = {0}", PC8.Value));
+                    SettingsToText.AppendLine(String.Format("PC9 = {0}", PC9.Value));
+                    SettingsToText.AppendLine(String.Format("PCD = {0}", PCD.Value));
+                    SettingsToText.AppendLine(String.Format("PC11 = {0}", PC11.Value));
+                    SettingsToText.AppendLine(String.Format("PC12 = {0}", PC12.Value));
+                    SettingsToText.AppendLine(String.Format("PC13 = {0}", PC13.Value));
+                    SettingsToText.AppendLine(String.Format("PC14 = {0}", PC14.Value));
+                    SettingsToText.AppendLine(String.Format("PC15 = {0}", PC15.Value));
+                    SettingsToText.AppendLine(String.Format("PC16 = {0}", PC16.Value));
+
+                    File.WriteAllText(ExportDialog.FileName, SettingsToText.ToString());
+
+                    MessageBox.Show(
+                        String.Format("The setting file \"{0}\" has been saved to:\n\n{1}",
+                        Path.GetFileNameWithoutExtension(ExportDialog.FileName),
+                        ExportDialog.FileName),
+                        "Keppy's Synthesizer - Export settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Something bad happened hehe
+                MessageBox.Show(
+                    "Fatal error", 
+                    String.Format("Fatal error during the execution of the program.\n\nPress OK to quit.\n\nException:\n{0}", ex.ToString()),
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error
+                    );
+
+                Application.Exit();
+            }
+        }
+
+        private void SetBCAll_ValueChanged(object sender, EventArgs e)
+        {
+            BC1.Value = SetBCAll.Value;
+            BC2.Value = SetBCAll.Value;
+            BC3.Value = SetBCAll.Value;
+            BC4.Value = SetBCAll.Value;
+            BC5.Value = SetBCAll.Value;
+            BC6.Value = SetBCAll.Value;
+            BC7.Value = SetBCAll.Value;
+            BC8.Value = SetBCAll.Value;
+            BC9.Value = SetBCAll.Value;
+            BCD.Value = SetBCAll.Value;
+            BC11.Value = SetBCAll.Value;
+            BC12.Value = SetBCAll.Value;
+            BC13.Value = SetBCAll.Value;
+            BC14.Value = SetBCAll.Value;
+            BC15.Value = SetBCAll.Value;
+            BC16.Value = SetBCAll.Value;
+        }
+
+        private void SetPCAll_ValueChanged(object sender, EventArgs e)
+        {
+            PC1.Value = SetPCAll.Value;
+            PC2.Value = SetPCAll.Value;
+            PC3.Value = SetPCAll.Value;
+            PC4.Value = SetPCAll.Value;
+            PC5.Value = SetPCAll.Value;
+            PC6.Value = SetPCAll.Value;
+            PC7.Value = SetPCAll.Value;
+            PC8.Value = SetPCAll.Value;
+            PC9.Value = SetPCAll.Value;
+            PCD.Value = SetPCAll.Value;
+            PC11.Value = SetPCAll.Value;
+            PC12.Value = SetPCAll.Value;
+            PC13.Value = SetPCAll.Value;
+            PC14.Value = SetPCAll.Value;
+            PC15.Value = SetPCAll.Value;
+            PC16.Value = SetPCAll.Value;
         }
 
         private void CheckMT32_Tick(object sender, EventArgs e)
@@ -124,6 +321,7 @@ namespace KeppySynthMixerWindow
             if ((Int32)KeppySynthMixerWindow.Settings.GetValue("mt32mode", 0) == 1)
             {
                 EnableOrNot.Enabled = false;
+                ControlsBox.Enabled = false;
                 ChannelsBox.Enabled = false;
                 SaveBtn.Enabled = false;
                 MT32IsEnabled.Visible = true;
@@ -135,17 +333,44 @@ namespace KeppySynthMixerWindow
                 MT32IsEnabled.Visible = false;
 
                 if (EnableOrNot.Checked == true)
+                {
+                    ImportConfig.Enabled = true;
+                    ExportConfig.Enabled = true;
+                    SetPCAll.Enabled = true;
+                    SetBCAll.Enabled = true;
                     ChannelsBox.Enabled = true;
+                }
                 else
+                {
+                    ImportConfig.Enabled = false;
+                    ExportConfig.Enabled = false;
+                    SetPCAll.Enabled = false;
+                    SetBCAll.Enabled = false;
                     ChannelsBox.Enabled = false;
+                }
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        /// <summary>
+        /// Set setting's name
+        /// </summary>
+        public static string SettingName(string value)
         {
-            var helpFile = Path.Combine(Path.GetTempPath(), "help.txt");
-            File.WriteAllText(helpFile, Properties.Resources.gmlist);
-            Process.Start(helpFile);
+            int A = value.IndexOf(" = ");
+            if (A == -1) return "";
+            return value.Substring(0, A);
+        }
+
+        /// <summary>
+        /// Get setting's value
+        /// </summary>
+        public static string SettingValue(string value)
+        {
+            int A = value.LastIndexOf(" = ");
+            if (A == -1) return "";
+            int A2 = A + (" = ").Length;
+            if (A2 >= value.Length) return "";
+            return value.Substring(A2);
         }
     }
 }
