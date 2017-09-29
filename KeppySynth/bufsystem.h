@@ -68,6 +68,14 @@ int bmsyn_play_some_data(void){
 
 			switch (uMsg) {
 			case MODM_DATA:
+				if (eggnog > 0) {
+					int eggran1 = rand() % eggnog + 1;
+					int eggran2 = rand() % eggnog + 1;
+					if (eggran1 != eggran2) {
+						break;
+					}
+				}
+
 				if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)	len = 2;
 				else if (statusv < 0xf0 || statusv == 0xf2)	len = 3;
 				else len = 1;
@@ -124,6 +132,13 @@ int bmsyn_play_some_data(void){
 				}
 				break;
 			case MODM_LONGDATA:
+				if (eggnog > 0) {
+					int egg = rand() % eggnog + 1;
+					if (egg != (egg / 2)) {
+						break;
+					}
+				}
+
 				if (sysresetignore != 1) {
 					if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, hdr->lpData, hdr->dwBytesRecorded);
 					else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);

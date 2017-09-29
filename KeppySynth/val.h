@@ -117,6 +117,8 @@ static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int volumemon = 1;				// Volume monitoring
 static int wasapiex = 0;				// Exclusive access to WASAPI device
 
+static int eggnog = 0;					// Dinkleberg
+
 // Priority values
 static int prioval[7] =
 {
