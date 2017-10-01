@@ -138,6 +138,7 @@
             this.menuItem48 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch32 = new System.Windows.Forms.MenuItem();
             this.WinMMPatch64 = new System.Windows.Forms.MenuItem();
+            this.menuItem52 = new System.Windows.Forms.MenuItem();
             this.WinMMPatchRmv = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.SelfSignedCertificate = new System.Windows.Forms.MenuItem();
@@ -1047,6 +1048,7 @@
             this.menuItem48.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.WinMMPatch32,
             this.WinMMPatch64,
+            this.menuItem52,
             this.WinMMPatchRmv});
             this.menuItem48.Text = "WinMM patch";
             // 
@@ -1062,9 +1064,14 @@
             this.WinMMPatch64.Text = "Apply the WinMM patch to a 64-bit app";
             this.WinMMPatch64.Click += new System.EventHandler(this.WinMMPatch64_Click);
             // 
+            // menuItem52
+            // 
+            this.menuItem52.Index = 2;
+            this.menuItem52.Text = "-";
+            // 
             // WinMMPatchRmv
             // 
-            this.WinMMPatchRmv.Index = 2;
+            this.WinMMPatchRmv.Index = 3;
             this.WinMMPatchRmv.Text = "Remove WinMM patch from app";
             this.WinMMPatchRmv.Click += new System.EventHandler(this.WinMMPatchRmv_Click);
             // 
@@ -3284,6 +3291,7 @@
         public System.Windows.Forms.MenuItem LiveChangesTrigger;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.LinkLabel ChangeFromWindows;
+        private System.Windows.Forms.MenuItem menuItem52;
     }
 }
 

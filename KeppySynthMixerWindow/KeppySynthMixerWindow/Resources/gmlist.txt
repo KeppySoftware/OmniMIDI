@@ -160,3 +160,52 @@ Sound effects
 125 Helicopter
 126 Applause
 127 Gunshot
+
+Drums
+34 Bass Drum 2
+35 Bass Drum 1
+36 Side Stick/Rimshot
+37 Snare Drum 1
+38 Hand Clap
+39 Snare Drum 2
+40 Low Tom 2
+41 Closed Hi-hat
+42 Low Tom 1
+43 Pedal Hi-hat
+44 Mid Tom 2
+45 Open Hi-hat
+46 Mid Tom 1
+47 High Tom 2
+48 Crash Cymbal 1
+49 High Tom 1
+50 Ride Cymbal 1
+51 Chinese Cymbal
+52 Ride Bell
+53 Tambourine
+54 Splash Cymbal
+55 Cowbell
+56 Crash Cymbal 2
+57 Vibra Slap
+58 Ride Cymbal 2
+59 High Bongo
+60 Low Bongo
+61 Mute High Conga
+62 Open High Conga
+63 Low Conga
+64 High Timbale
+65 Low Timbale
+66 High Agogô
+67 Low Agogô
+68 Cabasa
+69 Maracas
+70 Short Whistle
+71 Long Whistle
+72 Short Güiro
+73 Long Güiro
+74 Claves
+75 High Wood Block
+76 Low Wood Block
+77 Mute Cuíca
+78 Open Cuíca
+79 Mute Triangle
+80 Open Triangle

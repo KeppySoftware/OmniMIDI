@@ -1799,7 +1799,7 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                Properties.Settings.Default.LiveChanges = true;
+                Properties.Settings.Default.LiveChanges = false;
                 LiveChangesTrigger.Checked = false;
             }
             Properties.Settings.Default.Save();
