@@ -12,6 +12,7 @@ using System.Reflection;
 using Microsoft.VisualBasic.Devices;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace KeppySynthConfigurator
 {
@@ -118,6 +119,31 @@ namespace KeppySynthConfigurator
                         Environment.OSVersion.Version.Build);
                 }
             }
+
+            CheckDateLogo();
+        }
+
+        private void CheckDateLogo()
+        {
+            DateTime ChristmasStart = DateTime.ParseExact("21/12", "dd/MM", CultureInfo.InvariantCulture);
+            DateTime ChristmasEnd = DateTime.ParseExact("31/12", "dd/MM", CultureInfo.InvariantCulture);
+            DateTime Halloween = DateTime.ParseExact("31/10", "dd/MM", CultureInfo.InvariantCulture);
+            DateTime DriverBirthday = DateTime.ParseExact("29/09", "dd/MM", CultureInfo.InvariantCulture);
+            DateTime Epiphany = DateTime.ParseExact("06/01", "dd/MM", CultureInfo.InvariantCulture);
+
+            if (DateTime.Now.Date.Ticks >= Epiphany.Ticks && DateTime.Now.Date.Ticks <= Epiphany.Ticks)
+                CurrentLogo.Image = Properties.Resources.KSynthEpiphany;
+
+            else if (DateTime.Now.Date.Ticks >= ChristmasStart.Ticks && DateTime.Now.Date.Ticks <= ChristmasEnd.Ticks)
+                CurrentLogo.Image = Properties.Resources.KSynthEpiphany;
+
+            else if (DateTime.Now.Date.Ticks >= Halloween.Ticks && DateTime.Now.Date.Ticks <= Halloween.Ticks)
+                CurrentLogo.Image = Properties.Resources.KSynthHalloween;
+
+            else if (DateTime.Now.Date.Ticks >= DriverBirthday.Ticks && DateTime.Now.Date.Ticks <= DriverBirthday.Ticks)
+                CurrentLogo.Image = Properties.Resources.KSynthBirthday;
+
+            else CurrentLogo.Image = Properties.Resources.KSynthLogo;
         }
 
         private void OKClose_Click(object sender, EventArgs e)

@@ -125,6 +125,8 @@
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.OInst = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.ClassicTheme = new System.Windows.Forms.MenuItem();
             this.DarkTheme = new System.Windows.Forms.MenuItem();
@@ -137,8 +139,6 @@
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.CheckIfXAudio = new System.Windows.Forms.Timer(this.components);
-            this.OInst = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -1237,6 +1237,17 @@
             this.muteToolStripMenuItem});
             this.menuItem3.Text = "Settings";
             // 
+            // OInst
+            // 
+            this.OInst.Index = 0;
+            this.OInst.Text = "Override instruments";
+            this.OInst.Click += new System.EventHandler(this.OInst_Click);
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 1;
+            this.menuItem7.Text = "-";
+            // 
             // menuItem8
             // 
             this.menuItem8.Index = 2;
@@ -1316,17 +1327,6 @@
             this.CheckIfXAudio.Enabled = true;
             this.CheckIfXAudio.Interval = 10;
             this.CheckIfXAudio.Tick += new System.EventHandler(this.CheckIfXAudio_Tick);
-            // 
-            // OInst
-            // 
-            this.OInst.Index = 0;
-            this.OInst.Text = "Override instruments";
-            this.OInst.Click += new System.EventHandler(this.OInst_Click);
-            // 
-            // menuItem7
-            // 
-            this.menuItem7.Index = 1;
-            this.menuItem7.Text = "-";
             // 
             // KeppySynthMixerWindow
             // 

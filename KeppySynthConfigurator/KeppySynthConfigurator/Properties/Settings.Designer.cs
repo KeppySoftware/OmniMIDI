@@ -127,5 +127,17 @@ namespace KeppySynthConfigurator.Properties {
                 this["LastListSelected"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowMixerUnder {
+            get {
+                return ((bool)(this["ShowMixerUnder"]));
+            }
+            set {
+                this["ShowMixerUnder"] = value;
+            }
+        }
     }
 }

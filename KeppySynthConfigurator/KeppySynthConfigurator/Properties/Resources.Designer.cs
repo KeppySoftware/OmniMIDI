@@ -261,6 +261,56 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap KSynthBirthday {
+            get {
+                object obj = ResourceManager.GetObject("KSynthBirthday", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap KSynthChristmas {
+            get {
+                object obj = ResourceManager.GetObject("KSynthChristmas", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap KSynthEpiphany {
+            get {
+                object obj = ResourceManager.GetObject("KSynthEpiphany", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap KSynthHalloween {
+            get {
+                object obj = ResourceManager.GetObject("KSynthHalloween", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap KSynthIndependence {
+            get {
+                object obj = ResourceManager.GetObject("KSynthIndependence", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap KSynthLogo {
             get {
                 object obj = ResourceManager.GetObject("KSynthLogo", resourceCulture);
@@ -431,7 +481,7 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una stringa localizzata simile a 88.198.45.18
         ///keppysynthtm@kaleidonkep99
-        ///keptmsynth2309**.
+        ///R~9+J.&lt;aw6:PAeNE.
         /// </summary>
         internal static string TelemetryLoginData {
             get {

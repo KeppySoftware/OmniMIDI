@@ -731,9 +731,39 @@ namespace KeppySynthConfigurator
                 }
 
                 KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Checked = Properties.Settings.Default.ShowOutputLevel;
+                KeppySynthConfiguratorMain.Delegate.ShowMixerTools.Checked = Properties.Settings.Default.ShowMixerUnder;
                 KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
+
+                if (Properties.Settings.Default.ShowMixerUnder)
+                {
+                    if (MeterFunc.CheckIfDedicatedMixerIsRunning(true))
+                    {
+                        KeppySynthConfiguratorMain.Delegate.ClientSize = new System.Drawing.Size(649, 442);
+                        KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Checked = true;
+                        KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Enabled = true;
+                        KeppySynthConfiguratorMain.Delegate.ShowMixerTools.Checked = false;
+                        Properties.Settings.Default.ShowOutputLevel = true;
+                        Properties.Settings.Default.ShowMixerUnder = false;
+                        KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = true;
+                        KeppySynthConfiguratorMain.Delegate.MixerPanel.Visible = false;
+                        KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        MeterFunc.LoadChannelValues();
+                        KeppySynthConfiguratorMain.Delegate.ClientSize = new System.Drawing.Size(649, 630);
+                        KeppySynthConfiguratorMain.SynthSettings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                        KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Checked = true;
+                        KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Enabled = false;
+                        KeppySynthConfiguratorMain.Delegate.ShowMixerTools.Checked = true;
+                        KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = false;
+                        KeppySynthConfiguratorMain.Delegate.MixerPanel.Visible = true;
+                        KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
+                    }
+                }
 
                 KeppySynthConfiguratorMain.Delegate.AutoLoad.Checked = Properties.Settings.Default.AutoLoadList;
 

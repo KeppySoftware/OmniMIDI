@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InfoDialog));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.CurrentLogo = new System.Windows.Forms.PictureBox();
             this.VerLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
@@ -60,19 +60,19 @@
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.GTSLink = new System.Windows.Forms.LinkLabelEx();
             this.PatreonBtn = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // CurrentLogo
             // 
-            this.pictureBox1.Image = global::KeppySynthConfigurator.Properties.Resources.KSynthLogo;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(79, 80);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.CurrentLogo.Image = global::KeppySynthConfigurator.Properties.Resources.KSynthLogo;
+            this.CurrentLogo.Location = new System.Drawing.Point(12, 12);
+            this.CurrentLogo.Name = "CurrentLogo";
+            this.CurrentLogo.Size = new System.Drawing.Size(79, 80);
+            this.CurrentLogo.TabIndex = 0;
+            this.CurrentLogo.TabStop = false;
             // 
             // VerLabel
             // 
@@ -401,7 +401,7 @@
             this.Controls.Add(this.GitHubLink);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.VerLabel);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.CurrentLogo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -411,7 +411,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Information";
             this.Load += new System.EventHandler(this.InfoDialog_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -423,7 +423,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox CurrentLogo;
         private System.Windows.Forms.Label VerLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabelEx GitHubLink;
