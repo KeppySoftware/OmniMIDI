@@ -119,6 +119,9 @@ static int wasapiex = 0;				// Exclusive access to WASAPI device
 
 static int eggnog = 0;					// Dinkleberg
 
+static int printmidievent = 0;			// Print MIDI event to log
+static int printimportant = 1;			// Print important MIDI event to log
+
 // Priority values
 static int prioval[7] =
 {

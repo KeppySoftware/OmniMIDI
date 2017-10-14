@@ -104,6 +104,7 @@
     <Compile Include="Forms\Audio Outputs\DefaultAudioOutput.designer.cs">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </Compile>
+    <Compile Include="Functions\Extensions\SFListFunc.cs" />
     <Compile Include="Functions\AddToWhichList\AddToWhichList.cs">
       <SubType>Form</SubType>
     </Compile>

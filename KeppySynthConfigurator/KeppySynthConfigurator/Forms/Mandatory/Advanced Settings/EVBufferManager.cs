@@ -86,7 +86,7 @@ namespace KeppySynthConfigurator
                     WarningPanel.Visible = true;
                     WarningSign.Image = KeppySynthConfigurator.Properties.Resources.wi;
                     WarningLabel.Text = String.Format("WARNING:\nLeave at least {0} of RAM available for Windows.",
-                                                      Functions.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
+                                                      SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
                     ApplySettings.Enabled = true;
                 }
             }
@@ -134,8 +134,8 @@ namespace KeppySynthConfigurator
 
         private void WarningLabel_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(String.Format("Leave at least 1/8 of RAM ({0}) available to Windows, to avoid unexpected data loss and system crashes.\n\nRemember, you're responsible of anything that might happen after tampering with this setting.", 
-                Functions.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8)), 
+            MessageBox.Show(String.Format("Leave at least 1/8 of RAM ({0}) available to Windows, to avoid unexpected data loss and system crashes.\n\nRemember, you're responsible of anything that might happen after tampering with this setting.",
+                SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8)), 
                 "What does this warning mean?", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }

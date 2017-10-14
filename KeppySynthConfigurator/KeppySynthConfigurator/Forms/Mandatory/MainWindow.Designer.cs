@@ -389,6 +389,9 @@
             this.CH10VOL = new System.Windows.Forms.TrackBar();
             this.CH10 = new System.Windows.Forms.Label();
             this.ChannelVolume = new System.Windows.Forms.Timer(this.components);
+            this.menuItem53 = new System.Windows.Forms.MenuItem();
+            this.PrintMIDIEventsLog = new System.Windows.Forms.MenuItem();
+            this.PrintImportantLog = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -2624,7 +2627,10 @@
             this.menuItem28.Index = 16;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
-            this.DebugModeOpenNotepad});
+            this.DebugModeOpenNotepad,
+            this.menuItem53,
+            this.PrintMIDIEventsLog,
+            this.PrintImportantLog});
             this.menuItem28.Text = "Debug logging for troubleshooting";
             // 
             // menuItem2
@@ -4118,6 +4124,23 @@
             this.ChannelVolume.Interval = 1;
             this.ChannelVolume.Tick += new System.EventHandler(this.ChannelVolume_Tick);
             // 
+            // menuItem53
+            // 
+            this.menuItem53.Index = 2;
+            this.menuItem53.Text = "-";
+            // 
+            // PrintMIDIEventsLog
+            // 
+            this.PrintMIDIEventsLog.Index = 3;
+            this.PrintMIDIEventsLog.Text = "Print MIDI events to log";
+            this.PrintMIDIEventsLog.Click += new System.EventHandler(this.PrintMIDIEventsLog_Click);
+            // 
+            // PrintImportantLog
+            // 
+            this.PrintImportantLog.Index = 4;
+            this.PrintImportantLog.Text = "Print important driver messages to log";
+            this.PrintImportantLog.Click += new System.EventHandler(this.PrintImportantLog_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4547,6 +4570,9 @@
         public System.Windows.Forms.Panel MixerPanel;
         public System.Windows.Forms.Timer ChannelVolume;
         private System.Windows.Forms.LinkLabelEx OpenFullMixer;
+        private System.Windows.Forms.MenuItem menuItem53;
+        public System.Windows.Forms.MenuItem PrintMIDIEventsLog;
+        public System.Windows.Forms.MenuItem PrintImportantLog;
     }
 }
 

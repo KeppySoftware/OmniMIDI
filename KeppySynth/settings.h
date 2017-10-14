@@ -644,6 +644,10 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"volumemon", NULL, &dwType, (LPBYTE)&volumemon, &dwSize);
+
+		RegQueryValueEx(hKey, L"printmidievent", NULL, &dwType, (LPBYTE)&printmidievent, &dwSize);
+		RegQueryValueEx(hKey, L"printimportant", NULL, &dwType, (LPBYTE)&printimportant, &dwSize);
+
 		if (vms2emutemp != vms2emu) {
 			ResetSynth(1);
 		}

@@ -387,7 +387,7 @@ void StatusType(int status, char* &statustoprint) {
 }
 
 void PrintToConsole(int color, long stage, const char* text) {
-	if (debugmode == 1) {
+	if (debugmode == 1 && printimportant == 1) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
 
@@ -404,7 +404,7 @@ void PrintToConsole(int color, long stage, const char* text) {
 }
 
 void PrintEventToConsole(int color, int stage, bool issysex, const char* text, int channel, int status, int note, int velocity) {
-	if (debugmode == 1) {
+	if (debugmode == 1 && printmidievent == 1) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
 

@@ -109,7 +109,7 @@ namespace KeppySynthConfigurator
                                 Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
             }
 
-            SFfLab.Text = Functions.ReturnSoundFontFormatMore(Path.GetExtension(next));
+            SFfLab.Text = SFListFunc.ReturnSoundFontFormatMore(Path.GetExtension(next));
             CommentRich.Text = ReturnComment(fontinfo.comment);
             LELabel.Text = f.LastWriteTimeUtc.ToString();
 

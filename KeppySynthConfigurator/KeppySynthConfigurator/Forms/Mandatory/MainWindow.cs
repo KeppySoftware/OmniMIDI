@@ -187,7 +187,7 @@ namespace KeppySynthConfigurator
         private void AddSoundfontDragNDrop(String SelectedList, DragEventArgs e)
         {
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            Functions.AddSoundfontsToSelectedList(CurrentList, s);
+            SFListFunc.AddSoundfontsToSelectedList(CurrentList, s);
         }
 
         public void AddSoundfontDragNDropTriv(DragEventArgs e)
@@ -259,7 +259,7 @@ namespace KeppySynthConfigurator
                                 SelectedListBox.SelectedIndex = tempForm.Index;
                                 List<string> SoundFontsToImport = new List<string> { };
                                 SoundFontsToImport.Add(sf);
-                                Functions.AddSoundfontsToSelectedList(CurrentList, SoundFontsToImport.ToArray());
+                                SFListFunc.AddSoundfontsToSelectedList(CurrentList, SoundFontsToImport.ToArray());
                             }
                         }
                     }
@@ -345,7 +345,7 @@ namespace KeppySynthConfigurator
                 }
                 catch (Exception ex)
                 {
-                    Functions.ReinitializeList(ex, CurrentList);
+                    SFListFunc.ReinitializeList(ex, CurrentList);
                 }
             }
         }
@@ -455,7 +455,7 @@ namespace KeppySynthConfigurator
             {
                 _itemDnD = null;
                 Cursor = Cursors.Default;
-                Functions.SaveList(CurrentList);
+                SFListFunc.SaveList(CurrentList);
             }
         }
 
@@ -543,7 +543,7 @@ namespace KeppySynthConfigurator
                     String name = Lis.SelectedItems[0].Text.ToString();
                     if (File.Exists(name))
                     {
-                        Functions.OpenSFWithDefaultApp(name);
+                        SFListFunc.OpenSFWithDefaultApp(name);
                         Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
                     }
                     else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
@@ -558,7 +558,7 @@ namespace KeppySynthConfigurator
                             String name = Lis.SelectedItems[i].Text.ToString();
                             if (File.Exists(name))
                             {
-                                Functions.OpenSFWithDefaultApp(name);
+                                SFListFunc.OpenSFWithDefaultApp(name);
                                 Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
                             }
                             else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
@@ -568,7 +568,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -580,7 +580,7 @@ namespace KeppySynthConfigurator
                 if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
-                    Functions.OpenSFDirectory(name);
+                    SFListFunc.OpenSFDirectory(name);
                 }
                 else if (howmany > 1)
                 {
@@ -589,7 +589,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -602,13 +602,13 @@ namespace KeppySynthConfigurator
                 Functions.OpenFileDialogAddCustomPaths(SoundfontImport);
                 if (SoundfontImport.ShowDialog(this) == DialogResult.OK)
                 {
-                    Functions.SetLastPath(Path.GetDirectoryName(SoundfontImport.FileNames[0]));
-                    Functions.AddSoundfontsToSelectedList(CurrentList, SoundfontImport.FileNames);
+                    SFListFunc.SetLastPath(Path.GetDirectoryName(SoundfontImport.FileNames[0]));
+                    SFListFunc.AddSoundfontsToSelectedList(CurrentList, SoundfontImport.FileNames);
                 }
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -624,14 +624,14 @@ namespace KeppySynthConfigurator
                         String name = Lis.SelectedItems[i].Text.ToString();
                         Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                         Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
-                        Functions.SaveList(CurrentList);
-                        Functions.TriggerReload(false);
+                        SFListFunc.SaveList(CurrentList);
+                        SFListFunc.TriggerReload(false);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -648,8 +648,8 @@ namespace KeppySynthConfigurator
                             String name = Lis.SelectedItems[i].Text.ToString();
                             Lis.Items.RemoveAt(Lis.SelectedIndices[i]);
                             Program.DebugToConsole(false, String.Format("Removed soundfont from list: {0}", name), null);
-                            Functions.SaveList(CurrentList);
-                            Functions.TriggerReload(false);
+                            SFListFunc.SaveList(CurrentList);
+                            SFListFunc.TriggerReload(false);
                         }
                     }
                 }
@@ -664,7 +664,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -735,13 +735,13 @@ namespace KeppySynthConfigurator
                         sender.Items.RemoveAt(item.Index);
                         sender.Items.Insert(index, item);
                     }
-                    Functions.SaveList(CurrentList);
-                    Functions.TriggerReload(false);
+                    SFListFunc.SaveList(CurrentList);
+                    SFListFunc.TriggerReload(false);
                 }
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -782,21 +782,21 @@ namespace KeppySynthConfigurator
                     {
                         if (Enable)
                         {
-                            if (Lis.SelectedItems[i].ForeColor != Functions.SFEnabled)
+                            if (Lis.SelectedItems[i].ForeColor != SFListFunc.SFEnabled)
                             {
-                                Lis.SelectedItems[i].ForeColor = Functions.SFEnabled;
-                                Functions.SaveList(CurrentList);
-                                Functions.TriggerReload(false);
+                                Lis.SelectedItems[i].ForeColor = SFListFunc.SFEnabled;
+                                SFListFunc.SaveList(CurrentList);
+                                SFListFunc.TriggerReload(false);
                                 Program.DebugToConsole(false, String.Format("Enabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
                             }
                         }
                         else
                         {
-                            if (Lis.SelectedItems[i].ForeColor != Functions.SFDisabled)
+                            if (Lis.SelectedItems[i].ForeColor != SFListFunc.SFDisabled)
                             {
-                                Lis.SelectedItems[i].ForeColor = Functions.SFDisabled;
-                                Functions.SaveList(CurrentList);
-                                Functions.TriggerReload(false);
+                                Lis.SelectedItems[i].ForeColor = SFListFunc.SFDisabled;
+                                SFListFunc.SaveList(CurrentList);
+                                SFListFunc.TriggerReload(false);
                                 Program.DebugToConsole(false, String.Format("Disabled soundfont: {0}", Lis.SelectedItems[i].Text), null);
                             }
                         }
@@ -805,7 +805,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ReinitializeList(ex, CurrentList);
+                SFListFunc.ReinitializeList(ex, CurrentList);
             }
         }
 
@@ -817,7 +817,7 @@ namespace KeppySynthConfigurator
                 ExternalListImport.InitialDirectory = LastImportExportPath;
                 if (ExternalListImport.ShowDialog(this) == DialogResult.OK)
                 {
-                    Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListImport.FileNames[0]));
+                    SFListFunc.SetLastImportExportPath(Path.GetDirectoryName(ExternalListImport.FileNames[0]));
                     foreach (string file in ExternalListImport.FileNames)
                     {
                         using (StreamReader r = new StreamReader(file))
@@ -841,10 +841,10 @@ namespace KeppySynthConfigurator
                                     SFList.Add(line);
                                 }                           
                             }
-                            Functions.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
+                            SFListFunc.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
                         }
-                        Functions.SaveList(CurrentList);
-                        Functions.TriggerReload(false);
+                        SFListFunc.SaveList(CurrentList);
+                        SFListFunc.TriggerReload(false);
                     }
                 }
             }
@@ -860,9 +860,9 @@ namespace KeppySynthConfigurator
             ExternalListExport.InitialDirectory = LastImportExportPath;
             if (ExternalListExport.ShowDialog(this) == DialogResult.OK)
             {
-                Functions.SetLastImportExportPath(Path.GetDirectoryName(ExternalListExport.FileNames[0]));
+                SFListFunc.SetLastImportExportPath(Path.GetDirectoryName(ExternalListExport.FileNames[0]));
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
-                Functions.SetLastPath(LastBrowserPath);
+                SFListFunc.SetLastPath(LastBrowserPath);
                 foreach (ListViewItem item in Lis.Items)
                 {
                     SaveFile.WriteLine(item.Text.ToString());
@@ -930,7 +930,7 @@ namespace KeppySynthConfigurator
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.ChangeList(SelectedListBox.SelectedIndex);
+            SFListFunc.ChangeList(SelectedListBox.SelectedIndex);
             Properties.Settings.Default.LastListSelected = SelectedListBox.SelectedIndex;
             Properties.Settings.Default.Save();
         }
@@ -1751,6 +1751,34 @@ namespace KeppySynthConfigurator
             {
                 SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
                 hotkeys.Checked = false;
+            }
+        }
+
+        private void PrintMIDIEventsLog_Click(object sender, EventArgs e)
+        {
+            if (PrintMIDIEventsLog.Checked == false)
+            {
+                SynthSettings.SetValue("printmidievent", "1", RegistryValueKind.DWord);
+                PrintMIDIEventsLog.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("printmidievent", "0", RegistryValueKind.DWord);
+                PrintMIDIEventsLog.Checked = false;
+            }
+        }
+
+        private void PrintImportantLog_Click(object sender, EventArgs e)
+        {
+            if (PrintImportantLog.Checked == false)
+            {
+                SynthSettings.SetValue("printimportant", "1", RegistryValueKind.DWord);
+                PrintImportantLog.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("printimportant", "0", RegistryValueKind.DWord);
+                PrintImportantLog.Checked = false;
             }
         }
 
