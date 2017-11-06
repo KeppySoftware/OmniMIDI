@@ -130,7 +130,7 @@ namespace KeppySynthConfigurator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ShowMixerUnder {
             get {
                 return ((bool)(this["ShowMixerUnder"]));

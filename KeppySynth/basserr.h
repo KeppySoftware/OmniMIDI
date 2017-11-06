@@ -2,7 +2,7 @@
 Keppy's Synthesizer errors list
 */
 
-static TCHAR * basserrc[96] =
+static TCHAR * BASSErrorCode[48] =
 {
 	L"BASS_ERROR_UNKNOWN",																						// Error -1
 	L"BASS_OK",																									// Error 0
@@ -52,6 +52,16 @@ static TCHAR * basserrc[96] =
 	L"BASS_ERROR_CODEC",																						// Error 44
 	L"BASS_ERROR_ENDED",																						// Error 45
 	L"BASS_ERROR_BUSY",																							// Error 46
+};
+
+static TCHAR * BASSWASAPIErrorCode[2] =
+{
+	L"BASS_ERROR_WASAPI",																						// Error 5200
+	L"BASS_ERROR_WASAPI_BUFFER",																				// Error 5201
+};
+
+static TCHAR * BASSErrorDesc[48] =
+{
 	L"Unknown error.",																							// Description of error -1
 	L"Nothing's wrong.",																						// Description of error 0
 	L"There is insufficient memory.",																			// Description of error 1
@@ -102,20 +112,66 @@ static TCHAR * basserrc[96] =
 	L"The device is busy (eg. in 'exclusive' use by another process).",											// Description of error 46
 };
 
-static TCHAR * basswasapierrc[4] =
+static TCHAR * BASSWASAPIErrorDesc[2] =
 {
-	L"BASS_ERROR_WASAPI",																						// Error 5200
-	L"BASS_ERROR_WASAPI_BUFFER",																				// Error 5201
 	L"WASAPI is unavailable, or its DLL is missing.",															// Description of error 5200
 	L"The buffer is too large. You need a really small buffer value for exclusive mode.",						// Description of error 5201
 };
 
-static TCHAR * bassxaerrc[6] =
+static TCHAR * BASSErrorFix[48] =
 {
-	L"BASSXA_ERROR_STREAM",																						// Error 5000
-	L"BASSXA_ERROR_FRAME",																						// Error 5001																						
-	L"BASSXA_ERROR_DELETE",																						// Error 5002
-	L"An error has occurred while opening the XAudio stream.",													// Description of error 5000
-	L"An error has occurred while writing a frame to the XAudio stream.",										// Description of error 5001
-	L"An error has occurred while deleting the XAudio stream.",													// Description of error 5002
+	/* -1 */ L"The cause of the error is unknown, no description is available.",
+	/* 0 */ L"Everything's fine.",
+	/* 1 */ L"There's not enough available memory for the driver.\nIt might be caused by a really big SoundFont, or by the app itself.\n\nTry using a smaller SoundFont, or switch to the 64-bit version of the app, if available.",
+	/* 2 */ L"Ensure the file you selected actually exists, and if the drive hosting the file is online.",
+	/* 3 */ L"Another app might've took exclusive use of the selected audio device. Try closing all the other audio applications, then try again. Ensure you're not running another exclusive-mode instance of Keppy's Synthesizer.",
+	/* 4 */ L"The sound card might've timed out, or the buffer size might not be big enough for it to handle. Try increasing the buffer size, or switch to another audio device.",
+	/* 5 */ L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.",
+	/* 6 */ L"You're using an audio frequency that isn't supported by the device. If it still works after pressing OK, then ignore this message, otherwise change the frequency in the configurator.",
+	/* 7 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 8 */ L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.",
+	/* 9 */ L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.",
+	/* 10 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 11 */ L"The cause of the error is unknown, no description is available.",
+	/* 12 */ L"The cause of the error is unknown, no description is available.",
+	/* 13 */ L"The cause of the error is unknown, no description is available.",
+	/* 14 */ L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.",
+	/* 15 */ L"The cause of the error is unknown, no description is available.",
+	/* 16 */ L"The cause of the error is unknown, no description is available.",
+	/* 17 */ L"The cause of the error is unknown, no description is available.",
+	/* 18 */ L"BASS or BASSMIDI are unable to allocate a stream channel. If you're using VirtualMIDISynth 1.x, please uninstall it, otherwise restart the application.",
+	/* 19 */ L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.",
+	/* 20 */ L"The ASIO/WASAPI device might be incompatible with a certain function you enabled in the settings. Try disabling that specific function, otherwise switch to another device",
+	/* 21 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 22 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 23 */ L"The device you selected doesn't exist. Check the selected device in the configurator.",
+	/* 24 */ L"The driver encountered an error, and called the same function twice. Restart the application.",
+	/* 25 */ L"You're using an audio frequency that isn't supported by the device. Change the frequency in the configurator.",
+	/* 26 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 27 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 28 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 29 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 30 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 31 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 32 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 33 */ L"You might not have the required permissions to write the file, or BASS might have encountered an error while creating it.",
+	/* 34 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 35 */ L"The driver encountered an error, and called the same function twice. Restart the application.",
+	/* 36 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 37 */ L"The audio data wasn't ready yet to be picked up. This can be caused by a timeout in the buffer system, or by a dead audio stream. Try restarting the application.",
+	/* 38 */ L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.",
+	/* 39 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 40 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 41 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 42 */ L"BASS is unable to use the speakers. Make sure nothing is having exclusive control over the selected audio device.",
+	/* 43 */ L"This is a serious error, please reisntall the driver.\nIf it happens again, contact KaleidonKep99.",
+	/* 44 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 45 */ L"Not used by Keppy's Synthesizer, contact KaleidonKep99.",
+	/* 46 */  L"Another app might've took exclusive use of the selected audio device. Try closing all the other audio applications, then try again. Ensure you're not running another exclusive-mode instance of Keppy's Synthesizer.",
+};
+
+static TCHAR * BASSWASAPIErrorFix[2] =
+{
+	L"You might be using a OS without WASAPI support, or the required DLL file might be missing from the driver's directory.\n\nTry reinstalling the driver.",
+	L"Big buffer values aren't supported in exclusive mode.\n\nTry using a smaller size.",
 };

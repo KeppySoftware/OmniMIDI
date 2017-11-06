@@ -177,38 +177,41 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 	lstrcat(main, engine);
 	lstrcat(main, L" encountered the following error: ");
 	if (e >= 0 && e <= 48) {
-		lstrcat(main, basserrc[e]);
-		basserrconsole(FOREGROUND_RED, basserrc[e], basserrc[e + 48]);
+		lstrcat(main, BASSErrorCode[e]);
+		basserrconsole(FOREGROUND_RED, BASSErrorCode[e], BASSErrorCode[e]);
 	}
 	else if (e >= 5000 && e <= 5001) {
-		lstrcat(main, basswasapierrc[e - 5000]);
-		basserrconsole(FOREGROUND_RED, basswasapierrc[e], basswasapierrc[e - 5000 + 2]);
-	}
-	else if (e >= 5200 && e <= 5202) {
-		lstrcat(main, bassxaerrc[e - 5200]);
-		basserrconsole(FOREGROUND_RED, bassxaerrc[e - 5200], bassxaerrc[e - 5200 + 3]);
+		lstrcat(main, BASSWASAPIErrorCode[e - 5000]);
+		basserrconsole(FOREGROUND_RED, BASSWASAPIErrorCode[e - 5000], BASSErrorDesc[e - 5000]);
 	}
 	lstrcat(main, L" (E");
 	lstrcat(main, ernumb.c_str());
 	lstrcat(main, L")");
 
+	if (mode == 0) {
+		lstrcat(main, L"\n\nCode line error: ");
+		lstrcat(main, codeline);
+	}
+
 	lstrcat(main, L"\n\nExplanation: ");
 	if (e >= 0 && e <= 48) {
-		lstrcat(main, basserrc[e + 48]);
+		lstrcat(main, BASSErrorDesc[e]);
 	}
 	else if (e >= 5000 && e <= 5001) {
-		lstrcat(main, basswasapierrc[e - 5000 + 2]);
+		lstrcat(main, BASSWASAPIErrorDesc[e - 5000]);
 	}
-	else if (e >= 5200 && e <= 5202) {
-		lstrcat(main, bassxaerrc[e - 5200 + 3]);
+
+	if (mode == 1) lstrcat(main, L"\n\nWhat might have caused this error:\n\n");
+	else {
+		lstrcat(main, L"\n\nPossible fixes:\n");
+		if (e >= 0 && e <= 48)
+			lstrcat(main, BASSErrorFix[e]);
+		else if (e >= 5000 && e <= 5001)
+			lstrcat(main, BASSWASAPIErrorFix[e - 5000]);
 	}
 
 	lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
 	if (isoverrideenabled == 1) lstrcat(main, L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)");
-
-	if (mode == 1) lstrcat(main, L"\n\nWhat might have caused this error:\n\n");
-	else lstrcat(main, L"\n\nCode line error: ");
-	lstrcat(main, codeline);
 
 	if (engine == L"ASIO") {
 		lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
