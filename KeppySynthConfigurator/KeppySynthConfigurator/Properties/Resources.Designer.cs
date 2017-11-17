@@ -228,9 +228,7 @@ namespace KeppySynthConfigurator.Properties {
         ///22 Harmonica
         ///23 Tango Accordion
         ///
-        ///Guitar
-        ///24 Acoustic Guitar (nylon)
-        ///25 Aco [stringa troncata]&quot;;.
+        ///Guitar        /// [stringa troncata]&quot;;.
         /// </summary>
         internal static string gmlist {
             get {
@@ -254,56 +252,6 @@ namespace KeppySynthConfigurator.Properties {
         internal static System.Drawing.Bitmap infoicon {
             get {
                 object obj = ResourceManager.GetObject("infoicon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap KSynthBirthday {
-            get {
-                object obj = ResourceManager.GetObject("KSynthBirthday", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap KSynthChristmas {
-            get {
-                object obj = ResourceManager.GetObject("KSynthChristmas", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap KSynthEpiphany {
-            get {
-                object obj = ResourceManager.GetObject("KSynthEpiphany", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap KSynthHalloween {
-            get {
-                object obj = ResourceManager.GetObject("KSynthHalloween", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap KSynthIndependence {
-            get {
-                object obj = ResourceManager.GetObject("KSynthIndependence", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

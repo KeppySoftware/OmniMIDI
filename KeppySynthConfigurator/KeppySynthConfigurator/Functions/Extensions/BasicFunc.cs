@@ -17,6 +17,7 @@ using Microsoft.Win32;
 // For SF info
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
+using System.Threading;
 
 namespace KeppySynthConfigurator
 {
@@ -533,7 +534,7 @@ namespace KeppySynthConfigurator
         public static int PreviousEngine = 0;
         public static int PreviousFrequency = 0;
         public static int PreviousBuffer = 0;
-        public static void LoadSettings() // Loads the settings from the registry
+        public static void LoadSettings(Form thisform) // Loads the settings from the registry
         {
             // ======= Load settings from the registry
             try
@@ -628,6 +629,22 @@ namespace KeppySynthConfigurator
                         KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
                     }
                 }
+                else
+                {
+                    {
+                        KeppySynthConfiguratorMain.Delegate.ClientSize = new System.Drawing.Size(649, 442);
+                        KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Checked = true;
+                        KeppySynthConfiguratorMain.Delegate.ShowOutLevel.Enabled = true;
+                        KeppySynthConfiguratorMain.Delegate.ShowMixerTools.Checked = false;
+                        KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = true;
+                        KeppySynthConfiguratorMain.Delegate.MixerPanel.Visible = false;
+                        KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
+                        Properties.Settings.Default.Save();
+
+                        thisform.Top = (Screen.PrimaryScreen.Bounds.Height - thisform.Height) / 2;
+                        thisform.Left = (Screen.PrimaryScreen.Bounds.Width - thisform.Width) / 2;
+                    }
+                }
 
                 KeppySynthConfiguratorMain.Delegate.AutoLoad.Checked = Properties.Settings.Default.AutoLoadList;
 
@@ -715,11 +732,11 @@ namespace KeppySynthConfigurator
             {
                 Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
-                ReinitializeSettings();
+                ReinitializeSettings(thisform);
             }
         }
 
-        public static void SaveSettings() // Saves the settings to the registry 
+        public static void SaveSettings(Form thisform) // Saves the settings to the registry 
         {
             /*
              * Key: HKEY_CURRENT_USER\Software\Keppy's Synthesizer\Settings\
@@ -795,11 +812,11 @@ namespace KeppySynthConfigurator
             {
                 Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while saving the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
-                ReinitializeSettings();
+                ReinitializeSettings(thisform);
             }
         }
 
-        public static void ReinitializeSettings() // If the registry is missing, reset it
+        public static void ReinitializeSettings(Form thisform) // If the registry is missing, reset it
         {
             /*
              * Key: HKEY_CURRENT_USER\Software\Keppy's Synthesizer\Settings\
@@ -842,7 +859,7 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", "3", RegistryValueKind.DWord);
 
                 // Reload the settings
-                LoadSettings();
+                LoadSettings(thisform);
             }
             catch (Exception ex)
             {
@@ -857,7 +874,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void ImportSettings(String filename)
+        public static void ImportSettings(Form thisform, String filename)
         {
             try
             {
@@ -879,7 +896,7 @@ namespace KeppySynthConfigurator
                     processTemp.Start();
                     processTemp.WaitForExit();
 
-                    Functions.LoadSettings();
+                    Functions.LoadSettings(thisform);
                 }
                 else
                 {
@@ -984,7 +1001,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", pid, RegistryValueKind.DWord);
         }
 
-        public static void ImportPreset()
+        public static void ImportPreset(Form thisform)
         {
             String PresetTitle = "";
             Boolean dummy = false;
@@ -1044,7 +1061,7 @@ namespace KeppySynthConfigurator
                             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
                             // And then...
-                            Functions.SaveSettings();
+                            Functions.SaveSettings(thisform);
 
                             // Messagebox here
                             Program.DebugToConsole(false, "Settings restored.", null);
@@ -1476,6 +1493,56 @@ namespace KeppySynthConfigurator
             catch
             {
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+            }
+        }
+
+        public static bool MonitorStop = true;
+        public static void MonitorTailOfFile(string filePath)
+        {
+             MonitorStop = false;
+
+            var initialFileSize = new FileInfo(filePath).Length;
+            var lastReadLength = initialFileSize - 1024;
+            if (lastReadLength < 0) lastReadLength = 0;
+
+            while (true)
+            {
+                try
+                {
+                    var fileSize = new FileInfo(filePath).Length;
+                    if (fileSize > lastReadLength)
+                    {
+                        using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        {
+                            fs.Seek(lastReadLength, SeekOrigin.Begin);
+                            var buffer = new byte[1024];
+
+                            while (true)
+                            {
+                                MessageBox.Show("new line");
+
+                                var bytesRead = fs.Read(buffer, 0, buffer.Length);
+                                lastReadLength += bytesRead;
+
+                                if (bytesRead == 0)
+                                    break;
+
+                                var text = ASCIIEncoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                                KeppySynthConfiguratorMain.Delegate.Invoke((MethodInvoker)delegate ()
+                                {
+                                    KeppySynthConfiguratorMain.Delegate.DebugLogShow.AppendText(Environment.NewLine + text);
+                                    KeppySynthConfiguratorMain.Delegate.DebugLogShow.ScrollToCaret();
+                                });
+                            }
+                        }
+                    }
+                }
+                catch { }
+
+                if (MonitorStop == true) break;
+
+                Thread.Sleep(10);
             }
         }
     }

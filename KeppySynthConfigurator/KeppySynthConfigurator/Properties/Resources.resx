@@ -256,19 +256,4 @@
   <data name="BugReportTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Functions\Telemetry\BugReportTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="KSynthBirthday" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\KSynthBirthday.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="KSynthChristmas" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\KSynthChristmas.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="KSynthEpiphany" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\KSynthEpiphany.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="KSynthHalloween" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\KSynthHalloween.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="KSynthIndependence" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Pictures\KSynthIndependence.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
 </root>

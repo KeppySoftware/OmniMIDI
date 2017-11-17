@@ -58,7 +58,6 @@
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
-            this.GTSLink = new System.Windows.Forms.LinkLabelEx();
             this.PatreonBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -90,9 +89,8 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(358, 42);
             this.label2.TabIndex = 2;
-            this.label2.Text = "This software is open-source. Powered by\r\nRedistribution and use of this code or " +
-    "any derivative works are permitted provided that the following conditions are me" +
-    "t:";
+            this.label2.Text = "This software is open-source.\r\nRedistribution and use of this code or any derivat" +
+    "ive works are permitted provided that the following conditions are met:";
             // 
             // GitHubLink
             // 
@@ -357,18 +355,6 @@
             this.DisableBB.Index = -1;
             this.DisableBB.Text = "";
             // 
-            // GTSLink
-            // 
-            this.GTSLink.AutoSize = true;
-            this.GTSLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.GTSLink.Location = new System.Drawing.Point(212, 101);
-            this.GTSLink.Name = "GTSLink";
-            this.GTSLink.Size = new System.Drawing.Size(38, 13);
-            this.GTSLink.TabIndex = 12;
-            this.GTSLink.TabStop = true;
-            this.GTSLink.Text = "G.T.S.";
-            this.GTSLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GTSLink_LinkClicked);
-            // 
             // PatreonBtn
             // 
             this.PatreonBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -390,7 +376,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(382, 371);
             this.Controls.Add(this.PatreonBtn);
-            this.Controls.Add(this.GTSLink);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
             this.Controls.Add(this.CTC);
@@ -451,7 +436,6 @@
         private System.Windows.Forms.ToolTip BranchToolTip;
         private System.Windows.Forms.LinkLabelEx ChangeBranch;
         private System.Windows.Forms.MenuItem DisableBB;
-        private System.Windows.Forms.LinkLabelEx GTSLink;
         private System.Windows.Forms.Button PatreonBtn;
     }
 }

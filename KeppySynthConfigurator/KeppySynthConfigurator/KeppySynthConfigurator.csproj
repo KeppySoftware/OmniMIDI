@@ -403,11 +403,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Pictures\KSynthIndependence.png" />
-    <None Include="Resources\Pictures\KSynthHalloween.png" />
-    <None Include="Resources\Pictures\KSynthEpiphany.png" />
-    <None Include="Resources\Pictures\KSynthChristmas.png" />
-    <None Include="Resources\Pictures\KSynthBirthday.png" />
     <None Include="Resources\Text\TelemetryLoginData.txt" />
     <None Include="Resources\LoudMax\LoudMax64.dll" />
     <None Include="Resources\LoudMax\LoudMax.dll" />

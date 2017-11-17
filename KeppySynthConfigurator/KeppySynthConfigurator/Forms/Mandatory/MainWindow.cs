@@ -60,6 +60,7 @@ namespace KeppySynthConfigurator
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE");
         public static string AbsolutePath = soundfontnewlocation + "\\Keppy's Synthesizer";
         public static string PathToAllLists = soundfontnewlocation + "\\Keppy's Synthesizer\\lists";
+        public static string DebugTextFiles = soundfontnewlocation + "\\Keppy's Synthesizer\\debug";
         public static string[] ListsPath = new string[]
         {
             soundfontnewlocation + "\\Keppy's Synthesizer\\lists\\keppymidi.sflist",
@@ -205,6 +206,7 @@ namespace KeppySynthConfigurator
             {
                 // Check for updates as soon as the form shows up
                 Shown += CheckUpdatesStartUp;
+                TabsForTheControls.TabPages.Remove(DebugLog);
 
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
@@ -242,7 +244,7 @@ namespace KeppySynthConfigurator
                 Functions.InitializeLastPath();
 
                 InitializeVolumeLabelFont();
-                Functions.LoadSettings();
+                Functions.LoadSettings(this);
 
                 AudioEngBox_SelectedIndexChanged(null, null);
 
@@ -322,7 +324,7 @@ namespace KeppySynthConfigurator
         {
             if (ImportSettingsDialog.ShowDialog() == DialogResult.OK)
             {
-                Functions.ImportSettings(ImportSettingsDialog.FileName);
+                Functions.ImportSettings(this, ImportSettingsDialog.FileName);
                 MessageBox.Show("The settings have been imported from the selected registry file!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -1001,7 +1003,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             Program.DebugToConsole(false, "Settings restored.", null);
@@ -1011,7 +1013,7 @@ namespace KeppySynthConfigurator
         private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Just save the Settings
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
             EnableFade();
 
             // Messagebox here
@@ -1029,7 +1031,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Microsoft GS Wavetable Synth", 5, 0x0001, 0x001B);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The preset has been applied!\n\nRemember to download the Microsoft GS Wavetable Synth SoundFont for the best \"experience\".", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1046,7 +1048,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1063,7 +1065,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1080,7 +1082,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Chiptune Emulator", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The chiptunes/retrogaming preset has been applied!\n\n\"The NES soundfont\" is recommended for chiptunes.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1097,7 +1099,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"High fidelity audio (For HQ SoundFonts)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1114,7 +1116,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"SoundBlaster - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1131,7 +1133,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"Professional environments - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1148,7 +1150,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"Roland MT-32 Mode\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1920,7 +1922,7 @@ namespace KeppySynthConfigurator
 
         private void ImportPres_Click(object sender, EventArgs e)
         {
-            Functions.ImportPreset();
+            Functions.ImportPreset(this);
         }
 
         private void ExportPres_Click(object sender, EventArgs e)
@@ -2112,7 +2114,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             DialogResult dialogResult = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
@@ -2144,7 +2146,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 85;
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             DialogResult dialogResult3 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult3 == DialogResult.Yes)
@@ -2161,7 +2163,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...
-            Functions.SaveSettings();
+            Functions.SaveSettings(this);
 
             DialogResult dialogResult4 = MessageBox.Show(isitworking2, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult4 == DialogResult.Yes)
@@ -2235,7 +2237,7 @@ namespace KeppySynthConfigurator
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Functions.SaveSettings();
+                Functions.SaveSettings(this);
                 EnableFade();
             }
         }
@@ -2616,6 +2618,54 @@ namespace KeppySynthConfigurator
             MixerPanel.Visible = false;
             VolumeCheck.Enabled = true;
             Properties.Settings.Default.Save();
+        }
+
+        // Debug list
+        private string DebugListToAnalyze = null;
+
+        private void DebugList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Functions.MonitorStop == false) Functions.MonitorStop = true;
+            DebugListToAnalyze = DebugList.Text;
+
+            using (var fs = new FileStream(DebugListToAnalyze, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var sr = new StreamReader(fs, Encoding.Default)) DebugLogShow.Text = sr.ReadToEnd();
+            Thread.Sleep(10);
+
+            DebugLogAnalyze.RunWorkerAsync();
+        }
+
+        private void RefreshDebugList_Click(object sender, EventArgs e)
+        {
+            DebugList.Items.Clear();
+
+            string[] fileEntries = Directory.GetFiles(DebugTextFiles);
+            foreach (string fileName in fileEntries)
+            {
+                if (Path.GetExtension(fileName).ToLower() == ".txt")
+                    DebugList.Items.Add(fileName);
+            }
+        }
+
+        private void DebugLogAnalyze_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (e.ChangeType == WatcherChangeTypes.Changed)
+            {
+                using (var fs = new FileStream(DebugListToAnalyze, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var sr = new StreamReader(fs, Encoding.Default))
+                {
+                    while (sr.EndOfStream == false)
+                    {
+                        DebugLogShow.AppendText(Environment.NewLine + sr.ReadLine());
+                        DebugLogShow.ScrollToCaret();
+                    }
+                }
+            }
+        }
+
+        private void DebugLogAnalyze_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Functions.MonitorTailOfFile(DebugListToAnalyze);
         }
     }
 }
