@@ -33,8 +33,6 @@
             this.CurrentLogo = new System.Windows.Forms.PictureBox();
             this.VerLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
-            this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -45,7 +43,6 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.CompiledOn = new System.Windows.Forms.Label();
@@ -59,6 +56,9 @@
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.PatreonBtn = new System.Windows.Forms.Button();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
+            this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
+            this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -91,30 +91,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "This software is open-source.\r\nRedistribution and use of this code or any derivat" +
     "ive works are permitted provided that the following conditions are met:";
-            // 
-            // GitHubLink
-            // 
-            this.GitHubLink.AutoSize = true;
-            this.GitHubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.GitHubLink.Location = new System.Drawing.Point(97, 77);
-            this.GitHubLink.Name = "GitHubLink";
-            this.GitHubLink.Size = new System.Drawing.Size(277, 13);
-            this.GitHubLink.TabIndex = 3;
-            this.GitHubLink.TabStop = true;
-            this.GitHubLink.Text = "https://github.com/KaleidonKep99/Keppy-s-Synthesizer/";
-            this.GitHubLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GitHubLink_LinkClicked);
-            // 
-            // LicenseFile
-            // 
-            this.LicenseFile.AutoSize = true;
-            this.LicenseFile.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.LicenseFile.Location = new System.Drawing.Point(234, 127);
-            this.LicenseFile.Name = "LicenseFile";
-            this.LicenseFile.Size = new System.Drawing.Size(85, 13);
-            this.LicenseFile.TabIndex = 4;
-            this.LicenseFile.TabStop = true;
-            this.LicenseFile.Text = "Open license file";
-            this.LicenseFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LicenseFile_LinkClicked);
             // 
             // label3
             // 
@@ -229,18 +205,6 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Driver info";
-            // 
-            // ChangeBranch
-            // 
-            this.ChangeBranch.AutoSize = true;
-            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
-            this.ChangeBranch.Name = "ChangeBranch";
-            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 10;
-            this.ChangeBranch.TabStop = true;
-            this.ChangeBranch.Text = "Change branch";
-            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
             // 
             // CurBranch
             // 
@@ -368,6 +332,42 @@
             this.PatreonBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.PatreonBtn.UseVisualStyleBackColor = true;
             this.PatreonBtn.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
+            // 
+            // LicenseFile
+            // 
+            this.LicenseFile.AutoSize = true;
+            this.LicenseFile.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.LicenseFile.Location = new System.Drawing.Point(234, 127);
+            this.LicenseFile.Name = "LicenseFile";
+            this.LicenseFile.Size = new System.Drawing.Size(85, 13);
+            this.LicenseFile.TabIndex = 4;
+            this.LicenseFile.TabStop = true;
+            this.LicenseFile.Text = "Open license file";
+            this.LicenseFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LicenseFile_LinkClicked);
+            // 
+            // GitHubLink
+            // 
+            this.GitHubLink.AutoSize = true;
+            this.GitHubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.GitHubLink.Location = new System.Drawing.Point(97, 77);
+            this.GitHubLink.Name = "GitHubLink";
+            this.GitHubLink.Size = new System.Drawing.Size(277, 13);
+            this.GitHubLink.TabIndex = 3;
+            this.GitHubLink.TabStop = true;
+            this.GitHubLink.Text = "https://github.com/KaleidonKep99/Keppy-s-Synthesizer/";
+            this.GitHubLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GitHubLink_LinkClicked);
             // 
             // InfoDialog
             // 

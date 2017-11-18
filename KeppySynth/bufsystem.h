@@ -195,3 +195,22 @@ void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 }
+
+#ifndef __BUFSYSTEM_H
+#define __BUFSYSTEM_H
+
+extern "C" __declspec(dllexport) void SendDirectData(DWORD dwParam)
+{
+	ParseData(0, MODM_DATA, NULL, dwParam, NULL, NULL, NULL);
+}
+
+extern "C" __declspec(dllexport) void SendDirectLongData(DWORD dwParam)
+{
+	ParseData(0, MODM_LONGDATA, NULL, dwParam, NULL, NULL, NULL);
+}
+
+extern "C" __declspec(dllexport) void DriverSauce()
+{
+	MessageBox(NULL, L"Made in Italy with love.", L"Keppy's Synthesizer", MB_ICONERROR | MB_SYSTEMMODAL);
+}
+#endif 

@@ -234,8 +234,6 @@ namespace KeppySynthConfigurator
                 IEL.BackgroundImage = Properties.Resources.ImportIcon;
                 EL.BackgroundImage = Properties.Resources.ExportIcon;
 
-                VolTrackBar.ContextMenu = KnobContext;
-
                 TabsForTheControls.TabPages[0].ImageIndex = 0;
                 TabsForTheControls.TabPages[1].ImageIndex = 1;
 
@@ -294,7 +292,7 @@ namespace KeppySynthConfigurator
             CheckUpdates.RunWorkerAsync();
         }
 
-        private void VolTrackBar_Scroll(object sender)
+       private void VolTrackBar_Scroll(object sender)
         {
             try
             {
@@ -309,6 +307,11 @@ namespace KeppySynthConfigurator
             {
                 Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
             }
+        }
+
+        private void VolTrackBar_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            new PreciseControlVol(VolTrackBar.Value).ShowDialog();
         }
 
         private void ExportSettings_Click(object sender, EventArgs e)
@@ -2351,11 +2354,6 @@ namespace KeppySynthConfigurator
         private void SetAssociationWithSFs_Click(object sender, EventArgs e)
         {
             Functions.SetAssociation();
-        }
-
-        private void FineTuningVolume_Click(object sender, EventArgs e)
-        {
-            new PreciseControlVol(VolTrackBar.Value).ShowDialog();
         }
 
         bool alreadydone = false;

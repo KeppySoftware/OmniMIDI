@@ -1,38 +1,5 @@
 // Keppy's Synthesizer Values
 
-// Outputs
-#ifndef __VAL_H
-#define __VAL_H
-
-SHA256 sha256;
-#define STRINGIFY(...) #__VA_ARGS__
-#define STR(...) STRINGIFY(__VA_ARGS__)
-
-extern "C" __declspec(dllexport) void CompilerID(char * out, int length)
-{
-	const char* a =
-	{
-#include "signature.kep"
-	};
-	std::string shacode = sha256(a);
-	strcpy_s(out, length, shacode.c_str());
-}
-
-extern "C" __declspec(dllexport) void CompilerVersion(char * out, int length)
-{
-	int msver = _MSC_FULL_VER;
-    char ver[300];
-	sprintf(ver, "MSVC %d", msver);
-	std::string vers = ver;
-	strcpy_s(out, length, vers.c_str());
-}
-
-extern "C" __declspec(dllexport) void RavioliRavioli()
-{
-	MessageBox(NULL, L"Give me the formuoli.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-}
-#endif 
-
 // Mandatory values
 static NOTIFYICONDATA niData;
 static HINSTANCE hinst = NULL;			//main DLL handle
