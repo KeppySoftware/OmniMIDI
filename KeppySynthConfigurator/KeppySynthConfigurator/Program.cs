@@ -32,6 +32,8 @@ namespace KeppySynthConfigurator
 
     static class Program
     {
+        public static bool DebugMode = false;
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -46,6 +48,7 @@ namespace KeppySynthConfigurator
             {
                 if (s.ToLowerInvariant() == "/dbg" || s.ToLowerInvariant() == "/debugwindow")
                 {
+                    DebugMode = true;
                     AllocConsole();
                     break;
                 }
@@ -115,32 +118,35 @@ namespace KeppySynthConfigurator
         public static void DebugToConsole(bool isException, String message, Exception ex)
         {
             ShowLastMessage(message, isException);
-            System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
-            String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss.fff tt", ci);
-            try
+            if (DebugMode == true)
             {
-                if (isException)
+                System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
+                String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss.fff tt", ci);
+                try
+                {
+                    if (isException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(String.Format("{0}", CurrentTime));
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(String.Format(" - {0}", ex));
+                        Console.Write(Environment.NewLine);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(String.Format("{0}", CurrentTime));
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(String.Format(" - {0}", message));
+                        Console.Write(Environment.NewLine);
+                    }
+                }
+                catch
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(String.Format("{0}", CurrentTime));
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(String.Format(" - {0}", ex));
+                    Console.Write(" - Something went wrong while displaying the exception.");
                     Console.Write(Environment.NewLine);
                 }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(String.Format("{0}", CurrentTime));
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(String.Format(" - {0}", message));
-                    Console.Write(Environment.NewLine);
-                }
-            }
-            catch
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(" - Something went wrong while displaying the exception.");
-                Console.Write(Environment.NewLine);
             }
         }
 

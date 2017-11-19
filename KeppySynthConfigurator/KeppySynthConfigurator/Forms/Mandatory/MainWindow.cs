@@ -666,11 +666,52 @@ namespace KeppySynthConfigurator
                 {
                     MoveListViewItems(Lis, MoveDirection.Down);
                 }
+                else if (e.KeyCode == Keys.A && e.Control)
+                {
+                    Lis.MultiSelect = true;
+                    foreach (ListViewItem item in Lis.Items)
+                    {
+                        item.Selected = true;
+                    }
+                }
+                else if (e.KeyCode == Keys.C && e.Control)
+                {
+                    var builder = new StringBuilder();
+
+                    if (Lis.SelectedItems.Count > 0)
+                    {
+                        builder.AppendLine("==KeppySynthSFList==");
+                        foreach (ListViewItem item in Lis.SelectedItems)
+                            builder.AppendLine(item.SubItems[0].Text);
+
+                        Clipboard.SetText(builder.ToString());
+                    }
+                }
+                else if (e.KeyCode == Keys.V && e.Control)
+                {
+                    String[] lines = Clipboard.GetText().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+                    if (lines[0] == "==KeppySynthSFList==")
+                    {
+                        lines = lines.Skip(1).ToArray();
+                        Array.Resize(ref lines, lines.Length - 1);
+                        SFListFunc.AddSoundfontsToSelectedList(CurrentList, lines);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 SFListFunc.ReinitializeList(ex, CurrentList);
             }
+        }
+
+        private void CopyListToClipboard()
+        {
+            var builder = new StringBuilder();
+            foreach (ListViewItem item in Lis.SelectedItems)
+                builder.AppendLine(item.SubItems[0].Text);
+
+            Clipboard.SetText(builder.ToString());
         }
 
         private void SelectedSFInfo(MouseEventArgs e)
@@ -775,6 +816,32 @@ namespace KeppySynthConfigurator
         private void menuItem38_Click(object sender, EventArgs e)
         {
             SFEnableDisableSwitch(false);
+        }
+
+        private void menuItem54_Click(object sender, EventArgs e)
+        {
+            var builder = new StringBuilder();
+
+            if (Lis.SelectedItems.Count > 0)
+            {
+                builder.AppendLine("==KeppySynthSFList==");
+                foreach (ListViewItem item in Lis.SelectedItems)
+                    builder.AppendLine(item.SubItems[0].Text);
+
+                Clipboard.SetText(builder.ToString());
+            }
+        }
+
+        private void menuItem55_Click(object sender, EventArgs e)
+        {
+            String[] lines = Clipboard.GetText().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+            if (lines[0] == "==KeppySynthSFList==")
+            {
+                lines = lines.Skip(1).ToArray();
+                Array.Resize(ref lines, lines.Length - 1);
+                SFListFunc.AddSoundfontsToSelectedList(CurrentList, lines);
+            }
         }
 
         private void SFEnableDisableSwitch(Boolean Enable)

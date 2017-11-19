@@ -40,6 +40,9 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem37 = new System.Windows.Forms.MenuItem();
+            this.menuItem54 = new System.Windows.Forms.MenuItem();
+            this.menuItem55 = new System.Windows.Forms.MenuItem();
+            this.menuItem56 = new System.Windows.Forms.MenuItem();
             this.menuItem35 = new System.Windows.Forms.MenuItem();
             this.menuItem38 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
@@ -457,6 +460,9 @@
             this.menuItem4,
             this.menuItem5,
             this.menuItem37,
+            this.menuItem54,
+            this.menuItem55,
+            this.menuItem56,
             this.menuItem35,
             this.menuItem38,
             this.menuItem6,
@@ -497,32 +503,49 @@
             this.menuItem37.Index = 5;
             this.menuItem37.Text = "-";
             // 
+            // menuItem54
+            // 
+            this.menuItem54.Index = 6;
+            this.menuItem54.Text = "Copy selected SoundFont items to clipboard";
+            this.menuItem54.Click += new System.EventHandler(this.menuItem54_Click);
+            // 
+            // menuItem55
+            // 
+            this.menuItem55.Index = 7;
+            this.menuItem55.Text = "Paste SoundFont items from clipboard";
+            this.menuItem55.Click += new System.EventHandler(this.menuItem55_Click);
+            // 
+            // menuItem56
+            // 
+            this.menuItem56.Index = 8;
+            this.menuItem56.Text = "-";
+            // 
             // menuItem35
             // 
-            this.menuItem35.Index = 6;
+            this.menuItem35.Index = 9;
             this.menuItem35.Text = "Enable SoundFont(s)";
             this.menuItem35.Click += new System.EventHandler(this.menuItem35_Click);
             // 
             // menuItem38
             // 
-            this.menuItem38.Index = 7;
+            this.menuItem38.Index = 10;
             this.menuItem38.Text = "Disable SoundFont(s)";
             this.menuItem38.Click += new System.EventHandler(this.menuItem38_Click);
             // 
             // menuItem6
             // 
-            this.menuItem6.Index = 8;
+            this.menuItem6.Index = 11;
             this.menuItem6.Text = "-";
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 9;
+            this.menuItem8.Index = 12;
             this.menuItem8.Text = "Move up";
             this.menuItem8.Click += new System.EventHandler(this.MvU_Click);
             // 
             // menuItem10
             // 
-            this.menuItem10.Index = 10;
+            this.menuItem10.Index = 13;
             this.menuItem10.Text = "Move down";
             this.menuItem10.Click += new System.EventHandler(this.MvD_Click);
             // 
@@ -2285,7 +2308,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 609);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 614);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -3200,7 +3223,7 @@
             this.MixerPanel.Controls.Add(this.CH10VOL);
             this.MixerPanel.Controls.Add(this.CH10);
             this.MixerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MixerPanel.Location = new System.Drawing.Point(0, 417);
+            this.MixerPanel.Location = new System.Drawing.Point(0, 422);
             this.MixerPanel.Name = "MixerPanel";
             this.MixerPanel.Size = new System.Drawing.Size(649, 192);
             this.MixerPanel.TabIndex = 107;
@@ -4199,7 +4222,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(649, 631);
+            this.ClientSize = new System.Drawing.Size(649, 636);
             this.Controls.Add(this.MixerPanel);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
@@ -4631,6 +4654,9 @@
         private System.Windows.Forms.Label label6;
         private System.ComponentModel.BackgroundWorker DebugLogAnalyze;
         public System.Windows.Forms.RichTextBox DebugLogShow;
+        private System.Windows.Forms.MenuItem menuItem54;
+        private System.Windows.Forms.MenuItem menuItem55;
+        private System.Windows.Forms.MenuItem menuItem56;
     }
 }
 

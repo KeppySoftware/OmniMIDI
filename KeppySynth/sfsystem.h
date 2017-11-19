@@ -35,6 +35,7 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 		0
 #endif
 		;
+
 	const TCHAR * ext = _T("");
 	const TCHAR * dot = _tcsrchr(in_path, _T('.'));
 	if (dot != 0) ext = dot + 1;
@@ -139,7 +140,6 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 							cr = endchr;
 							BASS_MIDI_FONTEX fex = { 0, (int)spreset, (int)sbank, (int)dpreset, (int)dbank, 0 };
 							presets.push_back(fex);
-							checksferror(nameptr);
 						}
 						break;
 
@@ -163,7 +163,6 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 						presets.clear();
 						BASS_MIDI_FONTEX fex = { 0, -1, -1, -1, 0, 0 };
 						presets.push_back(fex);
-						checksferror(nameptr);
 					}
 				}
 				else
@@ -171,7 +170,6 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 					BASS_MIDI_FONTEX fex = { 0, -1, -1, -1, 0, 0 };
 					presets.push_back(fex);
 					nameptr = name;
-					checksferror(nameptr);
 				}
 				if ((isalpha(nameptr[0]) && nameptr[1] == _T(':')) || nameptr[0] == '\\')
 				{
@@ -179,6 +177,7 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 				}
 				else
 				{
+					_tcscpy(temp, path);
 					_tcscat(temp, nameptr);
 				}
 				if (name[0] != '@') {
@@ -191,20 +190,34 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 						int sbank;
 						int spreset;
 						HSOUNDFONT font = BASS_MIDI_FontInit(temp, bass_flags);
+						if (!font)
+						{
+							fclose(fl);
+							return false;
+						}
 						for (auto it = presets.begin(); it != presets.end(); ++it)
 						{
 							sbank = it->sbank;
 							spreset = it->spreset;
+
+							if (!font)
+							{
+								fclose(fl);
+								return false;
+							}
+
 							if (preload)
 								BASS_MIDI_FontLoad(font, it->spreset, it->sbank);
+
+							std::wstring appdatapath = L"This error might have been caused by a missing instrument/preset in the SoundFont.\nPlease check if the instrument/preset you selected exists inside the SoundFont, then try again.\n\nAffected SoundFont: ";
+							appdatapath += nameptr;
+							appdatapath += L"\nAffected bank and preset: Bank " + std::to_wstring(sbank) + L", Preset " + std::to_wstring(spreset);
+							CheckUp(CAUSE, (wchar_t *)appdatapath.c_str());
+
 							it->font = font;
 							presetList[uDeviceID].push_back(*it);
 						}
 						_soundFonts[uDeviceID].push_back(font);
-						std::wstring appdatapath = L"This error might have been caused by a missing instrument/preset in the SoundFont.\nPlease check if the instrument/preset you selected exists inside the SoundFont, then try again.\n\nAffected SoundFont: ";
-						appdatapath += nameptr;
-						appdatapath += L"\nAffected bank and preset: Bank " + std::to_wstring(sbank) + L", Preset " + std::to_wstring(spreset);
-						CheckUp(CAUSE, (wchar_t *)appdatapath.c_str());
 					}
 					else {
 						std::wstring appdatapath = L"The following SoundFont does not exist.\n\nAffected SoundFont: ";
@@ -212,9 +225,6 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 						appdatapath += L"\n\nSolution:\nCheck if the SoundFont actually exists in its folder, and if it hasn't accidentally been renamed, moved or deleted.\n\nThe SoundFont will be skipped from the loading process.";
 						MessageBox(NULL, appdatapath.c_str(), L"Keppy's Synthesizer - SoundFont error", MB_OK | MB_ICONERROR);
 					}
-				}
-				else {
-					continue;
 				}
 			}
 			fclose(fl);

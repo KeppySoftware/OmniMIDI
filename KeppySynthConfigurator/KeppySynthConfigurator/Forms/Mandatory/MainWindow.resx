@@ -145,7 +145,7 @@
     <value>552, 56</value>
   </metadata>
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1297, 56</value>
+    <value>1174, 56</value>
   </metadata>
   <metadata name="TabImgs.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>398, 17</value>
@@ -155,7 +155,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAACC
-        CQAAAk1TRnQBSQFMAgEBAgEAAbgBDAG4AQwBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        CQAAAk1TRnQBSQFMAgEBAgEAAUABDQFAAQ0BEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABEAMAAQEBAAEgBgABEBUAAQEDDQERAx0BKgMgAS8DIAEvAyABLwMgAS8DIAEvAyABLwMgAS8DIAEv
         AyABLwMgAS8DHQEqAw0BEQMAAQEPAAEBBAADAgEDAysBQgNUAawDVAGuAy0BRQMCAQMHAAEBjAADBwEJ
         AzUBVwJWAVUBsQJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJYAVYBvAJY
@@ -208,7 +208,7 @@
     <value>442, 56</value>
   </metadata>
   <metadata name="VolumeCheck.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1171, 56</value>
+    <value>1048, 56</value>
   </metadata>
   <metadata name="CheckUpdates.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>918, 56</value>
@@ -223,10 +223,10 @@
     <value>17, 17</value>
   </metadata>
   <metadata name="VolumeTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 95</value>
+    <value>1301, 56</value>
   </metadata>
   <metadata name="ChannelVolume.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>127, 95</value>
+    <value>17, 95</value>
   </metadata>
   <metadata name="DebugLogAnalyze.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1274, 17</value>

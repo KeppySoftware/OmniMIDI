@@ -258,7 +258,7 @@ namespace KeppySynthConfigurator
                 }
                 else
                 {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "Error", "Invalid soundfont!\n\nPlease select a valid soundfont and try again!", false, null);
+                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "Error", String.Format("Invalid soundfont!\n\nFile: {0}\n\nPlease select a valid soundfont and try again!", Soundfonts[i]), false, null);
                 }
             }
         }
