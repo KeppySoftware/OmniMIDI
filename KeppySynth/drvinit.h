@@ -293,8 +293,8 @@ void InitializeWASAPI() {
 	InitializeStreamForExternalEngine(infoDW.mixfreq);
 
 	if (BASS_WASAPI_Init(WASAPIoutput, 0, 2,
-		BASS_WASAPI_BUFFER | (wasapiex ? BASS_WASAPI_EXCLUSIVE : BASS_WASAPI_EVENT),
-		(wasapiex ? ((float)frames / 1000.0f) : infoW.buflen + 5),
+		BASS_WASAPI_BUFFER | (wasapiex ? (BASS_WASAPI_EXCLUSIVE | BASS_WASAPI_DITHER) : BASS_WASAPI_EVENT),
+		(wasapiex ? ((float)frames / 1000.0f) : 0),
 		0, WASAPIProc, NULL)) {
 		CheckUp(ERRORCODE, L"KSInitWASAPI");
 		BASS_WASAPI_Start();
