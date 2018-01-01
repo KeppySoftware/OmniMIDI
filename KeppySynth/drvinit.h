@@ -81,7 +81,7 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 
 void InitializeNotesCatcherThread() {
 	if (hThread4 == NULL) {
-		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, NULL);
+		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
 		SetThreadPriority(hThread4, prioval[driverprio]);
 	}
 }
@@ -106,10 +106,11 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 
 				if (currentengine == 0) AudioRender();
 				else {
-					if (DSoutput != 0) {
+					if (DSoutput != 0 && oldbuffermode == 1) {
 						BASS_ChannelUpdate(KSStream, 0);
+						Sleep(rco);
 					}
-					Sleep(rco);
+					else Sleep(1);
 				}
 			}
 			else break;

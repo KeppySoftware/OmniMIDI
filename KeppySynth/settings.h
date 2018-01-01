@@ -386,6 +386,7 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_ChannelSetSync);
 		LOADBASSFUNCTION(BASS_ChannelStop);
 		LOADBASSFUNCTION(BASS_ChannelUpdate);
+		LOADBASSFUNCTION(BASS_Update);
 		LOADBASSFUNCTION(BASS_ErrorGetCode);
 		LOADBASSFUNCTION(BASS_Free);
 		LOADBASSFUNCTION(BASS_Stop);
@@ -647,6 +648,15 @@ void realtime_load_settings()
 
 		RegQueryValueEx(hKey, L"printmidievent", NULL, &dwType, (LPBYTE)&printmidievent, &dwSize);
 		RegQueryValueEx(hKey, L"printimportant", NULL, &dwType, (LPBYTE)&printimportant, &dwSize);
+
+		if (oldbuffermode == 1) {
+			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+		}
+		else {
+			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 1);
+			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 5);
+		}
 
 		if (vms2emutemp != vms2emu) {
 			ResetSynth(1);

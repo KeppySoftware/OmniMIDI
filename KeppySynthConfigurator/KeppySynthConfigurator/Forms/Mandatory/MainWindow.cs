@@ -1712,6 +1712,7 @@ namespace KeppySynthConfigurator
             {
                 ChangeFromWindows.Visible = false;
                 BufferText.Enabled = false;
+                BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                 DrvHzLabel.Enabled = true;
                 Frequency.Enabled = true;
                 MaxCPU.Enabled = false;
@@ -1733,6 +1734,7 @@ namespace KeppySynthConfigurator
                 Frequency.Enabled = true;
                 MaxCPU.Enabled = true;
                 BufferText.Enabled = true;
+                BufferText.Text = "Additional output buffer (in ms, from 1 to 1000)\n(Helps to reduce stuttering, keep it between 60-70ms for best quality)";
                 bufsize.Enabled = true;
                 StatusBuf.Visible = false;
                 StatusBuf.Enabled = false;
@@ -1752,6 +1754,7 @@ namespace KeppySynthConfigurator
                         BufferText.Enabled = true;
                         StatusBuf.Visible = true;
                         StatusBuf.Enabled = true;
+                        BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                         bufsize.Enabled = true;
                     }
                     else
@@ -1764,6 +1767,7 @@ namespace KeppySynthConfigurator
                         BufferText.Enabled = false;
                         StatusBuf.Visible = false;
                         StatusBuf.Enabled = false;
+                        BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                         bufsize.Enabled = false;
                     }
                 }
@@ -1791,6 +1795,7 @@ namespace KeppySynthConfigurator
                     BufferText.Enabled = false;
                     StatusBuf.Visible = false;
                     StatusBuf.Enabled = false;
+                    BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                     bufsize.Enabled = false;
                 }
             }

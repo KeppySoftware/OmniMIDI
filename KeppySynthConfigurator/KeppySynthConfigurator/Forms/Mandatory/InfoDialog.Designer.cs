@@ -43,6 +43,7 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.CompiledOn = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.PatreonBtn = new System.Windows.Forms.Button();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
@@ -66,7 +66,7 @@
             // 
             // CurrentLogo
             // 
-            this.CurrentLogo.Image = global::KeppySynthConfigurator.Properties.Resources.KSynthLogo;
+            this.CurrentLogo.Image = global::KeppySynthConfigurator.Properties.Resources.KSynthLogo1;
             this.CurrentLogo.Location = new System.Drawing.Point(12, 12);
             this.CurrentLogo.Name = "CurrentLogo";
             this.CurrentLogo.Size = new System.Drawing.Size(79, 80);
@@ -206,6 +206,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Driver info";
             // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
+            // 
             // CurBranch
             // 
             this.CurBranch.AutoSize = true;
@@ -333,18 +345,6 @@
             this.PatreonBtn.UseVisualStyleBackColor = true;
             this.PatreonBtn.Click += new System.EventHandler(this.button1_Click);
             // 
-            // ChangeBranch
-            // 
-            this.ChangeBranch.AutoSize = true;
-            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
-            this.ChangeBranch.Name = "ChangeBranch";
-            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 10;
-            this.ChangeBranch.TabStop = true;
-            this.ChangeBranch.Text = "Change branch";
-            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
-            // 
             // LicenseFile
             // 
             this.LicenseFile.AutoSize = true;
@@ -373,7 +373,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(382, 371);
             this.Controls.Add(this.PatreonBtn);
             this.Controls.Add(this.DonateBtn);

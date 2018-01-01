@@ -669,6 +669,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 0;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
 
@@ -680,6 +681,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Additional output buffer (in ms, from 1 to 1000)\n(Helps to reduce stuttering, keep it between 60-70ms for best quality)";
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                     KeppySynthConfiguratorMain.Delegate.bufsize.Maximum = 1000;
                 }
@@ -691,6 +693,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
@@ -701,6 +704,7 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
                     KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
 
