@@ -42,7 +42,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			bmsyn_play_some_data();
 
 			if (capframerate == 1) Sleep(16); else Sleep(1);
-			if (currentengine < 2) { if (oldbuffermode == 1) break; }
+			if (currentengine == 1 && oldbuffermode == 1) { break; }
 		}
 		catch (...) {
 			crashmessage(L"NotesCatcher");
@@ -51,7 +51,8 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 	hThread4Running = FALSE;
-	ExitThread(0);
+	CloseHandle(hThread4);
+	hThread4 = NULL;
 	return 0;
 }
 
@@ -75,7 +76,8 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
 	hThread3Running = FALSE;
-	ExitThread(0);
+	CloseHandle(hThread3);
+	hThread3 = NULL;
 	return 0;
 }
 
@@ -98,20 +100,17 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				}
 
+				if (currentengine == 0) AudioRender();
+				else {
+					BASS_ChannelUpdate(KSStream, 0);
+					Sleep(rco);
+				}
+
 				if (oldbuffermode == 1) {
 					MT32SetInstruments();
 					bmsyn_play_some_data();
 				}
 				else InitializeNotesCatcherThread();
-
-				if (currentengine == 0) AudioRender();
-				else {
-					if (DSoutput != 0 && oldbuffermode == 1) {
-						BASS_ChannelUpdate(KSStream, 0);
-						Sleep(rco);
-					}
-					else Sleep(1);
-				}
 			}
 			else break;
 		}
@@ -122,7 +121,8 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
 	hThread2Running = FALSE;
-	ExitThread(0);
+	CloseHandle(hThread2);
+	hThread2 = NULL;
 	return 0;
 }
 

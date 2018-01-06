@@ -649,15 +649,6 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"printmidievent", NULL, &dwType, (LPBYTE)&printmidievent, &dwSize);
 		RegQueryValueEx(hKey, L"printimportant", NULL, &dwType, (LPBYTE)&printimportant, &dwSize);
 
-		if (oldbuffermode == 1) {
-			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-		}
-		else {
-			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 1);
-			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 5);
-		}
-
 		if (vms2emutemp != vms2emu) {
 			ResetSynth(1);
 		}
