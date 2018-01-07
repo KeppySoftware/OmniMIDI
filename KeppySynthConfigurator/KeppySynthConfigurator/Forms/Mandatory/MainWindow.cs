@@ -1710,6 +1710,7 @@ namespace KeppySynthConfigurator
         {
             if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
             {
+                UnsupportedEngine.Visible = false;
                 ChangeFromWindows.Visible = false;
                 BufferText.Enabled = false;
                 BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
@@ -1726,6 +1727,7 @@ namespace KeppySynthConfigurator
             }
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
             {
+                UnsupportedEngine.Visible = true;
                 ChangeFromWindows.Visible = false;
                 VolLabel.Enabled = true;
                 VolSimView.Enabled = true;
@@ -1743,6 +1745,7 @@ namespace KeppySynthConfigurator
             {
                 if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
                 {
+                    UnsupportedEngine.Visible = false;
                     DrvHzLabel.Enabled = false;
                     if ((Int32)SynthSettings.GetValue("wasapiex", 0) == 1)
                     {
@@ -1786,6 +1789,7 @@ namespace KeppySynthConfigurator
                         return;
                     }
 
+                    UnsupportedEngine.Visible = false;
                     ChangeFromWindows.Visible = false;
                     VolLabel.Enabled = true;
                     VolSimView.Enabled = true;
@@ -2519,6 +2523,12 @@ namespace KeppySynthConfigurator
                 }
             }
             else new Telemetry().ShowDialog();
+        }
+
+        private void UnsupportedEngine_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("The engine you selected is deprecated, and not supported by both me and Microsoft anymore.\n\nPlease refrain from using it, and switch to another engine.\nIt is recommended to switch to WASAPI, which is the native audio engine since Windows Vista.",
+                    "Keppy's Synthesizer - Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         // Mixer functions

@@ -133,9 +133,9 @@
             this.NoSleep.AutoSize = true;
             this.NoSleep.Location = new System.Drawing.Point(6, 57);
             this.NoSleep.Name = "NoSleep";
-            this.NoSleep.Size = new System.Drawing.Size(211, 17);
+            this.NoSleep.Size = new System.Drawing.Size(210, 17);
             this.NoSleep.TabIndex = 6;
-            this.NoSleep.Text = "Disable sleep states (Unsupported, DS)";
+            this.NoSleep.Text = "Disable sleep states (DirectSound only)\r\n";
             this.NoSleep.UseVisualStyleBackColor = true;
             this.NoSleep.CheckedChanged += new System.EventHandler(this.NoSleep_CheckedChanged);
             // 
@@ -155,9 +155,9 @@
             this.OldBuff.AutoSize = true;
             this.OldBuff.Location = new System.Drawing.Point(6, 38);
             this.OldBuff.Name = "OldBuff";
-            this.OldBuff.Size = new System.Drawing.Size(250, 17);
+            this.OldBuff.Size = new System.Drawing.Size(249, 17);
             this.OldBuff.TabIndex = 4;
-            this.OldBuff.Text = "Enable the old buffer system (Unsupported, DS)";
+            this.OldBuff.Text = "Enable the old buffer system (DirectSound only)";
             this.OldBuff.UseVisualStyleBackColor = true;
             this.OldBuff.CheckedChanged += new System.EventHandler(this.OldBuff_CheckedChanged);
             // 
