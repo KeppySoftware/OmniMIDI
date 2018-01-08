@@ -46,7 +46,9 @@ namespace KeppySynthConfigurator
                 {
                     DevicesList.Items.Add(info.ToString());
                 }
-                DevicesList.SelectedIndex = selecteddeviceprev;
+
+                try { DevicesList.SelectedIndex = selecteddeviceprev; }
+                catch { DevicesList.SelectedIndex = 0; }
 
                 DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             }
