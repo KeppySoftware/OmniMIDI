@@ -68,26 +68,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MeterFunc.cs" />
-    <Compile Include="KeppySynthMixerWindow.cs">
+    <Compile Include="Forms\UpdateFreq.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeppySynthMixerWindow.Designer.cs">
+    <Compile Include="Forms\UpdateFreq.Designer.cs">
+      <DependentUpon>UpdateFreq.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Functions\MeterFunc.cs" />
+    <Compile Include="Forms\KeppySynthMixerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KeppySynthMixerWindow.Designer.cs">
       <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="OverrideInstruments.cs">
+    <Compile Include="Forms\OverrideInstruments.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OverrideInstruments.Designer.cs">
+    <Compile Include="Forms\OverrideInstruments.Designer.cs">
       <DependentUpon>OverrideInstruments.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="KeppySynthMixerWindow.resx">
+    <EmbeddedResource Include="Forms\KeppySynthMixerWindow.resx">
       <DependentUpon>KeppySynthMixerWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OverrideInstruments.resx">
+    <EmbeddedResource Include="Forms\OverrideInstruments.resx">
       <DependentUpon>OverrideInstruments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateFreq.resx">
+      <DependentUpon>UpdateFreq.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

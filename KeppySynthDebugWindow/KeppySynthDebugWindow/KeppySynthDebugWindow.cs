@@ -832,16 +832,15 @@ namespace KeppySynthDebugWindow
 
                         // Get current active voices
                         UpdateActiveVoicesPerChannel();
+
+                        Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("polyphony", "512")));
+
                         if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("polyphony", "512")))
-                        {
                             AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Bold);
-                            AV.ForeColor = Color.DarkRed;
-                        }
                         else
-                        {
                             AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Regular);
-                            AV.ForeColor = SystemColors.ControlText;
-                        }
+
+                        AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitToRange(0, 100));
                         AV.Text = GetActiveVoices();
                         AvV.Text = GetAverageVoices();
 
@@ -852,18 +851,20 @@ namespace KeppySynthDebugWindow
                         }
                         else
                         {
+                            Int32 RTColor = (int)Math.Round((double)(100 * Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0"))) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
+
                             if (Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
                             {
                                 RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
-                                RT.ForeColor = Color.DarkRed;
-                                RT.Text = String.Format("{0}% (Beyond limit: {1}%)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString());
+                                RT.Text = String.Format("{0}% (Beyond limit!)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString());
                             }
                             else
                             {
                                 RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Regular);
-                                RT.ForeColor = SystemColors.ControlText;
                                 RT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusage0", "0").ToString()); // Else, it'll give you the info about how many cycles it needs to work.
                             }
+
+                            RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitToRange(0, 100));
                         }
 
                         if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 0)
@@ -977,5 +978,39 @@ public static class RegexConvert
     {
         Regex rgx = new Regex("[^a-zA-Z0-9()!'-_.\\\\ ]");
         return rgx.Replace(input, "");
+    }
+}
+
+public static class ValueBlend
+{
+    public static Color GetBlendedColor(int percentage)
+    {
+        if (percentage < 50)
+            return Interpolate(Color.FromArgb(32, 150, 0), Color.FromArgb(175, 111, 0), percentage / 50.0);
+        return Interpolate(Color.FromArgb(175, 111, 0), Color.FromArgb(209, 0, 31), (percentage - 50) / 50.0);
+    }
+
+    private static Color Interpolate(Color color1, Color color2, double fraction)
+    {
+        double r = Interpolate(color1.R, color2.R, fraction);
+        double g = Interpolate(color1.G, color2.G, fraction);
+        double b = Interpolate(color1.B, color2.B, fraction);
+        return Color.FromArgb((int)Math.Round(r), (int)Math.Round(g), (int)Math.Round(b));
+    }
+
+    private static double Interpolate(double d1, double d2, double fraction)
+    {
+        return d1 + (d2 - d1) * fraction;
+    }
+}
+
+public static class InputExtensions
+{
+    public static int LimitToRange(
+        this int value, int inclusiveMinimum, int inclusiveMaximum)
+    {
+        if (value < inclusiveMinimum) { return inclusiveMinimum; }
+        if (value > inclusiveMaximum) { return inclusiveMaximum; }
+        return value;
     }
 }

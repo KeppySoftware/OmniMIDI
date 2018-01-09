@@ -234,16 +234,8 @@ namespace KeppySynthMixerWindow
                 ChannelVolume.Enabled = true;
                 GarbageCollector.RunWorkerAsync();
 
-                if (Properties.Settings.Default.VolDelay)
-                {
-                    ReduceDelayVol.Checked = true;
-                    VolumeCheck.Interval = 1;
-                }
-                else
-                {
-                    ReduceDelayVol.Checked = false;
-                    VolumeCheck.Interval = 50;
-                }
+                Meter.ContextMenu = PeakMeterMenu;
+                VolumeCheck.Interval = Convert.ToInt32((1.0 / Properties.Settings.Default.VolUpdateHz) * 1000.0);
 
                 if (Properties.Settings.Default.CurrentTheme == 0) ClassicTheme.PerformClick();
                 else if (Properties.Settings.Default.CurrentTheme == 1) DarkTheme.PerformClick();
@@ -604,25 +596,15 @@ namespace KeppySynthMixerWindow
             Properties.Settings.Default.Save();
         }
 
-        private void ReduceDelayVol_Click(object sender, EventArgs e)
-        {
-            if (!ReduceDelayVol.Checked)
-            {
-                Properties.Settings.Default.VolDelay = true;
-                ReduceDelayVol.Checked = true;
-                VolumeCheck.Interval = 1;
-            }
-            else
-            {
-                Properties.Settings.Default.VolDelay = false;
-                ReduceDelayVol.Checked = false;
-                VolumeCheck.Interval = 50;
-            }
-        }
-
         private void OInst_Click(object sender, EventArgs e)
         {
             new OverrideInstruments().ShowDialog();
+        }
+
+        private void UpdateFreqSet_Click(object sender, EventArgs e)
+        {
+            new Forms.UpdateFreq().ShowDialog();
+            VolumeCheck.Interval = Convert.ToInt32((1.0 / Properties.Settings.Default.VolUpdateHz) * 1000.0);
         }
     }
 }

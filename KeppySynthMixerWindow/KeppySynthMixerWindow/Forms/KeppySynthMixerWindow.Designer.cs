@@ -134,11 +134,13 @@
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.VolumeMonitor = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.ReduceDelayVol = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.muteToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.CheckIfXAudio = new System.Windows.Forms.Timer(this.components);
+            this.PeakMeterMenu = new System.Windows.Forms.ContextMenu();
+            this.UpdateFreqSet = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.MainVol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH16VOL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CH15VOL)).BeginInit();
@@ -640,7 +642,7 @@
             // VolumeCheck
             // 
             this.VolumeCheck.Enabled = true;
-            this.VolumeCheck.Interval = 1;
+            this.VolumeCheck.Interval = 16;
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
             // 
             // WhatIsThis
@@ -1231,7 +1233,7 @@
             this.menuItem9,
             this.VolumeMonitor,
             this.menuItem5,
-            this.ReduceDelayVol,
+            this.menuItem6,
             this.menuItem4,
             this.resetToDefaultToolStripMenuItem,
             this.muteToolStripMenuItem});
@@ -1297,11 +1299,11 @@
             this.menuItem5.Text = "Enable volume boost";
             this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
             // 
-            // ReduceDelayVol
+            // menuItem6
             // 
-            this.ReduceDelayVol.Index = 6;
-            this.ReduceDelayVol.Text = "Reduce volume check delay";
-            this.ReduceDelayVol.Click += new System.EventHandler(this.ReduceDelayVol_Click);
+            this.menuItem6.Index = 6;
+            this.menuItem6.Text = "Set update frequency";
+            this.menuItem6.Click += new System.EventHandler(this.UpdateFreqSet_Click);
             // 
             // menuItem4
             // 
@@ -1327,6 +1329,17 @@
             this.CheckIfXAudio.Enabled = true;
             this.CheckIfXAudio.Interval = 10;
             this.CheckIfXAudio.Tick += new System.EventHandler(this.CheckIfXAudio_Tick);
+            // 
+            // PeakMeterMenu
+            // 
+            this.PeakMeterMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.UpdateFreqSet});
+            // 
+            // UpdateFreqSet
+            // 
+            this.UpdateFreqSet.Index = 0;
+            this.UpdateFreqSet.Text = "Set update frequency";
+            this.UpdateFreqSet.Click += new System.EventHandler(this.UpdateFreqSet_Click);
             // 
             // KeppySynthMixerWindow
             // 
@@ -1508,10 +1521,12 @@
         public System.Windows.Forms.Label CH2;
         public System.Windows.Forms.Label CH1;
         private System.Windows.Forms.MenuItem ItsThe80sTheme;
-        private System.Windows.Forms.MenuItem ReduceDelayVol;
         public System.Windows.Forms.Label VolLevel;
         private System.Windows.Forms.MenuItem OInst;
         private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.ContextMenu PeakMeterMenu;
+        private System.Windows.Forms.MenuItem UpdateFreqSet;
+        private System.Windows.Forms.MenuItem menuItem6;
     }
 }
 
