@@ -1256,44 +1256,44 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.LoPrio.Enabled = Status;
         }
 
-        public static string ReturnLength(long length)
+        public static string ReturnLength(long length, bool apx)
         {
             try
             {
                 if (length >= 1099511627776)
                 {
                     if (length >= 1099511627776 && length < 10995116277760)
-                        return ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.00 TB");
+                        return ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString(apx ? "0.0 TB~" : "0.00 TB");
                     else
-                        return ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
+                        return ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString(apx ? "0 TB~" : "0.0 TB");
                 }
                 else if (length >= 1073741824)
                 {
                     if (length >= 1073741824 && length < 10737418240)
-                        return (((length / 1024f) / 1024f) / 1024f).ToString("0.00 GB");
+                        return (((length / 1024f) / 1024f) / 1024f).ToString(apx ? "0.0 GB~" : "0.00 GB");
                     else
-                        return (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
+                        return (((length / 1024f) / 1024f) / 1024f).ToString(apx ? "0 GB~" : "0.0 GB");
                 }
                 else if (length >= 1048576)
                 {
                     if (length >= 1048576 && length < 10485760)
-                        return ((length / 1024f) / 1024f).ToString("0.00 MB");
+                        return ((length / 1024f) / 1024f).ToString(apx ? "0.0 MB~" : "0.00 MB");
                     else
-                        return ((length / 1024f) / 1024f).ToString("0.0 MB");
+                        return ((length / 1024f) / 1024f).ToString(apx ? "0 MB~" : "0.0 MB");
                 }
                 else if (length >= 1024)
                 {
                     if (length >= 1024 && length < 10240)
-                        return (length / 1024f).ToString("0.00 KB");
+                        return (length / 1024f).ToString(apx ? "0.0 kB~" : "0.00 kB");
                     else
-                        return (length / 1024f).ToString("0.0 KB");
+                        return (length / 1024f).ToString(apx ? "0 kB~" : "0.0 kB");
                 }
                 else
                 {
                     if (length >= 1 && length < 1024)
-                        return (length).ToString("0.00 B");
+                        return (length).ToString(apx ? "0.0 B~" : "0.00 B");
                     else
-                        return (length / 1024f).ToString("0.0 B");
+                        return (length / 1024f).ToString(apx ? "0 B~" : "0.0 B");
                 }
             }
             catch { return "-"; }

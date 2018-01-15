@@ -70,7 +70,7 @@ namespace KeppySynthConfigurator
                 NicknameVal.Text = Environment.UserName;
 
                 foreach (ManagementObject moProcessor in mosProcessor.Get()) RealCPU = moProcessor["name"].ToString();
-                RealRAM = String.Format("{0} bytes ({1})", TotalRAM, Functions.ReturnLength((long)TotalRAM));
+                RealRAM = String.Format("{0} bytes ({1})", TotalRAM, Functions.ReturnLength((long)TotalRAM, false));
 
                 string gpuname = "";
                 uint gpuvram = 0;
@@ -79,7 +79,7 @@ namespace KeppySynthConfigurator
                     gpuname = moGPU["Name"].ToString();
                     gpuvram = Convert.ToUInt32(moGPU["AdapterRAM"]);
                 }
-                RealGPU = String.Format("{0} ({1} of VRAM)", gpuname, Functions.ReturnLength(gpuvram));
+                RealGPU = String.Format("{0} ({1} of VRAM)", gpuname, Functions.ReturnLength(gpuvram, false));
 
                 RealOS = String.Format("{0} ({1})", OSInfo.Name, Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
 

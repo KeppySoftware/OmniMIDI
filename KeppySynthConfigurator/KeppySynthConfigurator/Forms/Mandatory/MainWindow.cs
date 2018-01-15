@@ -546,28 +546,16 @@ namespace KeppySynthConfigurator
                 if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
-                    if (File.Exists(name))
-                    {
-                        SFListFunc.OpenSFWithDefaultApp(name);
-                        Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
-                    }
+                    if (SFListFunc.OpenSFWithDefaultApp(name)) Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
                     else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
                 }
                 else if (howmany > 1)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Are you sure you want to open multiple SoundFonts at the same time?\n\nDoing so could make your computer lag, or in worst cases, hang.", "Keppy's Synthesizer - Open multiple SoundFonts", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (dialogResult == DialogResult.Yes)
+                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                     {
-                        for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
-                        {
-                            String name = Lis.SelectedItems[i].Text.ToString();
-                            if (File.Exists(name))
-                            {
-                                SFListFunc.OpenSFWithDefaultApp(name);
-                                Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
-                            }
-                            else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
-                        }
+                        String name = Lis.SelectedItems[i].Text.ToString();
+                        if (SFListFunc.OpenSFWithDefaultApp(name)) Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
+                        else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
                     }
                 }
             }
@@ -585,11 +573,17 @@ namespace KeppySynthConfigurator
                 if (howmany == 1)
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
-                    SFListFunc.OpenSFDirectory(name);
+                    if (SFListFunc.OpenSFDirectory(name)) Program.DebugToConsole(false, String.Format("Opened soundfont's root folder from list: {0}", name), null);
+                    else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The folder \"{0}\" doesn't exist.", Path.GetDirectoryName(name)), false, null);
                 }
                 else if (howmany > 1)
                 {
-                    MessageBox.Show("You can't open folders from multiple SoundFonts!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                    {
+                        String name = Lis.SelectedItems[i].Text.ToString();
+                        if (SFListFunc.OpenSFDirectory(name)) Program.DebugToConsole(false, String.Format("Opened soundfont's root folder from list: {0}", name), null);
+                        else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The folder \"{0}\" doesn't exist.", Path.GetDirectoryName(name)), false, null);
+                    }
                 }
             }
             catch (Exception ex)
@@ -2116,6 +2110,7 @@ namespace KeppySynthConfigurator
             });
 
             String IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
+            System.Threading.Thread.Sleep(100);
 
             if (IsUpdateAvailable == "yes") this.Invoke((MethodInvoker)delegate 
             {
@@ -2142,12 +2137,15 @@ namespace KeppySynthConfigurator
                 CheckForUpdatesMenu.Enabled = true;
             });
             else this.Invoke((MethodInvoker)delegate {
+                UpdateStatus.Click += CheckUpdatesStartUp;
+                VersionLabel.Click += CheckUpdatesStartUp;
+
                 UpdateStatus.Image = Properties.Resources.ClearIcon;
-                informationAboutTheDriverToolStripMenuItem.Enabled = false;
-                UpdateStatus.Enabled = false;
-                VersionLabel.Enabled = false;
+                informationAboutTheDriverToolStripMenuItem.Enabled = true;
+                UpdateStatus.Enabled = true;
+                VersionLabel.Enabled = true;
                 IsInternetAvailable = false;
-                CheckForUpdatesMenu.Enabled = false;
+                CheckForUpdatesMenu.Enabled = true;
             });
         }
 

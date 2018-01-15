@@ -22,13 +22,13 @@ namespace KeppySynthConfigurator
         {
             if (ext.ToLowerInvariant() != ".sfz")
             {
-                string size = Functions.ReturnLength(length);
+                string size = Functions.ReturnLength(length, false);
                 return size;
             }
             else
             {
                 long size = SFZInfo.GetSoundFontZSize(preset);
-                if (size > 0) return Functions.ReturnLength(size);
+                if (size > 0) return Functions.ReturnLength(size, true);
                 else return "N/A";
             }
         }
@@ -388,7 +388,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static void OpenSFWithDefaultApp(String SoundFont) // Basically changes the directory's name
+        public static bool OpenSFWithDefaultApp(String SoundFont)
         {
             try
             {
@@ -407,14 +407,13 @@ namespace KeppySynthConfigurator
                 {
                     Process.Start(SoundFont);
                 }
-            }
-            catch
-            {
 
+                return true;
             }
+            catch { return false; }
         }
 
-        public static void OpenSFDirectory(String SoundFont) // Basically changes the directory's name
+        public static bool OpenSFDirectory(String SoundFont)
         {
             try
             {
@@ -433,11 +432,10 @@ namespace KeppySynthConfigurator
                 {
                     Process.Start(Path.GetDirectoryName(SoundFont));
                 }
-            }
-            catch
-            {
 
+                return true;
             }
+            catch { return false; }
         }
 
     }

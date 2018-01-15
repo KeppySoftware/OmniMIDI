@@ -97,16 +97,16 @@ namespace KeppySynthConfigurator
             if (Path.GetExtension(sf).ToLowerInvariant() == ".sfz")
             {
                 SofSFLab.Text = String.Format("{0} (Samples: {1}, Presets: {2})",
-                                Functions.ReturnLength(f.Length + SFZInfo.GetSoundFontZSize(sf)),
-                                Functions.ReturnLength(SFZInfo.GetSoundFontZSize(sf)),
-                                Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
+                                Functions.ReturnLength(f.Length + SFZInfo.GetSoundFontZSize(sf), true),
+                                Functions.ReturnLength(SFZInfo.GetSoundFontZSize(sf), true),
+                                Functions.ReturnLength(f.Length - (long)fontinfo.samsize, false));
             }
             else
             {
                 SofSFLab.Text = String.Format("{0} (Samples: {1}, Presets: {2})",
-                                Functions.ReturnLength(f.Length),
-                                Functions.ReturnLength(fontinfo.samsize),
-                                Functions.ReturnLength(f.Length - (long)fontinfo.samsize));
+                                Functions.ReturnLength(f.Length, false),
+                                Functions.ReturnLength(fontinfo.samsize, false),
+                                Functions.ReturnLength(f.Length - (long)fontinfo.samsize, false));
             }
 
             SFfLab.Text = SFListFunc.ReturnSoundFontFormatMore(Path.GetExtension(next));

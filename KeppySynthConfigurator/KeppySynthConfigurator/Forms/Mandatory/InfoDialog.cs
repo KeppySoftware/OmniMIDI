@@ -13,6 +13,7 @@ using Microsoft.VisualBasic.Devices;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace KeppySynthConfigurator
 {
@@ -100,23 +101,33 @@ namespace KeppySynthConfigurator
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
             {
-                WinVer.Text = String.Format("{0}.{1}.{2} (Update Build Revision {3})",
-                   Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
-                   Environment.OSVersion.Version.Build, CurrentVerKey.GetValue("UBR", 0).ToString());
+                WinVer.Text = String.Format("Version {0} (Revision {1})",
+                   CurrentVerKey.GetValue("ReleaseId", 0).ToString(), CurrentVerKey.GetValue("UBR", 0).ToString());
             }
             else // Else, give normal version number
             {
-                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1)
+                if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor > 1)
                 {
-                    WinVer.Text = String.Format("{0}.{1}.{2} ({3})",
+                    WinVer.Text = String.Format("{0}.{1}.{2}",
                         Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
-                        Environment.OSVersion.Version.Build, Environment.OSVersion.ServicePack);
+                        Environment.OSVersion.Version.Build);
                 }
                 else
                 {
-                    WinVer.Text = String.Format("{0}.{1}.{2} (Metro)",
-                        Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
-                        Environment.OSVersion.Version.Build);
+                    int SP = Int32.Parse(Regex.Match(Environment.OSVersion.ServicePack, @"\d+").Value, NumberFormatInfo.InvariantInfo);
+
+                    if (SP > 0)
+                    {
+                        WinVer.Text = String.Format("{0}.{1}.{2} ({3})",
+                            Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
+                            Environment.OSVersion.Version.Build, Environment.OSVersion.ServicePack);
+                    }
+                    else
+                    {
+                        WinVer.Text = String.Format("{0}.{1}.{2}",
+                            Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
+                            Environment.OSVersion.Version.Build);
+                    }
                 }
             }
         }
