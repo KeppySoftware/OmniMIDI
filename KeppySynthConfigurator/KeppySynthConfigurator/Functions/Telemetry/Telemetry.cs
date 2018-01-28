@@ -201,33 +201,34 @@ namespace KeppySynthConfigurator
                 if (dialogResult == DialogResult.No) return;
             }
 
-            StringBuilder TelemetryData = new StringBuilder();
+            if (TelemetryExt.SendInfoForTelemetry(
+                // User info
+                NicknameVal.Text, 
+                Environment.UserName, 
+                Environment.MachineName,
+                EmailVal.Text,
+                String.Format("{0}", String.IsNullOrWhiteSpace(AgeVal.Text) ? "Not specified" : AgeVal.Text),
+                String.Format("{0}", String.IsNullOrWhiteSpace(CountryVal.Text) ? "Not specified" : CountryVal.Text),
 
-            TelemetryData.AppendLine(String.Format("Telemetry data sent by {0} in {1}, through Keppy's Synthesizer {2}.", 
-                NicknameVal.Text, DateTime.Now.ToString(), String.Format("{0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart)));
-            TelemetryData.AppendLine();
-            TelemetryData.AppendLine("========= Personal information =========");
-            TelemetryData.AppendLine(String.Format("Name: {0} (Windows username: {1}, Computer name: {2})", NicknameVal.Text, Environment.UserName, Environment.MachineName));
-            TelemetryData.AppendLine(String.Format("E-mail: {0}", EmailVal.Text));
-            TelemetryData.AppendLine(String.Format("Age: {0}", String.IsNullOrWhiteSpace(AgeVal.Text) ? "Not specified" : AgeVal.Text));
-            TelemetryData.AppendLine(String.Format("Country: {0}", String.IsNullOrWhiteSpace(CountryVal.Text) ? "Not specified" : CountryVal.Text));
-            TelemetryData.AppendLine();
-            TelemetryData.AppendLine("========= PC specifications =========");
-            TelemetryData.AppendLine(String.Format("Processor: {0}\nReal value: {1}", InstCPUVal.Text, RealCPU));
-            TelemetryData.AppendLine(String.Format("Installed RAM: {0}\nReal value: {1}\n", InstRAMVal.Text, RealRAM));
-            TelemetryData.AppendLine(String.Format("Operating system: {0}\nReal value: {1}\n", OSVal.Text, String.Format("{0}, {1}", RealOS, RealPatch)));
-            TelemetryData.AppendLine(String.Format("Graphics card: {0}\nReal value: {1}\n", InstGPUVal.Text, RealGPU));
-            TelemetryData.AppendLine(String.Format("Unique PC HWID: {0}", TelemetryExt.ParseHWID()));
-            TelemetryData.AppendLine(String.Format("MAC Address: {0}", MACAddress));
-            TelemetryData.AppendLine();
-            TelemetryData.AppendLine("========= Sound devices list =========");
-            TelemetryData.AppendLine(String.Format("Default device: {0}", SoundCards.Text.ToString()));
-            foreach (ManagementObject obj in mosSound.Get()) TelemetryData.AppendLine(obj["Name"].ToString());
-            TelemetryData.AppendLine();
-            TelemetryData.AppendLine("========= Additional feedback =========");
-            TelemetryData.AppendLine(String.IsNullOrWhiteSpace(AdditionalFeed.Text) ? "No additional feedback." : AdditionalFeed.Text.ToString());
+                // Computer specifications
+                String.Format("{0} (Real value: {1})", InstCPUVal.Text, RealCPU),
+                String.Format("{0} (Real value: {1})", InstGPUVal.Text, RealGPU),
+                String.Format("{0} (Real value: {1})", InstRAMVal.Text, RealRAM),
+                String.Format("{0} (Real value: {1})", OSVal.Text, String.Format("{0}, {1}", RealOS, RealPatch)),
+                SoundCards.Text.ToString(),
+                TelemetryExt.ParseHWID(),
+                MACAddress,
 
-            if (TelemetryExt.SendInfoForTelemetry(Encoding.ASCII.GetBytes(TelemetryData.ToString()), TelemetryData.ToString(), BugReport.Checked))
+                // Other info
+                DateTime.Now.ToString("dd MMMM yyyy", TelemetryExt.cultureTelemetry),
+                TelemetryExt.RandomID.Next(0, 2147483647).ToString("0000000000"),
+                String.Format("{0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart),
+
+                // Feedback
+                String.IsNullOrWhiteSpace(AdditionalFeed.Text) ? "No additional feedback." : AdditionalFeed.Text.ToString().Replace(System.Environment.NewLine, " "),
+
+                // ?
+                BugReport.Checked))
             {
                 MessageBox.Show("The data have been sent!\nThank you for collaborating!\n\nPress OK to close this dialog.", "Keppy's Synthesizer - Telemetry complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

@@ -38,8 +38,8 @@ namespace KeppySynthConfigurator
     {
         static Guid GuidKey;
         static String[] Data = Properties.Resources.TelemetryLoginData.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
-        static CultureInfo cultureTelemetry = new CultureInfo("en-US");
-        static Random RandomID = new Random();
+        public static CultureInfo cultureTelemetry = new CultureInfo("en-US");
+        public static Random RandomID = new Random();
         static String MACAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()
                              where nic.OperationalStatus == OperationalStatus.Up
                              select nic.GetPhysicalAddress().ToString()
@@ -52,20 +52,17 @@ namespace KeppySynthConfigurator
                 Int32 BanStatus = TelemetryStatus.USER_OK;
 
                 WebClient client = new WebClient();
-                Uri duri = new Uri(String.Format("ftp://{0}", Data[0]));
-                FtpWebRequest DirectoryFTP = (FtpWebRequest)FtpWebRequest.Create(duri);
-                client.Credentials = new NetworkCredential(Data[1], Data[2]);
 
-                Byte[] userbanRAW = client.DownloadData(String.Format("ftp://{0}/{1}", Data[0], "users.banlist"));
+                Byte[] userbanRAW = client.DownloadData(String.Format("https://kaleidonkep99.altervista.org/kstelemetry/{0}", "users.banlist"));
                 String userban = System.Text.Encoding.UTF8.GetString(userbanRAW);
 
-                Byte[] pcbanRAW = client.DownloadData(String.Format("ftp://{0}/{1}", Data[0], "pcs.banlist"));
+                Byte[] pcbanRAW = client.DownloadData(String.Format("https://kaleidonkep99.altervista.org/kstelemetry/{0}", "pcs.banlist"));
                 String pcban = System.Text.Encoding.UTF8.GetString(pcbanRAW);
 
-                Byte[] macbanRAW = client.DownloadData(String.Format("ftp://{0}/{1}", Data[0], "macaddresses.banlist"));
+                Byte[] macbanRAW = client.DownloadData(String.Format("https://kaleidonkep99.altervista.org/kstelemetry/{0}", "macaddresses.banlist"));
                 String macban = System.Text.Encoding.UTF8.GetString(macbanRAW);
 
-                Byte[] hwidRAW = client.DownloadData(String.Format("ftp://{0}/{1}", Data[0], "hwid.banlist"));
+                Byte[] hwidRAW = client.DownloadData(String.Format("https://kaleidonkep99.altervista.org/kstelemetry/{0}", "hwid.banlist"));
                 String hwid = System.Text.Encoding.UTF8.GetString(hwidRAW);
 
                 if (BanStatus == TelemetryStatus.USER_OK)
@@ -117,39 +114,59 @@ namespace KeppySynthConfigurator
             catch { return TelemetryStatus.DATA_ERROR; }
         }
 
-        public static bool SendInfoForTelemetry(Byte[] data, String dataraw, Boolean githubissue)
+        public static bool SendInfoForTelemetry(
+            // User info
+            String username,
+            String winname,
+            String compname,
+            String email,
+            String age,
+            String country,
+            // PC specs
+            String cpu,
+            String gpu,
+            String ram,
+            String os,
+            String snd,
+            String hwid,
+            String mac,
+            // Other info
+            String date,
+            String uid,
+            String drvver,
+            //Feedback
+            String feedback,
+            // ??
+            Boolean githubissue)
         {
             try
             {
                 if (githubissue) { /* Todo */ }
                 else
                 {
-                    try
-                    {
-                        // Create folder
-                        Uri duri = new Uri(String.Format("ftp://{0}/{1}", Data[0], Environment.UserName));
-                        FtpWebRequest DirectoryFTP = (FtpWebRequest)FtpWebRequest.Create(duri);
-                        DirectoryFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
-                        DirectoryFTP.Method = WebRequestMethods.Ftp.MakeDirectory;
-                        FtpWebResponse DirectoryResponse = (FtpWebResponse)DirectoryFTP.GetResponse();
-                        DirectoryResponse.Close();
-                    }
-                    catch { }
-
-                    // Upload data
-                    Uri furi = new Uri(String.Format("ftp://{0}/{1}/{2}", Data[0], Environment.UserName, String.Format("{0}_{1}_{2}_({3}).txt",
-                        Environment.UserName, DateTime.Now.ToString("dd MMMM yyyy", cultureTelemetry), DateTime.Now.ToLongTimeString(), RandomID.Next(0, 2147483647).ToString("0000000000"))));
-                    FtpWebRequest FileFTP = (FtpWebRequest)FtpWebRequest.Create(furi);
-                    FileFTP.Credentials = new NetworkCredential(Data[1], Data[2]);
-                    FileFTP.Method = WebRequestMethods.Ftp.UploadFile;
-                    FileFTP.KeepAlive = false;
-                    FileFTP.UsePassive = true;
-
-                    using (Stream stOut = FileFTP.GetRequestStream()) stOut.Write(data, 0, data.Length);
-
-                    // Close data connection
-                    FtpWebResponse FileResponse = (FtpWebResponse)FileFTP.GetResponse();
-                    FileResponse.Close();
+                    WebClient client = new WebClient();
+                    Stream Done = client.OpenRead(
+                        "https://kaleidonkep99.altervista.org/kstelemetry/send.php" +
+                        "?username=" + username +
+                        "&winname=" + winname +
+                        "&compname=" + compname +
+                        "&email=" + email +
+                        "&age=" + age +
+                        "&country=" + country +
+                        "&cpu=" + cpu +
+                        "&gpu=" + gpu +
+                        "&ram=" + ram +
+                        "&os=" + os +
+                        "&snd=" + snd +
+                        "&hwid=" + hwid +
+                        "&mac=" + mac +
+                        "&date=" + date +
+                        "&uid=" + uid +
+                        "&drvver=" + drvver +
+                        "&feedback=" + feedback);
+                    
+                    Done.Close();
+                    client.Dispose();
                 }
 
                 return true;

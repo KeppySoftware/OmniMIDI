@@ -53,8 +53,8 @@
             this.LetUserEditSpecs = new System.Windows.Forms.CheckBox();
             this.DiscLabel = new System.Windows.Forms.LinkLabelEx();
             this.HelpProvider = new System.Windows.Forms.HelpProvider();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.AdditionalFeed = new System.Windows.Forms.RichTextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.BugReport = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -350,6 +350,20 @@
             this.DiscLabel.Text = "Disclaimer";
             this.DiscLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DiscLabel_LinkClicked);
             // 
+            // AdditionalFeed
+            // 
+            this.AdditionalFeed.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.HelpProvider.SetHelpString(this.AdditionalFeed, "Add additional feedback here.");
+            this.AdditionalFeed.Location = new System.Drawing.Point(6, 15);
+            this.AdditionalFeed.MaxLength = 500;
+            this.AdditionalFeed.Name = "AdditionalFeed";
+            this.HelpProvider.SetShowHelp(this.AdditionalFeed, true);
+            this.AdditionalFeed.Size = new System.Drawing.Size(207, 263);
+            this.AdditionalFeed.TabIndex = 0;
+            this.AdditionalFeed.Text = "";
+            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -361,20 +375,7 @@
             this.groupBox3.Size = new System.Drawing.Size(219, 284);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Additional feedback";
-            // 
-            // AdditionalFeed
-            // 
-            this.AdditionalFeed.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.HelpProvider.SetHelpString(this.AdditionalFeed, "Add additional feedback here.");
-            this.AdditionalFeed.Location = new System.Drawing.Point(6, 15);
-            this.AdditionalFeed.Name = "AdditionalFeed";
-            this.HelpProvider.SetShowHelp(this.AdditionalFeed, true);
-            this.AdditionalFeed.Size = new System.Drawing.Size(207, 263);
-            this.AdditionalFeed.TabIndex = 0;
-            this.AdditionalFeed.Text = "";
+            this.groupBox3.Text = "Additional feedback (Max 500 chars)";
             // 
             // BugReport
             // 
