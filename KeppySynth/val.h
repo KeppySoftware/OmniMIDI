@@ -1,7 +1,6 @@
 // Keppy's Synthesizer Values
 
 // Mandatory values
-static NOTIFYICONDATA niData;
 static HINSTANCE hinst = NULL;			//main DLL handle
 
 static int improveperf = 0;				// Improve performance, reduces compatibility
@@ -12,6 +11,7 @@ static HINSTANCE bass_vst = 0;			// bass_vst handle
 static HINSTANCE bassasio = 0;			// bassasio handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
+static HINSTANCE bassmix = 0;			// bassmix handle
 static HINSTANCE basswasapi = 0;		// basswasapi handle
 
 static bool vstimode = FALSE;
@@ -26,6 +26,9 @@ static int evbuffratio = 1;
 static int evbuffbyram = 0;
 
 // Main values
+static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume (whole)
+static HFX ChVolume;						// Volume (whole)
+
 static HANDLE hConsole;					// Debug console
 static float *sndbf;					// Cake
 static int ASIOoutput = 0;				// Audio output (ASIO)

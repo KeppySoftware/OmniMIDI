@@ -61,6 +61,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
+#define LOADBASSMIXFUNCTION(f) *((void**)&f)=GetProcAddress(bassmix,#f)
 #define LOADBASSWASAPIFUNCTION(f) *((void**)&f)=GetProcAddress(basswasapi,#f)
 #define LOADBASS_FXFUNCTION(f) *((void**)&f)=GetProcAddress(bass_fx,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
@@ -76,6 +77,7 @@ static CRITICAL_SECTION midiparsing;
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>
+#include <bassmix.h>
 #include <bass_vst.h>
 #include <basswasapi.h>
 
@@ -117,7 +119,6 @@ static BASS_WASAPI_INFO infoW;
 static BOOL com_initialized = FALSE;
 static BOOL sound_out_float = FALSE;
 static float sound_out_volume_float = 1.0;
-static int sound_out_volume_int = 0x1000;
 
 // Threads
 static clock_t start1, start2, start3, start4;
@@ -727,7 +728,7 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 				LoadCustomInstruments();
 				keybindings();
 				CheckVolume();
-				Sleep(10);
+				Sleep(5);
 			}
 			stop_rtthread = 0;
 			FreeUpLibraries();

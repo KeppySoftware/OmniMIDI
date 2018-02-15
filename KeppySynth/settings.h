@@ -174,6 +174,8 @@ BOOL load_bassfuncs()
 		TCHAR bassasiopathalt[MAX_PATH] = { 0 };
 		TCHAR bassmidipath[MAX_PATH] = { 0 };
 		TCHAR bassmidipathalt[MAX_PATH] = { 0 };
+		TCHAR bassmixpath[MAX_PATH] = { 0 };
+		TCHAR bassmixpathalt[MAX_PATH] = { 0 };
 		TCHAR basspath[MAX_PATH] = { 0 };
 		TCHAR basspathalt[MAX_PATH] = { 0 };
 		TCHAR bassvstpath[MAX_PATH] = { 0 };
@@ -202,6 +204,7 @@ BOOL load_bassfuncs()
 #if defined(_WIN64)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmidi.dll"));
+		PathAppend(bassmixpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmix.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
 		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassasio.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
@@ -211,6 +214,7 @@ BOOL load_bassfuncs()
 #elif defined(_WIN32)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
+		PathAppend(bassmixpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmix.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
 		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassasio.dll"));
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
@@ -255,6 +259,23 @@ BOOL load_bassfuncs()
 				exit(0);
 			}
 		}
+
+		/* // BASSMix
+		if (PathFileExists(bassmixpathalt)) {
+			if (!(bassmix = LoadLibrary(bassmixpathalt))) {
+				DLLLoadError(bassmixpathalt);
+				exit(0);
+			}
+			isoverrideenabled = 1;
+		}
+		else {
+			lstrcat(bassmixpath, installpath);
+			lstrcat(bassmixpath, L"\\bassmix.dll");
+			if (!(bassmix = LoadLibrary(bassmixpath))) {
+				DLLLoadError(bassmixpath);
+				exit(0);
+			}
+		} */
 
 		// BASSenc
 		if (PathFileExists(bassencpathalt)) {
@@ -399,6 +420,7 @@ BOOL load_bassfuncs()
 		LOADBASSFUNCTION(BASS_SetDevice);
 		LOADBASSFUNCTION(BASS_SetVolume);
 		LOADBASSFUNCTION(BASS_StreamFree);
+		LOADBASSFUNCTION(BASS_FXSetParameters);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
@@ -408,6 +430,8 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+		// LOADBASSMIXFUNCTION(BASS_Mixer_StreamCreate);
+		// LOADBASSMIXFUNCTION(BASS_Mixer_StreamAddChannel);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Free);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetCPU);
 		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetDevice);
@@ -593,7 +617,6 @@ void load_settings(bool streamreload)
 		frequencynew = frequency;
 
 		sound_out_volume_float = (float)volume / 10000.0f;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
 	}
@@ -658,10 +681,12 @@ void realtime_load_settings()
 
 		//cake
 		sound_out_volume_float = (float)volume / 10000.0f;
-		sound_out_volume_int = (int)(sound_out_volume_float * (float)0x1000);
-		if (currentengine == 1) BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volume);
-		else if (currentengine == 2) BASS_ASIO_ChannelSetVolume(FALSE, -1, sound_out_volume_float);
-		else if (currentengine == 3) BASS_WASAPI_SetVolume(BASS_WASAPI_VOL_SESSION, sound_out_volume_float);
+		ChVolumeStruct.fCurrent = 1.0f;
+		ChVolumeStruct.fTarget = sound_out_volume_float;
+		ChVolumeStruct.fTime = 0.0f;
+		ChVolumeStruct.lCurve = 0;
+		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+		CheckUp(ERRORCODE, L"KSVolFXSet");
 
 		// stuff
 		if (autopanic != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);

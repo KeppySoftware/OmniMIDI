@@ -14,10 +14,12 @@ agrsvc.exe
 agsservice.exe
 alg.exe
 ambspie.exe
+applicationframehost.exe
 apsdaemon.exe
 armsvc.exe
 audiorepeater.exe
 audiorepeater_ks.exe
+authy desktop.exe
 battle.net launcher.exe
 beservice_ark.exe
 bittorrentie.exe
@@ -51,6 +53,8 @@ dreamweaver.exe
 easyhooksvc.exe
 easyhooksvc32.exe
 easyhooksvc64.exe
+ehrec.exe
+ehrecvr.exe
 evteng.exe
 explorer.exe
 firefox.exe
@@ -97,6 +101,7 @@ lsm.exe
 lssrvc.exe
 manycam.exe
 mbamservice.exe
+mcglidhost.exe
 mdm.exe
 mdnsresponder.exe
 megasync.exe
@@ -120,6 +125,7 @@ nvsphelper64.exe
 nvstreamnetworkservice.exe
 nvstreamservice.exe
 nvstreamuseragent.exe
+nvtelemetrycontainer.exe
 nvtray.exe
 nvvsvc.exe
 nvwirelesscontroller.exe
@@ -146,12 +152,15 @@ ravcpl32.exe
 ravcpl64.exe
 regsrvc.exe
 rthdcpl.exe
+runtimebroker.exe
 rustclient.exe
 samp.exe
 sandiskssddashboard.exe
 sandiskssddashboardService.exe	
 searchui.exe
+searchui.exe
 secd.exe
+services.exe
 setpoint.exe
 settingssynchost.exe
 sharex.exe
@@ -160,6 +169,7 @@ sidebar.exe
 sihost.exe
 skydrive.exe
 skype.exe
+skypehost.exe
 snagit32.exe
 snagiteditor.exe
 sndrec.exe
@@ -170,6 +180,7 @@ softube plug-ins control (x64).exe
 softube plug-ins control.exe
 soundmax.exe
 spoolsv.exe
+spotify.exe
 stdrt.exe
 steam.exe
 steamservice.exe

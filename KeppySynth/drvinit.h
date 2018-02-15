@@ -463,6 +463,10 @@ bool InitializeBASS(bool restart) {
 			CheckUp(ERRORCODE, L"KSAttributes3");
 		}
 	}
+
+	ChVolume = BASS_ChannelSetFX(KSStream, BASS_FX_VOLUME, 1);
+	CheckUp(ERRORCODE, L"KSVolFX");
+
 	return init;
 }
 
