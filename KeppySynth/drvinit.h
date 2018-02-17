@@ -134,14 +134,6 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	return data;
 }
 
-DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
-{
-	start2 = clock();
-	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
-	if (data == -1) return 0;
-	return data;
-}
-
 void InitializeVSTi(INT32 mixfreq, bool isdecode, LPCWSTR pathtchar, char * pathchar) {
 	/* Currently under construction :P
 	if (PathFileExists(pathtchar) && isbassvstloaded == 1) {
@@ -178,9 +170,12 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 	char *VSTI64 = T2A(vsti64dll);
 	*/
 
-	if (currentengine == 1) {
-		if (defaultoutput == 1) isdecode = TRUE;
+	if (currentengine == 1 || currentengine == 3) {
+		if (defaultoutput == 1) {
+			isdecode = TRUE;
+		}
 		else isdecode = FALSE;
+
 	}
 	else {
 		isdecode = TRUE;
@@ -277,40 +272,7 @@ void ASIOControlPanel() {
 	}
 }
 
-void InitializeWASAPI() {
-	currentengine = 3;
-
-	GetWASAPIDevice();
-
-	BASS_WASAPI_Init(WASAPIoutput, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-	CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
-	BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
-	CheckUp(ERRORCODE, L"KSWASAPIGetDeviceInfo");
-	BASS_WASAPI_GetInfo(&infoW);
-	CheckUp(ERRORCODE, L"KSWASAPIGetBufInfo");
-	BASS_WASAPI_Free();
-	CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
-	
-	InitializeStreamForExternalEngine(infoDW.mixfreq);
-
-	if (BASS_WASAPI_Init(WASAPIoutput, 0, 2,
-		BASS_WASAPI_BUFFER | (wasapiex ? (BASS_WASAPI_EXCLUSIVE | BASS_WASAPI_DITHER) : BASS_WASAPI_EVENT),
-		(wasapiex ? ((float)frames / 1000.0f) : 0),
-		0, WASAPIProc, NULL)) {
-		CheckUp(ERRORCODE, L"KSInitWASAPI");
-		BASS_WASAPI_Start();
-		CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
-	}
-	else {
-		MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to BASSEnc...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open WASAPI device", MB_OK | MB_ICONERROR);
-		currentengine = 0;
-		InitializeStreamForExternalEngine(frequency);
-		InitializeBASSEnc();
-		CheckUp(ERRORCODE, L"KSInitEnc");
-	}
-}
-
-void InitializeDirectSound() {
+void InitializeBASSFinal() {
 	currentengine = 1;
 
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
@@ -358,7 +320,7 @@ void InitializeASIO() {
 	else {
 		CheckUpASIO(ERRORCODE, L"KSInitASIO");
 		MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to WASAPI...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open ASIO device", MB_OK | MB_ICONERROR);
-		InitializeWASAPI();
+		InitializeBASSFinal();
 	}
 }
 
@@ -371,7 +333,7 @@ bool InitializeBASS(bool restart) {
     WASAPIoutput = defaultWoutput - 1;
 	DSoutput = defaultoutput - 1;
 
-	if (currentengine == 1) isds = TRUE; // DirectSound, init BASS for output device
+	if (currentengine == 1 || currentengine == 3) isds = TRUE; // DirectSound or WASAPI internal, init BASS for output device
 	else if (currentengine == 3)  {
 		if (monorendering != 0) {
 			monorendering = 0;
@@ -387,12 +349,6 @@ bool InitializeBASS(bool restart) {
 	}
 
 	// Free BASS
-	BASS_WASAPI_Stop(TRUE);
-	PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
-
-	BASS_WASAPI_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI freed.");
-
 	BASS_ASIO_Stop();
 	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
 
@@ -412,31 +368,26 @@ bool InitializeBASS(bool restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
 
 	// Init BASS
+	int flags;
+	if (currentengine == 1) flags = BASS_DEVICE_DSOUND;
+	else flags = 0;
+
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
-	init = BASS_Init(isds ? DSoutput : 0, frequency, 0, 0, NULL);
+	init = BASS_Init(isds ? DSoutput : 0, frequency, flags, 0, NULL);
 	CheckUp(ERRORCODE, L"BASSInit");
 
 	if (currentengine == 0) {
 		InitializeWAVEnc();
 	}
-	else if (currentengine == 1) {
-		InitializeDirectSound();
+	else if (currentengine == 1 || currentengine == 3) {
+		InitializeBASSFinal();
 	}
 	else if (currentengine == 2) {
 		InitializeASIO();
 	}
-	else if (currentengine == 3) {
-		InitializeWASAPI();
-	}
-	
+
 	if (!KSStream) {
 		// Free BASS
-		BASS_WASAPI_Stop(TRUE);
-		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI stopped.");
-
-		BASS_WASAPI_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSWASAPI terminated.");
-
 		BASS_ASIO_Stop();
 		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
 
@@ -556,8 +507,6 @@ void FreeUpLibraries() {
 	if (KSStream)
 	{
 		ResetSynth(0);
-		BASS_WASAPI_Stop(true);
-		CheckUp(ERRORCODE, L"KSStopWASAPI");
 		BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
 		CheckUp(ERRORCODE, L"KSResetChannelASIO");
 		BASS_ASIO_Stop();
@@ -588,12 +537,6 @@ void FreeUpLibraries() {
 		CheckUp(ERRORCODE, L"KSFreeASIO");
 		FreeLibrary(bassasio);
 		bassasio = 0;
-	}
-	if (basswasapi) {
-		BASS_WASAPI_Free();
-		CheckUp(ERRORCODE, L"KSFreeWASAPI");
-		FreeLibrary(basswasapi);
-		bass = 0;
 	}
 	if (com_initialized) {
 		CoUninitialize();

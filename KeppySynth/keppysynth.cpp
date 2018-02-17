@@ -62,7 +62,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSMIXFUNCTION(f) *((void**)&f)=GetProcAddress(bassmix,#f)
-#define LOADBASSWASAPIFUNCTION(f) *((void**)&f)=GetProcAddress(basswasapi,#f)
 #define LOADBASS_FXFUNCTION(f) *((void**)&f)=GetProcAddress(bass_fx,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 #define Between(value, a, b) (value <= b && value >= a)
@@ -79,7 +78,6 @@ static CRITICAL_SECTION midiparsing;
 #include <bassasio.h>
 #include <bassmix.h>
 #include <bass_vst.h>
-#include <basswasapi.h>
 
 #define MAX_DRIVERS 256
 #define MAX_CLIENTS 256 // Per driver
@@ -113,8 +111,6 @@ static HANDLE load_sfevent = NULL;
 
 static int KSStream = 0;
 static BASS_INFO info;
-static BASS_WASAPI_DEVICEINFO infoDW;
-static BASS_WASAPI_INFO infoW;
 
 static BOOL com_initialized = FALSE;
 static BOOL sound_out_float = FALSE;

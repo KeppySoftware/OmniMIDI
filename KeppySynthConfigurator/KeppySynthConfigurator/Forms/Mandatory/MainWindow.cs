@@ -474,6 +474,11 @@ namespace KeppySynthConfigurator
             OpenSoundFontDirectory();
         }
 
+        private void SincInter_CheckedChanged(object sender, EventArgs e)
+        {
+            Functions.CheckSincEnabled();
+        }
+
         private void ShowOutLevel_Click(object sender, EventArgs e)
         {
             if (ShowOutLevel.Checked != true)
@@ -1059,7 +1064,7 @@ namespace KeppySynthConfigurator
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, 2, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1087,7 +1092,7 @@ namespace KeppySynthConfigurator
         private void MSGSWSEmu_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, true, false, false, false, false, false, 1);
+            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, true, false, false, 0, false, false, false, 1);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
@@ -1104,7 +1109,7 @@ namespace KeppySynthConfigurator
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, true, false, false, 0, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1121,7 +1126,7 @@ namespace KeppySynthConfigurator
         private void lowLatencyPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, true, false, true, true, false, false, 0);
+            Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, true, false, true, 2, true, false, false, 0);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1138,7 +1143,7 @@ namespace KeppySynthConfigurator
         private void chiptunesRetrogamingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, true, false, false, false, false, false, 1);
+            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, true, false, false, 0, false, false, false, 1);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
@@ -1155,7 +1160,7 @@ namespace KeppySynthConfigurator
         private void keppysSteinwayPianoRealismToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, true, false, true, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, true, false, true, 3, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1172,7 +1177,7 @@ namespace KeppySynthConfigurator
         private void SBLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, true, false, false, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, true, false, false, 1, true, false, false, 3);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1189,7 +1194,7 @@ namespace KeppySynthConfigurator
         private void ProLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, true, false, false, 2);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 3, true, false, false, 2);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
@@ -1206,7 +1211,7 @@ namespace KeppySynthConfigurator
         private void MT32Mode_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, true, false, false, 2);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 0, true, false, false, 2);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
@@ -1697,108 +1702,7 @@ namespace KeppySynthConfigurator
 
         public void AudioEngBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AudioEngBoxTrigger(false);
-        }
-
-        private void AudioEngBoxTrigger(bool save)
-        {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
-            {
-                UnsupportedEngine.Visible = false;
-                ChangeFromWindows.Visible = false;
-                BufferText.Enabled = false;
-                BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
-                DrvHzLabel.Enabled = true;
-                Frequency.Enabled = true;
-                MaxCPU.Enabled = false;
-                RenderingTimeLabel.Enabled = false;
-                StatusBuf.Enabled = false;
-                StatusBuf.Visible = false;
-                VolLabel.Enabled = false;
-                VolSimView.Enabled = false;
-                VolTrackBar.Enabled = false;
-                bufsize.Enabled = false;
-            }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
-            {
-                UnsupportedEngine.Visible = true;
-                ChangeFromWindows.Visible = false;
-                VolLabel.Enabled = true;
-                VolSimView.Enabled = true;
-                VolTrackBar.Enabled = true;
-                DrvHzLabel.Enabled = true;
-                Frequency.Enabled = true;
-                MaxCPU.Enabled = true;
-                BufferText.Enabled = true;
-                BufferText.Text = "Additional output buffer (in ms, from 1 to 1000)\n(Helps to reduce stuttering, keep it between 60-70ms for best quality)";
-                bufsize.Enabled = true;
-                StatusBuf.Visible = false;
-                StatusBuf.Enabled = false;
-            }
-            else
-            {
-                if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
-                {
-                    UnsupportedEngine.Visible = false;
-                    DrvHzLabel.Enabled = false;
-                    if ((Int32)SynthSettings.GetValue("wasapiex", 0) == 1)
-                    {
-                        Frequency.Enabled = true;
-                        ChangeFromWindows.Visible = false;
-                        VolLabel.Enabled = false;
-                        VolSimView.Enabled = false;
-                        VolTrackBar.Enabled = false;
-                        BufferText.Enabled = true;
-                        StatusBuf.Visible = true;
-                        StatusBuf.Enabled = true;
-                        BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
-                        bufsize.Enabled = true;
-                    }
-                    else
-                    {
-                        Frequency.Enabled = false;
-                        ChangeFromWindows.Visible = true;
-                        VolLabel.Enabled = true;
-                        VolSimView.Enabled = true;
-                        VolTrackBar.Enabled = true;
-                        BufferText.Enabled = false;
-                        StatusBuf.Visible = false;
-                        StatusBuf.Enabled = false;
-                        BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
-                        bufsize.Enabled = false;
-                    }
-                }
-                else
-                {
-
-                    int numbdev;
-                    BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
-                    for (numbdev = 0; BassAsio.BASS_ASIO_GetDeviceInfo(numbdev, info); numbdev++) ;
-
-                    if (numbdev < 1)
-                    {
-                        Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to switch to WASAPI.", false, null);
-                        KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
-                        AudioEngBoxTrigger(true);
-                        return;
-                    }
-
-                    UnsupportedEngine.Visible = false;
-                    ChangeFromWindows.Visible = false;
-                    VolLabel.Enabled = true;
-                    VolSimView.Enabled = true;
-                    VolTrackBar.Enabled = true;
-                    DrvHzLabel.Enabled = true;
-                    Frequency.Enabled = true;
-                    BufferText.Enabled = false;
-                    StatusBuf.Visible = false;
-                    StatusBuf.Enabled = false;
-                    BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
-                    bufsize.Enabled = false;
-                }
-            }
-            changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
-            if (save) KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
+            Functions.AudioEngBoxTrigger(false);
         }
 
         private void autopanicmode_Click(object sender, EventArgs e)
@@ -1963,22 +1867,6 @@ namespace KeppySynthConfigurator
         private void SelfSignedCertificate_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/KaleidonKep99/Keppy-s-Synthesizer#how-can-i-get-rid-of-the-annoying-smartscreen-block-screen-and-stop-chrome-from-warning-me-not-to-download-your-driver");
-        }
-
-        private void ChangeDefaultOutput_Click(object sender, EventArgs e)
-        {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
-            {
-                DefaultASIOAudioOutput frm = new DefaultASIOAudioOutput();
-                frm.ShowDialog(this);
-                frm.Dispose();
-            }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
-            {
-                DefaultWASAPIAudioOutput frm = new DefaultWASAPIAudioOutput();
-                frm.ShowDialog(this);
-                frm.Dispose();
-            }
         }
 
         private void MaskSynthesizerAsAnother_Click(object sender, EventArgs e)
@@ -2365,7 +2253,7 @@ namespace KeppySynthConfigurator
             if (dialogResult == DialogResult.Yes)
             {
                 var p = new System.Diagnostics.Process();
-                p.StartInfo.FileName = Application.ExecutablePath;
+                p.StartInfo.FileName = System.Reflection.Assembly.GetEntryAssembly().Location;
                 p.StartInfo.Arguments = "/REI";
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.UseShellExecute = false;
@@ -2521,12 +2409,6 @@ namespace KeppySynthConfigurator
                 }
             }
             else new Telemetry().ShowDialog();
-        }
-
-        private void UnsupportedEngine_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("The engine you selected is deprecated, and not supported by both me and Microsoft anymore.\n\nPlease refrain from using it, and switch to another engine.\nIt is recommended to switch to WASAPI, which is the native audio engine since Windows Vista.",
-                    "Keppy's Synthesizer - Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         // Mixer functions

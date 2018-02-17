@@ -184,8 +184,6 @@ BOOL load_bassfuncs()
 		TCHAR bassxapathalt[MAX_PATH] = { 0 };
 		TCHAR bassfxpath[MAX_PATH] = { 0 };
 		TCHAR bassfxpathalt[MAX_PATH] = { 0 };
-		TCHAR basswasapipath[MAX_PATH] = { 0 };
-		TCHAR basswasapipathalt[MAX_PATH] = { 0 };
 
 		int installpathlength;
 
@@ -199,7 +197,6 @@ BOOL load_bassfuncs()
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassxapathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassfxpathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, basswasapipathalt);
 
 #if defined(_WIN64)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
@@ -210,7 +207,6 @@ BOOL load_bassfuncs()
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
 		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassxa.dll"));
 		PathAppend(bassfxpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_fx.dll"));
-		PathAppend(basswasapipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\basswasapi.dll"));
 #elif defined(_WIN32)
 		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
 		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
@@ -220,7 +216,6 @@ BOOL load_bassfuncs()
 		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
 		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassxa.dll"));
 		PathAppend(bassfxpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_fx.dll"));
-		PathAppend(basswasapipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\basswasapi.dll")); 
 #endif
 
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
@@ -290,23 +285,6 @@ BOOL load_bassfuncs()
 			lstrcat(bassencpath, L"\\bassenc.dll");
 			if (!(bassenc = LoadLibrary(bassencpath))) {
 				DLLLoadError(bassencpath);
-				exit(0);
-			}
-		}
-
-		// BASSWASAPI
-		if (PathFileExists(basswasapipathalt)) {
-			if (!(basswasapi = LoadLibrary(basswasapipathalt))) {
-				DLLLoadError(basswasapipathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(basswasapipath, installpath);
-			lstrcat(basswasapipath, L"\\basswasapi.dll");
-			if (!(basswasapi = LoadLibrary(basswasapipath))) {
-				DLLLoadError(basswasapipath);
 				exit(0);
 			}
 		}
@@ -432,18 +410,8 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 		// LOADBASSMIXFUNCTION(BASS_Mixer_StreamCreate);
 		// LOADBASSMIXFUNCTION(BASS_Mixer_StreamAddChannel);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Free);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetCPU);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetDevice);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetDeviceInfo);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetInfo);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_GetLevelEx);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Init);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_PutData);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_SetVolume);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Start);
-		LOADBASSWASAPIFUNCTION(BASS_WASAPI_Stop);
 		LOADBASS_FXFUNCTION(BASS_FX_TempoCreate);
+
 		if (isbassvstloaded == 1) {
 			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
 			LOADBASS_VSTFUNCTION(BASS_VST_ChannelFree);
@@ -596,14 +564,15 @@ void load_settings(bool streamreload)
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
+		if (currentengine == 1) RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
+		else rco = 0;
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+		RegQueryValueEx(hKey, L"sincconv", NULL, &dwType, (LPBYTE)&sincconv, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
 		RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
 		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
-		RegQueryValueEx(hKey, L"wasapiex", NULL, &dwType, (LPBYTE)&wasapiex, &dwSize);
 		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&currentengine, &dwSize);
 		RegSetValueEx(hKey, L"livechange", 0, dwType, (LPBYTE)&zero, sizeof(zero));
 
@@ -660,8 +629,10 @@ void realtime_load_settings()
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
+		if (currentengine == 1) RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
+		else rco = 0;
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
+		RegQueryValueEx(hKey, L"sincconv", NULL, &dwType, (LPBYTE)&sincconv, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"sysresetignore", NULL, &dwType, (LPBYTE)&sysresetignore, &dwSize);
 		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
@@ -691,6 +662,7 @@ void realtime_load_settings()
 		// stuff
 		if (autopanic != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
 
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_SRC, sincconv);
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
 		if (noteoff1) {
 			BASS_ChannelFlags(KSStream, BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
@@ -813,7 +785,7 @@ void CheckVolume() {
 			DWORD left, right;
 			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 
-			if (currentengine == 1)
+			if (currentengine == 1 || currentengine == 3)
 			{
 				BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 			}
@@ -822,10 +794,7 @@ void CheckVolume() {
 				levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
 				levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
 			}
-			else if (currentengine == 3)
-			{
-				BASS_WASAPI_GetLevelEx(levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
-			}
+			else { /* Nothing */ }
 
 			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
 			left = LOWORD(level); // the left level
@@ -853,7 +822,7 @@ void debug_info() {
 		int tempo;
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 		if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
-		else if (currentengine == 3) currentcpuusageE0 = BASS_WASAPI_GetCPU();
+		else if (currentengine == 3) currentcpuusageE0 = currentcpuusage0 + 0.5f;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));

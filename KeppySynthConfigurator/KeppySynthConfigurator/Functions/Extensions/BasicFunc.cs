@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
 using System.Threading;
+using Un4seen.BassAsio;
 
 namespace KeppySynthConfigurator
 {
@@ -531,6 +532,89 @@ namespace KeppySynthConfigurator
             }
         }
 
+
+        public static void CheckSincEnabled()
+        {
+            KeppySynthConfiguratorMain.Delegate.SincConvLab.Enabled = KeppySynthConfiguratorMain.Delegate.SincInter.Checked;
+            KeppySynthConfiguratorMain.Delegate.SincConv.Enabled = KeppySynthConfiguratorMain.Delegate.SincInter.Checked;
+        }
+
+        public static void AudioEngBoxTrigger(bool save)
+        {
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
+            {
+                KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
+                KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.MaxCPU.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.RenderingTimeLabel.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.VolLabel.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
+            {
+                KeppySynthConfiguratorMain.Delegate.VolLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.MaxCPU.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Output buffer (in ms, from 1 to 1000)\n(Helps to reduce stuttering, keep it between 60-70ms for best quality)";
+                KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
+            {
+                int numbdev;
+                BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
+                for (numbdev = 0; BassAsio.BASS_ASIO_GetDeviceInfo(numbdev, info); numbdev++) ;
+
+                if (numbdev < 1)
+                {
+                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to switch to WASAPI.", false, null);
+                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
+                    AudioEngBoxTrigger(true);
+                    return;
+                }
+
+                KeppySynthConfiguratorMain.Delegate.VolLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
+                KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
+            }
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
+            {
+                KeppySynthConfiguratorMain.Delegate.VolLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.VolSimView.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.MaxCPU.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Output buffer (in ms, from 1 to 1000)\n(It'll be set automatically to the lowest value possible)";
+                KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Visible = false;
+                KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
+            }
+            else KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
+
+            KeppySynthConfiguratorMain.Delegate.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Enabled = true;
+            if (save) KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
+        }
+
         public static int PreviousEngine = 0;
         public static int PreviousFrequency = 0;
         public static int PreviousBuffer = 0;
@@ -673,43 +757,19 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
                 }
 
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1)
-                {
-                    KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 1;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Additional output buffer (in ms, from 1 to 1000)\n(Helps to reduce stuttering, keep it between 60-70ms for best quality)";
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Maximum = 1000;
-                }
-                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2)
-                {
-                    KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 2;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
-                }
-                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3)
-                {
-                    KeppySynthConfiguratorMain.Delegate.DrvHzLabel.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.Frequency.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.StatusBuf.Enabled = false;
-                    KeppySynthConfiguratorMain.Delegate.BufferText.Text = "Driver buffer length (in ms, from 1 to 1000)";
-                    KeppySynthConfiguratorMain.Delegate.bufsize.Value = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50));
-                }
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 0) KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 0;
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 1) KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 1;
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 2) KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 2;
+                else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0)) == 3) KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
+                else KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
+                AudioEngBoxTrigger(false);
 
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sinc", 0)) == 1)
                     KeppySynthConfiguratorMain.Delegate.SincInter.Checked = true;
+                Functions.CheckSincEnabled();
+
+                try { KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sincconv", 0)); }
+                catch { KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex = 2; }
 
                 if (Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 15063)
                     KeppySynthConfiguratorMain.Delegate.SpatialSound.Visible = true;
@@ -792,6 +852,8 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "1", RegistryValueKind.DWord);
                 else
                     KeppySynthConfiguratorMain.SynthSettings.SetValue("sinc", "0", RegistryValueKind.DWord);
+
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("sincconv", KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex, RegistryValueKind.DWord);
 
                 if (Properties.Settings.Default.LiveChanges)
                 {
@@ -929,14 +991,15 @@ namespace KeppySynthConfigurator
         /// <param name="preload">Enable or disable the soundfont preload</param>
         /// <param name="noteoffcheck">Enable or disable the check for oldest instances of notes</param>
         /// <param name="sincinter">Enable or disable the sinc interpolation</param>
+        /// <param name="sincconv">Set the quality level of the sinc interpolation. 0 = Linear, 1 = 8 point, 2 = 16 points, 3 = 32 points</param>
         /// <param name="enablesfx">Enable or disable the audio effects</param>
         /// <param name="sysresetignore">Ignore or accept SysEx events</param>
         /// <param name="outputwav">Enable or disable the output to WAV mode</param>
         /// <param name="audioengine">Select the audio engine. 0 = XAudio2, 1 = DirectSound, 2 = ASIO, 3 = WASAPI</param>
         public static void ApplyPresetValues(
             int volume, int voices, int maxcpu, int frequency, int bufsize,
-            bool preload, bool noteoffcheck, bool sincinter, bool enablesfx,
-            bool sysresetignore, bool outputwav, int audioengine)
+            bool preload, bool noteoffcheck, bool sincinter, int sincconv, 
+            bool enablesfx, bool sysresetignore, bool outputwav, int audioengine)
         {
             KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = volume;
             KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = voices;
@@ -945,6 +1008,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.Preload.Checked = preload;
             KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = noteoffcheck;
             KeppySynthConfiguratorMain.Delegate.SincInter.Checked = sincinter;
+            KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex = sincconv;
             KeppySynthConfiguratorMain.Delegate.EnableSFX.Checked = enablesfx;
             KeppySynthConfiguratorMain.Delegate.SysResetIgnore.Checked = sysresetignore;
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = audioengine;
@@ -1027,6 +1091,7 @@ namespace KeppySynthConfigurator
                             else if (SettingName(x) == "NoteOff") KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked = Boolean.TryParse(SettingValue(x), out dummy);
                             else if (SettingName(x) == "Preload") KeppySynthConfiguratorMain.Delegate.Preload.Checked = Boolean.TryParse(SettingValue(x), out dummy);
                             else if (SettingName(x) == "SincInter") KeppySynthConfiguratorMain.Delegate.SincInter.Checked = Boolean.TryParse(SettingValue(x), out dummy);
+                            else if (SettingName(x) == "SincConv") KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex = Convert.ToInt32(SettingValue(x));
                             else if (SettingName(x) == "VoiceLimit") KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(SettingValue(x));
                             else if (SettingName(x) == "Volume") KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(SettingValue(x));
                             // Advanced audio settings
@@ -1057,7 +1122,7 @@ namespace KeppySynthConfigurator
                             Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Error", "Invalid preset!", false, ex);
 
                             // Set some values...
-                            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, true, false, false, 3);
+                            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, 2, true, false, false, 3);
 
                             // Advanced settings here...
                             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
@@ -1107,6 +1172,7 @@ namespace KeppySynthConfigurator
                     SettingsToText.AppendLine(String.Format("NoteOff = {0}", KeppySynthConfiguratorMain.Delegate.NoteOffCheck.Checked));
                     SettingsToText.AppendLine(String.Format("Preload = {0}", KeppySynthConfiguratorMain.Delegate.Preload.Checked));
                     SettingsToText.AppendLine(String.Format("SincInter = {0}", KeppySynthConfiguratorMain.Delegate.SincInter.Checked));
+                    SettingsToText.AppendLine(String.Format("SincConv = {0}", KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex));
                     SettingsToText.AppendLine(String.Format("VoiceLimit = {0}", KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value));
                     SettingsToText.AppendLine(String.Format("Volume = {0}", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value));
                     SettingsToText.AppendLine();

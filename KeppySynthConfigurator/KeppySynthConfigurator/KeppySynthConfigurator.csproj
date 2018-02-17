@@ -117,12 +117,6 @@
     <Compile Include="Forms\Add-ons\BecomeAPatron.Designer.cs">
       <DependentUpon>BecomeAPatron.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.Designer.cs">
-      <DependentUpon>DefaultWASAPIAudioOutput.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Audio Outputs\DefaultASIOAudioOutput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -308,9 +302,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Audio Outputs\DefaultASIOAudioOutput.resx">
       <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Audio Outputs\DefaultWASAPIAudioOutput.resx">
-      <DependentUpon>DefaultWASAPIAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\ChangelogWindow.resx">
       <DependentUpon>ChangelogWindow.cs</DependentUpon>

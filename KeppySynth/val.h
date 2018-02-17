@@ -12,7 +12,6 @@ static HINSTANCE bassasio = 0;			// bassasio handle
 static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassmix = 0;			// bassmix handle
-static HINSTANCE basswasapi = 0;		// basswasapi handle
 
 static bool vstimode = FALSE;
 
@@ -78,6 +77,7 @@ static int rco = 0;						// Reduce CPU overhead
 static int restartvalue = 0;			// How many times you changed the settings in real-time
 static int shortname = 0;				// Use short name or nah
 static int sinc = 0;					// Sinc
+static int sincconv = 2;				// Sinc
 static int sysexignore = 0;				// Ignore SysEx events
 static int sysresetignore = 0;			// Ignore sysex messages
 static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
@@ -85,7 +85,6 @@ static int vmsemu = 0;					// VirtualMIDISynth buffer emulation
 static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int volumemon = 1;				// Volume monitoring
-static int wasapiex = 0;				// Exclusive access to WASAPI device
 
 static int eggnog = 0;					// Dinkleberg
 

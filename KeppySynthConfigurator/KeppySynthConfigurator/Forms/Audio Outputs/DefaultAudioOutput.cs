@@ -13,15 +13,21 @@ namespace KeppySynthConfigurator
 {
     public partial class KeppySynthDefaultOutput : Form
     {
-        public KeppySynthDefaultOutput()
+        bool IsIt = false;
+
+        public KeppySynthDefaultOutput(bool IsItWasapi)
         {
             InitializeComponent();
+            IsIt = IsItWasapi;
         }
 
         private void KeppySynthDefaultOutput_Load(object sender, EventArgs e)
         {
             try
             {
+                if (IsIt) Text = String.Format(Text, "WASAPI");
+                else Text = String.Format(Text, "DirectSound");
+
                 int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultdev", 0);
                 BASS_DEVICEINFO info = new BASS_DEVICEINFO();
                 DevicesList.Items.Add("Default Windows audio output");

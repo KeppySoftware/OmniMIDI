@@ -128,13 +128,15 @@ namespace KeppySynthConfigurator
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "XAudio2")
+            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
-                MessageBox.Show("XAudio2 automatically switches between devices, when you change the default one through the \"Audio device\" applet in Windows.", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput(false);
+                frm.ShowDialog(this);
+                frm.Dispose();
             }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
             {
-                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput();
+                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput(true);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
@@ -144,12 +146,7 @@ namespace KeppySynthConfigurator
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
-            {
-                DefaultWASAPIAudioOutput frm = new DefaultWASAPIAudioOutput();
-                frm.ShowDialog(this);
-                frm.Dispose();
-            }
+            else { /* Nothing */ }
         }
 
         private void ChangePitchShifting_Click(object sender, EventArgs e)

@@ -89,7 +89,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Change default DirectSound output";
+            this.Text = "Change default {0} output";
             this.Load += new System.EventHandler(this.KeppySynthDefaultOutput_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

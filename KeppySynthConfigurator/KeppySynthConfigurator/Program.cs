@@ -12,6 +12,7 @@ using System.Net;
 using System.IO;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace KeppySynthConfigurator
 {
@@ -182,14 +183,14 @@ namespace KeppySynthConfigurator
                             Functions.UserProfileMigration();
                             return;
                         }
-                        if (s.ToLowerInvariant() == "/virtualmidisynth" ||
-                            s.ToLowerInvariant() == "/vms")
-                        {
-                            Process.Start("https://www.youtube.com/watch?v=hR2iRL173KI");
-                            return;
-                        }
                         else if (s.ToLowerInvariant() == "/rei")
                         {
+                            var current = Process.GetCurrentProcess();
+                            Process.GetProcessesByName(current.ProcessName)
+                                .Where(t => t.Id != current.Id)
+                                .ToList()
+                                .ForEach(t => t.Kill());
+
                             RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
                             sourceKey.DeleteSubKeyTree("Keppy's Synthesizer", true);
                             sourceKey.Close();
