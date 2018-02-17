@@ -84,7 +84,7 @@ namespace KeppySynthConfigurator
         // Work
         public static string StatusTemplate = "{0}";
         public static List<string> tempList = new List<string> { };
-        public static int greenfade = 0;
+        public static int applyfade = 0;
         public static int openadvanced { get; set; }
         public static int whichone { get; set; }
         public static string CurrentList { get; set; }
@@ -1072,7 +1072,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             Program.DebugToConsole(false, "Settings restored.", null);
@@ -1081,12 +1081,13 @@ namespace KeppySynthConfigurator
 
         private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Just save the Settings
-            Functions.SaveSettings(this);
-            EnableFade();
+            bool Override;
+            if ((ModifierKeys & Keys.Control) == Keys.Control) Override = true;
+            else Override = false;
 
-            // Messagebox here
-            Program.DebugToConsole(false, "Applied new settings.", null);
+            // Just save the Settings
+            if (Functions.SaveSettings(this, Override)) EnableFade("Saved!", true);
+            else EnableFade("Error!", false);
         }
 
         private void MSGSWSEmu_Click(object sender, EventArgs e)
@@ -1100,7 +1101,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Microsoft GS Wavetable Synth", 5, 0x0001, 0x001B);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("The preset has been applied!\n\nRemember to download the Microsoft GS Wavetable Synth SoundFont for the best \"experience\".", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1117,7 +1118,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1134,7 +1135,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1151,7 +1152,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Chiptune Emulator", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("The chiptunes/retrogaming preset has been applied!\n\n\"The NES soundfont\" is recommended for chiptunes.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1168,7 +1169,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("\"High fidelity audio (For HQ SoundFonts)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1185,7 +1186,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("\"SoundBlaster - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1202,7 +1203,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("\"Professional environments - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1219,7 +1220,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             // Messagebox here
             MessageBox.Show("\"Roland MT-32 Mode\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1682,7 +1683,7 @@ namespace KeppySynthConfigurator
 
         private void WhatIsXAudio_Click(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\n.WAV mode allows you to export the audio to WAV files. More info by clicking \"What's .WAV mode?\".\n\nDirectSound is deprecated, and I will not give support for it.\nIf you're encountering issues while using it, switch to WASAPI or ASIO.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving REALLY low latencies with little CPU usage; however, \"Exclusive mode\" is needed to reach latencies close to 1ms. This, however, will disallow other apps from outputting audio.",
+            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\n.WAV mode allows you to export the audio to WAV files. More info by clicking \"What's .WAV mode?\".\n\nDirectSound is deprecated, and I will not give support for it.\nIf you're encountering issues while using it, switch to WASAPI or ASIO.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving low latencies with little CPU usage, thanks to its integration with the Windows kernel.",
                 "What are engines?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -2079,7 +2080,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             DialogResult dialogResult = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
@@ -2111,7 +2112,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 85;
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             DialogResult dialogResult3 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult3 == DialogResult.Yes)
@@ -2128,7 +2129,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...
-            Functions.SaveSettings(this);
+            Functions.SaveSettings(this, true);
 
             DialogResult dialogResult4 = MessageBox.Show(isitworking2, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult4 == DialogResult.Yes)
@@ -2202,27 +2203,39 @@ namespace KeppySynthConfigurator
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Functions.SaveSettings(this);
-                EnableFade();
+                // Just save the Settings
+                if (Functions.SaveSettings(this, false))
+                {
+                    EnableFade("Saved!", true);
+                    Program.DebugToConsole(false, "Applied new settings.", null);
+                }
+                else
+                {
+                    EnableFade("Error!", false);
+                    Program.DebugToConsole(false, "Error while saving settings.", null);
+                }
             }
         }
 
-        
-        private void EnableFade()
+        private bool Error = false;
+        private string FadeText = "";
+        private void EnableFade(string text, bool err)
         {
+            FadeText = text;
+            Error = err;
             SystemSounds.Question.Play();
             SavedLabel.Enabled = false;
-            greenfade = 128;
+            applyfade = 128;
             SavedLabel.Enabled = true;
         }
 
         private void SavedLabel_Tick(object sender, EventArgs e)
         {
-            applySettingsToolStripMenuItem.Text = "Saved!";
+            applySettingsToolStripMenuItem.Text = FadeText;
             applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Bold);
-            applySettingsToolStripMenuItem.ForeColor = Color.FromArgb(0, greenfade, 0);
-            greenfade--;
-            if (greenfade <= 1)
+            applySettingsToolStripMenuItem.ForeColor = Color.FromArgb(Error ? 0 : applyfade, Error ? applyfade : 0, 0);
+            applyfade--;
+            if (applyfade <= 1)
             {
                 SavedLabel.Enabled = false;
                 applySettingsToolStripMenuItem.Text = "Apply settings";

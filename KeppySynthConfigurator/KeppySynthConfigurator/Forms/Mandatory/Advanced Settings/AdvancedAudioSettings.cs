@@ -48,26 +48,24 @@ namespace KeppySynthConfigurator
             {
                 OldBuff.Enabled = false;
                 NoSleep.Enabled = false;
+                ChangeDefaultOutput.Enabled = false;
             }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1)
+            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1 || KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
             {
                 OldBuff.Enabled = true;
                 NoSleep.Enabled = true;
+                ChangeDefaultOutput.Enabled = true;
             }
             else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
             {
                 OldBuff.Enabled = false;
                 NoSleep.Enabled = false;
-            }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
-            {
-                AudioBitDepth.Enabled = false;
-                AudioBitDepthLabel.Enabled = false;
-                OldBuff.Enabled = false;
-                NoSleep.Enabled = false;
+                ChangeDefaultOutput.Enabled = true;
             }
             else
             {
+                OldBuff.Enabled = false;
+                NoSleep.Enabled = false;
                 ChangeDefaultOutput.Enabled = false;
             }
 
