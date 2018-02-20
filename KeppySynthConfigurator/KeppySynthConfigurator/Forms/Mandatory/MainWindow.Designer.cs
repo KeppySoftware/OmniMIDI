@@ -58,6 +58,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.VolPanel = new System.Windows.Forms.Panel();
             this.VolLabel = new System.Windows.Forms.Label();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.VolSimView = new System.Windows.Forms.Label();
             this.MixerBox = new System.Windows.Forms.GroupBox();
             this.MixerContext = new System.Windows.Forms.ContextMenu();
@@ -114,6 +115,8 @@
             this.RV14S = new System.Windows.Forms.Panel();
             this.LV14S = new System.Windows.Forms.Panel();
             this.EnginesBox = new System.Windows.Forms.GroupBox();
+            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
+            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
             this.label2 = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.AdditionalSettingsBox = new System.Windows.Forms.GroupBox();
@@ -143,6 +146,10 @@
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.SoundFontTab = new System.Windows.Forms.TabPage();
             this.Separator = new System.Windows.Forms.Label();
+            this.Lis = new KeppySynthConfigurator.ListViewEx();
+            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EL = new System.Windows.Forms.Button();
             this.LoadToApp = new System.Windows.Forms.Button();
             this.IEL = new System.Windows.Forms.Button();
@@ -306,6 +313,7 @@
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MixerPanel = new System.Windows.Forms.Panel();
+            this.OpenFullMixer = new System.Windows.Forms.LinkLabelEx();
             this.Meter = new System.Windows.Forms.Panel();
             this.VolLevel = new System.Windows.Forms.Label();
             this.RV22 = new System.Windows.Forms.Panel();
@@ -392,14 +400,10 @@
             this.CH10 = new System.Windows.Forms.Label();
             this.ChannelVolume = new System.Windows.Forms.Timer(this.components);
             this.DebugLogAnalyze = new System.ComponentModel.BackgroundWorker();
-            this.OpenFullMixer = new System.Windows.Forms.LinkLabelEx();
-            this.Lis = new KeppySynthConfigurator.ListViewEx();
-            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.VolTrackBar = new KnobControl.KnobControl();
-            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
-            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
+            this.VolTrackBarMenu = new System.Windows.Forms.ContextMenu();
+            this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
+            this.menuItem57 = new System.Windows.Forms.MenuItem();
+            this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -637,19 +641,36 @@
             this.VolPanel.Name = "VolPanel";
             this.VolPanel.Size = new System.Drawing.Size(94, 104);
             this.VolPanel.TabIndex = 15;
-            this.VolPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.VolTrackBar_MouseDoubleClick);
             // 
             // VolLabel
             // 
             this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolLabel.Location = new System.Drawing.Point(3, 90);
+            this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolLabel.Location = new System.Drawing.Point(2, 88);
             this.VolLabel.Name = "VolLabel";
-            this.VolLabel.Size = new System.Drawing.Size(55, 14);
+            this.VolLabel.Size = new System.Drawing.Size(41, 14);
             this.VolLabel.TabIndex = 3;
             this.VolLabel.Text = "VOLUME:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.VolLabel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.VolTrackBar_MouseDoubleClick);
+            // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.ShowLargeScale = true;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(79, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.TabIndex = 5;
+            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
+            this.VolTrackBar.Value = 0;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // VolSimView
             // 
@@ -664,7 +685,6 @@
             this.VolSimView.Text = "100";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.VolSimView.UseMnemonic = false;
-            this.VolSimView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.VolTrackBar_MouseDoubleClick);
             // 
             // MixerBox
             // 
@@ -754,7 +774,7 @@
             this.VolLevelS.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.VolLevelS.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolLevelS.ForeColor = System.Drawing.Color.Black;
-            this.VolLevelS.Location = new System.Drawing.Point(20, 75);
+            this.VolLevelS.Location = new System.Drawing.Point(19, 75);
             this.VolLevelS.Name = "VolLevelS";
             this.VolLevelS.Size = new System.Drawing.Size(23, 10);
             this.VolLevelS.TabIndex = 95;
@@ -767,7 +787,7 @@
             this.SignalLabelS.AutoSize = true;
             this.SignalLabelS.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SignalLabelS.ForeColor = System.Drawing.Color.Black;
-            this.SignalLabelS.Location = new System.Drawing.Point(136, 77);
+            this.SignalLabelS.Location = new System.Drawing.Point(135, 77);
             this.SignalLabelS.Name = "SignalLabelS";
             this.SignalLabelS.Size = new System.Drawing.Size(30, 7);
             this.SignalLabelS.TabIndex = 74;
@@ -777,7 +797,7 @@
             // 
             this.LEDS.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LEDS.BackColor = System.Drawing.Color.Black;
-            this.LEDS.Location = new System.Drawing.Point(166, 76);
+            this.LEDS.Location = new System.Drawing.Point(165, 76);
             this.LEDS.Name = "LEDS";
             this.LEDS.Size = new System.Drawing.Size(8, 8);
             this.LEDS.TabIndex = 75;
@@ -789,7 +809,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV22S.BackColor = System.Drawing.Color.Red;
-            this.RV22S.Location = new System.Drawing.Point(169, 46);
+            this.RV22S.Location = new System.Drawing.Point(168, 46);
             this.RV22S.Name = "RV22S";
             this.RV22S.Size = new System.Drawing.Size(5, 28);
             this.RV22S.TabIndex = 93;
@@ -814,7 +834,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV22S.BackColor = System.Drawing.Color.Red;
-            this.LV22S.Location = new System.Drawing.Point(169, 17);
+            this.LV22S.Location = new System.Drawing.Point(168, 17);
             this.LV22S.Name = "LV22S";
             this.LV22S.Size = new System.Drawing.Size(5, 28);
             this.LV22S.TabIndex = 71;
@@ -839,7 +859,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV18S.BackColor = System.Drawing.Color.DarkSalmon;
-            this.RV18S.Location = new System.Drawing.Point(141, 46);
+            this.RV18S.Location = new System.Drawing.Point(140, 46);
             this.RV18S.Name = "RV18S";
             this.RV18S.Size = new System.Drawing.Size(5, 28);
             this.RV18S.TabIndex = 89;
@@ -852,7 +872,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV1S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV1S.Location = new System.Drawing.Point(22, 17);
+            this.LV1S.Location = new System.Drawing.Point(21, 17);
             this.LV1S.Name = "LV1S";
             this.LV1S.Size = new System.Drawing.Size(5, 28);
             this.LV1S.TabIndex = 50;
@@ -865,7 +885,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV18S.BackColor = System.Drawing.Color.DarkSalmon;
-            this.LV18S.Location = new System.Drawing.Point(141, 17);
+            this.LV18S.Location = new System.Drawing.Point(140, 17);
             this.LV18S.Name = "LV18S";
             this.LV18S.Size = new System.Drawing.Size(5, 28);
             this.LV18S.TabIndex = 67;
@@ -878,7 +898,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV2S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV2S.Location = new System.Drawing.Point(29, 17);
+            this.LV2S.Location = new System.Drawing.Point(28, 17);
             this.LV2S.Name = "LV2S";
             this.LV2S.Size = new System.Drawing.Size(5, 28);
             this.LV2S.TabIndex = 51;
@@ -891,7 +911,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV21S.BackColor = System.Drawing.Color.Red;
-            this.RV21S.Location = new System.Drawing.Point(162, 46);
+            this.RV21S.Location = new System.Drawing.Point(161, 46);
             this.RV21S.Name = "RV21S";
             this.RV21S.Size = new System.Drawing.Size(5, 28);
             this.RV21S.TabIndex = 92;
@@ -904,7 +924,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV1S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV1S.Location = new System.Drawing.Point(22, 46);
+            this.RV1S.Location = new System.Drawing.Point(21, 46);
             this.RV1S.Name = "RV1S";
             this.RV1S.Size = new System.Drawing.Size(5, 28);
             this.RV1S.TabIndex = 72;
@@ -917,7 +937,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV21S.BackColor = System.Drawing.Color.Red;
-            this.LV21S.Location = new System.Drawing.Point(162, 17);
+            this.LV21S.Location = new System.Drawing.Point(161, 17);
             this.LV21S.Name = "LV21S";
             this.LV21S.Size = new System.Drawing.Size(5, 28);
             this.LV21S.TabIndex = 70;
@@ -930,7 +950,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV3S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV3S.Location = new System.Drawing.Point(36, 17);
+            this.LV3S.Location = new System.Drawing.Point(35, 17);
             this.LV3S.Name = "LV3S";
             this.LV3S.Size = new System.Drawing.Size(5, 28);
             this.LV3S.TabIndex = 52;
@@ -943,7 +963,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV13S.BackColor = System.Drawing.Color.GreenYellow;
-            this.RV13S.Location = new System.Drawing.Point(106, 46);
+            this.RV13S.Location = new System.Drawing.Point(105, 46);
             this.RV13S.Name = "RV13S";
             this.RV13S.Size = new System.Drawing.Size(5, 28);
             this.RV13S.TabIndex = 84;
@@ -956,7 +976,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV2S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV2S.Location = new System.Drawing.Point(29, 46);
+            this.RV2S.Location = new System.Drawing.Point(28, 46);
             this.RV2S.Name = "RV2S";
             this.RV2S.Size = new System.Drawing.Size(5, 28);
             this.RV2S.TabIndex = 73;
@@ -969,7 +989,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV13S.BackColor = System.Drawing.Color.GreenYellow;
-            this.LV13S.Location = new System.Drawing.Point(106, 17);
+            this.LV13S.Location = new System.Drawing.Point(105, 17);
             this.LV13S.Name = "LV13S";
             this.LV13S.Size = new System.Drawing.Size(5, 28);
             this.LV13S.TabIndex = 62;
@@ -982,7 +1002,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV4S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV4S.Location = new System.Drawing.Point(43, 17);
+            this.LV4S.Location = new System.Drawing.Point(42, 17);
             this.LV4S.Name = "LV4S";
             this.LV4S.Size = new System.Drawing.Size(5, 28);
             this.LV4S.TabIndex = 53;
@@ -995,7 +1015,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV20S.BackColor = System.Drawing.Color.Red;
-            this.RV20S.Location = new System.Drawing.Point(155, 46);
+            this.RV20S.Location = new System.Drawing.Point(154, 46);
             this.RV20S.Name = "RV20S";
             this.RV20S.Size = new System.Drawing.Size(5, 28);
             this.RV20S.TabIndex = 91;
@@ -1008,7 +1028,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV3S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV3S.Location = new System.Drawing.Point(36, 46);
+            this.RV3S.Location = new System.Drawing.Point(35, 46);
             this.RV3S.Name = "RV3S";
             this.RV3S.Size = new System.Drawing.Size(5, 28);
             this.RV3S.TabIndex = 74;
@@ -1021,7 +1041,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV20S.BackColor = System.Drawing.Color.Red;
-            this.LV20S.Location = new System.Drawing.Point(155, 17);
+            this.LV20S.Location = new System.Drawing.Point(154, 17);
             this.LV20S.Name = "LV20S";
             this.LV20S.Size = new System.Drawing.Size(5, 28);
             this.LV20S.TabIndex = 69;
@@ -1034,7 +1054,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV9S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV9S.Location = new System.Drawing.Point(78, 17);
+            this.LV9S.Location = new System.Drawing.Point(77, 17);
             this.LV9S.Name = "LV9S";
             this.LV9S.Size = new System.Drawing.Size(5, 28);
             this.LV9S.TabIndex = 58;
@@ -1047,7 +1067,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV19S.BackColor = System.Drawing.Color.Red;
-            this.RV19S.Location = new System.Drawing.Point(148, 46);
+            this.RV19S.Location = new System.Drawing.Point(147, 46);
             this.RV19S.Name = "RV19S";
             this.RV19S.Size = new System.Drawing.Size(5, 28);
             this.RV19S.TabIndex = 90;
@@ -1060,7 +1080,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV4S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV4S.Location = new System.Drawing.Point(43, 46);
+            this.RV4S.Location = new System.Drawing.Point(42, 46);
             this.RV4S.Name = "RV4S";
             this.RV4S.Size = new System.Drawing.Size(5, 28);
             this.RV4S.TabIndex = 75;
@@ -1073,7 +1093,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV19S.BackColor = System.Drawing.Color.Red;
-            this.LV19S.Location = new System.Drawing.Point(148, 17);
+            this.LV19S.Location = new System.Drawing.Point(147, 17);
             this.LV19S.Name = "LV19S";
             this.LV19S.Size = new System.Drawing.Size(5, 28);
             this.LV19S.TabIndex = 68;
@@ -1086,7 +1106,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV5S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV5S.Location = new System.Drawing.Point(50, 17);
+            this.LV5S.Location = new System.Drawing.Point(49, 17);
             this.LV5S.Name = "LV5S";
             this.LV5S.Size = new System.Drawing.Size(5, 28);
             this.LV5S.TabIndex = 54;
@@ -1099,7 +1119,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV17S.BackColor = System.Drawing.Color.Yellow;
-            this.RV17S.Location = new System.Drawing.Point(134, 46);
+            this.RV17S.Location = new System.Drawing.Point(133, 46);
             this.RV17S.Name = "RV17S";
             this.RV17S.Size = new System.Drawing.Size(5, 28);
             this.RV17S.TabIndex = 88;
@@ -1112,7 +1132,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV9S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV9S.Location = new System.Drawing.Point(78, 46);
+            this.RV9S.Location = new System.Drawing.Point(77, 46);
             this.RV9S.Name = "RV9S";
             this.RV9S.Size = new System.Drawing.Size(5, 28);
             this.RV9S.TabIndex = 80;
@@ -1125,7 +1145,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV17S.BackColor = System.Drawing.Color.Yellow;
-            this.LV17S.Location = new System.Drawing.Point(134, 17);
+            this.LV17S.Location = new System.Drawing.Point(133, 17);
             this.LV17S.Name = "LV17S";
             this.LV17S.Size = new System.Drawing.Size(5, 28);
             this.LV17S.TabIndex = 66;
@@ -1138,7 +1158,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV10S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV10S.Location = new System.Drawing.Point(85, 17);
+            this.LV10S.Location = new System.Drawing.Point(84, 17);
             this.LV10S.Name = "LV10S";
             this.LV10S.Size = new System.Drawing.Size(5, 28);
             this.LV10S.TabIndex = 59;
@@ -1151,7 +1171,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV8S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV8S.Location = new System.Drawing.Point(71, 46);
+            this.RV8S.Location = new System.Drawing.Point(70, 46);
             this.RV8S.Name = "RV8S";
             this.RV8S.Size = new System.Drawing.Size(5, 28);
             this.RV8S.TabIndex = 79;
@@ -1164,7 +1184,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV5S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV5S.Location = new System.Drawing.Point(50, 46);
+            this.RV5S.Location = new System.Drawing.Point(49, 46);
             this.RV5S.Name = "RV5S";
             this.RV5S.Size = new System.Drawing.Size(5, 28);
             this.RV5S.TabIndex = 76;
@@ -1177,7 +1197,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV8S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV8S.Location = new System.Drawing.Point(71, 17);
+            this.LV8S.Location = new System.Drawing.Point(70, 17);
             this.LV8S.Name = "LV8S";
             this.LV8S.Size = new System.Drawing.Size(5, 28);
             this.LV8S.TabIndex = 57;
@@ -1190,7 +1210,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV6S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV6S.Location = new System.Drawing.Point(57, 17);
+            this.LV6S.Location = new System.Drawing.Point(56, 17);
             this.LV6S.Name = "LV6S";
             this.LV6S.Size = new System.Drawing.Size(5, 28);
             this.LV6S.TabIndex = 55;
@@ -1203,7 +1223,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV16S.BackColor = System.Drawing.Color.Yellow;
-            this.RV16S.Location = new System.Drawing.Point(127, 46);
+            this.RV16S.Location = new System.Drawing.Point(126, 46);
             this.RV16S.Name = "RV16S";
             this.RV16S.Size = new System.Drawing.Size(5, 28);
             this.RV16S.TabIndex = 87;
@@ -1216,7 +1236,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV10S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV10S.Location = new System.Drawing.Point(85, 46);
+            this.RV10S.Location = new System.Drawing.Point(84, 46);
             this.RV10S.Name = "RV10S";
             this.RV10S.Size = new System.Drawing.Size(5, 28);
             this.RV10S.TabIndex = 81;
@@ -1229,7 +1249,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV16S.BackColor = System.Drawing.Color.Yellow;
-            this.LV16S.Location = new System.Drawing.Point(127, 17);
+            this.LV16S.Location = new System.Drawing.Point(126, 17);
             this.LV16S.Name = "LV16S";
             this.LV16S.Size = new System.Drawing.Size(5, 28);
             this.LV16S.TabIndex = 65;
@@ -1242,7 +1262,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV6S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV6S.Location = new System.Drawing.Point(57, 46);
+            this.RV6S.Location = new System.Drawing.Point(56, 46);
             this.RV6S.Name = "RV6S";
             this.RV6S.Size = new System.Drawing.Size(5, 28);
             this.RV6S.TabIndex = 77;
@@ -1255,7 +1275,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV12S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV12S.Location = new System.Drawing.Point(99, 46);
+            this.RV12S.Location = new System.Drawing.Point(98, 46);
             this.RV12S.Name = "RV12S";
             this.RV12S.Size = new System.Drawing.Size(5, 28);
             this.RV12S.TabIndex = 83;
@@ -1268,7 +1288,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV11S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV11S.Location = new System.Drawing.Point(92, 17);
+            this.LV11S.Location = new System.Drawing.Point(91, 17);
             this.LV11S.Name = "LV11S";
             this.LV11S.Size = new System.Drawing.Size(5, 28);
             this.LV11S.TabIndex = 60;
@@ -1281,7 +1301,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV12S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV12S.Location = new System.Drawing.Point(99, 17);
+            this.LV12S.Location = new System.Drawing.Point(98, 17);
             this.LV12S.Name = "LV12S";
             this.LV12S.Size = new System.Drawing.Size(5, 28);
             this.LV12S.TabIndex = 61;
@@ -1294,7 +1314,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV11S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV11S.Location = new System.Drawing.Point(92, 46);
+            this.RV11S.Location = new System.Drawing.Point(91, 46);
             this.RV11S.Name = "RV11S";
             this.RV11S.Size = new System.Drawing.Size(5, 28);
             this.RV11S.TabIndex = 82;
@@ -1307,7 +1327,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV15S.BackColor = System.Drawing.Color.Yellow;
-            this.RV15S.Location = new System.Drawing.Point(120, 46);
+            this.RV15S.Location = new System.Drawing.Point(119, 46);
             this.RV15S.Name = "RV15S";
             this.RV15S.Size = new System.Drawing.Size(5, 28);
             this.RV15S.TabIndex = 86;
@@ -1320,7 +1340,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV7S.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV7S.Location = new System.Drawing.Point(64, 17);
+            this.LV7S.Location = new System.Drawing.Point(63, 17);
             this.LV7S.Name = "LV7S";
             this.LV7S.Size = new System.Drawing.Size(5, 28);
             this.LV7S.TabIndex = 56;
@@ -1333,7 +1353,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV15S.BackColor = System.Drawing.Color.Yellow;
-            this.LV15S.Location = new System.Drawing.Point(120, 17);
+            this.LV15S.Location = new System.Drawing.Point(119, 17);
             this.LV15S.Name = "LV15S";
             this.LV15S.Size = new System.Drawing.Size(5, 28);
             this.LV15S.TabIndex = 64;
@@ -1346,7 +1366,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV7S.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV7S.Location = new System.Drawing.Point(64, 46);
+            this.RV7S.Location = new System.Drawing.Point(63, 46);
             this.RV7S.Name = "RV7S";
             this.RV7S.Size = new System.Drawing.Size(5, 28);
             this.RV7S.TabIndex = 78;
@@ -1359,7 +1379,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RV14S.BackColor = System.Drawing.Color.Yellow;
-            this.RV14S.Location = new System.Drawing.Point(113, 46);
+            this.RV14S.Location = new System.Drawing.Point(112, 46);
             this.RV14S.Name = "RV14S";
             this.RV14S.Size = new System.Drawing.Size(5, 28);
             this.RV14S.TabIndex = 85;
@@ -1372,7 +1392,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LV14S.BackColor = System.Drawing.Color.Yellow;
-            this.LV14S.Location = new System.Drawing.Point(113, 17);
+            this.LV14S.Location = new System.Drawing.Point(112, 17);
             this.LV14S.Name = "LV14S";
             this.LV14S.Size = new System.Drawing.Size(5, 28);
             this.LV14S.TabIndex = 63;
@@ -1391,6 +1411,30 @@
             this.EnginesBox.TabIndex = 0;
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Engine settings";
+            // 
+            // WhatIsXAudio
+            // 
+            this.WhatIsXAudio.AutoSize = true;
+            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
+            this.WhatIsXAudio.Name = "WhatIsXAudio";
+            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
+            this.WhatIsXAudio.TabIndex = 16;
+            this.WhatIsXAudio.TabStop = true;
+            this.WhatIsXAudio.Text = "Engines?";
+            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
+            // 
+            // WhatIsOutput
+            // 
+            this.WhatIsOutput.AutoSize = true;
+            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
+            this.WhatIsOutput.Name = "WhatIsOutput";
+            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
+            this.WhatIsOutput.TabIndex = 15;
+            this.WhatIsOutput.TabStop = true;
+            this.WhatIsOutput.Text = "What\'s WAV mode?";
+            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
             // 
             // label2
             // 
@@ -1831,6 +1875,56 @@
             this.Separator.TabIndex = 15;
             this.Separator.Text = "|";
             // 
+            // Lis
+            // 
+            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.Lis.AllowDrop = true;
+            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Lis.BackColor = System.Drawing.Color.White;
+            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.SoundFont,
+            this.SFFormat,
+            this.SFSize});
+            this.Lis.FullRowSelect = true;
+            this.Lis.GridLines = true;
+            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.Lis.HideSelection = false;
+            this.Lis.LabelWrap = false;
+            this.Lis.LineAfter = -1;
+            this.Lis.LineBefore = -1;
+            this.Lis.Location = new System.Drawing.Point(5, 36);
+            this.Lis.Name = "Lis";
+            this.Lis.ShowGroups = false;
+            this.Lis.Size = new System.Drawing.Size(602, 341);
+            this.Lis.TabIndex = 3;
+            this.Lis.UseCompatibleStateImageBehavior = false;
+            this.Lis.View = System.Windows.Forms.View.Details;
+            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
+            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
+            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
+            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
+            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
+            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
+            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
+            // 
+            // SoundFont
+            // 
+            this.SoundFont.Text = "SoundFont";
+            this.SoundFont.Width = 393;
+            // 
+            // SFFormat
+            // 
+            this.SFFormat.Text = "Format";
+            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // SFSize
+            // 
+            this.SFSize.Text = "Size";
+            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // EL
             // 
             this.EL.AccessibleDescription = "Export SoundFonts list";
@@ -2233,7 +2327,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 619);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 611);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -3148,11 +3242,23 @@
             this.MixerPanel.Controls.Add(this.CH10VOL);
             this.MixerPanel.Controls.Add(this.CH10);
             this.MixerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MixerPanel.Location = new System.Drawing.Point(0, 427);
+            this.MixerPanel.Location = new System.Drawing.Point(0, 419);
             this.MixerPanel.Name = "MixerPanel";
             this.MixerPanel.Size = new System.Drawing.Size(649, 192);
             this.MixerPanel.TabIndex = 107;
             this.MixerPanel.Visible = false;
+            // 
+            // OpenFullMixer
+            // 
+            this.OpenFullMixer.AutoSize = true;
+            this.OpenFullMixer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.OpenFullMixer.Location = new System.Drawing.Point(491, 176);
+            this.OpenFullMixer.Name = "OpenFullMixer";
+            this.OpenFullMixer.Size = new System.Drawing.Size(160, 13);
+            this.OpenFullMixer.TabIndex = 17;
+            this.OpenFullMixer.TabStop = true;
+            this.OpenFullMixer.Text = "Open the dedicated mixer applet";
+            this.OpenFullMixer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenFullMixer_LinkClicked);
             // 
             // Meter
             // 
@@ -4129,111 +4235,29 @@
             // 
             this.DebugLogAnalyze.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DebugLogAnalyze_DoWork);
             // 
-            // OpenFullMixer
+            // VolTrackBarMenu
             // 
-            this.OpenFullMixer.AutoSize = true;
-            this.OpenFullMixer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.OpenFullMixer.Location = new System.Drawing.Point(491, 176);
-            this.OpenFullMixer.Name = "OpenFullMixer";
-            this.OpenFullMixer.Size = new System.Drawing.Size(160, 13);
-            this.OpenFullMixer.TabIndex = 17;
-            this.OpenFullMixer.TabStop = true;
-            this.OpenFullMixer.Text = "Open the dedicated mixer applet";
-            this.OpenFullMixer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenFullMixer_LinkClicked);
+            this.VolTrackBarMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.FineTuneKnobIt,
+            this.menuItem57,
+            this.VolumeBoost});
             // 
-            // Lis
+            // FineTuneKnobIt
             // 
-            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.Lis.AllowDrop = true;
-            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Lis.BackColor = System.Drawing.Color.White;
-            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.SoundFont,
-            this.SFFormat,
-            this.SFSize});
-            this.Lis.FullRowSelect = true;
-            this.Lis.GridLines = true;
-            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.Lis.HideSelection = false;
-            this.Lis.LabelWrap = false;
-            this.Lis.LineAfter = -1;
-            this.Lis.LineBefore = -1;
-            this.Lis.Location = new System.Drawing.Point(5, 36);
-            this.Lis.Name = "Lis";
-            this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(602, 341);
-            this.Lis.TabIndex = 3;
-            this.Lis.UseCompatibleStateImageBehavior = false;
-            this.Lis.View = System.Windows.Forms.View.Details;
-            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
-            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
-            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
-            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
-            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
-            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
-            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
+            this.FineTuneKnobIt.Index = 0;
+            this.FineTuneKnobIt.Text = "Fine tune the volume knob";
+            this.FineTuneKnobIt.Click += new System.EventHandler(this.FineTuneKnobIt_Click);
             // 
-            // SoundFont
+            // menuItem57
             // 
-            this.SoundFont.Text = "SoundFont";
-            this.SoundFont.Width = 393;
+            this.menuItem57.Index = 1;
+            this.menuItem57.Text = "-";
             // 
-            // SFFormat
+            // VolumeBoost
             // 
-            this.SFFormat.Text = "Format";
-            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SFSize
-            // 
-            this.SFSize.Text = "Size";
-            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.ShowLargeScale = true;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(79, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.TabIndex = 5;
-            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
-            this.VolTrackBar.Value = 0;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
-            this.VolTrackBar.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.VolTrackBar_MouseDoubleClick);
-            // 
-            // WhatIsXAudio
-            // 
-            this.WhatIsXAudio.AutoSize = true;
-            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
-            this.WhatIsXAudio.Name = "WhatIsXAudio";
-            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
-            this.WhatIsXAudio.TabIndex = 16;
-            this.WhatIsXAudio.TabStop = true;
-            this.WhatIsXAudio.Text = "Engines?";
-            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
-            // 
-            // WhatIsOutput
-            // 
-            this.WhatIsOutput.AutoSize = true;
-            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
-            this.WhatIsOutput.Name = "WhatIsOutput";
-            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
-            this.WhatIsOutput.TabIndex = 15;
-            this.WhatIsOutput.TabStop = true;
-            this.WhatIsOutput.Text = "What\'s WAV mode?";
-            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
+            this.VolumeBoost.Index = 2;
+            this.VolumeBoost.Text = "Enable volume boost";
+            this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
             // KeppySynthConfiguratorMain
             // 
@@ -4241,7 +4265,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(649, 641);
+            this.ClientSize = new System.Drawing.Size(649, 633);
             this.Controls.Add(this.MixerPanel);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
@@ -4677,6 +4701,10 @@
         internal System.Windows.Forms.Label SincConvLab;
         public System.Windows.Forms.CheckBox SincInter;
         public System.Windows.Forms.Label VolLabel;
+        private System.Windows.Forms.ContextMenu VolTrackBarMenu;
+        private System.Windows.Forms.MenuItem FineTuneKnobIt;
+        private System.Windows.Forms.MenuItem menuItem57;
+        public System.Windows.Forms.MenuItem VolumeBoost;
     }
 }
 

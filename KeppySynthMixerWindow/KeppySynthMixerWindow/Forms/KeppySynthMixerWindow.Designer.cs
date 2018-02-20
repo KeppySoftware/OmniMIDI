@@ -133,7 +133,6 @@
             this.ItsThe80sTheme = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.VolumeMonitor = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -1232,7 +1231,6 @@
             this.menuItem8,
             this.menuItem9,
             this.VolumeMonitor,
-            this.menuItem5,
             this.menuItem6,
             this.menuItem4,
             this.resetToDefaultToolStripMenuItem,
@@ -1292,34 +1290,27 @@
             this.VolumeMonitor.Text = "Enable volume monitoring";
             this.VolumeMonitor.Click += new System.EventHandler(this.VolumeMonitor_Click);
             // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 5;
-            this.menuItem5.Shortcut = System.Windows.Forms.Shortcut.F11;
-            this.menuItem5.Text = "Enable volume boost";
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
-            // 
             // menuItem6
             // 
-            this.menuItem6.Index = 6;
+            this.menuItem6.Index = 5;
             this.menuItem6.Text = "Set update frequency";
             this.menuItem6.Click += new System.EventHandler(this.UpdateFreqSet_Click);
             // 
             // menuItem4
             // 
-            this.menuItem4.Index = 7;
+            this.menuItem4.Index = 6;
             this.menuItem4.Text = "-";
             // 
             // resetToDefaultToolStripMenuItem
             // 
-            this.resetToDefaultToolStripMenuItem.Index = 8;
+            this.resetToDefaultToolStripMenuItem.Index = 7;
             this.resetToDefaultToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
             this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
             this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
             // 
             // muteToolStripMenuItem
             // 
-            this.muteToolStripMenuItem.Index = 9;
+            this.muteToolStripMenuItem.Index = 8;
             this.muteToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlM;
             this.muteToolStripMenuItem.Text = "Mute";
             this.muteToolStripMenuItem.Click += new System.EventHandler(this.muteToolStripMenuItem_Click);
@@ -1481,7 +1472,6 @@
         private System.Windows.Forms.MenuItem menuItem4;
         public System.Windows.Forms.Panel Meter;
         public System.Windows.Forms.Label SignalLabel;
-        private System.Windows.Forms.MenuItem menuItem5;
         public System.Windows.Forms.TrackBar MainVol;
         public System.Windows.Forms.TrackBar CH16VOL;
         public System.Windows.Forms.TrackBar CH15VOL;

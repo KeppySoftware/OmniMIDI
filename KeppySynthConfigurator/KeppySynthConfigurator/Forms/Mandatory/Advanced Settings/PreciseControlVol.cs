@@ -14,12 +14,13 @@ namespace KeppySynthConfigurator
     {
         public int ReturnValue { get; private set; }
 
-        public PreciseControlVol(int Value)
+        public PreciseControlVol()
         {
             InitializeComponent();
-            decimal VolVal = (decimal)Value / 100;
+            decimal VolVal = (decimal)KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value / 100;
             VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
-            VolTrackBar.Value = Value;
+            VolTrackBar.Maximum = KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum;
+            VolTrackBar.Value = KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value;
         }
 
         private void VolTrackBar_Scroll(object sender, EventArgs e)
@@ -33,6 +34,11 @@ namespace KeppySynthConfigurator
         {
             KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolTrackBar.Value;
             Close();
+        }
+
+        private void PreciseControlVol_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

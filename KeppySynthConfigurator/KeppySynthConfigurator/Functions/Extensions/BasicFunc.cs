@@ -466,6 +466,29 @@ namespace KeppySynthConfigurator
         }
         // NOT SUPPORTED ON XP
 
+        public static void VolumeBoostSwitch()
+        {
+            if (KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked)
+            {
+                if (KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value > 10000)
+                {
+                    KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = 10000;
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("volume", 10000, RegistryValueKind.DWord);
+                }
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("volumeboost", 0, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 10000;
+                KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Refresh();
+            }
+            else
+            {
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("volumeboost", 1, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 50000;
+                KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = true;
+                KeppySynthConfiguratorMain.Delegate.VolTrackBar.Refresh();
+            }
+        }
+
         public static void SetDefaultDevice(int engine, int dev)
         {
             if (engine == 0)
@@ -684,6 +707,17 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
+
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost", 0)) == 1)
+                {
+                    KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 50000;
+                    KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = true;
+                }
+                else
+                {
+                    KeppySynthConfiguratorMain.Delegate.VolTrackBar.Maximum = 10000;
+                    KeppySynthConfiguratorMain.Delegate.VolumeBoost.Checked = false;
+                }
 
                 if (Properties.Settings.Default.ShowMixerUnder)
                 {

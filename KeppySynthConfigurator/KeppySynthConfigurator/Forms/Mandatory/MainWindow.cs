@@ -159,20 +159,13 @@ namespace KeppySynthConfigurator
             try
             {
                 uint dummy = 0;
-                byte[] fontData1 = Properties.Resources.volnum;
-                byte[] fontData2 = Properties.Resources.vollab;
-                IntPtr fontPtr1 = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData1.Length);
-                System.Runtime.InteropServices.Marshal.Copy(fontData1, 0, fontPtr1, fontData1.Length);
-                IntPtr fontPtr2 = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData2.Length);
-                System.Runtime.InteropServices.Marshal.Copy(fontData2, 0, fontPtr2, fontData2.Length);
-                privateFontCollection.AddMemoryFont(fontPtr1, Properties.Resources.volnum.Length);
-                privateFontCollection.AddMemoryFont(fontPtr2, Properties.Resources.vollab.Length);
-                AddFontMemResourceEx(fontPtr1, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
-                AddFontMemResourceEx(fontPtr2, (uint)Properties.Resources.vollab.Length, IntPtr.Zero, ref dummy);
-                System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr1);
-                System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr2);
-                VolSimView.Font = new Font(privateFontCollection.Families[1], VolSimView.Font.Size, FontStyle.Regular);
-                VolLabel.Font = new Font(privateFontCollection.Families[0], VolLabel.Font.Size, FontStyle.Regular);
+                byte[] fontData = Properties.Resources.volnum;
+                IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
+                System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+                privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
+                AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
+                System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
+                VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size, FontStyle.Regular);
             }
             catch (Exception ex)
             {
@@ -233,6 +226,10 @@ namespace KeppySynthConfigurator
                 DisableSF.BackgroundImage = Properties.Resources.DisableIcon;
                 IEL.BackgroundImage = Properties.Resources.ImportIcon;
                 EL.BackgroundImage = Properties.Resources.ExportIcon;
+
+                VolTrackBar.ContextMenu = VolTrackBarMenu;
+                VolLabel.ContextMenu = VolTrackBarMenu;
+                VolSimView.ContextMenu = VolTrackBarMenu;
 
                 TabsForTheControls.TabPages[0].ImageIndex = 0;
                 TabsForTheControls.TabPages[1].ImageIndex = 1;
@@ -309,9 +306,14 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void VolTrackBar_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void VolumeBoost_Click(object sender, EventArgs e)
         {
-            new PreciseControlVol(VolTrackBar.Value).ShowDialog();
+            Functions.VolumeBoostSwitch();
+        }
+
+        private void FineTuneKnobIt_Click(object sender, EventArgs e)
+        {
+            new PreciseControlVol().ShowDialog();
         }
 
         private void ExportSettings_Click(object sender, EventArgs e)

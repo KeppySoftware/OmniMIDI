@@ -180,25 +180,12 @@ namespace KeppySynthMixerWindow
                     Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels");
                     return;
                 }
-                if (Convert.ToInt32(Settings.GetValue("volumeboost")) == 1)
+
+                for (int i = 0; i <= 16; ++i)
                 {
-                    menuItem5.Checked = true;
-                    MeterFunc.SetMaximum(200);
-                    for (int i = 0; i <= 16; ++i)
-                    {
-                        RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
-                        if (RegValInt[i] > 200)
-                            RegValInt[i] = 200;
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i <= 16; ++i)
-                    {
-                        RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
-                        if (RegValInt[i] > 100)
-                            RegValInt[i] = 100;
-                    }
+                    RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
+                    if (RegValInt[i] > 100)
+                        RegValInt[i] = 100;
                 }
 
                 CH1VOL.Value = RegValInt[0];
@@ -538,30 +525,6 @@ namespace KeppySynthMixerWindow
                 X = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - this.Width) / 2),
                 Y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - this.Height) / 2)
             };
-        }
-
-        private void menuItem5_Click(object sender, EventArgs e)
-        {
-            if (!menuItem5.Checked)
-            {
-                menuItem5.Checked = true;
-                Settings.SetValue("volumeboost", 1, RegistryValueKind.DWord);
-                MeterFunc.SetMaximum(200);
-            }
-            else
-            {
-                menuItem5.Checked = false;
-                Settings.SetValue("volumeboost", 0, RegistryValueKind.DWord);
-
-                for (int i = 0; i <= 15; ++i)
-                {
-                    if (RegValInt[i] > 100)
-                    {
-                        Channels.SetValue(RegValName[i], 100, RegistryValueKind.DWord);
-                    }
-                }
-                MeterFunc.SetMaximum(100);
-            }
         }
 
         private void ClassicTheme_Click(object sender, EventArgs e)

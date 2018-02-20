@@ -64,6 +64,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define LOADBASSMIXFUNCTION(f) *((void**)&f)=GetProcAddress(bassmix,#f)
 #define LOADBASS_FXFUNCTION(f) *((void**)&f)=GetProcAddress(bass_fx,#f)
 #define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
+#define LOADWINRT_FUNCTION(f) *((void**)&f)=GetProcAddress(winrtmidi,#f)
 #define Between(value, a, b) (value <= b && value >= a)
 
 #define ERRORCODE 0
@@ -438,13 +439,14 @@ void PrintEventToConsole(int color, int stage, bool issysex, const char* text, i
 
 static void DoStopClient();
 
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved){
-
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+{
 	if (fdwReason == DLL_PROCESS_ATTACH){
 		hinst = hinstDLL;
 		DisableThreadLibraryCalls(hinstDLL);
 	}
-	else if (fdwReason == DLL_PROCESS_DETACH){
+	else if (fdwReason == DLL_PROCESS_DETACH)
+	{
 		DoStopClient();
 	}
 	return TRUE;
@@ -555,12 +557,12 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
 
-		if (strlen(SynthName) < 1) {
+		if (strlen(SynthName) < 1 || isspace(SynthName[0])) {
 			ZeroMemory(SynthName, MAXPNAMELEN);
 			strncpy(SynthName, "Keppy's Synthesizer\0", MAXPNAMELEN);
 		}
 
-		if (wcslen(SynthNameW) < 1) {
+		if (wcslen(SynthNameW) < 1 || iswspace(SynthNameW[0])) {
 			ZeroMemory(SynthNameW, MAXPNAMELEN);
 			wcsncpy(SynthNameW, L"Keppy's Synthesizer\0", MAXPNAMELEN);
 		}
@@ -570,11 +572,11 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		MIDIOUTCAPSA * myCapsA;
 		MIDIOUTCAPSW * myCapsW;
 		MIDIOUTCAPS2A * myCaps2A;
-
 		MIDIOUTCAPS2W * myCaps2W;
-		WORD maximumvoices = 0xffff;
-		WORD maximumnotes = 0xffff;
-		DWORD CapsSupport = MIDICAPS_VOLUME | MIDICAPS_LRVOLUME | MIDICAPS_CACHE;
+
+		WORD maximumvoices = 0xFFFF;
+		WORD maximumnotes = 0x0000;
+		DWORD CapsSupport = MIDICAPS_VOLUME;
 
 		const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6,{ 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
 
@@ -653,14 +655,18 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 				return MMSYSERR_NOERROR;
 			}
 			catch (...) {
-				PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
+				crashmessage(L"MIDICaps");
+				ExitThread(0);
+				throw;
 				return MMSYSERR_NOTSUPPORTED;
 			}
 			break;
 		}
 	}
 	catch (...) {
-		PrintToConsole(FOREGROUND_BLUE, 1, "Error while sharing MIDI caps.");
+		crashmessage(L"MIDICaps");
+		ExitThread(0);
+		throw;
 		return MMSYSERR_NOTSUPPORTED;
 	}
 }
@@ -680,16 +686,6 @@ void keepstreamsalive(int& opend) {
 			opend = CreateThreads(TRUE);
 		}
 	}
-}
-
-BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
-	DWORD process;
-	GetWindowThreadProcessId(hWnd, &process);
-	if (GetCurrentProcessId() == process) {
-		MessageBox(hWnd, L"I loaded your dll!", L"it's me", MB_OK);
-		return TRUE;
-	}
-	return FALSE;
 }
 
 DWORD WINAPI threadfunc(LPVOID lpV){
@@ -912,12 +908,15 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			crashmessage(L"MODMDataParse");
 			throw;
 		}
+	case MODM_STRMDATA: {
+		return MMSYSERR_NOERROR;
+	}
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_SETVOLUME: {
-		sound_out_volume_float = LOWORD(dwParam1) / (float)0xFFFF;
+		setvolume(LOWORD(dwParam1));
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_PAUSE: {
@@ -942,8 +941,3 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		break;
 	}
 }
-
-#if defined(_WINMMMODE)
-	// WinMM functions
-	#include "winmmfunc.h"
-#endif

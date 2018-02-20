@@ -516,6 +516,22 @@ void allocate_memory() {
 		throw;
 	}
 }
+
+void setvolume(int vol) {
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	DWORD qwType = REG_QWORD;
+	DWORD qwSize = sizeof(QWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+	RegSetValueEx(hKey, L"volume", 0, dwType, (LPBYTE)&vol, sizeof(vol));
+	RegCloseKey(hKey);
+
+	volume = vol;
+	sound_out_volume_float = (float)volume / 10000.0f;
+}
+
 void load_settings(bool streamreload)
 {
 	try {

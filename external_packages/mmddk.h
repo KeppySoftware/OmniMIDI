@@ -140,23 +140,30 @@ extern "C" {
 #define WAVEIN_MAPPER_STATUS_FORMAT     2
 
 #define MODM_INIT		DRVM_INIT
-#define MODM_GETNUMDEVS		1
-#define MODM_GETDEVCAPS		2
-#define MODM_OPEN		3
-#define MODM_CLOSE		4
-#define MODM_PREPARE		5
-#define MODM_UNPREPARE		6
-#define MODM_DATA		7
-#define MODM_LONGDATA		8
-#define MODM_RESET          	9
-#define MODM_GETVOLUME		10
-#define MODM_SETVOLUME		11
-#define MODM_CACHEPATCHES	12
-#define MODM_CACHEDRUMPATCHES	13
+#define MODM_GETNUMDEVS     1
+#define MODM_GETDEVCAPS     2
+#define MODM_OPEN           3
+#define MODM_CLOSE          4
+#define MODM_PREPARE        5
+#define MODM_UNPREPARE      6
+#define MODM_DATA           7
+#define MODM_LONGDATA       8
+#define MODM_RESET          9
+#define MODM_GETVOLUME      10
+#define MODM_SETVOLUME      11
+#define MODM_CACHEPATCHES       12
+#define MODM_CACHEDRUMPATCHES   13
 
+#if (WINVER >= 0x400)
+#define MODM_STRMDATA               14
+#define MODM_GETPOS                 17
 #define MODM_PAUSE                  18
 #define MODM_RESTART                19
 #define MODM_STOP                   20
+#define MODM_PROPERTIES             21
+#define MODM_PREFERRED              22
+#define MODM_RECONFIGURE            (0x4000+0x0768)
+#endif
 
 #define MIDM_INIT		DRVM_INIT
 #define MIDM_GETNUMDEVS  	53

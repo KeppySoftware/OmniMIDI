@@ -86,7 +86,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 124);
+            this.ClientSize = new System.Drawing.Size(325, 120);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.VolIntView);
@@ -100,6 +100,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Fine tune the volume knob";
+            this.Load += new System.EventHandler(this.PreciseControlVol_Load);
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

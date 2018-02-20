@@ -33,9 +33,6 @@
     <ClInclude Include="..\external_packages\comdecl.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\external_packages\mmddk.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -58,6 +55,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\external_packages\bass_fx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external_packages\mmddk.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
