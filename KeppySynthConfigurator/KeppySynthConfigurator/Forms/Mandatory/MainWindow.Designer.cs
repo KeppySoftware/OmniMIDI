@@ -247,6 +247,8 @@
             this.PrintMIDIEventsLog = new System.Windows.Forms.MenuItem();
             this.PrintImportantLog = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.RPCSwitch = new System.Windows.Forms.MenuItem();
+            this.menuItem59 = new System.Windows.Forms.MenuItem();
             this.ShowMixerTools = new System.Windows.Forms.MenuItem();
             this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
             this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
@@ -309,6 +311,7 @@
             this.BASSNetLink = new System.Windows.Forms.MenuItem();
             this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.menuItem45 = new System.Windows.Forms.MenuItem();
+            this.DiscordRPCCredit = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
@@ -2327,7 +2330,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 611);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 613);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -2518,54 +2521,54 @@
             // 
             // LiveChangesTrigger
             // 
-            this.LiveChangesTrigger.Index = 0;
+            this.LiveChangesTrigger.Index = 2;
             this.LiveChangesTrigger.Text = "Enable live changes for all the settings";
             this.LiveChangesTrigger.Click += new System.EventHandler(this.LiveChangesTrigger_Click);
             // 
             // hotkeys
             // 
-            this.hotkeys.Index = 1;
+            this.hotkeys.Index = 3;
             this.hotkeys.Text = "Enable fast hotkeys in MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
             // AutoLoad
             // 
-            this.AutoLoad.Index = 2;
+            this.AutoLoad.Index = 4;
             this.AutoLoad.Text = "Reload list automatically after editing it";
             this.AutoLoad.Click += new System.EventHandler(this.AutoLoad_Click);
             // 
             // ShowOutLevel
             // 
-            this.ShowOutLevel.Index = 3;
+            this.ShowOutLevel.Index = 5;
             this.ShowOutLevel.Text = "Show output level meter";
             this.ShowOutLevel.Click += new System.EventHandler(this.ShowOutLevel_Click);
             // 
             // menuItem17
             // 
-            this.menuItem17.Index = 5;
+            this.menuItem17.Index = 7;
             this.menuItem17.Text = "-";
             // 
             // manageFolderFavouritesToolStripMenuItem
             // 
-            this.manageFolderFavouritesToolStripMenuItem.Index = 6;
+            this.manageFolderFavouritesToolStripMenuItem.Index = 8;
             this.manageFolderFavouritesToolStripMenuItem.Text = "Manage folder favourites";
             this.manageFolderFavouritesToolStripMenuItem.Click += new System.EventHandler(this.manageFolderFavouritesToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 7;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 9;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change WAV output directory";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
             // changeDefaultSoundfontListToolStripMenuItem1
             // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 8;
+            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 10;
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
             // EPB
             // 
-            this.EPB.Index = 9;
+            this.EPB.Index = 11;
             this.EPB.Text = "Enable performance boost";
             this.EPB.Click += new System.EventHandler(this.EPB_Click);
             // 
@@ -2618,7 +2621,7 @@
             // 
             // menuItem31
             // 
-            this.menuItem31.Index = 10;
+            this.menuItem31.Index = 12;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -2632,12 +2635,12 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 11;
+            this.menuItem21.Index = 13;
             this.menuItem21.Text = "-";
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 12;
+            this.SpatialSound.Index = 14;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
@@ -2667,7 +2670,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 13;
+            this.menuItem14.Index = 15;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
@@ -2689,7 +2692,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 14;
+            this.menuItem12.Index = 16;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ImportSettings,
             this.ExportSettings});
@@ -2697,7 +2700,7 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 15;
+            this.menuItem15.Index = 17;
             this.menuItem15.Text = "-";
             // 
             // DebugModePls
@@ -2714,7 +2717,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 16;
+            this.menuItem28.Index = 18;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad,
@@ -2744,6 +2747,8 @@
             // 
             this.menuItem2.Index = 1;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.RPCSwitch,
+            this.menuItem59,
             this.LiveChangesTrigger,
             this.hotkeys,
             this.AutoLoad,
@@ -2763,9 +2768,20 @@
             this.menuItem28});
             this.menuItem2.Text = "More settings";
             // 
+            // RPCSwitch
+            // 
+            this.RPCSwitch.Index = 0;
+            this.RPCSwitch.Text = "Enable rich presence on Discord";
+            this.RPCSwitch.Click += new System.EventHandler(this.RPCSwitch_Click);
+            // 
+            // menuItem59
+            // 
+            this.menuItem59.Index = 1;
+            this.menuItem59.Text = "-";
+            // 
             // ShowMixerTools
             // 
-            this.ShowMixerTools.Index = 4;
+            this.ShowMixerTools.Index = 6;
             this.ShowMixerTools.Text = "Show mixer tools";
             this.ShowMixerTools.Click += new System.EventHandler(this.ShowMixerTools_Click);
             // 
@@ -3167,8 +3183,15 @@
             this.HAPLink,
             this.BASSLink,
             this.BASSNetLink,
-            this.FodyCredit});
+            this.FodyCredit,
+            this.DiscordRPCCredit});
             this.menuItem45.Text = "Credits";
+            // 
+            // DiscordRPCCredit
+            // 
+            this.DiscordRPCCredit.Index = 4;
+            this.DiscordRPCCredit.Text = "C# Discord RPC wrapper by nostrenz";
+            this.DiscordRPCCredit.Click += new System.EventHandler(this.DiscordRPCCredit_Click);
             // 
             // menuItem3
             // 
@@ -3242,7 +3265,7 @@
             this.MixerPanel.Controls.Add(this.CH10VOL);
             this.MixerPanel.Controls.Add(this.CH10);
             this.MixerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MixerPanel.Location = new System.Drawing.Point(0, 419);
+            this.MixerPanel.Location = new System.Drawing.Point(0, 421);
             this.MixerPanel.Name = "MixerPanel";
             this.MixerPanel.Size = new System.Drawing.Size(649, 192);
             this.MixerPanel.TabIndex = 107;
@@ -4265,7 +4288,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(649, 633);
+            this.ClientSize = new System.Drawing.Size(649, 635);
             this.Controls.Add(this.MixerPanel);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
@@ -4705,6 +4728,9 @@
         private System.Windows.Forms.MenuItem FineTuneKnobIt;
         private System.Windows.Forms.MenuItem menuItem57;
         public System.Windows.Forms.MenuItem VolumeBoost;
+        private System.Windows.Forms.MenuItem menuItem59;
+        private System.Windows.Forms.MenuItem DiscordRPCCredit;
+        public System.Windows.Forms.MenuItem RPCSwitch;
     }
 }
 

@@ -13,6 +13,7 @@ using System.Resources;
 using System.IO;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
+using DiscordRPC;
 
 namespace KeppySynthConfigurator
 {
@@ -297,9 +298,18 @@ namespace KeppySynthConfigurator
 
                 int howmanytimes = 1;
 
+                long len = Bass.BASS_ChannelGetLength(hStream, BASSMode.BASS_POS_BYTE);
                 Bass.BASS_ChannelPlay(hStream, false);
                 ChangePreviewButtonText("Stop SoundFont preview", true);
                 ChangeWindowTitle(String.Format("Playing \"{0}\"", Path.GetFileNameWithoutExtension(MIDIPreview)));
+
+                this.Invoke((MethodInvoker)delegate
+                {
+                    Functions.UpdateDiscordPresence(
+                        String.Format("Previewing {0}...", Path.GetFileNameWithoutExtension(MIDIPreview)),
+                        "play", 0, 0
+                        );
+                });
 
                 while (Bass.BASS_ChannelIsActive(hStream) == BASSActive.BASS_ACTIVE_PLAYING)
                 {
@@ -317,12 +327,19 @@ namespace KeppySynthConfigurator
                     ChangeWindowTitle("Information about the SoundFont");
                     this.Invoke((MethodInvoker)delegate
                     {
+                        DiscordRpc.UpdatePresence(ref KSDiscord.CurRich);
                         StartNormalPrvw1.Enabled = true;
                         StartNormalPrvw2.Enabled = true;
                         StartNormalPrvw3.Enabled = true;
                         StartCustomPrvw.Enabled = true;
                     });
                 }
+
+                this.Invoke((MethodInvoker)delegate
+                {
+                    Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
+                    DiscordRpc.UpdatePresence(ref KSDiscord.CurRich);
+                });
 
                 Bass.BASS_StreamFree(hStream);
                 Bass.BASS_MusicFree(hStream);

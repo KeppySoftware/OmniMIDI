@@ -916,7 +916,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_SETVOLUME: {
-		setvolume(LOWORD(dwParam1));
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_PAUSE: {

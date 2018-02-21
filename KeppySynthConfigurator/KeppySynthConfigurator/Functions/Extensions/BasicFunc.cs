@@ -19,6 +19,7 @@ using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
 using System.Threading;
 using Un4seen.BassAsio;
+using DiscordRPC;
 
 namespace KeppySynthConfigurator
 {
@@ -707,6 +708,7 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.MixerBox.Visible = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.VolumeCheck.Enabled = Properties.Settings.Default.ShowOutputLevel;
                 KeppySynthConfiguratorMain.Delegate.LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
+                KeppySynthConfiguratorMain.Delegate.RPCSwitch.Checked = Properties.Settings.Default.DiscordRPCIntegration;
 
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost", 0)) == 1)
                 {
@@ -1023,6 +1025,17 @@ namespace KeppySynthConfigurator
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                 Application.Exit();
             }
+        }
+
+        public static void UpdateDiscordPresence(String status, String imgstatus, long startTimestamp, long endTimestamp)
+        {
+            KSDiscord.CurRich.state = Properties.Settings.Default.DiscordRPCIntegration ? status : null;
+            KSDiscord.CurRich.startTimestamp = Properties.Settings.Default.DiscordRPCIntegration ? startTimestamp : 0;
+            KSDiscord.CurRich.endTimestamp = Properties.Settings.Default.DiscordRPCIntegration ? endTimestamp : 0;
+            KSDiscord.CurRich.smallImageKey = Properties.Settings.Default.DiscordRPCIntegration ? imgstatus : null;
+            KSDiscord.CurRich.largeImageKey = "back";
+            KSDiscord.CurRich.instance = true;
+            DiscordRpc.UpdatePresence(ref KSDiscord.CurRich);
         }
 
         // Presets system

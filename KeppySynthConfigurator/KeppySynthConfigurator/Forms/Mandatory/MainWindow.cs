@@ -20,6 +20,7 @@ using System.Drawing.Text;
 using Un4seen.BassAsio;
 using Un4seen.BassWasapi;
 using System.Threading;
+using DiscordRPC;
 
 namespace KeppySynthConfigurator
 {
@@ -102,6 +103,8 @@ namespace KeppySynthConfigurator
         public KeppySynthConfiguratorMain(String[] args)
         {
             InitializeComponent();
+            DiscordRpc.Initialize("415888065282703380", ref KSDiscord.DSHandle, true, null);
+            Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
             StatusStrip.Padding = new Padding(StatusStrip.Padding.Left, StatusStrip.Padding.Top, StatusStrip.Padding.Left, StatusStrip.Padding.Bottom);
             Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
@@ -1614,18 +1617,29 @@ namespace KeppySynthConfigurator
             try
             {
                 Bass.BASS_Free();
+                DiscordRpc.Shutdown();
                 Application.Exit();
             }
             catch
             {
+                DiscordRpc.Shutdown();
                 Application.Exit();
             }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Bass.BASS_Free();
-            Application.Exit();
+            try
+            {
+                Bass.BASS_Free();
+                DiscordRpc.Shutdown();
+                Application.Exit();
+            }
+            catch
+            {
+                DiscordRpc.Shutdown();
+                Application.Exit();
+            }
         }
 
         // Guide part
@@ -1821,6 +1835,22 @@ namespace KeppySynthConfigurator
                 SynthSettings.SetValue("debugmode", "0", RegistryValueKind.DWord);
                 DebugModePls.Checked = false;
             }
+        }
+
+        private void RPCSwitch_Click(object sender, EventArgs e)
+        {
+            if (RPCSwitch.Checked == false)
+            {
+                RPCSwitch.Checked = true;
+                Properties.Settings.Default.DiscordRPCIntegration = true;
+            }
+            else
+            {
+                RPCSwitch.Checked = false;
+                Properties.Settings.Default.DiscordRPCIntegration = false;
+            }
+
+            Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
         }
 
         private void LiveChangesTrigger_Click(object sender, EventArgs e)
@@ -2310,6 +2340,12 @@ namespace KeppySynthConfigurator
         {
             Program.DebugToConsole(false, "Showing Fody's main GitHub page.", null);
             Process.Start("https://github.com/Fody");
+        }
+
+        private void DiscordRPCCredit_Click(object sender, EventArgs e)
+        {
+            Program.DebugToConsole(false, "Showing nostrenz's main GitHub page.", null);
+            Process.Start("https://github.com/nostrenz");
         }
 
         private void KSUSJoinNow_Click(object sender, EventArgs e)

@@ -32,13 +32,14 @@ namespace KeppySynthConfigurator
 
         private void ReturnOK_Click(object sender, EventArgs e)
         {
+            Functions.UpdateDiscordPresence("Tampering with the settings", "play", 0, 0);
             KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = VolTrackBar.Value;
             Close();
         }
 
         private void PreciseControlVol_Load(object sender, EventArgs e)
         {
-
+            Functions.UpdateDiscordPresence("Fine tuning the volume", "play", 0, 0);
         }
     }
 }

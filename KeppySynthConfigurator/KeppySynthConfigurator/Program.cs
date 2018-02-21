@@ -13,9 +13,16 @@ using System.IO;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Linq;
+using DiscordRPC;
 
 namespace KeppySynthConfigurator
 {
+    static class KSDiscord
+    {
+        public static DiscordRpc.EventHandlers DSHandle;
+        public static DiscordRpc.RichPresence CurRich;
+    }
+
     static class WinAPI
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -45,6 +52,11 @@ namespace KeppySynthConfigurator
         [STAThread]
         static void Main(String[] args)
         {
+            KSDiscord.DSHandle = new DiscordRpc.EventHandlers();
+            KSDiscord.DSHandle.readyCallback += ReadyCallback;
+            KSDiscord.DSHandle.disconnectedCallback += DisconnectedCallback;
+            KSDiscord.DSHandle.errorCallback += ErrorCallback;
+
             foreach (String s in args)
             {
                 if (s.ToLowerInvariant() == "/dbg" || s.ToLowerInvariant() == "/debugwindow")
@@ -313,6 +325,21 @@ namespace KeppySynthConfigurator
                 RegistryKey destSubKey = destinationKey.CreateSubKey(sourceSubKeyName);
                 RecurseCopyKey(sourceSubKey, destSubKey);
             }
+        }
+
+        private static void ReadyCallback()
+        {
+            DebugToConsole(false, "Connected to the Discord RPC service.", null);
+        }
+
+        private static void DisconnectedCallback(int errorCode, string message)
+        {
+            DebugToConsole(false, String.Format("Disconnected from the Discord RPC service. Error: {0}, {1}", errorCode, message), null);
+        }
+
+        private static void ErrorCallback(int errorCode, string message)
+        {
+            DebugToConsole(false, String.Format("Error in the Discord RPC service. Error: {0}, {1}", errorCode, message), null);
         }
     }
 }
