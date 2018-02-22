@@ -1850,6 +1850,7 @@ namespace KeppySynthConfigurator
                 Properties.Settings.Default.DiscordRPCIntegration = false;
             }
 
+            Properties.Settings.Default.Save();
             Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
         }
 
