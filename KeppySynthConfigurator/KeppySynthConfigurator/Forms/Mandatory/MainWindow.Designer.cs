@@ -313,7 +313,7 @@
             this.menuItem45 = new System.Windows.Forms.MenuItem();
             this.DiscordRPCCredit = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
+            this.SynthMenu = new System.Windows.Forms.MainMenu(this.components);
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MixerPanel = new System.Windows.Forms.Panel();
             this.OpenFullMixer = new System.Windows.Forms.LinkLabelEx();
@@ -3212,15 +3212,15 @@
             this.menuItem45});
             this.menuItem3.Text = "?";
             // 
-            // MainMenu
+            // SynthMenu
             // 
-            this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.SynthMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
             this.menuItem2,
             this.menuItem25,
             this.menuItem43,
             this.menuItem3});
-            this.MainMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.SynthMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
             // VolumeTip
             // 
@@ -4297,7 +4297,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Menu = this.MainMenu;
             this.Name = "KeppySynthConfiguratorMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -4618,7 +4617,7 @@
         private System.Windows.Forms.MenuItem FodyCredit;
         private System.Windows.Forms.MenuItem menuItem45;
         private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.MainMenu MainMenu;
+        private System.Windows.Forms.MainMenu SynthMenu;
         private System.Windows.Forms.ToolTip VolumeTip;
         public System.Windows.Forms.TrackBar CH1VOL;
         public System.Windows.Forms.Label AllCh;

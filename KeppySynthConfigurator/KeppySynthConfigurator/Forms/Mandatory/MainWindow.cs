@@ -204,6 +204,8 @@ namespace KeppySynthConfigurator
                 Shown += CheckUpdatesStartUp;
                 TabsForTheControls.TabPages.Remove(DebugLog);
 
+                Menu = SynthMenu;
+
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
                 Lis.Columns[0].Tag = 7;
@@ -1400,23 +1402,8 @@ namespace KeppySynthConfigurator
 
         private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string url = "";
-
-            string business = "prapapappo1999@gmail.com";
-            string description = "Donation";
-            string country = "US";
-            string currency = "USD";
-
-            url += "https://www.paypal.com/cgi-bin/webscr" +
-                "?cmd=" + "_donations" +
-                "&business=" + business +
-                "&lc=" + country +
-                "&item_name=" + description +
-                "&currency_code=" + currency +
-                "&bn=" + "PP%2dDonationsBF";
-
             Program.DebugToConsole(false, "Opening PayPal page for donation.", null);
-            Process.Start(url);
+            Process.Start("https://paypal.me/KaleidonKep99");
         }
 
         private void patronToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)

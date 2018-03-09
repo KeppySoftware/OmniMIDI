@@ -255,22 +255,8 @@ namespace KeppySynthConfigurator
 
         private void DonateBtn_Click(object sender, EventArgs e)
         {
-            string url = "";
-
-            string business = "prapapappo1999@gmail.com";
-            string description = "Donation";
-            string country = "US";
-            string currency = "USD";
-
-            url += "https://www.paypal.com/cgi-bin/webscr" +
-                "?cmd=" + "_donations" +
-                "&business=" + business +
-                "&lc=" + country +
-                "&item_name=" + description +
-                "&currency_code=" + currency +
-                "&bn=" + "PP%2dDonationsBF";
-
-            Process.Start(url);
+            Program.DebugToConsole(false, "Opening PayPal page for donation.", null);
+            Process.Start("https://paypal.me/KaleidonKep99");
         }
 
         private void button1_Click(object sender, EventArgs e)
