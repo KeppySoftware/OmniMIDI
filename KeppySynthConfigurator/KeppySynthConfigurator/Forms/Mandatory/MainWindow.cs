@@ -296,8 +296,22 @@ namespace KeppySynthConfigurator
 
         private void VolumeMouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0) VolTrackBar.Value += 100;
-            else if (e.Delta < 0) VolTrackBar.Value -= 100;
+            Int32 Volume = VolTrackBar.Value;
+
+            if (e.Delta > 0)
+            {
+                if (ModifierKeys == Keys.Shift) Volume += 500;
+                else if (ModifierKeys == Keys.Control) Volume += 50;
+                else Volume += 100;
+            }
+            else if (e.Delta < 0)
+            {
+                if (ModifierKeys == Keys.Shift) Volume -= 500;
+                else if (ModifierKeys == Keys.Control) Volume -= 50;
+                else Volume -= 100;
+            }
+
+            VolTrackBar.Value = Volume.LimitToRange(0, VolTrackBar.Maximum);
         }
 
         private void VolTrackBar_Scroll(object sender)
