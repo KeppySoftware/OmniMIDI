@@ -20,7 +20,6 @@ using System.Drawing.Text;
 using Un4seen.BassAsio;
 using Un4seen.BassWasapi;
 using System.Threading;
-using DiscordRPC;
 
 namespace KeppySynthConfigurator
 {
@@ -103,8 +102,6 @@ namespace KeppySynthConfigurator
         public KeppySynthConfiguratorMain(String[] args)
         {
             InitializeComponent();
-            DiscordRpc.Initialize("415888065282703380", ref KSDiscord.DSHandle, true, null);
-            Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
             StatusStrip.Padding = new Padding(StatusStrip.Padding.Left, StatusStrip.Padding.Top, StatusStrip.Padding.Left, StatusStrip.Padding.Bottom);
             Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
@@ -202,6 +199,9 @@ namespace KeppySynthConfigurator
             {
                 // Check for updates as soon as the form shows up
                 Shown += CheckUpdatesStartUp;
+                VolLabel.MouseWheel += VolumeMouseWheel;
+                VolSimView.MouseWheel += VolumeMouseWheel;
+                VolTrackBar.MouseWheel += VolumeMouseWheel;
                 TabsForTheControls.TabPages.Remove(DebugLog);
 
                 Menu = SynthMenu;
@@ -294,11 +294,17 @@ namespace KeppySynthConfigurator
             CheckUpdates.RunWorkerAsync();
         }
 
-       private void VolTrackBar_Scroll(object sender)
+        private void VolumeMouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0) VolTrackBar.Value += 100;
+            else if (e.Delta < 0) VolTrackBar.Value -= 100;
+        }
+
+        private void VolTrackBar_Scroll(object sender)
         {
             try
             {
-                if (VolTrackBar.Value <= 49)VolSimView.ForeColor = Color.Red;
+                if (VolTrackBar.Value <= 49) VolSimView.ForeColor = Color.Red;
                 else VolSimView.ForeColor = Color.Blue;
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
@@ -1604,12 +1610,10 @@ namespace KeppySynthConfigurator
             try
             {
                 Bass.BASS_Free();
-                DiscordRpc.Shutdown();
                 Application.Exit();
             }
             catch
             {
-                DiscordRpc.Shutdown();
                 Application.Exit();
             }
         }
@@ -1619,12 +1623,10 @@ namespace KeppySynthConfigurator
             try
             {
                 Bass.BASS_Free();
-                DiscordRpc.Shutdown();
                 Application.Exit();
             }
             catch
             {
-                DiscordRpc.Shutdown();
                 Application.Exit();
             }
         }
@@ -1822,23 +1824,6 @@ namespace KeppySynthConfigurator
                 SynthSettings.SetValue("debugmode", "0", RegistryValueKind.DWord);
                 DebugModePls.Checked = false;
             }
-        }
-
-        private void RPCSwitch_Click(object sender, EventArgs e)
-        {
-            if (RPCSwitch.Checked == false)
-            {
-                RPCSwitch.Checked = true;
-                Properties.Settings.Default.DiscordRPCIntegration = true;
-            }
-            else
-            {
-                RPCSwitch.Checked = false;
-                Properties.Settings.Default.DiscordRPCIntegration = false;
-            }
-
-            Properties.Settings.Default.Save();
-            Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
         }
 
         private void LiveChangesTrigger_Click(object sender, EventArgs e)

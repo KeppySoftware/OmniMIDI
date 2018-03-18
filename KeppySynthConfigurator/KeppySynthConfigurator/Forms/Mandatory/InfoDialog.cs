@@ -79,8 +79,6 @@ namespace KeppySynthConfigurator
 
         private void InfoDialog_Load(object sender, EventArgs e)
         {
-            Functions.UpdateDiscordPresence("Checking the information about the driver", "gear", 0, 0);
-
             if (!KeppySynthConfiguratorMain.IsInternetAvailable) CFU.Visible = false;
 
             ComputerInfo CI = new ComputerInfo();
@@ -136,7 +134,6 @@ namespace KeppySynthConfigurator
 
         private void OKClose_Click(object sender, EventArgs e)
         {
-            Functions.UpdateDiscordPresence("Tampering with the settings", "gear", 0, 0);
             CurrentVerKey.Close();
             Close();
         }

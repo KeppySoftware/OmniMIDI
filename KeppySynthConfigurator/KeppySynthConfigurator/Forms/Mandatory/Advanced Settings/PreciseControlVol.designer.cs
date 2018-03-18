@@ -43,7 +43,7 @@
             this.VolTrackBar.Location = new System.Drawing.Point(12, 37);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.Size = new System.Drawing.Size(309, 45);
+            this.VolTrackBar.Size = new System.Drawing.Size(314, 45);
             this.VolTrackBar.TabIndex = 16;
             this.VolTrackBar.TickFrequency = 500;
             this.VolTrackBar.Scroll += new System.EventHandler(this.VolTrackBar_Scroll);
@@ -51,7 +51,7 @@
             // ReturnOK
             // 
             this.ReturnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ReturnOK.Location = new System.Drawing.Point(246, 93);
+            this.ReturnOK.Location = new System.Drawing.Point(251, 90);
             this.ReturnOK.Name = "ReturnOK";
             this.ReturnOK.Size = new System.Drawing.Size(75, 23);
             this.ReturnOK.TabIndex = 17;
@@ -68,7 +68,7 @@
             this.VolIntView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolIntView.Location = new System.Drawing.Point(13, 69);
             this.VolIntView.Name = "VolIntView";
-            this.VolIntView.Size = new System.Drawing.Size(307, 12);
+            this.VolIntView.Size = new System.Drawing.Size(313, 12);
             this.VolIntView.TabIndex = 18;
             this.VolIntView.Text = "000.00%";
             this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -84,9 +84,9 @@
             // 
             // PreciseControlVol
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(325, 120);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(338, 125);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.VolIntView);
@@ -100,7 +100,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Fine tune the volume knob";
-            this.Load += new System.EventHandler(this.PreciseControlVol_Load);
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

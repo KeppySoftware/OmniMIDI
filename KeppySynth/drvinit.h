@@ -34,7 +34,7 @@ void MT32SetInstruments() {
 DWORD WINAPI notescatcher(LPVOID lpV) {
 	hThread4Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
-	while (stop_thread == 0) {
+	while (stop_thread == FALSE) {
 		try {
 			start4 = clock();
 
@@ -59,7 +59,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 DWORD WINAPI settingsload(LPVOID lpV) {
 	hThread3Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
-	while (stop_thread == 0) {
+	while (stop_thread == FALSE) {
 		try {
 			start3 = clock();
 			realtime_load_settings();
@@ -91,7 +91,7 @@ void InitializeNotesCatcherThread() {
 DWORD WINAPI audioengine(LPVOID lpParam) {
 	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
-	while (stop_thread == 0) {
+	while (stop_thread == FALSE) {
 		try {
 			start2 = clock();
 			if (currentengine < 2) {
@@ -447,7 +447,7 @@ void InitializeBASSVST() {
 }
 
 void CloseThreads() {
-	stop_thread = 1;
+	stop_thread = TRUE;
 
 	WaitForSingleObject(hThread2, INFINITE);
 	CloseHandle(hThread2);
@@ -461,7 +461,7 @@ void CloseThreads() {
 	CloseHandle(hThread4);
 	hThread4 = NULL;
 
-	stop_thread = 0;
+	stop_thread = FALSE;
 }
 
 int CreateThreads(bool startup) {

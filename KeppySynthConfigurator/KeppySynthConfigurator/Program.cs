@@ -13,16 +13,9 @@ using System.IO;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Linq;
-using DiscordRPC;
 
 namespace KeppySynthConfigurator
 {
-    static class KSDiscord
-    {
-        public static DiscordRpc.EventHandlers DSHandle;
-        public static DiscordRpc.RichPresence CurRich;
-    }
-
     static class WinAPI
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -52,10 +45,9 @@ namespace KeppySynthConfigurator
         [STAThread]
         static void Main(String[] args)
         {
-            KSDiscord.DSHandle = new DiscordRpc.EventHandlers();
-            KSDiscord.DSHandle.readyCallback += ReadyCallback;
-            KSDiscord.DSHandle.disconnectedCallback += DisconnectedCallback;
-            KSDiscord.DSHandle.errorCallback += ErrorCallback;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
             foreach (String s in args)
             {

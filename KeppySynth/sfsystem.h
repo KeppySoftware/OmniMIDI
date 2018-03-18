@@ -2,17 +2,17 @@
 Keppy's Synthesizer soundfont lists loading system
 */
 
-static void FreeFonts(UINT uDeviceID)
+static void FreeFonts(UINT list)
 {
 	unsigned i;
-	if (_soundFonts[uDeviceID].size())
+	if (_soundFonts[list].size())
 	{
-		for (auto it = _soundFonts[uDeviceID].begin(); it != _soundFonts[uDeviceID].end(); ++it)
+		for (auto it = _soundFonts[list].begin(); it != _soundFonts[list].end(); ++it)
 		{
 			BASS_MIDI_FontFree(*it);
 		}
-		_soundFonts[uDeviceID].resize(0);
-		presetList[uDeviceID].resize(0);
+		_soundFonts[list].resize(0);
+		presetList[list].resize(0);
 	}
 }
 
@@ -26,16 +26,8 @@ static void checksferror(LPCWSTR name) {
 	}
 }
 
-static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
+static bool load_font_item(unsigned list, const TCHAR * in_path)
 {
-	const DWORD bass_flags =
-#ifdef UNICODE
-		BASS_UNICODE
-#else
-		0
-#endif
-		;
-
 	const TCHAR * ext = _T("");
 	const TCHAR * dot = _tcsrchr(in_path, _T('.'));
 	if (dot != 0) ext = dot + 1;
@@ -44,14 +36,14 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 		|| !_tcsicmp(ext, _T("sfz"))
 		)
 	{
-		HSOUNDFONT font = BASS_MIDI_FontInit(in_path, bass_flags);
+		HSOUNDFONT font = BASS_MIDI_FontInit(in_path, BASS_UNICODE);
 		if (!font)
 		{
 			return false;
 		}
-		_soundFonts[uDeviceID].push_back(font);
+		_soundFonts[list].push_back(font);
 		BASS_MIDI_FONTEX fex = { font, -1, -1, -1, 0, 0 };
-		presetList[uDeviceID].push_back(fex);
+		presetList[list].push_back(fex);
 		return true;
 	}
 	else if (!_tcsicmp(ext, _T("sflist")))
@@ -189,7 +181,7 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 
 						int sbank;
 						int spreset;
-						HSOUNDFONT font = BASS_MIDI_FontInit(temp, bass_flags);
+						HSOUNDFONT font = BASS_MIDI_FontInit(temp, BASS_UNICODE);
 						if (!font)
 						{
 							fclose(fl);
@@ -215,9 +207,9 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 							CheckUp(CAUSE, (wchar_t *)appdatapath.c_str());
 
 							it->font = font;
-							presetList[uDeviceID].push_back(*it);
+							presetList[list].push_back(*it);
 						}
-						_soundFonts[uDeviceID].push_back(font);
+						_soundFonts[list].push_back(font);
 					}
 					else {
 						std::wstring appdatapath = L"The following SoundFont does not exist.\n\nAffected SoundFont: ";
@@ -234,9 +226,9 @@ static bool load_font_item(unsigned uDeviceID, const TCHAR * in_path)
 	return false;
 }
 
-void LoadFonts(UINT uDeviceID, const TCHAR * name)
+void LoadFonts(UINT list, const TCHAR * name)
 {
-	FreeFonts(uDeviceID);
+	FreeFonts(list);
 
 	if (name && *name)
 	{
@@ -244,25 +236,25 @@ void LoadFonts(UINT uDeviceID, const TCHAR * name)
 		if (ext) ext++;
 		if (!_tcsicmp(ext, _T("sf2")) || !_tcsicmp(ext, _T("sf2pack")) || !_tcsicmp(ext, _T("sfz")))
 		{
-			if (!load_font_item(uDeviceID, name))
+			if (!load_font_item(list, name))
 			{
-				FreeFonts(uDeviceID);
+				FreeFonts(list);
 				return;
 			}
 		}
 		else if (!_tcsicmp(ext, _T("sflist")))
 		{
-			if (!load_font_item(uDeviceID, name))
+			if (!load_font_item(list, name))
 			{
-				FreeFonts(uDeviceID);
+				FreeFonts(list);
 				return;
 			}
 		}
 
 		std::vector< BASS_MIDI_FONTEX > fonts;
-		for (unsigned long i = 0, j = presetList[uDeviceID].size(); i < j; ++i)
+		for (unsigned long i = 0, j = presetList[list].size(); i < j; ++i)
 		{
-			fonts.push_back(presetList[uDeviceID][j - i - 1]);
+			fonts.push_back(presetList[list][j - i - 1]);
 		}
 		BASS_MIDI_StreamSetFonts(KSStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 	}

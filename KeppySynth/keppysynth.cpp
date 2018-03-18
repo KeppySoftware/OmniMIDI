@@ -80,8 +80,8 @@ static CRITICAL_SECTION midiparsing;
 #include <bassmix.h>
 #include <bass_vst.h>
 
-#define MAX_DRIVERS 256
-#define MAX_CLIENTS 256 // Per driver
+#define MAX_DRIVERS 1
+#define MAX_CLIENTS 1 // Per driver
 
 struct Driver_Client {
 	int allocated;
@@ -95,22 +95,19 @@ struct Driver {
 	int clientCount;
 	HDRVR hdrvr;
 	struct Driver_Client clients[MAX_CLIENTS];
-} drivers[MAX_DRIVERS + 1];
+} drivers[MAX_DRIVERS];
 
 static int driverCount = 0;
 
-static volatile int OpenCount = 0;
-static volatile int modm_closed = 1;
+static volatile BOOL modm_closed = TRUE;
 
-static volatile int stop_thread = 0;
-static volatile int stop_athread = 0;
-static volatile int stop_sthread = 0;
-static volatile int stop_rtthread = 0;
-static volatile int reset_synth = 0;
-static DWORD processPriority;
+static volatile BOOL stop_thread = FALSE;
+static volatile BOOL stop_rtthread = FALSE;
+static volatile BOOL reset_synth = FALSE;
+static DWORD processPriority = NORMAL_PRIORITY_CLASS;
 static HANDLE load_sfevent = NULL;
 
-static int KSStream = 0;
+static int KSStream = NULL;
 static BASS_INFO info;
 
 static BOOL com_initialized = FALSE;
@@ -120,14 +117,8 @@ static float sound_out_volume_float = 1.0;
 // Threads
 static clock_t start1, start2, start3, start4;
 static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
-static HANDLE hCalcThread = NULL;
-static HANDLE hThread2 = NULL;
-static HANDLE hThread3 = NULL;
-static HANDLE hThread4 = NULL;
-static unsigned int thrdaddrC;
-static unsigned int thrdaddr2;
-static unsigned int thrdaddr3;
-static unsigned int thrdaddr4;
+static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL;
+static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL;
 static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE;
 
 // Variables
@@ -459,35 +450,17 @@ LRESULT DoDriverLoad() {
 }
 
 LRESULT DoDriverOpen(HDRVR hdrvr, LPCWSTR driverName, LONG lParam) {
-	int driverNum;
-	if (driverCount == MAX_DRIVERS) {
-		return 0;
-	}
-	else {
-		for (driverNum = 1; driverNum < MAX_DRIVERS; driverNum++) {
-			if (!drivers[driverNum].open) {
-				break;
-			}
-		}
-		if (driverNum == MAX_DRIVERS) {
-			return 0;
-		}
-	}
-	drivers[driverNum].open = 1;
-	drivers[driverNum].clientCount = 0;
-	drivers[driverNum].hdrvr = hdrvr;
-	driverCount++;
-	return driverNum;
+	drivers[0].open = 1;
+	drivers[0].clientCount = 0;
+	drivers[0].hdrvr = hdrvr;
+	return 1;
 }
 
 LRESULT DoDriverClose(DWORD_PTR dwDriverId, HDRVR hdrvr, LONG lParam1, LONG lParam2) {
-	int i;
-	for (i = 0; i < MAX_DRIVERS; i++) {
-		if (drivers[i].open && drivers[i].hdrvr == hdrvr) {
-			drivers[i].open = 0;
-			--driverCount;
-			return DRV_OK;
-		}
+	if (drivers[0].open && drivers[0].hdrvr == hdrvr) {
+		drivers[0].open = 0;
+		--driverCount;
+		return DRV_OK;
 	}
 	return DRV_CANCEL;
 }
@@ -682,8 +655,8 @@ void keepstreamsalive(int& opend) {
 		if (InitializeBASS(FALSE)) {
 			InitializeBASSVST();
 			SetUpStream();
-			LoadSoundFontsToStream();
 			opend = CreateThreads(TRUE);
+			LoadSoundFontsToStream();
 		}
 	}
 }
@@ -708,12 +681,12 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 				if (InitializeBASS(FALSE)) {
 					InitializeBASSVST();
 					SetUpStream();
-					LoadSoundFontsToStream();
 					opend = CreateThreads(TRUE);
+					LoadSoundFontsToStream();
 				}
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
-			while (stop_rtthread == 0){
+			while (stop_rtthread == FALSE){
 				start1 = clock();
 				keepstreamsalive(opend);
 				debug_info();
@@ -722,7 +695,7 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 				CheckVolume();
 				Sleep(5);
 			}
-			stop_rtthread = 0;
+			stop_rtthread = FALSE;
 			FreeUpLibraries();
 			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
 			ExitThread(0);
@@ -737,13 +710,13 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 	}
 }
 
-void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
-	struct Driver_Client *client = &drivers[driverNum].clients[clientNum];
-	DriverCallback(client->callback, client->flags, drivers[driverNum].hdrvr, msg, client->instance, param1, param2);
+void DoCallback(int clientNum, DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
+	struct Driver_Client *client = &drivers[0].clients[clientNum];
+	DriverCallback(client->callback, client->flags, drivers[0].hdrvr, msg, client->instance, param1, param2);
 }
 
 void DoStartClient() {
-	if (modm_closed == 1) {
+	if (modm_closed == TRUE) {
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -773,7 +746,7 @@ void DoStartClient() {
 		{
 			CloseHandle(load_sfevent);
 		}
-		modm_closed = 0;
+		modm_closed = FALSE;
 	}
 }
 
@@ -807,12 +780,12 @@ void DoStopClient() {
 	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&One, 1);
 	RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&One, 1);
 	RegCloseKey(hKey);
-	if (modm_closed == 0){
-		stop_thread = 1;
-		stop_rtthread = 1;
+	if (modm_closed == FALSE){
+		stop_thread = TRUE;
+		stop_rtthread = TRUE;
 		WaitForSingleObject(hCalcThread, INFINITE);
 		CloseHandle(hCalcThread);
-		modm_closed = 1;
+		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
 	if (improveperf == 0) DeleteCriticalSection(&midiparsing);
@@ -852,7 +825,7 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	*dwUser = clientNum;
 	driver->clientCount++;
 	SetPriorityClass(GetCurrentProcess(), processPriority);
-	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
+	DoCallback(clientNum, MOM_OPEN, 0, 0);
 	return MMSYSERR_NOERROR;
 }
 
@@ -867,14 +840,14 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 		DoResetClient(uDeviceID);
 		driver->clientCount = 0;
 	}
-	DoCallback(uDeviceID, dwUser, MOM_CLOSE, 0, 0);
+	DoCallback(dwUser, MOM_CLOSE, 0, 0);
 	return MMSYSERR_NOERROR;
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	LONG evbpoint;
 	MIDIHDR *IIMidiHdr;
-	struct Driver *driver = &drivers[uDeviceID];
+	struct Driver *driver = &drivers[0];
 	int exlen = 0;
 	unsigned char *sysexbuffer = NULL;
 	DWORD result = 0;
@@ -892,7 +865,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_LONGDATA:
 		try {
 			ParseData(evbpoint, MODM_LONGDATA, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-			DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
+			DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 			break;
 		}
 		catch (...) {
@@ -932,7 +905,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DoResetClient(uDeviceID);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		if (stop_rtthread != 0 || stop_thread != 0) return MIDIERR_STILLPLAYING;
+		if (stop_rtthread != FALSE || stop_thread != FALSE) return MIDIERR_STILLPLAYING;
 		else return DoCloseClient(driver, uDeviceID, static_cast<LONG>(dwUser));	
 		break;
 	default:
