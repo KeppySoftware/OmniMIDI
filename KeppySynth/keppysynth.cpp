@@ -190,7 +190,10 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 		lstrcat(main, BASSWASAPIErrorDesc[e - 5000]);
 	}
 
-	if (mode == 1) lstrcat(main, L"\n\nWhat might have caused this error:\n\n");
+	if (mode == 1) {
+		lstrcat(main, L"\n\nWhat might have caused this error:\n");
+		lstrcat(main, codeline);
+	}
 	else {
 		lstrcat(main, L"\n\nPossible fixes:\n");
 		if (e >= 0 && e <= 48)
@@ -218,11 +221,13 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 	}
 }
 
-void CheckUp(int mode, TCHAR * codeline) {
+BOOL CheckUp(int mode, TCHAR * codeline) {
 	int error = BASS_ErrorGetCode();
 	if (error != 0) {
 		ShowError(error, mode, L"BASS", codeline);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 void CheckUpASIO(int mode, TCHAR * codeline) {

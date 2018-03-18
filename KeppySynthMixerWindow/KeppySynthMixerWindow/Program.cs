@@ -30,7 +30,7 @@ namespace KeppySynthMixerWindow
         {
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthMixerWindowToFront");
-            Mutex m = new Mutex(true, "KeppySynthMixerWindow", out ok);
+            EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthMixerWindow", out ok);
             if (!ok)
             {
                 WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
@@ -41,7 +41,6 @@ namespace KeppySynthMixerWindow
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new KeppySynthMixerWindow(args));
-            GC.KeepAlive(m);
         }
     }
 }

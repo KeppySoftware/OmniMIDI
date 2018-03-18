@@ -171,7 +171,7 @@ namespace KeppySynthConfigurator
                 int window = 0;
                 bool ok;
                 BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthConfiguratorToFront");
-                Mutex m = new Mutex(true, "KeppySynthConfigurator", out ok);
+                EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthConfigurator", out ok);
                 if (!ok)
                 {
                     WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
@@ -229,7 +229,6 @@ namespace KeppySynthConfigurator
                 {
                     Application.EnableVisualStyles();
                     Application.Run(new KeppySynthConfiguratorMain(args));
-                    GC.KeepAlive(m);
                 }
             }
             catch (Exception ex)
@@ -281,7 +280,7 @@ namespace KeppySynthConfigurator
             return String.Format("{0}{1}", number, suffix);
         }
 
-        public static void ExecuteForm(Int32 runmode, String[] args, Mutex m, Int32 form)
+        public static void ExecuteForm(Int32 runmode, String[] args, EventWaitHandle m, Int32 form)
         {
             Application.EnableVisualStyles();
             if (form == 0)

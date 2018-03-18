@@ -35,8 +35,6 @@ namespace KeppySynthConfigurator
         private HtmlAgilityPack.HtmlNode ReturnSelectedNode(String version)
         {
             ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-            ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
             HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
             web.PreRequest += request =>
             {

@@ -42,7 +42,7 @@ namespace KeppySynthDebugWindow
             }
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthDebugWindowToFront");
-            Mutex m = new Mutex(true, "KeppySynthDebugWindow", out ok);
+            EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthDebugWindow", out ok);
             if (!ok)
             {
                 WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
@@ -53,7 +53,6 @@ namespace KeppySynthDebugWindow
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new KeppySynthDebugWindow());
-            GC.KeepAlive(m);
         }
     }
 }
