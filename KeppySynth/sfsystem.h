@@ -204,7 +204,7 @@ static bool load_font_item(unsigned list, const TCHAR * in_path)
 							std::wstring appdatapath = L"This error might have been caused by a missing instrument/preset in the SoundFont.\nPlease check if the instrument/preset you selected exists inside the SoundFont, then try again.\n\nAffected SoundFont: ";
 							appdatapath += nameptr;
 							appdatapath += L"\nAffected bank and preset: Bank " + std::to_wstring(sbank) + L", Preset " + std::to_wstring(spreset);
-							CheckUp(CAUSE, (wchar_t *)appdatapath.c_str());
+							CheckUp(CAUSE, (wchar_t *)appdatapath.c_str(), TRUE);
 
 							it->font = font;
 							presetList[list].push_back(*it);

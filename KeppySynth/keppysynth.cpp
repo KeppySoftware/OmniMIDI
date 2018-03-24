@@ -149,19 +149,11 @@ void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
 	}
 }
 
-void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
-	TCHAR title[MAX_PATH];
+void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerror) {
 	TCHAR main[33354];
-
-	ZeroMemory(title, MAX_PATH);
 	ZeroMemory(main, 33354);
 
-	lstrcat(title, L"Keppy's Synthesizer - ");
-	lstrcat(title, engine);
-	lstrcat(title, L" execution error");
-
 	int e = error + 1;
-	std::wstring ernumb = std::to_wstring(error);
 
 	lstrcat(main, engine);
 	lstrcat(main, L" encountered the following error: ");
@@ -173,43 +165,55 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 		lstrcat(main, BASSWASAPIErrorCode[e - 5000]);
 		basserrconsole(FOREGROUND_RED, BASSWASAPIErrorCode[e - 5000], BASSErrorDesc[e - 5000]);
 	}
-	lstrcat(main, L" (E");
-	lstrcat(main, ernumb.c_str());
-	lstrcat(main, L")");
 
-	if (mode == 0) {
-		lstrcat(main, L"\n\nCode line error: ");
-		lstrcat(main, codeline);
-	}
+	if (showerror) {
+		TCHAR title[MAX_PATH];
+		ZeroMemory(title, MAX_PATH);
 
-	lstrcat(main, L"\n\nExplanation: ");
-	if (e >= 0 && e <= 48) {
-		lstrcat(main, BASSErrorDesc[e]);
-	}
-	else if (e >= 5000 && e <= 5001) {
-		lstrcat(main, BASSWASAPIErrorDesc[e - 5000]);
-	}
+		std::wstring ernumb = std::to_wstring(error);
 
-	if (mode == 1) {
-		lstrcat(main, L"\n\nWhat might have caused this error:\n");
-		lstrcat(main, codeline);
-	}
-	else {
-		lstrcat(main, L"\n\nPossible fixes:\n");
-		if (e >= 0 && e <= 48)
-			lstrcat(main, BASSErrorFix[e]);
-		else if (e >= 5000 && e <= 5001)
-			lstrcat(main, BASSWASAPIErrorFix[e - 5000]);
-	}
+		lstrcat(title, L"Keppy's Synthesizer - ");
+		lstrcat(title, engine);
+		lstrcat(title, L" execution error");
 
-	lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
-	if (isoverrideenabled == 1) lstrcat(main, L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)");
+		lstrcat(main, L" (E");
+		lstrcat(main, ernumb.c_str());
+		lstrcat(main, L")");
 
-	if (engine == L"ASIO") {
-		lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+		if (mode == 0) {
+			lstrcat(main, L"\n\nCode line error: ");
+			lstrcat(main, codeline);
+		}
+
+		lstrcat(main, L"\n\nExplanation: ");
+		if (e >= 0 && e <= 48) {
+			lstrcat(main, BASSErrorDesc[e]);
+		}
+		else if (e >= 5000 && e <= 5001) {
+			lstrcat(main, BASSWASAPIErrorDesc[e - 5000]);
+		}
+
+		if (mode == 1) {
+			lstrcat(main, L"\n\nWhat might have caused this error:\n");
+			lstrcat(main, codeline);
+		}
+		else {
+			lstrcat(main, L"\n\nPossible fixes:\n");
+			if (e >= 0 && e <= 48)
+				lstrcat(main, BASSErrorFix[e]);
+			else if (e >= 5000 && e <= 5001)
+				lstrcat(main, BASSWASAPIErrorFix[e - 5000]);
+		}
+
+		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
+		if (isoverrideenabled == 1) lstrcat(main, L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)");
+
+		if (engine == L"ASIO") {
+			lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+		}
+
+		MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
 	}
-
-	MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
 
 	if (error == -1 ||
 		error >= 2 && error <= 10 ||
@@ -221,20 +225,22 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline) {
 	}
 }
 
-BOOL CheckUp(int mode, TCHAR * codeline) {
+BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
 	int error = BASS_ErrorGetCode();
 	if (error != 0) {
-		ShowError(error, mode, L"BASS", codeline);
+		ShowError(error, mode, L"BASS", codeline, showerror);
 		return FALSE;
 	}
 	return TRUE;
 }
 
-void CheckUpASIO(int mode, TCHAR * codeline) {
+BOOL CheckUpASIO(int mode, TCHAR * codeline, bool showerror) {
 	int error = BASS_ASIO_ErrorGetCode();
 	if (error != 0) {
-		ShowError(error, mode, L"BASSASIO", codeline);
+		return FALSE;
+		ShowError(error, mode, L"BASSASIO", codeline, showerror);
 	}
+	return TRUE;
 }
 
 bool GetVersionInfo(

@@ -51,8 +51,6 @@
             this.SynthDbg = new System.Windows.Forms.TabPage();
             this.ASIOL = new System.Windows.Forms.Label();
             this.ASIOLLabel = new System.Windows.Forms.Label();
-            this.AERT = new System.Windows.Forms.Label();
-            this.AERTLabel = new System.Windows.Forms.Label();
             this.AvV = new System.Windows.Forms.Label();
             this.AvVLabel = new System.Windows.Forms.Label();
             this.HCountV = new System.Windows.Forms.Label();
@@ -61,8 +59,7 @@
             this.RAMUsageVLabel = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyToClip1 = new System.Windows.Forms.Button();
-            this.DDS = new System.Windows.Forms.Label();
-            this.DDSLabel = new System.Windows.Forms.Label();
+            this.KSLogo = new System.Windows.Forms.PictureBox();
             this.RT = new System.Windows.Forms.Label();
             this.RTLabel = new System.Windows.Forms.Label();
             this.AV = new System.Windows.Forms.Label();
@@ -70,6 +67,7 @@
             this.CMA = new System.Windows.Forms.Label();
             this.CMALabel = new System.Windows.Forms.Label();
             this.ChannelVoices = new System.Windows.Forms.TabPage();
+            this.KSLogoVoc = new System.Windows.Forms.PictureBox();
             this.CopyToClip3 = new System.Windows.Forms.Button();
             this.CHV16 = new System.Windows.Forms.Label();
             this.CHV16L = new System.Windows.Forms.Label();
@@ -104,6 +102,7 @@
             this.CHV1 = new System.Windows.Forms.Label();
             this.CHV1L = new System.Windows.Forms.Label();
             this.ThreadTime = new System.Windows.Forms.TabPage();
+            this.KSLogoThrd = new System.Windows.Forms.PictureBox();
             this.CopyToClip2 = new System.Windows.Forms.Button();
             this.SLRT = new System.Windows.Forms.Label();
             this.SLRTLabel = new System.Windows.Forms.Label();
@@ -114,6 +113,7 @@
             this.MTRT = new System.Windows.Forms.Label();
             this.MTRTLabel = new System.Windows.Forms.Label();
             this.PCSpecs = new System.Windows.Forms.TabPage();
+            this.CPULogo = new System.Windows.Forms.PictureBox();
             this.MT = new System.Windows.Forms.Label();
             this.MTLabel = new System.Windows.Forms.Label();
             this.GPUInternalChip = new System.Windows.Forms.Label();
@@ -133,25 +133,21 @@
             this.TMLabel = new System.Windows.Forms.Label();
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
+            this.WinLogo = new System.Windows.Forms.PictureBox();
             this.MemoryThread = new System.Windows.Forms.Timer(this.components);
             this.WinLogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
             this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
-            this.KSLogo = new System.Windows.Forms.PictureBox();
-            this.KSLogoVoc = new System.Windows.Forms.PictureBox();
-            this.KSLogoThrd = new System.Windows.Forms.PictureBox();
-            this.CPULogo = new System.Windows.Forms.PictureBox();
-            this.WinLogo = new System.Windows.Forms.PictureBox();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
-            this.ChannelVoices.SuspendLayout();
-            this.ThreadTime.SuspendLayout();
-            this.PCSpecs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
+            this.ChannelVoices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).BeginInit();
+            this.ThreadTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).BeginInit();
+            this.PCSpecs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
             this.SuspendLayout();
@@ -238,8 +234,6 @@
             // 
             this.SynthDbg.Controls.Add(this.ASIOL);
             this.SynthDbg.Controls.Add(this.ASIOLLabel);
-            this.SynthDbg.Controls.Add(this.AERT);
-            this.SynthDbg.Controls.Add(this.AERTLabel);
             this.SynthDbg.Controls.Add(this.AvV);
             this.SynthDbg.Controls.Add(this.AvVLabel);
             this.SynthDbg.Controls.Add(this.HCountV);
@@ -249,8 +243,6 @@
             this.SynthDbg.Controls.Add(this.VersionLabel);
             this.SynthDbg.Controls.Add(this.CopyToClip1);
             this.SynthDbg.Controls.Add(this.KSLogo);
-            this.SynthDbg.Controls.Add(this.DDS);
-            this.SynthDbg.Controls.Add(this.DDSLabel);
             this.SynthDbg.Controls.Add(this.RT);
             this.SynthDbg.Controls.Add(this.RTLabel);
             this.SynthDbg.Controls.Add(this.AV);
@@ -286,28 +278,6 @@
             this.ASIOLLabel.TabIndex = 44;
             this.ASIOLLabel.Text = "ASIO driver\'s latency:";
             this.ASIOLLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AERT
-            // 
-            this.AERT.AutoSize = true;
-            this.AERT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AERT.Location = new System.Drawing.Point(170, 78);
-            this.AERT.Name = "AERT";
-            this.AERT.Size = new System.Drawing.Size(21, 13);
-            this.AERT.TabIndex = 43;
-            this.AERT.Text = "0%";
-            this.AERT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AERTLabel
-            // 
-            this.AERTLabel.AutoSize = true;
-            this.AERTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AERTLabel.Location = new System.Drawing.Point(2, 78);
-            this.AERTLabel.Name = "AERTLabel";
-            this.AERTLabel.Size = new System.Drawing.Size(169, 13);
-            this.AERTLabel.TabIndex = 42;
-            this.AERTLabel.Text = "Audio engine rendering time:";
-            this.AERTLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // AvV
             // 
@@ -402,28 +372,16 @@
             this.CopyToClip1.UseVisualStyleBackColor = true;
             this.CopyToClip1.Click += new System.EventHandler(this.CopyToClip_Click);
             // 
-            // DDS
+            // KSLogo
             // 
-            this.DDS.AutoSize = true;
-            this.DDS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DDS.Location = new System.Drawing.Point(161, 78);
-            this.DDS.Name = "DDS";
-            this.DDS.Size = new System.Drawing.Size(45, 13);
-            this.DDS.TabIndex = 15;
-            this.DDS.Text = "0 (0 x 4)";
-            this.DDS.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DDS.Visible = false;
-            // 
-            // DDSLabel
-            // 
-            this.DDSLabel.AutoSize = true;
-            this.DDSLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DDSLabel.Location = new System.Drawing.Point(2, 78);
-            this.DDSLabel.Name = "DDSLabel";
-            this.DDSLabel.Size = new System.Drawing.Size(159, 13);
-            this.DDSLabel.TabIndex = 14;
-            this.DDSLabel.Text = "Decoded data size (bytes):";
-            this.DDSLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.KSLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogo.Location = new System.Drawing.Point(389, 3);
+            this.KSLogo.Name = "KSLogo";
+            this.KSLogo.Size = new System.Drawing.Size(32, 32);
+            this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogo.TabIndex = 25;
+            this.KSLogo.TabStop = false;
             // 
             // RT
             // 
@@ -534,6 +492,17 @@
             this.ChannelVoices.TabIndex = 2;
             this.ChannelVoices.Text = "Channels voice count";
             this.ChannelVoices.UseVisualStyleBackColor = true;
+            // 
+            // KSLogoVoc
+            // 
+            this.KSLogoVoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.KSLogoVoc.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogoVoc.Location = new System.Drawing.Point(389, 3);
+            this.KSLogoVoc.Name = "KSLogoVoc";
+            this.KSLogoVoc.Size = new System.Drawing.Size(32, 32);
+            this.KSLogoVoc.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogoVoc.TabIndex = 49;
+            this.KSLogoVoc.TabStop = false;
             // 
             // CopyToClip3
             // 
@@ -918,6 +887,17 @@
             this.ThreadTime.Text = "Threads time";
             this.ThreadTime.UseVisualStyleBackColor = true;
             // 
+            // KSLogoThrd
+            // 
+            this.KSLogoThrd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.KSLogoThrd.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogoThrd.Location = new System.Drawing.Point(389, 3);
+            this.KSLogoThrd.Name = "KSLogoThrd";
+            this.KSLogoThrd.Size = new System.Drawing.Size(32, 32);
+            this.KSLogoThrd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogoThrd.TabIndex = 59;
+            this.KSLogoThrd.TabStop = false;
+            // 
             // CopyToClip2
             // 
             this.CopyToClip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1051,6 +1031,17 @@
             this.PCSpecs.TabIndex = 1;
             this.PCSpecs.Text = "Computer specifications";
             this.PCSpecs.UseVisualStyleBackColor = true;
+            // 
+            // CPULogo
+            // 
+            this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CPULogo.Cursor = System.Windows.Forms.Cursors.Help;
+            this.CPULogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
+            this.CPULogo.Location = new System.Drawing.Point(389, 37);
+            this.CPULogo.Name = "CPULogo";
+            this.CPULogo.Size = new System.Drawing.Size(32, 32);
+            this.CPULogo.TabIndex = 38;
+            this.CPULogo.TabStop = false;
             // 
             // MT
             // 
@@ -1261,6 +1252,17 @@
             this.COSLabel.Text = "Operating system:";
             this.COSLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // WinLogo
+            // 
+            this.WinLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.WinLogo.Cursor = System.Windows.Forms.Cursors.Help;
+            this.WinLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
+            this.WinLogo.Location = new System.Drawing.Point(389, 3);
+            this.WinLogo.Name = "WinLogo";
+            this.WinLogo.Size = new System.Drawing.Size(32, 32);
+            this.WinLogo.TabIndex = 24;
+            this.WinLogo.TabStop = false;
+            // 
             // MemoryThread
             // 
             this.MemoryThread.Tick += new System.EventHandler(this.MemoryThread_Tick);
@@ -1289,61 +1291,6 @@
             // 
             this.DebugInfo.Tick += new System.EventHandler(this.DebugInfo_Tick);
             // 
-            // KSLogo
-            // 
-            this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogo.Location = new System.Drawing.Point(389, 3);
-            this.KSLogo.Name = "KSLogo";
-            this.KSLogo.Size = new System.Drawing.Size(32, 32);
-            this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogo.TabIndex = 25;
-            this.KSLogo.TabStop = false;
-            // 
-            // KSLogoVoc
-            // 
-            this.KSLogoVoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogoVoc.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogoVoc.Location = new System.Drawing.Point(389, 3);
-            this.KSLogoVoc.Name = "KSLogoVoc";
-            this.KSLogoVoc.Size = new System.Drawing.Size(32, 32);
-            this.KSLogoVoc.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogoVoc.TabIndex = 49;
-            this.KSLogoVoc.TabStop = false;
-            // 
-            // KSLogoThrd
-            // 
-            this.KSLogoThrd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogoThrd.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogoThrd.Location = new System.Drawing.Point(389, 3);
-            this.KSLogoThrd.Name = "KSLogoThrd";
-            this.KSLogoThrd.Size = new System.Drawing.Size(32, 32);
-            this.KSLogoThrd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogoThrd.TabIndex = 59;
-            this.KSLogoThrd.TabStop = false;
-            // 
-            // CPULogo
-            // 
-            this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CPULogo.Cursor = System.Windows.Forms.Cursors.Help;
-            this.CPULogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
-            this.CPULogo.Location = new System.Drawing.Point(389, 37);
-            this.CPULogo.Name = "CPULogo";
-            this.CPULogo.Size = new System.Drawing.Size(32, 32);
-            this.CPULogo.TabIndex = 38;
-            this.CPULogo.TabStop = false;
-            // 
-            // WinLogo
-            // 
-            this.WinLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.WinLogo.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WinLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.unknown;
-            this.WinLogo.Location = new System.Drawing.Point(389, 3);
-            this.WinLogo.Name = "WinLogo";
-            this.WinLogo.Size = new System.Drawing.Size(32, 32);
-            this.WinLogo.TabIndex = 24;
-            this.WinLogo.TabStop = false;
-            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1361,15 +1308,15 @@
             this.Tabs.ResumeLayout(false);
             this.SynthDbg.ResumeLayout(false);
             this.SynthDbg.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.ChannelVoices.ResumeLayout(false);
             this.ChannelVoices.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).EndInit();
             this.ThreadTime.ResumeLayout(false);
             this.ThreadTime.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).EndInit();
             this.PCSpecs.ResumeLayout(false);
             this.PCSpecs.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
             this.ResumeLayout(false);
@@ -1463,14 +1410,10 @@
         private System.Windows.Forms.Label AvVLabel;
         private System.Windows.Forms.ToolTip VoiceAverage;
         private System.Windows.Forms.TabPage ThreadTime;
-        private System.Windows.Forms.Label AERT;
-        private System.Windows.Forms.Label AERTLabel;
         private System.Windows.Forms.Label HCountV;
         private System.Windows.Forms.Label HCountVLabel;
         private System.Windows.Forms.Label RAMUsageV;
         private System.Windows.Forms.Label RAMUsageVLabel;
-        private System.Windows.Forms.Label DDS;
-        private System.Windows.Forms.Label DDSLabel;
         private System.Windows.Forms.Button CopyToClip2;
         private System.Windows.Forms.Label SLRT;
         private System.Windows.Forms.Label SLRTLabel;

@@ -194,7 +194,7 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 
 	if (vstimode == FALSE) KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 
-	CheckUp(ERRORCODE, L"KSStreamCreateDEC");
+	CheckUp(ERRORCODE, L"KSStreamCreateDEC", TRUE);
 	
 	PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
 }
@@ -239,7 +239,7 @@ void InitializeBASSEnc() {
 	case IDYES:
 		BASS_Encode_Start(KSStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 		// Error handling
-		CheckUp(ERRORCODE, L"EncoderStart");
+		CheckUp(ERRORCODE, L"EncoderStart", TRUE);
 		break;
 	case IDNO:
 		TCHAR configuratorapp[MAX_PATH];
@@ -280,11 +280,11 @@ void InitializeBASSFinal() {
 	BASS_GetInfo(&info);
 	BASS_SetConfig(BASS_CONFIG_BUFFER, frames);
 	InitializeStreamForExternalEngine(frequency);
-	CheckUp(ERRORCODE, L"KSStreamCreateDS");
+	CheckUp(ERRORCODE, L"KSStreamCreateDS", TRUE);
 	if (DSoutput != 0)
 	{
 		BASS_ChannelPlay(KSStream, false);
-		CheckUp(ERRORCODE, L"KSChannelPlayDS");
+		CheckUp(ERRORCODE, L"KSChannelPlayDS", TRUE);
 	}
 }
 
@@ -293,7 +293,7 @@ void InitializeWAVEnc() {
 
 	InitializeStreamForExternalEngine(frequency);
 	InitializeBASSEnc();
-	CheckUp(ERRORCODE, L"KSInitEnc");
+	CheckUp(ERRORCODE, L"KSInitEnc", TRUE);
 }
 
 void InitializeASIO() {
@@ -301,25 +301,24 @@ void InitializeASIO() {
 
 	InitializeStreamForExternalEngine(frequency);
 	if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
-		CheckUpASIO(ERRORCODE, L"KSInitASIO");
 		BASS_ASIO_SetRate(frequency);
-		CheckUpASIO(ERRORCODE, L"KSFormatASIO");
+		CheckUpASIO(ERRORCODE, L"KSFormatASIO", FALSE);
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
 		if (monorendering == 1) BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
+		CheckUpASIO(ERRORCODE, L"KSChanSetMono", TRUE);
 		BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
-		CheckUpASIO(ERRORCODE, L"KSChanSetFormatASIO");
+		CheckUpASIO(ERRORCODE, L"KSChanSetFormatASIO", TRUE);
 		if (monorendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, frequency / 2);
 		else BASS_ASIO_ChannelSetRate(FALSE, 0, frequency);
-		CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO");
+		CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO", TRUE);
 		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, 0);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-		CheckUpASIO(ERRORCODE, L"KSChanEnableASIO");
+		CheckUpASIO(ERRORCODE, L"KSChanEnableASIO", TRUE);
 		BASS_ASIO_Start(0, 2);
-		CheckUpASIO(ERRORCODE, L"KSStartASIO");
+		CheckUpASIO(ERRORCODE, L"KSStartASIO", TRUE);
 	}
 	else {
-		CheckUpASIO(ERRORCODE, L"KSInitASIO");
-		MessageBox(NULL, L"ASIO is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to WASAPI...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open ASIO device", MB_OK | MB_ICONERROR);
+		CheckUpASIO(ERRORCODE, L"KSInitASIO", TRUE);
 		InitializeBASSFinal();
 	}
 }
@@ -372,9 +371,10 @@ bool InitializeBASS(bool restart) {
 	if (currentengine == 1) flags = BASS_DEVICE_DSOUND;
 	else flags = 0;
 
+	Retry:
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
 	init = BASS_Init(isds ? DSoutput : 0, frequency, flags, 0, NULL);
-	CheckUp(ERRORCODE, L"BASSInit");
+	CheckUp(ERRORCODE, L"BASSInit", TRUE);
 
 	if (currentengine == 0) {
 		InitializeWAVEnc();
@@ -407,16 +407,16 @@ bool InitializeBASS(bool restart) {
 	else {
 		if (vstimode == FALSE) {
 			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-			CheckUp(ERRORCODE, L"KSAttributes1");
+			CheckUp(ERRORCODE, L"KSAttributes1", TRUE);
 			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-			CheckUp(ERRORCODE, L"KSAttributes2");
+			CheckUp(ERRORCODE, L"KSAttributes2", TRUE);
 			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
-			CheckUp(ERRORCODE, L"KSAttributes3");
+			CheckUp(ERRORCODE, L"KSAttributes3", FALSE);
 		}
 	}
 
 	ChVolume = BASS_ChannelSetFX(KSStream, BASS_FX_VOLUME, 1);
-	CheckUp(ERRORCODE, L"KSVolFX");
+	CheckUp(ERRORCODE, L"KSVolFX", FALSE);
 
 	return init;
 }
@@ -508,11 +508,11 @@ void FreeUpLibraries() {
 	{
 		ResetSynth(0);
 		BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
-		CheckUp(ERRORCODE, L"KSResetChannelASIO");
+		CheckUp(ERRORCODE, L"KSResetChannelASIO", TRUE);
 		BASS_ASIO_Stop();
-		CheckUp(ERRORCODE, L"KSStopASIO");
+		CheckUp(ERRORCODE, L"KSStopASIO", TRUE);
 		BASS_StreamFree(KSStream);
-		CheckUp(ERRORCODE, L"KSStreamFreeBASS");
+		CheckUp(ERRORCODE, L"KSStreamFreeBASS", TRUE);
 		KSStream = 0;
 	}
 	if (bassmidi) {
@@ -522,19 +522,19 @@ void FreeUpLibraries() {
 	}
 	if (bassenc) {
 		BASS_Encode_Stop(KSStream);
-		CheckUp(ERRORCODE, L"KSFreeBASSenc");
+		CheckUp(ERRORCODE, L"KSFreeBASSenc", TRUE);
 		FreeLibrary(bassenc);
 		bassenc = 0;
 	}
 	if (bass) {
 		BASS_Free();
-		CheckUp(ERRORCODE, L"KSFreeBASS");
+		CheckUp(ERRORCODE, L"KSFreeBASS", TRUE);
 		FreeLibrary(bass);
 		bass = 0;
 	}
 	if (bassasio) {
 		BASS_ASIO_Free();
-		CheckUp(ERRORCODE, L"KSFreeASIO");
+		CheckUp(ERRORCODE, L"KSFreeASIO", TRUE);
 		FreeLibrary(bassasio);
 		bassasio = 0;
 	}

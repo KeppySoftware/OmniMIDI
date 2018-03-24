@@ -658,7 +658,7 @@ void realtime_load_settings()
 		ChVolumeStruct.fTime = 0.0f;
 		ChVolumeStruct.lCurve = 0;
 		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-		CheckUp(ERRORCODE, L"KSVolFXSet");
+		CheckUp(ERRORCODE, L"KSVolFXSet", FALSE);
 
 		// stuff
 		if (autopanic != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
@@ -820,10 +820,8 @@ void debug_info() {
 		DWORD dwSize = sizeof(DWORD);
 		DWORD level, left, right, handlecount;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
-		int tempo;
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 		if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
-		else if (currentengine == 3) currentcpuusageE0 = currentcpuusage0 + 0.5f;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
@@ -856,11 +854,11 @@ void debug_info() {
 
 		if (currentengine == 2) {
 			double rate = BASS_ASIO_GetRate();
-			CheckUpASIO(ERRORCODE, L"KSGetRateASIO");
+			CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
 			long inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
-			CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO");
+			CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO", TRUE);
 			long outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
-			CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO");
+			CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO", TRUE);
 
 			RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&inlatency, sizeof(inlatency));
 			RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&outlatency, sizeof(outlatency));
