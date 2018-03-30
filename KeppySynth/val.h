@@ -5,6 +5,9 @@ static HINSTANCE hinst = NULL;							// main DLL handle
 
 static int improveperf = 0;				// Improve performance, reduces compatibility
 
+static char modulename[MAX_PATH];		// debug info
+static char bitapp[MAX_PATH];			// debug info
+static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 static HINSTANCE winrtmidi = 0;			// winrt handle
 static HINSTANCE bass = 0;				// bass handle
 static HINSTANCE bass_fx = 0;			// bass_fx handle
@@ -123,12 +126,6 @@ static LPCWSTR cnames[16] =
 {
 	L"ch1", L"ch2", L"ch3", L"ch4", L"ch5", L"ch6", L"ch7", L"ch8",
 	L"ch9", L"ch10", L"ch11", L"ch12", L"ch13", L"ch14", L"ch15", L"ch16"
-};
-
-static int cvvalues[16] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
 };
 
 // Channels voices

@@ -44,11 +44,11 @@
             this.DebugWinTop = new System.Windows.Forms.MenuItem();
             this.CopyToClipboard = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.SonicMode = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
+            this.RefreshDebugApps = new System.Windows.Forms.PictureBox();
+            this.SelectedDebug = new System.Windows.Forms.ComboBox();
             this.ASIOL = new System.Windows.Forms.Label();
             this.ASIOLLabel = new System.Windows.Forms.Label();
             this.AvV = new System.Windows.Forms.Label();
@@ -134,14 +134,16 @@
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
             this.WinLogo = new System.Windows.Forms.PictureBox();
-            this.MemoryThread = new System.Windows.Forms.Timer(this.components);
             this.WinLogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
             this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
+            this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
+            this.ReloadDebugInfo = new System.Windows.Forms.ToolTip(this.components);
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             this.ChannelVoices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).BeginInit();
@@ -161,9 +163,8 @@
             this.DebugWinTop,
             this.CopyToClipboard,
             this.menuItem1,
-            this.SonicMode,
-            this.menuItem2,
             this.ExitMenu});
+            this.MainCont.Popup += new System.EventHandler(this.MainCont_Popup);
             // 
             // OpenConfigurator
             // 
@@ -199,20 +200,9 @@
             this.menuItem1.Index = 5;
             this.menuItem1.Text = "-";
             // 
-            // SonicMode
-            // 
-            this.SonicMode.Index = 6;
-            this.SonicMode.Text = "Parse debug information every 1ms";
-            this.SonicMode.Click += new System.EventHandler(this.SonicMode_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 7;
-            this.menuItem2.Text = "-";
-            // 
             // ExitMenu
             // 
-            this.ExitMenu.Index = 8;
+            this.ExitMenu.Index = 6;
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.Exit_Click);
             // 
@@ -228,10 +218,11 @@
             this.Tabs.SelectedIndex = 0;
             this.Tabs.Size = new System.Drawing.Size(432, 206);
             this.Tabs.TabIndex = 8;
-            this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
             // 
             // SynthDbg
             // 
+            this.SynthDbg.Controls.Add(this.RefreshDebugApps);
+            this.SynthDbg.Controls.Add(this.SelectedDebug);
             this.SynthDbg.Controls.Add(this.ASIOL);
             this.SynthDbg.Controls.Add(this.ASIOLLabel);
             this.SynthDbg.Controls.Add(this.AvV);
@@ -256,6 +247,31 @@
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
             this.SynthDbg.UseVisualStyleBackColor = true;
+            // 
+            // RefreshDebugApps
+            // 
+            this.RefreshDebugApps.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RefreshDebugApps.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.RefreshDebugApps.Image = global::KeppySynthDebugWindow.Properties.Resources.ReloadIcon;
+            this.RefreshDebugApps.Location = new System.Drawing.Point(266, 128);
+            this.RefreshDebugApps.Name = "RefreshDebugApps";
+            this.RefreshDebugApps.Size = new System.Drawing.Size(21, 21);
+            this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.RefreshDebugApps.TabIndex = 47;
+            this.RefreshDebugApps.TabStop = false;
+            this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "It reloads all the debug pipes, which are opened everytime a MIDI app loads Keppy" +
+        "\'s Synthesizer.");
+            this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
+            // 
+            // SelectedDebug
+            // 
+            this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SelectedDebug.FormattingEnabled = true;
+            this.SelectedDebug.Location = new System.Drawing.Point(291, 128);
+            this.SelectedDebug.Name = "SelectedDebug";
+            this.SelectedDebug.Size = new System.Drawing.Size(127, 21);
+            this.SelectedDebug.TabIndex = 46;
+            this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
             // 
             // ASIOL
             // 
@@ -1263,10 +1279,6 @@
             this.WinLogo.TabIndex = 24;
             this.WinLogo.TabStop = false;
             // 
-            // MemoryThread
-            // 
-            this.MemoryThread.Tick += new System.EventHandler(this.MemoryThread_Tick);
-            // 
             // WinLogoTT
             // 
             this.WinLogoTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
@@ -1289,7 +1301,19 @@
             // 
             // DebugInfo
             // 
+            this.DebugInfo.Interval = 10;
             this.DebugInfo.Tick += new System.EventHandler(this.DebugInfo_Tick);
+            // 
+            // DebugInfoCheck
+            // 
+            this.DebugInfoCheck.WorkerSupportsCancellation = true;
+            this.DebugInfoCheck.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DebugInfoCheck_DoWork);
+            this.DebugInfoCheck.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.DebugInfoCheck_RunWorkerCompleted);
+            // 
+            // ReloadDebugInfo
+            // 
+            this.ReloadDebugInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ReloadDebugInfo.ToolTipTitle = "What does this do?";
             // 
             // KeppySynthDebugWindow
             // 
@@ -1308,6 +1332,7 @@
             this.Tabs.ResumeLayout(false);
             this.SynthDbg.ResumeLayout(false);
             this.SynthDbg.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.ChannelVoices.ResumeLayout(false);
             this.ChannelVoices.PerformLayout();
@@ -1404,8 +1429,6 @@
         private System.Windows.Forms.ToolTip WinLogoTT;
         private System.Windows.Forms.ToolTip CPULogoTT;
         private System.Windows.Forms.ToolTip CurrentKSVer;
-        private System.Windows.Forms.MenuItem SonicMode;
-        private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.Label AvV;
         private System.Windows.Forms.Label AvVLabel;
         private System.Windows.Forms.ToolTip VoiceAverage;
@@ -1424,10 +1447,13 @@
         private System.Windows.Forms.Label MTRT;
         private System.Windows.Forms.Label MTRTLabel;
         private System.Windows.Forms.PictureBox KSLogoThrd;
-        public System.Windows.Forms.Timer MemoryThread;
         public System.Windows.Forms.Timer DebugInfo;
         private System.Windows.Forms.Label ASIOL;
         private System.Windows.Forms.Label ASIOLLabel;
+        private System.ComponentModel.BackgroundWorker DebugInfoCheck;
+        private System.Windows.Forms.ComboBox SelectedDebug;
+        private System.Windows.Forms.PictureBox RefreshDebugApps;
+        private System.Windows.Forms.ToolTip ReloadDebugInfo;
     }
 }
 

@@ -12,7 +12,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 #pragma comment(lib,"Version.lib")
 
-#include "sha256.h"
 #include "stdafx.h"
 #include <dbghelp.h>
 #include <Psapi.h>
@@ -225,6 +224,23 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 	}
 }
 
+void CrashMessage(LPCWSTR part) {
+	TCHAR errormessage[MAX_PATH] = L"An error has been detected while trying to execute the following action: ";
+	TCHAR clickokmsg[MAX_PATH] = L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
+	lstrcat(errormessage, part);
+	lstrcat(errormessage, clickokmsg);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(Error at \"" << part << "\") - Fatal error during the execution of the driver." << std::endl;
+
+	const int result = MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	switch (result)
+	{
+	default:
+		exit(0);
+		return;
+	}
+}
+
 BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
 	int error = BASS_ErrorGetCode();
 	if (error != 0) {
@@ -432,6 +448,58 @@ void PrintEventToConsole(int color, int stage, bool issysex, const char* text, i
 	}
 }
 
+std::wstring GetLastErrorAsWString()
+{
+	//Get the error message, if any.
+	DWORD errorMessageID = ::GetLastError();
+	if (errorMessageID == 0)
+		return std::wstring(); //No error message has been recorded
+
+	LPWSTR messageBuffer = nullptr;
+	size_t size = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_ENGLISH_US), (LPWSTR)&messageBuffer, 0, NULL);
+
+	std::wstring message(messageBuffer, size);
+
+	//Free the buffer.
+	LocalFree(messageBuffer);
+
+	return message;
+}
+
+void StartDebugPipe(BOOL restart) {
+	static unsigned int PipeVal = 0;
+	static const WCHAR PipeName[] = TEXT("\\\\.\\pipe\\KSDEBUG%u");
+
+	WCHAR PipeDes[MAX_PATH];
+
+Retry:
+	if (!restart) PipeVal++;
+	else CloseHandle(hPipe);
+
+	ZeroMemory(PipeDes, MAX_PATH);
+	swprintf_s(PipeDes, MAX_PATH, PipeName, PipeVal);
+
+	hPipe = CreateNamedPipe(PipeDes,
+		PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE,
+		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+		PIPE_UNLIMITED_INSTANCES,
+		1024,
+		1024,
+		NMPWAIT_USE_DEFAULT_WAIT,
+		NULL);
+
+	if (hPipe == INVALID_HANDLE_VALUE)
+	{
+		if (PipeVal <= PIPE_UNLIMITED_INSTANCES) goto Retry;
+		else {
+			std::wstring Error = GetLastErrorAsWString();
+			CrashMessage(Error.c_str());
+			throw;
+		}
+	}
+}
+
 // Keppy's Synthesizer vital parts
 #include "sfsystem.h"
 #include "settings.h"
@@ -449,6 +517,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH)
 	{
+		DisconnectNamedPipe(hPipe);
 		DoStopClient();
 	}
 	return TRUE;
@@ -639,7 +708,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 				return MMSYSERR_NOERROR;
 			}
 			catch (...) {
-				crashmessage(L"MIDICaps");
+				CrashMessage(L"MIDICaps");
 				ExitThread(0);
 				throw;
 				return MMSYSERR_NOTSUPPORTED;
@@ -648,7 +717,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		}
 	}
 	catch (...) {
-		crashmessage(L"MIDICaps");
+		CrashMessage(L"MIDICaps");
 		ExitThread(0);
 		throw;
 		return MMSYSERR_NOTSUPPORTED;
@@ -714,7 +783,7 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 		}
 	}
 	catch (...) {
-		crashmessage(L"DrvMainThread");
+		CrashMessage(L"DrvMainThread");
 		ExitThread(0);
 		throw;
 		return 0;
@@ -739,6 +808,8 @@ void DoStartClient() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"improveperf", NULL, &dwType, (LPBYTE)&improveperf, &dwSize);
 		RegCloseKey(hKey);
+
+		StartDebugPipe(FALSE);
 
 		if (improveperf == 0) InitializeCriticalSection(&midiparsing);
 		DWORD result;
@@ -880,7 +951,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			break;
 		}
 		catch (...) {
-			crashmessage(L"LongMODMDataParse");
+			CrashMessage(L"LongMODMDataParse");
 			throw;
 		}
 	case MODM_DATA:
@@ -889,7 +960,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			break;
 		}
 		catch (...) {
-			crashmessage(L"MODMDataParse");
+			CrashMessage(L"MODMDataParse");
 			throw;
 		}
 	case MODM_STRMDATA: {

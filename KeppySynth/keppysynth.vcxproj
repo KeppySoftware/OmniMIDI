@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="keppysynth.cpp" />
-    <ClCompile Include="sha256.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external_packages\bass.h" />
@@ -30,7 +29,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />
-    <ClInclude Include="sha256.h" />
     <ClInclude Include="val.h" />
   </ItemGroup>
   <ItemGroup>

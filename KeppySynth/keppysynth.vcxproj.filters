@@ -4,9 +4,6 @@
     <ClCompile Include="keppysynth.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
-    <ClCompile Include="sha256.cpp">
-      <Filter>Runtime</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bansystem.h">
@@ -43,9 +40,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="val.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="sha256.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="drvinit.h">

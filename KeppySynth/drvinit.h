@@ -45,7 +45,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			if (currentengine == 1 && oldbuffermode == 1) { break; }
 		}
 		catch (...) {
-			crashmessage(L"NotesCatcher");
+			CrashMessage(L"NotesCatcher");
 			throw;
 		}
 	}
@@ -70,7 +70,7 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 			Sleep(100);
 		}
 		catch (...) {
-			crashmessage(L"SettingsLoad");
+			CrashMessage(L"SettingsLoad");
 			throw;
 		}
 	}
@@ -115,7 +115,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 			else break;
 		}
 		catch (...) {
-			crashmessage(L"AudioEngineRender");
+			CrashMessage(L"AudioEngineRender");
 			throw;
 		}
 	}
@@ -504,6 +504,10 @@ void SetUpStream() {
 }
 
 void FreeUpLibraries() {
+	FillContentDebug(TRUE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FlushFileBuffers(hPipe);
+	CloseHandle(hPipe);
+
 	if (KSStream)
 	{
 		ResetSynth(0);

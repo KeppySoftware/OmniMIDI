@@ -20,11 +20,42 @@ using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using System.Drawing;
 using System.Windows.Forms.VisualStyles;
+using System.IO.Pipes;
+using System.IO;
+using System.Security.AccessControl;
+using System.Collections.Generic;
 
 namespace KeppySynthDebugWindow
 {
     public partial class KeppySynthDebugWindow : Form
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        struct WIN32_FIND_DATA
+        {
+            public uint dwFileAttributes;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
+            public uint nFileSizeHigh;
+            public uint nFileSizeLow;
+            public uint dwReserved0;
+            public uint dwReserved1;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string cFileName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
+            public string cAlternateFileName;
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern IntPtr FindFirstFile(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool FindNextFile(IntPtr hFindFile, out WIN32_FIND_DATA
+           lpFindFileData);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool FindClose(IntPtr hFindFile);
+
         // Topmost
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -35,31 +66,13 @@ namespace KeppySynthDebugWindow
         const UInt32 KEEPPOS = 2 | 1;
 
         // Voices
-        int ch1;
-        int ch2;
-        int ch3;
-        int ch4;
-        int ch5;
-        int ch6;
-        int ch7;
-        int ch8;
-        int ch9;
-        int ch10;
-        int ch11;
-        int ch12;
-        int ch13;
-        int ch14;
-        int ch15;
-        int ch16;
+        UInt32[] CHs = new UInt32[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         // Debug information
-        string currentapp;
-        string bitapp;
-        UInt64 ramusage;
-        Int32 handlecount;
-        Int32 sndbfvalue;
+        private BindingList<String> KSPipes = new BindingList<String>();
         string currentappreturn;
         string bitappreturn;
+        const int tryConnectTimeout = 15000;
 
         // Required for KS
         FileVersionInfo Driver { get; set; }
@@ -112,6 +125,11 @@ namespace KeppySynthDebugWindow
             PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             Tabs.SelectedIndex = 1;
             Tabs.SelectedIndex = 0;
+
+            CheckDebugPorts();
+
+            DebugInfoCheck.RunWorkerAsync();
+            DebugInfo.Enabled = true;
         }
 
         protected override void WndProc(ref Message m)
@@ -483,53 +501,16 @@ namespace KeppySynthDebugWindow
             Application.ExitThread(); // R.I.P. debug
         }
 
-        private void UpdateActiveVoicesPerChannel()
+        private void UpdateActiveVoicesPerChannel(StreamReader StreamDebugReader)
         {
-            try
-            {
-                ch1 = Convert.ToInt32(Debug.GetValue("chv1", "0").ToString());
-                ch2 = Convert.ToInt32(Debug.GetValue("chv2", "0").ToString());
-                ch3 = Convert.ToInt32(Debug.GetValue("chv3", "0").ToString());
-                ch4 = Convert.ToInt32(Debug.GetValue("chv4", "0").ToString());
-                ch5 = Convert.ToInt32(Debug.GetValue("chv5", "0").ToString());
-                ch6 = Convert.ToInt32(Debug.GetValue("chv6", "0").ToString());
-                ch7 = Convert.ToInt32(Debug.GetValue("chv7", "0").ToString());
-                ch8 = Convert.ToInt32(Debug.GetValue("chv8", "0").ToString());
-                ch9 = Convert.ToInt32(Debug.GetValue("chv9", "0").ToString());
-                ch10 = Convert.ToInt32(Debug.GetValue("chv10", "0").ToString());
-                ch11 = Convert.ToInt32(Debug.GetValue("chv11", "0").ToString());
-                ch12 = Convert.ToInt32(Debug.GetValue("chv12", "0").ToString());
-                ch13 = Convert.ToInt32(Debug.GetValue("chv13", "0").ToString());
-                ch14 = Convert.ToInt32(Debug.GetValue("chv14", "0").ToString());
-                ch15 = Convert.ToInt32(Debug.GetValue("chv15", "0").ToString());
-                ch16 = Convert.ToInt32(Debug.GetValue("chv16", "0").ToString());
-            }
-            catch
-            {
-                ch1 = 0;
-                ch2 = 0;
-                ch3 = 0;
-                ch4 = 0;
-                ch5 = 0;
-                ch6 = 0;
-                ch7 = 0;
-                ch8 = 0;
-                ch9 = 0;
-                ch10 = 0;
-                ch11 = 0;
-                ch12 = 0;
-                ch13 = 0;
-                ch14 = 0;
-                ch15 = 0;
-                ch16 = 0;
-            }
+            for (int i = 0; i <= 15; ++i) ReadPipeUInt32(StreamDebugReader, String.Format("CV{0}", i), ref CHs[i]);
         }
 
         private string GetActiveVoices()
         {
             try
             {
-                return String.Format("{0}", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16)).ToString());
+                return String.Format("{0}", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15])).ToString());
             }
             catch
             {
@@ -541,12 +522,126 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                return String.Format("{0} V/f", ((ch1 + ch2 + ch3 + ch4 + ch5 + ch6 + ch7 + ch8 + ch9 + ch10 + ch11 + ch12 + ch13 + ch14 + ch15 + ch16) / 16.67f).ToString("0.0"));
+                return String.Format("{0} V/f", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]) / 16.67f).ToString("0.0"));
             }
             catch
             {
                 return "0 V/f";
             }
+        }
+
+        private string DebugName(string value)
+        {
+            int A = value.IndexOf(" = ");
+            if (A == -1) return "";
+            return value.Substring(0, A);
+        }
+
+        private string DebugValue(string value)
+        {
+            int A = value.LastIndexOf(" = ");
+            if (A == -1) return "";
+            int A2 = A + (" = ").Length;
+            if (A2 >= value.Length) return "";
+            return value.Substring(A2);
+        }
+
+        private void ReadPipeString(StreamReader StreamDebugReader, String RequestedValue, ref String ValueToChange)
+        {
+            string temp = StreamDebugReader.ReadLine();
+            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp);
+        }
+
+        private void ReadPipeUInt32(StreamReader StreamDebugReader, String RequestedValue, ref UInt32 ValueToChange)
+        {
+            string temp = StreamDebugReader.ReadLine();
+            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToUInt32(DebugValue(temp));
+        }
+
+        private void ReadPipeUInt64(StreamReader StreamDebugReader, String RequestedValue, ref UInt64 ValueToChange)
+        {
+            string temp = StreamDebugReader.ReadLine();
+            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToUInt64(DebugValue(temp));
+        }
+
+        String CurrentApp = "None";
+        String BitApp = "...";
+        UInt32 CurCPU = 0;
+        UInt32 CurCPUE = 0;
+        UInt64 Handles = 0;
+        UInt64 RAMUsage = 0;
+        UInt32 Td1 = 0;
+        UInt32 Td2 = 0;
+        UInt32 Td3 = 0;
+        UInt32 Td4 = 0;
+        UInt32 ASIOInLat = 0;
+        UInt32 ASIOOutLat = 0;
+        private void ParseInfoFromPipe(StreamReader StreamDebugReader)
+        {
+            try
+            {
+                ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp);
+                ReadPipeString(StreamDebugReader, "BitApp", ref BitApp);
+                ReadPipeUInt32(StreamDebugReader, "CurCPU", ref CurCPU);
+                ReadPipeUInt32(StreamDebugReader, "CurCPUE", ref CurCPUE);
+                ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles);
+                ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage);
+                ReadPipeUInt32(StreamDebugReader, "Td1", ref Td1);
+                ReadPipeUInt32(StreamDebugReader, "Td2", ref Td2);
+                ReadPipeUInt32(StreamDebugReader, "Td3", ref Td3);
+                ReadPipeUInt32(StreamDebugReader, "Td4", ref Td4);
+                ReadPipeUInt32(StreamDebugReader, "ASIOInLat", ref ASIOInLat);
+                ReadPipeUInt32(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat);
+                UpdateActiveVoicesPerChannel(StreamDebugReader);
+            }
+            catch
+            {
+                CurrentApp = "None";
+                BitApp = "...";
+                CurCPU = 0;
+                CurCPUE = 0;
+                Handles = 0;
+                RAMUsage = 0;
+                Td1 = 0;
+                Td2 = 0;
+                Td3 = 0;
+                Td4 = 0;
+                ASIOInLat = 0;
+                ASIOOutLat = 0;
+            }
+        }
+
+        private bool DoesPipeStillExist(int requestedpipe)
+        {
+            String[] PipesOpen = Directory.GetFiles(@"\\.\pipe\");
+            foreach (String Pipe in PipesOpen) if (Pipe.Contains(String.Format("KSDEBUG{0}", requestedpipe + 1))) return true;
+            return false;
+        }
+
+        private void CheckDebugPorts()
+        {
+            SelectedDebug.DataSource = null;
+
+            KSPipes.Clear();
+
+            try
+            {
+                String[] PipesOpen = Directory.GetFiles(@"\\.\pipe\");
+                List<String> KSPipesCheck = new List<String>();
+                foreach (String Pipe in PipesOpen) if (Pipe.Contains("KSDEBUG")) KSPipesCheck.Add(Path.GetFileName(Pipe));
+                KSPipesCheck.Sort();
+                KSPipes = new BindingList<String>(KSPipesCheck);
+            }
+            catch { }
+
+            SelectedDebug.DataSource = KSPipes;
+
+            if (SelectedDebug.Items.Count < 1 || String.IsNullOrEmpty(SelectedDebug.Items[0].ToString()))
+            {
+                KSPipes.Add("No apps available");
+                SelectedDebug.Enabled = false;
+            }
+            else try { SelectedDebug.SelectedIndex = SelectedDebugVal; SelectedDebug.Enabled = true; } catch { SelectedDebug.SelectedIndex = SelectedDebug.Items.Count - 1; }
         }
 
         private void GetInfo()
@@ -555,38 +650,20 @@ namespace KeppySynthDebugWindow
             {
                 if (Tabs.SelectedIndex == 0)
                 {
-                    currentapp = Watchdog.GetValue("currentapp", "None").ToString(); // Gets app's name. If the name of the app is invalid, it'll return "Not available"
-                    bitapp = Watchdog.GetValue("bit", "...").ToString(); // Gets app's architecture. If the app doesn't return a value, it'll return "Unknown"
-                    ramusage = Convert.ToUInt64(Debug.GetValue("ramusage", 0).ToString()); // Gets app's working set size in bytes. (Eg. How much the app is using for both RAM and paging file)
-                    handlecount = Convert.ToInt32(Debug.GetValue("handlecount", 0).ToString()); // Gets app's handles count.
-                    sndbfvalue = Convert.ToInt32(Settings.GetValue("sndbfvalue", 0)); // Size of the decoded data, in bytes
-
                     // Time to write all the stuff to the string builder
-                    if (System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters()) == "0")
+                    if (System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
                     {
                         OpenAppLocat.Enabled = false;
                         currentappreturn = "None";
                     }
-                    else
-                    {
-                        currentappreturn = System.IO.Path.GetFileName(currentapp.RemoveGarbageCharacters());
-                    }
+                    else currentappreturn = System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters());
 
-                    if (bitapp.RemoveGarbageCharacters() == "0")
-                    {
-                        bitappreturn = "...";
-                    }
-                    else
-                    {
-                        bitappreturn = bitapp.RemoveGarbageCharacters();
-                    }
+                    if (BitApp.RemoveGarbageCharacters() == "0") bitappreturn = "...";
+                    else bitappreturn = BitApp.RemoveGarbageCharacters();
 
-                    HCountV.Text = String.Format("{0} handles", handlecount);
-                    RAMUsageV.Text = GetCurrentRAMUsage(ramusage);
+                    HCountV.Text = String.Format("{0} handles", Handles);
+                    RAMUsageV.Text = GetCurrentRAMUsage(RAMUsage);
                     CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
-
-                    // Get current active voices
-                    UpdateActiveVoicesPerChannel();
 
                     Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("polyphony", "512")));
 
@@ -606,66 +683,53 @@ namespace KeppySynthDebugWindow
                     }
                     else
                     {
-                        Int32 RTColor = (int)Math.Round((double)(100 * Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0"))) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
+                        Int32 RTColor = (int)Math.Round((double)(100 * CurCPU) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
 
-                        if (Convert.ToInt32(Debug.GetValue("currentcpuusage0", "0").ToString()) > Convert.ToInt32(Settings.GetValue("cpu", "75").ToString()) && Settings.GetValue("cpu", "75").ToString() != "0")
+                        if ((CurCPU > Convert.ToInt32(Settings.GetValue("cpu", "75"))) && (Convert.ToInt32(Settings.GetValue("cpu", "75")) != 0))
                         {
                             RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
-                            RT.Text = String.Format("{0}% (Beyond limit!)", Debug.GetValue("currentcpuusage0").ToString(), Settings.GetValue("cpu", "75").ToString());
+                            RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU, Settings.GetValue("cpu", "75").ToString());
                         }
                         else
                         {
                             RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Regular);
-                            RT.Text = String.Format("{0}%", Debug.GetValue("currentcpuusage0", "0").ToString()); // Else, it'll give you the info about how many cycles it needs to work.
+                            RT.Text = String.Format("{0}%", CurCPU.ToString()); // Else, it'll give you the info about how many cycles it needs to work.
                         }
 
                         RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitToRange(0, 100));
                     }
 
-                    if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", Debug.GetValue("asioinlatency", "0").ToString(), Debug.GetValue("asiooutlatency", "0").ToString());
+                    if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
                     else ASIOL.Text = "Not in use.";
                 }
                 else if (Tabs.SelectedIndex == 1)
                 {
-                    UpdateActiveVoicesPerChannel();
                     String FormatForVoices = "{0} voices";
-                    CHV1.Text = String.Format(FormatForVoices, ch1);
-                    CHV2.Text = String.Format(FormatForVoices, ch2);
-                    CHV3.Text = String.Format(FormatForVoices, ch3);
-                    CHV4.Text = String.Format(FormatForVoices, ch4);
-                    CHV5.Text = String.Format(FormatForVoices, ch5);
-                    CHV6.Text = String.Format(FormatForVoices, ch6);
-                    CHV7.Text = String.Format(FormatForVoices, ch7);
-                    CHV8.Text = String.Format(FormatForVoices, ch8);
-                    CHV9.Text = String.Format(FormatForVoices, ch9);
-                    CHV10.Text = String.Format(FormatForVoices, ch10);
-                    CHV11.Text = String.Format(FormatForVoices, ch11);
-                    CHV12.Text = String.Format(FormatForVoices, ch12);
-                    CHV13.Text = String.Format(FormatForVoices, ch13);
-                    CHV14.Text = String.Format(FormatForVoices, ch14);
-                    CHV15.Text = String.Format(FormatForVoices, ch15);
-                    CHV16.Text = String.Format(FormatForVoices, ch16);
+                    CHV1.Text = String.Format(FormatForVoices, CHs[0]);
+                    CHV2.Text = String.Format(FormatForVoices, CHs[1]);
+                    CHV3.Text = String.Format(FormatForVoices, CHs[2]);
+                    CHV4.Text = String.Format(FormatForVoices, CHs[3]);
+                    CHV5.Text = String.Format(FormatForVoices, CHs[4]);
+                    CHV6.Text = String.Format(FormatForVoices, CHs[5]);
+                    CHV7.Text = String.Format(FormatForVoices, CHs[6]);
+                    CHV8.Text = String.Format(FormatForVoices, CHs[7]);
+                    CHV9.Text = String.Format(FormatForVoices, CHs[8]);
+                    CHV10.Text = String.Format(FormatForVoices, CHs[9]);
+                    CHV11.Text = String.Format(FormatForVoices, CHs[10]);
+                    CHV12.Text = String.Format(FormatForVoices, CHs[11]);
+                    CHV13.Text = String.Format(FormatForVoices, CHs[12]);
+                    CHV14.Text = String.Format(FormatForVoices, CHs[13]);
+                    CHV15.Text = String.Format(FormatForVoices, CHs[14]);
+                    CHV16.Text = String.Format(FormatForVoices, CHs[15]);
                 }
                 else if (Tabs.SelectedIndex == 2)
                 {
-                    MTRT.Text = String.Format("{0}ms", Debug.GetValue("td1", 0).ToString());
-                    AERTi.Text = String.Format("{0}ms", Debug.GetValue("td2", 0).ToString());
-                    SLRT.Text = String.Format("{0}ms", Debug.GetValue("td3", 0).ToString());
-                    NCRT.Text = String.Format("{0}ms", Debug.GetValue("td4", 0).ToString());
+                    MTRT.Text = String.Format("{0}ms", Td1);
+                    AERTi.Text = String.Format("{0}ms", Td2);
+                    SLRT.Text = String.Format("{0}ms", Td3);
+                    NCRT.Text = String.Format("{0}ms", Td4);
                 }
-            }
-            finally
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            }
-        }
-
-        private void MemoryThread_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Tabs.SelectedIndex == 3)
+                else if (Tabs.SelectedIndex == 3)
                 {
                     Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
                     thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
@@ -685,7 +749,72 @@ namespace KeppySynthDebugWindow
                     CI = null;
                 }
             }
-            catch { }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+        private void DebugInfo_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                GetInfo();
+            }
+            catch (Exception ex)
+            {
+                // If something goes wrong, here's an error handler
+                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.ExitThread();
+            }
+        }
+
+        int SelectedDebugVal = 0;
+        private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
+        {
+            using (NamedPipeClientStream PipeClient = new NamedPipeClientStream(String.Format("KSDEBUG{0}", SelectedDebugVal + 1)))
+            {
+                PipeClient.Connect();
+                if (PipeClient.IsConnected)
+                {
+                    using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                if (DebugInfoCheck.CancellationPending) break;
+                                ParseInfoFromPipe(StreamDebugReader);
+                                Thread.Sleep(1);
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                else DebugInfoCheck.CancelAsync();
+            }
+        }
+
+        private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            DebugInfoCheck.RunWorkerAsync();
+        }
+
+        private void SelectedDebug_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (DoesPipeStillExist(SelectedDebug.SelectedIndex))
+            {
+                SelectedDebugVal = SelectedDebug.SelectedIndex;
+                if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
+                else DebugInfoCheck.RunWorkerAsync();
+            }
+            else MessageBox.Show("The selected app isn't open anymore!", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void RefreshDebugApps_Click(object sender, EventArgs e)
+        {
+            CheckDebugPorts();
         }
 
         private void OpenConfigurator_Click(object sender, EventArgs e)
@@ -738,48 +867,9 @@ namespace KeppySynthDebugWindow
             }
         }
 
-        private void SonicMode_Click(object sender, EventArgs e)
+        private void MainCont_Popup(object sender, EventArgs e)
         {
-            if (!SonicMode.Checked)
-            {
-                SonicMode.Checked = true;
-                DebugInfo.Interval = 1;
-                MemoryThread.Interval = 1;
-            }
-            else
-            {
-                SonicMode.Checked = false;
-                DebugInfo.Interval = 100;
-                MemoryThread.Interval = 100;
-            }
-        }
 
-        private void DebugInfo_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                GetInfo();
-            }
-            catch (Exception ex)
-            {
-                // If something goes wrong, here's an error handler
-                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.ExitThread();
-            }
-        }
-
-        private void Tabs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Tabs.SelectedIndex == 3)
-            {
-                MemoryThread.Enabled = true;
-                DebugInfo.Enabled = false;
-            }
-            else
-            {
-                MemoryThread.Enabled = false;
-                DebugInfo.Enabled = true;
-            }
         }
     }
 }

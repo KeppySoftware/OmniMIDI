@@ -156,6 +156,7 @@ namespace KeppySynthConfigurator
         }
 
         public static uint BringToFrontMessage;
+        static EventWaitHandle m;
         static void DoAnyway(String[] args)
         {
             try
@@ -171,7 +172,7 @@ namespace KeppySynthConfigurator
                 int window = 0;
                 bool ok;
                 BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthConfiguratorToFront");
-                EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthConfigurator", out ok);
+                m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthConfigurator", out ok);
                 if (!ok)
                 {
                     WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);

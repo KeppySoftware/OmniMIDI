@@ -24,13 +24,14 @@ namespace KeppySynthMixerWindow
     static class Program
     {
         public static uint BringToFrontMessage;
+        static EventWaitHandle m;
 
         [STAThread]
         static void Main(string[] args)
         {
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthMixerWindowToFront");
-            EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthMixerWindow", out ok);
+            m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthMixerWindow", out ok);
             if (!ok)
             {
                 WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);

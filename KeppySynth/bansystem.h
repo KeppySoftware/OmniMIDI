@@ -83,7 +83,7 @@ BOOL BlackListSystem(){
 		return 0x1;
 	}
 	catch (...) {
-		crashmessage(L"BlackListCheckUp");
+		CrashMessage(L"BlackListCheckUp");
 		throw;
 	}
 }
@@ -148,7 +148,7 @@ BOOL VMSBlackList(){
 		return 0x0;
 	}
 	catch (...) {
-		crashmessage(L"VMSBlackListedCheckUp");
+		CrashMessage(L"VMSBlackListedCheckUp");
 		throw;
 	}
 }

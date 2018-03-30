@@ -13,23 +13,6 @@ static long long evbrpoint = 0;
 static volatile long long evbcount = 0;
 static UINT evbsysexpoint;
 
-void crashmessage(LPCWSTR part) {
-	TCHAR errormessage[MAX_PATH] = L"An error has been detected while trying to execute the following action: ";
-	TCHAR clickokmsg[MAX_PATH] = L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
-	lstrcat(errormessage, part);
-	lstrcat(errormessage, clickokmsg);
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Error at \"" << part << "\") - Fatal error during the execution of the driver." << std::endl;
-
-	const int result = MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-	switch (result)
-	{
-	default:
-		exit(0);
-		return;
-	}
-}
-
 void DLLLoadError(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
@@ -114,7 +97,7 @@ void LoadSoundfont(int whichsf){
 		}
 	}
 	catch (...) {
-		crashmessage(L"SFLoad");
+		CrashMessage(L"SFLoad");
 		throw;
 	}
 }
@@ -159,7 +142,7 @@ bool LoadSoundfontStartup() {
 		}
 	}
 	catch (...) {
-		crashmessage(L"SFLoadStartup");
+		CrashMessage(L"SFLoadStartup");
 		throw;
 	}
 }
@@ -423,34 +406,24 @@ BOOL load_bassfuncs()
 		return TRUE;
 	}
 	catch (...) {
-		crashmessage(L"BASSDefLoad");
+		CrashMessage(L"BASSDefLoad");
 		throw;
 	}
 }
 
 void appname() {
 	try {
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_SZ;
-		DWORD dwSize = sizeof(DWORD);
-		TCHAR modulename[MAX_PATH];
-		TCHAR bitapp[MAX_PATH];
-		ZeroMemory(modulename, MAX_PATH * sizeof(TCHAR));
-		ZeroMemory(bitapp, MAX_PATH * sizeof(TCHAR));
-		GetModuleFileNameEx(GetCurrentProcess(), NULL, modulename, MAX_PATH);
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		ZeroMemory(modulename, MAX_PATH * sizeof(char));
+		ZeroMemory(bitapp, MAX_PATH * sizeof(char));
+		GetModuleFileNameExA(GetCurrentProcess(), NULL, modulename, MAX_PATH);
 #if defined(_WIN64)
-		wcscpy(bitapp, L"64-bit");
+		strcpy(bitapp, "64-bit");
 #elif defined(_WIN32)
-		wcscpy(bitapp, L"32-bit");
+		strcpy(bitapp, "32-bit");
 #endif
-		RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&modulename, sizeof(modulename));
-		RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&bitapp, sizeof(bitapp));
-		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"AppNameWrite");
+		CrashMessage(L"AppNameWrite");
 		throw;
 	}
 }
@@ -512,7 +485,7 @@ void allocate_memory() {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
 	}
 	catch (...) {
-		crashmessage(L"MemAlloc");
+		CrashMessage(L"MemAlloc");
 		throw;
 	}
 }
@@ -591,7 +564,7 @@ void load_settings(bool streamreload)
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
 	}
 	catch (...) {
-		crashmessage(L"RegSetLoad");
+		CrashMessage(L"RegSetLoad");
 		throw;
 	}
 }
@@ -692,7 +665,7 @@ void realtime_load_settings()
 		appname();
 	}
 	catch (...) {
-		crashmessage(L"RTSetLoad");
+		CrashMessage(L"RTSetLoad");
 		throw;
 	}
 }
@@ -770,7 +743,7 @@ void WatchdogCheck()
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"ConfigCheck");
+		CrashMessage(L"ConfigCheck");
 		throw;
 	}
 }
@@ -807,19 +780,47 @@ void CheckVolume() {
 		}
 	}
 	catch (...) {
-		crashmessage(L"VolumeMonWrite");
+		CrashMessage(L"VolumeMonWrite");
 		throw;
 	}
 }
 
+void FillContentDebug(BOOL close, int CCUI0, int CCUIE0, int HC, long RUI, int TD1, int TD2, int TD3, int TD4, long IL, long OL) {
+	std::string PipeContent;
+
+	PipeContent += "KSDebugInfo";
+	PipeContent += "\nCurrentApp = ";
+	PipeContent += close ? "" : modulename;
+	PipeContent += "\nBitApp = ";
+	PipeContent += close ? "" : bitapp;
+
+	for (int i = 0; i <= 15; ++i) {
+		DWORD v = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
+		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(v);
+	}
+
+	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
+	PipeContent += "\nCurCPUE = " + std::to_string(CCUIE0);
+	PipeContent += "\nHandles = " + std::to_string(HC);
+	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
+	PipeContent += "\n";
+	PipeContent += "\nTd1 = " + std::to_string(TD1);
+	PipeContent += "\nTd2 = " + std::to_string(TD2);
+	PipeContent += "\nTd3 = " + std::to_string(TD3);
+	PipeContent += "\nTd4 = " + std::to_string(TD4);
+	PipeContent += "\n";
+	PipeContent += "\nASIOInLat = " + std::to_string(IL);
+	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
+
+	PipeContent += "\n\0";
+
+	if (hPipe != INVALID_HANDLE_VALUE) WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), NULL, NULL);
+	if (GetLastError() != 0 && GetLastError() != 536) StartDebugPipe(TRUE);
+}
+
 void debug_info() {
 	try {
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
 		DWORD level, left, right, handlecount;
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 		if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
 
@@ -829,8 +830,10 @@ void debug_info() {
 		SIZE_T ramusage = pmc.WorkingSetSize;
 		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
 
-		int currentcpuusageint0 = int(currentcpuusage0);
-		int currentcpuusageintE0 = int(currentcpuusageE0);
+		double rate = 0;
+		long inlatency = 0;
+		long outlatency = 0;
+
 		clock_t end = clock();
 		int64_t td1i = int64_t(GetUsage(start1, end));
 		int64_t td2i = int64_t(GetUsage(start2, end));
@@ -839,40 +842,19 @@ void debug_info() {
 
 		if (oldbuffermode == 1) td4i = 1;
 
-		// Things
-		RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&currentcpuusageint0, sizeof(currentcpuusageint0));
-		RegSetValueEx(hKey, L"currentcpuusageE0", 0, dwType, (LPBYTE)&currentcpuusageintE0, sizeof(currentcpuusageintE0));
-		RegSetValueEx(hKey, L"handlecount", 0, dwType, (LPBYTE)&handlecount, sizeof(handlecount));
-
-		dwType = REG_QWORD;
-		dwSize = sizeof(QWORD);
-		RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&ramusageint, sizeof(ramusageint));
-		RegSetValueEx(hKey, L"td1", 0, dwType, (LPBYTE)&td1i, sizeof(td1i));
-		RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&td2i, sizeof(td2i));
-		RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&td3i, sizeof(td3i));
-		RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&td4i, sizeof(td4i));
-
 		if (currentengine == 2) {
-			double rate = BASS_ASIO_GetRate();
+			rate = BASS_ASIO_GetRate();
 			CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
-			long inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
+			inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
 			CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO", TRUE);
-			long outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
+			outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
 			CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO", TRUE);
-
-			RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&inlatency, sizeof(inlatency));
-			RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&outlatency, sizeof(outlatency));
 		}
 
-		for (int i = 0; i <= 15; ++i) {
-			cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
-			RegSetValueEx(hKey, cvnames[i], 0, dwType, (LPBYTE)&cvvalues[i], sizeof(cvvalues[i]));
-		}
-
-		RegCloseKey(hKey);
+		FillContentDebug(FALSE, int(currentcpuusage0), int(currentcpuusageE0), handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), td1i, td2i, td3i, td4i, inlatency, outlatency);
 	}
 	catch (...) {
-		crashmessage(L"DebugRead");
+		CrashMessage(L"DebugCheck");
 		throw;
 	}
 }
@@ -894,7 +876,7 @@ void mixervoid() {
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"MixerCheck");
+		CrashMessage(L"MixerCheck");
 		throw;
 	}
 }
@@ -922,7 +904,7 @@ void RevbNChor() {
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		crashmessage(L"RnCCheck");
+		CrashMessage(L"RnCCheck");
 		throw;
 	}
 }
@@ -934,7 +916,7 @@ void ReloadSFList(DWORD whichsflist){
 		LoadSoundfont(whichsflist);
 	}
 	catch (...) {
-		crashmessage(L"ReloadSFListCheck");
+		CrashMessage(L"ReloadSFListCheck");
 		throw;
 	}
 }
@@ -1080,7 +1062,7 @@ void keybindings()
 		}
 	}
 	catch (...) {
-		crashmessage(L"HotKeysCheck");
+		CrashMessage(L"HotKeysCheck");
 		throw;
 	}
 }
