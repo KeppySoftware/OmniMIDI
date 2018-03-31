@@ -1099,7 +1099,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             Program.DebugToConsole(false, "Settings restored.", null);
@@ -1108,12 +1108,8 @@ namespace KeppySynthConfigurator
 
         private void applySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool Override;
-            if ((ModifierKeys & Keys.Control) == Keys.Control) Override = true;
-            else Override = false;
-
             // Just save the Settings
-            if (Functions.SaveSettings(this, Override)) EnableFade("Saved!", true);
+            if (Functions.SaveSettings(this)) EnableFade("Saved!", true);
             else EnableFade("Error!", false);
         }
 
@@ -1128,7 +1124,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Microsoft GS Wavetable Synth", 5, 0x0001, 0x001B);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The preset has been applied!\n\nRemember to download the Microsoft GS Wavetable Synth SoundFont for the best \"experience\".", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1145,7 +1141,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The Black MIDIs preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1162,7 +1158,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The low latency preset has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1179,7 +1175,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Chiptune Emulator", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("The chiptunes/retrogaming preset has been applied!\n\n\"The NES soundfont\" is recommended for chiptunes.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1196,7 +1192,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"High fidelity audio (For HQ SoundFonts)\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1213,7 +1209,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"SoundBlaster - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1230,7 +1226,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"Professional environments - Low Latency\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1247,7 +1243,7 @@ namespace KeppySynthConfigurator
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             // Messagebox here
             MessageBox.Show("\"Roland MT-32 Mode\" has been applied!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2099,7 +2095,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "WASAPI";
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             DialogResult dialogResult = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
@@ -2131,7 +2127,7 @@ namespace KeppySynthConfigurator
             MaxCPU.Value = 85;
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             DialogResult dialogResult3 = MessageBox.Show(isitworking, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult3 == DialogResult.Yes)
@@ -2148,7 +2144,7 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text = "XAudio2";
 
             // And then...
-            Functions.SaveSettings(this, true);
+            Functions.SaveSettings(this);
 
             DialogResult dialogResult4 = MessageBox.Show(isitworking2, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult4 == DialogResult.Yes)
@@ -2223,7 +2219,7 @@ namespace KeppySynthConfigurator
             if (e.KeyCode == Keys.Enter)
             {
                 // Just save the Settings
-                if (Functions.SaveSettings(this, false))
+                if (Functions.SaveSettings(this))
                 {
                     EnableFade("Saved!", true);
                     Program.DebugToConsole(false, "Applied new settings.", null);

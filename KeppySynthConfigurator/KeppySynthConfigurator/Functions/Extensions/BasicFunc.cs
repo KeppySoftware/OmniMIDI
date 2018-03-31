@@ -638,9 +638,6 @@ namespace KeppySynthConfigurator
             if (save) KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
         }
 
-        public static int PreviousEngine = 0;
-        public static int PreviousFrequency = 0;
-        public static int PreviousBuffer = 0;
         public static void LoadSettings(Form thisform) // Loads the settings from the registry
         {
             // ======= Load settings from the registry
@@ -821,10 +818,6 @@ namespace KeppySynthConfigurator
 
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
 
-                PreviousEngine = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0);
-                PreviousFrequency = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100);
-                PreviousBuffer = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50);
-
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }
             catch (Exception ex)
@@ -835,7 +828,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static bool SaveSettings(Form thisform, Boolean Override) // Saves the settings to the registry 
+        public static bool SaveSettings(Form thisform) // Saves the settings to the registry 
         {
             /*
              * Key: HKEY_CURRENT_USER\Software\Keppy's Synthesizer\Settings\
@@ -890,34 +883,8 @@ namespace KeppySynthConfigurator
 
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("sincconv", KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex, RegistryValueKind.DWord);
 
-                if (Override)
-                {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
-                    PreviousEngine = KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex;
-                    PreviousFrequency = Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.Frequency.Text);
-                    PreviousBuffer = (int)KeppySynthConfiguratorMain.Delegate.bufsize.Value;
-                    Program.DebugToConsole(false, "Done saving settings with force reload.", null);
-                }
-                else
-                {
-                    if (Properties.Settings.Default.LiveChanges)
-                    {
-                        if (PreviousEngine != KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex ||
-                            PreviousFrequency != Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.Frequency.Text) ||
-                            PreviousBuffer != (int)KeppySynthConfiguratorMain.Delegate.bufsize.Value)
-                        {
-                            if (Convert.ToInt32(KeppySynthConfiguratorMain.Mixer.GetValue("handlecount", 0)) != 0)
-                            {
-                                DialogResult dialogResult = MessageBox.Show("Some changes you made require a restart of the audio engine.\n\nDo you want to restart it?", "Keppy's Synthesizer - Live changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                                if (dialogResult == DialogResult.Yes) KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
-                            }
-                            PreviousEngine = KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex;
-                            PreviousFrequency = Convert.ToInt32(KeppySynthConfiguratorMain.Delegate.Frequency.Text);
-                            PreviousBuffer = (int)KeppySynthConfiguratorMain.Delegate.bufsize.Value;
-                        }
-                    }
-                    Program.DebugToConsole(false, "Done saving settings.", null);
-                }
+                if (Properties.Settings.Default.LiveChanges) KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
+                Program.DebugToConsole(false, "Done saving settings.", null);
 
                 return true;
             }
@@ -1178,7 +1145,7 @@ namespace KeppySynthConfigurator
                             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
                             // And then...
-                            Functions.SaveSettings(thisform, true);
+                            Functions.SaveSettings(thisform);
 
                             // Messagebox here
                             Program.DebugToConsole(false, "Settings restored.", null);
