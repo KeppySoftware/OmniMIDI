@@ -187,7 +187,9 @@ namespace KeppySynthDebugWindow
                 }
             }
             catch { size = "-"; }
-            return size;
+
+            if (length > 0) return size;
+            else return "No usage.";
         }
 
         private System.Drawing.Bitmap CPUImage()
@@ -253,7 +255,7 @@ namespace KeppySynthDebugWindow
                 }
                 else
                 {
-                    if (Environment.OSVersion.Version.Major == 5)
+                    if (Environment.OSVersion.Version.Major < 6)
                     {
                         WinLogoTT.SetToolTip(WinLogo, "You're using an unsupported OS.");
                         return Properties.Resources.other;
@@ -322,7 +324,10 @@ namespace KeppySynthDebugWindow
                         }
                     }
                     else
-                        return Properties.Resources.unknown;
+                    {
+                        WinLogoTT.SetToolTip(WinLogo, "You're using an unknown OS.");
+                        return Properties.Resources.other;
+                    }
                 }
             }
         }
@@ -674,9 +679,9 @@ namespace KeppySynthDebugWindow
                 Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("polyphony", "512")));
 
                 if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("polyphony", "512")))
-                    AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Bold);
+                    AV.Font = new Font(AV.Font, FontStyle.Bold);
                 else
-                    AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Regular);
+                    AV.Font = new Font(AV.Font, FontStyle.Regular);
 
                 AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitToRange(0, 100));
                 AV.Text = GetActiveVoices();
@@ -873,6 +878,7 @@ namespace KeppySynthDebugWindow
                 avmemint = avmem / (1024 * 1024);
                 tlmemint = tlmem / (1024 * 1024);
                 percentage = avmem * 100.0 / tlmem;
+                Thread.Sleep(1);
             }
         }
     }
