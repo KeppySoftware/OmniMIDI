@@ -126,12 +126,12 @@ namespace KeppySynthDebugWindow
             Tabs.SelectedIndex = 1;
             Tabs.SelectedIndex = 0;
 
+            CheckMem.RunWorkerAsync();
+
             CheckDebugPorts();
             SelectedDebug.SelectedIndex = 0;
             SelectedDebug_SelectionChangeCommitted(null, null);
 
-            CheckMem.RunWorkerAsync();
-            DebugInfoCheck.RunWorkerAsync();
             DebugInfo.Enabled = true;
         }
 
