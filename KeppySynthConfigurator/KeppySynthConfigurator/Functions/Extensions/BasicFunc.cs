@@ -638,6 +638,16 @@ namespace KeppySynthConfigurator
             if (save) KeppySynthConfiguratorMain.SynthSettings.SetValue("xaudiodisabled", KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
         }
 
+
+        public static class LiveChanges
+        {
+            public static int PreviousEngine = 0;
+            public static int PreviousFrequency = 0;
+            public static int PreviousBuffer = 0;
+            public static int MonophonicRender = 0;
+            public static int AudioBitDepth = 0;
+        }
+
         public static void LoadSettings(Form thisform) // Loads the settings from the registry
         {
             // ======= Load settings from the registry
@@ -664,7 +674,7 @@ namespace KeppySynthConfigurator
 
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
-                    Functions.ButtonStatus(false);
+                    ButtonStatus(false);
                     KeppySynthConfiguratorMain.Delegate.DePrio.Checked = true;
                 }
                 else if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 1)
@@ -818,6 +828,12 @@ namespace KeppySynthConfigurator
 
                 KeppySynthConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
 
+                LiveChanges.PreviousEngine = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0);
+                LiveChanges.PreviousFrequency = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100);
+                LiveChanges.PreviousBuffer = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50);
+                LiveChanges.MonophonicRender = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0);
+                LiveChanges.AudioBitDepth = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1);
+
                 Program.DebugToConsole(false, "Done loading settings.", null);
             }
             catch (Exception ex)
@@ -828,7 +844,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        public static bool SaveSettings(Form thisform) // Saves the settings to the registry 
+        public static bool SaveSettings(Form thisform, Boolean Override) // Saves the settings to the registry 
         {
             /*
              * Key: HKEY_CURRENT_USER\Software\Keppy's Synthesizer\Settings\
@@ -883,8 +899,38 @@ namespace KeppySynthConfigurator
 
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("sincconv", KeppySynthConfiguratorMain.Delegate.SincConv.SelectedIndex, RegistryValueKind.DWord);
 
-                if (Properties.Settings.Default.LiveChanges) KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
-                Program.DebugToConsole(false, "Done saving settings.", null);
+                if (Override)
+                {
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
+                    LiveChanges.PreviousEngine = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0);
+                    LiveChanges.PreviousFrequency = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100);
+                    LiveChanges.PreviousBuffer = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50);
+                    LiveChanges.MonophonicRender = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0);
+                    LiveChanges.AudioBitDepth = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1);
+                    Program.DebugToConsole(false, "Done saving settings with force reload.", null);
+                }
+                else
+                {
+                    if (Properties.Settings.Default.LiveChanges)
+                    {
+                        if (LiveChanges.PreviousEngine != (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0) ||
+                            LiveChanges.PreviousFrequency != (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100) ||
+                            LiveChanges.PreviousBuffer != (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50) ||
+                            LiveChanges.MonophonicRender != (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0) ||
+                            LiveChanges.AudioBitDepth != (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1))
+                        {
+                            KeppySynthConfiguratorMain.SynthSettings.SetValue("livechange", "1", RegistryValueKind.DWord);
+                            LiveChanges.PreviousEngine = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("xaudiodisabled", 0);
+                            LiveChanges.PreviousFrequency = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("frequency", 44100);
+                            LiveChanges.PreviousBuffer = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("buflen", 50);
+                            LiveChanges.MonophonicRender = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0);
+                            LiveChanges.AudioBitDepth = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1);
+                            Program.DebugToConsole(false, "Done saving settings. Restarting streams if any is present...", null);
+                        }
+                        else Program.DebugToConsole(false, "Done saving settings.", null);
+                    }
+                    else Program.DebugToConsole(false, "Done saving settings.", null);
+                }
 
                 return true;
             }
@@ -1145,7 +1191,7 @@ namespace KeppySynthConfigurator
                             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
                             // And then...
-                            Functions.SaveSettings(thisform);
+                            Functions.SaveSettings(thisform, true);
 
                             // Messagebox here
                             Program.DebugToConsole(false, "Settings restored.", null);

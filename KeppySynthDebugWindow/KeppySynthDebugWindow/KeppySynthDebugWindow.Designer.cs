@@ -141,6 +141,7 @@
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
             this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
             this.ReloadDebugInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.CheckMem = new System.ComponentModel.BackgroundWorker();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
@@ -164,7 +165,6 @@
             this.CopyToClipboard,
             this.menuItem1,
             this.ExitMenu});
-            this.MainCont.Popup += new System.EventHandler(this.MainCont_Popup);
             // 
             // OpenConfigurator
             // 
@@ -1315,6 +1315,10 @@
             this.ReloadDebugInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ReloadDebugInfo.ToolTipTitle = "What does this do?";
             // 
+            // CheckMem
+            // 
+            this.CheckMem.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckMem_DoWork);
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1322,6 +1326,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(432, 206);
             this.Controls.Add(this.Tabs);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -1454,6 +1459,7 @@
         private System.Windows.Forms.ComboBox SelectedDebug;
         private System.Windows.Forms.PictureBox RefreshDebugApps;
         private System.Windows.Forms.ToolTip ReloadDebugInfo;
+        private System.ComponentModel.BackgroundWorker CheckMem;
     }
 }
 

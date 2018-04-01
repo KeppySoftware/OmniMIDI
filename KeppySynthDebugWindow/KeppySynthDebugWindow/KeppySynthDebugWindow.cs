@@ -127,7 +127,10 @@ namespace KeppySynthDebugWindow
             Tabs.SelectedIndex = 0;
 
             CheckDebugPorts();
+            SelectedDebug.SelectedIndex = 0;
+            SelectedDebug_SelectionChangeCommitted(null, null);
 
+            CheckMem.RunWorkerAsync();
             DebugInfoCheck.RunWorkerAsync();
             DebugInfo.Enabled = true;
         }
@@ -613,9 +616,13 @@ namespace KeppySynthDebugWindow
 
         private bool DoesPipeStillExist(int requestedpipe)
         {
-            String[] PipesOpen = Directory.GetFiles(@"\\.\pipe\");
-            foreach (String Pipe in PipesOpen) if (Pipe.Contains(String.Format("KSDEBUG{0}", requestedpipe + 1))) return true;
-            return false;
+            try
+            {
+                String[] PipesOpen = Directory.GetFiles(@"\\.\pipe\");
+                foreach (String Pipe in PipesOpen) if (Pipe.Contains(String.Format("KSDEBUG{0}", requestedpipe))) return true;
+                return false;
+            }
+            catch { return false; }
         }
 
         private void CheckDebugPorts()
@@ -641,118 +648,97 @@ namespace KeppySynthDebugWindow
                 KSPipes.Add("No apps available");
                 SelectedDebug.Enabled = false;
             }
-            else try { SelectedDebug.SelectedIndex = SelectedDebugVal; SelectedDebug.Enabled = true; } catch { SelectedDebug.SelectedIndex = SelectedDebug.Items.Count - 1; }
+            else try { SelectedDebug.SelectedIndex = SelectedDebugVal - 1; SelectedDebug.Enabled = true; }
+                 catch { SelectedDebug.SelectedIndex = SelectedDebug.Items.Count - 1; SelectedDebug.Enabled = true; }
         }
 
         private void GetInfo()
         {
-            try
+            if (Tabs.SelectedIndex == 0)
             {
-                if (Tabs.SelectedIndex == 0)
+                // Time to write all the stuff to the string builder
+                if (System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
                 {
-                    // Time to write all the stuff to the string builder
-                    if (System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
+                    OpenAppLocat.Enabled = false;
+                    currentappreturn = "None";
+                }
+                else currentappreturn = System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters());
+
+                if (BitApp.RemoveGarbageCharacters() == "0") bitappreturn = "...";
+                else bitappreturn = BitApp.RemoveGarbageCharacters();
+
+                HCountV.Text = String.Format("{0} handles", Handles);
+                RAMUsageV.Text = GetCurrentRAMUsage(RAMUsage);
+                CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
+
+                Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("polyphony", "512")));
+
+                if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("polyphony", "512")))
+                    AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Bold);
+                else
+                    AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Regular);
+
+                AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitToRange(0, 100));
+                AV.Text = GetActiveVoices();
+                AvV.Text = GetAverageVoices();
+
+                if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
+                {
+                    RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Italic);
+                    RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.
+                }
+                else
+                {
+                    Int32 RTColor = (int)Math.Round((double)(100 * CurCPU) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
+
+                    if ((CurCPU > Convert.ToInt32(Settings.GetValue("cpu", "75"))) && (Convert.ToInt32(Settings.GetValue("cpu", "75")) != 0))
                     {
-                        OpenAppLocat.Enabled = false;
-                        currentappreturn = "None";
+                        RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
+                        RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU, Settings.GetValue("cpu", "75").ToString());
                     }
-                    else currentappreturn = System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters());
-
-                    if (BitApp.RemoveGarbageCharacters() == "0") bitappreturn = "...";
-                    else bitappreturn = BitApp.RemoveGarbageCharacters();
-
-                    HCountV.Text = String.Format("{0} handles", Handles);
-                    RAMUsageV.Text = GetCurrentRAMUsage(RAMUsage);
-                    CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
-
-                    Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("polyphony", "512")));
-
-                    if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("polyphony", "512")))
-                        AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Bold);
                     else
-                        AV.Font = new System.Drawing.Font(AV.Font, System.Drawing.FontStyle.Regular);
-
-                    AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitToRange(0, 100));
-                    AV.Text = GetActiveVoices();
-                    AvV.Text = GetAverageVoices();
-
-                    if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
                     {
-                        RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Italic);
-                        RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.
-                    }
-                    else
-                    {
-                        Int32 RTColor = (int)Math.Round((double)(100 * CurCPU) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
-
-                        if ((CurCPU > Convert.ToInt32(Settings.GetValue("cpu", "75"))) && (Convert.ToInt32(Settings.GetValue("cpu", "75")) != 0))
-                        {
-                            RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
-                            RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU, Settings.GetValue("cpu", "75").ToString());
-                        }
-                        else
-                        {
-                            RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Regular);
-                            RT.Text = String.Format("{0}%", CurCPU.ToString()); // Else, it'll give you the info about how many cycles it needs to work.
-                        }
-
-                        RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitToRange(0, 100));
+                        RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Regular);
+                        RT.Text = String.Format("{0}%", CurCPU.ToString()); // Else, it'll give you the info about how many cycles it needs to work.
                     }
 
-                    if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
-                    else ASIOL.Text = "Not in use.";
+                    RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitToRange(0, 100));
                 }
-                else if (Tabs.SelectedIndex == 1)
-                {
-                    String FormatForVoices = "{0} voices";
-                    CHV1.Text = String.Format(FormatForVoices, CHs[0]);
-                    CHV2.Text = String.Format(FormatForVoices, CHs[1]);
-                    CHV3.Text = String.Format(FormatForVoices, CHs[2]);
-                    CHV4.Text = String.Format(FormatForVoices, CHs[3]);
-                    CHV5.Text = String.Format(FormatForVoices, CHs[4]);
-                    CHV6.Text = String.Format(FormatForVoices, CHs[5]);
-                    CHV7.Text = String.Format(FormatForVoices, CHs[6]);
-                    CHV8.Text = String.Format(FormatForVoices, CHs[7]);
-                    CHV9.Text = String.Format(FormatForVoices, CHs[8]);
-                    CHV10.Text = String.Format(FormatForVoices, CHs[9]);
-                    CHV11.Text = String.Format(FormatForVoices, CHs[10]);
-                    CHV12.Text = String.Format(FormatForVoices, CHs[11]);
-                    CHV13.Text = String.Format(FormatForVoices, CHs[12]);
-                    CHV14.Text = String.Format(FormatForVoices, CHs[13]);
-                    CHV15.Text = String.Format(FormatForVoices, CHs[14]);
-                    CHV16.Text = String.Format(FormatForVoices, CHs[15]);
-                }
-                else if (Tabs.SelectedIndex == 2)
-                {
-                    MTRT.Text = String.Format("{0}ms", Td1);
-                    AERTi.Text = String.Format("{0}ms", Td2);
-                    SLRT.Text = String.Format("{0}ms", Td3);
-                    NCRT.Text = String.Format("{0}ms", Td4);
-                }
-                else if (Tabs.SelectedIndex == 3)
-                {
-                    Process thisProc = Process.GetCurrentProcess(); // Go to the next function for an explanation
-                    thisProc.PriorityClass = ProcessPriorityClass.Idle; // Tells Windows that the process doesn't require a lot of resources     
 
-                    // This thread just takes the available and total memory info from Windows, then outputs them in the 2nd tab
-
-                    ComputerInfo CI = new ComputerInfo();
-                    ulong avmem = CI.AvailablePhysicalMemory;
-                    ulong tlmem = CI.TotalPhysicalMemory;
-                    ulong avmemint = avmem / (1024 * 1024);
-                    ulong tlmemint = tlmem / (1024 * 1024);
-                    double percentage = avmem * 100.0 / tlmem;
-
-                    TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-                    AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-
-                    CI = null;
-                }
+                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
+                else ASIOL.Text = "Not in use.";
             }
-            finally
+            else if (Tabs.SelectedIndex == 1)
             {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                String FormatForVoices = "{0} voices";
+                CHV1.Text = String.Format(FormatForVoices, CHs[0]);
+                CHV2.Text = String.Format(FormatForVoices, CHs[1]);
+                CHV3.Text = String.Format(FormatForVoices, CHs[2]);
+                CHV4.Text = String.Format(FormatForVoices, CHs[3]);
+                CHV5.Text = String.Format(FormatForVoices, CHs[4]);
+                CHV6.Text = String.Format(FormatForVoices, CHs[5]);
+                CHV7.Text = String.Format(FormatForVoices, CHs[6]);
+                CHV8.Text = String.Format(FormatForVoices, CHs[7]);
+                CHV9.Text = String.Format(FormatForVoices, CHs[8]);
+                CHV10.Text = String.Format(FormatForVoices, CHs[9]);
+                CHV11.Text = String.Format(FormatForVoices, CHs[10]);
+                CHV12.Text = String.Format(FormatForVoices, CHs[11]);
+                CHV13.Text = String.Format(FormatForVoices, CHs[12]);
+                CHV14.Text = String.Format(FormatForVoices, CHs[13]);
+                CHV15.Text = String.Format(FormatForVoices, CHs[14]);
+                CHV16.Text = String.Format(FormatForVoices, CHs[15]);
+            }
+            else if (Tabs.SelectedIndex == 2)
+            {
+                MTRT.Text = String.Format("{0}ms", Td1);
+                AERTi.Text = String.Format("{0}ms", Td2);
+                SLRT.Text = String.Format("{0}ms", Td3);
+                NCRT.Text = String.Format("{0}ms", Td4);
+            }
+            else if (Tabs.SelectedIndex == 3)
+            {
+                TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
             }
         }
 
@@ -770,10 +756,10 @@ namespace KeppySynthDebugWindow
             }
         }
 
-        int SelectedDebugVal = 0;
+        int SelectedDebugVal = 1;
         private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            using (NamedPipeClientStream PipeClient = new NamedPipeClientStream(String.Format("KSDEBUG{0}", SelectedDebugVal + 1)))
+            using (NamedPipeClientStream PipeClient = new NamedPipeClientStream(String.Format("KSDEBUG{0}", SelectedDebugVal)))
             {
                 PipeClient.Connect();
                 if (PipeClient.IsConnected)
@@ -803,13 +789,18 @@ namespace KeppySynthDebugWindow
 
         private void SelectedDebug_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (DoesPipeStillExist(SelectedDebug.SelectedIndex))
+            try
             {
-                SelectedDebugVal = SelectedDebug.SelectedIndex;
-                if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
-                else DebugInfoCheck.RunWorkerAsync();
+                Int32 SelectedValueToCheck = Convert.ToInt32(Regex.Match((String)SelectedDebug.Items[SelectedDebug.SelectedIndex], @"\d+").Value);
+                if (DoesPipeStillExist(SelectedValueToCheck))
+                {
+                    SelectedDebugVal = SelectedValueToCheck;
+                    if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
+                    else DebugInfoCheck.RunWorkerAsync();
+                }
+                else MessageBox.Show("The selected app isn't open anymore!", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else MessageBox.Show("The selected app isn't open anymore!", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            catch { }
         }
 
         private void RefreshDebugApps_Click(object sender, EventArgs e)
@@ -867,9 +858,22 @@ namespace KeppySynthDebugWindow
             }
         }
 
-        private void MainCont_Popup(object sender, EventArgs e)
+        static ulong avmem = 0;
+        static ulong tlmem = 0;
+        static ulong avmemint = 0;
+        static ulong tlmemint = 0;
+        static double percentage = 0.0;
+        private void CheckMem_DoWork(object sender, DoWorkEventArgs e)
         {
-
+            ComputerInfo CI = new ComputerInfo();
+            while (CI != null)
+            {
+                avmem = CI.AvailablePhysicalMemory;
+                tlmem = CI.TotalPhysicalMemory;
+                avmemint = avmem / (1024 * 1024);
+                tlmemint = tlmem / (1024 * 1024);
+                percentage = avmem * 100.0 / tlmem;
+            }
         }
     }
 }
