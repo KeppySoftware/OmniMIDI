@@ -39,7 +39,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			start4 = clock();
 
 			MT32SetInstruments();
-			bmsyn_play_some_data();
+			PlayBufferedData();
 
 			if (capframerate == 1) Sleep(16); else Sleep(1);
 			if (currentengine == 1 && oldbuffermode == 1) { break; }
@@ -108,7 +108,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 
 				if (oldbuffermode == 1) {
 					MT32SetInstruments();
-					bmsyn_play_some_data();
+					PlayBufferedData();
 				}
 				else InitializeNotesCatcherThread();
 			}

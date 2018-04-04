@@ -30,16 +30,17 @@ bool depends() {
 	}
 }
 
-int bmsyn_play_some_data(void){
+int PlayBufferedData(void){
 	if (allnotesignore) {
 		return 0;
 	}
 	else {
 		UINT uMsg;
 		DWORD_PTR	dwParam1;
-
+		DWORD_PTR   dwParam2;
 		UINT evbpoint;
 		int exlen;
+		unsigned char *sysexbuffer;
 
 		if (!bmsyn_buf_check()){
 			return ~0;
@@ -54,6 +55,9 @@ int bmsyn_play_some_data(void){
 
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
+			dwParam2 = evbuf[evbpoint].dwParam2;
+			exlen = evbuf[evbpoint].exlen;
+			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 			MIDIHDR *hdr = (MIDIHDR*)dwParam1;
@@ -68,14 +72,6 @@ int bmsyn_play_some_data(void){
 
 			switch (uMsg) {
 			case MODM_DATA:
-				if (eggnog > 0) {
-					int eggran1 = rand() % eggnog + 1;
-					int eggran2 = rand() % eggnog + 1;
-					if (eggran1 != eggran2) {
-						break;
-					}
-				}
-
 				if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)	len = 2;
 				else if (statusv < 0xf0 || statusv == 0xf2)	len = 3;
 				else len = 1;
@@ -132,13 +128,6 @@ int bmsyn_play_some_data(void){
 				}
 				break;
 			case MODM_LONGDATA:
-				if (eggnog > 0) {
-					int egg = rand() % eggnog + 1;
-					if (egg != (egg / 2)) {
-						break;
-					}
-				}
-
 				if (sysresetignore != 1) {
 					if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, hdr->lpData, hdr->dwBytesRecorded);
 					else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
@@ -179,6 +168,9 @@ bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
+	evbuf[evbpoint].dwParam2 = dwParam2;
+	evbuf[evbpoint].exlen = exlen;
+	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 
 	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
@@ -207,10 +199,5 @@ extern "C" __declspec(dllexport) void SendDirectData(DWORD dwParam)
 extern "C" __declspec(dllexport) void SendDirectLongData(DWORD dwParam)
 {
 	ParseData(0, MODM_LONGDATA, NULL, dwParam, NULL, NULL, NULL);
-}
-
-extern "C" __declspec(dllexport) void DriverSauce()
-{
-	MessageBox(NULL, L"Made in Italy with love.", L"Keppy's Synthesizer", MB_ICONERROR | MB_SYSTEMMODAL);
 }
 #endif 

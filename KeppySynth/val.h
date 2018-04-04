@@ -90,8 +90,6 @@ static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int volumemon = 1;				// Volume monitoring
 
-static int eggnog = 0;					// Dinkleberg
-
 static int printmidievent = 0;			// Print MIDI event to log
 static int printimportant = 1;			// Print important MIDI event to log
 

@@ -811,7 +811,7 @@ void DoStartClient() {
 
 		StartDebugPipe(FALSE);
 
-		if (improveperf == 0) InitializeCriticalSection(&midiparsing);
+		InitializeCriticalSection(&midiparsing);
 		DWORD result;
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
@@ -833,35 +833,6 @@ void DoStartClient() {
 }
 
 void DoStopClient() {
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	int One = 0;
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
-	RegSetValueEx(hKey, L"currentcpuusage0", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"currentcpuusageE0", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"ramusage", 0, dwType, (LPBYTE)&One, sizeof(One));
-	RegSetValueEx(hKey, L"handlecount", 0, dwType, (LPBYTE)&One, sizeof(One));
-	RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&One, 1);
-	for (int i = 0; i <= 15; ++i) {
-		RegSetValueEx(hKey, cvnames[i], 0, dwType, (LPBYTE)&One, sizeof(One));
-	}
-
-	RegSetValueEx(hKey, L"buffull", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"int", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"td1", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"td2", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"td3", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"td4", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"asioinlatency", 0, dwType, (LPBYTE)&One, sizeof(One));
-	RegSetValueEx(hKey, L"asiooutlatency", 0, dwType, (LPBYTE)&One, sizeof(One));
-	RegCloseKey(hKey);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-	RegSetValueEx(hKey, L"currentapp", 0, dwType, (LPBYTE)&One, 1);
-	RegSetValueEx(hKey, L"bit", 0, dwType, (LPBYTE)&One, 1);
-	RegCloseKey(hKey);
 	if (modm_closed == FALSE){
 		stop_thread = TRUE;
 		stop_rtthread = TRUE;
@@ -870,7 +841,7 @@ void DoStopClient() {
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
-	if (improveperf == 0) DeleteCriticalSection(&midiparsing);
+	DeleteCriticalSection(&midiparsing);
 }
 
 void DoResetClient(UINT uDeviceID) {
@@ -928,7 +899,6 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	LONG evbpoint;
-	MIDIHDR *IIMidiHdr;
 	struct Driver *driver = &drivers[0];
 	int exlen = 0;
 	unsigned char *sysexbuffer = NULL;
@@ -946,9 +916,9 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
 		try {
-			ParseData(evbpoint, MODM_LONGDATA, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			int returnval = ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
-			break;
+			return returnval;
 		}
 		catch (...) {
 			CrashMessage(L"LongMODMDataParse");
@@ -956,15 +926,20 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 	case MODM_DATA:
 		try {
-			ParseData(evbpoint, MODM_DATA, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-			break;
+			return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 		}
 		catch (...) {
 			CrashMessage(L"MODMDataParse");
 			throw;
 		}
 	case MODM_STRMDATA: {
-		return MMSYSERR_NOERROR;
+		try {
+			return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+		}
+		catch (...) {
+			CrashMessage(L"MODMDataParse");
+			throw;
+		}
 	}
 	case MODM_GETVOLUME: {
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
