@@ -34,20 +34,20 @@
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
             this.RightClickMenu = new System.Windows.Forms.ContextMenu();
-            this.OpenSFDefaultApp = new System.Windows.Forms.MenuItem();
-            this.OpenSFMainDirectory = new System.Windows.Forms.MenuItem();
-            this.menuItem30 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem30 = new System.Windows.Forms.MenuItem();
+            this.menuItem35 = new System.Windows.Forms.MenuItem();
+            this.menuItem38 = new System.Windows.Forms.MenuItem();
+            this.menuItem56 = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.OpenSFDefaultApp = new System.Windows.Forms.MenuItem();
+            this.OpenSFMainDirectory = new System.Windows.Forms.MenuItem();
             this.menuItem37 = new System.Windows.Forms.MenuItem();
             this.menuItem54 = new System.Windows.Forms.MenuItem();
             this.menuItem55 = new System.Windows.Forms.MenuItem();
-            this.menuItem56 = new System.Windows.Forms.MenuItem();
-            this.menuItem35 = new System.Windows.Forms.MenuItem();
-            this.menuItem38 = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem8 = new System.Windows.Forms.MenuItem();
-            this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.ThemeCheck = new System.ComponentModel.BackgroundWorker();
             this.ExportSettingsDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportSettingsDialog = new System.Windows.Forms.OpenFileDialog();
@@ -460,100 +460,100 @@
             // RightClickMenu
             // 
             this.RightClickMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.OpenSFDefaultApp,
-            this.OpenSFMainDirectory,
-            this.menuItem30,
             this.menuItem4,
             this.menuItem5,
-            this.menuItem37,
-            this.menuItem54,
-            this.menuItem55,
-            this.menuItem56,
+            this.menuItem30,
             this.menuItem35,
             this.menuItem38,
-            this.menuItem6,
+            this.menuItem56,
             this.menuItem8,
-            this.menuItem10});
+            this.menuItem10,
+            this.menuItem6,
+            this.OpenSFDefaultApp,
+            this.OpenSFMainDirectory,
+            this.menuItem37,
+            this.menuItem54,
+            this.menuItem55});
             // 
-            // OpenSFDefaultApp
+            // menuItem4
             // 
-            this.OpenSFDefaultApp.Index = 0;
-            this.OpenSFDefaultApp.Text = "Open SoundFont with default app";
-            this.OpenSFDefaultApp.Click += new System.EventHandler(this.OpenSFDefaultApp_Click);
+            this.menuItem4.Index = 0;
+            this.menuItem4.Text = "Add SoundFont(s)";
+            this.menuItem4.Click += new System.EventHandler(this.AddSF_Click);
             // 
-            // OpenSFMainDirectory
+            // menuItem5
             // 
-            this.OpenSFMainDirectory.Index = 1;
-            this.OpenSFMainDirectory.Text = "Open SoundFont parent directory";
-            this.OpenSFMainDirectory.Click += new System.EventHandler(this.OpenSFMainDirectory_Click);
+            this.menuItem5.Index = 1;
+            this.menuItem5.Text = "Remove SoundFont(s)";
+            this.menuItem5.Click += new System.EventHandler(this.RmvSF_Click);
             // 
             // menuItem30
             // 
             this.menuItem30.Index = 2;
             this.menuItem30.Text = "-";
             // 
-            // menuItem4
-            // 
-            this.menuItem4.Index = 3;
-            this.menuItem4.Text = "Add SoundFont(s)";
-            this.menuItem4.Click += new System.EventHandler(this.AddSF_Click);
-            // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 4;
-            this.menuItem5.Text = "Remove SoundFont(s)";
-            this.menuItem5.Click += new System.EventHandler(this.RmvSF_Click);
-            // 
-            // menuItem37
-            // 
-            this.menuItem37.Index = 5;
-            this.menuItem37.Text = "-";
-            // 
-            // menuItem54
-            // 
-            this.menuItem54.Index = 6;
-            this.menuItem54.Text = "Copy selected SoundFont items to clipboard";
-            this.menuItem54.Click += new System.EventHandler(this.menuItem54_Click);
-            // 
-            // menuItem55
-            // 
-            this.menuItem55.Index = 7;
-            this.menuItem55.Text = "Paste SoundFont items from clipboard";
-            this.menuItem55.Click += new System.EventHandler(this.menuItem55_Click);
-            // 
-            // menuItem56
-            // 
-            this.menuItem56.Index = 8;
-            this.menuItem56.Text = "-";
-            // 
             // menuItem35
             // 
-            this.menuItem35.Index = 9;
+            this.menuItem35.Index = 3;
             this.menuItem35.Text = "Enable SoundFont(s)";
             this.menuItem35.Click += new System.EventHandler(this.menuItem35_Click);
             // 
             // menuItem38
             // 
-            this.menuItem38.Index = 10;
+            this.menuItem38.Index = 4;
             this.menuItem38.Text = "Disable SoundFont(s)";
             this.menuItem38.Click += new System.EventHandler(this.menuItem38_Click);
             // 
-            // menuItem6
+            // menuItem56
             // 
-            this.menuItem6.Index = 11;
-            this.menuItem6.Text = "-";
+            this.menuItem56.Index = 5;
+            this.menuItem56.Text = "-";
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 12;
+            this.menuItem8.Index = 6;
             this.menuItem8.Text = "Move up";
             this.menuItem8.Click += new System.EventHandler(this.MvU_Click);
             // 
             // menuItem10
             // 
-            this.menuItem10.Index = 13;
+            this.menuItem10.Index = 7;
             this.menuItem10.Text = "Move down";
             this.menuItem10.Click += new System.EventHandler(this.MvD_Click);
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 8;
+            this.menuItem6.Text = "-";
+            // 
+            // OpenSFDefaultApp
+            // 
+            this.OpenSFDefaultApp.Index = 9;
+            this.OpenSFDefaultApp.Text = "Open SoundFont with default app";
+            this.OpenSFDefaultApp.Click += new System.EventHandler(this.OpenSFDefaultApp_Click);
+            // 
+            // OpenSFMainDirectory
+            // 
+            this.OpenSFMainDirectory.Index = 10;
+            this.OpenSFMainDirectory.Text = "Open SoundFont parent directory";
+            this.OpenSFMainDirectory.Click += new System.EventHandler(this.OpenSFMainDirectory_Click);
+            // 
+            // menuItem37
+            // 
+            this.menuItem37.Index = 11;
+            this.menuItem37.Text = "-";
+            // 
+            // menuItem54
+            // 
+            this.menuItem54.Index = 12;
+            this.menuItem54.Text = "Copy selected SoundFont items to clipboard";
+            this.menuItem54.Click += new System.EventHandler(this.menuItem54_Click);
+            // 
+            // menuItem55
+            // 
+            this.menuItem55.Index = 13;
+            this.menuItem55.Text = "Paste SoundFont items from clipboard";
+            this.menuItem55.Click += new System.EventHandler(this.menuItem55_Click);
             // 
             // ThemeCheck
             // 
@@ -4391,7 +4391,6 @@
         private System.Windows.Forms.ColumnHeader SoundFont;
         private System.Windows.Forms.ColumnHeader SFFormat;
         private System.Windows.Forms.ColumnHeader SFSize;
-        private System.Windows.Forms.MenuItem menuItem37;
         private System.Windows.Forms.MenuItem menuItem35;
         private System.Windows.Forms.MenuItem menuItem38;
         private System.Windows.Forms.Timer SavedLabel;
@@ -4466,7 +4465,6 @@
         private System.Windows.Forms.MenuItem menuItem19;
         private System.Windows.Forms.MenuItem DisableOLM;
         public System.Windows.Forms.Label VolLevelS;
-        private System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel UpdateStatus;
         private System.Windows.Forms.Label Separator;
@@ -4708,6 +4706,8 @@
         private System.Windows.Forms.MenuItem menuItem57;
         public System.Windows.Forms.MenuItem VolumeBoost;
         private System.Windows.Forms.MenuItem DiscordRPCCredit;
+        private System.Windows.Forms.MenuItem menuItem37;
+        public System.Windows.Forms.ToolTip Requirements;
     }
 }
 

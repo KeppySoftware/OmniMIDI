@@ -1849,6 +1849,7 @@ namespace KeppySynthConfigurator
                     {
                         Properties.Settings.Default.LiveChangesDisclaimer = false;
                         Properties.Settings.Default.LiveChanges = true;
+                        Requirements.Active = false;
                         LiveChangesTrigger.Checked = true;
                     }
                 }
@@ -1856,12 +1857,14 @@ namespace KeppySynthConfigurator
                 {
                     Properties.Settings.Default.LiveChanges = true;
                     LiveChangesTrigger.Checked = true;
+                    Requirements.Active = false;
                 }
             }
             else
             {
                 Properties.Settings.Default.LiveChanges = false;
                 LiveChangesTrigger.Checked = false;
+                Requirements.Active = true;
             }
             Properties.Settings.Default.Save();
         }

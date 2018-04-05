@@ -105,7 +105,7 @@ namespace KeppySynthConfigurator.Forms
 
                         Program.DebugToConsole(false, "The update is ready to be installed.", null);
                         MessageBox.Show("Be sure to save all your data in the apps using Keppy's Synthesizer, before updating.\n\nClick OK when you're ready.", "Keppy's Synthesizer - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe", "/VERYSILENT");
+                        Process.Start(Path.GetTempPath() + "KeppySynthUpdate.exe", "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /SP-");
 
                         DialogResult = DialogResult.OK;
                         Application.ExitThread();

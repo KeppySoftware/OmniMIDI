@@ -147,7 +147,7 @@
             // 
             this.WinVer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WinVer.AutoSize = true;
-            this.WinVer.Location = new System.Drawing.Point(120, 39);
+            this.WinVer.Location = new System.Drawing.Point(110, 39);
             this.WinVer.Name = "WinVer";
             this.WinVer.Size = new System.Drawing.Size(61, 13);
             this.WinVer.TabIndex = 9;
@@ -167,7 +167,7 @@
             // 
             this.WinName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WinName.AutoSize = true;
-            this.WinName.Location = new System.Drawing.Point(120, 20);
+            this.WinName.Location = new System.Drawing.Point(110, 20);
             this.WinName.Name = "WinName";
             this.WinName.Size = new System.Drawing.Size(63, 13);
             this.WinName.TabIndex = 8;
@@ -223,7 +223,7 @@
             this.CurBranch.AutoSize = true;
             this.CurBranch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurBranch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.CurBranch.Location = new System.Drawing.Point(120, 96);
+            this.CurBranch.Location = new System.Drawing.Point(110, 96);
             this.CurBranch.Name = "CurBranch";
             this.CurBranch.Size = new System.Drawing.Size(58, 13);
             this.CurBranch.TabIndex = 9;
@@ -241,7 +241,7 @@
             // CompiledOn
             // 
             this.CompiledOn.AutoSize = true;
-            this.CompiledOn.Location = new System.Drawing.Point(120, 77);
+            this.CompiledOn.Location = new System.Drawing.Point(110, 77);
             this.CompiledOn.Name = "CompiledOn";
             this.CompiledOn.Size = new System.Drawing.Size(63, 13);
             this.CompiledOn.TabIndex = 7;
@@ -250,7 +250,7 @@
             // BASSMIDIVer
             // 
             this.BASSMIDIVer.AutoSize = true;
-            this.BASSMIDIVer.Location = new System.Drawing.Point(120, 58);
+            this.BASSMIDIVer.Location = new System.Drawing.Point(110, 58);
             this.BASSMIDIVer.Name = "BASSMIDIVer";
             this.BASSMIDIVer.Size = new System.Drawing.Size(54, 13);
             this.BASSMIDIVer.TabIndex = 6;
@@ -259,7 +259,7 @@
             // BASSVer
             // 
             this.BASSVer.AutoSize = true;
-            this.BASSVer.Location = new System.Drawing.Point(120, 39);
+            this.BASSVer.Location = new System.Drawing.Point(110, 39);
             this.BASSVer.Name = "BASSVer";
             this.BASSVer.Size = new System.Drawing.Size(54, 13);
             this.BASSVer.TabIndex = 5;
@@ -268,7 +268,7 @@
             // DriverVer
             // 
             this.DriverVer.AutoSize = true;
-            this.DriverVer.Location = new System.Drawing.Point(120, 20);
+            this.DriverVer.Location = new System.Drawing.Point(110, 20);
             this.DriverVer.Name = "DriverVer";
             this.DriverVer.Size = new System.Drawing.Size(62, 13);
             this.DriverVer.TabIndex = 4;

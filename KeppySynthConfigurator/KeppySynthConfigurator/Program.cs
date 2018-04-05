@@ -50,24 +50,6 @@ namespace KeppySynthConfigurator
         [STAThread]
         static void Main(String[] args)
         {
-            try {
-                ServicePointManager.SecurityProtocol = SecurityProtocolNET45.Tls12;
-                Properties.Settings.Default.TLS12Missing = false;
-            }
-            catch {
-                if (!Properties.Settings.Default.TLS12Missing)
-                    MessageBox.Show("Your .NET Framework doesn't seem to support TLS 1.2 encryption." +
-                                    "\nThis might prevent the configurator from downloading the required update files." +
-                                    "\n\nPlease install .NET Framework 4.5, for seamless updates.", "Keppy's Synthesizer - TLS 1.2 protocol not found",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Properties.Settings.Default.TLS12Missing = true;
-            }
-            finally
-            {
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
-
             foreach (String s in args)
             {
                 if (s.ToLowerInvariant() == "/dbg" || s.ToLowerInvariant() == "/debugwindow")
@@ -182,14 +164,12 @@ namespace KeppySynthConfigurator
             {
                 DebugToConsole(false, "Started configurator.", null);
                 Application.SetCompatibleTextRenderingDefault(false);
-                if (!Functions.IsWindowsVistaOrNewer())
-                {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Fatal error", "Windows XP is not supported.", true, null);
-                    Application.ExitThread();
-                }
+                if (!Functions.IsWindowsVistaOrNewer()) Application.ExitThread();
+
                 int runmode = 0;
                 int window = 0;
                 bool ok;
+
                 BringToFrontMessage = WinAPI.RegisterWindowMessage("KeppySynthConfiguratorToFront");
                 m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthConfigurator", out ok);
                 if (!ok)
@@ -197,7 +177,9 @@ namespace KeppySynthConfigurator
                     WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
                     return;
                 }
+
                 TriggerDate();
+
                 try
                 {
                     foreach (String s in args)
@@ -209,6 +191,8 @@ namespace KeppySynthConfigurator
                         }
                         else if (s.ToLowerInvariant() == "/rei")
                         {
+                            TLS12Enable(true);
+
                             var current = Process.GetCurrentProcess();
                             Process.GetProcessesByName(current.ProcessName)
                                 .Where(t => t.Id != current.Id)
@@ -234,6 +218,8 @@ namespace KeppySynthConfigurator
                             break;
                         }
                     }
+
+                    TLS12Enable(false);
                     if (Properties.Settings.Default.UpdateBranch == "choose")
                     {
                         MessageBox.Show("The driver's update system is divided into three branches. For future update notifications, you can pick between the following branches, which are the Canary Branch, the Normal Branch, and the Delayed Branch. These preferences can be changed at any time.\n\nCanary Branch: all updates\nNormal Branch: occasional updates (default, recommended)\nDelayed Branch: very infrequent updates (not recommended)\n\nClick OK to choose a branch.", "Keppy's Synthesizer - New update branches", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -243,6 +229,7 @@ namespace KeppySynthConfigurator
                         frm.ShowDialog();
                         frm.Dispose();
                     }
+
                     ExecuteForm(runmode, args, m, window);
                 }
                 catch
@@ -254,6 +241,29 @@ namespace KeppySynthConfigurator
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public static void TLS12Enable(Boolean HideMessage)
+        {
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolNET45.Tls12;
+                Properties.Settings.Default.TLS12Missing = false;
+            }
+            catch
+            {
+                if (!Properties.Settings.Default.TLS12Missing && !HideMessage)
+                    MessageBox.Show("Your .NET Framework doesn't seem to support TLS 1.2 encryption." +
+                                    "\nThis might prevent the configurator from downloading the required update files." +
+                                    "\n\nPlease install .NET Framework 4.5, for seamless updates.", "Keppy's Synthesizer - TLS 1.2 protocol not found",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Properties.Settings.Default.TLS12Missing = true;
+            }
+            finally
+            {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
         }
 
