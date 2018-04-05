@@ -6,28 +6,21 @@ Keppy's Synthesizer buffer system
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-int bmsyn_buf_check(void){
+int BufferCheck(void){
 	int retval;
 	int retvalemu;
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);
 	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
 	retvalemu = evbcount;
 	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
-	if (vms2emu == 1) {
-		return retvalemu;
-	}
-	else {
-		return retval;
-	}
+
+	return vms2emu ? retvalemu : retval;
 }
 
-bool depends() {
-	if (vms2emu == 1) {
-		return InterlockedDecrement64(&evbcount);
-	}
-	else {
-		return bmsyn_buf_check();
-	}
+void SendToBASSMIDI(DWORD dwParam1, DWORD len, int channel, int status, int note, int velocity) {
+	if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
+	else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
 }
 
 int PlayBufferedData(void){
@@ -42,7 +35,7 @@ int PlayBufferedData(void){
 		int exlen;
 		unsigned char *sysexbuffer;
 
-		if (!bmsyn_buf_check()){
+		if (!BufferCheck()){
 			return ~0;
 		}
 		do{
@@ -72,8 +65,8 @@ int PlayBufferedData(void){
 
 			switch (uMsg) {
 			case MODM_DATA:
-				if ((statusv >= 0xc0 && statusv <= 0xdf) || statusv == 0xf1 || statusv == 0xf3)	len = 2;
-				else if (statusv < 0xf0 || statusv == 0xf2)	len = 3;
+				if ((statusv >= 0xC0 && statusv <= 0xDF) || statusv == 0xF1 || statusv == 0xF3)	len = 2;
+				else if (statusv < 0xF0 || statusv == 0xF2)	len = 3;
 				else len = 1;
 
 				if (ignorenotes1) {
@@ -84,47 +77,24 @@ int PlayBufferedData(void){
 					else {
 						if (limit88 == 1) {
 							if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-								if (note >= 21 && note <= 108) {
-									if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-									else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-									PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
-								}
+								if (note >= 21 && note <= 108) SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
+								else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
 							}
-							else {
-								if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-								else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-								PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
-							}
+							else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
 						}
-						else {
-							if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-							else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-							PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
-						}
+						else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
 					}
 					break;
 				}
 				else {
 					if (limit88 == 1) {
 						if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-							if (note >= 21 && note <= 108) {
-								if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-								else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-								PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
-							}
+							if (note >= 21 && note <= 108) SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
 							else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
 						}
-						else {
-							if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-							else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-							PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
-						}
+						else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
 					}
-					else {
-						if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-						else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-						PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
-					}
+					else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
 				}
 				break;
 			case MODM_LONGDATA:
@@ -135,7 +105,7 @@ int PlayBufferedData(void){
 				}
 				break;
 			}
-		} while (depends());
+		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
 		return 0;
 	}
 }

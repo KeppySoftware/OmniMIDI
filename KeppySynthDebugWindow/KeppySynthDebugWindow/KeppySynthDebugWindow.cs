@@ -66,7 +66,7 @@ namespace KeppySynthDebugWindow
         const UInt32 KEEPPOS = 2 | 1;
 
         // Voices
-        UInt32[] CHs = new UInt32[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        UInt64[] CHs = new UInt64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         // Debug information
         private BindingList<String> KSPipes = new BindingList<String>();
@@ -434,8 +434,7 @@ namespace KeppySynthDebugWindow
 
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using Keppy's Synthesizer
         {
-            string currentapp = Watchdog.GetValue("currentapp", "Not available").ToString();
-            Process.Start(System.IO.Path.GetDirectoryName(currentapp.RemoveGarbageCharacters()));
+            Process.Start(Path.GetDirectoryName(CurrentApp.RemoveGarbageCharacters()));
         }
 
         private void CopyToClipBoardCmd() // Copies content of window to clipboard
@@ -511,7 +510,7 @@ namespace KeppySynthDebugWindow
 
         private void UpdateActiveVoicesPerChannel(StreamReader StreamDebugReader)
         {
-            for (int i = 0; i <= 15; ++i) ReadPipeUInt32(StreamDebugReader, String.Format("CV{0}", i), ref CHs[i]);
+            for (int i = 0; i <= 15; ++i) ReadPipeUInt64(StreamDebugReader, String.Format("CV{0}", i), ref CHs[i]);
         }
 
         private string GetActiveVoices()
@@ -560,10 +559,16 @@ namespace KeppySynthDebugWindow
             if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp);
         }
 
-        private void ReadPipeUInt32(StreamReader StreamDebugReader, String RequestedValue, ref UInt32 ValueToChange)
+        private void ReadPipeSingle(StreamReader StreamDebugReader, String RequestedValue, ref Single ValueToChange)
         {
             string temp = StreamDebugReader.ReadLine();
-            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToUInt32(DebugValue(temp));
+            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToSingle(DebugValue(temp)) / 1000000.0f;
+        }
+
+        private void ReadPipeDouble(StreamReader StreamDebugReader, String RequestedValue, ref Double ValueToChange)
+        {
+            string temp = StreamDebugReader.ReadLine();
+            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToDouble(DebugValue(temp)) / 1000000.0;
         }
 
         private void ReadPipeUInt64(StreamReader StreamDebugReader, String RequestedValue, ref UInt64 ValueToChange)
@@ -574,32 +579,32 @@ namespace KeppySynthDebugWindow
 
         String CurrentApp = "None";
         String BitApp = "...";
-        UInt32 CurCPU = 0;
-        UInt32 CurCPUE = 0;
+        Single CurCPU = 0;
+        Single CurCPUE = 0;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
-        UInt32 Td1 = 0;
-        UInt32 Td2 = 0;
-        UInt32 Td3 = 0;
-        UInt32 Td4 = 0;
-        UInt32 ASIOInLat = 0;
-        UInt32 ASIOOutLat = 0;
+        Single Td1 = 0;
+        Single Td2 = 0;
+        Single Td3 = 0;
+        Single Td4 = 0;
+        Double ASIOInLat = 0;
+        Double ASIOOutLat = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader)
         {
             try
             {
                 ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp);
                 ReadPipeString(StreamDebugReader, "BitApp", ref BitApp);
-                ReadPipeUInt32(StreamDebugReader, "CurCPU", ref CurCPU);
-                ReadPipeUInt32(StreamDebugReader, "CurCPUE", ref CurCPUE);
+                ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU);
+                ReadPipeSingle(StreamDebugReader, "CurCPUE", ref CurCPUE);
                 ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles);
                 ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage);
-                ReadPipeUInt32(StreamDebugReader, "Td1", ref Td1);
-                ReadPipeUInt32(StreamDebugReader, "Td2", ref Td2);
-                ReadPipeUInt32(StreamDebugReader, "Td3", ref Td3);
-                ReadPipeUInt32(StreamDebugReader, "Td4", ref Td4);
-                ReadPipeUInt32(StreamDebugReader, "ASIOInLat", ref ASIOInLat);
-                ReadPipeUInt32(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat);
+                ReadPipeSingle(StreamDebugReader, "Td1", ref Td1);
+                ReadPipeSingle(StreamDebugReader, "Td2", ref Td2);
+                ReadPipeSingle(StreamDebugReader, "Td3", ref Td3);
+                ReadPipeSingle(StreamDebugReader, "Td4", ref Td4);
+                ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat);
+                ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat);
                 UpdateActiveVoicesPerChannel(StreamDebugReader);
             }
             catch
@@ -699,12 +704,12 @@ namespace KeppySynthDebugWindow
                     if ((CurCPU > Convert.ToInt32(Settings.GetValue("cpu", "75"))) && (Convert.ToInt32(Settings.GetValue("cpu", "75")) != 0))
                     {
                         RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
-                        RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU, Settings.GetValue("cpu", "75").ToString());
+                        RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU.ToString("0.0"), Settings.GetValue("cpu", "75").ToString());
                     }
                     else
                     {
                         RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Regular);
-                        RT.Text = String.Format("{0}%", CurCPU.ToString()); // Else, it'll give you the info about how many cycles it needs to work.
+                        RT.Text = String.Format("{0}%", CurCPU.ToString("0.0")); // Else, it'll give you the info about how many cycles it needs to work.
                     }
 
                     RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitToRange(0, 100));

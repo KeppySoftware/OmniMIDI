@@ -62,7 +62,7 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 	while (stop_thread == FALSE) {
 		try {
 			start3 = clock();
-			realtime_load_settings();
+			LoadSettingsRT();
 			Panic();
 			WatchdogCheck();
 			mixervoid();

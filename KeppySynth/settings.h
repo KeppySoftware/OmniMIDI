@@ -14,7 +14,6 @@ static struct evbuf_t * evbuf;
 static long long evbwpoint = 0;
 static long long evbrpoint = 0;
 static volatile long long evbcount = 0;
-static UINT evbsysexpoint;
 
 void DLLLoadError(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
@@ -35,17 +34,6 @@ void DLLLoadError(LPCWSTR dll) {
 
 void DLLLoadErrorVST(LPCWSTR dll) {
 	std::cout << "(BASS_VST ERROR: " << dll << ") " << " - Can not load DLL. VC++ 2010 is missing. Skipping..." << std::endl;
-}
-
-bool CheckXAudioInstallation() {
-	TCHAR xaudio[MAX_PATH];
-	ZeroMemory(xaudio, sizeof(TCHAR) * MAX_PATH);
-	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, xaudio);
-	PathAppend(xaudio, _T("XAudio2_7.dll"));
-	if (!PathFileExists(xaudio)) {
-		return FALSE;
-	}
-	return TRUE;
 }
 
 float GetUsage(clock_t start, clock_t end) {
@@ -414,7 +402,7 @@ BOOL load_bassfuncs()
 	}
 }
 
-void appname() {
+void AppName() {
 	try {
 		ZeroMemory(modulename, MAX_PATH * sizeof(char));
 		ZeroMemory(bitapp, MAX_PATH * sizeof(char));
@@ -493,7 +481,7 @@ void allocate_memory() {
 	}
 }
 
-void load_settings(bool streamreload)
+void LoadSettings(bool streamreload)
 {
 	try {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
@@ -557,10 +545,7 @@ void load_settings(bool streamreload)
 
 		RegCloseKey(hKey);
 
-		appname();
-
 		frequencynew = frequency;
-
 		sound_out_volume_float = (float)volume / 10000.0f;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
@@ -571,7 +556,7 @@ void load_settings(bool streamreload)
 	}
 }
 
-void realtime_load_settings()
+void LoadSettingsRT()
 {
 	try {
 		int zero = 0;
@@ -663,7 +648,6 @@ void realtime_load_settings()
 		else {
 			BASS_ChannelFlags(KSStream, 0, BASS_MIDI_SINCINTER);
 		}
-		appname();
 	}
 	catch (...) {
 		CrashMessage(L"RTSetLoad");
@@ -786,7 +770,7 @@ void CheckVolume() {
 	}
 }
 
-void FillContentDebug(BOOL close, int CCUI0, int CCUIE0, int HC, long RUI, int TD1, int TD2, int TD3, int TD4, long IL, long OL) {
+void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, float TD1, float TD2, float TD3, float TD4, double IL, double OL) {
 	std::string PipeContent;
 	DWORD bytesWritten;
 
@@ -833,27 +817,24 @@ void DebugInfo() {
 		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
 
 		double rate = 0;
-		long inlatency = 0;
-		long outlatency = 0;
+		double inlatency = 0.0;
+		double outlatency = 0.0;
 
 		clock_t end = clock();
-		int64_t td1i = int64_t(GetUsage(start1, end));
-		int64_t td2i = int64_t(GetUsage(start2, end));
-		int64_t td3i = int64_t(GetUsage(start3, end));
-		int64_t td4i = int64_t(GetUsage(start4, end));
-
-		if (oldbuffermode == 1) td4i = 1;
+		int64_t td1i = GetUsage(start1, end);
 
 		if (currentengine == 2) {
 			rate = BASS_ASIO_GetRate();
 			CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
-			inlatency = BASS_ASIO_GetLatency(TRUE) * 1000 / rate;
+			inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
 			CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO", TRUE);
-			outlatency = BASS_ASIO_GetLatency(FALSE) * 1000 / rate;
+			outlatency = (double)BASS_ASIO_GetLatency(FALSE) * 1000.0 / rate;
 			CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO", TRUE);
 		}
 
-		FillContentDebug(FALSE, int(currentcpuusage0), int(currentcpuusageE0), handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), td1i, td2i, td3i, td4i, inlatency, outlatency);
+		FillContentDebug(FALSE, currentcpuusage0, currentcpuusageE0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize),
+			GetUsage(start1, end), GetUsage(start2, end), GetUsage(start3, end), oldbuffermode ? 0.0f : GetUsage(start4, end),
+			inlatency, outlatency);
 	}
 	catch (...) {
 		CrashMessage(L"DebugCheck");

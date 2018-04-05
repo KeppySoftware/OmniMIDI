@@ -620,6 +620,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			wcsncpy(SynthNameW, L"Keppy's Synthesizer\0", MAXPNAMELEN);
 		}
 
+		AppName();
 		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
 
 		MIDIOUTCAPSA * myCapsA;
@@ -729,7 +730,7 @@ void keepstreamsalive(int& opend) {
 	if (BASS_ErrorGetCode() == 5 || livechange == 1) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 		CloseThreads();
-		load_settings(TRUE);
+		LoadSettings(TRUE);
 		if (!com_initialized) { if (!FAILED(CoInitialize(NULL))) com_initialized = TRUE; }
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		if (InitializeBASS(FALSE)) {
@@ -750,7 +751,7 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 		else {
 			int opend = 0;
 			while (opend == 0) {
-				load_settings(FALSE);
+				LoadSettings(FALSE);
 				allocate_memory();
 				load_bassfuncs();
 				if (!com_initialized) {
