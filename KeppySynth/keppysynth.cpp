@@ -769,11 +769,11 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 			while (stop_rtthread == FALSE){
 				start1 = clock();
 				keepstreamsalive(opend);
-				debug_info();
+				DebugInfo();
 				LoadCustomInstruments();
 				keybindings();
 				CheckVolume();
-				Sleep(5);
+				Sleep(1);
 			}
 			stop_rtthread = FALSE;
 			FreeUpLibraries();

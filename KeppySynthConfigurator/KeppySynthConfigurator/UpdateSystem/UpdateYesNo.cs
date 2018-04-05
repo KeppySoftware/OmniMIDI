@@ -14,6 +14,7 @@ namespace KeppySynthConfigurator
 {
     public partial class UpdateYesNo : Form
     {
+        public String ReturnVal { get; set; }
         String OnlineVersion;
         String CurrentVersion;
         UInt32 SoundToPlay = SoundEvent.SndOk;
@@ -38,6 +39,7 @@ namespace KeppySynthConfigurator
                         ShowChangelog.Visible = false;
                         NoBtn.Text = "OK";
                         SoundToPlay = SoundEvent.SndInformation;
+                        ReturnVal = "0.0.0.0";
                     }
                     else
                     {
@@ -51,6 +53,7 @@ namespace KeppySynthConfigurator
                             ShowChangelog.Visible = false;
                             MessageText.Text = String.Format("Would you like to reinstall Keppy's Synthesizer?\nCurrent version online is {0}, the same as yours.\n\nPress Yes to confirm, or No to close the window.", CurrentVersion);
                             SoundToPlay = SoundEvent.SndQuestion;
+                            ReturnVal = CurrentVersion;
                         }
                         else if (x < y)
                         {
@@ -59,6 +62,7 @@ namespace KeppySynthConfigurator
                             ShowChangelog.Visible = false;
                             MessageText.Text = String.Format("Are you sure you want to downgrade Keppy's Synthesizer?\nCurrent version online is {0}, you have {1}.\n\nPress Yes to confirm, or No to close the window.", OnlineVersion, CurrentVersion);
                             SoundToPlay = SoundEvent.SndWarning;
+                            ReturnVal = OnlineVersion;
                         }
                         else
                         {
@@ -67,6 +71,7 @@ namespace KeppySynthConfigurator
                             ShowChangelog.Visible = !IsItFromTheChangelogWindow;
                             MessageText.Text = String.Format("A new update for Keppy's Synthesizer has been found.\nCurrent version online is {0}, you have {1}.\n\nWould you like to update now?", OnlineVersion, CurrentVersion);
                             SoundToPlay = SoundEvent.SndQuestion;
+                            ReturnVal = OnlineVersion;
                         }
                     }
                 }
@@ -79,6 +84,7 @@ namespace KeppySynthConfigurator
                     ShowChangelog.Visible = false;
                     NoBtn.Text = "OK";
                     SoundToPlay = SoundEvent.SndHand;
+                    ReturnVal = "0.0.0.0";
                 }
             }
             catch
@@ -90,6 +96,7 @@ namespace KeppySynthConfigurator
                 ShowChangelog.Visible = false;
                 NoBtn.Text = "OK";
                 SoundToPlay = SoundEvent.SndHand;
+                ReturnVal = "0.0.0.0";
             }
         }
 
