@@ -83,7 +83,7 @@ namespace KeppySynthConfigurator
 
         private void VIDPIDList_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://pci-ids.ucw.cz/read/PC/");
+            Process.Start("http://pcidatabase.com");
         }
 
         private void SynthType_SelectedIndexChanged(object sender, EventArgs e)

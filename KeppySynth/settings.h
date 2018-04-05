@@ -788,7 +788,6 @@ void CheckVolume() {
 
 void FillContentDebug(BOOL close, int CCUI0, int CCUIE0, int HC, long RUI, int TD1, int TD2, int TD3, int TD4, long IL, long OL) {
 	std::string PipeContent;
-	DWORD bytesWritten;
 
 	PipeContent += "KSDebugInfo";
 	PipeContent += "\nCurrentApp = ";
@@ -816,11 +815,11 @@ void FillContentDebug(BOOL close, int CCUI0, int CCUIE0, int HC, long RUI, int T
 
 	PipeContent += "\n\0";
 
-	if (hPipe != INVALID_HANDLE_VALUE) WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), &bytesWritten, NULL);
+	if (hPipe != INVALID_HANDLE_VALUE) WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), NULL, NULL);
 	if (GetLastError() != 0 && GetLastError() != 536) StartDebugPipe(TRUE);
 }
 
-void DebugInfo() {
+void debug_info() {
 	try {
 		DWORD level, left, right, handlecount;
 		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);

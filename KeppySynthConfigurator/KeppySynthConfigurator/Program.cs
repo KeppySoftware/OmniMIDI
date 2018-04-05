@@ -31,11 +31,6 @@ namespace KeppySynthConfigurator
         public const short SW_RESTORE = 9;
     }
 
-    static class SecurityProtocolNET45
-    {
-        public static SecurityProtocolType Tls12 = (SecurityProtocolType)3072;
-    }
-
     static class Program
     {
         public static bool DebugMode = false;
@@ -50,23 +45,9 @@ namespace KeppySynthConfigurator
         [STAThread]
         static void Main(String[] args)
         {
-            try {
-                ServicePointManager.SecurityProtocol = SecurityProtocolNET45.Tls12;
-                Properties.Settings.Default.TLS12Missing = false;
-            }
-            catch {
-                if (!Properties.Settings.Default.TLS12Missing)
-                    MessageBox.Show("Your .NET Framework doesn't seem to support TLS 1.2 encryption." +
-                                    "\nThis might prevent the configurator from downloading the required update files." +
-                                    "\n\nPlease install .NET Framework 4.5, for seamless updates.", "Keppy's Synthesizer - TLS 1.2 protocol not found",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Properties.Settings.Default.TLS12Missing = true;
-            }
-            finally
-            {
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
             foreach (String s in args)
             {

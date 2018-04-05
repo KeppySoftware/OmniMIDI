@@ -27,38 +27,29 @@ namespace KeppySynthConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void CheckForTLS12ThenUpdate(String ReturnVal)
-        {
-            if (!ReturnVal.Equals("0.0.0.0"))
-            {
-                if (!Properties.Settings.Default.TLS12Missing)
-                {
-                    Forms.DLEngine frm = new Forms.DLEngine(ReturnVal, String.Format("Downloading update {0}...", ReturnVal, @"{0}"), null, null, 0, true);
-                    frm.StartPosition = FormStartPosition.CenterScreen;
-                    frm.ShowDialog();
-                }
-                else Process.Start(String.Format("https://github.com/KeppySoftware/Keppy-s-Synthesizer/releases/tag/{0}", ReturnVal));
-            }
-        }
-
         public static void TriggerUpdateWindow(Version y, Version x, String newestversion, bool forced, bool startup, bool isitfromthechangelogwindow)
         {
-            String ReturnVal = "0.0.0.0";
-            if (forced && startup) CheckForTLS12ThenUpdate(newestversion);
+            if (forced && startup)
+            {
+                Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}...", newestversion, @"{0}"), null, null, 0, true);
+                frm.StartPosition = FormStartPosition.CenterScreen;
+                frm.ShowDialog();
+            }
             else
             {
                 UpdateYesNo upd = new UpdateYesNo(x, y, true, startup, isitfromthechangelogwindow);
-
                 if (startup)
                     upd.StartPosition = FormStartPosition.CenterScreen;
                 else
                     upd.StartPosition = FormStartPosition.CenterParent;
-
                 DialogResult dialogResult = upd.ShowDialog();
-                ReturnVal = upd.ReturnVal;
                 upd.Dispose();
-
-                if (dialogResult == DialogResult.Yes) CheckForTLS12ThenUpdate(ReturnVal);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Forms.DLEngine frm = new Forms.DLEngine(newestversion, String.Format("Downloading update {0}...", newestversion, @"{0}"), null, null, 0, false);
+                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    frm.ShowDialog();
+                }
             }
         }
 

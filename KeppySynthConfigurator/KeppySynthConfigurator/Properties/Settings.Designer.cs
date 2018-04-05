@@ -139,17 +139,5 @@ namespace KeppySynthConfigurator.Properties {
                 this["ShowMixerUnder"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TLS12Missing {
-            get {
-                return ((bool)(this["TLS12Missing"]));
-            }
-            set {
-                this["TLS12Missing"] = value;
-            }
-        }
     }
 }
