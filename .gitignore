@@ -48,6 +48,7 @@
 /Release
 /ipch
 /sign
+/.vs
 
 // Ignore SoundFont Packer output
 /sfpacker/*.dll
