@@ -34,6 +34,13 @@
  *
  *  Version History:
  *
+ *  Version 2.4.5.0 (19/11/2013) Victor Chechenin additions
+ *
+ *      - Internal event handling for use with shell plugins
+ *      - BASS_VST_ChannelSetDSPEx / BASS_VST_ChannelCreateEx() 
+ *      - added for shell plugins support
+ *      - compiled 64bit version also (not tested fully)
+ *
  *  Version 2.4.0.6 (19/11/2008)
  *
  *      - MIDI event handling improved
@@ -152,7 +159,9 @@ extern "C" {
 #endif
 
 
-
+#ifdef __APPLE__
+#pragma GCC visibility push(default)
+#endif
 
 /*****************************************************************************
  *  Assigning VST effects to BASS channels
@@ -193,6 +202,18 @@ extern "C" {
  */
 BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelSetDSP)
     (DWORD chHandle, const void* dllFile, DWORD flags, int priority);
+
+/* BASS_VST_ChannelSetDSPEx is version for shell plugin.
+ * For errors, 0 is returned and BASS_ErrorGetCode()
+ * will specify the reason. BASS_UNKNOWN error meant that plugin have sub-plugins.
+ * pluginList contains list of string with format "pluginName\tpluginID"
+ * For sub-plugin initialization set pluginID value from this list
+ */
+
+BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelSetDSPEx)
+    (DWORD chHandle, const void* dllFile, DWORD flags, int priority,
+	char *pluginList, int pluginListSize, int pluginID);
+
 
 #define BASS_VST_KEEP_CHANS 0x00000001 /* flag that may be used for BASS_VST_ChannelSetDSP(), see the comments above */
 
@@ -246,6 +267,18 @@ BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelCreate)
     (DWORD freq, DWORD chans, const void* dllFile, DWORD flags);
 
 
+/* BASS_VST_ChannelCreateEx() creates a new BASS stream based on any VST
+ * On success, the function returns the new vstHandle that must be given to
+ * the other functions.  The returned VST handle can also be given to the
+ * typical BASS_Channel*(). For errors, 0 is returned and BASS_ErrorGetCode()
+ * will specify the reason. BASS_UNKNOWN error meant that plugin have sub-plugins.
+ * pluginList contains list of string with format "pluginName\tpluginID"
+ * For sub-plugin initialization set pluginID value from this list
+ */
+
+BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelCreateEx)
+	(DWORD freq, DWORD chans, const void* dllFile, DWORD flags,
+	char *pluginList, int pluginListSize, int pluginID);
 
 /* BASS_VST_ChannelFree deletes a VST instrument channel created by
  * BASS_VST_ChannelCreate().  Note, that you cannot delete effects assigned to
@@ -306,19 +339,6 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_GetParamInfo)
 
 
 
-/* Get/Set the parameter data chunk as a plain byte array.
- * 
- * length: contains or returns the size of the chunk data pointer.
- * isPreset: true when saving a single program, false for all programs.
- * chunk: pointer to the allocated memory block containing the chunk data.
- */
-BASS_VSTSCOPE char* BASS_VSTDEF(BASS_VST_GetChunk)
-	(DWORD vstHandle, BOOL isPreset, DWORD* length);
-
-BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_SetChunk)
-	(DWORD vstHandle, BOOL isPreset, const char* chunk, DWORD length);
-
-
 
 /*****************************************************************************
  *  VST Program Handling
@@ -360,12 +380,13 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetProgram)
  * for the same vstHandle or until you delete the plugin.  The number of
  * elements in the returned array is equal to BASS_VST_GetParamCount().
  *
- * programIndex must be smaller than BASS_VST_GetProgramCount().
- * length: returns the number of returned params.
- * This function does not change the selected program.
+ * programIndex must be smaller than BASS_VST_GetProgramCount().  If you set
+ * programIndex to -1, you can retrieve the plugin's default values (these are
+ * the same values as returned by BASS_VST_GetParamInfo()).  This function does
+ * not change the selected program.
  */
 BASS_VSTSCOPE const float* BASS_VSTDEF(BASS_VST_GetProgramParam)
-    (DWORD vstHandle, int programIndex, DWORD* length);
+    (DWORD vstHandle, int programIndex);
 
 
 
@@ -379,13 +400,12 @@ BASS_VSTSCOPE const float* BASS_VSTDEF(BASS_VST_GetProgramParam)
  *
  * programIndex must be smaller than BASS_VST_GetProgramCount().  This function
  * does not change the selected program.
- * length: the number of params passed to this function.
  *
  * If you use BASS_VST_SetCallback(), the BASS_VST_PARAM_CHANGED event is only
  * posted if you select a program with parameters different from the prior.
  */
 BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetProgramParam)
-    (DWORD vstHandle, int programIndex, const float* param, DWORD length);
+    (DWORD vstHandle, int programIndex, const float* param);
 
 
 
@@ -564,7 +584,7 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetScope)
  * the view of BASS_VST.
  */
 typedef DWORD (CALLBACK VSTPROC)(DWORD vstHandle, DWORD action, DWORD param1, DWORD param2, void* user);
-#define BASS_VST_PARAM_CHANGED  1   /* some parameters are changed by the editor opened by BASS_VST_EmbedEditor(), NOT posted if you call BASS_VST_SetParam(), param1=oldParamNum, param2=newParamNum */
+#define BASS_VST_PARAM_CHANGED  1   /* some parameters are changed by the editor opened by BASS_VST_EmbedEditor(), NOT posted if you call BASS_VST_SetParam() */
 #define BASS_VST_EDITOR_RESIZED 2   /* the embedded editor window should be resized, the new width/height can be found in param1/param2 and in BASS_VST_GetInfo() */
 #define BASS_VST_AUDIO_MASTER   3   /* can be used to subclass the audioMaster callback, param1 is a pointer to a BASS_VST_AUDIO_MASTER_PARAM structure defined below */
 
@@ -619,11 +639,7 @@ typedef struct
 #endif
     long     opcode;
     long     index;
-#if VST_64BIT_PLATFORM
-    long long     value;
-#else
     long     value;
-#endif
     void*    ptr;
     float    opt;
     long     doDefault;
@@ -672,22 +688,6 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_ProcessEventRaw)
     (DWORD vstHandle, const void* event, DWORD length);
 
 
-/* StereoTools enhancement for the RDS functions
- * BASS_VST_SetRdsPs set the Programme Service Name (PS) - typically 8 chars
- * BASS_VST_SetRdsRt set the Radio Text (RT) - typically 64 chars for each line
- * BASS_VST_SetRdsTa sets the Traffic-Programme-Signal (TP) and Traffic Announcement (TA)
- */
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SupportsRds)
-    (DWORD vstHandle);
-
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsPs)
-    (DWORD vstHandle, char* text, bool now);
-
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsRt)
-    (DWORD vstHandle, bool on, char* text, bool now);
-
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsTa)
-    (DWORD vstHandle, bool ta, bool tp);
 
 
 /* If any BASS_VST function fails, you can use BASS_ErrorGetCode() to obtain
@@ -699,11 +699,13 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsTa)
 #define BASS_VST_ERROR_NOOUTPUTS    3001 /* the given VST plugin has no outputs */
 #define BASS_VST_ERROR_NOREALTIME   3002 /* the given VST plugin does not support realtime processing */
 
-
-
+#ifdef __APPLE__
+#pragma GCC visibility pop
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* BASS_VST_H */
+
