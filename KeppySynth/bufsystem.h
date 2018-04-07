@@ -176,20 +176,17 @@ void AudioRender() {
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 }
 
-#ifndef __BUFSYSTEM_H
-#define __BUFSYSTEM_H
-
-extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectData(DWORD dwMsg)
+MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
 	return ParseData(0, MODM_DATA, 0, dwMsg, 0, 0, 0);
 }
 
-extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectLongData(LPMIDIHDR lpMidiOutHdr)
+MMRESULT WINAPI SendDirectLongData(LPMIDIHDR lpMidiOutHdr)
 {
 	return ParseData(0, MODM_LONGDATA, 0, (DWORD)lpMidiOutHdr, 0, 0, 0);
 }
 
-extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
+MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 {
 	try {
 		SendToBASSMIDI(dwMsg);
@@ -198,7 +195,7 @@ extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg
 	catch (...) { return MMSYSERR_ERROR; }
 }
 
-extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectLongDataNoBuf(LPMIDIHDR lpMidiOutHdr)
+MMRESULT WINAPI SendDirectLongDataNoBuf(LPMIDIHDR lpMidiOutHdr)
 {
 	try {
 		SendLongToBASSMIDI(TRUE, NULL, lpMidiOutHdr);
@@ -206,4 +203,3 @@ extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectLongDataNoBuf(LPMIDIH
 	}
 	catch (...) { return MMSYSERR_ERROR; }
 }
-#endif
