@@ -12,10 +12,10 @@ It works just like WinMM would, we'll see later the differences between using Wi
 #define ALLOK 0;
 #define NOTOK 1;
 
-MMRESULT(_stdcall*mmOutOpen)(LPHMIDIOUT, lphmo, UINT uDeviceID, DWORD_PTR dwCallback, DWORD_PTR dwCallbackInstance, DWORD dwFlags) = 0;
-MMRESULT(_stdcall*mmOutClose)(HMIDIOUT hmo) = 0;
-MMRESULT(_stdcall*mmOutShortMsg)(HMIDIOUT hmo, DWORD dwMsg) = 0;
-UINT(_stdcall*mmOutGetErrorTextA)(MMRESULT mmrError, LPTSTR, lpText, UINT cchText) = 0;
+MMRESULT(WINAPI*mmOutOpen)(LPHMIDIOUT, lphmo, UINT uDeviceID, DWORD_PTR dwCallback, DWORD_PTR dwCallbackInstance, DWORD dwFlags) = 0;
+MMRESULT(WINAPI*mmOutClose)(HMIDIOUT hmo) = 0;
+MMRESULT(WINAPI*mmOutShortMsg)(HMIDIOUT hmo, DWORD dwMsg) = 0;
+UINT(WINAPI*mmOutGetErrorTextA)(MMRESULT mmrError, LPTSTR, lpText, UINT cchText) = 0;
 
 MMRESULT(*KShortMsg)(DWORD msg) = 0;
 ...
@@ -84,7 +84,7 @@ if (KShortMsg) {
 
 And here's the function from the application itself:
 ```c
-MMRESULT _stdcall _KOutShortMsg(HMIDIOUT hmo, DWORD msg) {
+MMRESULT WINAPI _KOutShortMsg(HMIDIOUT hmo, DWORD msg) {
     // Pass the MIDI event to the KSDirect call, and return the WinMM result
     return KShortMsg(msg);
 }
