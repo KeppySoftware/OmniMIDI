@@ -134,25 +134,6 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	return data;
 }
 
-void InitializeVSTi(INT32 mixfreq, bool isdecode, LPCWSTR pathtchar, char * pathchar) {
-	/* Currently under construction :P
-	if (PathFileExists(pathtchar) && isbassvstloaded == 1) {
-		PrintToConsole(FOREGROUND_RED, 1, "VSTi found. Loading...");
-		KSStream = BASS_VST_ChannelCreate(mixfreq, (monorendering ? 1 : 2), pathchar, (isdecode ? BASS_STREAM_DECODE : 0) | AudioRenderingType(floatrendering) | (sinc ? BASS_MIDI_SINCINTER : 0));
-		CheckUp(ERRORCODE, L"KSStreamVSTInit");
-		vstimode = TRUE;
-		PrintToConsole(FOREGROUND_RED, 1, "VSTi initialized.");
-	}
-	else {
-		vstimode = FALSE;
-		if (isbassvstloaded == 1) PrintToConsole(FOREGROUND_RED, 1, "VSTi not found. Skipping...");
-		else PrintToConsole(FOREGROUND_RED, 1, "BASS_VST hasn't been loaded in memory.");
-	}
-	*/
-
-	vstimode = FALSE;
-}
-
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
 	// USES_CONVERSION;
 	// TCHAR vsti32dll[MAX_PATH];
@@ -192,7 +173,7 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 	// InitializeVSTi(mixfreq, isdecode, vsti32dll, VSTI32);
 #endif
 
-	if (vstimode == FALSE) KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
+	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
 
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC", TRUE);
 	
@@ -405,14 +386,12 @@ bool InitializeBASS(bool restart) {
 		return false;
 	}
 	else {
-		if (vstimode == FALSE) {
-			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
-			CheckUp(ERRORCODE, L"KSAttributes1", TRUE);
-			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
-			CheckUp(ERRORCODE, L"KSAttributes2", TRUE);
-			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
-			CheckUp(ERRORCODE, L"KSAttributes3", FALSE);
-		}
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, midivoices);
+		CheckUp(ERRORCODE, L"KSAttributes1", TRUE);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, maxcpu);
+		CheckUp(ERRORCODE, L"KSAttributes2", TRUE);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, fadeoutdisable);
+		CheckUp(ERRORCODE, L"KSAttributes3", FALSE);
 	}
 
 	ChVolume = BASS_ChannelSetFX(KSStream, BASS_FX_VOLUME, 1);

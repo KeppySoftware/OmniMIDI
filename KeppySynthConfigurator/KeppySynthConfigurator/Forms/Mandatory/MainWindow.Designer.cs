@@ -405,6 +405,8 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
+            this.KSDAPIDoc = new System.Windows.Forms.MenuItem();
+            this.menuItem59 = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -3189,7 +3191,9 @@
             this.menuItem33,
             this.guidesToolStripMenuItem,
             this.menuItem24,
-            this.menuItem45});
+            this.menuItem45,
+            this.menuItem59,
+            this.KSDAPIDoc});
             this.menuItem3.Text = "?";
             // 
             // SynthMenu
@@ -4262,6 +4266,17 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
+            // KSDAPIDoc
+            // 
+            this.KSDAPIDoc.Index = 14;
+            this.KSDAPIDoc.Text = "KSDirect API documentation";
+            this.KSDAPIDoc.Click += new System.EventHandler(this.KSDAPIDoc_Click);
+            // 
+            // menuItem59
+            // 
+            this.menuItem59.Index = 13;
+            this.menuItem59.Text = "-";
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4708,6 +4723,8 @@
         private System.Windows.Forms.MenuItem DiscordRPCCredit;
         private System.Windows.Forms.MenuItem menuItem37;
         public System.Windows.Forms.ToolTip Requirements;
+        private System.Windows.Forms.MenuItem menuItem59;
+        private System.Windows.Forms.MenuItem KSDAPIDoc;
     }
 }
 

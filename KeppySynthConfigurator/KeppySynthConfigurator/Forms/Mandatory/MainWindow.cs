@@ -2440,6 +2440,11 @@ namespace KeppySynthConfigurator
             else new Telemetry().ShowDialog();
         }
 
+        private void KSDAPIDoc_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/KeppySoftware/Keppy-s-Synthesizer/blob/master/KSDAPI.md");
+        }
+
         // Mixer functions
 
         private void VolumeToolTip(string channel, TrackBar trackbar)

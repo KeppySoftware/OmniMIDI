@@ -17,10 +17,31 @@ int BufferCheck(void){
 	return vms2emu ? retvalemu : retval;
 }
 
-void SendToBASSMIDI(DWORD dwParam1, DWORD len, int channel, int status, int note, int velocity) {
-	if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, &dwParam1, len);
-	else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+void SendToBASSMIDI(DWORD dwParam1) {
+	BYTE statusv = (BYTE)dwParam1;
+	DWORD len = 0;
+
+	int status = (dwParam1 & 0x000000FF);
+	int note = (dwParam1 & 0x0000FF00) >> 8;
+	int velocity = (dwParam1 & 0x00FF0000) >> 16;
+	int channel = (dwParam1 & 0xFF000000) >> 24;
+
+	if ((statusv >= 0xC0 && statusv <= 0xDF) || statusv == 0xF1 || statusv == 0xF3)	len = 2;
+	else if (statusv < 0xF0 || statusv == 0xF2)	len = 3;
+	else len = 1;
+
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+}
+
+void SendLongToBASSMIDI(BOOL direct, DWORD dwParam1, MIDIHDR* rhdr) {
+	MIDIHDR *hdr;
+
+	if (!direct) hdr = (MIDIHDR*)dwParam1;
+	else hdr = rhdr;
+
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
+	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)hdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
 }
 
 int PlayBufferedData(void){
@@ -53,56 +74,13 @@ int PlayBufferedData(void){
 			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
-			MIDIHDR *hdr = (MIDIHDR*)dwParam1;
-			BYTE statusv = (BYTE)dwParam1;
-
-			DWORD len;
-
-			int status = (dwParam1 & 0x000000FF);
-			int note = (dwParam1 & 0x0000FF00) >> 8;
-			int velocity = (dwParam1 & 0x00FF0000) >> 16;
-			int channel = (dwParam1 & 0xFF000000) >> 24;
-
 			switch (uMsg) {
 			case MODM_DATA:
-				if ((statusv >= 0xC0 && statusv <= 0xDF) || statusv == 0xF1 || statusv == 0xF3)	len = 2;
-				else if (statusv < 0xF0 || statusv == 0xF2)	len = 3;
-				else len = 1;
-
-				if (ignorenotes1) {
-					if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
-						&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
-						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-					}
-					else {
-						if (limit88 == 1) {
-							if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-								if (note >= 21 && note <= 108) SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
-								else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-							}
-							else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
-						}
-						else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
-					}
-					break;
-				}
-				else {
-					if (limit88 == 1) {
-						if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-							if (note >= 21 && note <= 108) SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
-							else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-						}
-						else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
-					}
-					else SendToBASSMIDI(dwParam1, len, channel, status, note, velocity);
-				}
+				SendToBASSMIDI(dwParam1);
 				break;
 			case MODM_LONGDATA:
-				if (sysresetignore != 1) {
-					if (vstimode == TRUE) BASS_VST_ProcessEventRaw(KSStream, hdr->lpData, hdr->dwBytesRecorded);
-					else BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-					PrintEventToConsole(FOREGROUND_GREEN, (DWORD)hdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
-				}
+				if (sysresetignore != 1) SendLongToBASSMIDI(FALSE, dwParam1, NULL);
+				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 				break;
 			}
 		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
@@ -110,18 +88,39 @@ int PlayBufferedData(void){
 	}
 }
 
-bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
-	if (improveperf == 0) EnterCriticalSection(&midiparsing);
+BOOL CheckIfEventIsToIgnore(DWORD dwParam1, int status, int note, int velocity, int channel) {
+	if (ignorenotes1) {
+		if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
+			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
+			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+			return TRUE;
+		}
+		else {
+			if (limit88) {
+				if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+					if (!(note >= 21 && note <= 108)) {
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+						return TRUE;
+					}
+				}
+			}
+		}
+	}
+	else {
+		if (limit88 == 1) {
+			if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+				if (!(note >= 21 && note <= 108)) {
+					PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+					return TRUE;
+				}
+			}
+		}
+	}
 
-	evbpoint = evbwpoint;
-	if (++evbwpoint >= evbuffsize)
-		evbwpoint -= evbuffsize;
+	return FALSE;
+}
 
-	int status = (dwParam1 & 0x000000FF);
-	int note = (dwParam1 & 0x0000FF00) >> 8;
-	int velocity = (dwParam1 & 0x00FF0000) >> 16;
-	int channel = (dwParam1 & 0xFF000000) >> 24;
-
+DWORD ReturnEditedEvent(DWORD dwParam1, int status, int note, int velocity, int channel) {
 	// SETSTATUS(dwParam1, status);
 	if (pitchshift != 127) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
@@ -135,6 +134,25 @@ bool ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWO
 	}
 	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
 		SETVELOCITY(dwParam1, 127);
+
+	return dwParam1;
+}
+
+MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+	int status = (dwParam1 & 0x000000FF);
+	int note = (dwParam1 & 0x0000FF00) >> 8;
+	int velocity = (dwParam1 & 0x00FF0000) >> 16;
+	int channel = (dwParam1 & 0xFF000000) >> 24;
+
+	if (CheckIfEventIsToIgnore(dwParam1, status, note, velocity, channel)) return MMSYSERR_NOERROR;
+
+	if (improveperf == 0) EnterCriticalSection(&midiparsing);
+
+	evbpoint = evbwpoint;
+	if (++evbwpoint >= evbuffsize)
+		evbwpoint -= evbuffsize;
+
+	dwParam1 = ReturnEditedEvent(dwParam1, status, note, velocity, channel);
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
@@ -161,13 +179,31 @@ void AudioRender() {
 #ifndef __BUFSYSTEM_H
 #define __BUFSYSTEM_H
 
-extern "C" __declspec(dllexport) void SendDirectData(DWORD dwParam)
+extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
-	ParseData(0, MODM_DATA, NULL, dwParam, NULL, NULL, NULL);
+	return ParseData(0, MODM_DATA, 0, dwMsg, 0, 0, 0);
 }
 
-extern "C" __declspec(dllexport) void SendDirectLongData(DWORD dwParam)
+extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectLongData(LPMIDIHDR lpMidiOutHdr)
 {
-	ParseData(0, MODM_LONGDATA, NULL, dwParam, NULL, NULL, NULL);
+	return ParseData(0, MODM_LONGDATA, 0, (DWORD)lpMidiOutHdr, 0, 0, 0);
 }
-#endif 
+
+extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
+{
+	try {
+		SendToBASSMIDI(dwMsg);
+		return MMSYSERR_NOERROR;
+	}
+	catch (...) { return MMSYSERR_ERROR; }
+}
+
+extern "C" __declspec(dllexport) MMRESULT WINAPI SendDirectLongDataNoBuf(LPMIDIHDR lpMidiOutHdr)
+{
+	try {
+		SendLongToBASSMIDI(TRUE, NULL, lpMidiOutHdr);
+		return MMSYSERR_NOERROR;
+	}
+	catch (...) { return MMSYSERR_ERROR; }
+}
+#endif

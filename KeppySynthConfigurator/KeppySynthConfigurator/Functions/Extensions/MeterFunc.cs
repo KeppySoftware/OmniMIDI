@@ -14,7 +14,7 @@ namespace KeppySynthConfigurator
         public static bool CheckIfDedicatedMixerIsRunning(bool isitstartup)
         {
             bool ok;
-            Mutex m = new Mutex(true, "KeppySynthMixerWindow", out ok);
+            EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "KeppySynthMixerWindow", out ok);
             if (!ok)
             {
                 if (!isitstartup) MessageBox.Show("The dedicated mixer applet is already running!", "Keppy's Synthesizer - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -2,3 +2,7 @@ LIBRARY      "keppysynth.dll"
 EXPORTS
 	DriverProc PRIVATE
 	modMessage PRIVATE
+	SendDirectData PRIVATE
+	SendDirectLongData PRIVATE
+	SendDirectDataNoBuf PRIVATE
+	SendDirectLongDataNoBuf PRIVATE

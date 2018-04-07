@@ -69,23 +69,20 @@ void ResetSynth(int ischangingbuffermode){
 
 void LoadSoundfont(int whichsf){
 	try {
-		if (vstimode == FALSE)
-		{
-			PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
-			TCHAR config[MAX_PATH];
-			BASS_MIDI_FONT * mf;
-			HKEY hKey;
-			long lResult;
-			DWORD dwType = REG_DWORD;
-			DWORD dwSize = sizeof(DWORD);
-			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-			FreeFonts(0);
-			RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
-			RegCloseKey(hKey);
-			LoadFonts(0, sflistloadme[whichsf - 1]);
-			BASS_MIDI_StreamLoadSamples(KSStream);
-			PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
-		}
+		PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
+		TCHAR config[MAX_PATH];
+		BASS_MIDI_FONT * mf;
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		FreeFonts(0);
+		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+		RegCloseKey(hKey);
+		LoadFonts(0, sflistloadme[whichsf - 1]);
+		BASS_MIDI_StreamLoadSamples(KSStream);
+		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
 	catch (...) {
 		CrashMessage(L"SFLoad");
@@ -95,41 +92,38 @@ void LoadSoundfont(int whichsf){
 
 bool LoadSoundfontStartup() {
 	try {
-		if (vstimode == FALSE)
-		{
-			int done = 0;
-			TCHAR modulename[MAX_PATH];
-			TCHAR fullmodulename[MAX_PATH];
-			GetModuleFileName(NULL, modulename, MAX_PATH);
-			GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-			PathStripPath(modulename);
+		int done = 0;
+		TCHAR modulename[MAX_PATH];
+		TCHAR fullmodulename[MAX_PATH];
+		GetModuleFileName(NULL, modulename, MAX_PATH);
+		GetModuleFileName(NULL, fullmodulename, MAX_PATH);
+		PathStripPath(modulename);
 
-			for (int i = 0; i <= 15; ++i) {
-				SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
-				SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
-				_tcscat(sflistloadme[i], sfdirs[i]);
-				_tcscat(listsloadme[i], listsanalyze[i]);
-				std::wifstream file(listsloadme[i]);
-				if (file) {
-					TCHAR defaultstring[MAX_PATH];
-					while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
-					{
-						if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
-							LoadSoundfont(i + 1);
-							done = 1;
-							PrintToConsole(FOREGROUND_RED, i, "Found it");
-						}
+		for (int i = 0; i <= 15; ++i) {
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
+			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
+			_tcscat(sflistloadme[i], sfdirs[i]);
+			_tcscat(listsloadme[i], listsanalyze[i]);
+			std::wifstream file(listsloadme[i]);
+			if (file) {
+				TCHAR defaultstring[MAX_PATH];
+				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+				{
+					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+						LoadSoundfont(i + 1);
+						done = 1;
+						PrintToConsole(FOREGROUND_RED, i, "Found it");
 					}
 				}
-				file.close();
 			}
+			file.close();
+		}
 
-			if (done == 1) {
-				return TRUE;
-			}
-			else {
-				return FALSE;
-			}
+		if (done == 1) {
+			return TRUE;
+		}
+		else {
+			return FALSE;
 		}
 	}
 	catch (...) {
@@ -497,7 +491,6 @@ void LoadSettings(bool streamreload)
 			RegQueryValueEx(hKey, L"evbuffsize", NULL, &qwType, (LPBYTE)&sevbuffsize, &qwSize);
 			RegQueryValueEx(hKey, L"evbuffbyram", NULL, &dwType, (LPBYTE)&evbuffbyram, &dwSize);
 			RegQueryValueEx(hKey, L"evbuffratio", NULL, &dwType, (LPBYTE)&evbuffratio, &dwSize);
-			RegQueryValueEx(hKey, L"sndbfvalue", NULL, &dwType, (LPBYTE)&newsndbfvalue, &dwSize);
 		}
 		RegQueryValueEx(hKey, L"32bit", NULL, &dwType, (LPBYTE)&floatrendering, &dwSize);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);

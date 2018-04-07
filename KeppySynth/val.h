@@ -17,8 +17,6 @@ static HINSTANCE bassenc = 0;			// bassenc handle
 static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassmix = 0;			// bassmix handle
 
-static bool vstimode = FALSE;
-
 // Potato
 static float currentcpuusage0;
 static float currentcpuusageE0;
@@ -68,7 +66,7 @@ static int midivoices = 0;				// Max voices INT
 static int midivolumeoverride = 0;		// MIDI track volume override
 static int monorendering = 0;			// Mono rendering (Instead of stereo by default)
 static int mt32mode = 0;				// Roland MT-32 mode
-static int newsndbfvalue;				// DO NOT TOUCH
+static int newsndbfvalue = 128;			// DO NOT TOUCH
 static int noblacklistmsg = 0;			// Disable blacklist message
 static int nofloat = 1;					// Enable or disable the float engine
 static int nofx = 0;					// Enable or disable FXs
