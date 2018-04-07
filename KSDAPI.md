@@ -17,7 +17,7 @@ MMRESULT(WINAPI*mmOutClose)(HMIDIOUT hmo) = 0;
 MMRESULT(WINAPI*mmOutShortMsg)(HMIDIOUT hmo, DWORD dwMsg) = 0;
 UINT(WINAPI*mmOutGetErrorTextA)(MMRESULT mmrError, LPTSTR, lpText, UINT cchText) = 0;
 
-MMRESULT(*KShortMsg)(DWORD msg) = 0;
+MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
 ...
 
 ...
@@ -105,7 +105,7 @@ Allows you to send MIDI events to the driver. The available arguments are:
 
 - *DWORD dwMsg*: The MIDI event to send to the driver.
 ```c
-MMRESULT(*KShortMsg)(DWORD msg) = 0;
+MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
 KShortMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectData"); // Or SendDirectDataNoBuf
 ```
 ### **SendDirectLongData/SendDirectLongDataNoBuf**
@@ -113,6 +113,6 @@ Allows you to send SysEx events to the driver. The available arguments are:
 
 - *LPMIDIHDR lpMidiOutHdr*: The MIDIHDR to send to the driver.
 ```c
-MMRESULT(*KLongMsg)(LPMIDIHDR lpMidiOutHdr) = 0;
+MMRESULT(WINAPI*KLongMsg)(LPMIDIHDR lpMidiOutHdr) = 0;
 KLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectLongData"); // Or SendDirectLongDataNoBuf
 ```
