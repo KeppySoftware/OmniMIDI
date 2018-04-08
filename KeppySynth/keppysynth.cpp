@@ -114,7 +114,7 @@ static BOOL sound_out_float = FALSE;
 static float sound_out_volume_float = 1.0;
 
 // Threads
-static clock_t start1, start2, start3, start4;
+static unsigned long long start1, start2, start3, start4;
 static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
 static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL, hThreadDBG = NULL;
 static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL, thrdaddrDBG = NULL;
@@ -768,10 +768,9 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == FALSE){
-				start1 = clock();
+				start1 = TimeNow();
 				keepstreamsalive(opend);
 				LoadCustomInstruments();
-				keybindings();
 				CheckVolume();
 				ParseDebugData();
 				Sleep(1);

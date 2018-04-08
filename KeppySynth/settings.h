@@ -33,11 +33,25 @@ void DLLLoadError(LPCWSTR dll) {
 }
 
 void DLLLoadErrorVST(LPCWSTR dll) {
-	std::cout << "(BASS_VST ERROR: " << dll << ") " << " - Can not load DLL. VC++ 2010 is missing. Skipping..." << std::endl;
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(Invalid DLL: " << dll << ") " << " - The required runtime library is missing!" << std::endl;
+
+	MessageBox(NULL,
+		L"An error has occurred during the initialization of BASS_VST!\nPlease install Visual C++ 2010 to get rid of this error!\n\nClick OK to continue.",
+		L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
 }
 
-float GetUsage(clock_t start, clock_t end) {
-	return (float)(end - start);
+long long TimeNow() {
+	static LARGE_INTEGER s_frequency;
+	static BOOL s_use_qpc = QueryPerformanceFrequency(&s_frequency);
+	if (s_use_qpc) {
+		LARGE_INTEGER now;
+		QueryPerformanceCounter(&now);
+		return (1000LL * now.QuadPart) / s_frequency.QuadPart;
+	}
+	else {
+		return GetTickCount();
+	}
 }
 
 void CopyToClipboard(const std::string &s) {
@@ -223,7 +237,8 @@ BOOL load_bassfuncs()
 			}
 		}
 
-		/* // BASSMix
+		/* 
+		// BASSMix
 		if (PathFileExists(bassmixpathalt)) {
 			if (!(bassmix = LoadLibrary(bassmixpathalt))) {
 				DLLLoadError(bassmixpathalt);
@@ -238,7 +253,8 @@ BOOL load_bassfuncs()
 				DLLLoadError(bassmixpath);
 				exit(0);
 			}
-		} */
+		} 
+		*/
 
 		// BASSenc
 		if (PathFileExists(bassencpathalt)) {
@@ -763,7 +779,7 @@ void CheckVolume() {
 	}
 }
 
-void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, float TD1, float TD2, float TD3, float TD4, double IL, double OL) {
+void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
 	std::string PipeContent;
 	DWORD bytesWritten;
 
@@ -802,9 +818,6 @@ void ParseDebugData() {
 	BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 	if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
 
-	end = clock();
-	GetUsage(start1, end);
-
 	if (currentengine == 2) {
 		rate = BASS_ASIO_GetRate();
 		CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
@@ -827,8 +840,10 @@ void SendDebugDataToPipe() {
 		SIZE_T ramusage = pmc.WorkingSetSize;
 		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
 
+		long long TimeDuringDebug = TimeNow();
+
 		FillContentDebug(FALSE, currentcpuusage0, currentcpuusageE0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize),
-			GetUsage(start1, end), GetUsage(start2, end), GetUsage(start3, end), oldbuffermode ? 0.0f : GetUsage(start4, end),
+			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, oldbuffermode ? 0.0f : TimeDuringDebug - start4,
 			inlatency, outlatency);
 	}
 	catch (...) {

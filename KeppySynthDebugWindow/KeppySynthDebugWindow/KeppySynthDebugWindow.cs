@@ -587,10 +587,10 @@ namespace KeppySynthDebugWindow
         Single CurCPUE = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
-        Single Td1 = 0.0f;
-        Single Td2 = 0.0f;
-        Single Td3 = 0.0f;
-        Single Td4 = 0.0f;
+        Double Td1 = 0.0;
+        Double Td2 = 0.0;
+        Double Td3 = 0.0;
+        Double Td4 = 0.0;
         Double ASIOInLat = 0;
         Double ASIOOutLat = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader)
@@ -603,10 +603,10 @@ namespace KeppySynthDebugWindow
                 if (!ReadPipeSingle(StreamDebugReader, "CurCPUE", ref CurCPUE)) CurCPUE = 0.0f;
                 if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
                 if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
-                if (!ReadPipeSingle(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
-                if (!ReadPipeSingle(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
-                if (!ReadPipeSingle(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
-                if (!ReadPipeSingle(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
+                if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
+                if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
+                if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
+                if (!ReadPipeDouble(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
                 if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
                 if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
                 UpdateActiveVoicesPerChannel(StreamDebugReader);

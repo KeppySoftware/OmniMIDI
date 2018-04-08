@@ -56,7 +56,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 	while (stop_thread == FALSE) {
 		try {
-			start4 = clock();
+			start4 = TimeNow();
 
 			MT32SetInstruments();
 			PlayBufferedData();
@@ -81,13 +81,14 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	while (stop_thread == FALSE) {
 		try {
-			start3 = clock();
+			start3 = TimeNow();
 			LoadSettingsRT();
 			Panic();
+			keybindings();
 			WatchdogCheck();
 			mixervoid();
 			RevbNChor();
-			Sleep(100);
+			Sleep(1);
 		}
 		catch (...) {
 			CrashMessage(L"SettingsLoad");
@@ -113,7 +114,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	while (stop_thread == FALSE) {
 		try {
-			start2 = clock();
+			start2 = TimeNow();
 			if (currentengine < 2) {
 				if (reset_synth != 0) {
 					reset_synth = 0;
@@ -155,22 +156,9 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 }
 
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
-	// USES_CONVERSION;
-	// TCHAR vsti32dll[MAX_PATH];
-	// TCHAR vsti64dll[MAX_PATH];
 	bool isdecode = FALSE;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating stream for external engine...");
-
-	/* Currently under construction :P
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, vsti32dll);
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, vsti64dll);
-	PathAppend(vsti32dll, _T("\\Keppy's Synthesizer\\vsti32.dll"));
-	PathAppend(vsti64dll, _T("\\Keppy's Synthesizer\\vsti64.dll"));
-	char *VSTI32 = T2A(vsti32dll);
-	char *VSTI64 = T2A(vsti64dll);
-	*/
-
 	if (currentengine == 1 || currentengine == 3) {
 		if (defaultoutput == 1) {
 			isdecode = TRUE;
@@ -182,19 +170,12 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 		isdecode = TRUE;
 	}
 
-	if (KSStream) {
-		// if (isbassvstloaded == 1) BASS_VST_ChannelFree(KSStream);
-		BASS_StreamFree(KSStream);
-	}
+	if (KSStream) BASS_StreamFree(KSStream);
 
-#if defined(_WIN64)
-	// InitializeVSTi(mixfreq, isdecode, vsti64dll, VSTI64);
-#elif defined(_WIN32)
-	// InitializeVSTi(mixfreq, isdecode, vsti32dll, VSTI32);
-#endif
-
-	KSStream = BASS_MIDI_StreamCreate(16, (isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) | AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0), mixfreq);
-
+	KSStream = BASS_MIDI_StreamCreate(16,
+		(isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) |
+		AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0),
+		mixfreq);
 	CheckUp(ERRORCODE, L"KSStreamCreateDEC", TRUE);
 	
 	PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
