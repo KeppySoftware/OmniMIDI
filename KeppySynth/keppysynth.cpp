@@ -116,9 +116,9 @@ static float sound_out_volume_float = 1.0;
 // Threads
 static clock_t start1, start2, start3, start4;
 static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
-static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL;
-static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL;
-static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE;
+static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL, hThreadDBG = NULL;
+static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL, thrdaddrDBG = NULL;
+static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE, hThreadDBGRunning = FALSE;
 
 // Variables
 #include "basserr.h"
@@ -770,10 +770,10 @@ DWORD WINAPI threadfunc(LPVOID lpV){
 			while (stop_rtthread == FALSE){
 				start1 = clock();
 				keepstreamsalive(opend);
-				DebugInfo();
 				LoadCustomInstruments();
 				keybindings();
 				CheckVolume();
+				ParseDebugData();
 				Sleep(1);
 			}
 			stop_rtthread = FALSE;

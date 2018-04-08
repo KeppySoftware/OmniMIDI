@@ -163,16 +163,6 @@ namespace KeppySynthDebugWindow.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap w10 {
-            get {
-                object obj = ResourceManager.GetObject("w10", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap w7 {
             get {
                 object obj = ResourceManager.GetObject("w7", resourceCulture);
@@ -193,39 +183,9 @@ namespace KeppySynthDebugWindow.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap w81 {
-            get {
-                object obj = ResourceManager.GetObject("w81", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap w9x {
             get {
                 object obj = ResourceManager.GetObject("w9x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap ws2012 {
-            get {
-                object obj = ResourceManager.GetObject("ws2012", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap ws2016 {
-            get {
-                object obj = ResourceManager.GetObject("ws2016", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

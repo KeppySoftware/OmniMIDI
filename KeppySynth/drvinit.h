@@ -31,6 +31,26 @@ void MT32SetInstruments() {
 	}
 }
 
+DWORD WINAPI pipesfill(LPVOID lpV) {
+	hThreadDBGRunning = TRUE;
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
+	while (stop_thread == FALSE) {
+		try {
+			SendDebugDataToPipe();
+			Sleep(1);
+		}
+		catch (...) {
+			CrashMessage(L"DbgPipe");
+			throw;
+		}
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
+	hThreadDBGRunning = FALSE;
+	CloseHandle(hThreadDBG);
+	hThreadDBG = NULL;
+	return 0;
+}
+
 DWORD WINAPI notescatcher(LPVOID lpV) {
 	hThread4Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
@@ -457,8 +477,8 @@ int CreateThreads(bool startup) {
 		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
 		SetThreadPriority(hThread4, prioval[driverprio]);
 	}
-
-	SetPriorityClass(hThread3, callprioval[driverprio]);
+	hThreadDBG = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)pipesfill, NULL, 0, (LPDWORD)thrdaddrDBG);
+	SetThreadPriority(hThreadDBG, prioval[driverprio]);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 	return 1;

@@ -773,10 +773,7 @@ void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, f
 	PipeContent += "\nBitApp = ";
 	PipeContent += close ? "" : bitapp;
 
-	for (int i = 0; i <= 15; ++i) {
-		DWORD v = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
-		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(v);
-	}
+	for (int i = 0; i <= 15; ++i) PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
 
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nCurCPUE = " + std::to_string(CCUIE0);
@@ -797,33 +794,38 @@ void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, f
 	if (GetLastError() != 0 && GetLastError() != 536) StartDebugPipe(TRUE);
 }
 
-void DebugInfo() {
+clock_t end;
+double rate = 0;
+double inlatency = 0.0;
+double outlatency = 0.0;
+void ParseDebugData() {
+	BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
+	if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
+
+	end = clock();
+	GetUsage(start1, end);
+
+	if (currentengine == 2) {
+		rate = BASS_ASIO_GetRate();
+		CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
+		inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
+		CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO", TRUE);
+		outlatency = (double)BASS_ASIO_GetLatency(FALSE) * 1000.0 / rate;
+		CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO", TRUE);
+	}
+
+	for (int i = 0; i <= 15; ++i) cvvalues[i] = BASS_MIDI_StreamGetEvent(KSStream, i, MIDI_EVENT_VOICES);
+}
+
+void SendDebugDataToPipe() {
 	try {
-		DWORD level, left, right, handlecount;
-		BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
-		if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
+		DWORD handlecount;
 
 		PROCESS_MEMORY_COUNTERS_EX pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		GetProcessHandleCount(GetCurrentProcess(), &handlecount);
 		SIZE_T ramusage = pmc.WorkingSetSize;
 		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
-
-		double rate = 0;
-		double inlatency = 0.0;
-		double outlatency = 0.0;
-
-		clock_t end = clock();
-		int64_t td1i = GetUsage(start1, end);
-
-		if (currentengine == 2) {
-			rate = BASS_ASIO_GetRate();
-			CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
-			inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
-			CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO", TRUE);
-			outlatency = (double)BASS_ASIO_GetLatency(FALSE) * 1000.0 / rate;
-			CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO", TRUE);
-		}
 
 		FillContentDebug(FALSE, currentcpuusage0, currentcpuusageE0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize),
 			GetUsage(start1, end), GetUsage(start2, end), GetUsage(start3, end), oldbuffermode ? 0.0f : GetUsage(start4, end),

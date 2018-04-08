@@ -47,8 +47,6 @@
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
-            this.RefreshDebugApps = new System.Windows.Forms.PictureBox();
-            this.SelectedDebug = new System.Windows.Forms.ComboBox();
             this.ASIOL = new System.Windows.Forms.Label();
             this.ASIOLLabel = new System.Windows.Forms.Label();
             this.AvV = new System.Windows.Forms.Label();
@@ -57,9 +55,6 @@
             this.HCountVLabel = new System.Windows.Forms.Label();
             this.RAMUsageV = new System.Windows.Forms.Label();
             this.RAMUsageVLabel = new System.Windows.Forms.Label();
-            this.VersionLabel = new System.Windows.Forms.Label();
-            this.CopyToClip1 = new System.Windows.Forms.Button();
-            this.KSLogo = new System.Windows.Forms.PictureBox();
             this.RT = new System.Windows.Forms.Label();
             this.RTLabel = new System.Windows.Forms.Label();
             this.AV = new System.Windows.Forms.Label();
@@ -67,8 +62,6 @@
             this.CMA = new System.Windows.Forms.Label();
             this.CMALabel = new System.Windows.Forms.Label();
             this.ChannelVoices = new System.Windows.Forms.TabPage();
-            this.KSLogoVoc = new System.Windows.Forms.PictureBox();
-            this.CopyToClip3 = new System.Windows.Forms.Button();
             this.CHV16 = new System.Windows.Forms.Label();
             this.CHV16L = new System.Windows.Forms.Label();
             this.CHV15 = new System.Windows.Forms.Label();
@@ -102,8 +95,6 @@
             this.CHV1 = new System.Windows.Forms.Label();
             this.CHV1L = new System.Windows.Forms.Label();
             this.ThreadTime = new System.Windows.Forms.TabPage();
-            this.KSLogoThrd = new System.Windows.Forms.PictureBox();
-            this.CopyToClip2 = new System.Windows.Forms.Button();
             this.SLRT = new System.Windows.Forms.Label();
             this.SLRTLabel = new System.Windows.Forms.Label();
             this.NCRT = new System.Windows.Forms.Label();
@@ -118,7 +109,6 @@
             this.MTLabel = new System.Windows.Forms.Label();
             this.GPUInternalChip = new System.Windows.Forms.Label();
             this.GPUInternalChipLabel = new System.Windows.Forms.Label();
-            this.CopyToClip4 = new System.Windows.Forms.Button();
             this.GPUInfo = new System.Windows.Forms.Label();
             this.GPUInfoLabel = new System.Windows.Forms.Label();
             this.GPU = new System.Windows.Forms.Label();
@@ -134,9 +124,13 @@
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
             this.WinLogo = new System.Windows.Forms.PictureBox();
+            this.RefreshDebugApps = new System.Windows.Forms.PictureBox();
+            this.SelectedDebug = new System.Windows.Forms.ComboBox();
+            this.VersionLabel = new System.Windows.Forms.Label();
+            this.CopyToClip1 = new System.Windows.Forms.Button();
+            this.KSLogo = new System.Windows.Forms.PictureBox();
             this.WinLogoTT = new System.Windows.Forms.ToolTip(this.components);
             this.CPULogoTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CurrentKSVer = new System.Windows.Forms.ToolTip(this.components);
             this.VoiceAverage = new System.Windows.Forms.ToolTip(this.components);
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
             this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
@@ -144,15 +138,13 @@
             this.CheckMem = new System.ComponentModel.BackgroundWorker();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             this.ChannelVoices.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).BeginInit();
             this.ThreadTime.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).BeginInit();
             this.PCSpecs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // MainCont
@@ -208,21 +200,20 @@
             // 
             // Tabs
             // 
+            this.Tabs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.Tabs.Controls.Add(this.SynthDbg);
             this.Tabs.Controls.Add(this.ChannelVoices);
             this.Tabs.Controls.Add(this.ThreadTime);
             this.Tabs.Controls.Add(this.PCSpecs);
-            this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Tabs.Location = new System.Drawing.Point(0, 0);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(432, 206);
+            this.Tabs.Size = new System.Drawing.Size(432, 196);
             this.Tabs.TabIndex = 8;
             // 
             // SynthDbg
             // 
-            this.SynthDbg.Controls.Add(this.RefreshDebugApps);
-            this.SynthDbg.Controls.Add(this.SelectedDebug);
             this.SynthDbg.Controls.Add(this.ASIOL);
             this.SynthDbg.Controls.Add(this.ASIOLLabel);
             this.SynthDbg.Controls.Add(this.AvV);
@@ -231,9 +222,6 @@
             this.SynthDbg.Controls.Add(this.HCountVLabel);
             this.SynthDbg.Controls.Add(this.RAMUsageV);
             this.SynthDbg.Controls.Add(this.RAMUsageVLabel);
-            this.SynthDbg.Controls.Add(this.VersionLabel);
-            this.SynthDbg.Controls.Add(this.CopyToClip1);
-            this.SynthDbg.Controls.Add(this.KSLogo);
             this.SynthDbg.Controls.Add(this.RT);
             this.SynthDbg.Controls.Add(this.RTLabel);
             this.SynthDbg.Controls.Add(this.AV);
@@ -243,35 +231,10 @@
             this.SynthDbg.Location = new System.Drawing.Point(4, 22);
             this.SynthDbg.Name = "SynthDbg";
             this.SynthDbg.Padding = new System.Windows.Forms.Padding(3);
-            this.SynthDbg.Size = new System.Drawing.Size(424, 180);
+            this.SynthDbg.Size = new System.Drawing.Size(424, 170);
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
             this.SynthDbg.UseVisualStyleBackColor = true;
-            // 
-            // RefreshDebugApps
-            // 
-            this.RefreshDebugApps.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.RefreshDebugApps.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.RefreshDebugApps.Image = global::KeppySynthDebugWindow.Properties.Resources.ReloadIcon;
-            this.RefreshDebugApps.Location = new System.Drawing.Point(266, 128);
-            this.RefreshDebugApps.Name = "RefreshDebugApps";
-            this.RefreshDebugApps.Size = new System.Drawing.Size(21, 21);
-            this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.RefreshDebugApps.TabIndex = 47;
-            this.RefreshDebugApps.TabStop = false;
-            this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "It reloads all the debug pipes, which are opened everytime a MIDI app loads Keppy" +
-        "\'s Synthesizer.");
-            this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
-            // 
-            // SelectedDebug
-            // 
-            this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SelectedDebug.FormattingEnabled = true;
-            this.SelectedDebug.Location = new System.Drawing.Point(291, 128);
-            this.SelectedDebug.Name = "SelectedDebug";
-            this.SelectedDebug.Size = new System.Drawing.Size(127, 21);
-            this.SelectedDebug.TabIndex = 46;
-            this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
             // 
             // ASIOL
             // 
@@ -365,40 +328,6 @@
             this.RAMUsageVLabel.Text = "App\'s working set size:";
             this.RAMUsageVLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // VersionLabel
-            // 
-            this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Enabled = false;
-            this.VersionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VersionLabel.Location = new System.Drawing.Point(7, 156);
-            this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(107, 15);
-            this.VersionLabel.TabIndex = 35;
-            this.VersionLabel.Text = "Checking version...";
-            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // CopyToClip1
-            // 
-            this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip1.Location = new System.Drawing.Point(266, 152);
-            this.CopyToClip1.Name = "CopyToClip1";
-            this.CopyToClip1.Size = new System.Drawing.Size(153, 23);
-            this.CopyToClip1.TabIndex = 34;
-            this.CopyToClip1.Text = "Copy all tabs to clipboard";
-            this.CopyToClip1.UseVisualStyleBackColor = true;
-            this.CopyToClip1.Click += new System.EventHandler(this.CopyToClip_Click);
-            // 
-            // KSLogo
-            // 
-            this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogo.Location = new System.Drawing.Point(389, 3);
-            this.KSLogo.Name = "KSLogo";
-            this.KSLogo.Size = new System.Drawing.Size(32, 32);
-            this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogo.TabIndex = 25;
-            this.KSLogo.TabStop = false;
-            // 
             // RT
             // 
             this.RT.AutoSize = true;
@@ -467,8 +396,6 @@
             // 
             // ChannelVoices
             // 
-            this.ChannelVoices.Controls.Add(this.KSLogoVoc);
-            this.ChannelVoices.Controls.Add(this.CopyToClip3);
             this.ChannelVoices.Controls.Add(this.CHV16);
             this.ChannelVoices.Controls.Add(this.CHV16L);
             this.ChannelVoices.Controls.Add(this.CHV15);
@@ -504,32 +431,10 @@
             this.ChannelVoices.Location = new System.Drawing.Point(4, 22);
             this.ChannelVoices.Name = "ChannelVoices";
             this.ChannelVoices.Padding = new System.Windows.Forms.Padding(3);
-            this.ChannelVoices.Size = new System.Drawing.Size(424, 180);
+            this.ChannelVoices.Size = new System.Drawing.Size(424, 170);
             this.ChannelVoices.TabIndex = 2;
             this.ChannelVoices.Text = "Channels voice count";
             this.ChannelVoices.UseVisualStyleBackColor = true;
-            // 
-            // KSLogoVoc
-            // 
-            this.KSLogoVoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogoVoc.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogoVoc.Location = new System.Drawing.Point(389, 3);
-            this.KSLogoVoc.Name = "KSLogoVoc";
-            this.KSLogoVoc.Size = new System.Drawing.Size(32, 32);
-            this.KSLogoVoc.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogoVoc.TabIndex = 49;
-            this.KSLogoVoc.TabStop = false;
-            // 
-            // CopyToClip3
-            // 
-            this.CopyToClip3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip3.Location = new System.Drawing.Point(266, 152);
-            this.CopyToClip3.Name = "CopyToClip3";
-            this.CopyToClip3.Size = new System.Drawing.Size(153, 23);
-            this.CopyToClip3.TabIndex = 48;
-            this.CopyToClip3.Text = "Copy all tabs to clipboard";
-            this.CopyToClip3.UseVisualStyleBackColor = true;
-            this.CopyToClip3.Click += new System.EventHandler(this.CopyToClip_Click);
             // 
             // CHV16
             // 
@@ -885,8 +790,6 @@
             // 
             // ThreadTime
             // 
-            this.ThreadTime.Controls.Add(this.KSLogoThrd);
-            this.ThreadTime.Controls.Add(this.CopyToClip2);
             this.ThreadTime.Controls.Add(this.SLRT);
             this.ThreadTime.Controls.Add(this.SLRTLabel);
             this.ThreadTime.Controls.Add(this.NCRT);
@@ -898,32 +801,10 @@
             this.ThreadTime.Location = new System.Drawing.Point(4, 22);
             this.ThreadTime.Name = "ThreadTime";
             this.ThreadTime.Padding = new System.Windows.Forms.Padding(3);
-            this.ThreadTime.Size = new System.Drawing.Size(424, 180);
+            this.ThreadTime.Size = new System.Drawing.Size(424, 170);
             this.ThreadTime.TabIndex = 3;
             this.ThreadTime.Text = "Threads time";
             this.ThreadTime.UseVisualStyleBackColor = true;
-            // 
-            // KSLogoThrd
-            // 
-            this.KSLogoThrd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.KSLogoThrd.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
-            this.KSLogoThrd.Location = new System.Drawing.Point(389, 3);
-            this.KSLogoThrd.Name = "KSLogoThrd";
-            this.KSLogoThrd.Size = new System.Drawing.Size(32, 32);
-            this.KSLogoThrd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogoThrd.TabIndex = 59;
-            this.KSLogoThrd.TabStop = false;
-            // 
-            // CopyToClip2
-            // 
-            this.CopyToClip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip2.Location = new System.Drawing.Point(266, 152);
-            this.CopyToClip2.Name = "CopyToClip2";
-            this.CopyToClip2.Size = new System.Drawing.Size(153, 23);
-            this.CopyToClip2.TabIndex = 58;
-            this.CopyToClip2.Text = "Copy all tabs to clipboard";
-            this.CopyToClip2.UseVisualStyleBackColor = true;
-            this.CopyToClip2.Click += new System.EventHandler(this.CopyToClip_Click);
             // 
             // SLRT
             // 
@@ -1024,7 +905,6 @@
             this.PCSpecs.Controls.Add(this.MTLabel);
             this.PCSpecs.Controls.Add(this.GPUInternalChip);
             this.PCSpecs.Controls.Add(this.GPUInternalChipLabel);
-            this.PCSpecs.Controls.Add(this.CopyToClip4);
             this.PCSpecs.Controls.Add(this.GPUInfo);
             this.PCSpecs.Controls.Add(this.GPUInfoLabel);
             this.PCSpecs.Controls.Add(this.GPU);
@@ -1043,7 +923,7 @@
             this.PCSpecs.Location = new System.Drawing.Point(4, 22);
             this.PCSpecs.Name = "PCSpecs";
             this.PCSpecs.Padding = new System.Windows.Forms.Padding(3);
-            this.PCSpecs.Size = new System.Drawing.Size(424, 180);
+            this.PCSpecs.Size = new System.Drawing.Size(424, 170);
             this.PCSpecs.TabIndex = 1;
             this.PCSpecs.Text = "Computer specifications";
             this.PCSpecs.UseVisualStyleBackColor = true;
@@ -1102,17 +982,6 @@
             this.GPUInternalChipLabel.TabIndex = 34;
             this.GPUInternalChipLabel.Text = "GPU chip:";
             this.GPUInternalChipLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // CopyToClip4
-            // 
-            this.CopyToClip4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip4.Location = new System.Drawing.Point(266, 152);
-            this.CopyToClip4.Name = "CopyToClip4";
-            this.CopyToClip4.Size = new System.Drawing.Size(153, 23);
-            this.CopyToClip4.TabIndex = 33;
-            this.CopyToClip4.Text = "Copy all tabs to clipboard";
-            this.CopyToClip4.UseVisualStyleBackColor = true;
-            this.CopyToClip4.Click += new System.EventHandler(this.CopyToClip_Click);
             // 
             // GPUInfo
             // 
@@ -1279,6 +1148,67 @@
             this.WinLogo.TabIndex = 24;
             this.WinLogo.TabStop = false;
             // 
+            // RefreshDebugApps
+            // 
+            this.RefreshDebugApps.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.RefreshDebugApps.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.RefreshDebugApps.Image = global::KeppySynthDebugWindow.Properties.Resources.ReloadIcon;
+            this.RefreshDebugApps.Location = new System.Drawing.Point(276, 225);
+            this.RefreshDebugApps.Name = "RefreshDebugApps";
+            this.RefreshDebugApps.Size = new System.Drawing.Size(21, 21);
+            this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.RefreshDebugApps.TabIndex = 47;
+            this.RefreshDebugApps.TabStop = false;
+            this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "It reloads all the debug pipes, which are opened everytime a MIDI app loads Keppy" +
+        "\'s Synthesizer.");
+            this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
+            // 
+            // SelectedDebug
+            // 
+            this.SelectedDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SelectedDebug.FormattingEnabled = true;
+            this.SelectedDebug.Location = new System.Drawing.Point(301, 225);
+            this.SelectedDebug.Name = "SelectedDebug";
+            this.SelectedDebug.Size = new System.Drawing.Size(127, 21);
+            this.SelectedDebug.TabIndex = 46;
+            this.SelectedDebug.SelectedIndexChanged += new System.EventHandler(this.SelectedDebug_SelectedIndexChanged);
+            this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.VersionLabel.Enabled = false;
+            this.VersionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.Location = new System.Drawing.Point(42, 207);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(214, 32);
+            this.VersionLabel.TabIndex = 35;
+            this.VersionLabel.Text = "Checking version...";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // CopyToClip1
+            // 
+            this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CopyToClip1.Location = new System.Drawing.Point(276, 199);
+            this.CopyToClip1.Name = "CopyToClip1";
+            this.CopyToClip1.Size = new System.Drawing.Size(153, 23);
+            this.CopyToClip1.TabIndex = 34;
+            this.CopyToClip1.Text = "Copy all tabs to clipboard";
+            this.CopyToClip1.UseVisualStyleBackColor = true;
+            this.CopyToClip1.Click += new System.EventHandler(this.CopyToClip_Click);
+            // 
+            // KSLogo
+            // 
+            this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.KSLogo.Image = global::KeppySynthDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogo.Location = new System.Drawing.Point(9, 207);
+            this.KSLogo.Name = "KSLogo";
+            this.KSLogo.Size = new System.Drawing.Size(32, 32);
+            this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogo.TabIndex = 25;
+            this.KSLogo.TabStop = false;
+            // 
             // WinLogoTT
             // 
             this.WinLogoTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
@@ -1288,11 +1218,6 @@
             // 
             this.CPULogoTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CPULogoTT.ToolTipTitle = "What CPU am I using?";
-            // 
-            // CurrentKSVer
-            // 
-            this.CurrentKSVer.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CurrentKSVer.ToolTipTitle = "Keppy\'s Synthesizer VER";
             // 
             // VoiceAverage
             // 
@@ -1324,8 +1249,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(432, 206);
+            this.ClientSize = new System.Drawing.Size(432, 251);
+            this.Controls.Add(this.RefreshDebugApps);
             this.Controls.Add(this.Tabs);
+            this.Controls.Add(this.SelectedDebug);
+            this.Controls.Add(this.CopyToClip1);
+            this.Controls.Add(this.VersionLabel);
+            this.Controls.Add(this.KSLogo);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1337,18 +1267,16 @@
             this.Tabs.ResumeLayout(false);
             this.SynthDbg.ResumeLayout(false);
             this.SynthDbg.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.ChannelVoices.ResumeLayout(false);
             this.ChannelVoices.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoVoc)).EndInit();
             this.ThreadTime.ResumeLayout(false);
             this.ThreadTime.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KSLogoThrd)).EndInit();
             this.PCSpecs.ResumeLayout(false);
             this.PCSpecs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1387,7 +1315,6 @@
         private System.Windows.Forms.Label GPUInfoLabel;
         private System.Windows.Forms.Label GPU;
         private System.Windows.Forms.Label GPULabel;
-        private System.Windows.Forms.Button CopyToClip4;
         private System.Windows.Forms.Button CopyToClip1;
         private System.Windows.Forms.Label GPUInternalChip;
         private System.Windows.Forms.Label GPUInternalChipLabel;
@@ -1427,13 +1354,10 @@
         private System.Windows.Forms.Label CHV2L;
         private System.Windows.Forms.Label CHV1;
         private System.Windows.Forms.Label CHV1L;
-        private System.Windows.Forms.Button CopyToClip3;
         private System.Windows.Forms.PictureBox KSLogo;
-        private System.Windows.Forms.PictureBox KSLogoVoc;
         private System.Windows.Forms.Label VersionLabel;
         private System.Windows.Forms.ToolTip WinLogoTT;
         private System.Windows.Forms.ToolTip CPULogoTT;
-        private System.Windows.Forms.ToolTip CurrentKSVer;
         private System.Windows.Forms.Label AvV;
         private System.Windows.Forms.Label AvVLabel;
         private System.Windows.Forms.ToolTip VoiceAverage;
@@ -1442,7 +1366,6 @@
         private System.Windows.Forms.Label HCountVLabel;
         private System.Windows.Forms.Label RAMUsageV;
         private System.Windows.Forms.Label RAMUsageVLabel;
-        private System.Windows.Forms.Button CopyToClip2;
         private System.Windows.Forms.Label SLRT;
         private System.Windows.Forms.Label SLRTLabel;
         private System.Windows.Forms.Label NCRT;
@@ -1451,7 +1374,6 @@
         private System.Windows.Forms.Label AERTiLabel;
         private System.Windows.Forms.Label MTRT;
         private System.Windows.Forms.Label MTRTLabel;
-        private System.Windows.Forms.PictureBox KSLogoThrd;
         public System.Windows.Forms.Timer DebugInfo;
         private System.Windows.Forms.Label ASIOL;
         private System.Windows.Forms.Label ASIOLLabel;

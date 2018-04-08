@@ -22,5 +22,31 @@ namespace KeppySynthDebugWindow.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>Better than VirtualMIDISynth.</string>
+  <string>The best soft-synth in the world.</string>
+  <string>I don't like Windows 95.</string>
+  <string>I love beautiful wood. Don't you?</string>
+  <string>Approved by Donald Trump.</string>
+  <string>Hey Scotty! Jesus man.</string>
+  <string>Now available for Android Oreo!</string>
+  <string>With 400% more potatoes.</string>
+  <string>* not supported by Apple.</string>
+  <string>Powered by NVIDIA GameWorks.</string>
+  <string>With full support for Windows 11!</string>
+  <string>Only for $49.99!</string>
+  <string>World War III ready.</string>
+  <string>MAH BOI.</string>
+  <string>Easter eggs not included.</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection LeMessages {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["LeMessages"]));
+            }
+        }
     }
 }

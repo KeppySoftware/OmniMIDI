@@ -131,6 +131,11 @@ static LPCWSTR cvnames[16] =
 	L"chv9", L"chv10", L"chv11", L"chv12", L"chv13", L"chv14", L"chv15", L"chv16"
 };
 
+static DWORD cvvalues[16] =
+{
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+
 // Channels instruments/banks
 static LPCWSTR cbankname[16] =
 {

@@ -24,6 +24,7 @@ using System.IO.Pipes;
 using System.IO;
 using System.Security.AccessControl;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace KeppySynthDebugWindow
 {
@@ -81,7 +82,6 @@ namespace KeppySynthDebugWindow
         RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
         RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
         String LogPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\DebugOutput.txt";
-        String Credits = "Copyright Ⓒ 2011\nKaleidonKep99, Kode54 & Mudlord";
 
         // Windows information
         ComputerInfo CI = new ComputerInfo();
@@ -109,15 +109,17 @@ namespace KeppySynthDebugWindow
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true); // AAAAA I hate flickering
         }
 
+        private string ParseEgg()
+        {
+            Random RND = new Random();
+            int ThisOne = RND.Next(0, Properties.Settings.Default.LeMessages.Count);
+            return Properties.Settings.Default.LeMessages[ThisOne];
+        }
+
         private void KeppySynthDebugWindow_Load(object sender, EventArgs e)
         {
             Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
-            CurrentKSVer.ToolTipTitle = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
-            CurrentKSVer.SetToolTip(KSLogo, Credits);
-            CurrentKSVer.SetToolTip(KSLogoVoc, Credits);
-            CurrentKSVer.SetToolTip(KSLogoThrd, Credits);
-            CurrentKSVer.SetToolTip(VersionLabel, Credits);
-            VersionLabel.Text = String.Format("Keppy's Synthesizer {0}", Driver.FileVersion);
+            VersionLabel.Text = String.Format("Keppy's Synthesizer {0}\n{1}", Driver.FileVersion, ParseEgg());
             GetWindowsInfoData(); // Get info about your Windows installation
             SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
             ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
@@ -227,7 +229,7 @@ namespace KeppySynthDebugWindow
             else if (cpumanufacturer == "Microsoft Hv")
             {
                 CPULogoTT.SetToolTip(CPULogo, "You're running the app inside a Hyper-V virtual machine.");
-                return Properties.Resources.ws2012;
+                return Properties.Resources.w8;
             }
             else
             {
@@ -286,42 +288,24 @@ namespace KeppySynthDebugWindow
                     }
                     else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
                     {
-                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
-                        {
-                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2012.");
-                            return Properties.Resources.ws2012;
-                        }
-                        else
-                        {
-                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 8.");
-                            return Properties.Resources.w8;
-                        }
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER) WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2012.");
+                        else WinLogoTT.SetToolTip(WinLogo, "You're using Windows 8.");
+
+                        return Properties.Resources.w8;
                     }
                     else if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 3)
                     {
-                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
-                        {
-                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2012 R2.");
-                            return Properties.Resources.ws2012;
-                        }
-                        else
-                        {
-                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 8.1.");
-                            return Properties.Resources.w81;
-                        }
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER) WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2012 R2.");
+                        else WinLogoTT.SetToolTip(WinLogo, "You're using Windows 8.1.");
+
+                        return Properties.Resources.w8;
                     }
                     else if (Environment.OSVersion.Version.Major == 10)
                     {
-                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
-                        {
-                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2016.");
-                            return Properties.Resources.ws2016;
-                        }
-                        else
-                        {
-                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows 10.");
-                            return Properties.Resources.w10;
-                        }
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER) WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2016.");
+                        else WinLogoTT.SetToolTip(WinLogo, "You're using Windows 10.");
+
+                        return Properties.Resources.w8;
                     }
                     else
                     {
@@ -510,7 +494,7 @@ namespace KeppySynthDebugWindow
 
         private void UpdateActiveVoicesPerChannel(StreamReader StreamDebugReader)
         {
-            for (int i = 0; i <= 15; ++i) ReadPipeUInt64(StreamDebugReader, String.Format("CV{0}", i), ref CHs[i]);
+            for (int i = 0; i <= 15; ++i) if (!ReadPipeUInt64(StreamDebugReader, String.Format("CV{0}", i), ref CHs[i])) CHs[i] = 0;
         }
 
         private string GetActiveVoices()
@@ -529,7 +513,7 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                return String.Format("{0} V/f", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]) / 16.67f).ToString("0.0"));
+                return String.Format("{0} V/f", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]) / 16.6666666666667f).ToString("0.00"));
             }
             catch
             {
@@ -553,74 +537,85 @@ namespace KeppySynthDebugWindow
             return value.Substring(A2);
         }
 
-        private void ReadPipeString(StreamReader StreamDebugReader, String RequestedValue, ref String ValueToChange)
+        private bool ReadPipeString(StreamReader StreamDebugReader, String RequestedValue, ref String ValueToChange)
         {
-            string temp = StreamDebugReader.ReadLine();
-            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp);
+            try
+            {
+                string temp = StreamDebugReader.ReadLine();
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp);
+                return true;
+            }
+            catch { return false; }
         }
 
-        private void ReadPipeSingle(StreamReader StreamDebugReader, String RequestedValue, ref Single ValueToChange)
+        private bool ReadPipeSingle(StreamReader StreamDebugReader, String RequestedValue, ref Single ValueToChange)
         {
-            string temp = StreamDebugReader.ReadLine();
-            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToSingle(DebugValue(temp)) / 1000000.0f;
+            try
+            {
+                string temp = StreamDebugReader.ReadLine();
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToSingle(DebugValue(temp)) / 1000000.0f;
+                return true;
+            }
+            catch { return false; }
         }
 
-        private void ReadPipeDouble(StreamReader StreamDebugReader, String RequestedValue, ref Double ValueToChange)
+        private bool ReadPipeDouble(StreamReader StreamDebugReader, String RequestedValue, ref Double ValueToChange)
         {
-            string temp = StreamDebugReader.ReadLine();
-            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToDouble(DebugValue(temp)) / 1000000.0;
+            try
+            {
+                string temp = StreamDebugReader.ReadLine();
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToDouble(DebugValue(temp)) / 1000000.0;
+                return true;
+            }
+            catch { return false; }
         }
 
-        private void ReadPipeUInt64(StreamReader StreamDebugReader, String RequestedValue, ref UInt64 ValueToChange)
+        private bool ReadPipeUInt64(StreamReader StreamDebugReader, String RequestedValue, ref UInt64 ValueToChange)
         {
-            string temp = StreamDebugReader.ReadLine();
-            if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToUInt64(DebugValue(temp));
+            try
+            {
+                string temp = StreamDebugReader.ReadLine();
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToUInt64(DebugValue(temp));
+                return true;
+            }
+            catch { return false; }
         }
 
-        String CurrentApp = "None";
-        String BitApp = "...";
-        Single CurCPU = 0;
-        Single CurCPUE = 0;
+        String CurrentApp = "Nothing";
+        String BitApp = "N/A";
+        Single CurCPU = 0.0f;
+        Single CurCPUE = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
-        Single Td1 = 0;
-        Single Td2 = 0;
-        Single Td3 = 0;
-        Single Td4 = 0;
+        Single Td1 = 0.0f;
+        Single Td2 = 0.0f;
+        Single Td3 = 0.0f;
+        Single Td4 = 0.0f;
         Double ASIOInLat = 0;
         Double ASIOOutLat = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader)
         {
             try
             {
-                ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp);
-                ReadPipeString(StreamDebugReader, "BitApp", ref BitApp);
-                ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU);
-                ReadPipeSingle(StreamDebugReader, "CurCPUE", ref CurCPUE);
-                ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles);
-                ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage);
-                ReadPipeSingle(StreamDebugReader, "Td1", ref Td1);
-                ReadPipeSingle(StreamDebugReader, "Td2", ref Td2);
-                ReadPipeSingle(StreamDebugReader, "Td3", ref Td3);
-                ReadPipeSingle(StreamDebugReader, "Td4", ref Td4);
-                ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat);
-                ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat);
+                if (!ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp)) CurrentApp = "Nothing";
+                if (!ReadPipeString(StreamDebugReader, "BitApp", ref BitApp)) BitApp = "N/A";
+                if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
+                if (!ReadPipeSingle(StreamDebugReader, "CurCPUE", ref CurCPUE)) CurCPUE = 0.0f;
+                if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
+                if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
+                if (!ReadPipeSingle(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
+                if (!ReadPipeSingle(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
+                if (!ReadPipeSingle(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
+                if (!ReadPipeSingle(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
+                if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
+                if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
                 UpdateActiveVoicesPerChannel(StreamDebugReader);
             }
-            catch
+            catch (Exception ex)
             {
-                CurrentApp = "None";
-                BitApp = "...";
-                CurCPU = 0;
-                CurCPUE = 0;
-                Handles = 0;
-                RAMUsage = 0;
-                Td1 = 0;
-                Td2 = 0;
-                Td3 = 0;
-                Td4 = 0;
-                ASIOInLat = 0;
-                ASIOOutLat = 0;
+                // If something goes wrong, here's an error handler
+                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.ExitThread();
             }
         }
 
@@ -628,8 +623,20 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                String[] PipesOpen = Directory.GetFiles(@"\\.\pipe\");
-                foreach (String Pipe in PipesOpen) if (Pipe.Contains(String.Format("KSDEBUG{0}", requestedpipe))) return true;
+                String PipeToAdd;
+                WIN32_FIND_DATA lpFindFileData;
+
+                var ptr = FindFirstFile(@"\\.\pipe\*", out lpFindFileData);
+                PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
+                if (PipeToAdd.Contains(String.Format("KSDEBUG{0}", requestedpipe))) return true;
+
+                while (FindNextFile(ptr, out lpFindFileData))
+                {
+                    PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
+                    if (PipeToAdd.Contains(String.Format("KSDEBUG{0}", requestedpipe))) return true;
+                }
+                FindClose(ptr);
+
                 return false;
             }
             catch { return false; }
@@ -643,19 +650,39 @@ namespace KeppySynthDebugWindow
 
             try
             {
-                String[] PipesOpen = Directory.GetFiles(@"\\.\pipe\");
                 List<String> KSPipesCheck = new List<String>();
-                foreach (String Pipe in PipesOpen) if (Pipe.Contains("KSDEBUG")) KSPipesCheck.Add(Path.GetFileName(Pipe));
+
+                String PipeToAdd;
+                WIN32_FIND_DATA lpFindFileData;
+
+                var ptr = FindFirstFile(@"\\.\pipe\*", out lpFindFileData);
+                PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
+                if (PipeToAdd.Contains("KSDEBUG"))
+                    KSPipesCheck.Add(PipeToAdd);
+
+                while (FindNextFile(ptr, out lpFindFileData))
+                {
+                    PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
+                    if (PipeToAdd.Contains("KSDEBUG"))
+                        KSPipesCheck.Add(PipeToAdd);
+                }
+                FindClose(ptr);
+
                 KSPipesCheck.Sort();
                 KSPipes = new BindingList<String>(KSPipesCheck);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // If something goes wrong, here's an error handler
+                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.ExitThread();
+            }
 
             SelectedDebug.DataSource = KSPipes;
 
             if (SelectedDebug.Items.Count < 1 || String.IsNullOrEmpty(SelectedDebug.Items[0].ToString()))
             {
-                KSPipes.Add("No apps available");
+                KSPipes.Add("No pipes available");
                 SelectedDebug.Enabled = false;
             }
             else try { SelectedDebug.SelectedIndex = SelectedDebugVal - 1; SelectedDebug.Enabled = true; }
@@ -667,7 +694,7 @@ namespace KeppySynthDebugWindow
             if (Tabs.SelectedIndex == 0)
             {
                 // Time to write all the stuff to the string builder
-                if (System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
+                if (Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
                 {
                     OpenAppLocat.Enabled = false;
                     currentappreturn = "None";
@@ -784,7 +811,12 @@ namespace KeppySynthDebugWindow
                                 ParseInfoFromPipe(StreamDebugReader);
                                 Thread.Sleep(1);
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                // If something goes wrong, here's an error handler
+                                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                Application.ExitThread();
+                            }
                         }
                     }
                 }
@@ -799,6 +831,16 @@ namespace KeppySynthDebugWindow
 
         private void SelectedDebug_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            SwitchPipe(false);
+        }
+
+        private void SelectedDebug_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SwitchPipe(true);
+        }
+
+        private void SwitchPipe(bool silent)
+        {
             try
             {
                 Int32 SelectedValueToCheck = Convert.ToInt32(Regex.Match((String)SelectedDebug.Items[SelectedDebug.SelectedIndex], @"\d+").Value);
@@ -808,7 +850,7 @@ namespace KeppySynthDebugWindow
                     if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
                     else DebugInfoCheck.RunWorkerAsync();
                 }
-                else MessageBox.Show("The selected app isn't open anymore!", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else { if (!silent) MessageBox.Show("This debug pipe is not available anymore.", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information); }
             }
             catch { }
         }
@@ -883,7 +925,7 @@ namespace KeppySynthDebugWindow
                 avmemint = avmem / (1024 * 1024);
                 tlmemint = tlmem / (1024 * 1024);
                 percentage = avmem * 100.0 / tlmem;
-                Thread.Sleep(1);
+                Thread.Sleep(50);
             }
         }
     }
