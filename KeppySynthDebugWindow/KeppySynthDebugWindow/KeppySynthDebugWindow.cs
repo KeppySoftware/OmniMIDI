@@ -112,7 +112,7 @@ namespace KeppySynthDebugWindow
         private string ParseEgg()
         {
             Random RND = new Random();
-            int ThisOne = RND.Next(0, Properties.Settings.Default.LeMessages.Count);
+            int ThisOne = RND.Next(0, Properties.Settings.Default.LeMessages.Count - 1);
             return Properties.Settings.Default.LeMessages[ThisOne];
         }
 
