@@ -1575,6 +1575,7 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
+                        RemovePatchFiles(WinMMDialog.FileName);
                         if (Is64Bit)
                         {
                             File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
@@ -1627,6 +1628,7 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
+                        RemovePatchFiles(WinMMDialog.FileName);
                         if (Is64Bit)
                         {
                             File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.System)), String.Format("{0}\\{1}", DirectoryPath, "owinmm.dll"));
@@ -1657,27 +1659,29 @@ namespace KeppySynthConfigurator
                 WinMMDialog.Title = "Select an application to unpatch";
                 WinMMDialog.Multiselect = false;
                 WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                if (WinMMDialog.ShowDialog() == DialogResult.OK)
-                {
-                    String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
-                    String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll", "owinmm.dll" };
-                    TryAgain:
-                    try
-                    {
-                        foreach (String DeleteMe in DeleteTheseFiles) File.Delete(String.Format("{0}\\{1}", DirectoryPath, DeleteMe));
-                    }
-                    catch
-                    {
-                        Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
-                        goto TryAgain;
-                    }
-                    MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+
+                if (WinMMDialog.ShowDialog() == DialogResult.OK) RemovePatchFiles(WinMMDialog.FileName);
             }
             catch
             {
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
             }
+        }
+
+        private static void RemovePatchFiles(String DirectoryPath)
+        {
+            String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll", "owinmm.dll" };
+            TryAgain:
+            try
+            {
+                foreach (String DeleteMe in DeleteTheseFiles) File.Delete(String.Format("{0}\\{1}", Path.GetDirectoryName(DirectoryPath), DeleteMe));
+            }
+            catch
+            {
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                goto TryAgain;
+            }
+            MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static bool MonitorStop = true;

@@ -779,7 +779,7 @@ void CheckVolume() {
 	}
 }
 
-void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
+void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, bool KSDAPI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
 	std::string PipeContent;
 	DWORD bytesWritten;
 
@@ -795,12 +795,11 @@ void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, d
 	PipeContent += "\nCurCPUE = " + std::to_string(CCUIE0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
-	PipeContent += "\n";
+	PipeContent += "\nKSDirect = " + std::to_string(KSDAPI);
 	PipeContent += "\nTd1 = " + std::to_string(TD1);
 	PipeContent += "\nTd2 = " + std::to_string(TD2);
 	PipeContent += "\nTd3 = " + std::to_string(TD3);
 	PipeContent += "\nTd4 = " + std::to_string(TD4);
-	PipeContent += "\n";
 	PipeContent += "\nASIOInLat = " + std::to_string(IL);
 	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
 
@@ -842,7 +841,7 @@ void SendDebugDataToPipe() {
 
 		long long TimeDuringDebug = TimeNow();
 
-		FillContentDebug(FALSE, currentcpuusage0, currentcpuusageE0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize),
+		FillContentDebug(FALSE, currentcpuusage0, currentcpuusageE0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), ksdirectenabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, oldbuffermode ? 0.0f : TimeDuringDebug - start4,
 			inlatency, outlatency);
 	}

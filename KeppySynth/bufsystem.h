@@ -34,10 +34,10 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
 }
 
-void SendLongToBASSMIDI(BOOL direct, DWORD dwParam1, MIDIHDR* rhdr) {
+void SendLongToBASSMIDI(DWORD dwParam1, MIDIHDR* rhdr) {
 	MIDIHDR *hdr;
 
-	if (!direct) hdr = (MIDIHDR*)dwParam1;
+	if (!ksdirectenabled) hdr = (MIDIHDR*)dwParam1;
 	else hdr = rhdr;
 
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
@@ -79,7 +79,7 @@ int PlayBufferedData(void){
 				SendToBASSMIDI(dwParam1);
 				break;
 			case MODM_LONGDATA:
-				if (sysresetignore != 1) SendLongToBASSMIDI(FALSE, dwParam1, NULL);
+				if (sysresetignore != 1) SendLongToBASSMIDI(dwParam1, NULL);
 				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 				break;
 			}
@@ -138,7 +138,9 @@ DWORD ReturnEditedEvent(DWORD dwParam1, int status, int note, int velocity, int 
 	return dwParam1;
 }
 
-MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+	if (ksdirectenabled != direct) ksdirectenabled = direct;
+
 	int status = (dwParam1 & 0x000000FF);
 	int note = (dwParam1 & 0x0000FF00) >> 8;
 	int velocity = (dwParam1 & 0x00FF0000) >> 16;
@@ -178,17 +180,18 @@ void AudioRender() {
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
-	return ParseData(0, MODM_DATA, 0, dwMsg, 0, 0, 0);
+	return ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
 }
 
 MMRESULT WINAPI SendDirectLongData(LPMIDIHDR lpMidiOutHdr)
 {
-	return ParseData(0, MODM_LONGDATA, 0, (DWORD)lpMidiOutHdr, 0, 0, 0);
+	return ParseData(TRUE, 0, MODM_LONGDATA, 0, (DWORD)lpMidiOutHdr, 0, 0, 0);
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 {
 	try {
+		if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
 		SendToBASSMIDI(dwMsg);
 		return MMSYSERR_NOERROR;
 	}
@@ -198,7 +201,8 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 MMRESULT WINAPI SendDirectLongDataNoBuf(LPMIDIHDR lpMidiOutHdr)
 {
 	try {
-		SendLongToBASSMIDI(TRUE, NULL, lpMidiOutHdr);
+		if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
+		SendLongToBASSMIDI(NULL, lpMidiOutHdr);
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) { return MMSYSERR_ERROR; }

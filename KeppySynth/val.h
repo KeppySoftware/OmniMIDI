@@ -8,7 +8,6 @@ static int improveperf = 0;				// Improve performance, reduces compatibility
 static char modulename[MAX_PATH];		// debug info
 static char bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
-static HINSTANCE winrtmidi = 0;			// winrt handle
 static HINSTANCE bass = 0;				// bass handle
 static HINSTANCE bass_fx = 0;			// bass_fx handle
 static HINSTANCE bass_vst = 0;			// bass_vst handle
@@ -18,6 +17,7 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassmix = 0;			// bassmix handle
 
 // Potato
+static BOOL ksdirectenabled = FALSE;
 static float currentcpuusage0;
 static float currentcpuusageE0;
 static int isoverrideenabled = 0;

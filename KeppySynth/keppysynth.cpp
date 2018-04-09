@@ -916,7 +916,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
 		try {
-			int returnval = ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			int returnval = ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 			return returnval;
 		}
@@ -926,7 +926,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 	case MODM_DATA:
 		try {
-			return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 		}
 		catch (...) {
 			CrashMessage(L"MODMDataParse");
@@ -934,10 +934,10 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 	case MODM_STRMDATA: {
 		try {
-			return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 		}
 		catch (...) {
-			CrashMessage(L"MODMDataParse");
+			CrashMessage(L"MODMStrmDataParse");
 			throw;
 		}
 	}

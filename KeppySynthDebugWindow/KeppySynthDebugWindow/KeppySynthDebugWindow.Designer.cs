@@ -136,6 +136,8 @@
             this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
             this.ReloadDebugInfo = new System.Windows.Forms.ToolTip(this.components);
             this.CheckMem = new System.ComponentModel.BackgroundWorker();
+            this.KSDAPI = new System.Windows.Forms.Label();
+            this.KSDAPILabel = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             this.ChannelVoices.SuspendLayout();
@@ -214,6 +216,8 @@
             // 
             // SynthDbg
             // 
+            this.SynthDbg.Controls.Add(this.KSDAPI);
+            this.SynthDbg.Controls.Add(this.KSDAPILabel);
             this.SynthDbg.Controls.Add(this.ASIOL);
             this.SynthDbg.Controls.Add(this.ASIOLLabel);
             this.SynthDbg.Controls.Add(this.AvV);
@@ -1244,6 +1248,28 @@
             // 
             this.CheckMem.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckMem_DoWork);
             // 
+            // KSDAPI
+            // 
+            this.KSDAPI.AutoSize = true;
+            this.KSDAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KSDAPI.Location = new System.Drawing.Point(96, 132);
+            this.KSDAPI.Name = "KSDAPI";
+            this.KSDAPI.Size = new System.Drawing.Size(56, 13);
+            this.KSDAPI.TabIndex = 47;
+            this.KSDAPI.Text = "Unknown.";
+            this.KSDAPI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // KSDAPILabel
+            // 
+            this.KSDAPILabel.AutoSize = true;
+            this.KSDAPILabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KSDAPILabel.Location = new System.Drawing.Point(2, 132);
+            this.KSDAPILabel.Name = "KSDAPILabel";
+            this.KSDAPILabel.Size = new System.Drawing.Size(94, 13);
+            this.KSDAPILabel.TabIndex = 46;
+            this.KSDAPILabel.Text = "KSDAPI status:";
+            this.KSDAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1382,6 +1408,8 @@
         private System.Windows.Forms.PictureBox RefreshDebugApps;
         private System.Windows.Forms.ToolTip ReloadDebugInfo;
         private System.ComponentModel.BackgroundWorker CheckMem;
+        private System.Windows.Forms.Label KSDAPI;
+        private System.Windows.Forms.Label KSDAPILabel;
     }
 }
 

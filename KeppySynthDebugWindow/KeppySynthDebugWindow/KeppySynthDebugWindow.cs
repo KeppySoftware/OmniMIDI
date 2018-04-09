@@ -439,6 +439,7 @@ namespace KeppySynthDebugWindow
                 sb.AppendLine(String.Format("{0} {1}", ASIOL.Text, ASIOLLabel.Text));
                 sb.AppendLine(String.Format("{0} {1}", RAMUsageVLabel.Text, RAMUsageV.Text));
                 sb.AppendLine(String.Format("{0} {1}", HCountVLabel.Text, HCountV.Text));
+                sb.AppendLine(String.Format("{0} {1}", KSDAPILabel.Text, KSDAPI.Text));
                 sb.AppendLine("======= Channels  information =======");
                 sb.AppendLine(String.Format("{0} {1}", CHV1L.Text, CHV1.Text));
                 sb.AppendLine(String.Format("{0} {1}", CHV2L.Text, CHV2.Text));
@@ -537,6 +538,18 @@ namespace KeppySynthDebugWindow
             return value.Substring(A2);
         }
 
+        private bool ReadPipeKSDAPI(StreamReader StreamDebugReader)
+        {
+            try
+            {
+                string temp = StreamDebugReader.ReadLine();
+          
+                if (DebugName(temp).Equals("KSDirect")) KSDAPIStatus = Convert.ToBoolean(Convert.ToInt32(DebugValue(temp)));
+                return true;
+            }
+            catch { return false; }
+        }
+
         private bool ReadPipeString(StreamReader StreamDebugReader, String RequestedValue, ref String ValueToChange)
         {
             try
@@ -587,6 +600,7 @@ namespace KeppySynthDebugWindow
         Single CurCPUE = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
+        Boolean KSDAPIStatus = false;
         Double Td1 = 0.0;
         Double Td2 = 0.0;
         Double Td3 = 0.0;
@@ -603,6 +617,7 @@ namespace KeppySynthDebugWindow
                 if (!ReadPipeSingle(StreamDebugReader, "CurCPUE", ref CurCPUE)) CurCPUE = 0.0f;
                 if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
                 if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
+                if (!ReadPipeKSDAPI(StreamDebugReader)) KSDAPIStatus = false;
                 if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
                 if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
                 if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
@@ -744,6 +759,8 @@ namespace KeppySynthDebugWindow
 
                 if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
                 else ASIOL.Text = "Not in use.";
+
+                KSDAPI.Text = KSDAPIStatus ? "Using KSDirect API." : "KSDirect API is inactive.";
             }
             else if (Tabs.SelectedIndex == 1)
             {
