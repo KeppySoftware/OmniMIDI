@@ -2252,7 +2252,6 @@ namespace KeppySynthConfigurator
                 applySettingsToolStripMenuItem.Font = new Font(applySettingsToolStripMenuItem.Font, FontStyle.Regular);
                 applySettingsToolStripMenuItem.ForeColor = SystemColors.ControlText;
             }
-            System.Threading.Thread.Sleep(1);
         }
 
         private void WinMMPatch32_Click(object sender, EventArgs e)
@@ -2263,6 +2262,16 @@ namespace KeppySynthConfigurator
         private void WinMMPatch64_Click(object sender, EventArgs e)
         {
             Functions.ApplyWinMMPatch(true);
+        }
+
+        private void WinMMWRPPatch32_Click(object sender, EventArgs e)
+        {
+            Functions.ApplyWinMMWRPPatch(false);
+        }
+
+        private void WinMMWRPPatch64_Click(object sender, EventArgs e)
+        {
+            Functions.ApplyWinMMWRPPatch(true);
         }
 
         private void WinMMPatchRmv_Click(object sender, EventArgs e)

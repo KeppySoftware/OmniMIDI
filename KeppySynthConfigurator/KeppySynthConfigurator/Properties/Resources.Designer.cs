@@ -551,9 +551,29 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Byte[].
         /// </summary>
+        internal static byte[] winmm32wrp {
+            get {
+                object obj = ResourceManager.GetObject("winmm32wrp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
         internal static byte[] winmm64 {
             get {
                 object obj = ResourceManager.GetObject("winmm64", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] winmm64wrp {
+            get {
+                object obj = ResourceManager.GetObject("winmm64wrp", resourceCulture);
                 return ((byte[])(obj));
             }
         }

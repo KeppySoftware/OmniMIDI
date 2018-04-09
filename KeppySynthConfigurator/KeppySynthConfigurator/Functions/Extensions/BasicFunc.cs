@@ -1596,6 +1596,58 @@ namespace KeppySynthConfigurator
             }
         }
 
+
+        public static void ApplyWinMMWRPPatch(Boolean Is64Bit)
+        {
+            if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1) && Properties.Settings.Default.PatchInfoShow == true)
+            {
+                Properties.Settings.Default.PatchInfoShow = false;
+                Properties.Settings.Default.Save();
+                MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            OpenFileDialog WinMMDialog = new OpenFileDialog();
+            TryAgain:
+            try
+            {
+                WinMMDialog.Filter = "Executables (*.exe, *.dll)|*.exe;*.dll;";
+                WinMMDialog.Title = "Select an application to patch";
+                WinMMDialog.Multiselect = false;
+                WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (WinMMDialog.ShowDialog() == DialogResult.OK)
+                {
+                    String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
+                    if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x86" && Is64Bit)
+                    {
+                        MessageBox.Show("You can't patch a 32-bit application with the 64-bit patch!", "Keppy's Synthesizer - Patch error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
+                    else if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x64" && !Is64Bit)
+                    {
+                        MessageBox.Show("You can't patch a 64-bit application with the 32-bit patch!", "Keppy's Synthesizer - Patch error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
+                    else
+                    {
+                        if (Is64Bit)
+                        {
+                            File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.System)), String.Format("{0}\\{1}", DirectoryPath, "owinmm.dll"));
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64wrp);
+                        }
+                        else
+                        {
+                            File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86)), String.Format("{0}\\{1}", DirectoryPath, "owinmm.dll"));
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32wrp);
+                        }
+                        MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
+                goto TryAgain;
+            }
+        }
+
         public static void RemoveWinMMPatch()
         {
             OpenFileDialog WinMMDialog = new OpenFileDialog();
@@ -1608,7 +1660,7 @@ namespace KeppySynthConfigurator
                 if (WinMMDialog.ShowDialog() == DialogResult.OK)
                 {
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
-                    String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll" };
+                    String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll", "owinmm.dll" };
                     TryAgain:
                     try
                     {

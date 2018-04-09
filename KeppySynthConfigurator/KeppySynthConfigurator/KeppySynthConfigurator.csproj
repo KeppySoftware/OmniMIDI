@@ -394,6 +394,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\WinMM64WRP\winmm64wrp.dll" />
+    <None Include="Resources\WinMM32WRP\winmm32wrp.dll" />
     <None Include="Resources\Pictures\KSynthLogo.gif" />
     <None Include="Resources\Text\TelemetryLoginData.txt" />
     <None Include="Resources\LoudMax\LoudMax64.dll" />
