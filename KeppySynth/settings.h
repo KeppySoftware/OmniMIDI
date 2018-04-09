@@ -779,7 +779,7 @@ void CheckVolume() {
 	}
 }
 
-void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, bool KSDAPI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
+void FillContentDebug(BOOL close, float CCUI0, int HC, long RUI, bool KSDAPI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
 	std::string PipeContent;
 	DWORD bytesWritten;
 
@@ -792,7 +792,6 @@ void FillContentDebug(BOOL close, float CCUI0, float CCUIE0, int HC, long RUI, b
 	for (int i = 0; i <= 15; ++i) PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
 
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
-	PipeContent += "\nCurCPUE = " + std::to_string(CCUIE0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
 	PipeContent += "\nKSDirect = " + std::to_string(KSDAPI);
@@ -815,7 +814,6 @@ double inlatency = 0.0;
 double outlatency = 0.0;
 void ParseDebugData() {
 	BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
-	if (currentengine == 2) currentcpuusageE0 = BASS_ASIO_GetCPU();
 
 	if (currentengine == 2) {
 		rate = BASS_ASIO_GetRate();
@@ -841,7 +839,7 @@ void SendDebugDataToPipe() {
 
 		long long TimeDuringDebug = TimeNow();
 
-		FillContentDebug(FALSE, currentcpuusage0, currentcpuusageE0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), ksdirectenabled,
+		FillContentDebug(FALSE, currentcpuusage0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), ksdirectenabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, oldbuffermode ? 0.0f : TimeDuringDebug - start4,
 			inlatency, outlatency);
 	}

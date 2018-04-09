@@ -484,7 +484,7 @@ void SetUpStream() {
 }
 
 void FreeUpLibraries() {
-	FillContentDebug(TRUE, 0.0f, 0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	FillContentDebug(TRUE, 0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	FlushFileBuffers(hPipe);
 	CloseHandle(hPipe);
 

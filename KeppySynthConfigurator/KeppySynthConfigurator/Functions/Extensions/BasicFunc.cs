@@ -1575,7 +1575,7 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
-                        RemovePatchFiles(WinMMDialog.FileName);
+                        RemovePatchFiles(WinMMDialog.FileName, true);
                         if (Is64Bit)
                         {
                             File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, WDMAUDDrvName), Properties.Resources.wdmaud64drv);
@@ -1628,16 +1628,16 @@ namespace KeppySynthConfigurator
                     }
                     else
                     {
-                        RemovePatchFiles(WinMMDialog.FileName);
+                        RemovePatchFiles(WinMMDialog.FileName, true);
                         if (Is64Bit)
                         {
-                            File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.System)), String.Format("{0}\\{1}", DirectoryPath, "owinmm.dll"));
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64wrp);
+                            File.Copy(String.Format("{0}\\winmm.dll", Path.Combine(Environment.ExpandEnvironmentVariables("%windir%"), "SysNative")), String.Format("{0}\\{1}", DirectoryPath, "OWINMM.DLL"));
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "WINMM.DLL"), Properties.Resources.winmm64wrp);
                         }
                         else
                         {
-                            File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86)), String.Format("{0}\\{1}", DirectoryPath, "owinmm.dll"));
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32wrp);
+                            File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86)), String.Format("{0}\\{1}", DirectoryPath, "OWINMM.DLL"));
+                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "WINMM.DLL"), Properties.Resources.winmm32wrp);
                         }
                         MessageBox.Show(String.Format("\"{0}\" has been succesfully patched!", Path.GetFileName(WinMMDialog.FileName)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -1660,7 +1660,7 @@ namespace KeppySynthConfigurator
                 WinMMDialog.Multiselect = false;
                 WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-                if (WinMMDialog.ShowDialog() == DialogResult.OK) RemovePatchFiles(WinMMDialog.FileName);
+                if (WinMMDialog.ShowDialog() == DialogResult.OK) RemovePatchFiles(WinMMDialog.FileName, false);
             }
             catch
             {
@@ -1668,7 +1668,7 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private static void RemovePatchFiles(String DirectoryPath)
+        private static void RemovePatchFiles(String DirectoryPath, Boolean Silent)
         {
             String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll", "owinmm.dll" };
             TryAgain:
@@ -1681,7 +1681,7 @@ namespace KeppySynthConfigurator
                 Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
                 goto TryAgain;
             }
-            MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!Silent) MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static bool MonitorStop = true;

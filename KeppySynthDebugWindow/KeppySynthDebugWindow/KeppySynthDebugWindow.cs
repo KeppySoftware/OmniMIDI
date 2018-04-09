@@ -555,7 +555,7 @@ namespace KeppySynthDebugWindow
             try
             {
                 string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp);
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp); 
                 return true;
             }
             catch { return false; }
@@ -597,7 +597,6 @@ namespace KeppySynthDebugWindow
         String CurrentApp = "Nothing";
         String BitApp = "N/A";
         Single CurCPU = 0.0f;
-        Single CurCPUE = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
         Boolean KSDAPIStatus = false;
@@ -614,7 +613,6 @@ namespace KeppySynthDebugWindow
                 if (!ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp)) CurrentApp = "Nothing";
                 if (!ReadPipeString(StreamDebugReader, "BitApp", ref BitApp)) BitApp = "N/A";
                 if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
-                if (!ReadPipeSingle(StreamDebugReader, "CurCPUE", ref CurCPUE)) CurCPUE = 0.0f;
                 if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
                 if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
                 if (!ReadPipeKSDAPI(StreamDebugReader)) KSDAPIStatus = false;
@@ -730,7 +728,7 @@ namespace KeppySynthDebugWindow
                 else
                     AV.Font = new Font(AV.Font, FontStyle.Regular);
 
-                AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitToRange(0, 100));
+                AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitIntToRange(0, 100));
                 AV.Text = GetActiveVoices();
                 AvV.Text = GetAverageVoices();
 
@@ -754,7 +752,7 @@ namespace KeppySynthDebugWindow
                         RT.Text = String.Format("{0}%", CurCPU.ToString("0.0")); // Else, it'll give you the info about how many cycles it needs to work.
                     }
 
-                    RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitToRange(0, 100));
+                    RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitIntToRange(0, 100));
                 }
 
                 if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
@@ -784,7 +782,7 @@ namespace KeppySynthDebugWindow
             }
             else if (Tabs.SelectedIndex == 2)
             {
-                MTRT.Text = String.Format("{0}ms", Td1);
+                MTRT.Text = String.Format("{0}ms", Td1.LimitDoubleToRange(0.0, 1E7));
                 AERTi.Text = String.Format("{0}ms", Td2);
                 SLRT.Text = String.Format("{0}ms", Td3);
                 NCRT.Text = String.Format("{0}ms", Td4);
@@ -983,8 +981,16 @@ public static class ValueBlend
 
 public static class InputExtensions
 {
-    public static int LimitToRange(
+    public static int LimitIntToRange(
         this int value, int inclusiveMinimum, int inclusiveMaximum)
+    {
+        if (value < inclusiveMinimum) { return inclusiveMinimum; }
+        if (value > inclusiveMaximum) { return inclusiveMaximum; }
+        return value;
+    }
+
+    public static double LimitDoubleToRange(
+    this double value, double inclusiveMinimum, double inclusiveMaximum)
     {
         if (value < inclusiveMinimum) { return inclusiveMinimum; }
         if (value > inclusiveMaximum) { return inclusiveMaximum; }

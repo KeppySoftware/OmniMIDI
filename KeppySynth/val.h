@@ -19,7 +19,6 @@ static HINSTANCE bassmix = 0;			// bassmix handle
 // Potato
 static BOOL ksdirectenabled = FALSE;
 static float currentcpuusage0;
-static float currentcpuusageE0;
 static int isoverrideenabled = 0;
 static unsigned long long evbuffsize = 16384;
 static unsigned long long sevbuffsize = evbuffsize;
