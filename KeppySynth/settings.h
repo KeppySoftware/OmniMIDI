@@ -779,7 +779,7 @@ void CheckVolume() {
 	}
 }
 
-void FillContentDebug(BOOL close, float CCUI0, int HC, long RUI, bool KSDAPI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
+void FillContentDebug(BOOL close, float CCUI0, int HC, unsigned long long RUI, bool KSDAPI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
 	std::string PipeContent;
 	DWORD bytesWritten;
 
