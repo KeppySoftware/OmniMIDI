@@ -46,7 +46,7 @@
             this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.CompiledOn = new System.Windows.Forms.Label();
+            this.KSDAPIVer = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
             this.BASSVer = new System.Windows.Forms.Label();
             this.DriverVer = new System.Windows.Forms.Label();
@@ -124,9 +124,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 77);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(68, 13);
+            this.label6.Size = new System.Drawing.Size(86, 13);
             this.label6.TabIndex = 3;
-            this.label6.Text = "Compiled on:";
+            this.label6.Text = "KSDAPI version:";
             // 
             // groupBox2
             // 
@@ -191,7 +191,7 @@
             this.groupBox1.Controls.Add(this.ChangeBranch);
             this.groupBox1.Controls.Add(this.CurBranch);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.CompiledOn);
+            this.groupBox1.Controls.Add(this.KSDAPIVer);
             this.groupBox1.Controls.Add(this.BASSMIDIVer);
             this.groupBox1.Controls.Add(this.BASSVer);
             this.groupBox1.Controls.Add(this.DriverVer);
@@ -238,14 +238,14 @@
             this.label9.TabIndex = 8;
             this.label9.Text = "Update branch:";
             // 
-            // CompiledOn
+            // KSDAPIVer
             // 
-            this.CompiledOn.AutoSize = true;
-            this.CompiledOn.Location = new System.Drawing.Point(110, 77);
-            this.CompiledOn.Name = "CompiledOn";
-            this.CompiledOn.Size = new System.Drawing.Size(63, 13);
-            this.CompiledOn.TabIndex = 7;
-            this.CompiledOn.Text = "COMP DAT";
+            this.KSDAPIVer.AutoSize = true;
+            this.KSDAPIVer.Location = new System.Drawing.Point(110, 77);
+            this.KSDAPIVer.Name = "KSDAPIVer";
+            this.KSDAPIVer.Size = new System.Drawing.Size(71, 13);
+            this.KSDAPIVer.TabIndex = 7;
+            this.KSDAPIVer.Text = "KSDAPI VER";
             // 
             // BASSMIDIVer
             // 
@@ -423,7 +423,7 @@
         private System.Windows.Forms.Label WinName;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label CompiledOn;
+        private System.Windows.Forms.Label KSDAPIVer;
         private System.Windows.Forms.Label BASSMIDIVer;
         private System.Windows.Forms.Label BASSVer;
         private System.Windows.Forms.Label DriverVer;

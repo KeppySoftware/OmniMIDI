@@ -1,8 +1,11 @@
-LIBRARY      "keppysynth.dll"
+LIBRARY		keppysynth.dll
 EXPORTS
-	DriverProc PRIVATE
-	modMessage PRIVATE
-	SendDirectData PRIVATE
-	SendDirectLongData PRIVATE
-	SendDirectDataNoBuf PRIVATE
-	SendDirectLongDataNoBuf PRIVATE
+	DriverProc
+	modMessage
+	ReturnKSDAPIVer
+	InitializeKSStream
+	TerminateKSStream
+	SendDirectData
+	SendDirectLongData
+	SendDirectDataNoBuf
+	SendDirectLongDataNoBuf

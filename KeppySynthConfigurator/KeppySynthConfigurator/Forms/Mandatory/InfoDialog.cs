@@ -19,6 +19,10 @@ namespace KeppySynthConfigurator
 {
     public partial class InfoDialog : Form
     {
+        // KSDAPI info
+        [DllImport("keppysynth.dll", CharSet = CharSet.Ansi)]
+        public static extern string ReturnKSDAPIVer();
+
         // Funcs
 
         private RegistryKey CurrentVerKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
@@ -26,29 +30,6 @@ namespace KeppySynthConfigurator
         private FileVersionInfo BASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\bass.dll");
         private FileVersionInfo BASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\bassmidi.dll");
         private String License = Environment.SystemDirectory + "\\keppysynth\\license.txt";
-
-        private DateTime GetLinkerTime(Assembly assembly, TimeZoneInfo target = null)
-        {
-            var filePath = assembly.Location;
-            const int c_PeHeaderOffset = 60;
-            const int c_LinkerTimestampOffset = 8;
-
-            var buffer = new byte[2048];
-
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                stream.Read(buffer, 0, 2048);
-
-            var offset = BitConverter.ToInt32(buffer, c_PeHeaderOffset);
-            var secondsSince1970 = BitConverter.ToInt32(buffer, offset + c_LinkerTimestampOffset);
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
-
-            var tz = target ?? TimeZoneInfo.Local;
-            var localTime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
-
-            return localTime;
-        }
 
         // Dialog
 
@@ -87,7 +68,7 @@ namespace KeppySynthConfigurator
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
-            CompiledOn.Text = GetLinkerTime(Assembly.GetExecutingAssembly(), TimeZoneInfo.Utc).ToString();
+            KSDAPIVer.Text = ReturnKSDAPIVer();
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
@@ -208,7 +189,7 @@ namespace KeppySynthConfigurator
                 sb.Append(String.Format("Driver version: {0}\n", DriverVer.Text));
                 sb.Append(String.Format("BASS version: {0}\n", BASSVer.Text));
                 sb.Append(String.Format("BASSMIDI version: {0}\n", BASSMIDIVer.Text));
-                sb.Append(String.Format("Compiled on: {0}\n\n", CompiledOn.Text));
+                sb.Append(String.Format("Compiled on: {0}\n\n", KSDAPIVer.Text));
                 sb.Append("== Windows installation info ===================================\n");
                 sb.Append(String.Format("Name: {0}\n", WinName.Text));
                 sb.Append(String.Format("Version: {0}\n\n", WinVer.Text));

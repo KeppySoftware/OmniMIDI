@@ -177,33 +177,3 @@ void AudioRender() {
 	DWORD decoded;
 	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
 }
-
-MMRESULT WINAPI SendDirectData(DWORD dwMsg)
-{
-	return ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
-}
-
-MMRESULT WINAPI SendDirectLongData(LPMIDIHDR lpMidiOutHdr)
-{
-	return ParseData(TRUE, 0, MODM_LONGDATA, 0, (DWORD)lpMidiOutHdr, 0, 0, 0);
-}
-
-MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
-{
-	try {
-		if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
-		SendToBASSMIDI(dwMsg);
-		return MMSYSERR_NOERROR;
-	}
-	catch (...) { return MMSYSERR_ERROR; }
-}
-
-MMRESULT WINAPI SendDirectLongDataNoBuf(LPMIDIHDR lpMidiOutHdr)
-{
-	try {
-		if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
-		SendLongToBASSMIDI(NULL, lpMidiOutHdr);
-		return MMSYSERR_NOERROR;
-	}
-	catch (...) { return MMSYSERR_ERROR; }
-}

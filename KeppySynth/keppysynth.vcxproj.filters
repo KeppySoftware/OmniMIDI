@@ -54,6 +54,9 @@
     <ClInclude Include="..\external_packages\mmddk.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ksdapi.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
