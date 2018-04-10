@@ -88,7 +88,7 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 			WatchdogCheck();
 			mixervoid();
 			RevbNChor();
-			Sleep(1);
+			Sleep(50);
 		}
 		catch (...) {
 			CrashMessage(L"SettingsLoad");
