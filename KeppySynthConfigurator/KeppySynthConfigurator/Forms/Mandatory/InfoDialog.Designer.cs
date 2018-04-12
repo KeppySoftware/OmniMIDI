@@ -66,7 +66,6 @@
             // 
             // CurrentLogo
             // 
-            this.CurrentLogo.Image = global::KeppySynthConfigurator.Properties.Resources.KSynthLogo1;
             this.CurrentLogo.Location = new System.Drawing.Point(12, 12);
             this.CurrentLogo.Name = "CurrentLogo";
             this.CurrentLogo.Size = new System.Drawing.Size(79, 80);

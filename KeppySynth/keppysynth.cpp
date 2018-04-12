@@ -54,16 +54,11 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASSWASAPIDEF(f) (WINAPI *f)
-#define BASS_FXDEF(f) (WINAPI *f)
-#define BASS_VSTDEF(f) (WINAPI *f)
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 #define LOADBASSMIXFUNCTION(f) *((void**)&f)=GetProcAddress(bassmix,#f)
-#define LOADBASS_FXFUNCTION(f) *((void**)&f)=GetProcAddress(bass_fx,#f)
-#define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
-#define LOADWINRT_FUNCTION(f) *((void**)&f)=GetProcAddress(winrtmidi,#f)
 #define Between(value, a, b) (value <= b && value >= a)
 
 #define ERRORCODE 0
@@ -72,12 +67,10 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 static CRITICAL_SECTION midiparsing;
 
 #include <bass.h>
-#include <bass_fx.h>
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>
 #include <bassmix.h>
-#include <bass_vst.h>
 
 #define MAX_DRIVERS 1
 #define MAX_CLIENTS 1 // Per driver

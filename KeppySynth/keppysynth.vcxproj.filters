@@ -12,9 +12,6 @@
     <ClInclude Include="..\external_packages\bass.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\external_packages\bass_vst.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\bassenc.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -46,9 +43,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\external_packages\bassasio.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\external_packages\bass_fx.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\external_packages\mmddk.h">

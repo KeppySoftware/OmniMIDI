@@ -8,6 +8,8 @@
 /*.suo
 /*.user
 /*.vcxproj.user
+/external_packages/lib/*.dll
+/external_packages/lib64/*.dll
 /Debug
 /KSDriverRegister/KSDriverRegister/bin/
 /KSDriverRegister/KSDriverRegister/obj/

@@ -332,103 +332,6 @@ namespace KeppySynthConfigurator
             KeppySynthConfiguratorMain.SynthSettings.SetValue("oldbuffermode", yesno, RegistryValueKind.DWord);
         }
 
-        public static void LoudMaxInstall()
-        {
-            try
-            {
-                bool bit32 = false;
-                bool bit64 = false;
-                string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
-
-                // 32-bit DLL
-                if (!File.Exists(userfolder + "\\LoudMax.dll"))
-                {
-                    Program.DebugToConsole(false, "Extracting LoudMax 32-bit...", null);
-                    File.WriteAllBytes(String.Format("{0}\\{1}", userfolder, "LoudMax.dll"), Properties.Resources.loudmax32);
-                    Program.DebugToConsole(false, "LoudMax 32-bit is now installed.", null);
-                    bit32 = true;
-                }
-                else
-                {
-                    Program.DebugToConsole(false, "LoudMax 32-bit is already installed.", null);
-                    MessageBox.Show("LoudMax 32-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                // 64-bit DLL
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    if (!File.Exists(userfolder + "\\LoudMax64.dll"))
-                    {
-                        Program.DebugToConsole(false, "Extracting LoudMax 64-bit...", null);
-                        File.WriteAllBytes(String.Format("{0}\\{1}", userfolder, "LoudMax64.dll"), Properties.Resources.loudmax64);
-                        Program.DebugToConsole(false, "LoudMax 64-bit is now installed.", null);
-                        bit64 = true;
-                    }
-                    else
-                    {
-                        Program.DebugToConsole(false, "LoudMax 64-bit is already installed.", null);
-                        MessageBox.Show("LoudMax 64-bit seems to be already installed.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-                else { bit32 = true; }
-
-                if (bit32 == true && bit64 == true)
-                {
-                    MessageBox.Show("LoudMax successfully installed!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Program.DebugToConsole(false, "LoudMax has been installed properly.", null);
-                }
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "LoudMax Installation", "Crap, an error!\nAre you sure the files aren't locked?", true, ex);
-            }
-        }
-
-        public static void LoudMaxUninstall()
-        {
-            try
-            {
-                bool bit32 = false;
-                bool bit64 = false;
-                string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer";
-
-                // 32-bit DLL
-                if (File.Exists(userfolder + "\\LoudMax.dll"))
-                {
-                    Program.DebugToConsole(false, "Uninstalling LoudMax 32-bit...", null);
-                    File.Delete(userfolder + "\\LoudMax.dll");
-                    bit32 = true;
-                }
-                else
-                {
-                    Program.DebugToConsole(false, "LoudMax 32-bit is already uninstalled.", null);
-                    MessageBox.Show("LoudMax 32-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                // 64-bit DLL
-                if (File.Exists(userfolder + "\\LoudMax64.dll"))
-                {
-                    Program.DebugToConsole(false, "Uninstalling LoudMax 64-bit...", null);
-                    File.Delete(userfolder + "\\LoudMax64.dll");
-                    bit64 = true;
-                }
-                else
-                {
-                    Program.DebugToConsole(false, "LoudMax 64-bit is already uninstalled.", null);
-                    MessageBox.Show("LoudMax 64-bit seems to be already uninstalled.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                if (bit32 == true && bit64 == true)
-                {
-                    MessageBox.Show("LoudMax successfully uninstalled!", "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "LoudMax Installation", "Crap, an error!\nAre you sure you closed all the apps using the driver? They might have locked LoudMax.", true, ex);
-            }
-        }
-
         // -------------------------
         // Soundfont lists functions
 
@@ -516,15 +419,6 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
                 KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                 KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                if (!Environment.Is64BitOperatingSystem)
-                {
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                }
-                else
-                {
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
-                }
                 KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = false;
             }
             else
@@ -537,20 +431,18 @@ namespace KeppySynthConfigurator
                     KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
                     KeppySynthConfiguratorMain.Delegate.SetSynthDefault.Visible = true;
                 }
+
                 if (!Environment.Is64BitOperatingSystem)
                 {
                     KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
                     KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
                 }
                 else
                 {
                     KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
                     KeppySynthConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
                     KeppySynthConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch32.Enabled = true;
-                    KeppySynthConfiguratorMain.Delegate.WinMMPatch64.Enabled = true;
                 }
             }
         }

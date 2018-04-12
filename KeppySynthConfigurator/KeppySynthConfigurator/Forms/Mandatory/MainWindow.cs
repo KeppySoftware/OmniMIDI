@@ -269,10 +269,7 @@ namespace KeppySynthConfigurator
                 }
 
                 // If /AS is specified, switch to the Settings tab automatically
-                if (openadvanced == 1)
-                {
-                    TabsForTheControls.SelectedIndex = 1;
-                }
+                if (openadvanced == 1) TabsForTheControls.SelectedIndex = 1;
             }
             catch (Exception ex)
             {
@@ -1307,6 +1304,11 @@ namespace KeppySynthConfigurator
             catch { }
         }
 
+        private void WMMPatches_Click(object sender, EventArgs e)
+        {
+            new WinMMPatches().ShowDialog();
+        }
+
         private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1337,21 +1339,6 @@ namespace KeppySynthConfigurator
         {
             if (Control.ModifierKeys == Keys.Shift) UpdateSystem.CheckForUpdates(true, false, false);
             else UpdateSystem.CheckForUpdates(false, false, false);
-        }
-
-        private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
-        {
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)) != 1)
-            {
-                DialogResult dialogResult = MessageBox.Show("LoudMax is useless without 32-bit float audio rendering.\nPlease enable it by going to \"Additional settings > Advanced audio settings > Audio bit depth\".\n\nDo you want to continue anyway?", "Keppy's Synthesizer - LoudMax", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (dialogResult == DialogResult.Yes) Functions.LoudMaxInstall();
-            }
-            else Functions.LoudMaxInstall();
-        }
-
-        private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)
-        {
-            Functions.LoudMaxUninstall();
         }
 
         private void SetHandCursor(object sender, EventArgs e)
@@ -2452,6 +2439,11 @@ namespace KeppySynthConfigurator
         private void KSDAPIDoc_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/KeppySoftware/Keppy-s-Synthesizer/blob/master/KSDAPI.md");
+        }
+
+        private void DifferencePatches_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/KeppySoftware/Keppy-s-Synthesizer/wiki/What's-the-difference-between-the-WinMM-patches%3F");
         }
 
         // Mixer functions

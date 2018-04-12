@@ -18,8 +18,6 @@
     <ClInclude Include="..\external_packages\bassasio.h" />
     <ClInclude Include="..\external_packages\bassenc.h" />
     <ClInclude Include="..\external_packages\bassmidi.h" />
-    <ClInclude Include="..\external_packages\bass_fx.h" />
-    <ClInclude Include="..\external_packages\bass_vst.h" />
     <ClInclude Include="..\external_packages\comdecl.h" />
     <ClInclude Include="..\external_packages\mmddk.h" />
     <ClInclude Include="bansystem.h" />

@@ -1,6 +1,6 @@
 /*
-	BASSASIO 1.4 C/C++ header file
-	Copyright (c) 2005-2017 Un4seen Developments Ltd.
+	BASSASIO 1.3 C/C++ header file
+	Copyright (c) 2005-2018 Un4seen Developments Ltd.
 
 	See the BASSASIO.CHM file for more detailed documentation
 */
@@ -78,6 +78,7 @@ typedef struct {
 #define BASS_ASIO_RESET_FORMAT	8 // reset sample format to native format
 #define BASS_ASIO_RESET_RATE	16 // reset sample rate to device rate
 #define BASS_ASIO_RESET_VOLUME	32 // reset volume to 1.0
+#define BASS_ASIO_RESET_JOINED	0x10000 // apply to joined channels too
 
 // BASS_ASIO_ChannelIsActive return values
 #define BASS_ASIO_ACTIVE_DISABLED	0

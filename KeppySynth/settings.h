@@ -32,15 +32,6 @@ void DLLLoadError(LPCWSTR dll) {
 	}
 }
 
-void DLLLoadErrorVST(LPCWSTR dll) {
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Invalid DLL: " << dll << ") " << " - The required runtime library is missing!" << std::endl;
-
-	MessageBox(NULL,
-		L"An error has occurred during the initialization of BASS_VST!\nPlease install Visual C++ 2010 to get rid of this error!\n\nClick OK to continue.",
-		L"Keppy's Synthesizer - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
-}
-
 long long TimeNow() {
 	static LARGE_INTEGER s_frequency;
 	static BOOL s_use_qpc = QueryPerformanceFrequency(&s_frequency);
@@ -160,8 +151,6 @@ BOOL load_bassfuncs()
 		TCHAR bassmixpathalt[MAX_PATH] = { 0 };
 		TCHAR basspath[MAX_PATH] = { 0 };
 		TCHAR basspathalt[MAX_PATH] = { 0 };
-		TCHAR bassvstpath[MAX_PATH] = { 0 };
-		TCHAR bassvstpathalt[MAX_PATH] = { 0 };
 		TCHAR bassxapath[MAX_PATH] = { 0 };
 		TCHAR bassxapathalt[MAX_PATH] = { 0 };
 		TCHAR bassfxpath[MAX_PATH] = { 0 };
@@ -176,7 +165,6 @@ BOOL load_bassfuncs()
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassasiopathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassvstpathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassxapathalt);
 		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassfxpathalt);
 
@@ -186,7 +174,6 @@ BOOL load_bassfuncs()
 		PathAppend(bassmixpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmix.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
 		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassasio.dll"));
-		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_vst.dll"));
 		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassxa.dll"));
 		PathAppend(bassfxpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_fx.dll"));
 #elif defined(_WIN32)
@@ -195,7 +182,6 @@ BOOL load_bassfuncs()
 		PathAppend(bassmixpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmix.dll"));
 		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
 		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassasio.dll"));
-		PathAppend(bassvstpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_vst.dll"));
 		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassxa.dll"));
 		PathAppend(bassfxpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_fx.dll"));
 #endif
@@ -307,29 +293,6 @@ BOOL load_bassfuncs()
 			}
 		}
 
-		// BASS_VST
-		if (PathFileExists(bassvstpathalt)) {
-			if (!(bass_vst = LoadLibrary(bassvstpathalt))) {
-				isbassvstloaded = 0;
-				DLLLoadErrorVST(bassvstpathalt);
-			}
-			else {
-				isbassvstloaded = 1;
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(bassvstpath, installpath);
-			lstrcat(bassvstpath, L"\\bass_vst.dll");
-			if (!(bass_vst = LoadLibrary(bassvstpath))) {
-				isbassvstloaded = 0;
-				DLLLoadErrorVST(bassvstpath);
-			}
-			else {
-				isbassvstloaded = 1;
-			}
-		}
-
 		PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");
 
 		/* "load" all the BASS functions that are to be used */
@@ -392,17 +355,7 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-		// LOADBASSMIXFUNCTION(BASS_Mixer_StreamCreate);
-		// LOADBASSMIXFUNCTION(BASS_Mixer_StreamAddChannel);
-		LOADBASS_FXFUNCTION(BASS_FX_TempoCreate);
 
-		if (isbassvstloaded == 1) {
-			LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
-			LOADBASS_VSTFUNCTION(BASS_VST_ChannelFree);
-			LOADBASS_VSTFUNCTION(BASS_VST_ChannelCreate);
-			LOADBASS_VSTFUNCTION(BASS_VST_ProcessEvent);
-			LOADBASS_VSTFUNCTION(BASS_VST_ProcessEventRaw);
-		}
 		PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
 		return TRUE;
 	}

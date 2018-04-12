@@ -10,7 +10,6 @@ void keepstreamsalive(int& opend) {
 		if (!com_initialized) { if (!FAILED(CoInitialize(NULL))) com_initialized = TRUE; }
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		if (InitializeBASS(FALSE)) {
-			InitializeBASSVST();
 			SetUpStream();
 			opend = CreateThreads(TRUE);
 			LoadSoundFontsToStream();
@@ -36,7 +35,6 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (InitializeBASS(FALSE)) {
-					InitializeBASSVST();
 					SetUpStream();
 					opend = CreateThreads(TRUE);
 					LoadSoundFontsToStream();

@@ -113,9 +113,6 @@ static int callprioval[7] =
 	0x0000040
 };
 
-// BASS_VST load status
-static int isbassvstloaded = 0;
-
 // Channels volume
 static LPCWSTR cnames[16] =
 {

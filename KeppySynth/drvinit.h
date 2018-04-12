@@ -401,6 +401,7 @@ bool InitializeBASS(bool restart) {
 	return init;
 }
 
+/*
 void InitializeBASSVST() {
 	USES_CONVERSION;
 	TCHAR loudmaxdll[MAX_PATH];
@@ -425,6 +426,7 @@ void InitializeBASSVST() {
 	}
 #endif
 }
+*/
 
 void CloseThreads() {
 	stop_thread = TRUE;

@@ -36,6 +36,7 @@ namespace KeppySynthConfigurator
         public InfoDialog(Int32 mode)
         {
             InitializeComponent();
+
             if (mode == 0)
                 StartPosition = FormStartPosition.CenterParent;
             else
@@ -60,6 +61,8 @@ namespace KeppySynthConfigurator
 
         private void InfoDialog_Load(object sender, EventArgs e)
         {
+            CurrentLogo.Image = Properties.Resources.KSynthLogo;
+
             if (!KeppySynthConfiguratorMain.IsInternetAvailable) CFU.Visible = false;
 
             ComputerInfo CI = new ComputerInfo();
@@ -68,7 +71,7 @@ namespace KeppySynthConfigurator
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
-            KSDAPIVer.Text = ReturnKSDAPIVer();
+            try { KSDAPIVer.Text = ReturnKSDAPIVer(); } catch { KSDAPIVer.Text = "Unable to parse the info"; }
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
