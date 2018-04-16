@@ -255,8 +255,6 @@
             this.PanicButton = new System.Windows.Forms.MenuItem();
             this.menuItem23 = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
-            this.menuItem16 = new System.Windows.Forms.MenuItem();
-            this.DLLOverrideFolder = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.SelfSignedCertificate = new System.Windows.Forms.MenuItem();
             this.menuItem39 = new System.Windows.Forms.MenuItem();
@@ -265,6 +263,7 @@
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ResetToDefault = new System.Windows.Forms.MenuItem();
             this.menuItem25 = new System.Windows.Forms.MenuItem();
+            this.WMMPatches = new System.Windows.Forms.MenuItem();
             this.menuItem60 = new System.Windows.Forms.MenuItem();
             this.menuItem47 = new System.Windows.Forms.MenuItem();
             this.menuItem51 = new System.Windows.Forms.MenuItem();
@@ -399,7 +398,6 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
-            this.WMMPatches = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -2803,17 +2801,6 @@
             this.SignatureCheck.Text = "Check the driver signature for tampering";
             this.SignatureCheck.Click += new System.EventHandler(this.SignatureCheck_Click);
             // 
-            // menuItem16
-            // 
-            this.menuItem16.Index = 4;
-            this.menuItem16.Text = "-";
-            // 
-            // DLLOverrideFolder
-            // 
-            this.DLLOverrideFolder.Index = 5;
-            this.DLLOverrideFolder.Text = "Open folder for DLL override";
-            this.DLLOverrideFolder.Click += new System.EventHandler(this.DLLOverrideFolder_Click);
-            // 
             // menuItem20
             // 
             this.menuItem20.Index = 3;
@@ -2821,9 +2808,7 @@
             this.RegDriver,
             this.PanicButton,
             this.menuItem23,
-            this.SignatureCheck,
-            this.menuItem16,
-            this.DLLOverrideFolder});
+            this.SignatureCheck});
             this.menuItem20.Text = "Troubleshooting";
             // 
             // SelfSignedCertificate
@@ -2875,6 +2860,12 @@
             this.DeleteUserData,
             this.ResetToDefault});
             this.menuItem25.Text = "Tools";
+            // 
+            // WMMPatches
+            // 
+            this.WMMPatches.Index = 0;
+            this.WMMPatches.Text = "Windows Multimedia patches";
+            this.WMMPatches.Click += new System.EventHandler(this.WMMPatches_Click);
             // 
             // menuItem60
             // 
@@ -4215,12 +4206,6 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
-            // WMMPatches
-            // 
-            this.WMMPatches.Index = 0;
-            this.WMMPatches.Text = "Windows Multimedia patches";
-            this.WMMPatches.Click += new System.EventHandler(this.WMMPatches_Click);
-            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4499,8 +4484,6 @@
         private System.Windows.Forms.MenuItem PanicButton;
         private System.Windows.Forms.MenuItem menuItem23;
         private System.Windows.Forms.MenuItem SignatureCheck;
-        private System.Windows.Forms.MenuItem menuItem16;
-        private System.Windows.Forms.MenuItem DLLOverrideFolder;
         private System.Windows.Forms.MenuItem menuItem20;
         private System.Windows.Forms.MenuItem SelfSignedCertificate;
         private System.Windows.Forms.MenuItem menuItem39;

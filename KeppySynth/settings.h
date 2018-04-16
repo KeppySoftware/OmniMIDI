@@ -142,155 +142,50 @@ BOOL load_bassfuncs()
 	try {
 		TCHAR installpath[MAX_PATH] = { 0 };
 		TCHAR bassencpath[MAX_PATH] = { 0 };
-		TCHAR bassencpathalt[MAX_PATH] = { 0 };
 		TCHAR bassasiopath[MAX_PATH] = { 0 };
-		TCHAR bassasiopathalt[MAX_PATH] = { 0 };
 		TCHAR bassmidipath[MAX_PATH] = { 0 };
-		TCHAR bassmidipathalt[MAX_PATH] = { 0 };
 		TCHAR bassmixpath[MAX_PATH] = { 0 };
-		TCHAR bassmixpathalt[MAX_PATH] = { 0 };
 		TCHAR basspath[MAX_PATH] = { 0 };
-		TCHAR basspathalt[MAX_PATH] = { 0 };
-		TCHAR bassxapath[MAX_PATH] = { 0 };
-		TCHAR bassxapathalt[MAX_PATH] = { 0 };
 		TCHAR bassfxpath[MAX_PATH] = { 0 };
-		TCHAR bassfxpathalt[MAX_PATH] = { 0 };
 
 		int installpathlength;
 
 		GetModuleFileName(hinst, installpath, MAX_PATH);
 		PathRemoveFileSpec(installpath);
 
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, basspathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassmidipathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassencpathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassasiopathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassxapathalt);
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, bassfxpathalt);
-
-#if defined(_WIN64)
-		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass.dll"));
-		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmidi.dll"));
-		PathAppend(bassmixpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmix.dll"));
-		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassenc.dll"));
-		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassasio.dll"));
-		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassxa.dll"));
-		PathAppend(bassfxpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bass_fx.dll"));
-#elif defined(_WIN32)
-		PathAppend(basspathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass.dll"));
-		PathAppend(bassmidipathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassmidi.dll"));
-		PathAppend(bassmixpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\64\\bassmix.dll"));
-		PathAppend(bassencpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassenc.dll"));
-		PathAppend(bassasiopathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassasio.dll"));
-		PathAppend(bassxapathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bassxa.dll"));
-		PathAppend(bassfxpathalt, _T("\\Keppy's Synthesizer\\dlloverride\\32\\bass_fx.dll"));
-#endif
-
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		PrintToConsole(FOREGROUND_RED, 1, "Allocating memory for BASS DLLs...");
 
 		// BASS
-		if (PathFileExists(basspathalt)) {
-			if (!(bass = LoadLibrary(basspathalt))) {
-				DLLLoadError(basspathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(basspath, installpath);
-			lstrcat(basspath, L"\\bass.dll");
-			if (!(bass = LoadLibrary(basspath))) {
-				DLLLoadError(basspath);
-				exit(0);
-			}
+		lstrcat(basspath, installpath);
+		lstrcat(basspath, L"\\bass.dll");
+		if (!(bass = LoadLibrary(basspath))) {
+			DLLLoadError(basspath);
+			exit(0);
 		}
 
 		// BASSMIDI
-		if (PathFileExists(bassmidipathalt)) {
-			if (!(bassmidi = LoadLibrary(bassmidipathalt))) {
-				DLLLoadError(bassmidipathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
+		lstrcat(bassmidipath, installpath);
+		lstrcat(bassmidipath, L"\\bassmidi.dll");
+		if (!(bassmidi = LoadLibrary(bassmidipath))) {
+			DLLLoadError(bassmidipath);
+			exit(0);
 		}
-		else {
-			lstrcat(bassmidipath, installpath);
-			lstrcat(bassmidipath, L"\\bassmidi.dll");
-			if (!(bassmidi = LoadLibrary(bassmidipath))) {
-				DLLLoadError(bassmidipath);
-				exit(0);
-			}
-		}
-
-		/* 
-		// BASSMix
-		if (PathFileExists(bassmixpathalt)) {
-			if (!(bassmix = LoadLibrary(bassmixpathalt))) {
-				DLLLoadError(bassmixpathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(bassmixpath, installpath);
-			lstrcat(bassmixpath, L"\\bassmix.dll");
-			if (!(bassmix = LoadLibrary(bassmixpath))) {
-				DLLLoadError(bassmixpath);
-				exit(0);
-			}
-		} 
-		*/
 
 		// BASSenc
-		if (PathFileExists(bassencpathalt)) {
-			if (!(bassenc = LoadLibrary(bassencpathalt))) {
-				DLLLoadError(bassencpathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(bassencpath, installpath);
-			lstrcat(bassencpath, L"\\bassenc.dll");
-			if (!(bassenc = LoadLibrary(bassencpath))) {
-				DLLLoadError(bassencpath);
-				exit(0);
-			}
+		lstrcat(bassencpath, installpath);
+		lstrcat(bassencpath, L"\\bassenc.dll");
+		if (!(bassenc = LoadLibrary(bassencpath))) {
+			DLLLoadError(bassencpath);
+			exit(0);
 		}
 
 		// BASSASIO
-		if (PathFileExists(bassasiopathalt)) {
-			if (!(bassasio = LoadLibrary(bassasiopathalt))) {
-				DLLLoadError(bassasiopathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(bassasiopath, installpath);
-			lstrcat(bassasiopath, L"\\bassasio.dll");
-			if (!(bassasio = LoadLibrary(bassasiopath))) {
-				DLLLoadError(bassasiopath);
-				exit(0);
-			}
-		}
-
-		// BASS_FX
-		if (PathFileExists(bassfxpathalt)) {
-			if (!(bass_fx = LoadLibrary(bassfxpathalt))) {
-				DLLLoadError(bassfxpathalt);
-				exit(0);
-			}
-			isoverrideenabled = 1;
-		}
-		else {
-			lstrcat(bassfxpath, installpath);
-			lstrcat(bassfxpath, L"\\bass_fx.dll");
-			if (!(bass_fx = LoadLibrary(bassfxpath))) {
-				DLLLoadError(bassfxpath);
-				exit(0);
-			}
+		lstrcat(bassasiopath, installpath);
+		lstrcat(bassasiopath, L"\\bassasio.dll");
+		if (!(bassasio = LoadLibrary(bassasiopath))) {
+			DLLLoadError(bassasiopath);
+			exit(0);
 		}
 
 		PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");

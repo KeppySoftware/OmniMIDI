@@ -34,14 +34,12 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
 }
 
-void SendLongToBASSMIDI(DWORD dwParam1, MIDIHDR* rhdr) {
-	MIDIHDR *hdr;
+void SendLongToBASSMIDI(DWORD dwParam1) {
+	MIDIHDR* rhdr;
+	rhdr = (MIDIHDR*)dwParam1;
 
-	if (!ksdirectenabled) hdr = (MIDIHDR*)dwParam1;
-	else hdr = rhdr;
-
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, hdr->lpData, hdr->dwBytesRecorded);
-	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)hdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, rhdr->lpData, rhdr->dwBytesRecorded);
+	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)rhdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
 }
 
 int PlayBufferedData(void){
@@ -79,7 +77,7 @@ int PlayBufferedData(void){
 				SendToBASSMIDI(dwParam1);
 				break;
 			case MODM_LONGDATA:
-				if (sysresetignore != 1) SendLongToBASSMIDI(dwParam1, NULL);
+				if (sysresetignore != 1) SendLongToBASSMIDI(dwParam1);
 				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 				break;
 			}

@@ -1351,32 +1351,6 @@ namespace KeppySynthConfigurator
             Cursor = Cursors.Default;
         }
 
-        private void DLLOverrideFolder_Click(object sender, EventArgs e)
-        {
-            if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride"))
-            {
-                Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride");
-                File.WriteAllText(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\What's DLL override.txt", KeppySynthConfigurator.Properties.Resources.whatoverride);
-            }
-            if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\32"))
-            {
-                Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\32");
-                File.Create(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\32\\PUT 32-BIT DLLs HERE").Dispose();
-            }
-            if (!Directory.Exists(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\64"))
-            {
-                Directory.CreateDirectory(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\64");
-                File.Create(soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride\\64\\PUT 64-BIT DLLs HERE").Dispose();
-            }
-
-            Process.Start(new ProcessStartInfo()
-            {
-                FileName = soundfontnewlocation + "\\Keppy's Synthesizer\\dlloverride",
-                UseShellExecute = true,
-                Verb = "open"
-            });
-        }
-
         private void KSynthWiki_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/wiki");

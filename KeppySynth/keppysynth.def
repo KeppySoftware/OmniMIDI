@@ -6,6 +6,4 @@ EXPORTS
 	InitializeKSStream
 	TerminateKSStream
 	SendDirectData
-	SendDirectLongData
 	SendDirectDataNoBuf
-	SendDirectLongDataNoBuf

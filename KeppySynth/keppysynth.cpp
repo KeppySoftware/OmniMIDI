@@ -784,7 +784,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
 		try {
-			int returnval = ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
+			MMRESULT returnval = ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 			DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 			return returnval;
 		}
