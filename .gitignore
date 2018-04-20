@@ -85,3 +85,4 @@ output/KeppysSynthUpdate.exe
 output/Test Keppy's Synthesizer Configurator.bat
 Sign and compile setup.bat
 Sign runtime.bat
+Sign WinMM patches and BASS.bat

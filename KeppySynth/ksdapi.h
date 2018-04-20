@@ -1,5 +1,4 @@
 // KSDAPI calls
-#define KSDAPIVer "1.0A (YHLBBJ)"
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
@@ -125,7 +124,13 @@ void DoResetClient(UINT uDeviceID) {
 
 char const* WINAPI ReturnKSDAPIVer()
 {
-	return KSDAPIVer;
+	return "v1.2 (Release)";
+}
+
+BOOL WINAPI IsKSDAPIAvailable() 
+{
+	// Dummy bool, used for apps to check if KSDAPI v1.2+ is available
+	return TRUE;
 }
 
 void InitializeKSStream() {

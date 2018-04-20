@@ -36,6 +36,7 @@ cemu.exe
 chgbmode.exe
 citra.exe
 citraqt.exe
+compattelrunner.exe
 compil32.exe
 conhost.exe
 console 1 on-screen display (x64).exe
@@ -59,7 +60,6 @@ ehrec.exe
 ehrecvr.exe
 evteng.exe
 explorer.exe
-firefox.exe
 fontdrvhost.exe
 gameoverlayui.exe
 gamepanel.exe
@@ -112,7 +112,7 @@ mscamsvc.exe
 msiexec.exe
 mspdbsrv.exe
 mstsc.exe
-node.exe
+notepad++.exe
 notepad++.exe
 nvbackend.exe
 nvcontainer.exe
@@ -153,6 +153,7 @@ ravcpl.exe
 ravcpl32.exe
 ravcpl64.exe
 regsrvc.exe
+rog armoury.exe
 rthdcpl.exe
 runtimebroker.exe
 rustclient.exe
@@ -165,6 +166,7 @@ secd.exe
 services.exe
 setpoint.exe
 settingssynchost.exe
+sgrmbroker.exe
 sharex.exe
 shellexperiencehost.exe
 sidebar.exe
@@ -183,6 +185,7 @@ softube plug-ins control.exe
 soundmax.exe
 spoolsv.exe
 spotify.exe
+spotifywebhelper.exe
 stdrt.exe
 steam.exe
 steamservice.exe
@@ -209,6 +212,7 @@ tv_w64.exe
 ui32.exe
 utorrentie.exe
 vcpkgsrv.exe
+vctip.exe
 virtualmidisynth.exe
 vmplayer.exe
 vmware-hostd.exe

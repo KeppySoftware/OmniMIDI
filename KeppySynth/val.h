@@ -312,3 +312,25 @@ static LPCWSTR pitchshiftname[16] =
 	L"ch11pshift", L"ch12pshift", L"ch13pshift", L"ch14pshift", L"ch15pshift", 
 	L"ch16pshift"
 };
+
+// 
+
+BOOL CheckNullChar(CHAR* scanme) {
+	for (int i = 0; i != sizeof(scanme); i++) {
+		if (scanme[i] == '\0') {
+			return TRUE;
+			break;
+		}
+	}
+	return FALSE;
+}
+
+BOOL CheckNullWChar(WCHAR* scanme) {
+	for (int i = 0; i != sizeof(scanme); i++) {
+		if (scanme[i] == L'\0') {
+			return TRUE;
+			break;
+		}
+	}
+	return FALSE;
+}

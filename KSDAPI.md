@@ -98,8 +98,42 @@ The driver will work fine with the default WinMM => modMessage system too.
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of April 16th 2018, these are the functions available in the KSDirect API.
+As of April 20th 2018, these are the functions available in the KSDirect API.
 The **"NoBuf"** calls bypass the built-in buffer in Keppy's Synthesizer, and directly send the events to the events processing system.
+### **InitializeKSStream**
+It initializes the driver, its stream and all its required threads. There are no arguments.
+
+```c
+void(WINAPI*KSInit)() = 0;
+KSInit = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "InitializeKSStream");
+```
+
+### **TerminateKSStream**
+It tells the driver to wrap up its stuff and to leave! There are no arguments.
+
+```c
+void(WINAPI*KSStop)() = 0;
+KSStop = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "TerminateKSStream");
+```
+
+### **ReturnKSDAPIVer**
+It returns the version of the KSDirect API, as a string. There are no arguments available.
+Used by Keppy's Synthesizer Configurator.
+
+```c
+char const*(WINAPI*KSDAPIVer)() = 0;
+KSDAPIVer = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "ReturnKSDAPIVer");
+```
+
+### **IsKSDAPIAvailable**
+A generic check, useful for people who want to see if KSDAPI v1.2+ is available.
+There are no arguments available, and you have to manually catch the exception, if the function isn't available.
+
+```c
+void(WINAPI*KSDAPIStatus)() = 0;
+KSDAPIStatus = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "IsKSDAPIAvailable");
+```
+
 ### **SendDirectData/SendDirectDataNoBuf**
 Allows you to send MIDI events to the driver. The available arguments are:
 

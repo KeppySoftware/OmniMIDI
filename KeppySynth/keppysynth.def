@@ -3,6 +3,7 @@ EXPORTS
 	DriverProc
 	modMessage
 	ReturnKSDAPIVer
+	IsKSDAPIAvailable
 	InitializeKSStream
 	TerminateKSStream
 	SendDirectData

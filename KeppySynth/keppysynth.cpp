@@ -573,22 +573,26 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		HKEY hKey;
 		long lResult;
 		int defaultmode;
+
 		WORD VID = 0x0000;
 		WORD PID = 0x0000;
+
 		CHAR SynthName[MAXPNAMELEN];
 		WCHAR SynthNameW[MAXPNAMELEN];
+
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		DWORD dwSizeA = sizeof(SynthName);
 		DWORD dwSizeW = sizeof(SynthNameW);
+
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
 		RegQueryValueEx(hKey, L"synthtype", NULL, &dwType, (LPBYTE)&selectedtype, &dwSize);
 		RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
-		dwType = REG_DWORD;
 		RegQueryValueEx(hKey, L"vid", NULL, &dwType, (LPBYTE)&VID, &dwSize);
 		RegQueryValueEx(hKey, L"pid", NULL, &dwType, (LPBYTE)&PID, &dwSize);
+
 		dwType = REG_SZ;
 		RegQueryValueExA(hKey, "synthname", NULL, &dwType, (LPBYTE)&SynthName, &dwSizeA);
 		RegQueryValueExW(hKey, L"synthname", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
