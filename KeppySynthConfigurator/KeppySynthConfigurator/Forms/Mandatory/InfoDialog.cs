@@ -19,10 +19,6 @@ namespace KeppySynthConfigurator
 {
     public partial class InfoDialog : Form
     {
-        // KSDAPI info
-        [DllImport("keppysynth.dll", CharSet = CharSet.Ansi)]
-        public static extern string ReturnKSDAPIVer();
-
         // Funcs
 
         private RegistryKey CurrentVerKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
@@ -71,7 +67,7 @@ namespace KeppySynthConfigurator
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
-            try { KSDAPIVer.Text = ReturnKSDAPIVer(); } catch { KSDAPIVer.Text = "Unable to parse the info"; }
+            try { KSDAPIVer.Text = KSDAPI.ReturnKSDAPIVer(); } catch { KSDAPIVer.Text = "Unable to parse the info"; }
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());

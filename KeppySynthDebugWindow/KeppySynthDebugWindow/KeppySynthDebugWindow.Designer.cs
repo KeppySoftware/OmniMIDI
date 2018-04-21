@@ -47,6 +47,8 @@
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
+            this.KSDAPI = new System.Windows.Forms.Label();
+            this.KSDAPILabel = new System.Windows.Forms.Label();
             this.ASIOL = new System.Windows.Forms.Label();
             this.ASIOLLabel = new System.Windows.Forms.Label();
             this.AvV = new System.Windows.Forms.Label();
@@ -124,7 +126,6 @@
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
             this.WinLogo = new System.Windows.Forms.PictureBox();
-            this.RefreshDebugApps = new System.Windows.Forms.PictureBox();
             this.SelectedDebug = new System.Windows.Forms.ComboBox();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyToClip1 = new System.Windows.Forms.Button();
@@ -136,8 +137,6 @@
             this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
             this.ReloadDebugInfo = new System.Windows.Forms.ToolTip(this.components);
             this.CheckMem = new System.ComponentModel.BackgroundWorker();
-            this.KSDAPI = new System.Windows.Forms.Label();
-            this.KSDAPILabel = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
             this.ChannelVoices.SuspendLayout();
@@ -145,7 +144,6 @@
             this.PCSpecs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -239,6 +237,28 @@
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
             this.SynthDbg.UseVisualStyleBackColor = true;
+            // 
+            // KSDAPI
+            // 
+            this.KSDAPI.AutoSize = true;
+            this.KSDAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KSDAPI.Location = new System.Drawing.Point(96, 132);
+            this.KSDAPI.Name = "KSDAPI";
+            this.KSDAPI.Size = new System.Drawing.Size(56, 13);
+            this.KSDAPI.TabIndex = 47;
+            this.KSDAPI.Text = "Unknown.";
+            this.KSDAPI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // KSDAPILabel
+            // 
+            this.KSDAPILabel.AutoSize = true;
+            this.KSDAPILabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KSDAPILabel.Location = new System.Drawing.Point(2, 132);
+            this.KSDAPILabel.Name = "KSDAPILabel";
+            this.KSDAPILabel.Size = new System.Drawing.Size(94, 13);
+            this.KSDAPILabel.TabIndex = 46;
+            this.KSDAPILabel.Text = "KSDAPI status:";
+            this.KSDAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ASIOL
             // 
@@ -1152,29 +1172,14 @@
             this.WinLogo.TabIndex = 24;
             this.WinLogo.TabStop = false;
             // 
-            // RefreshDebugApps
-            // 
-            this.RefreshDebugApps.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RefreshDebugApps.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.RefreshDebugApps.Image = global::KeppySynthDebugWindow.Properties.Resources.ReloadIcon;
-            this.RefreshDebugApps.Location = new System.Drawing.Point(276, 225);
-            this.RefreshDebugApps.Name = "RefreshDebugApps";
-            this.RefreshDebugApps.Size = new System.Drawing.Size(21, 21);
-            this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.RefreshDebugApps.TabIndex = 47;
-            this.RefreshDebugApps.TabStop = false;
-            this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "It reloads all the debug pipes, which are opened everytime a MIDI app loads Keppy" +
-        "\'s Synthesizer.");
-            this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
-            // 
             // SelectedDebug
             // 
             this.SelectedDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedDebug.FormattingEnabled = true;
-            this.SelectedDebug.Location = new System.Drawing.Point(301, 225);
+            this.SelectedDebug.Location = new System.Drawing.Point(293, 225);
             this.SelectedDebug.Name = "SelectedDebug";
-            this.SelectedDebug.Size = new System.Drawing.Size(127, 21);
+            this.SelectedDebug.Size = new System.Drawing.Size(135, 21);
             this.SelectedDebug.TabIndex = 46;
             this.SelectedDebug.SelectedIndexChanged += new System.EventHandler(this.SelectedDebug_SelectedIndexChanged);
             this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
@@ -1194,9 +1199,9 @@
             // CopyToClip1
             // 
             this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip1.Location = new System.Drawing.Point(276, 199);
+            this.CopyToClip1.Location = new System.Drawing.Point(293, 199);
             this.CopyToClip1.Name = "CopyToClip1";
-            this.CopyToClip1.Size = new System.Drawing.Size(153, 23);
+            this.CopyToClip1.Size = new System.Drawing.Size(136, 23);
             this.CopyToClip1.TabIndex = 34;
             this.CopyToClip1.Text = "Copy all tabs to clipboard";
             this.CopyToClip1.UseVisualStyleBackColor = true;
@@ -1248,35 +1253,12 @@
             // 
             this.CheckMem.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckMem_DoWork);
             // 
-            // KSDAPI
-            // 
-            this.KSDAPI.AutoSize = true;
-            this.KSDAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KSDAPI.Location = new System.Drawing.Point(96, 132);
-            this.KSDAPI.Name = "KSDAPI";
-            this.KSDAPI.Size = new System.Drawing.Size(56, 13);
-            this.KSDAPI.TabIndex = 47;
-            this.KSDAPI.Text = "Unknown.";
-            this.KSDAPI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // KSDAPILabel
-            // 
-            this.KSDAPILabel.AutoSize = true;
-            this.KSDAPILabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KSDAPILabel.Location = new System.Drawing.Point(2, 132);
-            this.KSDAPILabel.Name = "KSDAPILabel";
-            this.KSDAPILabel.Size = new System.Drawing.Size(94, 13);
-            this.KSDAPILabel.TabIndex = 46;
-            this.KSDAPILabel.Text = "KSDAPI status:";
-            this.KSDAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // KeppySynthDebugWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(432, 251);
-            this.Controls.Add(this.RefreshDebugApps);
             this.Controls.Add(this.Tabs);
             this.Controls.Add(this.SelectedDebug);
             this.Controls.Add(this.CopyToClip1);
@@ -1301,7 +1283,6 @@
             this.PCSpecs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
             this.ResumeLayout(false);
 
@@ -1405,7 +1386,6 @@
         private System.Windows.Forms.Label ASIOLLabel;
         private System.ComponentModel.BackgroundWorker DebugInfoCheck;
         private System.Windows.Forms.ComboBox SelectedDebug;
-        private System.Windows.Forms.PictureBox RefreshDebugApps;
         private System.Windows.Forms.ToolTip ReloadDebugInfo;
         private System.ComponentModel.BackgroundWorker CheckMem;
         private System.Windows.Forms.Label KSDAPI;

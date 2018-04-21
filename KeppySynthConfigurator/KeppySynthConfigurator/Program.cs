@@ -19,16 +19,23 @@ namespace KeppySynthConfigurator
     static class WinAPI
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern uint RegisterWindowMessage(string lpString);
+        public static extern UInt32 RegisterWindowMessage(string lpString);
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        public static extern Boolean PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public static extern Boolean ShowWindow(IntPtr hWnd, int nCmdShow);
         [DllImport("user32.dll")]
         public static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
         public const uint HWND_BROADCAST = 0xFFFF;
         public const short SW_RESTORE = 9;
+    }
+
+    static class KSDAPI
+    {
+        // KSDAPI info
+        [DllImport("keppysynth.dll", CharSet = CharSet.Ansi)]
+        public static extern String ReturnKSDAPIVer();
     }
 
     static class SecurityProtocolNET45

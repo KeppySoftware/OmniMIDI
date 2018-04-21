@@ -118,23 +118,30 @@ namespace KeppySynthDebugWindow
 
         private void KeppySynthDebugWindow_Load(object sender, EventArgs e)
         {
-            Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
-            VersionLabel.Text = String.Format("Keppy's Synthesizer {0}\n{1}", Driver.FileVersion, ParseEgg());
-            GetWindowsInfoData(); // Get info about your Windows installation
-            SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-            ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-            ThreadTime.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-            PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-            Tabs.SelectedIndex = 1;
-            Tabs.SelectedIndex = 0;
+            try
+            {
+                Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\keppysynth\\keppysynth.dll"); // Gets Keppy's Synthesizer version
+                VersionLabel.Text = String.Format("Keppy's Synthesizer {0}\n{1}", Driver.FileVersion, ParseEgg());
+                GetWindowsInfoData(); // Get info about your Windows installation
+                SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+                ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+                ThreadTime.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+                PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+                Tabs.SelectedIndex = 1;
+                Tabs.SelectedIndex = 0;
 
-            CheckMem.RunWorkerAsync();
+                CheckMem.RunWorkerAsync();
 
-            CheckDebugPorts();
-            SelectedDebug.SelectedIndex = 0;
-            SelectedDebug_SelectionChangeCommitted(null, null);
+                CheckDebugPorts();
+                SelectedDebug.SelectedIndex = 0;
+                SelectedDebug_SelectionChangeCommitted(null, null);
 
-            DebugInfo.Enabled = true;
+                DebugInfo.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         protected override void WndProc(ref Message m)
@@ -655,16 +662,22 @@ namespace KeppySynthDebugWindow
             catch { return false; }
         }
 
+        static string NoPipes = "No pipes available";
         private void CheckDebugPorts()
         {
-            SelectedDebug.DataSource = null;
+            List<String> KSPipesCheck = new List<String>();
 
-            KSPipes.Clear();
+            Int32 PreviousCount = 1;
+            String PreviousItem = NoPipes;
+
+            if (KSPipes.Count > 0)
+            {
+                PreviousCount = KSPipes.Count;
+                PreviousItem = KSPipes[0];
+            }
 
             try
             {
-                List<String> KSPipesCheck = new List<String>();
-
                 String PipeToAdd;
                 WIN32_FIND_DATA lpFindFileData;
 
@@ -682,7 +695,6 @@ namespace KeppySynthDebugWindow
                 FindClose(ptr);
 
                 KSPipesCheck.Sort();
-                KSPipes = new BindingList<String>(KSPipesCheck);
             }
             catch (Exception ex)
             {
@@ -691,15 +703,25 @@ namespace KeppySynthDebugWindow
                 Application.ExitThread();
             }
 
-            SelectedDebug.DataSource = KSPipes;
-
-            if (SelectedDebug.Items.Count < 1 || String.IsNullOrEmpty(SelectedDebug.Items[0].ToString()))
+            if (KSPipesCheck.Count < 1)
             {
-                KSPipes.Add("No pipes available");
+                SelectedDebug.DataSource = null;
+                KSPipes = new BindingList<String>() { NoPipes };
                 SelectedDebug.Enabled = false;
+                SelectedDebug.DataSource = KSPipes;
             }
-            else try { SelectedDebug.SelectedIndex = SelectedDebugVal - 1; SelectedDebug.Enabled = true; }
-                 catch { SelectedDebug.SelectedIndex = SelectedDebug.Items.Count - 1; SelectedDebug.Enabled = true; }
+            else
+            {
+                if (PreviousCount != KSPipesCheck.Count || PreviousItem == NoPipes)
+                {
+                    SelectedDebug.DataSource = null;
+                    KSPipes = new BindingList<String>(KSPipesCheck);
+                    SelectedDebug.DataSource = KSPipes;
+                    if (!PreviousItem.Equals(NoPipes)) SelectedDebug.Text = PreviousItem;
+                }
+                SelectedDebug.Enabled = true;
+            }
+
         }
 
         private void GetInfo()
@@ -798,7 +820,19 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                GetInfo();
+                if (CurrentlyConnected)
+                {
+                    GetInfo();
+                    CheckDebugPorts();
+                }
+                else
+                {
+                    try {
+                        GetInfo();
+                        CheckDebugPorts();
+                        DebugInfoCheck.RunWorkerAsync();
+                    } catch { }
+                } 
             }
             catch (Exception ex)
             {
@@ -809,22 +843,23 @@ namespace KeppySynthDebugWindow
         }
 
         int SelectedDebugVal = 1;
+        bool CurrentlyConnected = false;
         private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            using (NamedPipeClientStream PipeClient = new NamedPipeClientStream(String.Format("KSDEBUG{0}", SelectedDebugVal)))
+            using (NamedPipeClientStream PipeClient = new NamedPipeClientStream(".", String.Format("KSDEBUG{0}", SelectedDebugVal), PipeDirection.In, PipeOptions.Asynchronous))
             {
                 PipeClient.Connect();
                 if (PipeClient.IsConnected)
                 {
+                    CurrentlyConnected = true;
                     using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
                     {
-                        while (true)
+                        while (PipeClient.IsConnected)
                         {
                             try
                             {
                                 if (DebugInfoCheck.CancellationPending) break;
                                 ParseInfoFromPipe(StreamDebugReader);
-                                Thread.Sleep(1);
                             }
                             catch (Exception ex)
                             {
@@ -835,8 +870,11 @@ namespace KeppySynthDebugWindow
                         }
                     }
                 }
-                else DebugInfoCheck.CancelAsync();
+
+                PipeClient.Dispose();
             }
+
+            CurrentlyConnected = false;
         }
 
         private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -868,11 +906,6 @@ namespace KeppySynthDebugWindow
                 else { if (!silent) MessageBox.Show("This debug pipe is not available anymore.", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information); }
             }
             catch { }
-        }
-
-        private void RefreshDebugApps_Click(object sender, EventArgs e)
-        {
-            CheckDebugPorts();
         }
 
         private void OpenConfigurator_Click(object sender, EventArgs e)
