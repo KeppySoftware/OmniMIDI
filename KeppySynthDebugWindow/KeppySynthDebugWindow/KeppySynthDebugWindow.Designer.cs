@@ -47,6 +47,8 @@
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
+            this.BufStatus = new System.Windows.Forms.Label();
+            this.BufStatusLabel = new System.Windows.Forms.Label();
             this.KSDAPI = new System.Windows.Forms.Label();
             this.KSDAPILabel = new System.Windows.Forms.Label();
             this.ASIOL = new System.Windows.Forms.Label();
@@ -214,6 +216,8 @@
             // 
             // SynthDbg
             // 
+            this.SynthDbg.Controls.Add(this.BufStatus);
+            this.SynthDbg.Controls.Add(this.BufStatusLabel);
             this.SynthDbg.Controls.Add(this.KSDAPI);
             this.SynthDbg.Controls.Add(this.KSDAPILabel);
             this.SynthDbg.Controls.Add(this.ASIOL);
@@ -237,6 +241,30 @@
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
             this.SynthDbg.UseVisualStyleBackColor = true;
+            // 
+            // BufStatus
+            // 
+            this.BufStatus.AutoSize = true;
+            this.BufStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BufStatus.Location = new System.Drawing.Point(127, 150);
+            this.BufStatus.Name = "BufStatus";
+            this.BufStatus.Size = new System.Drawing.Size(56, 13);
+            this.BufStatus.TabIndex = 49;
+            this.BufStatus.Text = "Unknown.";
+            this.BufStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.BufStatus.Visible = false;
+            // 
+            // BufStatusLabel
+            // 
+            this.BufStatusLabel.AutoSize = true;
+            this.BufStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BufStatusLabel.Location = new System.Drawing.Point(2, 150);
+            this.BufStatusLabel.Name = "BufStatusLabel";
+            this.BufStatusLabel.Size = new System.Drawing.Size(125, 13);
+            this.BufStatusLabel.TabIndex = 48;
+            this.BufStatusLabel.Text = "Events buffer status:";
+            this.BufStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.BufStatusLabel.Visible = false;
             // 
             // KSDAPI
             // 
@@ -1390,6 +1418,8 @@
         private System.ComponentModel.BackgroundWorker CheckMem;
         private System.Windows.Forms.Label KSDAPI;
         private System.Windows.Forms.Label KSDAPILabel;
+        private System.Windows.Forms.Label BufStatus;
+        private System.Windows.Forms.Label BufStatusLabel;
     }
 }
 

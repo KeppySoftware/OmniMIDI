@@ -57,11 +57,12 @@ int PlayBufferedData(void){
 		if (!BufferCheck()){
 			return ~0;
 		}
-		do{
+
+		while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck()) {
 			if (improveperf == 0) EnterCriticalSection(&midiparsing);
 			evbpoint = evbrpoint;
 
-			if (++evbrpoint >= evbuffsize) {
+			if (++evbrpoint >= evbuffsize) {			
 				evbrpoint -= evbuffsize;
 			}
 
@@ -81,7 +82,8 @@ int PlayBufferedData(void){
 				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 				break;
 			}
-		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
+		}
+
 		return 0;
 	}
 }
@@ -137,7 +139,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1, int status, int note, int velocity, int 
 }
 
 MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
-	if (ksdirectenabled != direct) ksdirectenabled = direct;
+	if (ksdirectenabled != direct && ksdirectenabled != TRUE) ksdirectenabled = direct;
 
 	int status = (dwParam1 & 0x000000FF);
 	int note = (dwParam1 & 0x0000FF00) >> 8;
@@ -149,8 +151,9 @@ MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);
 
 	evbpoint = evbwpoint;
-	if (++evbwpoint >= evbuffsize)
+	if (++evbwpoint >= evbuffsize) {
 		evbwpoint -= evbuffsize;
+	}
 
 	dwParam1 = ReturnEditedEvent(dwParam1, status, note, velocity, channel);
 
@@ -164,7 +167,7 @@ MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_
 
 	if (vms2emu == 1) {
 		if (InterlockedIncrement64(&evbcount) >= evbuffsize) {
-			do { Sleep(1); } while (evbcount >= evbuffsize);
+			do { usleep(1); } while (evbcount >= evbuffsize);
 		}
 	}
 

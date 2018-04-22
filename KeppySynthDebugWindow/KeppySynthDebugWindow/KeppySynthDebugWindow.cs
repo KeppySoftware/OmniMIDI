@@ -540,13 +540,13 @@ namespace KeppySynthDebugWindow
             return value.Substring(A2);
         }
 
-        private bool ReadPipeKSDAPI(StreamReader StreamDebugReader)
+        private bool ReadPipeBoolean(StreamReader StreamDebugReader, String RequestedValue, ref Int32 ValueToChange)
         {
             try
             {
                 string temp = StreamDebugReader.ReadLine();
-          
-                if (DebugName(temp).Equals("KSDirect")) KSDAPIStatus = Boolean.Parse(DebugValue(temp));
+
+                if (DebugName(temp).Equals("KSDirect")) ValueToChange = Convert.ToInt32(DebugValue(temp));
                 return true;
             }
             catch { return false; }
@@ -601,13 +601,14 @@ namespace KeppySynthDebugWindow
         Single CurCPU = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
-        Boolean KSDAPIStatus = false;
+        Int32 KSDAPIStatus = 0;
         Double Td1 = 0.0;
         Double Td2 = 0.0;
         Double Td3 = 0.0;
         Double Td4 = 0.0;
         Double ASIOInLat = 0;
         Double ASIOOutLat = 0;
+        // Int32 BufferOverload = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
             try
@@ -619,13 +620,14 @@ namespace KeppySynthDebugWindow
                     if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
                     if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
                     if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
-                    if (!ReadPipeKSDAPI(StreamDebugReader)) KSDAPIStatus = false;
+                    if (!ReadPipeBoolean(StreamDebugReader, "KSDirect", ref KSDAPIStatus)) KSDAPIStatus = 0;
                     if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
+                    // if (!ReadPipeBoolean(StreamDebugReader, "BufferOverload", ref BufferOverload)) BufferOverload = 0;
                     UpdateActiveVoicesPerChannel(StreamDebugReader, ClosingPipe);
                 }
                 else
@@ -635,13 +637,14 @@ namespace KeppySynthDebugWindow
                     CurCPU = 0.0f;
                     Handles = 0;
                     RAMUsage = 0;
-                    KSDAPIStatus = false;
+                    KSDAPIStatus = 0;
                     Td1 = 0.0f;
                     Td2 = 0.0f;
                     Td3 = 0.0f;
                     Td4 = 0.0f;
                     ASIOInLat = 0.0f;
                     ASIOOutLat = 0.0f;
+                    // BufferOverload = 0;
                     UpdateActiveVoicesPerChannel(null, ClosingPipe);
                 }
             }
@@ -745,7 +748,7 @@ namespace KeppySynthDebugWindow
                 if (Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
                 {
                     OpenAppLocat.Enabled = false;
-                    currentappreturn = "None";
+                    currentappreturn = "Nothing";
                 }
                 else currentappreturn = System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters());
 
@@ -791,9 +794,32 @@ namespace KeppySynthDebugWindow
                 }
 
                 if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
-                else ASIOL.Text = "Not in use.";
+                else ASIOL.Text = (Handles > 0) ? "Not in use." : "Unavailable";
 
-                KSDAPI.Text = KSDAPIStatus ? "Using KSDirect API." : "KSDirect API is inactive.";
+                if (KSDAPIStatus == 0)
+                    KSDAPI.Text = (Handles > 0) ? "The API is in idle." : "Unavailable";
+                else
+                    KSDAPI.Text = "The API is active.";
+
+                /*
+                WIP
+                if (BufferOverload == 0)
+                {
+                    BufStatus.ForeColor = (Handles > 0) ? Color.FromArgb(32, 150, 0) : Color.Black;
+                    BufStatus.Font = new Font(BufStatus.Font, FontStyle.Regular);
+                    BufStatus.Text = (Handles > 0) ? "Healthy." : "Unavailable.";
+                }
+                else
+                {
+                    BufStatus.ForeColor = Color.FromArgb(209, 0, 31);
+                    BufStatus.Font = new Font(BufStatus.Font, FontStyle.Bold);
+                    if (Convert.ToInt32(Settings.GetValue("vms2emu", "0")) == 0)
+                        BufStatus.Text = "Full, skipping notes.";
+                    else
+                        BufStatus.Text = "Full, slowing down playback.";
+                }
+                WIP 
+                */
             }
             else if (Tabs.SelectedIndex == 1)
             {

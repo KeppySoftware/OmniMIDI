@@ -402,6 +402,19 @@ void StatusType(int status, char* &statustoprint) {
 	else statustoprint = "Unknown event\0";
 }
 
+void usleep(__int64 usec)
+{
+	HANDLE timer;
+	LARGE_INTEGER ft;
+
+	ft.QuadPart = -(10 * usec);
+
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+	WaitForSingleObject(timer, INFINITE);
+	CloseHandle(timer);
+}
+
 void PrintToConsole(int color, long stage, const char* text) {
 	if (debugmode == 1 && printimportant == 1) {
 		// Set color

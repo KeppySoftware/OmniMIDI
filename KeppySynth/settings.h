@@ -627,17 +627,29 @@ void CheckVolume() {
 	}
 }
 
-void FillContentDebug(BOOL close, float CCUI0, int HC, unsigned long long RUI, bool KSDAPI, double TD1, double TD2, double TD3, double TD4, double IL, double OL) {
-	std::locale::global(std::locale::classic());
+void FillContentDebug(
+	float CCUI0,				// Rendering time
+	int HC,						// App's handles
+	unsigned long long RUI,		// App's working size/RAM usage
+	bool KSDAPI,				// KSDAPI status
+	double TD1,					// Thread 1's latency
+	double TD2,					// Thread 2's latency
+	double TD3,					// Thread 3's latency
+	double TD4,					// Thread 4's latency
+	double IL,					// ASIO's input latency
+	double OL,					// ASIO's output latency
+	bool BUFOVD					// EVBuffer overload
+) {
+	std::locale::global(std::locale::classic());	// DO NOT REMOVE
 
 	std::string PipeContent;
-	DWORD bytesWritten;
+	DWORD bytesWritten;								// Needed for Windows 7 apparently...
 
 	PipeContent += "KSDebugInfo";
 	PipeContent += "\nCurrentApp = ";
-	PipeContent += close ? "" : modulename;
+	PipeContent += modulename;
 	PipeContent += "\nBitApp = ";
-	PipeContent += close ? "" : bitapp;
+	PipeContent += bitapp;
 
 	for (int i = 0; i <= 15; ++i) PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
 
@@ -651,6 +663,7 @@ void FillContentDebug(BOOL close, float CCUI0, int HC, unsigned long long RUI, b
 	PipeContent += "\nTd4 = " + std::to_string(TD4);
 	PipeContent += "\nASIOInLat = " + std::to_string(IL);
 	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
+	// PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
 
 	PipeContent += "\n\0";
 
@@ -689,9 +702,9 @@ void SendDebugDataToPipe() {
 
 		long long TimeDuringDebug = TimeNow();
 
-		FillContentDebug(FALSE, currentcpuusage0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), ksdirectenabled,
+		FillContentDebug(currentcpuusage0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), ksdirectenabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, oldbuffermode ? 0.0f : TimeDuringDebug - start4,
-			inlatency, outlatency);
+			inlatency, outlatency, bufferoverload);
 	}
 	catch (...) {
 		CrashMessage(L"DebugCheck");

@@ -2,19 +2,6 @@
 Keppy's Synthesizer stream init
 */
 
-void usleep(__int64 usec)
-{
-	HANDLE timer;
-	LARGE_INTEGER ft;
-
-	ft.QuadPart = -(10 * usec);
-
-	timer = CreateWaitableTimer(NULL, TRUE, NULL);
-	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
-	WaitForSingleObject(timer, INFINITE);
-	CloseHandle(timer);
-}
-
 void MT32SetInstruments() {
 	if (mt32mode == 1) {
 		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_PROGRAM, 0);
@@ -472,7 +459,7 @@ void SetUpStream() {
 }
 
 void FreeUpLibraries() {
-	FillContentDebug(TRUE, 0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	FillContentDebug(0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
 	FlushFileBuffers(hPipe);
 	CloseHandle(hPipe);
 
