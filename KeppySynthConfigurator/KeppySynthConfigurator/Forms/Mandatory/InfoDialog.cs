@@ -81,8 +81,8 @@ namespace KeppySynthConfigurator
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
             {
-                WinVer.Text = String.Format("Version {0} (Revision {1})",
-                   CurrentVerKey.GetValue("ReleaseId", 0).ToString(), CurrentVerKey.GetValue("UBR", 0).ToString());
+                WinVer.Text = String.Format("Version {0} (Release {1}, Revision {2})",
+                   CurrentVerKey.GetValue("ReleaseId", 0).ToString(), Environment.OSVersion.Version.Build, CurrentVerKey.GetValue("UBR", 0).ToString());
             }
             else // Else, give normal version number
             {

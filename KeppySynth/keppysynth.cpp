@@ -45,6 +45,10 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <winbase.h>
 #include <windows.h>
 #include <winnt.h>
+#include <cstdio>
+#include <clocale>
+#include <ctime>
+#include <cwchar>
 #include "Resource.h"
 
 // BLiNX best game

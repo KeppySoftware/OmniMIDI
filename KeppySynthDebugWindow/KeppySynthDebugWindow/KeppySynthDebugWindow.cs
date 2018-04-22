@@ -25,6 +25,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Globalization;
 
 namespace KeppySynthDebugWindow
 {
@@ -70,6 +71,7 @@ namespace KeppySynthDebugWindow
         UInt64[] CHs = new UInt64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         // Debug information
+        private CultureInfo CultureTo = CultureInfo.CreateSpecificCulture("it-IT");
         private BindingList<String> KSPipes = new BindingList<String>();
         string currentappreturn;
         string bitappreturn;
@@ -247,8 +249,9 @@ namespace KeppySynthDebugWindow
 
         private System.Drawing.Bitmap WinImage()
         {
-            OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX();
-            osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX));
+            OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX
+            { dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX)) };
+
             if (!OSInfo.GetVersionEx(ref osVersionInfo))
             {
                 WinLogoTT.SetToolTip(WinLogo, "You're using an unknown OS.");
@@ -543,7 +546,7 @@ namespace KeppySynthDebugWindow
             {
                 string temp = StreamDebugReader.ReadLine();
           
-                if (DebugName(temp).Equals("KSDirect")) KSDAPIStatus = Convert.ToBoolean(Convert.ToInt32(DebugValue(temp)));
+                if (DebugName(temp).Equals("KSDirect")) KSDAPIStatus = Boolean.Parse(DebugValue(temp));
                 return true;
             }
             catch { return false; }
@@ -565,7 +568,7 @@ namespace KeppySynthDebugWindow
             try
             {
                 string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToSingle(DebugValue(temp)) / 1000000.0f;
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = (Single.Parse(DebugValue(temp), NumberStyles.Any, CultureTo) / 1000000.0f);
                 return true;
             }
             catch { return false; }
@@ -576,7 +579,7 @@ namespace KeppySynthDebugWindow
             try
             {
                 string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToDouble(DebugValue(temp)) / 1000000.0;
+                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = (Double.Parse(DebugValue(temp), NumberStyles.Any, CultureTo) / 1000000.0);
                 return true;
             }
             catch { return false; }
@@ -655,9 +658,8 @@ namespace KeppySynthDebugWindow
             try
             {
                 String PipeToAdd;
-                WIN32_FIND_DATA lpFindFileData;
 
-                var ptr = FindFirstFile(@"\\.\pipe\*", out lpFindFileData);
+                var ptr = FindFirstFile(@"\\.\pipe\*", out WIN32_FIND_DATA lpFindFileData);
                 PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
                 if (PipeToAdd.Contains(String.Format("KSDEBUG{0}", requestedpipe))) return true;
 
@@ -816,9 +818,9 @@ namespace KeppySynthDebugWindow
             else if (Tabs.SelectedIndex == 2)
             {
                 MTRT.Text = String.Format("{0}ms", Td1.LimitDoubleToRange(0.0, 1E7));
-                AERTi.Text = String.Format("{0}ms", Td2);
-                SLRT.Text = String.Format("{0}ms", Td3);
-                NCRT.Text = String.Format("{0}ms", Td4);
+                AERTi.Text = String.Format("{0}ms", Td2.LimitDoubleToRange(0.0, 1E7));
+                SLRT.Text = String.Format("{0}ms", Td3.LimitDoubleToRange(0.0, 1E7));
+                NCRT.Text = String.Format("{0}ms", Td4.LimitDoubleToRange(0.0, 1E7));
             }
             else if (Tabs.SelectedIndex == 3)
             {
