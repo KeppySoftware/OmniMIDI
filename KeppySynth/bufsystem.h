@@ -58,7 +58,7 @@ int PlayBufferedData(void){
 			return ~0;
 		}
 
-		while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck()) {
+		do {
 			if (improveperf == 0) EnterCriticalSection(&midiparsing);
 			evbpoint = evbrpoint;
 
@@ -82,7 +82,7 @@ int PlayBufferedData(void){
 				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 				break;
 			}
-		}
+		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
 
 		return 0;
 	}
