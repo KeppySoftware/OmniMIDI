@@ -46,7 +46,7 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 				LoadCustomInstruments();
 				CheckVolume();
 				ParseDebugData();
-				Sleep(1);
+				Sleep(10);
 			}
 			stop_rtthread = FALSE;
 			FreeUpLibraries();

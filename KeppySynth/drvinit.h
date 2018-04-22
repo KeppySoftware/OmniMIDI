@@ -2,6 +2,19 @@
 Keppy's Synthesizer stream init
 */
 
+void usleep(__int64 usec)
+{
+	HANDLE timer;
+	LARGE_INTEGER ft;
+
+	ft.QuadPart = -(10 * usec);
+
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+	WaitForSingleObject(timer, INFINITE);
+	CloseHandle(timer);
+}
+
 void MT32SetInstruments() {
 	if (mt32mode == 1) {
 		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_PROGRAM, 0);
@@ -37,12 +50,12 @@ DWORD WINAPI pipesfill(LPVOID lpV) {
 	while (stop_thread == FALSE) {
 		try {
 			SendDebugDataToPipe();
-			Sleep(1);
 		}
 		catch (...) {
 			CrashMessage(L"DbgPipe");
 			throw;
 		}
+		usleep(100);
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
 	hThreadDBGRunning = FALSE;
@@ -61,7 +74,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			MT32SetInstruments();
 			PlayBufferedData();
 
-			if (capframerate == 1) Sleep(16); else Sleep(1);
+			if (capframerate == 1) usleep(16666); else usleep(1);
 			if (currentengine == 1 && oldbuffermode == 1) { break; }
 		}
 		catch (...) {
@@ -88,7 +101,7 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 			WatchdogCheck();
 			mixervoid();
 			RevbNChor();
-			Sleep(50);
+			usleep(50000);
 		}
 		catch (...) {
 			CrashMessage(L"SettingsLoad");
@@ -124,7 +137,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 				if (currentengine == 0) AudioRender();
 				else {
 					BASS_ChannelUpdate(KSStream, 0);
-					Sleep(rco);
+					usleep(rco);
 				}
 
 				if (oldbuffermode == 1) {
@@ -400,33 +413,6 @@ bool InitializeBASS(bool restart) {
 
 	return init;
 }
-
-/*
-void InitializeBASSVST() {
-	USES_CONVERSION;
-	TCHAR loudmaxdll[MAX_PATH];
-	TCHAR loudmaxdll64[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, loudmaxdll);
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, loudmaxdll64);
-	PathAppend(loudmaxdll, _T("\\Keppy's Synthesizer\\LoudMax.dll"));
-	PathAppend(loudmaxdll64, _T("\\Keppy's Synthesizer\\LoudMax64.dll"));
-    char *LMDLL = T2A(loudmaxdll);
-	char *LMDLL64 = T2A(loudmaxdll64);
-#if defined(_WIN64)
-	if (PathFileExists(loudmaxdll64)) {
-		if (isbassvstloaded == 1) {
-			BASS_VST_ChannelSetDSP(KSStream, LMDLL64, 0, 1);
-		}
-	}
-#elif defined(_WIN32)
-	if (PathFileExists(loudmaxdll)) {
-		if (isbassvstloaded == 1) {
-			BASS_VST_ChannelSetDSP(KSStream, LMDLL, 0, 1);
-		}
-	}
-#endif
-}
-*/
 
 void CloseThreads() {
 	stop_thread = TRUE;

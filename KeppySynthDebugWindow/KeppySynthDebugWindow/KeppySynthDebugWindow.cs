@@ -432,8 +432,6 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                GetInfo();
-
                 StringBuilder sb = new StringBuilder();
 
                 sb.AppendLine(String.Format("Keppy's Synthesizer version {0}", Driver.FileVersion));
@@ -481,16 +479,13 @@ namespace KeppySynthDebugWindow
                 thread.Start();
                 thread.Join();
             }
-            catch {
-                // lel
-            }
             finally
             {
                 MessageBox.Show("Info copied to clipboard.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information); // Done, now get out
             }
         }
 
-        private void CopyToClip_Click(object sender, EventArgs e) // Allows you to copy the content of the richtextbox to clipboard
+        private void CopyToClip_Click(object sender, EventArgs e) // Allows you to copy the content of the RichTextBox to clipboard
         {
             CopyToClipBoardCmd();
         }
@@ -500,33 +495,30 @@ namespace KeppySynthDebugWindow
             Application.ExitThread(); // R.I.P. debug
         }
 
-        private void UpdateActiveVoicesPerChannel(StreamReader StreamDebugReader)
+        private void UpdateActiveVoicesPerChannel(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
-            for (int i = 0; i <= 15; ++i) if (!ReadPipeUInt64(StreamDebugReader, String.Format("CV{0}", i), ref CHs[i])) CHs[i] = 0;
+            int x;
+
+            if (ClosingPipe) for (x = 0; x <= 15; ++x) CHs[x] = 0;
+            else for(x = 0; x <= 15; ++x) if (!ReadPipeUInt64(StreamDebugReader, String.Format("CV{0}", x), ref CHs[x])) CHs[x] = 0;
         }
 
         private string GetActiveVoices()
         {
             try
             {
-                return String.Format("{0}", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15])).ToString());
+                return String.Format("{0}", (CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]));
             }
-            catch
-            {
-                return "0";
-            }
+            catch { return "0"; }
         }
 
         private string GetAverageVoices()
         {
             try
             {
-                return String.Format("{0} V/f", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]) / 16.6666666666667f).ToString("0.00"));
+                return String.Format("{0} V/f", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]) / 16.6666666666667f));
             }
-            catch
-            {
-                return "0 V/f";
-            }
+            catch { return "0 V/f"; }
         }
 
         private string DebugName(string value)
@@ -613,23 +605,42 @@ namespace KeppySynthDebugWindow
         Double Td4 = 0.0;
         Double ASIOInLat = 0;
         Double ASIOOutLat = 0;
-        private void ParseInfoFromPipe(StreamReader StreamDebugReader)
+        private void ParseInfoFromPipe(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
             try
             {
-                if (!ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp)) CurrentApp = "Nothing";
-                if (!ReadPipeString(StreamDebugReader, "BitApp", ref BitApp)) BitApp = "N/A";
-                if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
-                if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
-                if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
-                if (!ReadPipeKSDAPI(StreamDebugReader)) KSDAPIStatus = false;
-                if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
-                if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
-                if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
-                if (!ReadPipeDouble(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
-                if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
-                if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
-                UpdateActiveVoicesPerChannel(StreamDebugReader);
+                if (!ClosingPipe)
+                {
+                    if (!ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp)) CurrentApp = "Nothing";
+                    if (!ReadPipeString(StreamDebugReader, "BitApp", ref BitApp)) BitApp = "N/A";
+                    if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
+                    if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
+                    if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
+                    if (!ReadPipeKSDAPI(StreamDebugReader)) KSDAPIStatus = false;
+                    if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
+                    if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
+                    if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
+                    if (!ReadPipeDouble(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
+                    if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
+                    if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
+                    UpdateActiveVoicesPerChannel(StreamDebugReader, ClosingPipe);
+                }
+                else
+                {
+                    CurrentApp = "Nothing";
+                    BitApp = "N/A";
+                    CurCPU = 0.0f;
+                    Handles = 0;
+                    RAMUsage = 0;
+                    KSDAPIStatus = false;
+                    Td1 = 0.0f;
+                    Td2 = 0.0f;
+                    Td3 = 0.0f;
+                    Td4 = 0.0f;
+                    ASIOInLat = 0.0f;
+                    ASIOOutLat = 0.0f;
+                    UpdateActiveVoicesPerChannel(null, ClosingPipe);
+                }
             }
             catch (Exception ex)
             {
@@ -859,7 +870,7 @@ namespace KeppySynthDebugWindow
                             try
                             {
                                 if (DebugInfoCheck.CancellationPending) break;
-                                ParseInfoFromPipe(StreamDebugReader);
+                                ParseInfoFromPipe(StreamDebugReader, false);
                             }
                             catch (Exception ex)
                             {
@@ -874,6 +885,7 @@ namespace KeppySynthDebugWindow
                 PipeClient.Dispose();
             }
 
+            ParseInfoFromPipe(null, true);
             CurrentlyConnected = false;
         }
 
