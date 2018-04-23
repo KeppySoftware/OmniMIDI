@@ -787,6 +787,7 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
+	MIDIHDR* IIMidiHdr;
 	LONG evbpoint;
 	struct Driver *driver = &drivers[0];
 	int exlen = 0;
@@ -805,48 +806,45 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
 		try {
-			MMRESULT returnval = ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-			DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
-			return returnval;
+			IIMidiHdr = (MIDIHDR *)dwParam1;
+			if ((IIMidiHdr->dwFlags & MHDR_PREPARED) == 0) {
+				return MIDIERR_UNPREPARED;
+			}
+			if (sysresetignore != 1) SendLongToBASSMIDI(IIMidiHdr);
+			else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
+			IIMidiHdr->dwFlags |= MHDR_DONE;
+			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+			DoCallback(dwUser, MOM_DONE, dwParam1, NULL);
+			return MMSYSERR_NOERROR;
 		}
 		catch (...) {
-			CrashMessage(L"LongMODMDataParse");
+			CrashMessage(L"MODMLongDataParse");
 			throw;
 		}
 	case MODM_DATA:
 		try {
+			if (ksdirectenabled != FALSE) ksdirectenabled = FALSE;
 			return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
 		}
 		catch (...) {
 			CrashMessage(L"MODMDataParse");
 			throw;
 		}
-	case MODM_STRMDATA: {
-		try {
-			return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-		}
-		catch (...) {
-			CrashMessage(L"MODMStrmDataParse");
-			throw;
-		}
-	}
-	case MODM_GETVOLUME: {
+	case MODM_STRMDATA:
+		return MMSYSERR_NOTSUPPORTED;
+	case MODM_GETVOLUME:
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
-	}
-	case MODM_SETVOLUME: {
+	case MODM_SETVOLUME: 
 		return MMSYSERR_NOERROR;
-	}
-	case MODM_PAUSE: {
+	case MODM_PAUSE: 
 		reset_synth = 1;
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
-	}
-	case MODM_STOP: {
+	case MODM_STOP:
 		reset_synth = 1;
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
-	}
 	case MODM_RESET:
 		DoResetClient(uDeviceID);
 		return MMSYSERR_NOERROR;

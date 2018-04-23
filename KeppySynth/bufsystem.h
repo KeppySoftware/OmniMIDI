@@ -24,7 +24,7 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	int status = (dwParam1 & 0x000000FF);
 	int note = (dwParam1 & 0x0000FF00) >> 8;
 	int velocity = (dwParam1 & 0x00FF0000) >> 16;
-	int channel = (dwParam1 & 0xFF000000) >> 24;
+	int channel = (dwParam1 & 0xF0);
 
 	if ((statusv >= 0xC0 && statusv <= 0xDF) || statusv == 0xF1 || statusv == 0xF3)	len = 2;
 	else if (statusv < 0xF0 || statusv == 0xF2)	len = 3;
@@ -34,12 +34,9 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
 }
 
-void SendLongToBASSMIDI(DWORD dwParam1) {
-	MIDIHDR* rhdr;
-	rhdr = (MIDIHDR*)dwParam1;
-
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, rhdr->lpData, rhdr->dwBytesRecorded);
-	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)rhdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
+void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)IIMidiHdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
 }
 
 int PlayBufferedData(void){
@@ -78,7 +75,7 @@ int PlayBufferedData(void){
 				SendToBASSMIDI(dwParam1);
 				break;
 			case MODM_LONGDATA:
-				if (sysresetignore != 1) SendLongToBASSMIDI(dwParam1);
+				if (sysresetignore != 1) SendLongToBASSMIDI((MIDIHDR *)dwParam1);
 				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 				break;
 			}
@@ -144,7 +141,7 @@ MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_
 	int status = (dwParam1 & 0x000000FF);
 	int note = (dwParam1 & 0x0000FF00) >> 8;
 	int velocity = (dwParam1 & 0x00FF0000) >> 16;
-	int channel = (dwParam1 & 0xFF000000) >> 24;
+	int channel = (dwParam1 & 0xF0);
 
 	if (CheckIfEventIsToIgnore(dwParam1, status, note, velocity, channel)) return MMSYSERR_NOERROR;
 

@@ -16,6 +16,7 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 static HINSTANCE bassmix = 0;			// bassmix handle
 
 // Potato
+static BOOL streaminitialized = FALSE;
 static BOOL ksdirectenabled = FALSE;
 static BOOL bufferoverload = FALSE;
 static float currentcpuusage0;

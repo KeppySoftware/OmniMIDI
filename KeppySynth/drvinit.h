@@ -196,7 +196,7 @@ void InitializeBASSEnc() {
 	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
 	if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
 	out = PathFindFileName(buffer);
-	std::wstring stemp = tstring(out) + L" - Keppy's Synthesizer Output File (Restart N°" + rv.str() + L").wav";
+	std::wstring stemp = tstring(out) + L" - Keppy's Synthesizer Output File (Restart Nï¿½" + rv.str() + L").wav";
 	LPCWSTR result2 = stemp.c_str();
 	HKEY hKey = 0;
 	DWORD cbValueLength = sizeof(confpath);

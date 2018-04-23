@@ -13,6 +13,7 @@ void keepstreamsalive(int& opend) {
 			opend = CreateThreads(TRUE);
 			LoadSoundFontsToStream();
 		}
+		streaminitialized = TRUE;
 	}
 }
 
@@ -38,6 +39,7 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 					opend = CreateThreads(TRUE);
 					LoadSoundFontsToStream();
 				}
+				streaminitialized = TRUE;
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == FALSE) {
@@ -143,7 +145,10 @@ void TerminateKSStream() {
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
-	MMRESULT returnme = ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
+	if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
+
+	MMRESULT returnme = MMSYSERR_NOERROR;
+	if (streaminitialized) returnme = ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
 	return returnme;
 }
 
@@ -151,7 +156,8 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 {
 	try {
 		if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
-		SendToBASSMIDI(dwMsg);
+
+		if (streaminitialized) SendToBASSMIDI(dwMsg);
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) { return MMSYSERR_INVALPARAM; }
