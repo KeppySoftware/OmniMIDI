@@ -162,3 +162,20 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 	}
 	catch (...) { return MMSYSERR_INVALPARAM; }
 }
+
+MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
+{
+	if ((IIMidiHdr->dwFlags & MHDR_PREPARED) == 0) {
+		PrintToConsole(FOREGROUND_RED, 0, "IIMidiHdr is not ready. You're probably using the ReactOS patch. Continuing...");
+		IIMidiHdr->dwFlags |= MHDR_DONE;
+		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+		DoCallback(0, MOM_DONE, (DWORD_PTR)IIMidiHdr->lpData, NULL);
+		return MMSYSERR_NOERROR;
+	}
+	if (sysresetignore != 1) SendLongToBASSMIDI(IIMidiHdr);
+	else PrintToConsole(FOREGROUND_RED, 0, "Ignored SysEx MIDI event.");
+	IIMidiHdr->dwFlags |= MHDR_DONE;
+	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+	DoCallback(0, MOM_DONE, (DWORD_PTR)IIMidiHdr->lpData, NULL);
+	return MMSYSERR_NOERROR;
+}

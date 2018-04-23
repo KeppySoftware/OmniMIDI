@@ -143,5 +143,13 @@ MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
 KShortMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectData"); // Or SendDirectDataNoBuf
 ```
 
-### Deprecated functions
-- **SendDirectLongData/SendDirectLongDataNoBuf**: WinMM already sends the data directly to the driver, without buffering them first.
+### **SendDirectLongData**
+Allows you to send MIDIHDR/System Exclusive events to the driver. 
+The function always sends the data directly to the driver, it's not buffered.
+The available arguments are:
+
+- *MIDIHDR* IIMidiHdr*: The pointer to the MIDIHDR.
+```c
+MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr) = 0;
+KLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectLongData");
+```
