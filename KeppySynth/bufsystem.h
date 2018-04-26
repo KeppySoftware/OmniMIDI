@@ -54,7 +54,7 @@ void SendToBASSMIDI(DWORD dwParam1) {
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
-	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)IIMidiHdr->lpData, TRUE, "Parsed SysEx MIDI event.");
+	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
 int PlayBufferedData(void){
@@ -82,8 +82,6 @@ int PlayBufferedData(void){
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
 			dwParam2 = evbuf[evbpoint].dwParam2;
-			exlen = evbuf[evbpoint].exlen;
-			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 			switch (uMsg) {
@@ -197,7 +195,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
+MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (ksdirectenabled != direct && ksdirectenabled != TRUE) ksdirectenabled = direct;
 
 	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
@@ -214,8 +212,6 @@ MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
-	evbuf[evbpoint].exlen = exlen;
-	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 
 	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 

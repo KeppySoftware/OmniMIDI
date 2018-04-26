@@ -67,7 +67,7 @@ namespace KeppySynthConfigurator
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
-            try { KSDAPIVer.Text = KSDAPI.ReturnKSDAPIVer(); } catch { KSDAPIVer.Text = "Unable to parse the info"; }
+            KSDAPIVer.Text = KSDAPI.KSDAPIVer;
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());

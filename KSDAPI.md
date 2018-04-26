@@ -127,10 +127,11 @@ KSDAPIVer = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "ReturnKSDAPIVe
 
 ### **IsKSDAPIAvailable**
 A generic check, useful for people who want to see if KSDAPI v1.2+ is available.
+You NEED to call this function at least once, in order to switch the KSDAPI status value in the debug window to active.
 There are no arguments available, and you have to manually catch the exception, if the function isn't available.
 
 ```c
-void(WINAPI*KSDAPIStatus)() = 0;
+BOOL(WINAPI*KSDAPIStatus)() = 0;
 KSDAPIStatus = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "IsKSDAPIAvailable");
 ```
 

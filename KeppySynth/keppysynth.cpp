@@ -787,9 +787,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	MIDIHDR* IIMidiHdr;
 	LONG evbpoint;
 	struct Driver *driver = &drivers[0];
-	int exlen = 0;
-	unsigned char *sysexbuffer = NULL;
-	DWORD result = 0;
+
 	switch (uMsg) {
 	case MODM_OPEN:
 		return DoOpenClient(driver, uDeviceID, reinterpret_cast<LONG*>(dwUser), reinterpret_cast<MIDIOPENDESC*>(dwParam1), static_cast<DWORD>(dwParam2));
@@ -802,31 +800,17 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_LONGDATA:
-		try {
-			IIMidiHdr = (MIDIHDR *)dwParam1;
-			if ((IIMidiHdr->dwFlags & MHDR_PREPARED) == 0) {
-				return MIDIERR_UNPREPARED;
-			}
-			if (sysresetignore != 1) SendLongToBASSMIDI(IIMidiHdr);
-			else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
-			IIMidiHdr->dwFlags |= MHDR_DONE;
-			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-			DoCallback(dwUser, MOM_DONE, dwParam1, NULL);
-			return MMSYSERR_NOERROR;
-		}
-		catch (...) {
-			CrashMessage(L"MODMLongDataParse");
-			throw;
-		}
+		IIMidiHdr = (MIDIHDR *)dwParam1;
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+		IIMidiHdr->dwFlags &= ~MHDR_DONE;
+		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
+		else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
+		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+		IIMidiHdr->dwFlags |= MHDR_DONE;
+		DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 	case MODM_DATA:
-		try {
-			if (ksdirectenabled != FALSE) ksdirectenabled = FALSE;
-			return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, exlen, sysexbuffer);
-		}
-		catch (...) {
-			CrashMessage(L"MODMDataParse");
-			throw;
-		}
+		return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2);
 	case MODM_STRMDATA:
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_GETVOLUME:
@@ -846,7 +830,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DoResetClient(uDeviceID);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		if (stop_rtthread != FALSE || stop_thread != FALSE) return MIDIERR_STILLPLAYING;
+		if (stop_rtthread || stop_thread) return MIDIERR_STILLPLAYING;
 		else return DoCloseClient(driver, uDeviceID, static_cast<LONG>(dwUser));	
 		break;
 	default:

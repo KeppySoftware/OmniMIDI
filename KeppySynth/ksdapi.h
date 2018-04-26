@@ -131,8 +131,8 @@ char const* WINAPI ReturnKSDAPIVer()
 
 BOOL WINAPI IsKSDAPIAvailable() 
 {
-	// Dummy bool, used for apps to check if KSDAPI v1.2+ is available
-	return TRUE;
+	ksdirectenabled = TRUE;
+	return ksdirectenabled;
 }
 
 void InitializeKSStream() {
@@ -145,18 +145,15 @@ void TerminateKSStream() {
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
-	if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
-
-	MMRESULT returnme = MMSYSERR_NOERROR;
-	if (streaminitialized) return ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
-	else return MMSYSERR_NOERROR;
+	if (streaminitialized) 
+		return ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0);
+	else 
+		return MMSYSERR_NOERROR;
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 {
 	try {
-		if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
-
 		if (streaminitialized) SendToBASSMIDI(dwMsg);
 		return MMSYSERR_NOERROR;
 	}
@@ -166,16 +163,12 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
 {
 	if ((IIMidiHdr->dwFlags & MHDR_PREPARED) == 0) {
-		PrintToConsole(FOREGROUND_RED, 0, "IIMidiHdr is not ready. You're probably using the ReactOS patch. Continuing...");
-		IIMidiHdr->dwFlags |= MHDR_DONE;
-		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-		DoCallback(0, MOM_DONE, (DWORD_PTR)IIMidiHdr->lpData, NULL);
-		return MMSYSERR_NOERROR;
+		return MIDIERR_UNPREPARED;
 	}
 	if (sysresetignore != 1) SendLongToBASSMIDI(IIMidiHdr);
-	else PrintToConsole(FOREGROUND_RED, 0, "Ignored SysEx MIDI event.");
+	else PrintToConsole(FOREGROUND_RED, (DWORD_PTR)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 	IIMidiHdr->dwFlags |= MHDR_DONE;
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-	DoCallback(0, MOM_DONE, (DWORD_PTR)IIMidiHdr->lpData, NULL);
+	DoCallback(0, NULL, MOM_DONE, (DWORD_PTR)IIMidiHdr->lpData);
 	return MMSYSERR_NOERROR;
 }

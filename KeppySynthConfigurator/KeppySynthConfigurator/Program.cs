@@ -36,6 +36,8 @@ namespace KeppySynthConfigurator
         // KSDAPI info
         [DllImport("keppysynth.dll", CharSet = CharSet.Ansi)]
         public static extern String ReturnKSDAPIVer();
+
+        public static String KSDAPIVer = "Null";
     }
 
     static class SecurityProtocolNET45
@@ -170,6 +172,7 @@ namespace KeppySynthConfigurator
             try
             {
                 DebugToConsole(false, "Started configurator.", null);
+                KSDAPI.KSDAPIVer = KSDAPI.ReturnKSDAPIVer();
                 Application.SetCompatibleTextRenderingDefault(false);
                 if (!Functions.IsWindowsVistaOrNewer()) Application.ExitThread();
 
