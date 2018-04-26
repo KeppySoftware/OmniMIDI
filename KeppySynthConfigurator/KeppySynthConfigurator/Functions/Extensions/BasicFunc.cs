@@ -1448,7 +1448,7 @@ namespace KeppySynthConfigurator
             TryAgain:
             try
             {
-                WinMMDialog.Filter = "Executables (*.exe, *.dll)|*.exe;*.dll;";
+                WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
                 WinMMDialog.Title = "Select an application to patch";
                 WinMMDialog.Multiselect = false;
                 WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -1466,16 +1466,10 @@ namespace KeppySynthConfigurator
                     else
                     {
                         RemovePatchFiles(WinMMDialog.FileName, true);
-                        if (Is64Bit)
-                        {
-                            File.Copy(String.Format("{0}\\winmm.dll", Path.Combine(Environment.ExpandEnvironmentVariables("%windir%"), "SysNative")), String.Format("{0}\\{1}", DirectoryPath, "OWINMM.DLL"));
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "WINMM.DLL"), Properties.Resources.winmm64wrp);
-                        }
-                        else
-                        {
-                            File.Copy(String.Format("{0}\\winmm.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86)), String.Format("{0}\\{1}", DirectoryPath, "OWINMM.DLL"));
-                            File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "WINMM.DLL"), Properties.Resources.winmm32wrp);
-                        }
+
+                        if (Is64Bit) File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64wrp);
+                        else File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32wrp);
+
                         return true;
                     }
                 }
@@ -1495,7 +1489,7 @@ namespace KeppySynthConfigurator
             TryAgain:
             try
             {
-                WinMMDialog.Filter = "Executables (*.exe, *.dll)|*.exe;*.dll;";
+                WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
                 WinMMDialog.Title = "Select an application to unpatch";
                 WinMMDialog.Multiselect = false;
                 WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -1523,7 +1517,7 @@ namespace KeppySynthConfigurator
             }
             catch
             {
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
                 goto TryAgain;
             }
             if (!Silent) MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

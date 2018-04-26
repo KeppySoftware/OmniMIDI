@@ -39,12 +39,12 @@ namespace KeppySynthConfigurator
             if (Functions.ApplyWinMMWRPPatch(true))
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "The app has been successfully patched!";
+                PatchStatusLabel.Text = "Successfully patched!";
             }
             else
             {
                 PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error while patching app!";
+                PatchStatusLabel.Text = "Error!";
             }
         }
 
@@ -53,12 +53,12 @@ namespace KeppySynthConfigurator
             if (Functions.RemoveWinMMPatch())
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "The app has been successfully unpatched!";
+                PatchStatusLabel.Text = "Successfully unpatched!";
             }
             else
             {
                 PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error while unpatching app!";
+                PatchStatusLabel.Text = "Error!";
             }
         }
 
