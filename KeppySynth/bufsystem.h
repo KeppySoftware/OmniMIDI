@@ -1,5 +1,6 @@
 /*
 Keppy's Synthesizer buffer system
+Some code has been optimized by Sono (MarcusD), the old one has been commented out
 */
 
 #define SETVELOCITY(evento, newvelocity) evento = (DWORD(evento) & 0xFF00FFFF) | ((DWORD(newvelocity) & 0xFF) << 16)
@@ -10,7 +11,7 @@ int BufferCheck(void){
 	int retval;
 	int retvalemu;
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);
-	retval = (evbrpoint != evbwpoint) ? ~0 : 0;
+	retval = (evbrpoint != evbwpoint) ? -1 : 0;
 	retvalemu = evbcount;
 	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
@@ -19,24 +20,41 @@ int BufferCheck(void){
 
 void SendToBASSMIDI(DWORD dwParam1) {
 	BYTE statusv = (BYTE)dwParam1;
-	DWORD len = 0;
+	DWORD len = 3;
 
-	int status = (dwParam1 & 0x000000FF);
-	int note = (dwParam1 & 0x0000FF00) >> 8;
-	int velocity = (dwParam1 & 0x00FF0000) >> 16;
-	int channel = (dwParam1 & 0xF0);
-
+	/* 
 	if ((statusv >= 0xC0 && statusv <= 0xDF) || statusv == 0xF1 || statusv == 0xF3)	len = 2;
 	else if (statusv < 0xF0 || statusv == 0xF2)	len = 3;
 	else len = 1;
 
+	Understandable version of what the following function does
+	*/
+
+	if (statusv >= 0xC0)
+	{
+		if (!((statusv - 0xC0) & ~0x1F))
+			len = 2;
+		else if ((statusv & 0xF0) == 0xF0)
+		{
+			switch (statusv & 0xF)
+			{
+			case 3:
+				len = 2;
+				break;
+			default:
+				len = 1;
+				break;
+			}
+		}
+	}
+
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.", channel, status, note, velocity);
+	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
-	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)IIMidiHdr->lpData, TRUE, "Parsed SysEx MIDI event.", 0, 0, 0, 0);
+	PrintEventToConsole(FOREGROUND_GREEN, (DWORD)IIMidiHdr->lpData, TRUE, "Parsed SysEx MIDI event.");
 }
 
 int PlayBufferedData(void){
@@ -59,9 +77,7 @@ int PlayBufferedData(void){
 			if (improveperf == 0) EnterCriticalSection(&midiparsing);
 			evbpoint = evbrpoint;
 
-			if (++evbrpoint >= evbuffsize) {			
-				evbrpoint -= evbuffsize;
-			}
+			if (++evbrpoint >= evbuffsize)	evbrpoint -= evbuffsize;
 
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
@@ -85,7 +101,9 @@ int PlayBufferedData(void){
 	}
 }
 
-BOOL CheckIfEventIsToIgnore(DWORD dwParam1, int status, int note, int velocity, int channel) {
+BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
+{
+	/* 
 	if (ignorenotes1) {
 		if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
 			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
@@ -114,11 +132,36 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1, int status, int note, int velocity, 
 		}
 	}
 
+	Understandable version of what the following function does
+	*/
+
+	if (ignorenotes1)
+	{
+		if (!((dwParam1 - 0x80) & ~0x1F)
+			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel))
+		{
+			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+			return TRUE;
+		}
+	}
+	if (limit88)
+	{
+		if (!((dwParam1 - 0x80) & ~0x1F) && (dwParam1 & 0xF) != 9)
+		{
+			if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
+			{
+				PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+				return TRUE;
+			}
+		}
+	}
 	return FALSE;
 }
 
-DWORD ReturnEditedEvent(DWORD dwParam1, int status, int note, int velocity, int channel) {
+DWORD ReturnEditedEvent(DWORD dwParam1) {
 	// SETSTATUS(dwParam1, status);
+
+	/* 
 	if (pitchshift != 127) {
 		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
 			if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
@@ -130,7 +173,26 @@ DWORD ReturnEditedEvent(DWORD dwParam1, int status, int note, int velocity, int 
 		}
 	}
 	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
-		SETVELOCITY(dwParam1, 127);
+	SETVELOCITY(dwParam1, 127);
+	
+	Understandable version of what the following function does
+	*/
+
+	if (pitchshift != 127)
+	{
+		if (!((dwParam1 - 0x80) & ~0x1F) && (dwParam1 & 0xF) != 9)
+		{
+			if (pitchshiftchan[(dwParam1 & 0xFF) & 0xF])
+			{
+				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + pitchshift;
+				if (newnote > 0x7F) { newnote = 0x7F; }
+				else if (newnote < 0) { newnote = 0; }
+				SETNOTE(dwParam1, newnote);
+			}
+		}
+	}
+	if (fullvelocity && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
+		SETVELOCITY(dwParam1, 0x7F);
 
 	return dwParam1;
 }
@@ -138,12 +200,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1, int status, int note, int velocity, int 
 MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, int exlen, unsigned char *sysexbuffer) {
 	if (ksdirectenabled != direct && ksdirectenabled != TRUE) ksdirectenabled = direct;
 
-	int status = (dwParam1 & 0x000000FF);
-	int note = (dwParam1 & 0x0000FF00) >> 8;
-	int velocity = (dwParam1 & 0x00FF0000) >> 16;
-	int channel = (dwParam1 & 0xF0);
-
-	if (CheckIfEventIsToIgnore(dwParam1, status, note, velocity, channel)) return MMSYSERR_NOERROR;
+	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
 
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);
 
@@ -152,7 +209,7 @@ MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_
 		evbwpoint -= evbuffsize;
 	}
 
-	dwParam1 = ReturnEditedEvent(dwParam1, status, note, velocity, channel);
+	dwParam1 = ReturnEditedEvent(dwParam1);
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;

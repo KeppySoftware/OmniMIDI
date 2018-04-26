@@ -16,40 +16,50 @@ namespace KeppySynthConfigurator
         {
             InitializeComponent();
 
-            if (!Environment.Is64BitOperatingSystem)
-            {
-                KSDAPI32.Enabled = true;
-            }
-            else
-            {
-                KSDAPI32.Enabled = true;
-                KSDAPI64.Enabled = true;
-            }
-        }
-
-        private void KSDAPI32_Click(object sender, EventArgs e)
-        {
-            Functions.ApplyWinMMPatch(false);
-        }
-
-        private void KSDAPI64_Click(object sender, EventArgs e)
-        {
-            Functions.ApplyWinMMPatch(true);
+            WMMW32.Enabled = true;
+            if (Environment.Is64BitOperatingSystem) WMMW64.Enabled = true;
         }
 
         private void WMMW32_Click(object sender, EventArgs e)
         {
-            Functions.ApplyWinMMWRPPatch(false);
+            if (Functions.ApplyWinMMWRPPatch(false))
+            {
+                PatchStatusLabel.ForeColor = Color.DarkGreen;
+                PatchStatusLabel.Text = "The app has been successfully patched!";
+            }
+            else
+            {
+                PatchStatusLabel.ForeColor = Color.DarkRed;
+                PatchStatusLabel.Text = "Error while patching app!";
+            }
         }
 
         private void WMMW64_Click(object sender, EventArgs e)
         {
-            Functions.ApplyWinMMWRPPatch(true);
+            if (Functions.ApplyWinMMWRPPatch(true))
+            {
+                PatchStatusLabel.ForeColor = Color.DarkGreen;
+                PatchStatusLabel.Text = "The app has been successfully patched!";
+            }
+            else
+            {
+                PatchStatusLabel.ForeColor = Color.DarkRed;
+                PatchStatusLabel.Text = "Error while patching app!";
+            }
         }
 
         private void UnpatchApp_Click(object sender, EventArgs e)
         {
-            Functions.RemoveWinMMPatch();
+            if (Functions.RemoveWinMMPatch())
+            {
+                PatchStatusLabel.ForeColor = Color.DarkGreen;
+                PatchStatusLabel.Text = "The app has been successfully unpatched!";
+            }
+            else
+            {
+                PatchStatusLabel.ForeColor = Color.DarkRed;
+                PatchStatusLabel.Text = "Error while unpatching app!";
+            }
         }
 
         private void DifferencesPatch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

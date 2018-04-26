@@ -698,11 +698,11 @@ void SendDebugDataToPipe() {
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
 		GetProcessHandleCount(GetCurrentProcess(), &handlecount);
 		SIZE_T ramusage = pmc.WorkingSetSize;
-		uint64_t ramusageint = static_cast<uint64_t>(ramusage);
+		QWORD ramusageint = static_cast<QWORD>(ramusage);
 
 		long long TimeDuringDebug = TimeNow();
 
-		FillContentDebug(currentcpuusage0, handlecount, static_cast<uint64_t>(pmc.WorkingSetSize), ksdirectenabled,
+		FillContentDebug(currentcpuusage0, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), ksdirectenabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, oldbuffermode ? 0.0f : TimeDuringDebug - start4,
 			inlatency, outlatency, bufferoverload);
 	}

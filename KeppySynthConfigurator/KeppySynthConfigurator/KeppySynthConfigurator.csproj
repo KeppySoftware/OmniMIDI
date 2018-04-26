@@ -396,8 +396,6 @@
     </Compile>
     <None Include="Resources\Text\vollab.ttf" />
     <None Include="Resources\Text\volnum.ttf" />
-    <None Include="Resources\WinMM64\wdmaud.drv" />
-    <None Include="Resources\WinMM32\wdmaud.drv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -413,8 +411,6 @@
     <None Include="Resources\List Editor\MvUpIcon.png" />
     <None Include="Resources\List Editor\MvDwIcon.png" />
     <None Include="Resources\List Editor\ImportIcon.png" />
-    <None Include="Resources\WinMM64\winmm.dll" />
-    <None Include="Resources\WinMM32\winmm.dll" />
     <None Include="Resources\Pictures\ppdonate.png" />
     <None Include="Resources\Icons\successiconupd.png" />
     <None Include="Resources\Hashes\DRV32.SHA" />

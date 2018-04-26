@@ -2841,7 +2841,7 @@
             // WMMPatches
             // 
             this.WMMPatches.Index = 0;
-            this.WMMPatches.Text = "Windows Multimedia patches";
+            this.WMMPatches.Text = "Windows Multimedia Wrapper patch";
             this.WMMPatches.Click += new System.EventHandler(this.WMMPatches_Click);
             // 
             // menuItem60

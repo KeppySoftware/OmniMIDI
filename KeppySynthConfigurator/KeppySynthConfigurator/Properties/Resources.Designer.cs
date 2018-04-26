@@ -478,26 +478,6 @@ namespace KeppySynthConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] wdmaud32drv {
-            get {
-                object obj = ResourceManager.GetObject("wdmaud32drv", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] wdmaud64drv {
-            get {
-                object obj = ResourceManager.GetObject("wdmaud64drv", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap what {
@@ -531,29 +511,9 @@ namespace KeppySynthConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Byte[].
         /// </summary>
-        internal static byte[] winmm32 {
-            get {
-                object obj = ResourceManager.GetObject("winmm32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
         internal static byte[] winmm32wrp {
             get {
                 object obj = ResourceManager.GetObject("winmm32wrp", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] winmm64 {
-            get {
-                object obj = ResourceManager.GetObject("winmm64", resourceCulture);
                 return ((byte[])(obj));
             }
         }

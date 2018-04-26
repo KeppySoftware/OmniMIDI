@@ -432,7 +432,7 @@ void PrintToConsole(int color, long stage, const char* text) {
 	}
 }
 
-void PrintEventToConsole(int color, int stage, bool issysex, const char* text, int channel, int status, int note, int velocity) {
+void PrintEventToConsole(int color, int stage, bool issysex, const char* text) {
 	if (debugmode == 1 && printmidievent == 1) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
@@ -444,16 +444,13 @@ void PrintEventToConsole(int color, int stage, bool issysex, const char* text, i
 		sTm = gmtime(&now);
 		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
 
-		// Get status
-		char* statustoprint = { 0 };
-		StatusType(status, statustoprint);
-
 		// Print to log
-		if (issysex) {
-			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
-		}
+		if (issysex) std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
 		else {
-			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Channel = " << statustoprint << " | Type = " << statustoprint << " | Note = " << note << " | Velocity = " << velocity;
+			// Get status
+			char* statustoprint = { 0 };
+			StatusType(stage & 0xFF, statustoprint);
+			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Channel = " << (stage & 0xF) << " | Type = " << statustoprint << " | Note = " << ((stage >> 8) & 0xFF) << " | Velocity = " << ((stage >> 16) & 0xFF);
 		}
 	}
 }

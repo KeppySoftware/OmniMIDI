@@ -34,14 +34,8 @@ void MT32SetInstruments() {
 DWORD WINAPI pipesfill(LPVOID lpV) {
 	hThreadDBGRunning = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
-	while (stop_thread == FALSE) {
-		try {
-			SendDebugDataToPipe();
-		}
-		catch (...) {
-			CrashMessage(L"DbgPipe");
-			throw;
-		}
+	while (!stop_thread) {
+		SendDebugDataToPipe();
 		usleep(100);
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
@@ -54,8 +48,8 @@ DWORD WINAPI pipesfill(LPVOID lpV) {
 DWORD WINAPI notescatcher(LPVOID lpV) {
 	hThread4Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
-	while (stop_thread == FALSE) {
-		try {
+	try {
+		while (!stop_thread) {
 			start4 = TimeNow();
 
 			MT32SetInstruments();
@@ -64,10 +58,10 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			if (capframerate == 1) usleep(16666); else usleep(1);
 			if (currentengine == 1 && oldbuffermode == 1) { break; }
 		}
-		catch (...) {
-			CrashMessage(L"NotesCatcher");
-			throw;
-		}
+	}
+	catch (...) {
+		CrashMessage(L"NotesCatcher");
+		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 	hThread4Running = FALSE;
@@ -79,8 +73,8 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 DWORD WINAPI settingsload(LPVOID lpV) {
 	hThread3Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
-	while (stop_thread == FALSE) {
-		try {
+	try {
+		while (!stop_thread) {
 			start3 = TimeNow();
 			LoadSettingsRT();
 			Panic();
@@ -90,10 +84,10 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 			RevbNChor();
 			usleep(50000);
 		}
-		catch (...) {
-			CrashMessage(L"SettingsLoad");
-			throw;
-		}
+	}
+	catch (...) {
+		CrashMessage(L"SettingsLoad");
+		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
 	hThread3Running = FALSE;
@@ -112,8 +106,8 @@ void InitializeNotesCatcherThread() {
 DWORD WINAPI audioengine(LPVOID lpParam) {
 	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
-	while (stop_thread == FALSE) {
-		try {
+	try {
+		while (!stop_thread) {
 			start2 = TimeNow();
 			if (currentengine < 2) {
 				if (reset_synth != 0) {
@@ -135,10 +129,10 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 			}
 			else break;
 		}
-		catch (...) {
-			CrashMessage(L"AudioEngineRender");
-			throw;
-		}
+	}
+	catch (...) {
+		CrashMessage(L"AudioEngineRender");
+		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
 	hThread2Running = FALSE;

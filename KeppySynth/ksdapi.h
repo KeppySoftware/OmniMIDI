@@ -126,7 +126,7 @@ void DoResetClient(UINT uDeviceID) {
 
 char const* WINAPI ReturnKSDAPIVer()
 {
-	return "v1.2 (Release)";
+	return "v1.3 (Release)";
 }
 
 BOOL WINAPI IsKSDAPIAvailable() 
@@ -148,8 +148,8 @@ MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 	if (ksdirectenabled != TRUE) ksdirectenabled = TRUE;
 
 	MMRESULT returnme = MMSYSERR_NOERROR;
-	if (streaminitialized) returnme = ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
-	return returnme;
+	if (streaminitialized) return ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0, 0, 0);
+	else return MMSYSERR_NOERROR;
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)

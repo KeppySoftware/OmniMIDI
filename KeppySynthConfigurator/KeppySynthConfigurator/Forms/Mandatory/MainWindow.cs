@@ -2101,31 +2101,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void WinMMPatch32_Click(object sender, EventArgs e)
-        {
-            Functions.ApplyWinMMPatch(false);
-        }
-
-        private void WinMMPatch64_Click(object sender, EventArgs e)
-        {
-            Functions.ApplyWinMMPatch(true);
-        }
-
-        private void WinMMWRPPatch32_Click(object sender, EventArgs e)
-        {
-            Functions.ApplyWinMMWRPPatch(false);
-        }
-
-        private void WinMMWRPPatch64_Click(object sender, EventArgs e)
-        {
-            Functions.ApplyWinMMWRPPatch(true);
-        }
-
-        private void WinMMPatchRmv_Click(object sender, EventArgs e)
-        {
-            Functions.RemoveWinMMPatch();
-        }
-
         private void ResetToDefault_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Are you sure you want to reinstall the driver?\n\nThe configurator will download the latest installer, and remove all the old registry keys.\nYou'll lose ALL the settings.", "Keppy's Synthesizer - Reinstall the driver from scratch", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
