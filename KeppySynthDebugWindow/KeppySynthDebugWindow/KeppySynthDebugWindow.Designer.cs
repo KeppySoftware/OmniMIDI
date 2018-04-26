@@ -138,6 +138,7 @@
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
             this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
             this.ReloadDebugInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.RefreshDebugApps = new System.Windows.Forms.PictureBox();
             this.CheckMem = new System.ComponentModel.BackgroundWorker();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
@@ -147,6 +148,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
             this.SuspendLayout();
             // 
             // MainCont
@@ -1205,9 +1207,9 @@
             this.SelectedDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedDebug.FormattingEnabled = true;
-            this.SelectedDebug.Location = new System.Drawing.Point(293, 225);
+            this.SelectedDebug.Location = new System.Drawing.Point(294, 225);
             this.SelectedDebug.Name = "SelectedDebug";
-            this.SelectedDebug.Size = new System.Drawing.Size(135, 21);
+            this.SelectedDebug.Size = new System.Drawing.Size(134, 21);
             this.SelectedDebug.TabIndex = 46;
             this.SelectedDebug.SelectedIndexChanged += new System.EventHandler(this.SelectedDebug_SelectedIndexChanged);
             this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
@@ -1277,6 +1279,19 @@
             this.ReloadDebugInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ReloadDebugInfo.ToolTipTitle = "What does this do?";
             // 
+            // RefreshDebugApps
+            // 
+            this.RefreshDebugApps.Image = global::KeppySynthDebugWindow.Properties.Resources.ReloadIcon;
+            this.RefreshDebugApps.Location = new System.Drawing.Point(294, 223);
+            this.RefreshDebugApps.Name = "RefreshDebugApps";
+            this.RefreshDebugApps.Size = new System.Drawing.Size(24, 24);
+            this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.RefreshDebugApps.TabIndex = 47;
+            this.RefreshDebugApps.TabStop = false;
+            this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "Force refresh the debug pipes list");
+            this.RefreshDebugApps.Visible = false;
+            this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
+            // 
             // CheckMem
             // 
             this.CheckMem.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckMem_DoWork);
@@ -1287,6 +1302,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(432, 251);
+            this.Controls.Add(this.RefreshDebugApps);
             this.Controls.Add(this.Tabs);
             this.Controls.Add(this.SelectedDebug);
             this.Controls.Add(this.CopyToClip1);
@@ -1312,7 +1328,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1420,6 +1438,7 @@
         private System.Windows.Forms.Label KSDAPILabel;
         private System.Windows.Forms.Label BufStatus;
         private System.Windows.Forms.Label BufStatusLabel;
+        private System.Windows.Forms.PictureBox RefreshDebugApps;
     }
 }
 

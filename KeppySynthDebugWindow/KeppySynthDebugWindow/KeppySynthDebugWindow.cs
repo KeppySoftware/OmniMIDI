@@ -859,19 +859,30 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                if (CurrentlyConnected)
+                try
                 {
-                    GetInfo();
-                    CheckDebugPorts();
-                }
-                else
-                {
-                    try {
+                    if (PipeClient.IsConnected)
+                    {
+                        GetInfo();
+                        CheckDebugPorts();
+                    }
+                    else
+                    {
                         GetInfo();
                         CheckDebugPorts();
                         DebugInfoCheck.RunWorkerAsync();
-                    } catch { }
-                } 
+                    }
+                }
+                catch
+                {
+                    try
+                    {
+                        GetInfo();
+                        CheckDebugPorts();
+                        DebugInfoCheck.RunWorkerAsync();
+                    }
+                    catch { }
+                }
             }
             catch (Exception ex)
             {
@@ -881,40 +892,33 @@ namespace KeppySynthDebugWindow
             }
         }
 
-        int SelectedDebugVal = 1;
-        bool CurrentlyConnected = false;
+        Int32 SelectedValueToCheck = 1;
+        NamedPipeClientStream PipeClient = null;
         private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            using (NamedPipeClientStream PipeClient = new NamedPipeClientStream(".", String.Format("KSDEBUG{0}", SelectedDebugVal), PipeDirection.In, PipeOptions.Asynchronous))
+            using (PipeClient = new NamedPipeClientStream(".", String.Format("KSDEBUG{0}", SelectedValueToCheck), PipeDirection.In, PipeOptions.Asynchronous))
             {
                 PipeClient.Connect();
                 if (PipeClient.IsConnected)
                 {
-                    CurrentlyConnected = true;
                     using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
                     {
-                        while (PipeClient.IsConnected)
+                        try
                         {
-                            try
-                            {
-                                if (DebugInfoCheck.CancellationPending) break;
-                                ParseInfoFromPipe(StreamDebugReader, false);
-                            }
-                            catch (Exception ex)
-                            {
-                                // If something goes wrong, here's an error handler
-                                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                Application.ExitThread();
-                            }
+                            while (PipeClient.IsConnected) ParseInfoFromPipe(StreamDebugReader, false);
+                        }
+                        catch (Exception ex)
+                        {
+                            // If something goes wrong, here's an error handler
+                            MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.ExitThread();
                         }
                     }
                 }
-
                 PipeClient.Dispose();
             }
 
             ParseInfoFromPipe(null, true);
-            CurrentlyConnected = false;
         }
 
         private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -932,17 +936,21 @@ namespace KeppySynthDebugWindow
             SwitchPipe(true);
         }
 
+        private void RefreshDebugApps_Click(object sender, EventArgs e)
+        {
+            CheckDebugPorts();
+            SelectedDebug.SelectedIndex = 0;
+            SelectedDebug_SelectionChangeCommitted(null, null);
+            SwitchPipe(false);
+        }
+
         private void SwitchPipe(bool silent)
         {
             try
             {
                 Int32 SelectedValueToCheck = Convert.ToInt32(Regex.Match((String)SelectedDebug.Items[SelectedDebug.SelectedIndex], @"\d+").Value);
-                if (DoesPipeStillExist(SelectedValueToCheck))
-                {
-                    SelectedDebugVal = SelectedValueToCheck;
-                    if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
-                    else DebugInfoCheck.RunWorkerAsync();
-                }
+
+                if (DoesPipeStillExist(SelectedValueToCheck)) { if (PipeClient.IsConnected) PipeClient.Close(); }
                 else { if (!silent) MessageBox.Show("This debug pipe is not available anymore.", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information); }
             }
             catch { }
