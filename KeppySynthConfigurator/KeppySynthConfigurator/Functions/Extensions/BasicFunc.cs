@@ -829,7 +829,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while saving the driver's settings.", true, ex);
+                ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while saving the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings(thisform);
                 return false;
@@ -916,7 +916,7 @@ namespace KeppySynthConfigurator
                     processTemp.Start();
                     processTemp.WaitForExit();
 
-                    Functions.LoadSettings(thisform);
+                    LoadSettings(thisform);
                 }
                 else
                 {
@@ -976,14 +976,16 @@ namespace KeppySynthConfigurator
         /// <param name="monorendering">Set the stream to only output to one audio channel. 0 = Disabled, 1 = Enabled</param>
         /// <param name="fadeoutdisable">Set the fade out for when a note gets killed. 0 = Disabled, 1 = Enabled</param>
         /// <param name="vms2emu">Set if the driver has to emulate VirtualMIDISynth 2.x (Example: Slowdowns when the EVBuffer is full). 0 = Disabled, 1 = Enabled</param>
+        /// <param name="allowksdapi">Set if the driver has to allow apps to use the KSDirect API. 0 = Disallow, 1 = Allow</param>
         /// <param name="oldbuffermode">Set if the driver should use the old buffer mode (Only DirectSound and XAudio). 0 = Disabled, 1 = Enabled</param>
         /// <param name="sleepstates">Set if the driver should disable sleepstates (Only DirectSound). 0 = Disable them, 1 = Keep them enabled</param>
-        public static void ChangeAdvancedAudioSettings(int audiodepth, int monorendering, int fadeoutdisable, int vms2emu, int oldbuffermode, int sleepstates)
+        public static void ChangeAdvancedAudioSettings(int audiodepth, int monorendering, int fadeoutdisable, int vms2emu, int allowksdapi, int oldbuffermode, int sleepstates)
         {
             KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", audiodepth, RegistryValueKind.DWord);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", monorendering, RegistryValueKind.DWord);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", fadeoutdisable, RegistryValueKind.DWord);
             KeppySynthConfiguratorMain.SynthSettings.SetValue("vms2emu", vms2emu, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", audiodepth, RegistryValueKind.DWord);
             Functions.OldBufferMode(oldbuffermode);
             Functions.SleepStates(sleepstates);
         }
@@ -1049,6 +1051,7 @@ namespace KeppySynthConfigurator
                             else if (SettingName(x) == "VoiceLimit") KeppySynthConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(SettingValue(x));
                             else if (SettingName(x) == "Volume") KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(SettingValue(x));
                             // Advanced audio settings
+                            else if (SettingName(x) == "AllowKSDAPI") KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "AudioDepth") KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "FadeOutDisable") KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "MonoRendering") KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", SettingValue(x), RegistryValueKind.DWord);
@@ -1079,7 +1082,7 @@ namespace KeppySynthConfigurator
                             Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, 2, true, false, false, 3);
 
                             // Advanced settings here...
-                            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+                            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
                             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
                             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1131,6 +1134,7 @@ namespace KeppySynthConfigurator
                     SettingsToText.AppendLine(String.Format("Volume = {0}", KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value));
                     SettingsToText.AppendLine();
                     SettingsToText.AppendLine("// Advanced audio settings");
+                    SettingsToText.AppendLine(String.Format("AllowKSDAPI = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("allowksdapi", 1)));
                     SettingsToText.AppendLine(String.Format("AudioDepth = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)));
                     SettingsToText.AppendLine(String.Format("FadeOutDisable = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)));
                     SettingsToText.AppendLine(String.Format("MonoRendering = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)));

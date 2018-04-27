@@ -1863,6 +1863,8 @@
             // 
             // Lis
             // 
+            this.Lis.AccessibleDescription = "The SoundFonts list";
+            this.Lis.AccessibleName = "SoundFonts list";
             this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.Lis.AllowDrop = true;
             this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1914,6 +1916,7 @@
             // EL
             // 
             this.EL.AccessibleDescription = "Export SoundFonts list";
+            this.EL.AccessibleName = "Export SoundFonts list";
             this.EL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EL.BackColor = System.Drawing.Color.Transparent;
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -1932,6 +1935,7 @@
             // LoadToApp
             // 
             this.LoadToApp.AccessibleDescription = "Load SoundFonts list to app";
+            this.LoadToApp.AccessibleName = "Load SoundFonts list to app";
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
             this.LoadToApp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -1950,6 +1954,7 @@
             // IEL
             // 
             this.IEL.AccessibleDescription = "Import SoundFonts list";
+            this.IEL.AccessibleName = "Import SoundFonts list";
             this.IEL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IEL.BackColor = System.Drawing.Color.Transparent;
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -1977,6 +1982,8 @@
             // 
             // SelectedListBox
             // 
+            this.SelectedListBox.AccessibleDescription = "Switch between the 8 available lists";
+            this.SelectedListBox.AccessibleName = "SoundFonts list switcher";
             this.SelectedListBox.BackColor = System.Drawing.Color.White;
             this.SelectedListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedListBox.ForeColor = System.Drawing.Color.Black;
@@ -2007,7 +2014,8 @@
             // 
             // DisableSF
             // 
-            this.DisableSF.AccessibleDescription = "Disable SoundFonts";
+            this.DisableSF.AccessibleDescription = "Disable selected SoundFonts in the SoundFonts list";
+            this.DisableSF.AccessibleName = "Disable selected SoundFonts";
             this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisableSF.BackColor = System.Drawing.Color.Transparent;
             this.DisableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -2025,7 +2033,8 @@
             // 
             // EnableSF
             // 
-            this.EnableSF.AccessibleDescription = "Enable SoundFonts";
+            this.EnableSF.AccessibleDescription = "Enable selected SoundFonts in the SoundFonts list";
+            this.EnableSF.AccessibleName = "Enable selected SoundFonts";
             this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EnableSF.BackColor = System.Drawing.Color.Transparent;
             this.EnableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -2074,7 +2083,8 @@
             // 
             // MvD
             // 
-            this.MvD.AccessibleDescription = "Move SoundFont down";
+            this.MvD.AccessibleDescription = "Move selected SoundFont down in the SoundFonts list";
+            this.MvD.AccessibleName = "Move SoundFont down";
             this.MvD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvD.BackColor = System.Drawing.Color.Transparent;
             this.MvD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -2092,7 +2102,8 @@
             // 
             // MvU
             // 
-            this.MvU.AccessibleDescription = "Move SoundFont up";
+            this.MvU.AccessibleDescription = "Move selected SoundFont up in the SoundFonts list";
+            this.MvU.AccessibleName = "Move SoundFont up";
             this.MvU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MvU.BackColor = System.Drawing.Color.Transparent;
             this.MvU.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -2110,8 +2121,8 @@
             // 
             // RmvSF
             // 
-            this.RmvSF.AccessibleDescription = "Remove SoundFonts";
-            this.RmvSF.AccessibleName = "";
+            this.RmvSF.AccessibleDescription = "Remove SoundFonts to the SoundFonts list";
+            this.RmvSF.AccessibleName = "Remove SoundFonts";
             this.RmvSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RmvSF.BackColor = System.Drawing.Color.Transparent;
             this.RmvSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -2129,7 +2140,8 @@
             // 
             // AddSF
             // 
-            this.AddSF.AccessibleDescription = "Add SoundFonts";
+            this.AddSF.AccessibleDescription = "Add SoundFonts to the SoundFonts list";
+            this.AddSF.AccessibleName = "Add SoundFonts";
             this.AddSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddSF.BackColor = System.Drawing.Color.Transparent;
             this.AddSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -2147,6 +2159,7 @@
             // 
             // TabsForTheControls
             // 
+            this.TabsForTheControls.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.TabsForTheControls.AllowDrop = true;
             this.TabsForTheControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -2218,7 +2231,7 @@
             this.TabImgs.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("TabImgs.ImageStream")));
             this.TabImgs.TransparentColor = System.Drawing.Color.Transparent;
             this.TabImgs.Images.SetKeyName(0, "listicon.png");
-            this.TabImgs.Images.SetKeyName(1, "gear.png");
+            this.TabImgs.Images.SetKeyName(1, "gearicon.png");
             // 
             // SettingsPresets
             // 

@@ -116,7 +116,7 @@ namespace KeppySynthConfigurator
                             openadvanced = 1;
                             break;
                         case "/MIX":
-                            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
+                            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthMixerWindow.exe");
                             return;
                         default:
                             // do other stuff...
@@ -160,11 +160,11 @@ namespace KeppySynthConfigurator
             {
                 uint dummy = 0;
                 byte[] fontData = Properties.Resources.volnum;
-                IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
-                System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+                IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
+                Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
                 privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
                 AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
-                System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
+                Marshal.FreeCoTaskMem(fontPtr);
                 VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size, FontStyle.Regular);
             }
             catch (Exception ex)
@@ -239,7 +239,7 @@ namespace KeppySynthConfigurator
                 TabsForTheControls.TabPages[0].ImageIndex = 0;
                 TabsForTheControls.TabPages[1].ImageIndex = 1;
 
-                KeppySynthConfiguratorMain.whichone = 1;
+                whichone = 1;
                 SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
                 Functions.InitializeLastPath();
 
@@ -274,7 +274,7 @@ namespace KeppySynthConfigurator
             catch (Exception ex)
             {
                 Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.\n\nPress OK to reinstall the driver.", true, ex);
-                var p = new System.Diagnostics.Process();
+                var p = new Process();
                 p.StartInfo.FileName = Application.ExecutablePath;
                 p.StartInfo.Arguments = "/REI";
                 p.StartInfo.RedirectStandardOutput = true;
@@ -324,7 +324,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
+                Functions.ShowErrorDialog(1, SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
             }
         }
 
@@ -667,7 +667,11 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                if (e.KeyCode == Keys.Delete)
+                if (e.KeyCode == Keys.Apps)
+                {
+                    RightClickMenu.Show(Lis, new Point(Lis.SelectedItems[0].Position.X + 8, Lis.SelectedItems[0].Position.Y + 8));
+                }
+                else if (e.KeyCode == Keys.Delete)
                 {
                     if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
                     {
@@ -1091,7 +1095,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, 2, true, false, false, 3);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1116,7 +1120,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, true, false, false, 0, false, false, false, 1);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 256, 1);
             Functions.ChangeDriverMask("Microsoft GS Wavetable Synth", 5, 0x0001, 0x001B);
 
@@ -1133,7 +1137,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, true, false, false, 0, true, false, false, 3);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1150,7 +1154,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, true, false, true, 2, true, false, false, 0);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1167,7 +1171,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, true, false, false, 0, false, false, false, 1);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 384, 1);
             Functions.ChangeDriverMask("Keppy's Chiptune Emulator", 4, 0xFFFF, 0x000A);
 
@@ -1184,7 +1188,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, true, false, true, 3, true, false, false, 3);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1201,7 +1205,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, true, false, false, 1, true, false, false, 3);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 1);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1218,7 +1222,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 3, true, false, false, 2);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 0);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 
@@ -1235,7 +1239,7 @@ namespace KeppySynthConfigurator
             Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 0, true, false, false, 2);
 
             // Advanced settings here...
-            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 0, 0);
+            Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 0);
             Functions.ChangeMIDIEventParserSettings(0, 0, 0, 0, 16384, 1);
             Functions.ChangeDriverMask("Keppy's Synthesizer", 4, 0xFFFF, 0x000A);
 

@@ -810,7 +810,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags |= MHDR_DONE;
 		DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 	case MODM_DATA:
-		return ParseData(FALSE, evbpoint, uMsg, uDeviceID, dwParam1, dwParam2);
+		return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2);
 	case MODM_STRMDATA:
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_GETVOLUME:

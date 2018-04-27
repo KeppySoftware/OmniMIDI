@@ -536,7 +536,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Set pitch shifting";
+            this.Text = "Change transpose value";
             this.Load += new System.EventHandler(this.KeppySynthPitchShifting_Load);
             ((System.ComponentModel.ISupportInitialize)(this.NewPitch)).EndInit();
             this.ResumeLayout(false);

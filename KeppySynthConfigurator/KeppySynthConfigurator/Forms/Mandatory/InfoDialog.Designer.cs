@@ -43,7 +43,6 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.KSDAPIVer = new System.Windows.Forms.Label();
@@ -57,6 +56,7 @@
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.PatreonBtn = new System.Windows.Forms.Button();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
@@ -66,6 +66,7 @@
             // 
             // CurrentLogo
             // 
+            this.CurrentLogo.BackColor = System.Drawing.Color.Transparent;
             this.CurrentLogo.Location = new System.Drawing.Point(12, 12);
             this.CurrentLogo.Name = "CurrentLogo";
             this.CurrentLogo.Size = new System.Drawing.Size(79, 80);
@@ -75,6 +76,7 @@
             // VerLabel
             // 
             this.VerLabel.AutoSize = true;
+            this.VerLabel.BackColor = System.Drawing.Color.Transparent;
             this.VerLabel.Location = new System.Drawing.Point(97, 12);
             this.VerLabel.Name = "VerLabel";
             this.VerLabel.Size = new System.Drawing.Size(172, 52);
@@ -84,6 +86,7 @@
             // 
             // label2
             // 
+            this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Location = new System.Drawing.Point(12, 101);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(358, 42);
@@ -131,6 +134,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.BackColor = System.Drawing.Color.Transparent;
             this.groupBox2.Controls.Add(this.WinVer);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.WinName);
@@ -187,6 +191,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.BackColor = System.Drawing.Color.Transparent;
             this.groupBox1.Controls.Add(this.ChangeBranch);
             this.groupBox1.Controls.Add(this.CurBranch);
             this.groupBox1.Controls.Add(this.label9);
@@ -204,18 +209,6 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Driver info";
-            // 
-            // ChangeBranch
-            // 
-            this.ChangeBranch.AutoSize = true;
-            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
-            this.ChangeBranch.Name = "ChangeBranch";
-            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 10;
-            this.ChangeBranch.TabStop = true;
-            this.ChangeBranch.Text = "Change branch";
-            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
             // 
             // CurBranch
             // 
@@ -344,9 +337,22 @@
             this.PatreonBtn.UseVisualStyleBackColor = true;
             this.PatreonBtn.Click += new System.EventHandler(this.button1_Click);
             // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
+            // 
             // LicenseFile
             // 
             this.LicenseFile.AutoSize = true;
+            this.LicenseFile.BackColor = System.Drawing.Color.Transparent;
             this.LicenseFile.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.LicenseFile.Location = new System.Drawing.Point(234, 127);
             this.LicenseFile.Name = "LicenseFile";
@@ -359,6 +365,7 @@
             // GitHubLink
             // 
             this.GitHubLink.AutoSize = true;
+            this.GitHubLink.BackColor = System.Drawing.Color.Transparent;
             this.GitHubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.GitHubLink.Location = new System.Drawing.Point(97, 77);
             this.GitHubLink.Name = "GitHubLink";
@@ -373,6 +380,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.BackgroundImage = global::KeppySynthConfigurator.Properties.Resources.InfoBk;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(382, 371);
             this.Controls.Add(this.PatreonBtn);
             this.Controls.Add(this.DonateBtn);

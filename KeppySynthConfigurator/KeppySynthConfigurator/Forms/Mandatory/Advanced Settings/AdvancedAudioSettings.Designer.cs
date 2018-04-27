@@ -35,6 +35,8 @@
             this.MonophonicFunc = new System.Windows.Forms.CheckBox();
             this.FadeoutDisable = new System.Windows.Forms.CheckBox();
             this.ABS = new System.Windows.Forms.GroupBox();
+            this.KSDAPIBoxWhat = new System.Windows.Forms.PictureBox();
+            this.KSDAPIBox = new System.Windows.Forms.CheckBox();
             this.NoSleep = new System.Windows.Forms.CheckBox();
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
@@ -46,6 +48,7 @@
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
             this.AOS.SuspendLayout();
             this.ABS.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSDAPIBoxWhat)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,22 +119,50 @@
             // 
             // ABS
             // 
-            this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ABS.Controls.Add(this.KSDAPIBoxWhat);
+            this.ABS.Controls.Add(this.KSDAPIBox);
             this.ABS.Controls.Add(this.NoSleep);
             this.ABS.Controls.Add(this.SlowDownPlayback);
             this.ABS.Controls.Add(this.OldBuff);
             this.ABS.Location = new System.Drawing.Point(12, 110);
             this.ABS.Name = "ABS";
-            this.ABS.Size = new System.Drawing.Size(345, 80);
+            this.ABS.Size = new System.Drawing.Size(345, 98);
             this.ABS.TabIndex = 4;
             this.ABS.TabStop = false;
             this.ABS.Text = "Audio buffer settings";
             // 
+            // KSDAPIBoxWhat
+            // 
+            this.KSDAPIBoxWhat.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.KSDAPIBoxWhat.Image = global::KeppySynthConfigurator.Properties.Resources.what;
+            this.KSDAPIBoxWhat.Location = new System.Drawing.Point(197, 19);
+            this.KSDAPIBoxWhat.Name = "KSDAPIBoxWhat";
+            this.KSDAPIBoxWhat.Size = new System.Drawing.Size(14, 14);
+            this.KSDAPIBoxWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSDAPIBoxWhat.TabIndex = 8;
+            this.KSDAPIBoxWhat.TabStop = false;
+            this.KSDAPIBoxWhat.Click += new System.EventHandler(this.KSDAPIBoxWhat_Click);
+            // 
+            // KSDAPIBox
+            // 
+            this.KSDAPIBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.KSDAPIBox.AutoSize = true;
+            this.KSDAPIBox.Location = new System.Drawing.Point(6, 18);
+            this.KSDAPIBox.Name = "KSDAPIBox";
+            this.KSDAPIBox.Size = new System.Drawing.Size(192, 17);
+            this.KSDAPIBox.TabIndex = 7;
+            this.KSDAPIBox.Text = "Allow apps to use the KSDirect API";
+            this.KSDAPIBox.UseVisualStyleBackColor = true;
+            this.KSDAPIBox.CheckedChanged += new System.EventHandler(this.KSDAPIBox_CheckedChanged);
+            // 
             // NoSleep
             // 
+            this.NoSleep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.NoSleep.AutoSize = true;
-            this.NoSleep.Location = new System.Drawing.Point(6, 57);
+            this.NoSleep.Location = new System.Drawing.Point(6, 75);
             this.NoSleep.Name = "NoSleep";
             this.NoSleep.Size = new System.Drawing.Size(276, 17);
             this.NoSleep.TabIndex = 6;
@@ -141,8 +172,9 @@
             // 
             // SlowDownPlayback
             // 
+            this.SlowDownPlayback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SlowDownPlayback.AutoSize = true;
-            this.SlowDownPlayback.Location = new System.Drawing.Point(6, 19);
+            this.SlowDownPlayback.Location = new System.Drawing.Point(6, 37);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
             this.SlowDownPlayback.Size = new System.Drawing.Size(244, 17);
             this.SlowDownPlayback.TabIndex = 5;
@@ -152,8 +184,9 @@
             // 
             // OldBuff
             // 
+            this.OldBuff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.OldBuff.AutoSize = true;
-            this.OldBuff.Location = new System.Drawing.Point(6, 38);
+            this.OldBuff.Location = new System.Drawing.Point(6, 56);
             this.OldBuff.Name = "OldBuff";
             this.OldBuff.Size = new System.Drawing.Size(315, 17);
             this.OldBuff.TabIndex = 4;
@@ -163,11 +196,11 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.ChangePitchShifting);
             this.groupBox1.Controls.Add(this.ChangeDefaultOutput);
-            this.groupBox1.Location = new System.Drawing.Point(12, 196);
+            this.groupBox1.Location = new System.Drawing.Point(12, 214);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(345, 48);
             this.groupBox1.TabIndex = 7;
@@ -180,7 +213,7 @@
             this.ChangePitchShifting.Name = "ChangePitchShifting";
             this.ChangePitchShifting.Size = new System.Drawing.Size(162, 23);
             this.ChangePitchShifting.TabIndex = 1;
-            this.ChangePitchShifting.Text = "Change pitch shifting";
+            this.ChangePitchShifting.Text = "Change transpose value";
             this.ChangePitchShifting.UseVisualStyleBackColor = true;
             this.ChangePitchShifting.Click += new System.EventHandler(this.ChangePitchShifting_Click);
             // 
@@ -198,7 +231,7 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(282, 254);
+            this.OKBtn.Location = new System.Drawing.Point(282, 272);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 8;
@@ -208,9 +241,10 @@
             // 
             // CAE
             // 
+            this.CAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CAE.AutoSize = true;
             this.CAE.Enabled = false;
-            this.CAE.Location = new System.Drawing.Point(15, 259);
+            this.CAE.Location = new System.Drawing.Point(15, 277);
             this.CAE.Name = "CAE";
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 9;
@@ -231,7 +265,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(369, 289);
+            this.ClientSize = new System.Drawing.Size(369, 307);
             this.Controls.Add(this.CAE);
             this.Controls.Add(this.OKBtn);
             this.Controls.Add(this.groupBox1);
@@ -250,6 +284,7 @@
             this.AOS.PerformLayout();
             this.ABS.ResumeLayout(false);
             this.ABS.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KSDAPIBoxWhat)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -273,5 +308,7 @@
         private System.Windows.Forms.Button OKBtn;
         private System.Windows.Forms.Label CAE;
         private System.Windows.Forms.ToolTip Requirements;
+        private System.Windows.Forms.PictureBox KSDAPIBoxWhat;
+        private System.Windows.Forms.CheckBox KSDAPIBox;
     }
 }

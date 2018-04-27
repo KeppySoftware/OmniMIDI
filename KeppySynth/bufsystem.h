@@ -135,7 +135,7 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 
 	if (ignorenotes1)
 	{
-		if (!((dwParam1 - 0x80) & ~0x1F)
+		if (!((dwParam1 - 0x80) & 0xE0)
 			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel))
 		{
 			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
@@ -144,7 +144,7 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 	}
 	if (limit88)
 	{
-		if (!((dwParam1 - 0x80) & ~0x1F) && (dwParam1 & 0xF) != 9)
+		if (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89)
 		{
 			if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
 			{
@@ -176,11 +176,11 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	Understandable version of what the following function does
 	*/
 
-	if (pitchshift != 127)
+	if (pitchshift != 0x7F)
 	{
-		if (!((dwParam1 - 0x80) & ~0x1F) && (dwParam1 & 0xF) != 9)
+		if (!((dwParam1 - 0x80) & 0xE0) && (dwParam1 & 0xF) != 9)
 		{
-			if (pitchshiftchan[(dwParam1 & 0xFF) & 0xF])
+			if (pitchshiftchan[dwParam1 & 0xF])
 			{
 				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + pitchshift;
 				if (newnote > 0x7F) { newnote = 0x7F; }
@@ -195,9 +195,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(BOOL direct, LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	if (ksdirectenabled != direct && ksdirectenabled != TRUE) ksdirectenabled = direct;
-
+MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
 
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);

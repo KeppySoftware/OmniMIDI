@@ -131,7 +131,14 @@ char const* WINAPI ReturnKSDAPIVer()
 
 BOOL WINAPI IsKSDAPIAvailable() 
 {
-	ksdirectenabled = TRUE;
+	HKEY hKey;
+	long lResult;
+	DWORD dwType = REG_DWORD;
+	DWORD dwSize = sizeof(DWORD);
+	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_READ, &hKey);
+	RegQueryValueEx(hKey, L"allowksdapi", NULL, &dwType, (LPBYTE)&ksdirectenabled, &dwSize);
+	RegCloseKey(hKey);
+
 	return ksdirectenabled;
 }
 
@@ -146,7 +153,7 @@ void TerminateKSStream() {
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
 	if (streaminitialized) 
-		return ParseData(TRUE, 0, MODM_DATA, 0, dwMsg, 0);
+		return ParseData(0, MODM_DATA, 0, dwMsg, 0);
 	else 
 		return MMSYSERR_NOERROR;
 }

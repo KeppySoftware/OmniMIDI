@@ -401,6 +401,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Pictures\InfoBk.png" />
     <None Include="Resources\WinMM64WRP\winmm64wrp.dll" />
     <None Include="Resources\WinMM32WRP\winmm32wrp.dll" />
     <None Include="Resources\Text\TelemetryLoginData.txt" />

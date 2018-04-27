@@ -400,7 +400,6 @@ void LoadSettings(bool streamreload)
 
 		RegCloseKey(hKey);
 
-		frequencynew = frequency;
 		sound_out_volume_float = (float)volume / 10000.0f;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");

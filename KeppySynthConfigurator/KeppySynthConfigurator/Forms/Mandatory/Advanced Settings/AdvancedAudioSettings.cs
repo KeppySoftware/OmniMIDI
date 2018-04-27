@@ -28,6 +28,9 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)) == 1)
                 SlowDownPlayback.Checked = true;
 
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allowksdapi", 1)) == 1)
+                KSDAPIBox.Checked = true;
+
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffermode", 0)) == 1)
                 OldBuff.Checked = true;
 
@@ -108,6 +111,14 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("vms2emu", "0", RegistryValueKind.DWord);
         }
 
+        private void KSDAPIBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (KSDAPIBox.Checked)
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", "1", RegistryValueKind.DWord);
+            else
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", "0", RegistryValueKind.DWord);
+        }
+
         private void OldBuff_CheckedChanged(object sender, EventArgs e)
         {
             if (OldBuff.Checked)
@@ -144,7 +155,14 @@ namespace KeppySynthConfigurator
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
-            else { /* Nothing */ }
+        }
+
+        private void KSDAPIBoxWhat_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("If you uncheck this option, some apps might be forced to fallback to the stock Windows Multimedia API, which increases latency." +
+                "\nKeep in mind that not all KSDAPI-ready apps do check for this value, and they might use it whether you want them to or not." +
+                "\n\n(This value will not affect the Windows Multimedia Wrapper.)", 
+                "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ChangePitchShifting_Click(object sender, EventArgs e)
