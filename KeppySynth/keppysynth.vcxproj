@@ -43,7 +43,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>keppysynth</ProjectName>
     <ProjectGuid>{BD7491C1-986F-4D48-99E6-018AB4ACF801}</ProjectGuid>
-    <RootNamespace>keppymididrv</RootNamespace>
+    <RootNamespace>keppysynth</RootNamespace>
     <Keyword>AtlProj</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -91,7 +91,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)lib\x86;$(LibraryPath);$(ProjectDir)\..\external_packages\lib</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(DXSDK_DIR)lib\x86;$(LibraryPath);$(ProjectDir)\..\external_packages\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(DXSDK_DIR)lib\x86;$(LibraryPath);$(ProjectDir)\..\external_packages\lib64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -118,7 +118,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\external_packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;_USRDLL;I_ASM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>
       </StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -153,7 +153,8 @@
       </LanguageStandard>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <Culture>0x0809</Culture>
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
@@ -214,7 +215,7 @@ GetSHA256.exe</Command>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\external_packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;_USRDLL;I_ASM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>
       </StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -245,7 +246,8 @@ GetSHA256.exe</Command>
       <FloatingPointExceptions>false</FloatingPointExceptions>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <Culture>0x0809</Culture>
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
@@ -264,7 +266,7 @@ GetSHA256.exe</Command>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib64</AdditionalLibraryDirectories>
       <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
       <LargeAddressAware>
       </LargeAddressAware>
