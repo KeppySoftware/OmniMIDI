@@ -10,8 +10,8 @@ void keepstreamsalive(int& opend) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		if (InitializeBASS(FALSE)) {
 			SetUpStream();
-			opend = CreateThreads(TRUE);
 			LoadSoundFontsToStream();
+			opend = CreateThreads(TRUE);
 		}
 		streaminitialized = TRUE;
 	}
@@ -36,8 +36,8 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (InitializeBASS(FALSE)) {
 					SetUpStream();
-					opend = CreateThreads(TRUE);
 					LoadSoundFontsToStream();
+					opend = CreateThreads(TRUE);
 				}
 				streaminitialized = TRUE;
 			}
