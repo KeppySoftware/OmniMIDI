@@ -152,13 +152,13 @@ void TerminateKSStream() {
 }
 
 void ResetKSStream() {
-	DoResetClient();
+	ResetSynth(0);
 }
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
 	if (streaminitialized) 
-		return ParseData(0, MODM_DATA, 0, dwMsg, 0);
+		return ParseData(evbpoint, MODM_DATA, 0, dwMsg, NULL, NULL, NULL);
 	else 
 		return MMSYSERR_NOERROR;
 }
@@ -174,13 +174,19 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
 {
-	if ((IIMidiHdr->dwFlags & MHDR_PREPARED) == 0) {
-		return MIDIERR_UNPREPARED;
-	}
-	if (sysresetignore != 1) SendLongToBASSMIDI(IIMidiHdr);
-	else PrintToConsole(FOREGROUND_RED, (DWORD_PTR)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
-	IIMidiHdr->dwFlags |= MHDR_DONE;
+	int exlen = 0;
+	unsigned char *sysexbuffer = NULL;
+	DWORD_PTR dwUser = IIMidiHdr->dwUser;
+
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+	IIMidiHdr->dwFlags &= ~MHDR_DONE;
+	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+	exlen = (int)IIMidiHdr->dwBufferLength;
+
+	if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char)))) return MMSYSERR_NOMEM;
+	else memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
+
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-	DoCallback(0, NULL, MOM_DONE, (DWORD_PTR)IIMidiHdr->lpData);
-	return MMSYSERR_NOERROR;
+	IIMidiHdr->dwFlags |= MHDR_DONE;
+	DoCallback(static_cast<LONG>(dwUser), MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
 }

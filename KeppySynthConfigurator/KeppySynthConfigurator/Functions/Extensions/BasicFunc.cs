@@ -1448,8 +1448,9 @@ namespace KeppySynthConfigurator
                 MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            OpenFileDialog WinMMDialog = new OpenFileDialog();
+            OpenFileDialog WinMMDialog;
             TryAgain:
+            WinMMDialog = new OpenFileDialog();
             try
             {
                 WinMMDialog.Filter = "Executables (*.exe)|*.exe;";

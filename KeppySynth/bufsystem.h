@@ -19,41 +19,15 @@ int BufferCheck(void){
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
-	BYTE statusv = (BYTE)dwParam1;
-	DWORD len = 3;
-
-	/* 
-	if ((statusv >= 0xC0 && statusv <= 0xDF) || statusv == 0xF1 || statusv == 0xF3)	len = 2;
-	else if (statusv < 0xF0 || statusv == 0xF2)	len = 3;
-	else len = 1;
-
-	Understandable version of what the following function does
-	*/
-
-	if (statusv >= 0xC0)
-	{
-		if (!((statusv - 0xC0) & ~0x1F))
-			len = 2;
-		else if ((statusv & 0xF0) == 0xF0)
-		{
-			switch (statusv & 0xF)
-			{
-			case 3:
-				len = 2;
-				break;
-			default:
-				len = 1;
-				break;
-			}
-		}
-	}
+	DWORD dwParam2 = dwParam1 & 0xF0;
+	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
-void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+void SendLongToBASSMIDI(unsigned char *sysexbuffer, int exlen) {
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
 	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
@@ -77,11 +51,13 @@ int PlayBufferedData(void){
 			if (improveperf == 0) EnterCriticalSection(&midiparsing);
 			evbpoint = evbrpoint;
 
-			if (++evbrpoint >= evbuffsize)	evbrpoint -= evbuffsize;
+			if (++evbrpoint >= evbuffsize) evbrpoint -= evbuffsize;
 
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
 			dwParam2 = evbuf[evbpoint].dwParam2;
+			exlen = evbuf[evbpoint].exlen;
+			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 			switch (uMsg) {
@@ -89,8 +65,9 @@ int PlayBufferedData(void){
 				SendToBASSMIDI(dwParam1);
 				break;
 			case MODM_LONGDATA:
-				if (sysresetignore != 1) SendLongToBASSMIDI((MIDIHDR *)dwParam1);
+				if (sysresetignore != 1) SendLongToBASSMIDI(sysexbuffer, exlen);
 				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
+				free(sysexbuffer);
 				break;
 			}
 		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
@@ -195,7 +172,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, unsigned char *sysexbuffer, int exlen) {
 	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
 
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);
@@ -210,6 +187,8 @@ MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1,
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
+	evbuf[evbpoint].exlen = exlen;
+	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 
 	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 

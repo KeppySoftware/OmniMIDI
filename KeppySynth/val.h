@@ -29,6 +29,7 @@ static int evbuffbyram = 0;
 // Main values
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume (whole)
 static HFX ChVolume;						// Volume (whole)
+static LONG evbpoint;						// Buffer stuff
 
 static HANDLE hConsole;					// Debug console
 static float *sndbf;					// Cake

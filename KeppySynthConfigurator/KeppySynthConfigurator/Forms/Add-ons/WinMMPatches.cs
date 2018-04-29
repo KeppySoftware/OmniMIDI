@@ -25,12 +25,12 @@ namespace KeppySynthConfigurator
             if (Functions.ApplyWinMMWRPPatch(false))
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "The app has been successfully patched!";
+                PatchStatusLabel.Text = "Successfully patched!";
             }
             else
             {
                 PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error while patching app!";
+                PatchStatusLabel.Text = "Error!";
             }
         }
 
