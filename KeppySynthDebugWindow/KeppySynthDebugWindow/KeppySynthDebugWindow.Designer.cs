@@ -1229,9 +1229,9 @@
             // CopyToClip1
             // 
             this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip1.Location = new System.Drawing.Point(293, 199);
+            this.CopyToClip1.Location = new System.Drawing.Point(266, 199);
             this.CopyToClip1.Name = "CopyToClip1";
-            this.CopyToClip1.Size = new System.Drawing.Size(136, 23);
+            this.CopyToClip1.Size = new System.Drawing.Size(163, 23);
             this.CopyToClip1.TabIndex = 34;
             this.CopyToClip1.Text = "Copy all tabs to clipboard";
             this.CopyToClip1.UseVisualStyleBackColor = true;
@@ -1265,7 +1265,7 @@
             // 
             // DebugInfo
             // 
-            this.DebugInfo.Interval = 10;
+            this.DebugInfo.Interval = 1;
             this.DebugInfo.Tick += new System.EventHandler(this.DebugInfo_Tick);
             // 
             // DebugInfoCheck
@@ -1282,14 +1282,13 @@
             // RefreshDebugApps
             // 
             this.RefreshDebugApps.Image = global::KeppySynthDebugWindow.Properties.Resources.ReloadIcon;
-            this.RefreshDebugApps.Location = new System.Drawing.Point(294, 223);
+            this.RefreshDebugApps.Location = new System.Drawing.Point(266, 224);
             this.RefreshDebugApps.Name = "RefreshDebugApps";
             this.RefreshDebugApps.Size = new System.Drawing.Size(24, 24);
             this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.RefreshDebugApps.TabIndex = 47;
             this.RefreshDebugApps.TabStop = false;
             this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "Force refresh the debug pipes list");
-            this.RefreshDebugApps.Visible = false;
             this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
             // 
             // CheckMem

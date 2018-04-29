@@ -84,8 +84,8 @@ void DoStartClient() {
 		RegQueryValueEx(hKey, L"improveperf", NULL, &dwType, (LPBYTE)&improveperf, &dwSize);
 		RegCloseKey(hKey);
 
-		StartDebugPipe(FALSE);
 		AppName();
+		StartDebugPipe(FALSE);
 
 		InitializeCriticalSection(&midiparsing);
 		DWORD result;
