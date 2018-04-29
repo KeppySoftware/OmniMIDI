@@ -85,6 +85,7 @@ void DoStartClient() {
 		RegCloseKey(hKey);
 
 		StartDebugPipe(FALSE);
+		AppName();
 
 		InitializeCriticalSection(&midiparsing);
 		DWORD result;
@@ -119,7 +120,7 @@ void DoStopClient() {
 	DeleteCriticalSection(&midiparsing);
 }
 
-void DoResetClient(UINT uDeviceID) {
+void DoResetClient() {
 	reset_synth = 1;
 	ResetSynth(0);
 }
@@ -151,8 +152,7 @@ void TerminateKSStream() {
 }
 
 void ResetKSStream() {
-	reset_synth = 1;
-	ResetSynth(0);
+	DoResetClient();
 }
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)

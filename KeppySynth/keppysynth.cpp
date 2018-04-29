@@ -630,7 +630,6 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			wcsncpy(SynthNameW, L"Keppy's Synthesizer\0", MAXPNAMELEN);
 		}
 
-		AppName();
 		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
 
 		MIDIOUTCAPSA * myCapsA;
@@ -739,7 +738,7 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	int clientNum;
 	if (driver->clientCount == 0) {
 		DoStartClient();
-		DoResetClient(uDeviceID);
+		DoResetClient();
 		clientNum = 0;
 	}
 	else if (driver->clientCount == MAX_CLIENTS) {
@@ -776,7 +775,7 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 	driver->clients[dwUser].allocated = 0;
 	driver->clientCount--;
 	if (driver->clientCount <= 0) {
-		DoResetClient(uDeviceID);
+		DoResetClient();
 		driver->clientCount = 0;
 	}
 	DoCallback(dwUser, MOM_CLOSE, 0, 0);
@@ -827,7 +826,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
 	case MODM_RESET:
-		DoResetClient(uDeviceID);
+		DoResetClient();
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
 		if (stop_rtthread || stop_thread) return MIDIERR_STILLPLAYING;
