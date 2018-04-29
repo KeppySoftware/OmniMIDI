@@ -150,6 +150,11 @@ void TerminateKSStream() {
 	DoStopClient();
 }
 
+void ResetKSStream() {
+	reset_synth = 1;
+	ResetSynth(0);
+}
+
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
 	if (streaminitialized) 
