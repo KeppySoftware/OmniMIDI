@@ -7,7 +7,7 @@ struct evbuf_t{
 	DWORD_PTR		dwParam1;
 	DWORD_PTR		dwParam2;
 	int				exlen;
-	unsigned char	*sysexbuffer;
+	char			*sysexbuffer;
 };
 
 static struct evbuf_t * evbuf;

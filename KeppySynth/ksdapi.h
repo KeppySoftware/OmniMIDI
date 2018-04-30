@@ -174,19 +174,13 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
 {
-	int exlen = 0;
-	unsigned char *sysexbuffer = NULL;
-	DWORD_PTR dwUser = IIMidiHdr->dwUser;
-
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-	exlen = (int)IIMidiHdr->dwBufferLength;
-
-	if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char)))) return MMSYSERR_NOMEM;
-	else memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-
+	if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+	else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr, "Ignored SysEx MIDI event.");
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 	IIMidiHdr->dwFlags |= MHDR_DONE;
-	DoCallback(static_cast<LONG>(dwUser), MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
+	DoCallback(static_cast<LONG>(IIMidiHdr->dwUser), MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
+	return MMSYSERR_NOERROR;
 }

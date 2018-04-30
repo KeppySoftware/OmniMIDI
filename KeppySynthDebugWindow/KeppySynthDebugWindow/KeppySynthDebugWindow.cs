@@ -862,30 +862,8 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                try
-                {
-                    if (PipeClient.IsConnected)
-                    {
-                        GetInfo();
-                        CheckDebugPorts();
-                    }
-                    else
-                    {
-                        GetInfo();
-                        CheckDebugPorts();
-                        DebugInfoCheck.RunWorkerAsync();
-                    }
-                }
-                catch
-                {
-                    try
-                    {
-                        GetInfo();
-                        CheckDebugPorts();
-                        DebugInfoCheck.RunWorkerAsync();
-                    }
-                    catch { }
-                }
+                GetInfo();
+                CheckDebugPorts();
             }
             catch (Exception ex)
             {

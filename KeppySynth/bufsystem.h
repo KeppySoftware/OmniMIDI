@@ -26,7 +26,7 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
-void SendLongToBASSMIDI(unsigned char *sysexbuffer, int exlen) {
+void SendLongToBASSMIDI(char* sysexbuffer, int exlen) {
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
 	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
@@ -41,7 +41,7 @@ int PlayBufferedData(void){
 		DWORD_PTR   dwParam2;
 		UINT evbpoint;
 		int exlen;
-		unsigned char *sysexbuffer;
+		char *sysexbuffer;
 
 		if (!BufferCheck()){
 			return ~0;
@@ -172,7 +172,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, unsigned char *sysexbuffer, int exlen) {
+MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, char *sysexbuffer, int exlen) {
 	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
 
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);

@@ -784,18 +784,20 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
-	int exlen = 0;
-	unsigned char *sysexbuffer = NULL;
 	struct Driver *driver = &drivers[0];
+	int exlen = 0;
+	char *sysexbuffer = NULL;
 
 	switch (uMsg) {
 	case MODM_OPEN:
 		return DoOpenClient(driver, uDeviceID, reinterpret_cast<LONG*>(dwUser), reinterpret_cast<MIDIOPENDESC*>(dwParam1), static_cast<DWORD>(dwParam2));
+		break;
 	case MODM_PREPARE:
-
-		return MMSYSERR_NOERROR;
+		return MMSYSERR_NOTSUPPORTED;
+		break;
 	case MODM_UNPREPARE:
 		return MMSYSERR_NOTSUPPORTED;
+		break;
 	case MODM_GETNUMDEVS:
 		return VMSBlackList();
 	case MODM_GETDEVCAPS:
@@ -805,34 +807,37 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 		IIMidiHdr->dwFlags &= ~MHDR_DONE;
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-		exlen = (int)IIMidiHdr->dwBufferLength;
-
-		if (NULL == (sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char)))) return MMSYSERR_NOMEM;
-		else memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-
+		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+		else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 		IIMidiHdr->dwFlags |= MHDR_DONE;
-		DoCallback(static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 	case MODM_DATA:
 		return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, sysexbuffer, exlen);
+		break;
 	case MODM_STRMDATA:
 		return MMSYSERR_NOTSUPPORTED;
+		break;
 	case MODM_GETVOLUME:
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
+		break;
 	case MODM_SETVOLUME: 
 		return MMSYSERR_NOERROR;
+		break;
 	case MODM_PAUSE: 
 		reset_synth = 1;
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
+		break;
 	case MODM_STOP:
 		reset_synth = 1;
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
+		break;
 	case MODM_RESET:
 		DoResetClient();
 		return MMSYSERR_NOERROR;
+		break;
 	case MODM_CLOSE:
 		if (stop_rtthread || stop_thread) return MIDIERR_STILLPLAYING;
 		else return DoCloseClient(driver, uDeviceID, static_cast<LONG>(dwUser));	
