@@ -219,7 +219,6 @@
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
-            this.EPB = new System.Windows.Forms.MenuItem();
             this.DePrio = new System.Windows.Forms.MenuItem();
             this.menuItem34 = new System.Windows.Forms.MenuItem();
             this.RTPrio = new System.Windows.Forms.MenuItem();
@@ -2562,12 +2561,6 @@
             this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
             this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
-            // EPB
-            // 
-            this.EPB.Index = 9;
-            this.EPB.Text = "Enable performance boost";
-            this.EPB.Click += new System.EventHandler(this.EPB_Click);
-            // 
             // DePrio
             // 
             this.DePrio.Index = 0;
@@ -2617,7 +2610,7 @@
             // 
             // menuItem31
             // 
-            this.menuItem31.Index = 10;
+            this.menuItem31.Index = 9;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -2631,12 +2624,12 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 11;
+            this.menuItem21.Index = 10;
             this.menuItem21.Text = "-";
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 12;
+            this.SpatialSound.Index = 11;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
@@ -2666,7 +2659,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 13;
+            this.menuItem14.Index = 12;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf,
@@ -2688,7 +2681,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 14;
+            this.menuItem12.Index = 13;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ImportSettings,
             this.ExportSettings});
@@ -2696,7 +2689,7 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 15;
+            this.menuItem15.Index = 14;
             this.menuItem15.Text = "-";
             // 
             // DebugModePls
@@ -2713,7 +2706,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 16;
+            this.menuItem28.Index = 15;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad,
@@ -2752,7 +2745,6 @@
             this.manageFolderFavouritesToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
             this.changeDefaultSoundfontListToolStripMenuItem1,
-            this.EPB,
             this.menuItem31,
             this.menuItem21,
             this.SpatialSound,
@@ -4442,7 +4434,6 @@
         private System.Windows.Forms.MenuItem manageFolderFavouritesToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
         private System.Windows.Forms.MenuItem changeDefaultSoundfontListToolStripMenuItem1;
-        public System.Windows.Forms.MenuItem EPB;
         public System.Windows.Forms.MenuItem DePrio;
         private System.Windows.Forms.MenuItem menuItem34;
         public System.Windows.Forms.MenuItem RTPrio;

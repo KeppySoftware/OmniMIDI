@@ -3,8 +3,6 @@
 // Mandatory values
 static HINSTANCE hinst = NULL;							// main DLL handle
 
-static int improveperf = 0;				// Improve performance, reduces compatibility
-
 static char modulename[MAX_PATH];		// debug info
 static char bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
@@ -29,7 +27,7 @@ static int evbuffbyram = 0;
 // Main values
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume (whole)
 static HFX ChVolume;						// Volume (whole)
-static LONG evbpoint;						// Buffer stuff
+static long long evbpoint;					// Buffer stuff
 
 static HANDLE hConsole;					// Debug console
 static float *sndbf;					// Cake

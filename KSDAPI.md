@@ -98,7 +98,7 @@ The driver will work fine with the default WinMM => modMessage system too.
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of April 20th 2018, these are the functions available in the KSDirect API.
+As of May 1st 2018, these are the functions available in the KSDirect API.
 The **"NoBuf"** calls bypass the built-in buffer in Keppy's Synthesizer, and directly send the events to the events processing system.
 ### **InitializeKSStream**
 It initializes the driver, its stream and all its required threads. There are no arguments.
@@ -110,6 +110,14 @@ KSInit = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "InitializeKSStrea
 
 ### **TerminateKSStream**
 It tells the driver to wrap up its stuff and to leave! There are no arguments.
+
+```c
+void(WINAPI*KSStop)() = 0;
+KSStop = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "TerminateKSStream");
+```
+
+### **ResetKSStream**
+Resets the MIDI channels. There are no arguments.
 
 ```c
 void(WINAPI*KSStop)() = 0;
@@ -147,6 +155,7 @@ KShortMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectData
 ### **SendDirectLongData**
 Allows you to send MIDIHDR/System Exclusive events to the driver. 
 The function always sends the data directly to the driver, it's not buffered.
+**REMEMBER** to handle the MIDIHDR preparation yourself, if you're not using Keppy's Synthesizer through WinMM!
 The available arguments are:
 
 - *MIDIHDR* IIMidiHdr*: The pointer to the MIDIHDR.

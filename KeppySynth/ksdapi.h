@@ -80,14 +80,10 @@ void DoStartClient() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
 		RegCloseKey(hKey);
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"improveperf", NULL, &dwType, (LPBYTE)&improveperf, &dwSize);
-		RegCloseKey(hKey);
 
 		AppName();
 		StartDebugPipe(FALSE);
 
-		InitializeCriticalSection(&midiparsing);
 		DWORD result;
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
@@ -117,7 +113,6 @@ void DoStopClient() {
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
-	DeleteCriticalSection(&midiparsing);
 }
 
 void DoResetClient() {
@@ -127,7 +122,7 @@ void DoResetClient() {
 
 char const* WINAPI ReturnKSDAPIVer()
 {
-	return "v1.3 (Release)";
+	return "v1.4 (Release)";
 }
 
 BOOL WINAPI IsKSDAPIAvailable() 
@@ -157,10 +152,7 @@ void ResetKSStream() {
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
-	if (streaminitialized) 
-		return ParseData(evbpoint, MODM_DATA, 0, dwMsg, NULL);
-	else 
-		return MMSYSERR_NOERROR;
+	return ParseData(MODM_DATA, 0, dwMsg, NULL);
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)

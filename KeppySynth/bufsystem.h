@@ -10,11 +10,8 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 int BufferCheck(void){
 	int retval;
 	int retvalemu;
-	if (improveperf == 0) EnterCriticalSection(&midiparsing);
 	retval = (evbrpoint != evbwpoint) ? -1 : 0;
 	retvalemu = evbcount;
-	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
-
 	return vms2emu ? retvalemu : retval;
 }
 
@@ -48,7 +45,6 @@ int PlayBufferedData(void){
 		}
 
 		do {
-			if (improveperf == 0) EnterCriticalSection(&midiparsing);
 			evbpoint = evbrpoint;
 
 			if (++evbrpoint >= evbuffsize) evbrpoint -= evbuffsize;
@@ -56,7 +52,6 @@ int PlayBufferedData(void){
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
 			dwParam2 = evbuf[evbpoint].dwParam2;
-			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 			switch (uMsg) {
 			case MODM_DATA:
@@ -165,23 +160,17 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
-
-	if (improveperf == 0) EnterCriticalSection(&midiparsing);
+MMRESULT ParseData(UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	if (CheckIfEventIsToIgnore(dwParam1) || !streaminitialized) return MMSYSERR_NOERROR;
 
 	evbpoint = evbwpoint;
-	if (++evbwpoint >= evbuffsize) {
-		evbwpoint -= evbuffsize;
-	}
+	if (++evbwpoint >= evbuffsize) evbwpoint -= evbuffsize;
 
 	dwParam1 = ReturnEditedEvent(dwParam1);
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
-
-	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 	if (vms2emu == 1) {
 		if (InterlockedIncrement64(&evbcount) >= evbuffsize) {

@@ -1421,24 +1421,6 @@ namespace KeppySynthConfigurator
             frm.Dispose();
         }
 
-        private void EPB_Click(object sender, EventArgs e)
-        {
-            if (!EPB.Checked)
-            {
-                DialogResult dialogResult = MessageBox.Show("Enabling this function might break compatibility with some old applications.\nIf you're encountering issues with them, like missing notes and crashes, please disable this function.\n\nClick \"Yes\" to enable the function, or \"No\" to close this dialog.", "Keppy's Synthesizer - Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    EPB.Checked = true;
-                    SynthSettings.SetValue("improveperf", "1", RegistryValueKind.DWord);
-                }
-            }
-            else
-            {
-                EPB.Checked = false;
-                SynthSettings.SetValue("improveperf", "0", RegistryValueKind.DWord);
-            }
-        }
-
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening SoundFont list assign dialog.", null);
