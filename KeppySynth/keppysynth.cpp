@@ -584,16 +584,16 @@ STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM
 
 HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	try {
-		HKEY hKey;
-		long lResult;
+
 		int defaultmode;
 
 		WORD VID = 0x0000;
 		WORD PID = 0x0000;
-
 		CHAR SynthName[MAXPNAMELEN];
 		WCHAR SynthNameW[MAXPNAMELEN];
 
+		HKEY hKey;
+		long lResult;
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		DWORD dwSizeA = sizeof(SynthName);
@@ -646,83 +646,68 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
 			myCapsA = (MIDIOUTCAPSA *)capsPtr;
-			myCapsA->wMid = VID;
-			myCapsA->wPid = PID;
 			memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
-			myCapsA->wVoices = maximumvoices;
-			myCapsA->wNotes = maximumnotes;
-			myCapsA->wTechnology = defaultmode;
-			myCapsA->wChannelMask = 0xffff;
 			myCapsA->dwSupport = CapsSupport;
+			myCapsA->wChannelMask = 0xffff;
+			myCapsA->wMid = VID;
+			myCapsA->wNotes = maximumnotes;
+			myCapsA->wPid = PID;
+			myCapsA->wTechnology = defaultmode;
+			myCapsA->wVoices = maximumvoices;
+			myCapsA->vDriverVersion = 0x0090;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
 			return MMSYSERR_NOERROR;
 
 		case (sizeof(MIDIOUTCAPSW)):
 			myCapsW = (MIDIOUTCAPSW *)capsPtr;
-			myCapsW->wMid = VID;
-			myCapsW->wPid = PID;
 			memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
-			myCapsW->wVoices = maximumvoices;
-			myCapsW->wNotes = maximumnotes;
-			myCapsW->wTechnology = defaultmode;
-			myCapsW->wChannelMask = 0xffff;
 			myCapsW->dwSupport = CapsSupport;
+			myCapsW->wChannelMask = 0xffff;
+			myCapsW->wMid = VID;
+			myCapsW->wNotes = maximumnotes;
+			myCapsW->wPid = PID;
+			myCapsW->wTechnology = defaultmode;
+			myCapsW->wVoices = maximumvoices;
+			myCapsW->vDriverVersion = 0x0090;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
 			return MMSYSERR_NOERROR;
 
 		case (sizeof(MIDIOUTCAPS2A)):
 			myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
-			myCaps2A->wMid = VID;
-			myCaps2A->wPid = PID;
 			memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
 			myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
-			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2A->NameGuid = CLSIDKEPSYNTH;
-			myCaps2A->wVoices = maximumvoices;
-			myCaps2A->wNotes = maximumnotes;
-			myCaps2A->wTechnology = defaultmode;
-			myCaps2A->wChannelMask = 0xffff;
+			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2A->dwSupport = CapsSupport;
+			myCaps2A->vDriverVersion = 0x0090;
+			myCaps2A->wChannelMask = 0xffff;
+			myCaps2A->wMid = VID;
+			myCaps2A->wNotes = maximumnotes;
+			myCaps2A->wPid = PID;
+			myCaps2A->wTechnology = defaultmode;
+			myCaps2A->wVoices = maximumvoices;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
 			return MMSYSERR_NOERROR;
 
 		case (sizeof(MIDIOUTCAPS2W)):
 			myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
-			myCaps2W->wMid = VID;
-			myCaps2W->wPid = PID;
 			memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
 			myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
-			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2W->NameGuid = CLSIDKEPSYNTH;
-			myCaps2W->wVoices = maximumvoices;
-			myCaps2W->wNotes = maximumnotes;
-			myCaps2W->wTechnology = defaultmode;
-			myCaps2W->wChannelMask = 0xffff;
+			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2W->dwSupport = CapsSupport;
+			myCaps2W->vDriverVersion = 0x0090;
+			myCaps2W->wChannelMask = 0xffff;
+			myCaps2W->wMid = VID;
+			myCaps2W->wNotes = maximumnotes;
+			myCaps2W->wPid = PID;
+			myCaps2W->wTechnology = defaultmode;
+			myCaps2W->wVoices = maximumvoices;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
 			return MMSYSERR_NOERROR;
 
 		default:
-			try {
-				PrintToConsole(FOREGROUND_BLUE, 1, "App is not asking for specific caps. Trying to give Unicode caps...");
-				myCapsW = (MIDIOUTCAPSW *)capsPtr;
-				myCapsW->wMid = VID;
-				myCapsW->wPid = PID;
-				memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
-				myCapsW->wVoices = 0;
-				myCapsW->wNotes = 0;
-				myCapsW->wTechnology = defaultmode;
-				myCapsW->wChannelMask = 0xffff;
-				myCapsW->dwSupport = CapsSupport;
-				PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
-				return MMSYSERR_NOERROR;
-			}
-			catch (...) {
-				CrashMessage(L"MIDICaps");
-				ExitThread(0);
-				throw;
-				return MMSYSERR_NOTSUPPORTED;
-			}
+			return MMSYSERR_ERROR;
 			break;
 		}
 	}
@@ -800,8 +785,10 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		break;
 	case MODM_GETNUMDEVS:
 		return VMSBlackList();
+		break;
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
+		break;
 	case MODM_LONGDATA:
 		IIMidiHdr = (MIDIHDR *)dwParam1;
 		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
@@ -811,6 +798,8 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
 		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 		IIMidiHdr->dwFlags |= MHDR_DONE;
+		return MMSYSERR_NOERROR;
+		break;
 	case MODM_DATA:
 		return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, sysexbuffer, exlen);
 		break;

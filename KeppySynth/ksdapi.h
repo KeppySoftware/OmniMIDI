@@ -181,6 +181,5 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
 	else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr, "Ignored SysEx MIDI event.");
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 	IIMidiHdr->dwFlags |= MHDR_DONE;
-	DoCallback(static_cast<LONG>(IIMidiHdr->dwUser), MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
 	return MMSYSERR_NOERROR;
 }
