@@ -72,6 +72,8 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 
 void DoStartClient() {
 	if (modm_closed == TRUE) {
+		InitializeCriticalSection(&mim_section);
+
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -113,6 +115,7 @@ void DoStopClient() {
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
+	DeleteCriticalSection(&mim_section);
 }
 
 void DoResetClient() {

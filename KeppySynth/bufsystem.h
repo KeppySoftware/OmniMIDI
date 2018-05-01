@@ -9,10 +9,10 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 
 int BufferCheck(void){
 	int retval;
-	int retvalemu;
-	retval = (evbrpoint != evbwpoint) ? -1 : 0;
-	retvalemu = evbcount;
-	return vms2emu ? retvalemu : retval;
+	EnterCriticalSection(&mim_section);
+	retval = vms2emu ? evbcount : (evbrpoint != evbwpoint) ? -1 : 0;
+	LeaveCriticalSection(&mim_section);
+	return retval;
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
@@ -45,6 +45,7 @@ int PlayBufferedData(void){
 		}
 
 		do {
+			EnterCriticalSection(&mim_section);
 			evbpoint = evbrpoint;
 
 			if (++evbrpoint >= evbuffsize) evbrpoint -= evbuffsize;
@@ -52,6 +53,7 @@ int PlayBufferedData(void){
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
 			dwParam2 = evbuf[evbpoint].dwParam2;
+			LeaveCriticalSection(&mim_section);
 
 			switch (uMsg) {
 			case MODM_DATA:
@@ -163,19 +165,19 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 MMRESULT ParseData(UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (CheckIfEventIsToIgnore(dwParam1) || !streaminitialized) return MMSYSERR_NOERROR;
 
-	evbpoint = evbwpoint;
-	if (++evbwpoint >= evbuffsize) evbwpoint -= evbuffsize;
-
 	dwParam1 = ReturnEditedEvent(dwParam1);
+
+	EnterCriticalSection(&mim_section);
+	long long evbpoint = evbwpoint;
+	if (++evbwpoint >= evbuffsize) evbwpoint -= evbuffsize;
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
+	LeaveCriticalSection(&mim_section);
 
-	if (vms2emu == 1) {
-		if (InterlockedIncrement64(&evbcount) >= evbuffsize) {
-			do { usleep(1); } while (evbcount >= evbuffsize);
-		}
+	if (vms2emu && InterlockedIncrement64(&evbcount) >= evbuffsize) {
+		do { /* Absolutely nothing */ } while (evbcount >= evbuffsize);
 	}
 
 	return MMSYSERR_NOERROR;

@@ -800,14 +800,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return MMSYSERR_NOERROR;
 	case MODM_SETVOLUME: 
 		return MMSYSERR_NOERROR;
-	case MODM_PAUSE: 
-		reset_synth = 1;
-		ResetSynth(0);
-		return MMSYSERR_NOERROR;
-	case MODM_STOP:
-		reset_synth = 1;
-		ResetSynth(0);
-		return MMSYSERR_NOERROR;
 	case MODM_RESET:
 		DoResetClient();
 		return MMSYSERR_NOERROR;

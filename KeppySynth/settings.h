@@ -31,16 +31,11 @@ void DLLLoadError(LPCWSTR dll) {
 }
 
 long long TimeNow() {
-	static LARGE_INTEGER s_frequency;
-	static BOOL s_use_qpc = QueryPerformanceFrequency(&s_frequency);
-	if (s_use_qpc) {
-		LARGE_INTEGER now;
-		QueryPerformanceCounter(&now);
-		return (1000LL * now.QuadPart) / s_frequency.QuadPart;
-	}
-	else {
-		return GetTickCount();
-	}
+	LARGE_INTEGER now;
+	LARGE_INTEGER s_frequency;
+	QueryPerformanceCounter(&now);
+	QueryPerformanceFrequency(&s_frequency);
+	return (1000LL * now.QuadPart) / s_frequency.QuadPart;
 }
 
 void CopyToClipboard(const std::string &s) {
@@ -292,22 +287,19 @@ void allocate_memory() {
 			if (sevbuffsize > status.ullTotalPhys) sevbuffsize = status.ullTotalPhys;
 		}
 
-#if _WIN32 || _WIN64
-#if _WIN64
-		// Nothing
-#else
+#if !_WIN64
 		if (sevbuffsize > 2147483647) {
 			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer is too big, limiting to 2GB...");
 			sevbuffsize = 2147483647;
 		}
 #endif
-#endif
+
 		std::ostringstream st;
 		std::ostringstream nd;
 		std::ostringstream rd;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
-		evbuffsize = (unsigned long long)sevbuffsize / (unsigned long long)evbuffratio;
+		evbuffsize = sevbuffsize / (unsigned long long)evbuffratio;
 
 		st << "EV buffer size: " << sevbuffsize;
 		nd << "EV buffer ratio: " << evbuffratio;

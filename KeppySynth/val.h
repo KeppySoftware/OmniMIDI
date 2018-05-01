@@ -1,6 +1,8 @@
 // Keppy's Synthesizer Values
 
 // Mandatory values
+static CRITICAL_SECTION mim_section;
+static CRITICAL_SECTION bass_section;
 static HINSTANCE hinst = NULL;							// main DLL handle
 
 static char modulename[MAX_PATH];		// debug info
@@ -27,7 +29,6 @@ static int evbuffbyram = 0;
 // Main values
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume (whole)
 static HFX ChVolume;						// Volume (whole)
-static long long evbpoint;					// Buffer stuff
 
 static HANDLE hConsole;					// Debug console
 static float *sndbf;					// Cake
