@@ -6,8 +6,6 @@ struct evbuf_t{
 	UINT			uMsg;
 	DWORD_PTR		dwParam1;
 	DWORD_PTR		dwParam2;
-	int				exlen;
-	char			*sysexbuffer;
 };
 
 static struct evbuf_t * evbuf;

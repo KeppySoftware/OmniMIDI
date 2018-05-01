@@ -91,7 +91,7 @@ struct Driver {
 	int clientCount;
 	HDRVR hdrvr;
 	struct Driver_Client clients[MAX_CLIENTS];
-} drivers[MAX_DRIVERS];
+} drivers[MAX_DRIVERS+1];
 
 static int driverCount = 0;
 
@@ -748,7 +748,7 @@ LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPEND
 	*dwUser = clientNum;
 	driver->clientCount++;
 	SetPriorityClass(GetCurrentProcess(), processPriority);
-	DoCallback(clientNum, MOM_OPEN, 0, 0);
+	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
 	return MMSYSERR_NOERROR;
 }
 
@@ -763,76 +763,60 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 		DoResetClient();
 		driver->clientCount = 0;
 	}
-	DoCallback(dwUser, MOM_CLOSE, 0, 0);
+	DoCallback(uDeviceID, dwUser, MOM_CLOSE, 0, 0);
 	return MMSYSERR_NOERROR;
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
-	struct Driver *driver = &drivers[0];
-	int exlen = 0;
-	char *sysexbuffer = NULL;
+	struct Driver *driver = &drivers[uDeviceID];
 
 	switch (uMsg) {
 	case MODM_OPEN:
 		return DoOpenClient(driver, uDeviceID, reinterpret_cast<LONG*>(dwUser), reinterpret_cast<MIDIOPENDESC*>(dwParam1), static_cast<DWORD>(dwParam2));
-		break;
 	case MODM_PREPARE:
 		return MMSYSERR_NOTSUPPORTED;
-		break;
 	case MODM_UNPREPARE:
 		return MMSYSERR_NOTSUPPORTED;
-		break;
 	case MODM_GETNUMDEVS:
 		return VMSBlackList();
-		break;
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
-		break;
 	case MODM_LONGDATA:
 		IIMidiHdr = (MIDIHDR *)dwParam1;
 		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 		IIMidiHdr->dwFlags &= ~MHDR_DONE;
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
-		else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
+		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
+		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 		IIMidiHdr->dwFlags |= MHDR_DONE;
+		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
 		return MMSYSERR_NOERROR;
-		break;
 	case MODM_DATA:
-		return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2, sysexbuffer, exlen);
-		break;
+		return ParseData(evbpoint, uMsg, uDeviceID, dwParam1, dwParam2);
 	case MODM_STRMDATA:
 		return MMSYSERR_NOTSUPPORTED;
-		break;
 	case MODM_GETVOLUME:
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
-		break;
 	case MODM_SETVOLUME: 
 		return MMSYSERR_NOERROR;
-		break;
 	case MODM_PAUSE: 
 		reset_synth = 1;
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
-		break;
 	case MODM_STOP:
 		reset_synth = 1;
 		ResetSynth(0);
 		return MMSYSERR_NOERROR;
-		break;
 	case MODM_RESET:
 		DoResetClient();
 		return MMSYSERR_NOERROR;
-		break;
 	case MODM_CLOSE:
 		if (stop_rtthread || stop_thread) return MIDIERR_STILLPLAYING;
 		else return DoCloseClient(driver, uDeviceID, static_cast<LONG>(dwUser));	
-		break;
 	default:
 		return MMSYSERR_NOERROR;
-		break;
 	}
 }

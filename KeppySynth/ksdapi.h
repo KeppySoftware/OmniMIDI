@@ -65,9 +65,9 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 	}
 }
 
-void DoCallback(int clientNum, DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
-	struct Driver_Client *client = &drivers[0].clients[clientNum];
-	DriverCallback(client->callback, client->flags, drivers[0].hdrvr, msg, client->instance, param1, param2);
+void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
+	struct Driver_Client *client = &drivers[driverNum].clients[clientNum];
+	DriverCallback(client->callback, client->flags, drivers[driverNum].hdrvr, msg, client->instance, param1, param2);
 }
 
 void DoStartClient() {
@@ -158,7 +158,7 @@ void ResetKSStream() {
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
 	if (streaminitialized) 
-		return ParseData(evbpoint, MODM_DATA, 0, dwMsg, NULL, NULL, NULL);
+		return ParseData(evbpoint, MODM_DATA, 0, dwMsg, NULL);
 	else 
 		return MMSYSERR_NOERROR;
 }
@@ -174,12 +174,16 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
 {
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-	IIMidiHdr->dwFlags &= ~MHDR_DONE;
-	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-	if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
-	else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr, "Ignored SysEx MIDI event.");
-	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-	IIMidiHdr->dwFlags |= MHDR_DONE;
-	return MMSYSERR_NOERROR;
+	if (streaminitialized)
+	{
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+		IIMidiHdr->dwFlags &= ~MHDR_DONE;
+		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
+		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
+		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+		IIMidiHdr->dwFlags |= MHDR_DONE;
+		return MMSYSERR_NOERROR;
+	}
+	else return MMSYSERR_NOMEM;
 }

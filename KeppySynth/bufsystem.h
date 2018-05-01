@@ -26,8 +26,8 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
-void SendLongToBASSMIDI(char* sysexbuffer, int exlen) {
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
 	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
@@ -41,7 +41,7 @@ int PlayBufferedData(void){
 		DWORD_PTR   dwParam2;
 		UINT evbpoint;
 		int exlen;
-		char *sysexbuffer;
+		unsigned char *sysexbuffer;
 
 		if (!BufferCheck()){
 			return ~0;
@@ -56,18 +56,11 @@ int PlayBufferedData(void){
 			uMsg = evbuf[evbpoint].uMsg;
 			dwParam1 = evbuf[evbpoint].dwParam1;
 			dwParam2 = evbuf[evbpoint].dwParam2;
-			exlen = evbuf[evbpoint].exlen;
-			sysexbuffer = evbuf[evbpoint].sysexbuffer;
 			if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
 			switch (uMsg) {
 			case MODM_DATA:
 				SendToBASSMIDI(dwParam1);
-				break;
-			case MODM_LONGDATA:
-				if (sysresetignore != 1) SendLongToBASSMIDI(sysexbuffer, exlen);
-				else PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored SysEx MIDI event.");
-				free(sysexbuffer);
 				break;
 			}
 		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
@@ -172,7 +165,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2, char *sysexbuffer, int exlen) {
+MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
 
 	if (improveperf == 0) EnterCriticalSection(&midiparsing);
@@ -187,8 +180,6 @@ MMRESULT ParseData(LONG evbpoint, UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1,
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
-	evbuf[evbpoint].exlen = exlen;
-	evbuf[evbpoint].sysexbuffer = sysexbuffer;
 
 	if (improveperf == 0) LeaveCriticalSection(&midiparsing);
 
