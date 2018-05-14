@@ -10,12 +10,18 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 int BufferCheck(void){
 	int retval;
 	EnterCriticalSection(&mim_section);
-	retval = vms2emu ? evbcount : (evbrpoint != evbwpoint) ? -1 : 0;
+	retval = vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
 	LeaveCriticalSection(&mim_section);
 	return retval;
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
+	if (!(dwParam1 - 0x80 & 0xC0))
+	{
+		BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
+		return;
+	}
+
 	DWORD dwParam2 = dwParam1 & 0xF0;
 	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 
@@ -24,16 +30,16 @@ void SendToBASSMIDI(DWORD dwParam1) {
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
 	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
 int __inline PlayBufferedData(void){
-	if (allnotesignore || !BufferCheck()) return -1;
+	if (allnotesignore || !BufferCheck()) return 1;
 
 	do {
-		evbuf_t TempBuffer = *(evbuf + evbrpoint);
-		if (++evbrpoint >= evbuffsize) evbrpoint = 0;
+		evbuf_t TempBuffer = *(evbuf + readhead);
+		if (++readhead >= evbuffsize) readhead = 0;
 
 		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
@@ -43,8 +49,31 @@ int __inline PlayBufferedData(void){
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
 			break;
 		}
-	} 
-	while (vms2emu ? InterlockedDecrement64(&evbcount) : (evbrpoint != evbwpoint));
+	} while (vms2emu ? InterlockedDecrement64(&eventcount) : (readhead != writehead));
+
+	return 0;
+}
+
+int __inline PlayBufferedDataChunk(void)
+{
+	if (allnotesignore || !BufferCheck()) return 1;
+
+	DWORD evt = writehead;
+
+	do {
+		evbuf_t TempBuffer = *(evbuf + readhead);
+		if (++readhead >= evbuffsize) readhead = 0;
+
+		switch (TempBuffer.uMsg)
+		{
+		case MODM_DATA:
+			SendToBASSMIDI(TempBuffer.dwParam1);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
+			break;
+		}
+	} while (vms2emu ? InterlockedDecrement64(&eventcount) : (readhead != evt));
 
 	return 0;
 }
@@ -146,24 +175,23 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 }
 
 MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	if (!streaminitialized) return MMSYSERR_NOERROR;
-
-	long long evbpoint = evbwpoint;
-	if (((evbrpoint - evbwpoint) % evbuffsize) == 1) return MMSYSERR_NOERROR;
-	if (++evbwpoint >= evbuffsize) evbwpoint = 0;
-
-	if (uMsg != MODM_LONGDATA && (ignorenotes1 || limit88) && CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
+	if (!streaminitialized || (uMsg != MODM_LONGDATA && (ignorenotes1 || limit88) && CheckIfEventIsToIgnore(dwParam1)))
+		return MMSYSERR_NOERROR;
 
 	if ((uMsg != MODM_LONGDATA) && fullvelocity || pitchshift != 0x7F)
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
-	evbuf[evbpoint].uMsg = uMsg;
-	evbuf[evbpoint].dwParam1 = dwParam1;
-	evbuf[evbpoint].dwParam2 = dwParam2;
+	EnterCriticalSection(&mim_section);
+	long long tempevent = writehead;
+	if (++writehead >= evbuffsize) writehead = 0;
 
-	if (vms2emu && InterlockedIncrement64(&evbcount) >= evbuffsize) {
-		do { /* Absolutely nothing */ } while (evbcount >= evbuffsize);
-	}
+	evbuf[tempevent].uMsg = uMsg;
+	evbuf[tempevent].dwParam1 = dwParam1;
+	evbuf[tempevent].dwParam2 = dwParam2;
+	LeaveCriticalSection(&mim_section);
+
+	if (vms2emu) 
+		if (InterlockedIncrement64(&eventcount) >= evbuffsize) do { /* Absolutely nothing */ } while (eventcount >= evbuffsize);
 
 	return MMSYSERR_NOERROR;
 }

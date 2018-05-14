@@ -123,13 +123,11 @@ void DoResetClient() {
 	ResetSynth(0);
 }
 
-char const* WINAPI ReturnKSDAPIVer()
-{
-	return "v1.5 (Release)";
+char const* WINAPI ReturnKSDAPIVer() {
+	return "v1.10 (Release)";
 }
 
-BOOL WINAPI IsKSDAPIAvailable() 
-{
+BOOL WINAPI IsKSDAPIAvailable()  {
 	HKEY hKey;
 	long lResult;
 	DWORD dwType = REG_DWORD;
@@ -153,13 +151,11 @@ void ResetKSStream() {
 	ResetSynth(0);
 }
 
-MMRESULT WINAPI SendDirectData(DWORD dwMsg)
-{
+MMRESULT WINAPI SendDirectData(DWORD dwMsg) {
 	return ParseData(MODM_DATA, dwMsg, NULL);
 }
 
-MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
-{
+MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	try {
 		if (streaminitialized) SendToBASSMIDI(dwMsg);
 		return MMSYSERR_NOERROR;
@@ -167,18 +163,44 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)
 	catch (...) { return MMSYSERR_INVALPARAM; }
 }
 
-MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr)
-{
-	if (streaminitialized)
-	{
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-		IIMidiHdr->dwFlags &= ~MHDR_DONE;
-		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
-		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
-		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-		IIMidiHdr->dwFlags |= MHDR_DONE;
-		return MMSYSERR_NOERROR;
+MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
+	try {
+		if (streaminitialized) {
+			DWORD retval = MMSYSERR_NOERROR;
+			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+			IIMidiHdr->dwFlags &= ~MHDR_DONE;
+			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+			if (!sysexignore) {
+				void* data = malloc(IIMidiHdr->dwBytesRecorded);
+				if (data) {
+					memcpy(data, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+					retval = ParseData(MODM_LONGDATA, (DWORD_PTR)data, IIMidiHdr->dwBytesRecorded);
+				}
+				else retval = MMSYSERR_NOMEM;
+			}
+			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
+			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+			IIMidiHdr->dwFlags |= MHDR_DONE;
+			return retval;
+		}
+		else return MMSYSERR_NOMEM;
 	}
-	else return MMSYSERR_NOMEM;
+	catch (...) { return MMSYSERR_INVALPARAM; }
+}
+
+MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
+	try {
+		if (streaminitialized) {
+			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+			IIMidiHdr->dwFlags &= ~MHDR_DONE;
+			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+			if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
+			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
+			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+			IIMidiHdr->dwFlags |= MHDR_DONE;
+			return MMSYSERR_NOERROR;
+		}
+		else return MMSYSERR_NOMEM;
+	}
+	catch (...) { return MMSYSERR_INVALPARAM; }
 }

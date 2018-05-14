@@ -400,8 +400,7 @@ void StatusType(int status, char* &statustoprint) {
 	else statustoprint = "Unknown event\0";
 }
 
-void usleep(__int64 usec)
-{
+void usleep(__int64 usec) {
 	HANDLE timer;
 	LARGE_INTEGER ft;
 
@@ -414,41 +413,45 @@ void usleep(__int64 usec)
 }
 
 void PrintToConsole(int color, long stage, const char* text) {
-	if (debugmode == 1 && printimportant == 1) {
-		// Set color
-		SetConsoleTextAttribute(hConsole, color);
+	if (debugmode) {
+		if (printimportant) {
+			// Set color
+			SetConsoleTextAttribute(hConsole, color);
 
-		// Get time
-		char buff[20];
-		struct tm *sTm;
-		time_t now = time(0);
-		sTm = gmtime(&now);
-		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+			// Get time
+			char buff[20];
+			struct tm *sTm;
+			time_t now = time(0);
+			sTm = gmtime(&now);
+			strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
 
-		// Print to log
-		std::cout << std::endl << buff << " - (" << stage << ") - " << text;
+			// Print to log
+			std::cout << std::endl << buff << " - (" << stage << ") - " << text;
+		}
 	}
 }
 
 void PrintEventToConsole(int color, int stage, bool issysex, const char* text) {
-	if (debugmode == 1 && printmidievent == 1) {
-		// Set color
-		SetConsoleTextAttribute(hConsole, color);
+	if (debugmode) {
+		if (printmidievent) {
+			// Set color
+			SetConsoleTextAttribute(hConsole, color);
 
-		// Get time
-		char buff[20];
-		struct tm *sTm;
-		time_t now = time(0);
-		sTm = gmtime(&now);
-		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+			// Get time
+			char buff[20];
+			struct tm *sTm;
+			time_t now = time(0);
+			sTm = gmtime(&now);
+			strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
 
-		// Print to log
-		if (issysex) std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
-		else {
-			// Get status
-			char* statustoprint = { 0 };
-			StatusType(stage & 0xFF, statustoprint);
-			std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Channel = " << (stage & 0xF) << " | Type = " << statustoprint << " | Note = " << ((stage >> 8) & 0xFF) << " | Velocity = " << ((stage >> 16) & 0xFF);
+			// Print to log
+			if (issysex) std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
+			else {
+				// Get status
+				char* statustoprint = { 0 };
+				StatusType(stage & 0xFF, statustoprint);
+				std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Channel = " << (stage & 0xF) << " | Type = " << statustoprint << " | Note = " << ((stage >> 8) & 0xFF) << " | Velocity = " << ((stage >> 16) & 0xFF);
+			}
 		}
 	}
 }

@@ -6,12 +6,12 @@ struct evbuf_t{
 	UINT			uMsg;
 	DWORD_PTR		dwParam1;
 	DWORD_PTR		dwParam2;
-};
+};	// The buffer's structure
 
-static struct evbuf_t * evbuf;
-static long long evbwpoint = 0;
-static long long evbrpoint = 0;
-static volatile long long evbcount = 0;
+static struct evbuf_t * evbuf;				// The buffer
+static long long writehead = 0;				// Current write position in the buffer
+static long long readhead = 0;				// Current read position in the buffer
+static volatile long long eventcount = 0;	// Total events present in the buffer
 
 void DLLLoadError(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
@@ -57,9 +57,9 @@ void CopyToClipboard(const std::string &s) {
 void ResetSynth(int ischangingbuffermode){
 	reset_synth = 1;
 	if (ischangingbuffermode == 1) {
-		evbwpoint = 0;
-		evbrpoint = 0;
-		evbcount = 0;
+		writehead = 0;
+		readhead = 0;
+		eventcount = 0;
 	}
 	BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 	reset_synth = 0;

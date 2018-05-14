@@ -53,10 +53,13 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			start4 = TimeNow();
 
 			MT32SetInstruments();
-			PlayBufferedData();
+			if (PlayBufferedData()) 
+				usleep(1);
 
-			if (capframerate == 1) usleep(16666); else usleep(1);
-			if (currentengine == 1 && oldbuffermode == 1) { break; }
+			if (capframerate)
+				usleep(16667);
+	
+			if (currentengine == 1 && oldbuffermode) break;
 		}
 	}
 	catch (...) {
@@ -110,22 +113,22 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 		while (!stop_thread) {
 			start2 = TimeNow();
 			if (currentengine < 2) {
-				if (reset_synth != 0) {
+				if (reset_synth) {
 					reset_synth = 0;
 					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				}
 
 				if (currentengine == 0) AudioRender();
-				else {
-					BASS_ChannelUpdate(KSStream, 0);
-					usleep(rco);
-				}
+				else BASS_ChannelUpdate(KSStream, 0);
 
-				if (oldbuffermode == 1) {
+				if (oldbuffermode) {
 					MT32SetInstruments();
-					PlayBufferedData();
+					PlayBufferedDataChunk();
 				}
-				else InitializeNotesCatcherThread();
+				else if (!hThread4)
+					InitializeNotesCatcherThread();
+
+				usleep(rco);
 			}
 			else break;
 		}

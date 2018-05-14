@@ -120,8 +120,8 @@ KSStop = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "TerminateKSStream
 Resets the MIDI channels. There are no arguments.
 
 ```c
-void(WINAPI*KSStop)() = 0;
-KSStop = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "TerminateKSStream");
+void(WINAPI*KSReset)() = 0;
+KSReset = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "ResetKSStream");
 ```
 
 ### **ReturnKSDAPIVer**
@@ -152,14 +152,13 @@ MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
 KShortMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectData"); // Or SendDirectDataNoBuf
 ```
 
-### **SendDirectLongData**
-Allows you to send MIDIHDR/System Exclusive events to the driver. 
-The function always sends the data directly to the driver, it's not buffered.
-**REMEMBER** to handle the MIDIHDR preparation yourself, if you're not using Keppy's Synthesizer through WinMM!
+### **SendDirectLongData/SendDirectLongDataNoBuf**
+Allows you to send MIDIHDR/System Exclusive events to the driver.
+**REMEMBER** to handle the MIDIHDR preparation and the callbacks yourself, if you're not using Keppy's Synthesizer through WinMM!
 The available arguments are:
 
 - *MIDIHDR* IIMidiHdr*: The pointer to the MIDIHDR.
 ```c
 MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr) = 0;
-KLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectLongData");
+KLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectLongData"); // Or SendDirectLongDataNoBuf
 ```

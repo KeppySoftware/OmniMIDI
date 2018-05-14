@@ -164,9 +164,10 @@
             this.NoSleep.AutoSize = true;
             this.NoSleep.Location = new System.Drawing.Point(6, 75);
             this.NoSleep.Name = "NoSleep";
-            this.NoSleep.Size = new System.Drawing.Size(276, 17);
+            this.NoSleep.Size = new System.Drawing.Size(250, 17);
             this.NoSleep.TabIndex = 6;
-            this.NoSleep.Text = "Disable sleep states (DirectSound and WASAPI only)\r\n";
+            this.NoSleep.Text = "Disable sleep states in the notes catcher thread\r\n";
+            this.Requirements.SetToolTip(this.NoSleep, "This only works with WASAPI and DirectSound");
             this.NoSleep.UseVisualStyleBackColor = true;
             this.NoSleep.CheckedChanged += new System.EventHandler(this.NoSleep_CheckedChanged);
             // 
@@ -188,9 +189,10 @@
             this.OldBuff.AutoSize = true;
             this.OldBuff.Location = new System.Drawing.Point(6, 56);
             this.OldBuff.Name = "OldBuff";
-            this.OldBuff.Size = new System.Drawing.Size(315, 17);
+            this.OldBuff.Size = new System.Drawing.Size(318, 17);
             this.OldBuff.TabIndex = 4;
-            this.OldBuff.Text = "Enable the old buffer system (DirectSound and WASAPI only)";
+            this.OldBuff.Text = "Run the notes catcher in the same thread as the audio engine";
+            this.Requirements.SetToolTip(this.OldBuff, "This only works with WASAPI and DirectSound");
             this.OldBuff.UseVisualStyleBackColor = true;
             this.OldBuff.CheckedChanged += new System.EventHandler(this.OldBuff_CheckedChanged);
             // 
