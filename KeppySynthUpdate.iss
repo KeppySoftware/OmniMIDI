@@ -10,7 +10,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthUpdate"
 #define ProductName "Keppy's Synthesizer"
-#define Version '5.0.4.5'
+#define Version '5.0.4.6'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -53,7 +53,6 @@ TimeStampsInUTC=True
 UninstallDisplayIcon={syswow64}\{#InstallDir}\KeppySynthConfigurator.exe
 UninstallDisplayName={#ProductName} (Uninstall only)
 UninstallDisplaySize=8241947
-UninstallFilesDir={syswow64}\{#InstallDir}
 Uninstallable=no
 UpdateUninstallLogAppName=no
 UsePreviousAppDir=yes
@@ -141,7 +140,6 @@ Name: "{group}\Open the {#ProductName}'s debug window"; Filename: "{sys}\{#Insta
 Name: "{group}\Change advanced settings"; Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; WorkingDir: "{app}"; IconFilename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/AST"; Check: not Is64BitInstallMode
 Name: "{group}\Soundfont packer by Kode54"; Filename: "{sys}\{#InstallDir}\sfpacker.exe"; WorkingDir: "{app}"; Check: Is64BitInstallMode
 ; Other
-Name: "{group}\Uninstall the driver"; Filename: "{uninstallexe}"; IconFilename: "{uninstallexe}"
 Name: "{userdesktop}\{#ProductName} Configurator"; Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; IconFilename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Tasks: desktopicon; Check: Is64BitInstallMode
 Name: "{userdesktop}\{#ProductName} Configurator"; Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; IconFilename: "{sys}\keppysynth\KeppySynthConfigurator.exe"; Tasks: desktopicon; Check: not Is64BitInstallMode
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#ProductName} Configurator"; Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; IconFilename: "{syswow64}\keppysynth\KeppySynthConfigurator.exe"; Tasks: quicklaunchicon; Check: Is64BitInstallMode

@@ -28,42 +28,25 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
-int PlayBufferedData(void){
-	if (allnotesignore) {
-		return 0;
-	}
-	else {
-		UINT uMsg;
-		DWORD_PTR	dwParam1;
-		DWORD_PTR   dwParam2;
-		UINT evbpoint;
-		int exlen;
-		unsigned char *sysexbuffer;
+int __inline PlayBufferedData(void){
+	if (allnotesignore || !BufferCheck()) return -1;
 
-		if (!BufferCheck()){
-			return ~0;
+	do {
+		evbuf_t TempBuffer = *(evbuf + evbrpoint);
+		if (++evbrpoint >= evbuffsize) evbrpoint = 0;
+
+		switch (TempBuffer.uMsg) {
+		case MODM_DATA:
+			SendToBASSMIDI(TempBuffer.dwParam1);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
+			break;
 		}
+	} 
+	while (vms2emu ? InterlockedDecrement64(&evbcount) : (evbrpoint != evbwpoint));
 
-		do {
-			EnterCriticalSection(&mim_section);
-			evbpoint = evbrpoint;
-
-			if (++evbrpoint >= evbuffsize) evbrpoint -= evbuffsize;
-
-			uMsg = evbuf[evbpoint].uMsg;
-			dwParam1 = evbuf[evbpoint].dwParam1;
-			dwParam2 = evbuf[evbpoint].dwParam2;
-			LeaveCriticalSection(&mim_section);
-
-			switch (uMsg) {
-			case MODM_DATA:
-				SendToBASSMIDI(dwParam1);
-				break;
-			}
-		} while (vms2emu ? InterlockedDecrement64(&evbcount) : BufferCheck());
-
-		return 0;
-	}
+	return 0;
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -162,19 +145,21 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(UINT uMsg, UINT uDeviceID, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	if (CheckIfEventIsToIgnore(dwParam1) || !streaminitialized) return MMSYSERR_NOERROR;
+MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	if (!streaminitialized) return MMSYSERR_NOERROR;
 
-	dwParam1 = ReturnEditedEvent(dwParam1);
-
-	EnterCriticalSection(&mim_section);
 	long long evbpoint = evbwpoint;
-	if (++evbwpoint >= evbuffsize) evbwpoint -= evbuffsize;
+	if (((evbrpoint - evbwpoint) % evbuffsize) == 1) return MMSYSERR_NOERROR;
+	if (++evbwpoint >= evbuffsize) evbwpoint = 0;
+
+	if (uMsg != MODM_LONGDATA && (ignorenotes1 || limit88) && CheckIfEventIsToIgnore(dwParam1)) return MMSYSERR_NOERROR;
+
+	if ((uMsg != MODM_LONGDATA) && fullvelocity || pitchshift != 0x7F)
+		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	evbuf[evbpoint].uMsg = uMsg;
 	evbuf[evbpoint].dwParam1 = dwParam1;
 	evbuf[evbpoint].dwParam2 = dwParam2;
-	LeaveCriticalSection(&mim_section);
 
 	if (vms2emu && InterlockedIncrement64(&evbcount) >= evbuffsize) {
 		do { /* Absolutely nothing */ } while (evbcount >= evbuffsize);

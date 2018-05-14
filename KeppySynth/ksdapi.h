@@ -2,7 +2,7 @@
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
-	if (BASS_ErrorGetCode() == 5 || livechange == 1) {
+	if (BASS_ErrorGetCode() == 5 || livechange) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 		CloseThreads();
 		LoadSettings(TRUE);
@@ -125,7 +125,7 @@ void DoResetClient() {
 
 char const* WINAPI ReturnKSDAPIVer()
 {
-	return "v1.4 (Release)";
+	return "v1.5 (Release)";
 }
 
 BOOL WINAPI IsKSDAPIAvailable() 
@@ -155,7 +155,7 @@ void ResetKSStream() {
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg)
 {
-	return ParseData(MODM_DATA, 0, dwMsg, NULL);
+	return ParseData(MODM_DATA, dwMsg, NULL);
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg)

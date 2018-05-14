@@ -768,8 +768,38 @@ LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
 	struct Driver *driver = &drivers[uDeviceID];
+	DWORD retval = MMSYSERR_NOERROR;
 
 	switch (uMsg) {
+	case MODM_DATA:
+		return ParseData(uMsg, dwParam1, dwParam2);
+	case MODM_LONGDATA:
+		IIMidiHdr = (MIDIHDR *)dwParam1;
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+		IIMidiHdr->dwFlags &= ~MHDR_DONE;
+		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+		if (!sysexignore)
+		{
+			void* data = malloc(IIMidiHdr->dwBytesRecorded);
+			if (data)
+			{
+				try
+				{
+					memcpy(data, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+					retval = ParseData(uMsg, (DWORD_PTR)data, IIMidiHdr->dwBytesRecorded);
+				}
+				catch (...)
+				{
+					retval = MMSYSERR_INVALPARAM;
+				}
+			}
+			else retval = MMSYSERR_NOMEM;
+		}
+		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
+		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+		IIMidiHdr->dwFlags |= MHDR_DONE;
+		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
+		return retval;
 	case MODM_OPEN:
 		return DoOpenClient(driver, uDeviceID, reinterpret_cast<LONG*>(dwUser), reinterpret_cast<MIDIOPENDESC*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_PREPARE:
@@ -780,19 +810,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return VMSBlackList();
 	case MODM_GETDEVCAPS:
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
-	case MODM_LONGDATA:
-		IIMidiHdr = (MIDIHDR *)dwParam1;
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-		IIMidiHdr->dwFlags &= ~MHDR_DONE;
-		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
-		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
-		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-		IIMidiHdr->dwFlags |= MHDR_DONE;
-		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
-		return MMSYSERR_NOERROR;
-	case MODM_DATA:
-		return ParseData(uMsg, uDeviceID, dwParam1, dwParam2);
 	case MODM_STRMDATA:
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_GETVOLUME:
