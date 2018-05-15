@@ -51,6 +51,9 @@
     <ClInclude Include="ksdapi.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="dbg.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

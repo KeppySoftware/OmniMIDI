@@ -175,3 +175,179 @@ static TCHAR * BASSWASAPIErrorFix[2] =
 	L"You might be using a OS without WASAPI support, or the required DLL file might be missing from the driver's directory.\n\nTry reinstalling the driver.",
 	L"Big buffer values aren't supported in exclusive mode.\n\nTry using a smaller size.",
 };
+
+
+void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
+	if (debugmode == 1) {
+		// Set color
+		SetConsoleTextAttribute(hConsole, color);
+
+		// Get time
+		char buff[20];
+		struct tm *sTm;
+		time_t now = time(0);
+		sTm = gmtime(&now);
+		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+
+		// Get error
+		char errorC[MAX_PATH];
+		char descC[MAX_PATH];
+		wcstombs(errorC, error, wcslen(error) + 1);
+		wcstombs(descC, desc, wcslen(desc) + 1);
+		std::cout << std::endl;
+		std::cout << std::endl << buff << " - Keppy's Synthesizer encountered the following error: " << errorC;
+		std::cout << std::endl << buff << " - Description: " << descC;
+		std::cout << std::endl;
+	}
+}
+
+void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerror) {
+	TCHAR main[33354];
+	ZeroMemory(main, 33354);
+
+	int e = error + 1;
+
+	lstrcat(main, engine);
+	lstrcat(main, L" encountered the following error: ");
+	if (e >= 0 && e <= 48) {
+		lstrcat(main, BASSErrorCode[e]);
+		basserrconsole(FOREGROUND_RED, BASSErrorCode[e], BASSErrorCode[e]);
+	}
+	else if (e >= 5000 && e <= 5001) {
+		lstrcat(main, BASSWASAPIErrorCode[e - 5000]);
+		basserrconsole(FOREGROUND_RED, BASSWASAPIErrorCode[e - 5000], BASSErrorDesc[e - 5000]);
+	}
+
+	if (showerror) {
+		TCHAR title[MAX_PATH];
+		ZeroMemory(title, MAX_PATH);
+
+		std::wstring ernumb = std::to_wstring(error);
+
+		lstrcat(title, L"Keppy's Synthesizer - ");
+		lstrcat(title, engine);
+		lstrcat(title, L" execution error");
+
+		lstrcat(main, L" (E");
+		lstrcat(main, ernumb.c_str());
+		lstrcat(main, L")");
+
+		if (mode == 0) {
+			lstrcat(main, L"\n\nCode line error: ");
+			lstrcat(main, codeline);
+		}
+
+		lstrcat(main, L"\n\nExplanation: ");
+		if (e >= 0 && e <= 48) {
+			lstrcat(main, BASSErrorDesc[e]);
+		}
+		else if (e >= 5000 && e <= 5001) {
+			lstrcat(main, BASSWASAPIErrorDesc[e - 5000]);
+		}
+
+		if (mode == 1) {
+			lstrcat(main, L"\n\nWhat might have caused this error:\n");
+			lstrcat(main, codeline);
+		}
+		else {
+			lstrcat(main, L"\n\nPossible fixes:\n");
+			if (e >= 0 && e <= 48)
+				lstrcat(main, BASSErrorFix[e]);
+			else if (e >= 5000 && e <= 5001)
+				lstrcat(main, BASSWASAPIErrorFix[e - 5000]);
+		}
+
+		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
+		if (isoverrideenabled == 1) lstrcat(main, L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)");
+
+		if (engine == L"ASIO") {
+			lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+		}
+
+		MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
+	}
+
+	if (error == -1 ||
+		error >= 2 && error <= 10 ||
+		error == 19 ||
+		error >= 24 && error <= 26 ||
+		error == 44)
+	{
+		exit(error);
+	}
+}
+
+void CrashMessage(LPCWSTR part) {
+	TCHAR errormessage[MAX_PATH] = L"An error has been detected while trying to execute the following action: ";
+	TCHAR clickokmsg[MAX_PATH] = L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
+	lstrcat(errormessage, part);
+	lstrcat(errormessage, clickokmsg);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(Error at \"" << part << "\") - Fatal error during the execution of the driver." << std::endl;
+
+	const int result = MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	switch (result)
+	{
+	default:
+		exit(0);
+		return;
+	}
+}
+
+BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
+	int error = BASS_ErrorGetCode();
+	if (error != 0) {
+		ShowError(error, mode, L"BASS", codeline, showerror);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CheckUpASIO(int mode, TCHAR * codeline, bool showerror) {
+	int error = BASS_ASIO_ErrorGetCode();
+	if (error != 0) {
+		return FALSE;
+		ShowError(error, mode, L"BASSASIO", codeline, showerror);
+	}
+	return TRUE;
+}
+
+bool GetVersionInfo(
+	LPCTSTR filename,
+	int &major,
+	int &minor,
+	int &build,
+	int &revision)
+{
+	DWORD   verBufferSize;
+	char    verBuffer[2048];
+
+	//  Get the size of the version info block in the file
+	verBufferSize = GetFileVersionInfoSize(filename, NULL);
+	if (verBufferSize > 0 && verBufferSize <= sizeof(verBuffer))
+	{
+		//  get the version block from the file
+		if (TRUE == GetFileVersionInfo(filename, NULL, verBufferSize, verBuffer))
+		{
+			UINT length;
+			VS_FIXEDFILEINFO *verInfo = NULL;
+
+			//  Query the version information for neutral language
+			if (TRUE == VerQueryValue(
+				verBuffer,
+				_T("\\"),
+				reinterpret_cast<LPVOID*>(&verInfo),
+				&length))
+			{
+				//  Pull the version values.
+				major = HIWORD(verInfo->dwProductVersionMS);
+				minor = LOWORD(verInfo->dwProductVersionMS);
+				build = HIWORD(verInfo->dwProductVersionLS);
+				revision = LOWORD(verInfo->dwProductVersionLS);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}

@@ -10,3 +10,4 @@ EXPORTS
 	SendDirectData
 	SendDirectLongData
 	SendDirectDataNoBuf
+	SendDirectLongDataNoBuf

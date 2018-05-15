@@ -1,19 +1,49 @@
 // Keppy's Synthesizer Values
 
+struct Driver_Client {
+	int allocated;
+	DWORD_PTR instance;
+	DWORD flags;
+	DWORD_PTR callback;
+};
+
+struct Driver {
+	int open;
+	int clientCount;
+	HDRVR hdrvr;
+	struct Driver_Client clients[MAX_CLIENTS];
+} drivers[MAX_DRIVERS + 1];
+
+static int driverCount = 0;
+
+static volatile BOOL modm_closed = TRUE;
+
+static volatile BOOL reset_synth = FALSE;
+static DWORD processPriority = NORMAL_PRIORITY_CLASS;
+static HANDLE load_sfevent = NULL;
+
+static int KSStream = NULL;
+static BASS_INFO info;
+
+static BOOL com_initialized = FALSE;
+static float sound_out_volume_float = 1.0;
+
+// Threads
+static volatile BOOL stop_thread = FALSE;
+static volatile BOOL stop_rtthread = FALSE;
+static unsigned long long start1, start2, start3, start4;
+static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
+static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL, hThreadDBG = NULL;
+static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL, thrdaddrDBG = NULL;
+static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE, hThreadDBGRunning = FALSE;
+
 // Mandatory values
 static CRITICAL_SECTION mim_section;
-static CRITICAL_SECTION bass_section;
 static HINSTANCE hinst = NULL;							// main DLL handle
 
 static char modulename[MAX_PATH];		// debug info
 static char bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
-static HINSTANCE bass = 0;				// bass handle
-static HINSTANCE bass_vst = 0;			// bass_vst handle
-static HINSTANCE bassasio = 0;			// bassasio handle
-static HINSTANCE bassenc = 0;			// bassenc handle
-static HINSTANCE bassmidi = 0;			// bassmidi handle
-static HINSTANCE bassmix = 0;			// bassmix handle
 
 // Potato
 static BOOL streaminitialized = FALSE;
@@ -314,7 +344,7 @@ static LPCWSTR pitchshiftname[16] =
 	L"ch16pshift"
 };
 
-// 
+//
 
 BOOL CheckNullChar(CHAR* scanme) {
 	for (int i = 0; i != sizeof(scanme); i++) {
@@ -334,4 +364,16 @@ BOOL CheckNullWChar(WCHAR* scanme) {
 		}
 	}
 	return FALSE;
+}
+
+void usleep(__int64 usec) {
+	HANDLE timer;
+	LARGE_INTEGER ft;
+
+	ft.QuadPart = -(10 * usec);
+
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+	WaitForSingleObject(timer, INFINITE);
+	CloseHandle(timer);
 }
