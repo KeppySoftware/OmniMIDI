@@ -82,6 +82,26 @@ void DoStartClient() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
 		RegCloseKey(hKey);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"hypermode", NULL, &dwType, (LPBYTE)&HyperMode, &dwSize);
+		RegCloseKey(hKey);
+
+		if (HyperMode && !HyperCheckedAlready) {
+			MessageBox(NULL, L"Hyper-playback mode is enabled!", L"Keppy's Synthesizer", MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
+			_PrsData = ParseDataHyper;
+			_SndBASSMIDI = SendToBASSMIDIHyper;
+			_SndLongBASSMIDI = SendLongToBASSMIDIHyper;
+			_PlayBufData = PlayBufferedDataHyper;
+			_PlayBufDataChk = PlayBufferedDataChunkHyper;
+		}
+		else {
+			_PrsData = ParseData;
+			_SndBASSMIDI = SendToBASSMIDI;
+			_SndLongBASSMIDI = SendLongToBASSMIDI;
+			_PlayBufData = PlayBufferedData;
+			_PlayBufDataChk = PlayBufferedDataChunk;
+		}
+		HyperCheckedAlready = TRUE;
 
 		AppName();
 		StartDebugPipe(FALSE);
@@ -152,7 +172,7 @@ void ResetKSStream() {
 }
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg) {
-	return ParseData(MODM_DATA, dwMsg, NULL);
+	return _PrsData(MODM_DATA, dwMsg, NULL);
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
@@ -174,7 +194,7 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 				void* data = malloc(IIMidiHdr->dwBytesRecorded);
 				if (data) {
 					memcpy(data, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
-					retval = ParseData(MODM_LONGDATA, (DWORD_PTR)data, IIMidiHdr->dwBytesRecorded);
+					retval = _PrsData(MODM_LONGDATA, (DWORD_PTR)data, IIMidiHdr->dwBytesRecorded);
 				}
 				else retval = MMSYSERR_NOMEM;
 			}
@@ -194,7 +214,7 @@ MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 			IIMidiHdr->dwFlags &= ~MHDR_DONE;
 			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-			if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
+			if (!sysexignore) _SndLongBASSMIDI(IIMidiHdr);
 			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 			IIMidiHdr->dwFlags |= MHDR_DONE;

@@ -53,7 +53,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 			start4 = TimeNow();
 
 			MT32SetInstruments();
-			if (PlayBufferedData()) 
+			if (_PlayBufData())
 				usleep(1);
 
 			if (capframerate)
@@ -123,7 +123,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 
 				if (oldbuffermode) {
 					MT32SetInstruments();
-					PlayBufferedDataChunk();
+					_PlayBufDataChk();
 				}
 				else if (!hThread4)
 					InitializeNotesCatcherThread();

@@ -1052,6 +1052,7 @@ namespace KeppySynthConfigurator
                             else if (SettingName(x) == "Volume") KeppySynthConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(SettingValue(x));
                             // Advanced audio settings
                             else if (SettingName(x) == "AllowKSDAPI") KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "HyperMode") KeppySynthConfiguratorMain.SynthSettings.SetValue("hypermode", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "AudioDepth") KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "FadeOutDisable") KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "MonoRendering") KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", SettingValue(x), RegistryValueKind.DWord);
@@ -1135,6 +1136,7 @@ namespace KeppySynthConfigurator
                     SettingsToText.AppendLine();
                     SettingsToText.AppendLine("// Advanced audio settings");
                     SettingsToText.AppendLine(String.Format("AllowKSDAPI = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("allowksdapi", 1)));
+                    SettingsToText.AppendLine(String.Format("HyperMode = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("hypermode", 0)));
                     SettingsToText.AppendLine(String.Format("AudioDepth = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1)));
                     SettingsToText.AppendLine(String.Format("FadeOutDisable = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)));
                     SettingsToText.AppendLine(String.Format("MonoRendering = {0}", KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)));

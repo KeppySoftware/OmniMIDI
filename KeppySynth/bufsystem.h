@@ -7,10 +7,18 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-int BufferCheck(void){
+int BufferCheck(long long writehead) {
 	int retval;
 	EnterCriticalSection(&mim_section);
 	retval = vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
+	LeaveCriticalSection(&mim_section);
+	return retval;
+}
+
+int BufferCheckHyper(long long writehead) {
+	int retval;
+	EnterCriticalSection(&mim_section);
+	retval = (readhead != writehead) ? ~0 : 0;
 	LeaveCriticalSection(&mim_section);
 	return retval;
 }
@@ -34,8 +42,25 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
-int __inline PlayBufferedData(void){
-	if (allnotesignore || !BufferCheck()) return 1;
+void SendToBASSMIDIHyper(DWORD dwParam1) {
+	if (!(dwParam1 - 0x80 & 0xC0))
+	{
+		BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
+		return;
+	}
+
+	DWORD dwParam2 = dwParam1 & 0xF0;
+	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
+
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+}
+
+void SendLongToBASSMIDIHyper(MIDIHDR* IIMidiHdr) {
+	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+}
+
+int __inline PlayBufferedData(void) {
+	if (allnotesignore || !BufferCheck(writehead)) return 1;
 
 	do {
 		evbuf_t TempBuffer = *(evbuf + readhead);
@@ -43,7 +68,7 @@ int __inline PlayBufferedData(void){
 
 		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
-			SendToBASSMIDI(TempBuffer.dwParam1);
+			_SndBASSMIDI(TempBuffer.dwParam1);
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
@@ -54,26 +79,64 @@ int __inline PlayBufferedData(void){
 	return 0;
 }
 
-int __inline PlayBufferedDataChunk(void)
-{
-	if (allnotesignore || !BufferCheck()) return 1;
-
-	DWORD evt = writehead;
+int __inline PlayBufferedDataHyper(void) {
+	if (!BufferCheckHyper(writehead)) return 1;
 
 	do {
 		evbuf_t TempBuffer = *(evbuf + readhead);
 		if (++readhead >= evbuffsize) readhead = 0;
 
-		switch (TempBuffer.uMsg)
-		{
+		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
-			SendToBASSMIDI(TempBuffer.dwParam1);
+			_SndBASSMIDI(TempBuffer.dwParam1);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
+			break;
+		}
+	} while (readhead != writehead);
+
+	return 0;
+}
+
+int __inline PlayBufferedDataChunk(void) {
+	DWORD evt = writehead;
+
+	if (allnotesignore || !BufferCheck(evt)) return 1;
+	do {
+		evbuf_t TempBuffer = *(evbuf + readhead);
+		if (++readhead >= evbuffsize) readhead = 0;
+
+		switch (TempBuffer.uMsg) {
+		case MODM_DATA:
+			_SndBASSMIDI(TempBuffer.dwParam1);
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
 			break;
 		}
 	} while (vms2emu ? InterlockedDecrement64(&eventcount) : (readhead != evt));
+
+	return 0;
+}
+
+int __inline PlayBufferedDataChunkHyper(void) {
+	DWORD evt = writehead;
+
+	if (!BufferCheckHyper(evt)) return 1;
+	do {
+		evbuf_t TempBuffer = *(evbuf + readhead);
+		if (++readhead >= evbuffsize) readhead = 0;
+
+		switch (TempBuffer.uMsg) {
+		case MODM_DATA:
+			_SndBASSMIDI(TempBuffer.dwParam1);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
+			break;
+		}
+	} while (readhead != evt);
 
 	return 0;
 }
@@ -190,8 +253,21 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	evbuf[tempevent].dwParam2 = dwParam2;
 	LeaveCriticalSection(&mim_section);
 
-	if (vms2emu) 
+	if (vms2emu)
 		if (InterlockedIncrement64(&eventcount) >= evbuffsize) do { /* Absolutely nothing */ } while (eventcount >= evbuffsize);
+
+	return MMSYSERR_NOERROR;
+}
+
+MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	EnterCriticalSection(&mim_section);
+	long long tempevent = writehead;
+	if (++writehead >= evbuffsize) writehead = 0;
+
+	evbuf[tempevent].uMsg = uMsg;
+	evbuf[tempevent].dwParam1 = dwParam1;
+	evbuf[tempevent].dwParam2 = dwParam2;
+	LeaveCriticalSection(&mim_section);
 
 	return MMSYSERR_NOERROR;
 }

@@ -46,10 +46,13 @@
             this.OKBtn = new System.Windows.Forms.Button();
             this.CAE = new System.Windows.Forms.Label();
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
+            this.HMode = new System.Windows.Forms.CheckBox();
+            this.HModeWhat = new System.Windows.Forms.PictureBox();
             this.AOS.SuspendLayout();
             this.ABS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSDAPIBoxWhat)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HModeWhat)).BeginInit();
             this.SuspendLayout();
             // 
             // AOS
@@ -122,6 +125,8 @@
             this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ABS.Controls.Add(this.HModeWhat);
+            this.ABS.Controls.Add(this.HMode);
             this.ABS.Controls.Add(this.KSDAPIBoxWhat);
             this.ABS.Controls.Add(this.KSDAPIBox);
             this.ABS.Controls.Add(this.NoSleep);
@@ -129,7 +134,7 @@
             this.ABS.Controls.Add(this.OldBuff);
             this.ABS.Location = new System.Drawing.Point(12, 110);
             this.ABS.Name = "ABS";
-            this.ABS.Size = new System.Drawing.Size(345, 98);
+            this.ABS.Size = new System.Drawing.Size(345, 117);
             this.ABS.TabIndex = 4;
             this.ABS.TabStop = false;
             this.ABS.Text = "Audio buffer settings";
@@ -148,7 +153,6 @@
             // 
             // KSDAPIBox
             // 
-            this.KSDAPIBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.KSDAPIBox.AutoSize = true;
             this.KSDAPIBox.Location = new System.Drawing.Point(6, 18);
             this.KSDAPIBox.Name = "KSDAPIBox";
@@ -162,7 +166,7 @@
             // 
             this.NoSleep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.NoSleep.AutoSize = true;
-            this.NoSleep.Location = new System.Drawing.Point(6, 75);
+            this.NoSleep.Location = new System.Drawing.Point(6, 94);
             this.NoSleep.Name = "NoSleep";
             this.NoSleep.Size = new System.Drawing.Size(250, 17);
             this.NoSleep.TabIndex = 6;
@@ -175,7 +179,7 @@
             // 
             this.SlowDownPlayback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SlowDownPlayback.AutoSize = true;
-            this.SlowDownPlayback.Location = new System.Drawing.Point(6, 37);
+            this.SlowDownPlayback.Location = new System.Drawing.Point(6, 56);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
             this.SlowDownPlayback.Size = new System.Drawing.Size(244, 17);
             this.SlowDownPlayback.TabIndex = 5;
@@ -187,7 +191,7 @@
             // 
             this.OldBuff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.OldBuff.AutoSize = true;
-            this.OldBuff.Location = new System.Drawing.Point(6, 56);
+            this.OldBuff.Location = new System.Drawing.Point(6, 75);
             this.OldBuff.Name = "OldBuff";
             this.OldBuff.Size = new System.Drawing.Size(318, 17);
             this.OldBuff.TabIndex = 4;
@@ -202,7 +206,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.ChangePitchShifting);
             this.groupBox1.Controls.Add(this.ChangeDefaultOutput);
-            this.groupBox1.Location = new System.Drawing.Point(12, 214);
+            this.groupBox1.Location = new System.Drawing.Point(12, 233);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(345, 48);
             this.groupBox1.TabIndex = 7;
@@ -233,7 +237,7 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(282, 272);
+            this.OKBtn.Location = new System.Drawing.Point(282, 291);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 8;
@@ -246,7 +250,7 @@
             this.CAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CAE.AutoSize = true;
             this.CAE.Enabled = false;
-            this.CAE.Location = new System.Drawing.Point(15, 277);
+            this.CAE.Location = new System.Drawing.Point(15, 296);
             this.CAE.Name = "CAE";
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 9;
@@ -262,12 +266,37 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
             // 
+            // HMode
+            // 
+            this.HMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.HMode.AutoSize = true;
+            this.HMode.Location = new System.Drawing.Point(6, 37);
+            this.HMode.Name = "HMode";
+            this.HMode.Size = new System.Drawing.Size(163, 17);
+            this.HMode.TabIndex = 9;
+            this.HMode.Text = "Enable hyper-playback mode";
+            this.Requirements.SetToolTip(this.HMode, "You need to restart the MIDI app, in order for this function to work.");
+            this.HMode.UseVisualStyleBackColor = true;
+            this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
+            // 
+            // HModeWhat
+            // 
+            this.HModeWhat.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.HModeWhat.Image = global::KeppySynthConfigurator.Properties.Resources.wi;
+            this.HModeWhat.Location = new System.Drawing.Point(168, 38);
+            this.HModeWhat.Name = "HModeWhat";
+            this.HModeWhat.Size = new System.Drawing.Size(14, 14);
+            this.HModeWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.HModeWhat.TabIndex = 10;
+            this.HModeWhat.TabStop = false;
+            this.HModeWhat.Click += new System.EventHandler(this.HModeWhat_Click);
+            // 
             // AdvancedAudioSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(369, 307);
+            this.ClientSize = new System.Drawing.Size(369, 326);
             this.Controls.Add(this.CAE);
             this.Controls.Add(this.OKBtn);
             this.Controls.Add(this.groupBox1);
@@ -288,6 +317,7 @@
             this.ABS.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KSDAPIBoxWhat)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.HModeWhat)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -312,5 +342,7 @@
         private System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.PictureBox KSDAPIBoxWhat;
         private System.Windows.Forms.CheckBox KSDAPIBox;
+        private System.Windows.Forms.PictureBox HModeWhat;
+        private System.Windows.Forms.CheckBox HMode;
     }
 }

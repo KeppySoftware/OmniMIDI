@@ -46,6 +46,17 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <bassasio.h>
 #include <bassmix.h>
 
+// Hyper switch
+int HyperMode = 0;
+int HyperCheckedAlready = FALSE;
+MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = 0;
+void(*_SndBASSMIDI)(DWORD dwParam1) = 0;
+void(*_SndLongBASSMIDI)(MIDIHDR *IIMidiHdr) = 0;
+int(*_PlayBufData)(void) = 0;
+int(*_PlayBufDataChk)(void) = 0;
+// What does it do? It gets rid of the useless functions,
+// and passes the events without checking for anything
+
 // Blinx best game
 static HINSTANCE bass = 0;				// bass handle
 static HINSTANCE bassasio = 0;			// bassasio handle
@@ -328,7 +339,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 	switch (uMsg) {
 	case MODM_DATA:
-		return ParseData(uMsg, dwParam1, dwParam2);
+		return _PrsData(uMsg, dwParam1, dwParam2);
 	case MODM_LONGDATA:
 		IIMidiHdr = (MIDIHDR *)dwParam1;
 		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;

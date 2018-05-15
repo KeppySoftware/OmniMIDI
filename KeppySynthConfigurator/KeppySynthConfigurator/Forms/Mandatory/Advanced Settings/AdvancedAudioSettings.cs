@@ -31,6 +31,9 @@ namespace KeppySynthConfigurator
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allowksdapi", 1)) == 1)
                 KSDAPIBox.Checked = true;
 
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hypermode", 0)) == 1)
+                HMode.Checked = true;
+
             if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffermode", 0)) == 1)
                 OldBuff.Checked = true;
 
@@ -119,6 +122,14 @@ namespace KeppySynthConfigurator
                 KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", "0", RegistryValueKind.DWord);
         }
 
+        private void HMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (HMode.Checked)
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("hypermode", "1", RegistryValueKind.DWord);
+            else
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("hypermode", "0", RegistryValueKind.DWord);
+        }
+
         private void OldBuff_CheckedChanged(object sender, EventArgs e)
         {
             if (OldBuff.Checked)
@@ -162,6 +173,14 @@ namespace KeppySynthConfigurator
             MessageBox.Show("If you uncheck this option, some apps might be forced to fallback to the stock Windows Multimedia API, which increases latency." +
                 "\nKeep in mind that not all KSDAPI-ready apps do check for this value, and they might use it whether you want them to or not." +
                 "\n\n(This value will not affect the Windows Multimedia Wrapper.)", 
+                "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void HModeWhat_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Clicking this checkbox will remove all the checks done to the events, for example transposing and other settings in the configurator.\n" +
+                "The events will be sent straight to the buffer, and played immediately.\n\n" +
+                "The \"Slow down playback instead of skipping notes\" checkbox will not work, while this mode is enabled, along with other event processing-related functions.",
                 "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
