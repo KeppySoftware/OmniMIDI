@@ -53,7 +53,6 @@ MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = 0;
 void(*_SndBASSMIDI)(DWORD dwParam1) = 0;
 void(*_SndLongBASSMIDI)(MIDIHDR *IIMidiHdr) = 0;
 int(*_PlayBufData)(void) = 0;
-int(*_PlayBufDataChk)(void) = 0;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 
@@ -94,28 +93,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	return TRUE;
 }
 
-LRESULT DoDriverLoad() {
-	memset(drivers, 0, sizeof(drivers));
-	driverCount = 0;
-	return DRV_OK;
-}
-
-LRESULT DoDriverOpen(HDRVR hdrvr, LPCWSTR driverName, LONG lParam) {
-	drivers[0].open = 1;
-	drivers[0].clientCount = 0;
-	drivers[0].hdrvr = hdrvr;
-	return 1;
-}
-
-LRESULT DoDriverClose(DWORD_PTR dwDriverId, HDRVR hdrvr, LONG lParam1, LONG lParam2) {
-	if (drivers[0].open && drivers[0].hdrvr == hdrvr) {
-		drivers[0].open = 0;
-		--driverCount;
-		return DRV_OK;
-	}
-	return DRV_CANCEL;
-}
-
 LRESULT DoDriverConfiguration() {
 	TCHAR configuratorapp[MAX_PATH];
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
@@ -135,13 +112,14 @@ STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM
 	case DRV_CONFIGURE:
 		return DoDriverConfiguration();
 	case DRV_LOAD:
-		return DoDriverLoad();
-	case DRV_FREE:
+		return DRV_OK;
+	case DRV_REMOVE:
 		return DRV_OK;
 	case DRV_OPEN:
-		return DoDriverOpen(hdrvr, reinterpret_cast<LPCWSTR>(lParam1), static_cast<LONG>(lParam2));
+		KSDevice = hdrvr;
+		return DRV_OK;
 	case DRV_CLOSE:
-		return DoDriverClose(dwDriverId, hdrvr, static_cast<LONG>(lParam1), static_cast<LONG>(lParam2));
+		return DRV_OK;
 	default:
 		return DRV_OK;
 	}
@@ -284,112 +262,120 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	}
 }
 
-LONG DoOpenClient(struct Driver *driver, UINT uDeviceID, LONG* dwUser, MIDIOPENDESC * desc, DWORD flags) {
-	int clientNum;
-	if (driver->clientCount == 0) {
-		DoStartClient();
-		DoResetClient();
-		clientNum = 0;
-	}
-	else if (driver->clientCount == MAX_CLIENTS) {
-		return MMSYSERR_ALLOCATED;
-	}
-	else {
-		int i;
-		for (i = 0; i < MAX_CLIENTS; i++) {
-			if (!driver->clients[i].allocated) {
-				break;
-			}
-		}
-		if (i == MAX_CLIENTS) {
-			return MMSYSERR_ALLOCATED;
-		}
-		clientNum = i;
-	}
-	driver->clients[clientNum].allocated = 1;
-	driver->clients[clientNum].flags = HIWORD(flags);
-	driver->clients[clientNum].callback = desc->dwCallback;
-	driver->clients[clientNum].instance = desc->dwInstance;
-	*dwUser = clientNum;
-	driver->clientCount++;
+LONG DoOpenClient() {
+	DoStartClient();
+	DoResetClient();
 	SetPriorityClass(GetCurrentProcess(), processPriority);
-	DoCallback(uDeviceID, clientNum, MOM_OPEN, 0, 0);
-	return MMSYSERR_NOERROR;
-}
-
-LONG DoCloseClient(struct Driver *driver, UINT uDeviceID, LONG dwUser) {
-	if (!driver->clients[dwUser].allocated) {
-		return MMSYSERR_INVALPARAM;
-	}
-
-	driver->clients[dwUser].allocated = 0;
-	driver->clientCount--;
-	if (driver->clientCount <= 0) {
-		DoResetClient();
-		driver->clientCount = 0;
-	}
-	DoCallback(uDeviceID, dwUser, MOM_CLOSE, 0, 0);
 	return MMSYSERR_NOERROR;
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
-	struct Driver *driver = &drivers[uDeviceID];
 	DWORD retval = MMSYSERR_NOERROR;
 
 	switch (uMsg) {
 	case MODM_DATA:
+		// Parse the data lol
 		return _PrsData(uMsg, dwParam1, dwParam2);
 	case MODM_LONGDATA:
+		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR *)dwParam1;
+
 		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+
+		// Mark the buffer as in queue
 		IIMidiHdr->dwFlags &= ~MHDR_DONE;
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+
+		// Do the stuff with it, if it's not to be ignored
 		if (!sysexignore)
 		{
+			// Allocate temp buffer for the event
 			void* data = malloc(IIMidiHdr->dwBytesRecorded);
 			if (data)
 			{
 				try
 				{
+					// Copy the event, and send it over to the events parser
 					memcpy(data, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 					retval = ParseData(uMsg, (DWORD_PTR)data, IIMidiHdr->dwBytesRecorded);
 				}
 				catch (...)
 				{
+					// Something happened, return "Invalid parameter"
 					retval = MMSYSERR_INVALPARAM;
 				}
 			}
+			// The buffer is invalid, return "No memory"
 			else retval = MMSYSERR_NOMEM;
 		}
+		// It has to be ignored, send info to console
 		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
+
+		// Mark the buffer as done
 		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 		IIMidiHdr->dwFlags |= MHDR_DONE;
-		DoCallback(uDeviceID, static_cast<LONG>(dwUser), MOM_DONE, dwParam1, 0);
+
+		// Tell the app that the buffer has been played
+		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, dwParam1, 0);
 		return retval;
 	case MODM_OPEN:
-		return DoOpenClient(driver, uDeviceID, reinterpret_cast<LONG*>(dwUser), reinterpret_cast<MIDIOPENDESC*>(dwParam1), static_cast<DWORD>(dwParam2));
+		// Parse callback and instance
+		KSCallback = reinterpret_cast<MIDIOPENDESC*>(dwParam1)->dwCallback;
+		KSInstance = reinterpret_cast<MIDIOPENDESC*>(dwParam1)->dwInstance;
+		KSFlags = HIWORD(static_cast<DWORD>(dwParam2));
+
+		// Open the driver
+		retval = DoOpenClient();
+
+		// Tell the app that the driver is ready
+		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_OPEN, KSInstance, 0, 0);
+		return retval;
 	case MODM_PREPARE:
-		return MMSYSERR_NOTSUPPORTED;
+		// Reference the MIDIHDR
+		IIMidiHdr = (MIDIHDR *)dwParam1;
+
+		// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
+		VirtualLock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+
+		// Mark the buffer as prepared, and say that everything is oki-doki
+		IIMidiHdr->dwFlags |= MHDR_PREPARED;
+		return MMSYSERR_NOERROR;
 	case MODM_UNPREPARE:
-		return MMSYSERR_NOTSUPPORTED;
+		// Reference the MIDIHDR
+		IIMidiHdr = (MIDIHDR *)dwParam1;
+
+		// Check if the MIDIHDR buffer is valid
+		if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
+		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
+
+		IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
+
+		// Unlock the buffer, and say that everything is oki-doki
+		VirtualUnlock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+		return MMSYSERR_NOERROR;
 	case MODM_GETNUMDEVS:
-		return VMSBlackList();
+		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO
+		return BlackListInit();
 	case MODM_GETDEVCAPS:
+		// Return KS' caps to the app
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
 	case MODM_STRMDATA:
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_GETVOLUME:
+		// Tell the app the current output volume of the driver
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
 	case MODM_SETVOLUME: 
+		// The app isn't allowed to set the volume, everything's fine anyway
 		return MMSYSERR_NOERROR;
 	case MODM_RESET:
 		DoResetClient();
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		if (stop_rtthread || stop_thread) return MIDIERR_STILLPLAYING;
-		else return DoCloseClient(driver, uDeviceID, static_cast<LONG>(dwUser));	
+		// The driver is sleeping now (Sort of), tell the app about this and that everything is oki-doki
+		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_CLOSE, KSInstance, 0, 0);
+		return MMSYSERR_NOERROR;
 	default:
 		return MMSYSERR_NOERROR;
 	}

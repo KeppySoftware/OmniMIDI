@@ -10,7 +10,7 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 int BufferCheck(void) {
 	int retval;
 	EnterCriticalSection(&mim_section);
-	retval = vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
+	retval = vms2emu ? eventcount : (readhead != writehead);
 	LeaveCriticalSection(&mim_section);
 	return retval;
 }
@@ -18,7 +18,7 @@ int BufferCheck(void) {
 int BufferCheckHyper(void) {
 	int retval;
 	EnterCriticalSection(&mim_section);
-	retval = (readhead != writehead) ? ~0 : 0;
+	retval = (readhead != writehead);
 	LeaveCriticalSection(&mim_section);
 	return retval;
 }
@@ -63,8 +63,10 @@ int __inline PlayBufferedData(void) {
 	if (allnotesignore || !BufferCheck()) return 1;
 
 	do {
-		evbuf_t TempBuffer = *(evbuf + readhead);
+		long long tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead = 0;
+
+		evbuf_t TempBuffer = *(evbuf + tempevent);
 
 		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
@@ -72,6 +74,7 @@ int __inline PlayBufferedData(void) {
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
+			free((void *)TempBuffer.dwParam1);
 			break;
 		}
 	} while (vms2emu ? InterlockedDecrement64(&eventcount) : (readhead != writehead));
@@ -83,8 +86,10 @@ int __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do {
-		evbuf_t TempBuffer = *(evbuf + readhead);
+		long long tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead = 0;
+
+		evbuf_t TempBuffer = *(evbuf + tempevent);
 
 		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
@@ -92,51 +97,10 @@ int __inline PlayBufferedDataHyper(void) {
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
+			free((void *)TempBuffer.dwParam1);
 			break;
 		}
 	} while (readhead != writehead);
-
-	return 0;
-}
-
-int __inline PlayBufferedDataChunk(void) {
-	DWORD evt = writehead;
-
-	if (allnotesignore || !BufferCheck()) return 1;
-	do {
-		evbuf_t TempBuffer = *(evbuf + readhead);
-		if (++readhead >= evbuffsize) readhead = 0;
-
-		switch (TempBuffer.uMsg) {
-		case MODM_DATA:
-			_SndBASSMIDI(TempBuffer.dwParam1);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
-			break;
-		}
-	} while (vms2emu ? InterlockedDecrement64(&eventcount) : (readhead != evt));
-
-	return 0;
-}
-
-int __inline PlayBufferedDataChunkHyper(void) {
-	DWORD evt = writehead;
-
-	if (!BufferCheckHyper()) return 1;
-	do {
-		evbuf_t TempBuffer = *(evbuf + readhead);
-		if (++readhead >= evbuffsize) readhead = 0;
-
-		switch (TempBuffer.uMsg) {
-		case MODM_DATA:
-			_SndBASSMIDI(TempBuffer.dwParam1);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
-			break;
-		}
-	} while (readhead != evt);
 
 	return 0;
 }
@@ -241,34 +205,47 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (!streaminitialized || (uMsg != MODM_LONGDATA && (ignorenotes1 || limit88) && CheckIfEventIsToIgnore(dwParam1)))
 		return MMSYSERR_NOERROR;
 
-	if ((uMsg != MODM_LONGDATA) && fullvelocity || pitchshift != 0x7F)
+	if ((uMsg != MODM_LONGDATA) && (fullvelocity || pitchshift != 0x7F))
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
+	// Prepare the event in the buffer
 	EnterCriticalSection(&mim_section);
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead = 0;
 
-	evbuf[tempevent].uMsg = uMsg;
-	evbuf[tempevent].dwParam1 = dwParam1;
-	evbuf[tempevent].dwParam2 = dwParam2;
+	evbuf_t evtobuf;
+	evtobuf.uMsg = uMsg;
+	evtobuf.dwParam1 = dwParam1;
+	evtobuf.dwParam2 = dwParam2;
+
+	evbuf[tempevent] = evtobuf;
+
 	LeaveCriticalSection(&mim_section);
 
+	// Some checks
 	if (vms2emu)
 		if (InterlockedIncrement64(&eventcount) >= evbuffsize) do { /* Absolutely nothing */ } while (eventcount >= evbuffsize);
 
+	// Haha everything is fine
 	return MMSYSERR_NOERROR;
 }
 
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	// Prepare the event in the buffer
 	EnterCriticalSection(&mim_section);
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead = 0;
 
-	evbuf[tempevent].uMsg = uMsg;
-	evbuf[tempevent].dwParam1 = dwParam1;
-	evbuf[tempevent].dwParam2 = dwParam2;
+	evbuf_t evtobuf;
+	evtobuf.uMsg = uMsg;
+	evtobuf.dwParam1 = dwParam1;
+	evtobuf.dwParam2 = dwParam2;
+
+	evbuf[tempevent] = evtobuf;
+
 	LeaveCriticalSection(&mim_section);
 
+	// Haha everything is fine
 	return MMSYSERR_NOERROR;
 }
 

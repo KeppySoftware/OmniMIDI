@@ -88,7 +88,7 @@ BOOL BlackListSystem(){
 	}
 }
 
-BOOL VMSBlackList(){
+BOOL BlackListInit(){
 	// First, the VMS blacklist system, then the main one
 	TCHAR modulename[MAX_PATH];
 	TCHAR sndvol[MAX_PATH];

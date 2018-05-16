@@ -123,7 +123,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 
 				if (oldbuffermode) {
 					MT32SetInstruments();
-					_PlayBufDataChk();
+					_PlayBufData();
 				}
 				else if (!hThread4)
 					InitializeNotesCatcherThread();

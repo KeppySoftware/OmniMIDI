@@ -8,7 +8,7 @@ struct evbuf_t{
 	DWORD_PTR		dwParam2;
 };	// The buffer's structure
 
-static struct evbuf_t * evbuf;				// The buffer
+static evbuf_t * evbuf;						// The buffer
 static long long writehead = 0;				// Current write position in the buffer
 static long long readhead = 0;				// Current read position in the buffer
 static volatile long long eventcount = 0;	// Total events present in the buffer
@@ -59,7 +59,6 @@ void ResetSynth(int ischangingbuffermode){
 	if (ischangingbuffermode == 1) {
 		writehead = 0;
 		readhead = 0;
-		eventcount = 0;
 	}
 	BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 	reset_synth = 0;

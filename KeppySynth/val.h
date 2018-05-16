@@ -1,30 +1,22 @@
 // Keppy's Synthesizer Values
 
-struct Driver_Client {
-	int allocated;
-	DWORD_PTR instance;
-	DWORD flags;
-	DWORD_PTR callback;
-};
+// Device stuff
+static DWORD_PTR KSCallback = NULL;
+static DWORD_PTR KSInstance = NULL;
+static DWORD KSFlags = NULL;
+static HDRVR KSDevice = NULL;
 
-struct Driver {
-	int open;
-	int clientCount;
-	HDRVR hdrvr;
-	struct Driver_Client clients[MAX_CLIENTS];
-} drivers[MAX_DRIVERS + 1];
-
-static int driverCount = 0;
-
+// Important stuff
 static volatile BOOL modm_closed = TRUE;
-
 static volatile BOOL reset_synth = FALSE;
 static DWORD processPriority = NORMAL_PRIORITY_CLASS;
 static HANDLE load_sfevent = NULL;
 
+// Stream
 static int KSStream = NULL;
 static BASS_INFO info;
 
+// COM
 static BOOL com_initialized = FALSE;
 static float sound_out_volume_float = 1.0;
 

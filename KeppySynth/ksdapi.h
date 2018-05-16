@@ -65,14 +65,9 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 	}
 }
 
-void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
-	struct Driver_Client *client = &drivers[driverNum].clients[clientNum];
-	DriverCallback(client->callback, client->flags, drivers[driverNum].hdrvr, msg, client->instance, param1, param2);
-}
-
 void DoStartClient() {
-	timeBeginPeriod(1);
 	if (modm_closed == TRUE) {
+		timeBeginPeriod(1);
 		InitializeCriticalSection(&mim_section);
 
 		HKEY hKey;
@@ -93,14 +88,12 @@ void DoStartClient() {
 			_SndBASSMIDI = SendToBASSMIDIHyper;
 			_SndLongBASSMIDI = SendLongToBASSMIDIHyper;
 			_PlayBufData = PlayBufferedDataHyper;
-			_PlayBufDataChk = PlayBufferedDataChunkHyper;
 		}
 		else {
 			_PrsData = ParseData;
 			_SndBASSMIDI = SendToBASSMIDI;
 			_SndLongBASSMIDI = SendLongToBASSMIDI;
 			_PlayBufData = PlayBufferedData;
-			_PlayBufDataChk = PlayBufferedDataChunk;
 		}
 		HyperCheckedAlready = TRUE;
 
@@ -135,9 +128,9 @@ void DoStopClient() {
 		CloseHandle(hCalcThread);
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
+		timeEndPeriod(1);
+		DeleteCriticalSection(&mim_section);
 	}
-	timeEndPeriod(1);
-	DeleteCriticalSection(&mim_section);
 }
 
 void DoResetClient() {
