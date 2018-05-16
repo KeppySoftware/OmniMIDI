@@ -7,7 +7,7 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-int BufferCheck(long long writehead) {
+int BufferCheck(void) {
 	int retval;
 	EnterCriticalSection(&mim_section);
 	retval = vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
@@ -15,7 +15,7 @@ int BufferCheck(long long writehead) {
 	return retval;
 }
 
-int BufferCheckHyper(long long writehead) {
+int BufferCheckHyper(void) {
 	int retval;
 	EnterCriticalSection(&mim_section);
 	retval = (readhead != writehead) ? ~0 : 0;
@@ -60,7 +60,7 @@ void SendLongToBASSMIDIHyper(MIDIHDR* IIMidiHdr) {
 }
 
 int __inline PlayBufferedData(void) {
-	if (allnotesignore || !BufferCheck(writehead)) return 1;
+	if (allnotesignore || !BufferCheck()) return 1;
 
 	do {
 		evbuf_t TempBuffer = *(evbuf + readhead);
@@ -80,7 +80,7 @@ int __inline PlayBufferedData(void) {
 }
 
 int __inline PlayBufferedDataHyper(void) {
-	if (!BufferCheckHyper(writehead)) return 1;
+	if (!BufferCheckHyper()) return 1;
 
 	do {
 		evbuf_t TempBuffer = *(evbuf + readhead);
@@ -102,7 +102,7 @@ int __inline PlayBufferedDataHyper(void) {
 int __inline PlayBufferedDataChunk(void) {
 	DWORD evt = writehead;
 
-	if (allnotesignore || !BufferCheck(evt)) return 1;
+	if (allnotesignore || !BufferCheck()) return 1;
 	do {
 		evbuf_t TempBuffer = *(evbuf + readhead);
 		if (++readhead >= evbuffsize) readhead = 0;
@@ -123,7 +123,7 @@ int __inline PlayBufferedDataChunk(void) {
 int __inline PlayBufferedDataChunkHyper(void) {
 	DWORD evt = writehead;
 
-	if (!BufferCheckHyper(evt)) return 1;
+	if (!BufferCheckHyper()) return 1;
 	do {
 		evbuf_t TempBuffer = *(evbuf + readhead);
 		if (++readhead >= evbuffsize) readhead = 0;

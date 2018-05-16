@@ -51,7 +51,7 @@ static BOOL ksdirectenabled = FALSE;
 static BOOL bufferoverload = FALSE;
 static float currentcpuusage0;
 static int isoverrideenabled = 0;
-static unsigned long long evbuffsize = 16384;
+static unsigned long long evbuffsize = 4096;
 static unsigned long long sevbuffsize = evbuffsize;
 static int evbuffratio = 1;
 static int evbuffbyram = 0;

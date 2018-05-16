@@ -71,6 +71,7 @@ void DoCallback(int driverNum, int clientNum, DWORD msg, DWORD_PTR param1, DWORD
 }
 
 void DoStartClient() {
+	timeBeginPeriod(1);
 	if (modm_closed == TRUE) {
 		InitializeCriticalSection(&mim_section);
 
@@ -135,6 +136,7 @@ void DoStopClient() {
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 	}
+	timeEndPeriod(1);
 	DeleteCriticalSection(&mim_section);
 }
 
