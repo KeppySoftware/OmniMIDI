@@ -1696,34 +1696,6 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void PrintMIDIEventsLog_Click(object sender, EventArgs e)
-        {
-            if (PrintMIDIEventsLog.Checked == false)
-            {
-                SynthSettings.SetValue("printmidievent", "1", RegistryValueKind.DWord);
-                PrintMIDIEventsLog.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("printmidievent", "0", RegistryValueKind.DWord);
-                PrintMIDIEventsLog.Checked = false;
-            }
-        }
-
-        private void PrintImportantLog_Click(object sender, EventArgs e)
-        {
-            if (PrintImportantLog.Checked == false)
-            {
-                SynthSettings.SetValue("printimportant", "1", RegistryValueKind.DWord);
-                PrintImportantLog.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("printimportant", "0", RegistryValueKind.DWord);
-                PrintImportantLog.Checked = false;
-            }
-        }
-
         private void AutoLoad_Click(object sender, EventArgs e)
         {
             if (AutoLoad.Checked == false)

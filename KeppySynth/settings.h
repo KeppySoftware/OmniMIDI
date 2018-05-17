@@ -9,8 +9,8 @@ struct evbuf_t{
 };	// The buffer's structure
 
 static evbuf_t * evbuf;						// The buffer
-static long long writehead = 0;				// Current write position in the buffer
-static long long readhead = 0;				// Current read position in the buffer
+static volatile long long writehead = 0;	// Current write position in the buffer
+static volatile long long readhead = 0;		// Current read position in the buffer
 static volatile long long eventcount = 0;	// Total events present in the buffer
 
 void DLLLoadError(LPCWSTR dll) {
@@ -444,9 +444,6 @@ void LoadSettingsRT()
 		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"volumemon", NULL, &dwType, (LPBYTE)&volumemon, &dwSize);
-
-		RegQueryValueEx(hKey, L"printmidievent", NULL, &dwType, (LPBYTE)&printmidievent, &dwSize);
-		RegQueryValueEx(hKey, L"printimportant", NULL, &dwType, (LPBYTE)&printimportant, &dwSize);
 
 		if (vms2emutemp != vms2emu) {
 			ResetSynth(1);

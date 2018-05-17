@@ -68,7 +68,6 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 void DoStartClient() {
 	if (modm_closed == TRUE) {
 		timeBeginPeriod(1);
-		InitializeCriticalSection(&mim_section);
 
 		HKEY hKey;
 		long lResult;
@@ -85,14 +84,10 @@ void DoStartClient() {
 		if (HyperMode && !HyperCheckedAlready) {
 			MessageBox(NULL, L"Hyper-playback mode is enabled!", L"Keppy's Synthesizer", MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
 			_PrsData = ParseDataHyper;
-			_SndBASSMIDI = SendToBASSMIDIHyper;
-			_SndLongBASSMIDI = SendLongToBASSMIDIHyper;
 			_PlayBufData = PlayBufferedDataHyper;
 		}
 		else {
 			_PrsData = ParseData;
-			_SndBASSMIDI = SendToBASSMIDI;
-			_SndLongBASSMIDI = SendLongToBASSMIDI;
 			_PlayBufData = PlayBufferedData;
 		}
 		HyperCheckedAlready = TRUE;
@@ -129,7 +124,6 @@ void DoStopClient() {
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 		timeEndPeriod(1);
-		DeleteCriticalSection(&mim_section);
 	}
 }
 
@@ -209,7 +203,7 @@ MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 			IIMidiHdr->dwFlags &= ~MHDR_DONE;
 			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-			if (!sysexignore) _SndLongBASSMIDI(IIMidiHdr);
+			if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr);
 			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 			IIMidiHdr->dwFlags |= MHDR_DONE;

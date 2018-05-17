@@ -30,7 +30,6 @@ static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdad
 static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE, hThreadDBGRunning = FALSE;
 
 // Mandatory values
-static CRITICAL_SECTION mim_section;
 static HINSTANCE hinst = NULL;							// main DLL handle
 
 static char modulename[MAX_PATH];		// debug info
@@ -108,9 +107,6 @@ static int vmsemu = 0;					// VirtualMIDISynth buffer emulation
 static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int volumemon = 1;				// Volume monitoring
-
-static int printmidievent = 0;			// Print MIDI event to log
-static int printimportant = 1;			// Print important MIDI event to log
 
 // Priority values
 static int prioval[7] =

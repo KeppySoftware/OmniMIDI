@@ -242,9 +242,6 @@
             this.DebugModePls = new System.Windows.Forms.MenuItem();
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
             this.menuItem28 = new System.Windows.Forms.MenuItem();
-            this.menuItem53 = new System.Windows.Forms.MenuItem();
-            this.PrintMIDIEventsLog = new System.Windows.Forms.MenuItem();
-            this.PrintImportantLog = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.ShowMixerTools = new System.Windows.Forms.MenuItem();
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
@@ -2709,28 +2706,8 @@
             this.menuItem28.Index = 15;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
-            this.DebugModeOpenNotepad,
-            this.menuItem53,
-            this.PrintMIDIEventsLog,
-            this.PrintImportantLog});
+            this.DebugModeOpenNotepad});
             this.menuItem28.Text = "Debug logging for troubleshooting";
-            // 
-            // menuItem53
-            // 
-            this.menuItem53.Index = 2;
-            this.menuItem53.Text = "-";
-            // 
-            // PrintMIDIEventsLog
-            // 
-            this.PrintMIDIEventsLog.Index = 3;
-            this.PrintMIDIEventsLog.Text = "Print MIDI events to log";
-            this.PrintMIDIEventsLog.Click += new System.EventHandler(this.PrintMIDIEventsLog_Click);
-            // 
-            // PrintImportantLog
-            // 
-            this.PrintImportantLog.Index = 4;
-            this.PrintImportantLog.Text = "Print important driver messages to log";
-            this.PrintImportantLog.Click += new System.EventHandler(this.PrintImportantLog_Click);
             // 
             // menuItem2
             // 
@@ -4596,9 +4573,6 @@
         public System.Windows.Forms.Panel MixerPanel;
         public System.Windows.Forms.Timer ChannelVolume;
         private System.Windows.Forms.LinkLabelEx OpenFullMixer;
-        private System.Windows.Forms.MenuItem menuItem53;
-        public System.Windows.Forms.MenuItem PrintMIDIEventsLog;
-        public System.Windows.Forms.MenuItem PrintImportantLog;
         private System.Windows.Forms.TabPage DebugLog;
         private System.Windows.Forms.Button RefreshDebugList;
         private System.Windows.Forms.ComboBox DebugList;

@@ -8,19 +8,11 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
 int BufferCheck(void) {
-	int retval;
-	EnterCriticalSection(&mim_section);
-	retval = vms2emu ? eventcount : (readhead != writehead);
-	LeaveCriticalSection(&mim_section);
-	return retval;
+	return vms2emu ? eventcount : (readhead != writehead);
 }
 
 int BufferCheckHyper(void) {
-	int retval;
-	EnterCriticalSection(&mim_section);
-	retval = (readhead != writehead);
-	LeaveCriticalSection(&mim_section);
-	return retval;
+	return (readhead != writehead);
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
@@ -34,29 +26,12 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-	PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
+	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
-	PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
-}
-
-void SendToBASSMIDIHyper(DWORD dwParam1) {
-	if (!(dwParam1 - 0x80 & 0xC0))
-	{
-		BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
-		return;
-	}
-
-	DWORD dwParam2 = dwParam1 & 0xF0;
-	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-}
-
-void SendLongToBASSMIDIHyper(MIDIHDR* IIMidiHdr) {
-	BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
 int __inline PlayBufferedData(void) {
@@ -70,7 +45,7 @@ int __inline PlayBufferedData(void) {
 
 		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
-			_SndBASSMIDI(TempBuffer.dwParam1);
+			SendToBASSMIDI(TempBuffer.dwParam1);
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
@@ -93,7 +68,7 @@ int __inline PlayBufferedDataHyper(void) {
 
 		switch (TempBuffer.uMsg) {
 		case MODM_DATA:
-			_SndBASSMIDI(TempBuffer.dwParam1);
+			SendToBASSMIDI(TempBuffer.dwParam1);
 			break;
 		case MODM_LONGDATA:
 			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.dwParam1, TempBuffer.dwParam2);
@@ -209,7 +184,6 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	// Prepare the event in the buffer
-	EnterCriticalSection(&mim_section);
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead = 0;
 
@@ -220,11 +194,8 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 
 	evbuf[tempevent] = evtobuf;
 
-	LeaveCriticalSection(&mim_section);
-
 	// Some checks
-	if (vms2emu)
-		if (InterlockedIncrement64(&eventcount) >= evbuffsize) do { /* Absolutely nothing */ } while (eventcount >= evbuffsize);
+	if (vms2emu && InterlockedIncrement64(&eventcount) >= evbuffsize) do { /* Absolutely nothing */ } while (eventcount >= evbuffsize);
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;
@@ -232,7 +203,6 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
-	EnterCriticalSection(&mim_section);
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead = 0;
 
@@ -242,8 +212,6 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	evtobuf.dwParam2 = dwParam2;
 
 	evbuf[tempevent] = evtobuf;
-
-	LeaveCriticalSection(&mim_section);
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;

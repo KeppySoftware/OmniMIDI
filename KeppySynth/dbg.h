@@ -110,22 +110,23 @@ void StatusType(int status, char* &statustoprint) {
 
 void PrintToConsole(int color, long stage, const char* text) {
 	if (debugmode) {
-		if (printimportant) {
-			// Set color
-			SetConsoleTextAttribute(hConsole, color);
+		// Set color
+		SetConsoleTextAttribute(hConsole, color);
 
-			// Get time
-			char buff[20];
-			struct tm *sTm;
-			time_t now = time(0);
-			sTm = gmtime(&now);
-			strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+		// Get time
+		char buff[20];
+		struct tm *sTm;
+		time_t now = time(0);
+		sTm = gmtime(&now);
+		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
 
-			// Print to log
-			std::cout << std::endl << buff << " - (" << stage << ") - " << text;
-		}
+		// Print to log
+		std::cout << std::endl << buff << " - (" << stage << ") - " << text;
 	}
 }
+
+/*
+/ Unused, but still here for people who wants to mess around with it
 
 void PrintEventToConsole(int color, int stage, bool issysex, const char* text) {
 	if (debugmode) {
@@ -151,6 +152,8 @@ void PrintEventToConsole(int color, int stage, bool issysex, const char* text) {
 		}
 	}
 }
+
+*/
 
 std::wstring GetLastErrorAsWString()
 {

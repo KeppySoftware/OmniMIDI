@@ -558,12 +558,6 @@ namespace KeppySynthConfigurator
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("alternativecpu", 0)) == 1)
                     KeppySynthConfiguratorMain.Delegate.autopanicmode.Checked = true;
 
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("printmidievent", 0)) == 1)
-                    KeppySynthConfiguratorMain.Delegate.PrintMIDIEventsLog.Checked = true;
-
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("printimportant", 1)) == 1)
-                    KeppySynthConfiguratorMain.Delegate.PrintImportantLog.Checked = true;
-
                 if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("driverprio", 0)) == 0)
                 {
                     ButtonStatus(false);

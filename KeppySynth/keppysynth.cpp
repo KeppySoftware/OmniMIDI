@@ -50,8 +50,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 int HyperMode = 0;
 int HyperCheckedAlready = FALSE;
 MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = 0;
-void(*_SndBASSMIDI)(DWORD dwParam1) = 0;
-void(*_SndLongBASSMIDI)(MIDIHDR *IIMidiHdr) = 0;
 int(*_PlayBufData)(void) = 0;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
