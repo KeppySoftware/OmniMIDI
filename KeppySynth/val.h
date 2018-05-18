@@ -1,5 +1,20 @@
 // Keppy's Synthesizer Values
 
+// EVBuffer
+struct evbuf_t {
+	UINT			uMsg;
+	DWORD_PTR		dwParam1;
+	DWORD_PTR		dwParam2;
+	DWORD			exlen;
+	unsigned char*	sysexbuffer;
+};	// The buffer's structure
+
+static CRITICAL_SECTION bufmed;				// Buffer stuff
+static evbuf_t * evbuf;						// The buffer
+static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
+static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
+static volatile LONGLONG eventcount = 0;	// Total events present in the buffer
+
 // Device stuff
 static DWORD_PTR KSCallback = NULL;
 static DWORD_PTR KSInstance = NULL;
@@ -37,13 +52,13 @@ static char bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
 // Potato
-static BOOL streaminitialized = FALSE;
+static BOOL bufferinitialized = FALSE;
 static BOOL ksdirectenabled = FALSE;
 static BOOL bufferoverload = FALSE;
 static float currentcpuusage0;
 static int isoverrideenabled = 0;
-static unsigned long long evbuffsize = 4096;
-static unsigned long long sevbuffsize = evbuffsize;
+static ULONGLONG evbuffsize = 4096;
+static ULONGLONG sevbuffsize = evbuffsize;
 static int evbuffratio = 1;
 static int evbuffbyram = 0;
 

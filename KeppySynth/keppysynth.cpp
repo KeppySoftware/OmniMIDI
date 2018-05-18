@@ -49,7 +49,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 // Hyper switch
 int HyperMode = 0;
 int HyperCheckedAlready = FALSE;
-MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = 0;
+MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, unsigned char* sysexbuffer) = 0;
 int(*_PlayBufData)(void) = 0;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
@@ -270,11 +270,13 @@ LONG DoOpenClient() {
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
 	DWORD retval = MMSYSERR_NOERROR;
+	DWORD exlen;
+	unsigned char* sysexbuffer;
 
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
-		return _PrsData(uMsg, dwParam1, dwParam2);
+		return _PrsData(uMsg, dwParam1, dwParam2, exlen, sysexbuffer);
 	case MODM_LONGDATA:
 		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR *)dwParam1;
@@ -289,14 +291,15 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		if (!sysexignore)
 		{
 			// Allocate temp buffer for the event
-			void* data = malloc(IIMidiHdr->dwBytesRecorded);
-			if (data)
+			exlen = IIMidiHdr->dwBytesRecorded;
+			sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char));
+			if (sysexbuffer)
 			{
 				try
 				{
 					// Copy the event, and send it over to the events parser
-					memcpy(data, IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
-					retval = ParseData(uMsg, (DWORD_PTR)data, IIMidiHdr->dwBytesRecorded);
+					memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
+					retval = ParseData(uMsg, 0, 0, exlen, sysexbuffer);
 				}
 				catch (...)
 				{

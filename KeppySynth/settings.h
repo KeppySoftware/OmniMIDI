@@ -2,17 +2,6 @@
 Keppy's Synthesizer settings loading system
 */
 
-struct evbuf_t{
-	UINT			uMsg;
-	DWORD_PTR		dwParam1;
-	DWORD_PTR		dwParam2;
-};	// The buffer's structure
-
-static evbuf_t * evbuf;						// The buffer
-static volatile long long writehead = 0;	// Current write position in the buffer
-static volatile long long readhead = 0;		// Current read position in the buffer
-static volatile long long eventcount = 0;	// Total events present in the buffer
-
 void DLLLoadError(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
@@ -59,7 +48,9 @@ void ResetSynth(int ischangingbuffermode){
 	if (ischangingbuffermode == 1) {
 		writehead = 0;
 		readhead = 0;
+		eventcount = 0;
 	}
+	BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 	BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 	reset_synth = 0;
 }
@@ -314,8 +305,9 @@ void allocate_memory() {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
 		evbuf = (evbuf_t *)malloc((unsigned long long)evbuffsize * sizeof(evbuf_t));
 		PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing EV buffer...");
-		memset(evbuf, 0, sizeof(evbuf_t));
+		memset(evbuf, 0, sizeof(evbuf_t)); 
 		PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
+		bufferinitialized = TRUE;
 		// EVBUFF
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
