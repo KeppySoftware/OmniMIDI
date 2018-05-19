@@ -154,6 +154,7 @@ KShortMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectData
 
 ### **SendDirectLongData/SendDirectLongDataNoBuf**
 Allows you to send MIDIHDR/System Exclusive events to the driver.
+Both functions do the same thing. SendDirectLongDataNoBuf directly calls SendDirectLongData. I left NoBuf for retrocompatibility purpose with old patches.
 **REMEMBER** to handle the MIDIHDR preparation and the callbacks yourself, if you're not using Keppy's Synthesizer through WinMM!
 The available arguments are:
 

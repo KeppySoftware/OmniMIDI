@@ -39,7 +39,7 @@ DWORD __inline PlayBufferedData(void) {
 
 	do {
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead -= evbuffsize;
+		if (++readhead >= evbuffsize) readhead = 0;
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		SendToBASSMIDI(TempBuffer.dwParam1);
@@ -53,7 +53,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 
 	do {
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead -= evbuffsize;
+		if (++readhead >= evbuffsize) readhead = 0;
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		SendToBASSMIDI(TempBuffer.dwParam1);
@@ -68,7 +68,7 @@ DWORD __inline PlayBufferedDataChunk(void) {
 	ULONGLONG whe = writehead;
 	do {
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead -= evbuffsize;
+		if (++readhead >= evbuffsize) readhead = 0;
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		SendToBASSMIDI(TempBuffer.dwParam1);
@@ -83,7 +83,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 	ULONGLONG whe = writehead;
 	do {
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead -= evbuffsize;
+		if (++readhead >= evbuffsize) readhead = 0;
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		SendToBASSMIDI(TempBuffer.dwParam1);
@@ -197,7 +197,7 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 
 	// Prepare the event in the buffer
 	long long tempevent = writehead;
-	if (++writehead >= evbuffsize) writehead -= evbuffsize;
+	if (++writehead >= evbuffsize) writehead = 0;
 
 	evbuf_t evtobuf{
 		uMsg = uMsg,
