@@ -1,5 +1,11 @@
 // Keppy's Synthesizer Values
 
+// Audio engines
+#define AUDTOWAV 0
+#define DSOUND_ENGINE 1
+#define ASIO_ENGINE 2
+#define WASAPI_ENGINE 3
+
 // EVBuffer
 struct evbuf_t {
 	UINT			uMsg;
@@ -68,16 +74,14 @@ static HFX ChVolume;						// Volume (whole)
 
 static HANDLE hConsole;					// Debug console
 static float *sndbf;					// Cake
-static int ASIOoutput = 0;				// Audio output (ASIO)
-static int DSoutput = 0;				// Audio output (DSound)
-static int WASAPIoutput = 0;			// Audio output (WASAPI)
+static int AudioOutput = 0;				// Audio output (All devices except AudToWAV and WASAPI)
 static int allhotkeys = 0;				// Enable/Disable all the hotkeys
 static int allnotesignore = 0;			// Ignore all MIDI events
 static int alreadyshown = 0;			// Check if the info about the drivers have been already shown.
 static int autopanic = 0;				// Autopanic switch
 static int bassoutputfinal = 0;			// DO NOT TOUCH
 static int capframerate = 0;			// Cap input framerate
-static int currentengine = 3;			// Current engine
+static int currentengine = WASAPI_ENGINE;	// Current engine
 static int debugmode = 0;				// Debug console
 static int defaultAoutput = 0;			// Default audio output (ASIO)
 static int defaultWoutput = 0;			// Default audio output (WASAPI)
@@ -118,7 +122,6 @@ static int sincconv = 2;				// Sinc
 static int sysexignore = 0;				// Ignore SysEx events
 static int sysresetignore = 0;			// Ignore sysex messages
 static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
-static int vmsemu = 0;					// VirtualMIDISynth buffer emulation
 static int volume = 0;					// Volume limit
 static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
 static int volumemon = 1;				// Volume monitoring

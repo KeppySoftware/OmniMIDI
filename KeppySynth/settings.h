@@ -233,6 +233,7 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+		// LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFilter);
 
 		PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
 		return TRUE;
@@ -366,13 +367,11 @@ void LoadSettings(bool streamreload)
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		if (currentengine == 1) RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
-		else rco = 0;
+		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sincconv", NULL, &dwType, (LPBYTE)&sincconv, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
 		RegQueryValueEx(hKey, L"vms2emu", NULL, &dwType, (LPBYTE)&vms2emu, &dwSize);
-		RegQueryValueEx(hKey, L"vmsemu", NULL, &dwType, (LPBYTE)&vmsemu, &dwSize);
 		RegQueryValueEx(hKey, L"volume", NULL, &dwType, (LPBYTE)&volume, &dwSize);
 		RegQueryValueEx(hKey, L"volumehotkeys", NULL, &dwType, (LPBYTE)&volumehotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"xaudiodisabled", NULL, &dwType, (LPBYTE)&currentengine, &dwSize);
@@ -426,8 +425,7 @@ void LoadSettingsRT()
 		RegQueryValueEx(hKey, L"pitchshift", NULL, &dwType, (LPBYTE)&pitchshift, &dwSize);
 		RegQueryValueEx(hKey, L"polyphony", NULL, &dwType, (LPBYTE)&midivoices, &dwSize);
 		RegQueryValueEx(hKey, L"preload", NULL, &dwType, (LPBYTE)&preload, &dwSize);
-		if (currentengine == 1) RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
-		else rco = 0;
+		RegQueryValueEx(hKey, L"rco", NULL, &dwType, (LPBYTE)&rco, &dwSize);
 		RegQueryValueEx(hKey, L"sinc", NULL, &dwType, (LPBYTE)&sinc, &dwSize);
 		RegQueryValueEx(hKey, L"sincconv", NULL, &dwType, (LPBYTE)&sincconv, &dwSize);
 		RegQueryValueEx(hKey, L"sysexignore", NULL, &dwType, (LPBYTE)&sysexignore, &dwSize);
@@ -528,7 +526,7 @@ void Panic() {
 }
 
 int AudioRenderingType(int value) {
-	if (currentengine == 2 || currentengine == 3) return BASS_SAMPLE_FLOAT;
+	if (currentengine == ASIO_ENGINE) return BASS_SAMPLE_FLOAT;
 	else {
 		if (value == 1)
 			return BASS_SAMPLE_FLOAT;
@@ -569,7 +567,7 @@ void WatchdogCheck()
 
 void CheckVolume() {
 	try {
-		if (volumemon == 1) {
+		if (volumemon == 1 && currentengine > 0) {
 			HKEY hKey;
 			long lResult;
 			float levels[2];
@@ -578,16 +576,14 @@ void CheckVolume() {
 			DWORD left, right;
 			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 
-			if (currentengine == 1 || currentengine == 3)
-			{
+			if (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE) {
 				BASS_ChannelGetLevelEx(KSStream, levels, (monorendering ? 0.01f : 0.02f), (monorendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 			}
-			else if (currentengine == 2)
+			else if (currentengine == ASIO_ENGINE)
 			{
 				levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
 				levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
 			}
-			else { /* Nothing */ }
 
 			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
 			left = LOWORD(level); // the left level
@@ -655,7 +651,7 @@ double outlatency = 0.0;
 void ParseDebugData() {
 	BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &currentcpuusage0);
 
-	if (currentengine == 2) {
+	if (currentengine == ASIO_ENGINE) {
 		rate = BASS_ASIO_GetRate();
 		CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
 		inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
@@ -857,7 +853,7 @@ void keybindings()
 				}
 			}
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
-				if (currentengine == 2) {
+				if (currentengine == ASIO_ENGINE) {
 					BASS_ASIO_ControlPanel();
 				}
 				else {

@@ -35,6 +35,8 @@
             this.MonophonicFunc = new System.Windows.Forms.CheckBox();
             this.FadeoutDisable = new System.Windows.Forms.CheckBox();
             this.ABS = new System.Windows.Forms.GroupBox();
+            this.HModeWhat = new System.Windows.Forms.PictureBox();
+            this.HMode = new System.Windows.Forms.CheckBox();
             this.KSDAPIBoxWhat = new System.Windows.Forms.PictureBox();
             this.KSDAPIBox = new System.Windows.Forms.CheckBox();
             this.NoSleep = new System.Windows.Forms.CheckBox();
@@ -46,13 +48,11 @@
             this.OKBtn = new System.Windows.Forms.Button();
             this.CAE = new System.Windows.Forms.Label();
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.HMode = new System.Windows.Forms.CheckBox();
-            this.HModeWhat = new System.Windows.Forms.PictureBox();
             this.AOS.SuspendLayout();
             this.ABS.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HModeWhat)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSDAPIBoxWhat)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.HModeWhat)).BeginInit();
             this.SuspendLayout();
             // 
             // AOS
@@ -82,7 +82,7 @@
             this.AudioBitDepth.Name = "AudioBitDepth";
             this.AudioBitDepth.Size = new System.Drawing.Size(85, 21);
             this.AudioBitDepth.TabIndex = 3;
-            this.Requirements.SetToolTip(this.AudioBitDepth, "Changing this setting requires the user to restart the MIDI application.");
+            this.Requirements.SetToolTip(this.AudioBitDepth, "Changing this setting requires a restart of the audio stream.");
             this.AudioBitDepth.SelectedIndexChanged += new System.EventHandler(this.AudioBitDepth_SelectedIndexChanged);
             // 
             // AudioBitDepthLabel
@@ -104,7 +104,7 @@
             this.MonophonicFunc.Size = new System.Drawing.Size(153, 17);
             this.MonophonicFunc.TabIndex = 1;
             this.MonophonicFunc.Text = "Use monophonic rendering";
-            this.Requirements.SetToolTip(this.MonophonicFunc, "Changing this setting requires the user to restart the MIDI application.");
+            this.Requirements.SetToolTip(this.MonophonicFunc, "Changing this setting requires a restart of the audio stream.");
             this.MonophonicFunc.UseVisualStyleBackColor = true;
             this.MonophonicFunc.CheckedChanged += new System.EventHandler(this.MonophonicFunc_CheckedChanged);
             // 
@@ -139,6 +139,31 @@
             this.ABS.TabStop = false;
             this.ABS.Text = "Audio buffer settings";
             // 
+            // HModeWhat
+            // 
+            this.HModeWhat.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.HModeWhat.Image = global::KeppySynthConfigurator.Properties.Resources.wi;
+            this.HModeWhat.Location = new System.Drawing.Point(168, 38);
+            this.HModeWhat.Name = "HModeWhat";
+            this.HModeWhat.Size = new System.Drawing.Size(14, 14);
+            this.HModeWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.HModeWhat.TabIndex = 10;
+            this.HModeWhat.TabStop = false;
+            this.HModeWhat.Click += new System.EventHandler(this.HModeWhat_Click);
+            // 
+            // HMode
+            // 
+            this.HMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.HMode.AutoSize = true;
+            this.HMode.Location = new System.Drawing.Point(6, 37);
+            this.HMode.Name = "HMode";
+            this.HMode.Size = new System.Drawing.Size(163, 17);
+            this.HMode.TabIndex = 9;
+            this.HMode.Text = "Enable hyper-playback mode";
+            this.Requirements.SetToolTip(this.HMode, "You need to restart the MIDI app, in order for this function to work.");
+            this.HMode.UseVisualStyleBackColor = true;
+            this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
+            // 
             // KSDAPIBoxWhat
             // 
             this.KSDAPIBoxWhat.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -171,7 +196,7 @@
             this.NoSleep.Size = new System.Drawing.Size(250, 17);
             this.NoSleep.TabIndex = 6;
             this.NoSleep.Text = "Disable sleep states in the notes catcher thread\r\n";
-            this.Requirements.SetToolTip(this.NoSleep, "This only works with WASAPI and DirectSound");
+            this.Requirements.SetToolTip(this.NoSleep, "This doesn\'t work in .WAV mode.");
             this.NoSleep.UseVisualStyleBackColor = true;
             this.NoSleep.CheckedChanged += new System.EventHandler(this.NoSleep_CheckedChanged);
             // 
@@ -196,7 +221,7 @@
             this.OldBuff.Size = new System.Drawing.Size(318, 17);
             this.OldBuff.TabIndex = 4;
             this.OldBuff.Text = "Run the notes catcher in the same thread as the audio engine";
-            this.Requirements.SetToolTip(this.OldBuff, "This only works with WASAPI and DirectSound");
+            this.Requirements.SetToolTip(this.OldBuff, "This doesn\'t work in .WAV mode.");
             this.OldBuff.UseVisualStyleBackColor = true;
             this.OldBuff.CheckedChanged += new System.EventHandler(this.OldBuff_CheckedChanged);
             // 
@@ -266,31 +291,6 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
             // 
-            // HMode
-            // 
-            this.HMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.HMode.AutoSize = true;
-            this.HMode.Location = new System.Drawing.Point(6, 37);
-            this.HMode.Name = "HMode";
-            this.HMode.Size = new System.Drawing.Size(163, 17);
-            this.HMode.TabIndex = 9;
-            this.HMode.Text = "Enable hyper-playback mode";
-            this.Requirements.SetToolTip(this.HMode, "You need to restart the MIDI app, in order for this function to work.");
-            this.HMode.UseVisualStyleBackColor = true;
-            this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
-            // 
-            // HModeWhat
-            // 
-            this.HModeWhat.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.HModeWhat.Image = global::KeppySynthConfigurator.Properties.Resources.wi;
-            this.HModeWhat.Location = new System.Drawing.Point(168, 38);
-            this.HModeWhat.Name = "HModeWhat";
-            this.HModeWhat.Size = new System.Drawing.Size(14, 14);
-            this.HModeWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.HModeWhat.TabIndex = 10;
-            this.HModeWhat.TabStop = false;
-            this.HModeWhat.Click += new System.EventHandler(this.HModeWhat_Click);
-            // 
             // AdvancedAudioSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -315,9 +315,9 @@
             this.AOS.PerformLayout();
             this.ABS.ResumeLayout(false);
             this.ABS.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HModeWhat)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSDAPIBoxWhat)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.HModeWhat)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

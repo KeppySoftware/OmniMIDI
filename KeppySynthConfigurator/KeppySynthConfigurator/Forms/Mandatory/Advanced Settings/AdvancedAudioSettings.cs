@@ -50,30 +50,13 @@ namespace KeppySynthConfigurator
             else
                 AudioBitDepth.SelectedIndex = 0;
 
-            if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0)
-            {
-                OldBuff.Enabled = false;
-                NoSleep.Enabled = false;
-                ChangeDefaultOutput.Enabled = false;
-            }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1 || KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3)
-            {
-                OldBuff.Enabled = true;
-                NoSleep.Enabled = true;
-                ChangeDefaultOutput.Enabled = true;
-            }
-            else if (KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2)
-            {
-                OldBuff.Enabled = false;
-                NoSleep.Enabled = false;
-                ChangeDefaultOutput.Enabled = true;
-            }
-            else
-            {
-                OldBuff.Enabled = false;
-                NoSleep.Enabled = false;
-                ChangeDefaultOutput.Enabled = false;
-            }
+            OldBuff.Enabled = !(KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0);
+            NoSleep.Enabled = !(KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0);
+            ChangeDefaultOutput.Enabled = (
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1 ||
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2 ||
+                KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3
+                );
 
             CAE.Text = String.Format(CAE.Text, KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text);
         }

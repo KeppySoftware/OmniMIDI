@@ -1447,8 +1447,7 @@
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(90, 21);
             this.AudioEngBox.TabIndex = 2;
-            this.Requirements.SetToolTip(this.AudioEngBox, "To change this in real-time, enable the \"Enable live changes for all the settings" +
-        "\" function.");
+            this.Requirements.SetToolTip(this.AudioEngBox, "Changing this setting requires a restart of the audio stream.");
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
             // 
             // AdditionalSettingsBox
@@ -1641,7 +1640,7 @@
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 14;
-            this.Requirements.SetToolTip(this.Frequency, "Changing this setting requires the user to restart the MIDI application.");
+            this.Requirements.SetToolTip(this.Frequency, "Changing this setting requires a restart of the audio stream.");
             this.Frequency.SelectedIndexChanged += new System.EventHandler(this.Frequency_SelectedIndexChanged);
             this.Frequency.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckIfUserPressesEnter);
             // 
@@ -1683,7 +1682,7 @@
             this.bufsize.Size = new System.Drawing.Size(64, 20);
             this.bufsize.TabIndex = 18;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.Requirements.SetToolTip(this.bufsize, "Changing this setting requires the user to restart the MIDI application.");
+            this.Requirements.SetToolTip(this.bufsize, "Changing this setting requires a restart of the audio stream.");
             this.bufsize.Value = new decimal(new int[] {
             20,
             0,

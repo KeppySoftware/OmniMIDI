@@ -52,14 +52,12 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 		while (!stop_thread) {
 			start4 = TimeNow();
 
-			MT32SetInstruments();
-			if (_PlayBufData()) 
-				usleep(1);
+			if (oldbuffermode) break;
 
-			if (capframerate)
-				usleep(16667);
-	
-			if (currentengine == 1 && oldbuffermode) break;
+			MT32SetInstruments();
+			if (_PlayBufData()) usleep(rco);
+
+			if (capframerate) usleep(16666);
 		}
 	}
 	catch (...) {
@@ -110,27 +108,26 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	try {
-		while (!stop_thread) {
-			start2 = TimeNow();
-			if (currentengine < 2) {
+		if (currentengine != ASIO_ENGINE) {
+			while (!stop_thread) {
+				start2 = TimeNow();
 				if (reset_synth) {
 					reset_synth = 0;
 					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				}
 
-				if (currentengine == 0) AudioRender();
+				if (currentengine == AUDTOWAV) AudioRender();
 				else BASS_ChannelUpdate(KSStream, 0);
 
 				if (oldbuffermode) {
 					MT32SetInstruments();
-					if (_PlayBufData()) usleep(1);
+					_PlayBufData();
 				}
 				else if (!hThread4)
 					InitializeNotesCatcherThread();
 
 				usleep(rco);
 			}
-			else break;
 		}
 	}
 	catch (...) {
@@ -147,25 +144,78 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
 	start2 = clock();
+
+	if (oldbuffermode) {
+		MT32SetInstruments();
+		_PlayBufData();
+	}
+	else if (!hThread4)
+		InitializeNotesCatcherThread();
+
 	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
 	if (data == -1) return 0;
 	return data;
 }
 
+/*
+/ Something I could use in Keppy's MIDI Converter
+BOOL CALLBACK MidiFilterProc(HSTREAM handle, DWORD track, BASS_MIDI_EVENT *event, BOOL seeking, void *user)
+{
+	if (event->event == MIDI_EVENT_NOTE) {
+		int vel = HIBYTE(event->param);
+		int note = LOBYTE(event->param);
+
+		// First check
+		if (ignorenotes1)
+		{
+			if (vel < 10 && vel>0) {
+				// Ignored
+				return FALSE;
+			}
+		}
+
+		// Second
+		if (limit88)
+		{
+			if (!(note >= 21 && note <= 108))
+			{
+				// Ignored
+				return FALSE;
+			}
+		}
+
+		// Third
+		if (fullvelocity || pitchshift != 0x7F) {
+			if (pitchshift != 0x7F)
+			{
+				if (pitchshiftchan[event->chan])
+				{
+					int newnote = note + pitchshift;
+					if (newnote > 127) { newnote = 127; }
+					else if (newnote < 0) { newnote = 0; }
+					event->param = (event->param & 0xFF00) | newnote;
+				}
+			}
+			if (fullvelocity && vel != 0)
+				event->param = (event->param & 0x00FF) | 0x7F;
+		}
+
+	}
+	return TRUE; // process the event
+}
+*/
+
 void InitializeStreamForExternalEngine(INT32 mixfreq) {
 	bool isdecode = FALSE;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating stream for external engine...");
-	if (currentengine == 1 || currentengine == 3) {
+	if (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE) {
 		if (defaultoutput == 1) {
 			isdecode = TRUE;
 		}
 		else isdecode = FALSE;
-
 	}
-	else {
-		isdecode = TRUE;
-	}
+	else isdecode = TRUE;
 
 	if (KSStream) BASS_StreamFree(KSStream);
 
@@ -173,7 +223,8 @@ void InitializeStreamForExternalEngine(INT32 mixfreq) {
 		(isdecode ? BASS_STREAM_DECODE : 0) | (sysresetignore ? BASS_MIDI_NOSYSRESET : 0) | (monorendering ? BASS_SAMPLE_MONO : 0) |
 		AudioRenderingType(floatrendering) | (noteoff1 ? BASS_MIDI_NOTEOFF1 : 0) | (nofx ? BASS_MIDI_NOFX : 0) | (sinc ? BASS_MIDI_SINCINTER : 0),
 		mixfreq);
-	CheckUp(ERRORCODE, L"KSStreamCreateDEC", TRUE);
+	// BASS_MIDI_StreamSetFilter(KSStream, TRUE, MidiFilterProc, NULL);
+	CheckUp(ERRORCODE, L"KSStreamCreate", TRUE);
 	
 	PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
 }
@@ -245,39 +296,33 @@ void GetWASAPIDevice() {
 
 void ASIOControlPanel() {
 	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
-		if (currentengine == 2) {
+		if (currentengine == ASIO_ENGINE) {
 			BASS_ASIO_ControlPanel();
 		}
 	}
 }
 
 void InitializeBASSFinal() {
-	currentengine = 1;
-
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 	BASS_GetInfo(&info);
 	BASS_SetConfig(BASS_CONFIG_BUFFER, frames);
 	InitializeStreamForExternalEngine(frequency);
-	CheckUp(ERRORCODE, L"KSStreamCreateDS", TRUE);
-	if (DSoutput != 0)
+	CheckUp(ERRORCODE, L"KSStreamCreate", TRUE);
+	if (AudioOutput != NULL)
 	{
 		BASS_ChannelPlay(KSStream, false);
-		CheckUp(ERRORCODE, L"KSChannelPlayDS", TRUE);
+		CheckUp(ERRORCODE, L"KSChannelPlay", TRUE);
 	}
 }
 
 void InitializeWAVEnc() {
-	currentengine = 0;
-
 	InitializeStreamForExternalEngine(frequency);
 	InitializeBASSEnc();
 	CheckUp(ERRORCODE, L"KSInitEnc", TRUE);
 }
 
 void InitializeASIO() {
-	currentengine = 2;
-
 	InitializeStreamForExternalEngine(frequency);
 	if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 		BASS_ASIO_SetRate(frequency);
@@ -308,22 +353,15 @@ bool InitializeBASS(bool restart) {
 	bool init = FALSE;
 	bool isds = FALSE;
 
-    WASAPIoutput = defaultWoutput - 1;
-	DSoutput = defaultoutput - 1;
+	AudioOutput = defaultoutput - 1;
 
-	if (currentengine == 1 || currentengine == 3) isds = TRUE; // DirectSound or WASAPI internal, init BASS for output device
-	else if (currentengine == 3)  {
-		if (monorendering != 0) {
-			monorendering = 0;
-			MessageBox(NULL, L"WASAPI doesn't support monophonic rendering.\n\nClick OK to continue in stereophonic mode.", L"Keppy's Synthesizer - WASAPI error", MB_OK | MB_ICONERROR);
-		}
-	}
+    isds = (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE); // DirectSound or WASAPI internal, init BASS for output device
 
 	PrintToConsole(FOREGROUND_RED, 1, "Settings are valid, continue...");
 
 	if (restart == TRUE) {
 		PrintToConsole(FOREGROUND_RED, 1, "The driver requested to restart the stream.");
-		if (currentengine == 0) restartvalue++;
+		if (currentengine == AUDTOWAV) restartvalue++;
 	}
 
 	// Free BASS
@@ -347,21 +385,21 @@ bool InitializeBASS(bool restart) {
 
 	// Init BASS
 	int flags;
-	if (currentengine == 1) flags = BASS_DEVICE_DSOUND;
+	if (currentengine == DSOUND_ENGINE) flags = BASS_DEVICE_DSOUND;
 	else flags = 0;
 
 	Retry:
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
-	init = BASS_Init(isds ? DSoutput : 0, frequency, flags, 0, NULL);
+	init = BASS_Init(isds ? AudioOutput : 0, frequency, flags, 0, NULL);
 	CheckUp(ERRORCODE, L"BASSInit", TRUE);
 
-	if (currentengine == 0) {
+	if (currentengine == AUDTOWAV) {
 		InitializeWAVEnc();
 	}
-	else if (currentengine == 1 || currentengine == 3) {
+	else if (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE) {
 		InitializeBASSFinal();
 	}
-	else if (currentengine == 2) {
+	else if (currentengine == ASIO_ENGINE) {
 		InitializeASIO();
 	}
 
@@ -426,10 +464,8 @@ int CreateThreads(bool startup) {
 	SetThreadPriority(hThread2, prioval[driverprio]);
 	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)settingsload, NULL, 0, (LPDWORD)thrdaddr3);
 	SetThreadPriority(hThread3, prioval[driverprio]);
-	if (currentengine > 1) {
-		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
-		SetThreadPriority(hThread4, prioval[driverprio]);
-	}
+	hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
+	SetThreadPriority(hThread4, prioval[driverprio]);
 	hThreadDBG = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)pipesfill, NULL, 0, (LPDWORD)thrdaddrDBG);
 	SetThreadPriority(hThreadDBG, prioval[driverprio]);
 
