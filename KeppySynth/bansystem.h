@@ -2,17 +2,7 @@
 Keppy's Synthesizer blacklist system
 */
 
-BOOL CheckXP(){
-	DWORD version = GetVersion();
-	DWORD major = (DWORD)(LOBYTE(LOWORD(version)));
-	return (major < 6);
-}
-
 BOOL BlackListSystem(){
-	// If the user tries to run the driver on XP, immediately return 0 and quit
-	if (CheckXP()) {
-		return 0x0;
-	}
 	// Blacklist system init
 	TCHAR defaultstring[MAX_PATH];
 	TCHAR userstring[MAX_PATH];
@@ -41,9 +31,7 @@ BOOL BlackListSystem(){
 				OutputDebugString(defaultblacklistdirectory);
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
-					if (_tcsicmp(modulename, defaultstring) == 0) {
-						return 0x0;
-					}
+					if (_tcsicmp(modulename, defaultstring) == 0) return 0x0;
 				}
 			}
 			else {
@@ -120,82 +108,38 @@ BOOL BlackListInit(){
 	_tcscpy_s(sndvol, _countof(sndvol), _T("sndvol.exe"));
 	try {
 		if (PathFileExists(vmidisynthdll)) {
-			if (PathFileExists(vmidisynth2exe)) {
-				return BlackListSystem();
-			}
+			if (PathFileExists(vmidisynth2exe)) return BlackListSystem();
 			else {
-				if (!_tcsicmp(modulename, sndvol)) {
+				if (!_tcsicmp(modulename, sndvol))
 					return 0x0;
-				}
 				else {
 					if (MessageBox(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use Keppy's Synthesizer anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using Keppy's Synthesizer)", L"Keppy's Synthesizer", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
-					{
 						return 0x0;
-					}
-					else {
+					else 
 						return BlackListSystem();
-					}
 				}
 			}
 		}
 		else if (PathFileExists(bassmididrv)) {
-			MessageBox(0, L"Keppy's Synthesizer can NOT work while BASSMIDI Driver is installed.\nThe driver will not work until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			MessageBox(0, L"Keppy's Synthesizer will refuse to start until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"Keppy's Synthesizer", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 			return 0x0;
 		}
-		else {
-			return BlackListSystem();
-		}
-		return 0x0;
+		return BlackListSystem();
 	}
 	catch (...) {
-		CrashMessage(L"VMSBlackListedCheckUp");
+		CrashMessage(L"BlacklistCheckUp");
 		throw;
 	}
 }
 
 BOOL BannedSystemProcess() {
 	// These processes are PERMANENTLY banned because of some internal bugs inside them.
-	TCHAR bannedbattlenet[MAX_PATH];
-	TCHAR bannedconsent[MAX_PATH];
-	TCHAR bannedcsrss[MAX_PATH];
-	TCHAR bannedexplorer[MAX_PATH];
-	TCHAR bannedmstsc[MAX_PATH];
-	TCHAR bannedrust[MAX_PATH];
-	TCHAR bannedshare[MAX_PATH];
-	TCHAR bannedshellinfrastructure[MAX_PATH];
-	TCHAR bannedsndvol[MAX_PATH];
-	TCHAR bannedvmware[MAX_PATH];
-
 	TCHAR modulename[MAX_PATH];
-
-	_tcscpy_s(bannedbattlenet, _countof(bannedbattlenet), _T("Battle.net Launcher.exe"));
-	_tcscpy_s(bannedconsent, _countof(bannedconsent), _T("consent.exe"));
-	_tcscpy_s(bannedcsrss, _countof(bannedcsrss), _T("csrss.exe"));
-	_tcscpy_s(bannedexplorer, _countof(bannedexplorer), _T("explorer.exe"));
-	_tcscpy_s(bannedmstsc, _countof(bannedmstsc), _T("mstsc.exe"));
-	_tcscpy_s(bannedrust, _countof(bannedrust), _T("RustClient.exe"));
-	_tcscpy_s(bannedshare, _countof(bannedshare), _T("NVIDIA Share.exe"));
-	_tcscpy_s(bannedshellinfrastructure, _countof(bannedshellinfrastructure), _T("ShellExperienceHost.exe"));
-	_tcscpy_s(bannedsndvol, _countof(bannedsndvol), _T("SndVol.exe"));
-	_tcscpy_s(bannedvmware, _countof(bannedvmware), _T("vmware-hostd.exe"));
-
 	GetModuleFileName(NULL, modulename, MAX_PATH);
-	PathStripPath(modulename);
-	if (!_tcsicmp(modulename, bannedbattlenet) |
-		!_tcsicmp(modulename, bannedconsent) |
-		!_tcsicmp(modulename, bannedcsrss) |
-		!_tcsicmp(modulename, bannedexplorer) |
-		!_tcsicmp(modulename, bannedmstsc) |
-		!_tcsicmp(modulename, bannedrust) |
-		!_tcsicmp(modulename, bannedshare) |
-		!_tcsicmp(modulename, bannedshellinfrastructure) |
-		!_tcsicmp(modulename, bannedsndvol) |
-		!_tcsicmp(modulename, bannedvmware)) {
-		return TRUE;
-		// It's a blacklisted process, so it can NOT create a BASS audio stream.
+
+	for (int i = 0; i < SizeOfArray(builtinblacklist); i++) {
+		if (!_tcsicmp(modulename, builtinblacklist[i])) return TRUE;
 	}
-	else {
-		return FALSE;
-		// It's not a blacklisted process, so it can create a BASS audio stream.
-	}
+
+	return FALSE;
 }

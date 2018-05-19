@@ -8,17 +8,11 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
 int BufferCheck(void) {
-	LockSystem.LockForReading();
-	int retval = vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
-	LockSystem.UnlockForReading();
-	return retval;
+	return vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
 }
 
 int BufferCheckHyper(void) {
-	LockSystem.LockForReading();	
-	int retval = (readhead != writehead) ? ~0 : 0;
-	LockSystem.UnlockForReading();
-	return retval;
+	return (readhead != writehead) ? ~0 : 0;
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
@@ -40,103 +34,59 @@ void SendLongToBASSMIDI(unsigned char* sysexbuffer, DWORD exlen) {
 	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
-int __inline PlayBufferedData(void) {
+DWORD __inline PlayBufferedData(void) {
 	if (allnotesignore || !BufferCheck()) return 1;
 
 	do {
-		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead -= evbuffsize;
-		LockSystem.UnlockForReading();
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
-
-		switch (TempBuffer.uMsg) {
-		case MODM_DATA:
-			SendToBASSMIDI(TempBuffer.dwParam1);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.sysexbuffer, TempBuffer.exlen);
-			free((void *)TempBuffer.sysexbuffer);
-			break;
-		}
+		SendToBASSMIDI(TempBuffer.dwParam1);
 	} while (vms2emu ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
 }
 
-int __inline PlayBufferedDataHyper(void) {
+DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do {
-		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead -= evbuffsize;
-		LockSystem.UnlockForReading();
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
-
-		switch (TempBuffer.uMsg) {
-		case MODM_DATA:
-			SendToBASSMIDI(TempBuffer.dwParam1);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.sysexbuffer, TempBuffer.exlen);
-			free((void *)TempBuffer.sysexbuffer);
-			break;
-		}
+		SendToBASSMIDI(TempBuffer.dwParam1);
 	} while ((readhead != writehead) ? ~0 : 0);
 
 	return 0;
 }
 
-int __inline PlayBufferedDataChunk(void) {
+DWORD __inline PlayBufferedDataChunk(void) {
 	if (allnotesignore || !BufferCheck()) return 1;
 
 	ULONGLONG whe = writehead;
 	do {
-		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead -= evbuffsize;
-		LockSystem.UnlockForReading();
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
-
-		switch (TempBuffer.uMsg) {
-		case MODM_DATA:
-			SendToBASSMIDI(TempBuffer.dwParam1);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.sysexbuffer, TempBuffer.exlen);
-			free((void *)TempBuffer.sysexbuffer);
-			break;
-		}
+		SendToBASSMIDI(TempBuffer.dwParam1);
 	} while (vms2emu ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
 
 	return 0;
 }
 
-int __inline PlayBufferedDataChunkHyper(void) {
+DWORD __inline PlayBufferedDataChunkHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	ULONGLONG whe = writehead;
 	do {
-		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead -= evbuffsize;
-		LockSystem.UnlockForReading();
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
-
-		switch (TempBuffer.uMsg) {
-		case MODM_DATA:
-			SendToBASSMIDI(TempBuffer.dwParam1);
-			break;
-		case MODM_LONGDATA:
-			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.sysexbuffer, TempBuffer.exlen);
-			free((void *)TempBuffer.sysexbuffer);
-			break;
-		}
+		SendToBASSMIDI(TempBuffer.dwParam1);
 	} while ((readhead != whe) ? ~0 : 0);
 
 	return 0;
@@ -238,7 +188,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, unsigned char* sysexbuffer) {
+MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	if (!bufferinitialized || (uMsg != MODM_LONGDATA && (ignorenotes1 || limit88) && CheckIfEventIsToIgnore(dwParam1)))
 		return MMSYSERR_NOERROR;
 
@@ -246,17 +196,13 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, u
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	// Prepare the event in the buffer
-	LockSystem.LockForWriting();
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead -= evbuffsize;
-	LockSystem.UnlockForWriting();
 
-	evbuf_t evtobuf{ 
+	evbuf_t evtobuf{
 		uMsg = uMsg,
 		dwParam1 = dwParam1,
 		dwParam2 = dwParam2,
-		exlen = exlen,
-		sysexbuffer = sysexbuffer
 	};
 
 	evbuf[tempevent] = evtobuf;
@@ -268,19 +214,15 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, u
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, unsigned char* sysexbuffer) {
+MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	// Prepare the event in the buffer
-	LockSystem.LockForWriting();
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead -= evbuffsize;
-	LockSystem.UnlockForWriting();
 
 	evbuf_t evtobuf{
 		uMsg = uMsg,
 		dwParam1 = dwParam1,
 		dwParam2 = dwParam2,
-		exlen = exlen,
-		sysexbuffer = sysexbuffer
 	};
 
 	evbuf[tempevent] = evtobuf;

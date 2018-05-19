@@ -6,7 +6,6 @@ void keepstreamsalive(int& opend) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 		CloseThreads();
 		LoadSettings(TRUE);
-		if (!com_initialized) { if (!FAILED(CoInitialize(NULL))) com_initialized = TRUE; }
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		if (InitializeBASS(FALSE)) {
 			SetUpStream();
@@ -16,7 +15,7 @@ void keepstreamsalive(int& opend) {
 	}
 }
 
-DWORD WINAPI threadfunc(LPVOID lpV) {
+DWORD WINAPI DriverHeart(LPVOID lpV) {
 	try {
 		if (BannedSystemProcess() == TRUE) {
 			_endthread();
@@ -28,10 +27,6 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 				LoadSettings(FALSE);
 				allocate_memory();
 				load_bassfuncs();
-				if (!com_initialized) {
-					if (FAILED(CoInitialize(NULL))) continue;
-					com_initialized = TRUE;
-				}
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (InitializeBASS(FALSE)) {
 					SetUpStream();
@@ -56,7 +51,7 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"DrvMainThread");
+		CrashMessage(L"DriverHeart");
 		ExitThread(0);
 		throw;
 		return 0;
@@ -104,7 +99,7 @@ void DoStartClient() {
 			FALSE,              // initial state is nonsignaled
 			TEXT("SoundFontEvent")  // object name
 		);
-		hCalcThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadfunc, NULL, 0, (LPDWORD)thrdaddrC);
+		hCalcThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)thrdaddrC);
 		SetThreadPriority(hCalcThread, prioval[driverprio]);
 		result = WaitForSingleObject(load_sfevent, INFINITE);
 		if (result == WAIT_OBJECT_0)
@@ -160,7 +155,7 @@ void ResetKSStream() {
 }
 
 MMRESULT WINAPI SendDirectData(DWORD dwMsg) {
-	return _PrsData(MODM_DATA, dwMsg, 0, 0, 0);
+	return _PrsData(MODM_DATA, dwMsg, 0);
 }
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
@@ -172,56 +167,6 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	try {
-		if (bufferinitialized) {
-			DWORD exlen;
-			unsigned char* sysexbuffer;
-			DWORD retval = MMSYSERR_NOERROR;
-			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
-
-			// Mark the buffer as in queue
-			IIMidiHdr->dwFlags &= ~MHDR_DONE;
-			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-
-			// Do the stuff with it, if it's not to be ignored
-			if (!sysexignore)
-			{
-				// Allocate temp buffer for the event
-				exlen = IIMidiHdr->dwBytesRecorded;
-				sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char));
-				if (sysexbuffer)
-				{
-					try
-					{
-						// Copy the event, and send it over to the events parser
-						memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-						retval = ParseData(MODM_LONGDATA, 0, 0, exlen, sysexbuffer);
-					}
-					catch (...)
-					{
-						// Something happened, return "Invalid parameter"
-						retval = MMSYSERR_INVALPARAM;
-					}
-				}
-				// The buffer is invalid, return "No memory"
-				else retval = MMSYSERR_NOMEM;
-			}
-			// It has to be ignored, send info to console
-			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
-
-			// Mark the buffer as done
-			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-			IIMidiHdr->dwFlags |= MHDR_DONE;
-
-			// Tell the app that the buffer has been played
-			return retval;
-		}
-		else return MIDIERR_NOTREADY;
-	}
-	catch (...) { return MMSYSERR_INVALPARAM; }
-}
-
-MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 	try {
 		if (bufferinitialized) {
 			DWORD exlen;
@@ -269,4 +214,8 @@ MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 		else return MIDIERR_NOTREADY;
 	}
 	catch (...) { return MMSYSERR_INVALPARAM; }
+}
+
+MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
+	return SendDirectLongData(IIMidiHdr);
 }

@@ -695,7 +695,7 @@ void mixervoid() {
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Channels", 0, KEY_ALL_ACCESS, &hKey);
 
-		for (int i = 0; i <= 15; ++i) {
+		for (int i = 0; i <= SizeOfArray(cnames); ++i) {
 			RegQueryValueEx(hKey, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
 			BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 			RegQueryValueEx(hKey, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);

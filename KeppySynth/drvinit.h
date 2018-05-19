@@ -31,7 +31,7 @@ void MT32SetInstruments() {
 	}
 }
 
-DWORD WINAPI pipesfill(LPVOID lpV) {
+DWORD WINAPI DebugThread(LPVOID lpV) {
 	hThreadDBGRunning = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
 	while (!stop_thread) {
@@ -45,7 +45,7 @@ DWORD WINAPI pipesfill(LPVOID lpV) {
 	return 0;
 }
 
-DWORD WINAPI notescatcher(LPVOID lpV) {
+DWORD WINAPI EventsParser(LPVOID lpV) {
 	hThread4Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 	try {
@@ -71,7 +71,7 @@ DWORD WINAPI notescatcher(LPVOID lpV) {
 	return 0;
 }
 
-DWORD WINAPI settingsload(LPVOID lpV) {
+DWORD WINAPI RTSettings(LPVOID lpV) {
 	hThread3Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	try {
@@ -99,12 +99,12 @@ DWORD WINAPI settingsload(LPVOID lpV) {
 
 void InitializeNotesCatcherThread() {
 	if (hThread4 == NULL) {
-		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
+		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)EventsParser, NULL, 0, (LPDWORD)thrdaddr4);
 		SetThreadPriority(hThread4, prioval[driverprio]);
 	}
 }
 
-DWORD WINAPI audioengine(LPVOID lpParam) {
+DWORD WINAPI AudioThread(LPVOID lpParam) {
 	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	try {
@@ -387,8 +387,8 @@ bool InitializeBASS(bool restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
 
 	// Init BASS
-	int flags;
-	if (currentengine == DSOUND_ENGINE) flags = BASS_DEVICE_DSOUND;
+	DWORD flags = BASS_DEVICE_STEREO;
+	if (currentengine == DSOUND_ENGINE) flags |= BASS_DEVICE_DSOUND;
 	else flags = 0;
 
 	Retry:
@@ -463,11 +463,11 @@ int CreateThreads(bool startup) {
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 
 	reset_synth = 0;
-	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)audioengine, NULL, 0, (LPDWORD)thrdaddr2);
+	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AudioThread, NULL, 0, (LPDWORD)thrdaddr2);
 	SetThreadPriority(hThread2, prioval[driverprio]);
-	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)settingsload, NULL, 0, (LPDWORD)thrdaddr3);
+	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)thrdaddr3);
 	SetThreadPriority(hThread3, prioval[driverprio]);
-	hThreadDBG = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)pipesfill, NULL, 0, (LPDWORD)thrdaddrDBG);
+	hThreadDBG = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)thrdaddrDBG);
 	SetThreadPriority(hThreadDBG, prioval[driverprio]);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
@@ -530,9 +530,5 @@ void FreeUpLibraries() {
 		CheckUp(ERRORCODE, L"KSFreeASIO", TRUE);
 		FreeLibrary(bassasio);
 		bassasio = 0;
-	}
-	if (com_initialized) {
-		CoUninitialize();
-		com_initialized = FALSE;
 	}
 }

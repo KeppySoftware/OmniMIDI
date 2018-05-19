@@ -21,9 +21,6 @@
     <ClInclude Include="..\external_packages\bassmidi.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="bufsystem.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\comdecl.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -54,7 +51,7 @@
     <ClInclude Include="dbg.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="LwL.h">
+    <ClInclude Include="bufsystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

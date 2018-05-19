@@ -6,16 +6,16 @@
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
+// Things
+#define SizeOfArray(type) sizeof(type)/sizeof(type[0])
+
 // EVBuffer
 struct evbuf_t {
 	UINT			uMsg;
 	DWORD_PTR		dwParam1;
 	DWORD_PTR		dwParam2;
-	DWORD			exlen;
-	unsigned char*	sysexbuffer;
 };	// The buffer's structure
 
-static LightweightLock LockSystem;			// LockSystem
 static evbuf_t * evbuf;						// The buffer
 static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
@@ -34,100 +34,97 @@ static DWORD processPriority = NORMAL_PRIORITY_CLASS;
 static HANDLE load_sfevent = NULL;
 
 // Stream
-static int KSStream = NULL;
+static DWORD KSStream = NULL;
 static BASS_INFO info;
-
-// COM
-static BOOL com_initialized = FALSE;
-static float sound_out_volume_float = 1.0;
+static FLOAT sound_out_volume_float = 1.0;
 
 // Threads
 static volatile BOOL stop_thread = FALSE;
 static volatile BOOL stop_rtthread = FALSE;
-static unsigned long long start1, start2, start3, start4;
-static float Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
+static ULONGLONG start1, start2, start3, start4;
+static FLOAT Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
 static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL, hThreadDBG = NULL;
-static unsigned int thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL, thrdaddrDBG = NULL;
-static bool hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE, hThreadDBGRunning = FALSE;
+static ULONG thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL, thrdaddrDBG = NULL;
+static BOOL hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE, hThreadDBGRunning = FALSE;
 
 // Mandatory values
 static HINSTANCE hinst = NULL;							// main DLL handle
 
-static char modulename[MAX_PATH];		// debug info
-static char bitapp[MAX_PATH];			// debug info
+static CHAR modulename[MAX_PATH];		// debug info
+static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
 // Potato
 static BOOL bufferinitialized = FALSE;
 static BOOL ksdirectenabled = FALSE;
 static BOOL bufferoverload = FALSE;
-static float currentcpuusage0;
-static int isoverrideenabled = 0;
+static FLOAT currentcpuusage0;
+static DWORD isoverrideenabled = 0;
 static ULONGLONG evbuffsize = 4096;
 static ULONGLONG sevbuffsize = evbuffsize;
-static int evbuffratio = 1;
-static int evbuffbyram = 0;
+static DWORD evbuffratio = 1;
+static DWORD evbuffbyram = 0;
 
 // Main values
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume (whole)
 static HFX ChVolume;						// Volume (whole)
 
-static HANDLE hConsole;					// Debug console
-static float *sndbf;					// Cake
-static int AudioOutput = 0;				// Audio output (All devices except AudToWAV and WASAPI)
-static int allhotkeys = 0;				// Enable/Disable all the hotkeys
-static int allnotesignore = 0;			// Ignore all MIDI events
-static int alreadyshown = 0;			// Check if the info about the drivers have been already shown.
-static int autopanic = 0;				// Autopanic switch
-static int bassoutputfinal = 0;			// DO NOT TOUCH
-static int capframerate = 0;			// Cap input framerate
-static int currentengine = WASAPI_ENGINE;	// Current engine
-static int debugmode = 0;				// Debug console
-static int defaultAoutput = 0;			// Default audio output (ASIO)
-static int defaultWoutput = 0;			// Default audio output (WASAPI)
-static int defaultmidiindev = 0;		// MIDI Input device
-static int defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
-static int defaultoutput = 0;			// Default audio output (DSound)
-static int defaultsflist = 1;			// Default soundfont list
-static int driverprio = 0;				// Process priority
-static int fadeoutdisable = 0;			// Disable fade-out
-static int floatrendering = 1;			// Floating postatic int audio
-static int frames = 0;					// Default
-static int frequency = 0;				// Audio frequency
-static int fullvelocity = 0;			// Enable full velocity mode
-static int ignorenotes1 = 0;			// Ignores notes with velocity of 1
-static int ischangingbuffermode = 0;	// Stuff
-static int limit88 = 0;					// Limit to 88 keys
-static int livechange = 0;				// Live changes
-static int maxcpu = 0;					// CPU usage INT
-static int midiinenabled = 0;			// MIDI Input
-static int midivoices = 0;				// Max voices INT
-static int midivolumeoverride = 0;		// MIDI track volume override
-static int monorendering = 0;			// Mono rendering (Instead of stereo by default)
-static int mt32mode = 0;				// Roland MT-32 mode
-static int newsndbfvalue = 128;			// DO NOT TOUCH
-static int noblacklistmsg = 0;			// Disable blacklist message
-static int nofloat = 1;					// Enable or disable the float engine
-static int nofx = 0;					// Enable or disable FXs
-static int noteoff1 = 0;				// Note cut INT
-static BOOL oldbuffermode = TRUE;		// For old-ass PCs
-static int overrideinstruments = 0;		// Override channel instruments
-static int pitchshift = 127;			// Pitch shift
-static int preload = 0;					// Soundfont preloading
-static int rco = 0;						// Reduce CPU overhead
-static int restartvalue = 0;			// How many times you changed the settings in real-time
-static int shortname = 0;				// Use short name or nah
-static int sinc = 0;					// Sinc
-static int sincconv = 2;				// Sinc
-static int sysexignore = 0;				// Ignore SysEx events
-static int sysresetignore = 0;			// Ignore sysex messages
-static int vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
-static int volume = 0;					// Volume limit
-static int volumehotkeys = 1;			// Enable/Disable volume hotkeys
-static int volumemon = 1;				// Volume monitoring
+static HANDLE hConsole;						// Debug console
+static FLOAT *sndbf;						// Cake
+static DWORD AudioOutput = 0;				// Audio output (All devices except AudToWAV and WASAPI)
+static DWORD allhotkeys = 0;				// Enable/Disable all the hotkeys
+static DWORD allnotesignore = 0;			// Ignore all MIDI events
+static DWORD alreadyshown = 0;				// Check if the info about the drivers have been already shown.
+static DWORD autopanic = 0;					// Autopanic switch
+static DWORD bassoutputfinal = 0;			// DO NOT TOUCH
+static DWORD capframerate = 0;				// Cap input framerate
+static DWORD currentengine = WASAPI_ENGINE;	// Current engine
+static DWORD debugmode = 0;					// Debug console
+static DWORD defaultAoutput = 0;			// Default audio output (ASIO)
+static DWORD defaultWoutput = 0;			// Default audio output (WASAPI)
+static DWORD defaultmidiindev = 0;			// MIDI Input device
+static DWORD defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
+static DWORD defaultoutput = 0;				// Default audio output (DSound)
+static DWORD defaultsflist = 1;				// Default soundfont list
+static DWORD driverprio = 0;				// Process priority
+static DWORD fadeoutdisable = 0;			// Disable fade-out
+static DWORD floatrendering = 1;			// Floating postatic DWORD audio
+static DWORD frames = 0;					// Default
+static DWORD frequency = 0;					// Audio frequency
+static DWORD fullvelocity = 0;				// Enable full velocity mode
+static DWORD ignorenotes1 = 0;				// Ignores notes with velocity of 1
+static DWORD ischangingbuffermode = 0;		// Stuff
+static DWORD limit88 = 0;					// Limit to 88 keys
+static DWORD livechange = 0;				// Live changes
+static DWORD maxcpu = 0;					// CPU usage INT
+static DWORD midiinenabled = 0;				// MIDI Input
+static DWORD midivoices = 0;				// Max voices INT
+static DWORD midivolumeoverride = 0;		// MIDI track volume override
+static DWORD monorendering = 0;				// Mono rendering (Instead of stereo by default)
+static DWORD mt32mode = 0;					// Roland MT-32 mode
+static DWORD newsndbfvalue = 128;			// DO NOT TOUCH
+static DWORD noblacklistmsg = 0;			// Disable blacklist message
+static DWORD noFLOAT = 1;					// Enable or disable the FLOAT engine
+static DWORD nofx = 0;						// Enable or disable FXs
+static DWORD noteoff1 = 0;					// Note cut INT
+static BOOL oldbuffermode = TRUE;			// For old-ass PCs
+static DWORD overrideinstruments = 0;		// Override channel instruments
+static DWORD pitchshift = 127;				// Pitch shift
+static DWORD preload = 0;					// Soundfont preloading
+static DWORD rco = 0;						// Reduce CPU overhead
+static DWORD restartvalue = 0;				// How many times you changed the settings in real-time
+static DWORD shortname = 0;					// Use short name or nah
+static DWORD sinc = 0;						// Sinc
+static DWORD sincconv = 2;					// Sinc
+static DWORD sysexignore = 0;				// Ignore SysEx events
+static DWORD sysresetignore = 0;			// Ignore sysex messages
+static DWORD vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
+static DWORD volume = 0;					// Volume limit
+static DWORD volumehotkeys = 1;				// Enable/Disable volume hotkeys
+static DWORD volumemon = 1;					// Volume monitoring
 
 // Priority values
-static int prioval[7] =
+static DWORD prioval[7] =
 {
 	15,
 	15,
@@ -138,7 +135,7 @@ static int prioval[7] =
 	-2
 };
 
-static int callprioval[7] =
+static DWORD callprioval[7] =
 {
 	0x00000100,
 	0x00000100,
@@ -149,18 +146,26 @@ static int callprioval[7] =
 	0x0000040
 };
 
+// Built-in blacklist
+static LPCWSTR builtinblacklist[10] =
+{
+	_T("Battle.net Launcher.exe"),
+	_T("consent.exe"),
+	_T("csrss.exe"),
+	_T("explorer.exe"),
+	_T("mstsc.exe"),
+	_T("RustClient.exe"),
+	_T("NVIDIA Share.exe"),
+	_T("ShellExperienceHost.exe"),
+	_T("SndVol.exe"),
+	_T("vmware-hostd.exe")
+};
+
 // Channels volume
 static LPCWSTR cnames[16] =
 {
 	L"ch1", L"ch2", L"ch3", L"ch4", L"ch5", L"ch6", L"ch7", L"ch8",
 	L"ch9", L"ch10", L"ch11", L"ch12", L"ch13", L"ch14", L"ch15", L"ch16"
-};
-
-// Channels voices
-static LPCWSTR cvnames[16] =
-{
-	L"chv1", L"chv2", L"chv3", L"chv4", L"chv5", L"chv6", L"chv7", L"chv8",
-	L"chv9", L"chv10", L"chv11", L"chv12", L"chv13", L"chv14", L"chv15", L"chv16"
 };
 
 static DWORD cvvalues[16] =
@@ -181,20 +186,20 @@ static LPCWSTR cpresetname[16] =
 	L"pc9", L"pcd", L"pc11", L"pc12", L"pc13", L"pc14", L"pc15", L"pc16"
 };
 
-static int cbank[16] =
+static DWORD cbank[16] =
 {
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static int cpreset[16] =
+static DWORD cpreset[16] =
 {
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static int selectedtype = 4;
-static int SynthNamesTypes[7] =
+static DWORD selectedtype = 4;
+static DWORD SynthNamesTypes[7] =
 {
 	MOD_FMSYNTH,
 	MOD_SYNTH,
@@ -206,21 +211,15 @@ static int SynthNamesTypes[7] =
 };
 
 // Channels
-static int cvalues[16] =
+static DWORD cvalues[16] =
 {
 	100, 100, 100, 100, 100, 100, 100, 100,
 	100, 100, 100, 100, 100, 100, 100, 100
 };
 
-static int tcvalues[16] =
-{
-	16383, 16383, 16383, 16383, 16383, 16383, 16383, 16383,
-	16383, 16383, 16383, 16383, 16383, 16383, 16383, 16383
-};
-
 // Reverb and chorus
-static int reverb = 64;					// Reverb
-static int chorus = 64;					// Chorus
+static DWORD reverb = 64;					// Reverb
+static DWORD chorus = 64;					// Chorus
 
 // Watchdog stuff
 static LPCWSTR rnames[16] =
@@ -229,17 +228,17 @@ static LPCWSTR rnames[16] =
 	L"rel9", L"rel10", L"rel11", L"rel2", L"rel13", L"rel14", L"rel15", L"rel16"
 };
 
-static int rvalues[16] =
+static DWORD rvalues[16] =
 {
 	0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0
 };
 
 // Other
-static int buffull = 0;
-static int extra8lists = 0;
-static int lovel = 1;
-static int hivel = 1;
+static DWORD buffull = 0;
+static DWORD extra8lists = 0;
+static DWORD lovel = 1;
+static DWORD hivel = 1;
 
 // Soundfont lists
 static TCHAR userprofile[MAX_PATH];
@@ -336,12 +335,12 @@ static TCHAR * listsanalyze[16] =
 
 // -----------------------------------------------------------------------
 
-std::vector<HSOUNDFONT> _soundFonts[16];
+std::vector<DWORD> _soundFonts[16];
 std::vector<BASS_MIDI_FONTEX> presetList[16];
 
 // -----------------------------------------------------------------------
 
-static int pitchshiftchan[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static DWORD pitchshiftchan[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static LPCWSTR pitchshiftname[16] =
 {
 	L"ch1pshift", L"ch2pshift", L"ch3pshift", L"ch4pshift", L"ch5pshift",

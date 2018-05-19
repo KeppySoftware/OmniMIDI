@@ -26,7 +26,6 @@
     <ClInclude Include="dbg.h" />
     <ClInclude Include="drvinit.h" />
     <ClInclude Include="ksdapi.h" />
-    <ClInclude Include="LwL.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />
@@ -166,7 +165,7 @@
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>Version.lib;Psapi.lib;dxguid.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)\keppysynth.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -187,13 +186,14 @@
       <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
-      <PreventDllBinding>true</PreventDllBinding>
-      <TurnOffAssemblyGeneration>false</TurnOffAssemblyGeneration>
+      <PreventDllBinding>false</PreventDllBinding>
+      <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <EnableUAC>false</EnableUAC>
+      <SetChecksum>true</SetChecksum>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -263,7 +263,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>Version.lib;Psapi.lib;dxguid.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)\keppysynth.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -284,16 +284,17 @@
       <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
-      <PreventDllBinding>true</PreventDllBinding>
+      <PreventDllBinding>false</PreventDllBinding>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <TurnOffAssemblyGeneration>false</TurnOffAssemblyGeneration>
+      <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <GenerateMapFile>false</GenerateMapFile>
-      <ProfileGuidedDatabase />
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EnableUAC>false</EnableUAC>
+      <SetChecksum>true</SetChecksum>
     </Link>
     <PostBuildEvent>
       <Command>

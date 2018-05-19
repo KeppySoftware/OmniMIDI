@@ -8,7 +8,11 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
 #endif
 
-#define VC_EXTRALEAN
+#define STRICT
+#define WIN32_LEAN_AND_MEAN
+#define __STDC_LIMIT_MACROS
+#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
+
 #define BASSASIODEF(f) (WINAPI *f)
 #define BASSDEF(f) (WINAPI *f)
 #define BASSENCDEF(f) (WINAPI *f)	
@@ -19,15 +23,14 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define ERRORCODE 0
 #define CAUSE 1
 
-#define MAX_DRIVERS 1
-#define MAX_CLIENTS 1 // Per driver
-
 #include "stdafx.h"
 #include <Psapi.h>
 #include <atlbase.h>
+#include <cstdint>
 #include <comdef.h>
 #include <fstream>
 #include <iostream>
+#include <future>
 #include <mmddk.h>
 #include <process.h>
 #include <shlobj.h>
@@ -47,11 +50,11 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <bassmix.h>
 
 // Hyper switch
-int HyperMode = 0;
-int HyperCheckedAlready = FALSE;
-MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, unsigned char* sysexbuffer) = 0;
-int(*_PlayBufData)(void) = 0;
-int(*_PlayBufDataChk)(void) = 0;
+DWORD HyperMode = 0;
+DWORD HyperCheckedAlready = FALSE;
+MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) = 0;
+DWORD(*_PlayBufData)(void) = 0;
+DWORD(*_PlayBufDataChk)(void) = 0;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 
@@ -77,9 +80,6 @@ void usleep(__int64 usec) {
 	WaitForSingleObject(timer, INFINITE);
 	CloseHandle(timer);
 }
-
-// LightweightLock by Brad Wilson
-#include "LwL.h"
 
 // Variables
 #include "val.h"
@@ -108,7 +108,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	return TRUE;
 }
 
-LRESULT DoDriverConfiguration() {
+LONG_PTR DoDriverConfiguration() {
 	TCHAR configuratorapp[MAX_PATH];
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 	{
@@ -119,7 +119,7 @@ LRESULT DoDriverConfiguration() {
 	return DRVCNF_CANCEL;
 }
 
-STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
+STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
 	switch (uMsg) {
 	case DRV_QUERYCONFIGURE:
@@ -140,7 +140,7 @@ STDAPI_(LRESULT) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM
 	}
 }
 
-HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
+DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	try {
 
 		int defaultmode;
@@ -176,7 +176,7 @@ HRESULT modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		defaultmode = SynthNamesTypes[selectedtype];
 
-		if (debugmode == 1 && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
+		if (debugmode == TRUE && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
 
 		if (strlen(SynthName) < 1 || isspace(SynthName[0])) {
 			ZeroMemory(SynthName, MAXPNAMELEN);
@@ -293,7 +293,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
-		return _PrsData(uMsg, dwParam1, dwParam2, exlen, sysexbuffer);
+		return _PrsData(uMsg, dwParam1, dwParam2);
 	case MODM_LONGDATA:
 		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR *)dwParam1;
@@ -316,7 +316,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 				{
 					// Copy the event, and send it over to the events parser
 					memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-					retval = ParseData(uMsg, 0, 0, exlen, sysexbuffer);
+					SendLongToBASSMIDI(sysexbuffer, exlen);
 				}
 				catch (...)
 				{
