@@ -8,16 +8,16 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
 int BufferCheck(void) {
-	EnterCriticalSection(&bufmed);
-	int retval = vms2emu ? eventcount : (readhead != writehead);
-	LeaveCriticalSection(&bufmed);
+	LockSystem.LockForReading();
+	int retval = vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
+	LockSystem.UnlockForReading();
 	return retval;
 }
 
 int BufferCheckHyper(void) {
-	EnterCriticalSection(&bufmed);
-	int retval = (readhead != writehead);
-	LeaveCriticalSection(&bufmed);
+	LockSystem.LockForReading();	
+	int retval = (readhead != writehead) ? ~0 : 0;
+	LockSystem.UnlockForReading();
 	return retval;
 }
 
@@ -44,10 +44,10 @@ int __inline PlayBufferedData(void) {
 	if (allnotesignore || !BufferCheck()) return 1;
 
 	do {
-		EnterCriticalSection(&bufmed);
+		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead -= evbuffsize;
-		LeaveCriticalSection(&bufmed);
+		LockSystem.UnlockForReading();
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 
@@ -60,7 +60,7 @@ int __inline PlayBufferedData(void) {
 			free((void *)TempBuffer.sysexbuffer);
 			break;
 		}
-	} while (vms2emu ? InterlockedDecrement64(&eventcount) : (readhead != writehead));
+	} while (vms2emu ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
 }
@@ -69,10 +69,10 @@ int __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do {
-		EnterCriticalSection(&bufmed);
+		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
 		if (++readhead >= evbuffsize) readhead -= evbuffsize;
-		LeaveCriticalSection(&bufmed);
+		LockSystem.UnlockForReading();
 
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 
@@ -85,7 +85,7 @@ int __inline PlayBufferedDataHyper(void) {
 			free((void *)TempBuffer.sysexbuffer);
 			break;
 		}
-	} while (readhead != writehead);
+	} while ((readhead != writehead) ? ~0 : 0);
 
 	return 0;
 }
@@ -194,17 +194,18 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, u
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	// Prepare the event in the buffer
-	EnterCriticalSection(&bufmed);
+	LockSystem.LockForWriting();
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead -= evbuffsize;
-	LeaveCriticalSection(&bufmed);
+	LockSystem.UnlockForWriting();
 
-	evbuf_t evtobuf;
-	evtobuf.uMsg = uMsg;
-	evtobuf.dwParam1 = dwParam1;
-	evtobuf.dwParam2 = dwParam2;
-	evtobuf.exlen = exlen;
-	evtobuf.sysexbuffer = sysexbuffer;
+	evbuf_t evtobuf{ 
+		uMsg = uMsg,
+		dwParam1 = dwParam1,
+		dwParam2 = dwParam2,
+		exlen = exlen,
+		sysexbuffer = sysexbuffer
+	};
 
 	evbuf[tempevent] = evtobuf;
 
@@ -217,17 +218,18 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, u
 
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, unsigned char* sysexbuffer) {
 	// Prepare the event in the buffer
-	EnterCriticalSection(&bufmed);
+	LockSystem.LockForWriting();
 	long long tempevent = writehead;
 	if (++writehead >= evbuffsize) writehead -= evbuffsize;
-	LeaveCriticalSection(&bufmed);
+	LockSystem.UnlockForWriting();
 
-	evbuf_t evtobuf;
-	evtobuf.uMsg = uMsg;
-	evtobuf.dwParam1 = dwParam1;
-	evtobuf.dwParam2 = dwParam2;
-	evtobuf.exlen = exlen;
-	evtobuf.sysexbuffer = sysexbuffer;
+	evbuf_t evtobuf{
+		uMsg = uMsg,
+		dwParam1 = dwParam1,
+		dwParam2 = dwParam2,
+		exlen = exlen,
+		sysexbuffer = sysexbuffer
+	};
 
 	evbuf[tempevent] = evtobuf;
 

@@ -123,8 +123,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 					MT32SetInstruments();
 					_PlayBufData();
 				}
-				else if (!hThread4)
-					InitializeNotesCatcherThread();
+				else if (!hThread4) InitializeNotesCatcherThread();
 
 				usleep(rco);
 			}
@@ -143,16 +142,20 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
-	start2 = clock();
+	start2 = TimeNow();
+	if (reset_synth) {
+		reset_synth = 0;
+		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+	}
+
+	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
 
 	if (oldbuffermode) {
 		MT32SetInstruments();
 		_PlayBufData();
 	}
-	else if (!hThread4)
-		InitializeNotesCatcherThread();
+	else if (!hThread4) InitializeNotesCatcherThread();
 
-	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
 	if (data == -1) return 0;
 	return data;
 }
@@ -464,8 +467,6 @@ int CreateThreads(bool startup) {
 	SetThreadPriority(hThread2, prioval[driverprio]);
 	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)settingsload, NULL, 0, (LPDWORD)thrdaddr3);
 	SetThreadPriority(hThread3, prioval[driverprio]);
-	hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)notescatcher, NULL, 0, (LPDWORD)thrdaddr4);
-	SetThreadPriority(hThread4, prioval[driverprio]);
 	hThreadDBG = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)pipesfill, NULL, 0, (LPDWORD)thrdaddrDBG);
 	SetThreadPriority(hThreadDBG, prioval[driverprio]);
 

@@ -64,6 +64,22 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 
+// F**k Sleep() tbh
+void usleep(__int64 usec) {
+	HANDLE timer;
+	LARGE_INTEGER ft;
+
+	ft.QuadPart = -(10 * usec);
+
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+	WaitForSingleObject(timer, INFINITE);
+	CloseHandle(timer);
+}
+
+// LightweightLock by Brad Wilson
+#include "LwL.h"
+
 // Variables
 #include "val.h"
 #include "basserr.h"

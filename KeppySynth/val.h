@@ -15,7 +15,7 @@ struct evbuf_t {
 	unsigned char*	sysexbuffer;
 };	// The buffer's structure
 
-static CRITICAL_SECTION bufmed;				// Buffer stuff
+static LightweightLock LockSystem;			// LockSystem
 static evbuf_t * evbuf;						// The buffer
 static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
@@ -110,7 +110,7 @@ static int noblacklistmsg = 0;			// Disable blacklist message
 static int nofloat = 1;					// Enable or disable the float engine
 static int nofx = 0;					// Enable or disable FXs
 static int noteoff1 = 0;				// Note cut INT
-static int oldbuffermode = 0;			// For old-ass PCs
+static BOOL oldbuffermode = TRUE;		// For old-ass PCs
 static int overrideinstruments = 0;		// Override channel instruments
 static int pitchshift = 127;			// Pitch shift
 static int preload = 0;					// Soundfont preloading
@@ -370,16 +370,4 @@ BOOL CheckNullWChar(WCHAR* scanme) {
 		}
 	}
 	return FALSE;
-}
-
-void usleep(__int64 usec) {
-	HANDLE timer;
-	LARGE_INTEGER ft;
-
-	ft.QuadPart = -(10 * usec);
-
-	timer = CreateWaitableTimer(NULL, TRUE, NULL);
-	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
-	WaitForSingleObject(timer, INFINITE);
-	CloseHandle(timer);
 }

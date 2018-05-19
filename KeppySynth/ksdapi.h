@@ -66,7 +66,6 @@ DWORD WINAPI threadfunc(LPVOID lpV) {
 void DoStartClient() {
 	if (modm_closed == TRUE) {
 		timeBeginPeriod(1);
-		InitializeCriticalSection(&bufmed);
 
 		HKEY hKey;
 		long lResult;
@@ -122,7 +121,6 @@ void DoStopClient() {
 		CloseHandle(hCalcThread);
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
-		DeleteCriticalSection(&bufmed);
 		timeEndPeriod(1);
 	}
 }
