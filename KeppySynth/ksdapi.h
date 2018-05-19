@@ -83,10 +83,12 @@ void DoStartClient() {
 			MessageBox(NULL, L"Hyper-playback mode is enabled!", L"Keppy's Synthesizer", MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
 			_PrsData = ParseDataHyper;
 			_PlayBufData = PlayBufferedDataHyper;
+			_PlayBufDataChk = PlayBufferedDataChunkHyper;
 		}
 		else {
 			_PrsData = ParseData;
 			_PlayBufData = PlayBufferedData;
+			_PlayBufDataChk = PlayBufferedDataChunk;
 		}
 		HyperCheckedAlready = TRUE;
 

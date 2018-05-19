@@ -51,6 +51,7 @@ int HyperMode = 0;
 int HyperCheckedAlready = FALSE;
 MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2, DWORD exlen, unsigned char* sysexbuffer) = 0;
 int(*_PlayBufData)(void) = 0;
+int(*_PlayBufDataChk)(void) = 0;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 

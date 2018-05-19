@@ -90,6 +90,58 @@ int __inline PlayBufferedDataHyper(void) {
 	return 0;
 }
 
+int __inline PlayBufferedDataChunk(void) {
+	if (allnotesignore || !BufferCheck()) return 1;
+
+	ULONGLONG whe = writehead;
+	do {
+		LockSystem.LockForReading();
+		ULONGLONG tempevent = readhead;
+		if (++readhead >= evbuffsize) readhead -= evbuffsize;
+		LockSystem.UnlockForReading();
+
+		evbuf_t TempBuffer = *(evbuf + tempevent);
+
+		switch (TempBuffer.uMsg) {
+		case MODM_DATA:
+			SendToBASSMIDI(TempBuffer.dwParam1);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.sysexbuffer, TempBuffer.exlen);
+			free((void *)TempBuffer.sysexbuffer);
+			break;
+		}
+	} while (vms2emu ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
+
+	return 0;
+}
+
+int __inline PlayBufferedDataChunkHyper(void) {
+	if (!BufferCheckHyper()) return 1;
+
+	ULONGLONG whe = writehead;
+	do {
+		LockSystem.LockForReading();
+		ULONGLONG tempevent = readhead;
+		if (++readhead >= evbuffsize) readhead -= evbuffsize;
+		LockSystem.UnlockForReading();
+
+		evbuf_t TempBuffer = *(evbuf + tempevent);
+
+		switch (TempBuffer.uMsg) {
+		case MODM_DATA:
+			SendToBASSMIDI(TempBuffer.dwParam1);
+			break;
+		case MODM_LONGDATA:
+			BASS_MIDI_StreamEvents(KSStream, BASS_MIDI_EVENTS_RAW, (void*)TempBuffer.sysexbuffer, TempBuffer.exlen);
+			free((void *)TempBuffer.sysexbuffer);
+			break;
+		}
+	} while ((readhead != whe) ? ~0 : 0);
+
+	return 0;
+}
+
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
 {
 	/* 

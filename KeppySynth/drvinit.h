@@ -121,7 +121,7 @@ DWORD WINAPI audioengine(LPVOID lpParam) {
 
 				if (oldbuffermode) {
 					MT32SetInstruments();
-					_PlayBufData();
+					if (_PlayBufDataChk()) usleep(rco);
 				}
 				else if (!hThread4) InitializeNotesCatcherThread();
 
@@ -152,7 +152,7 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 
 	if (oldbuffermode) {
 		MT32SetInstruments();
-		_PlayBufData();
+		_PlayBufDataChk();
 	}
 	else if (!hThread4) InitializeNotesCatcherThread();
 
