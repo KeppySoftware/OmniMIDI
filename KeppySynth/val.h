@@ -16,6 +16,7 @@ struct evbuf_t {
 	DWORD_PTR		dwParam2;
 };	// The buffer's structure
 
+static LightweightLock LockSystem;			// LockSystem
 static evbuf_t * evbuf;						// The buffer
 static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;		// Current read position in the buffer

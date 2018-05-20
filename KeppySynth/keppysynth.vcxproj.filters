@@ -54,6 +54,9 @@
     <ClInclude Include="bufsystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="LwL.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

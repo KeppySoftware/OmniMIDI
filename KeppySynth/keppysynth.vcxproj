@@ -26,6 +26,7 @@
     <ClInclude Include="dbg.h" />
     <ClInclude Include="drvinit.h" />
     <ClInclude Include="ksdapi.h" />
+    <ClInclude Include="LwL.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="sfsystem.h" />

@@ -81,6 +81,9 @@ void usleep(__int64 usec) {
 	CloseHandle(timer);
 }
 
+// LightweightLock by Brad Wilson
+#include "LwL.h"
+
 // Variables
 #include "val.h"
 #include "basserr.h"
@@ -287,8 +290,6 @@ LONG DoOpenClient() {
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
 	DWORD retval = MMSYSERR_NOERROR;
-	DWORD exlen;
-	unsigned char* sysexbuffer;
 
 	switch (uMsg) {
 	case MODM_DATA:
@@ -305,28 +306,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 		// Do the stuff with it, if it's not to be ignored
-		if (!sysexignore)
-		{
-			// Allocate temp buffer for the event
-			exlen = IIMidiHdr->dwBytesRecorded;
-			sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char));
-			if (sysexbuffer)
-			{
-				try
-				{
-					// Copy the event, and send it over to the events parser
-					memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-					SendLongToBASSMIDI(sysexbuffer, exlen);
-				}
-				catch (...)
-				{
-					// Something happened, return "Invalid parameter"
-					retval = MMSYSERR_INVALPARAM;
-				}
-			}
-			// The buffer is invalid, return "No memory"
-			else retval = MMSYSERR_NOMEM;
-		}
+		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 		// It has to be ignored, send info to console
 		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 
@@ -336,7 +316,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 		// Tell the app that the buffer has been played
 		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, dwParam1, 0);
-		return retval;
+		return MMSYSERR_NOERROR;
 	case MODM_OPEN:
 		// Parse callback and instance
 		KSCallback = reinterpret_cast<MIDIOPENDESC*>(dwParam1)->dwCallback;
@@ -354,7 +334,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr = (MIDIHDR *)dwParam1;
 
 		// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-		VirtualLock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+		VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
 
 		// Mark the buffer as prepared, and say that everything is oki-doki
 		IIMidiHdr->dwFlags |= MHDR_PREPARED;
@@ -370,7 +350,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
 
 		// Unlock the buffer, and say that everything is oki-doki
-		VirtualUnlock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength);
+		VirtualUnlock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
 		return MMSYSERR_NOERROR;
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO

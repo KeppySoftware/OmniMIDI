@@ -169,9 +169,6 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	try {
 		if (bufferinitialized) {
-			DWORD exlen;
-			unsigned char* sysexbuffer;
-			DWORD retval = MMSYSERR_NOERROR;
 			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 
 			// Mark the buffer as in queue
@@ -179,28 +176,7 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 			// Do the stuff with it, if it's not to be ignored
-			if (!sysexignore)
-			{
-				// Allocate temp buffer for the event
-				exlen = IIMidiHdr->dwBytesRecorded;
-				sysexbuffer = (unsigned char *)malloc(exlen * sizeof(char));
-				if (sysexbuffer)
-				{
-					try
-					{
-						// Copy the event, and send it over to the events parser
-						memcpy(sysexbuffer, IIMidiHdr->lpData, exlen);
-						SendLongToBASSMIDI(sysexbuffer, exlen);
-					}
-					catch (...)
-					{
-						// Something happened, return "Invalid parameter"
-						retval = MMSYSERR_INVALPARAM;
-					}
-				}
-				// The buffer is invalid, return "No memory"
-				else retval = MMSYSERR_NOMEM;
-			}
+			if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 			// It has to be ignored, send info to console
 			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 
@@ -209,7 +185,7 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 			IIMidiHdr->dwFlags |= MHDR_DONE;
 
 			// Tell the app that the buffer has been played
-			return retval;
+			return MMSYSERR_NOERROR;
 		}
 		else return MIDIERR_NOTREADY;
 	}
