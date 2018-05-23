@@ -278,20 +278,17 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 }
 
 void CrashMessage(LPCWSTR part) {
-	TCHAR errormessage[MAX_PATH] = L"An error has been detected while trying to execute the following action: ";
-	TCHAR clickokmsg[MAX_PATH] = L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
-	lstrcat(errormessage, part);
-	lstrcat(errormessage, clickokmsg);
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Error at \"" << part << "\") - Fatal error during the execution of the driver." << std::endl;
+	std::wstring ErrorMessage;
+	ErrorMessage.append(L"An error has been detected while trying to execute the following action: ");
+	ErrorMessage.append(part);
+	ErrorMessage.append(L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.");
 
-	const int result = MessageBox(NULL, errormessage, L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-	switch (result)
-	{
-	default:
-		exit(0);
-		return;
-	}
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	std::cout << "(Error at \"" << part << "\) - Fatal error during the execution of the driver." << std::endl;
+
+	MessageBox(NULL, ErrorMessage.c_str() , L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	exit(0);
+	return;
 }
 
 BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
@@ -306,8 +303,8 @@ BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
 BOOL CheckUpASIO(int mode, TCHAR * codeline, bool showerror) {
 	int error = BASS_ASIO_ErrorGetCode();
 	if (error != 0) {
-		return FALSE;
 		ShowError(error, mode, L"BASSASIO", codeline, showerror);
+		return FALSE;
 	}
 	return TRUE;
 }

@@ -129,7 +129,6 @@
             this.OutputSettingsBox = new System.Windows.Forms.GroupBox();
             this.SincConv = new System.Windows.Forms.ComboBox();
             this.SincConvLab = new System.Windows.Forms.Label();
-            this.StatusBuf = new System.Windows.Forms.PictureBox();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
             this.SincInter = new System.Windows.Forms.CheckBox();
@@ -397,7 +396,6 @@
             this.EnginesBox.SuspendLayout();
             this.AdditionalSettingsBox.SuspendLayout();
             this.OutputSettingsBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).BeginInit();
             this.SynthSettingsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).BeginInit();
@@ -1537,7 +1535,6 @@
             this.OutputSettingsBox.BackColor = System.Drawing.Color.Transparent;
             this.OutputSettingsBox.Controls.Add(this.SincConv);
             this.OutputSettingsBox.Controls.Add(this.SincConvLab);
-            this.OutputSettingsBox.Controls.Add(this.StatusBuf);
             this.OutputSettingsBox.Controls.Add(this.DrvHzLabel);
             this.OutputSettingsBox.Controls.Add(this.Frequency);
             this.OutputSettingsBox.Controls.Add(this.SincInter);
@@ -1579,22 +1576,6 @@
             this.SincConvLab.Size = new System.Drawing.Size(96, 13);
             this.SincConvLab.TabIndex = 17;
             this.SincConvLab.Text = "Conversion quality:";
-            // 
-            // StatusBuf
-            // 
-            this.StatusBuf.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StatusBuf.BackColor = System.Drawing.Color.Transparent;
-            this.StatusBuf.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.StatusBuf.Cursor = System.Windows.Forms.Cursors.Help;
-            this.StatusBuf.ErrorImage = null;
-            this.StatusBuf.InitialImage = null;
-            this.StatusBuf.Location = new System.Drawing.Point(535, 80);
-            this.StatusBuf.Name = "StatusBuf";
-            this.StatusBuf.Size = new System.Drawing.Size(17, 17);
-            this.StatusBuf.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.StatusBuf.TabIndex = 38;
-            this.StatusBuf.TabStop = false;
-            this.StatusBuf.Click += new System.EventHandler(this.StatusBuf_Click);
             // 
             // DrvHzLabel
             // 
@@ -4194,7 +4175,6 @@
             this.AdditionalSettingsBox.ResumeLayout(false);
             this.OutputSettingsBox.ResumeLayout(false);
             this.OutputSettingsBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.StatusBuf)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bufsize)).EndInit();
             this.SynthSettingsBox.ResumeLayout(false);
             this.SynthSettingsBox.PerformLayout();
@@ -4300,7 +4280,6 @@
         private System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label DrvHzLabel;
         public System.Windows.Forms.Label BufferText;
-        public System.Windows.Forms.PictureBox StatusBuf;
         private System.Windows.Forms.MenuItem ProLowLatToolStripMenuItem;
         private System.Windows.Forms.ImageList TabImgs;
         private System.Windows.Forms.StatusStrip StatusStrip;

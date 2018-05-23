@@ -186,6 +186,7 @@ BOOL load_bassfuncs()
 		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
+		LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
 		LOADBASSASIOFUNCTION(BASS_ASIO_Free);
 		LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
@@ -346,7 +347,6 @@ void LoadSettings(bool streamreload)
 		RegQueryValueEx(hKey, L"capframerate", NULL, &dwType, (LPBYTE)&capframerate, &dwSize);
 		RegQueryValueEx(hKey, L"cpu", NULL, &dwType, (LPBYTE)&maxcpu, &dwSize);
 		RegQueryValueEx(hKey, L"defaultAdev", NULL, &dwType, (LPBYTE)&defaultAoutput, &dwSize);
-		RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultdev", NULL, &dwType, (LPBYTE)&defaultoutput, &dwSize);
 		RegQueryValueEx(hKey, L"defaultmidiindev", NULL, &dwType, (LPBYTE)&defaultmidiindev, &dwSize);
 		RegQueryValueEx(hKey, L"defaultsflist", NULL, &dwType, (LPBYTE)&defaultsflist, &dwSize);
@@ -403,7 +403,6 @@ void LoadSettingsRT()
 		DWORD dwSize = sizeof(DWORD);
 		int vms2emutemp = vms2emu;
 		int frequencyttemp = frequency;
-		int potato;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"allhotkeys", NULL, &dwType, (LPBYTE)&allhotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"allnotesignore", NULL, &dwType, (LPBYTE)&allnotesignore, &dwSize);

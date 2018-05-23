@@ -72,7 +72,7 @@ static HFX ChVolume;						// Volume (whole)
 
 static HANDLE hConsole;						// Debug console
 static FLOAT *sndbf;						// Cake
-static DWORD AudioOutput = 0;				// Audio output (All devices except AudToWAV and WASAPI)
+static INT AudioOutput = 0;					// Audio output (All devices except AudToWAV and WASAPI)
 static DWORD allhotkeys = 0;				// Enable/Disable all the hotkeys
 static DWORD allnotesignore = 0;			// Ignore all MIDI events
 static DWORD alreadyshown = 0;				// Check if the info about the drivers have been already shown.
@@ -82,7 +82,6 @@ static DWORD capframerate = 0;				// Cap input framerate
 static DWORD currentengine = WASAPI_ENGINE;	// Current engine
 static DWORD debugmode = 0;					// Debug console
 static DWORD defaultAoutput = 0;			// Default audio output (ASIO)
-static DWORD defaultWoutput = 0;			// Default audio output (WASAPI)
 static DWORD defaultmidiindev = 0;			// MIDI Input device
 static DWORD defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
 static DWORD defaultoutput = 0;				// Default audio output (DSound)

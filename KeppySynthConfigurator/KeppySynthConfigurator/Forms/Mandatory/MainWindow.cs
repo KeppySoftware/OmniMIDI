@@ -1092,7 +1092,7 @@ namespace KeppySynthConfigurator
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 500, 75, 44100, 20, true, false, false, 2, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 500, 75, 44100, 30, true, false, false, 2, true, false, false, AudioEngine.WASAPI_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
@@ -1117,7 +1117,7 @@ namespace KeppySynthConfigurator
         private void MSGSWSEmu_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, true, false, false, 0, false, false, false, 1);
+            Functions.ApplyPresetValues(10000, 32, 75, 22050, 200, true, false, false, 0, false, false, false, AudioEngine.DSOUND_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(2, 0, 1, 1, 1, 0, 1);
@@ -1134,7 +1134,7 @@ namespace KeppySynthConfigurator
         private void blackMIDIsPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, true, false, false, 0, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 1000, 75, 44100, 20, true, false, false, 0, true, false, false, AudioEngine.WASAPI_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
@@ -1151,7 +1151,7 @@ namespace KeppySynthConfigurator
         private void lowLatencyPresetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 500, 80, 44100, 20, true, false, true, 2, true, false, false, 0);
+            Functions.ApplyPresetValues(10000, 500, 80, 96000, 0, true, false, true, 2, true, false, false, AudioEngine.WASAPI_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
@@ -1168,7 +1168,7 @@ namespace KeppySynthConfigurator
         private void chiptunesRetrogamingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, true, false, false, 0, false, false, false, 1);
+            Functions.ApplyPresetValues(10000, 16, 80, 22050, 50, true, false, false, 0, false, false, false, AudioEngine.DSOUND_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(3, 0, 1, 0, 1, 0, 1);
@@ -1185,7 +1185,7 @@ namespace KeppySynthConfigurator
         private void keppysSteinwayPianoRealismToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, true, false, true, 3, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 850, 80, 44100, 20, true, false, true, 3, true, false, false, AudioEngine.WASAPI_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
@@ -1202,7 +1202,7 @@ namespace KeppySynthConfigurator
         private void SBLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, true, false, false, 1, true, false, false, 3);
+            Functions.ApplyPresetValues(10000, 750, 75, 44100, 20, true, false, false, 1, true, false, false, AudioEngine.WASAPI_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 1);
@@ -1219,7 +1219,7 @@ namespace KeppySynthConfigurator
         private void ProLowLatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 3, true, false, false, 2);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 3, true, false, false, AudioEngine.ASIO_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 0);
@@ -1236,7 +1236,7 @@ namespace KeppySynthConfigurator
         private void MT32Mode_Click(object sender, EventArgs e)
         {
             // Set some values...
-            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 0, true, false, false, 2);
+            Functions.ApplyPresetValues(10000, 1000, 75, 48000, 20, true, false, false, 0, true, false, false, AudioEngine.WASAPI_ENGINE);
 
             // Advanced settings here...
             Functions.ChangeAdvancedAudioSettings(1, 0, 0, 0, 1, 0, 0);

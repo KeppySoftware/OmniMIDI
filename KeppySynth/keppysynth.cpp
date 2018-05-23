@@ -145,8 +145,15 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 
 DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	try {
-
-		int defaultmode;
+		MIDIOUTCAPSA * myCapsA;
+		MIDIOUTCAPSW * myCapsW;
+		MIDIOUTCAPS2A * myCaps2A;
+		MIDIOUTCAPS2W * myCaps2W;
+		
+		WORD maximumvoices = 0xFFFF;
+		WORD maximumnotes = 0xFFFF;
+		DWORD CapsSupport = MIDICAPS_VOLUME;
+		DWORD Technology = NULL;
 
 		WORD VID = 0x0000;
 		WORD PID = 0x0000;
@@ -173,13 +180,11 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		RegQueryValueExW(hKey, L"synthname", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
 		RegCloseKey(hKey);
 
-		if (defaultmidiout == 1) defaultmode = MOD_SWSYNTH;
-		else if (selectedtype < 0 || selectedtype > 6) selectedtype = 4;
-		else defaultmode = MOD_SWSYNTH;
+		if (defaultmidiout == 1 || (selectedtype > MOD_SWSYNTH))
+			Technology = MOD_SWSYNTH;
+		else Technology = SynthNamesTypes[selectedtype];
 
-		defaultmode = SynthNamesTypes[selectedtype];
-
-		if (debugmode == TRUE && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
+		if (debugmode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
 
 		if (strlen(SynthName) < 1 || isspace(SynthName[0])) {
 			ZeroMemory(SynthName, MAXPNAMELEN);
@@ -193,16 +198,7 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
 
-		MIDIOUTCAPSA * myCapsA;
-		MIDIOUTCAPSW * myCapsW;
-		MIDIOUTCAPS2A * myCaps2A;
-		MIDIOUTCAPS2W * myCaps2W;
-
-		WORD maximumvoices = 0xFFFF;
-		WORD maximumnotes = 0x0000;
-		DWORD CapsSupport = MIDICAPS_VOLUME;
-
-		const GUID CLSIDKEPSYNTH = { 0x318fa900, 0xf7de, 0x4ec6,{ 0x84, 0x8f, 0x0f, 0x28, 0xea, 0x37, 0x88, 0x9f } };
+		const GUID CLSIDKEPSYNTH = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
 
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
@@ -213,9 +209,9 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCapsA->wMid = VID;
 			myCapsA->wNotes = maximumnotes;
 			myCapsA->wPid = PID;
-			myCapsA->wTechnology = defaultmode;
+			myCapsA->wTechnology = Technology;
 			myCapsA->wVoices = maximumvoices;
-			myCapsA->vDriverVersion = 0x0090;
+			myCapsA->vDriverVersion = 0x0501;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
 			return MMSYSERR_NOERROR;
 
@@ -227,9 +223,9 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCapsW->wMid = VID;
 			myCapsW->wNotes = maximumnotes;
 			myCapsW->wPid = PID;
-			myCapsW->wTechnology = defaultmode;
+			myCapsW->wTechnology = Technology;
 			myCapsW->wVoices = maximumvoices;
-			myCapsW->vDriverVersion = 0x0090;
+			myCapsW->vDriverVersion = 0x0501;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
 			return MMSYSERR_NOERROR;
 
@@ -240,13 +236,13 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCaps2A->NameGuid = CLSIDKEPSYNTH;
 			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2A->dwSupport = CapsSupport;
-			myCaps2A->vDriverVersion = 0x0090;
 			myCaps2A->wChannelMask = 0xffff;
 			myCaps2A->wMid = VID;
 			myCaps2A->wNotes = maximumnotes;
 			myCaps2A->wPid = PID;
-			myCaps2A->wTechnology = defaultmode;
+			myCaps2A->wTechnology = Technology;
 			myCaps2A->wVoices = maximumvoices;
+			myCaps2A->vDriverVersion = 0x0501;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
 			return MMSYSERR_NOERROR;
 
@@ -257,26 +253,24 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			myCaps2W->NameGuid = CLSIDKEPSYNTH;
 			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
 			myCaps2W->dwSupport = CapsSupport;
-			myCaps2W->vDriverVersion = 0x0090;
 			myCaps2W->wChannelMask = 0xffff;
 			myCaps2W->wMid = VID;
 			myCaps2W->wNotes = maximumnotes;
 			myCaps2W->wPid = PID;
-			myCaps2W->wTechnology = defaultmode;
+			myCaps2W->wTechnology = Technology;
 			myCaps2W->wVoices = maximumvoices;
+			myCaps2W->vDriverVersion = 0x0501;
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
 			return MMSYSERR_NOERROR;
 
 		default:
-			return MMSYSERR_ERROR;
-			break;
+			return MMSYSERR_NOTENABLED;
 		}
 	}
 	catch (...) {
-		CrashMessage(L"MIDICaps");
+		CrashMessage(L"MIDICapsException");
 		ExitThread(0);
 		throw;
-		return MMSYSERR_NOTSUPPORTED;
 	}
 }
 

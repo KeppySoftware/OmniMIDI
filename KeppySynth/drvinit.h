@@ -208,12 +208,12 @@ BOOL CALLBACK MidiFilterProc(HSTREAM handle, DWORD track, BASS_MIDI_EVENT *event
 }
 */
 
-void InitializeStreamForExternalEngine(INT32 mixfreq) {
+void InitializeStream(INT32 mixfreq) {
 	bool isdecode = FALSE;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating stream for external engine...");
 	if (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE) {
-		if (defaultoutput == 1) {
+		if (AudioOutput == 0) {
 			isdecode = TRUE;
 		}
 		else isdecode = FALSE;
@@ -254,10 +254,7 @@ void InitializeBASSEnc() {
 	DWORD dwType = REG_SZ;
 	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
 	if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath)))
-		{
-			PathAppend(encpath, result2);
-		}
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
 	}
 	else {
 		PathAppend(encpath, confpath);
@@ -287,21 +284,42 @@ void InitializeBASSEnc() {
 	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
 }
 
-void GetWASAPIDevice() {
-	HKEY hKey;
-	long lResult;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"defaultWdev", NULL, &dwType, (LPBYTE)&defaultWoutput, &dwSize);
-	RegCloseKey(hKey);
+void ASIOControlPanel() {
+	if ((GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) && currentengine == ASIO_ENGINE)
+		BASS_ASIO_ControlPanel();
 }
 
-void ASIOControlPanel() {
-	if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
-		if (currentengine == ASIO_ENGINE) {
-			BASS_ASIO_ControlPanel();
+DWORD ASIODetectID() {
+	try {
+		DWORD CurrentDevice = 0;
+		BASS_ASIO_DEVICEINFO info;
+		char OutputName[MAX_PATH] = "None";
+
+		HKEY hKey;
+		LSTATUS lResultA;
+		LSTATUS lResultB;
+		DWORD dwType = REG_SZ;
+		DWORD dwSize = sizeof(OutputName);
+
+		lResultA = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_READ, &hKey);
+		lResultB = RegQueryValueExA(hKey, "ASIOOutput", NULL, &dwType, (LPBYTE)&OutputName, &dwSize);
+
+		for (DWORD i = 0; BASS_ASIO_GetDeviceInfo(i, &info); i++) 
+		{
+			if (strcmp(OutputName, info.name) == 0)
+			{
+				RegCloseKey(hKey);
+				return CurrentDevice;
+			}
 		}
+
+		RegCloseKey(hKey);
+		return 0;
+	}
+	catch (...) {
+		CrashMessage(L"ASIODetectID");
+		ExitThread(0);
+		throw;
 	}
 }
 
@@ -310,8 +328,7 @@ void InitializeBASSFinal() {
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 	BASS_GetInfo(&info);
 	BASS_SetConfig(BASS_CONFIG_BUFFER, frames);
-	InitializeStreamForExternalEngine(frequency);
-	CheckUp(ERRORCODE, L"KSStreamCreate", TRUE);
+	InitializeStream(frequency);
 	if (AudioOutput != NULL)
 	{
 		BASS_ChannelPlay(KSStream, false);
@@ -320,14 +337,14 @@ void InitializeBASSFinal() {
 }
 
 void InitializeWAVEnc() {
-	InitializeStreamForExternalEngine(frequency);
+	InitializeStream(frequency);
 	InitializeBASSEnc();
 	CheckUp(ERRORCODE, L"KSInitEnc", TRUE);
 }
 
 void InitializeASIO() {
-	InitializeStreamForExternalEngine(frequency);
-	if (BASS_ASIO_Init(defaultAoutput, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+	InitializeStream(frequency);
+	if (BASS_ASIO_Init(ASIODetectID(), BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 		BASS_ASIO_SetRate(frequency);
 		CheckUpASIO(ERRORCODE, L"KSFormatASIO", FALSE);
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
@@ -344,13 +361,10 @@ void InitializeASIO() {
 		BASS_ASIO_Start(0, 2);
 		CheckUpASIO(ERRORCODE, L"KSStartASIO", TRUE);
 	}
-	else {
-		CheckUpASIO(ERRORCODE, L"KSInitASIO", TRUE);
-		InitializeBASSFinal();
-	}
+	else CheckUpASIO(ERRORCODE, L"KSInitASIO", TRUE);
 }
 
-bool InitializeBASS(bool restart) {
+bool InitializeBASS(BOOL restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
 
 	bool init = FALSE;
@@ -389,7 +403,6 @@ bool InitializeBASS(bool restart) {
 	// Init BASS
 	DWORD flags = BASS_DEVICE_STEREO;
 	if (currentengine == DSOUND_ENGINE) flags |= BASS_DEVICE_DSOUND;
-	else flags = 0;
 
 	Retry:
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");

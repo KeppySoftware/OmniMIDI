@@ -173,7 +173,7 @@
       <ModuleDefinitionFile>.\keppysynth.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>keppysynth_win32drv.lib</ImportLibrary>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -270,7 +270,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\keppysynth.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>keppysynth_win32drv.lib</ImportLibrary>
       <GenerateDebugInformation>true</GenerateDebugInformation>
