@@ -75,7 +75,7 @@ namespace KeppySynthConfigurator
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(1, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
+            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
             BassAsio.BASS_ASIO_Free();
             BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
             DeviceTrigger(false);

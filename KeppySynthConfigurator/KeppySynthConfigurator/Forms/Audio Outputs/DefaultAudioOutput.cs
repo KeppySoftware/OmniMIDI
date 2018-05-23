@@ -68,7 +68,7 @@ namespace KeppySynthConfigurator
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(0, DevicesList.SelectedIndex, null);
+            Functions.SetDefaultDevice(AudioEngine.DSOUND_OR_WASAPI, DevicesList.SelectedIndex, null);
         }
 
         private void Quit_Click(object sender, EventArgs e)

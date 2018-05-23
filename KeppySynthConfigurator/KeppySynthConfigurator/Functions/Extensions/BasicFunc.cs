@@ -24,6 +24,12 @@ namespace KeppySynthConfigurator
 {
     static class AudioEngine
     {
+        // Internal
+        public const int ENCODING_MODE = 0;
+        public const int DSOUND_OR_WASAPI = 1;
+        public const int PRO_INTERFACE = 2;
+
+        // Explicit names
         public const int AUDTOWAV = 0;
         public const int DSOUND_ENGINE = 1;
         public const int ASIO_ENGINE = 2;
