@@ -73,7 +73,7 @@ void LoadSoundfont(int whichsf){
 		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
 	catch (...) {
-		CrashMessage(L"SFLoad");
+		CrashMessage(L"ListLoad");
 		throw;
 	}
 }
@@ -115,7 +115,7 @@ bool LoadSoundfontStartup() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"SFLoadStartup");
+		CrashMessage(L"ListLoadStartUp");
 		throw;
 	}
 }
@@ -240,7 +240,7 @@ BOOL load_bassfuncs()
 		return TRUE;
 	}
 	catch (...) {
-		CrashMessage(L"BASSDefLoad");
+		CrashMessage(L"BASSLibLoad");
 		throw;
 	}
 }
@@ -257,7 +257,7 @@ void AppName() {
 #endif
 	}
 	catch (...) {
-		CrashMessage(L"AppNameWrite");
+		CrashMessage(L"AppAnalysis");
 		throw;
 	}
 }
@@ -317,7 +317,7 @@ void allocate_memory() {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
 	}
 	catch (...) {
-		CrashMessage(L"MemAlloc");
+		CrashMessage(L"EVBufAlloc");
 		throw;
 	}
 }
@@ -388,7 +388,7 @@ void LoadSettings(bool streamreload)
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
 	}
 	catch (...) {
-		CrashMessage(L"RegSetLoad");
+		CrashMessage(L"LoadSettings");
 		throw;
 	}
 }
@@ -483,7 +483,7 @@ void LoadSettingsRT()
 		}
 	}
 	catch (...) {
-		CrashMessage(L"RTSetLoad");
+		CrashMessage(L"LoadSettingsRT");
 		throw;
 	}
 }
@@ -561,7 +561,7 @@ void WatchdogCheck()
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		CrashMessage(L"ConfigCheck");
+		CrashMessage(L"WatchdogCheck");
 		throw;
 	}
 }
@@ -596,7 +596,7 @@ void CheckVolume() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"VolumeMonWrite");
+		CrashMessage(L"VolumeMonitor");
 		throw;
 	}
 }
@@ -681,7 +681,7 @@ void SendDebugDataToPipe() {
 			inlatency, outlatency, bufferoverload);
 	}
 	catch (...) {
-		CrashMessage(L"DebugCheck");
+		CrashMessage(L"DebugPipePush");
 		throw;
 	}
 }
@@ -731,7 +731,7 @@ void RevbNChor() {
 		RegCloseKey(hKey);
 	}
 	catch (...) {
-		CrashMessage(L"RnCCheck");
+		CrashMessage(L"ReverbAndChorusCheck");
 		throw;
 	}
 }
@@ -743,7 +743,7 @@ void ReloadSFList(DWORD whichsflist){
 		LoadSoundfont(whichsflist);
 	}
 	catch (...) {
-		CrashMessage(L"ReloadSFListCheck");
+		CrashMessage(L"ReloadListCheck");
 		throw;
 	}
 }

@@ -61,7 +61,7 @@ DWORD WINAPI EventsParser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"NotesCatcher");
+		CrashMessage(L"NotesCatcherThread");
 		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
@@ -87,7 +87,7 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"SettingsLoad");
+		CrashMessage(L"RTSettingsThread");
 		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
@@ -130,7 +130,7 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"AudioEngineRender");
+		CrashMessage(L"AudioEngineThread");
 		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
@@ -285,13 +285,18 @@ void InitializeBASSEnc() {
 }
 
 void ASIOControlPanel() {
-	if ((GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) && currentengine == ASIO_ENGINE)
-		BASS_ASIO_ControlPanel();
+	if ((GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) && currentengine == ASIO_ENGINE) BASS_ASIO_ControlPanel();	
 }
 
-DWORD ASIODetectID() {
+ULONG ASIODevicesCount() {
+	int count = 0;
+	BASS_ASIO_DEVICEINFO info;
+	for (count = 0; BASS_ASIO_GetDeviceInfo(count, &info); count++) { /* I'm counting */ }
+	return count;
+}
+
+LONG ASIODetectID() {
 	try {
-		DWORD CurrentDevice = 0;
 		BASS_ASIO_DEVICEINFO info;
 		char OutputName[MAX_PATH] = "None";
 
@@ -304,7 +309,7 @@ DWORD ASIODetectID() {
 		lResultA = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_READ, &hKey);
 		lResultB = RegQueryValueExA(hKey, "ASIOOutput", NULL, &dwType, (LPBYTE)&OutputName, &dwSize);
 
-		for (DWORD i = 0; BASS_ASIO_GetDeviceInfo(i, &info); i++) 
+		for (DWORD CurrentDevice = 0; BASS_ASIO_GetDeviceInfo(CurrentDevice, &info); CurrentDevice++)
 		{
 			if (strcmp(OutputName, info.name) == 0)
 			{
@@ -343,6 +348,17 @@ void InitializeWAVEnc() {
 }
 
 void InitializeASIO() {
+	if (ASIODevicesCount() < 1) {
+		MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+		currentengine = WASAPI_ENGINE;
+		BASS_Free();
+		PrintToConsole(FOREGROUND_RED, 1, "ASIO devices not available, using WASAPI...");
+		BASS_Init(AudioOutput, frequency, BASS_DEVICE_STEREO, 0, NULL);
+		CheckUp(ERRORCODE, L"BASSInit", TRUE);
+		InitializeBASSFinal();
+		return;
+	}
+
 	InitializeStream(frequency);
 	if (BASS_ASIO_Init(ASIODetectID(), BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 		BASS_ASIO_SetRate(frequency);
@@ -367,12 +383,9 @@ void InitializeASIO() {
 bool InitializeBASS(BOOL restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
 
-	bool init = FALSE;
-	bool isds = FALSE;
-
+	BOOL init;
+	BOOL isds = (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE);
 	AudioOutput = defaultoutput - 1;
-
-    isds = (currentengine == DSOUND_ENGINE || currentengine == WASAPI_ENGINE); // DirectSound or WASAPI internal, init BASS for output device
 
 	PrintToConsole(FOREGROUND_RED, 1, "Settings are valid, continue...");
 

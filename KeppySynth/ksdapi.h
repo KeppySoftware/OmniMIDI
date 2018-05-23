@@ -51,7 +51,7 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"DriverHeart");
+		CrashMessage(L"DriverHeartThread");
 		ExitThread(0);
 		throw;
 		return 0;
