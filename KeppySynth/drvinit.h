@@ -518,7 +518,7 @@ void SetUpStream() {
 	BASS_MIDI_StreamEvent(KSStream, 9, MIDI_EVENT_DRUMS, 1);
 }
 
-void FreeUpLibraries() {
+void FreeUpStream() {
 	FillContentDebug(0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
 	FlushFileBuffers(hPipe);
 	CloseHandle(hPipe);
@@ -532,29 +532,11 @@ void FreeUpLibraries() {
 		CheckUp(ERRORCODE, L"KSStopASIO", TRUE);
 		BASS_StreamFree(KSStream);
 		CheckUp(ERRORCODE, L"KSStreamFreeBASS", TRUE);
-		KSStream = 0;
-	}
-	if (bassmidi) {
-		FreeFonts(0);
-		FreeLibrary(bassmidi);
-		bassmidi = 0;
-	}
-	if (bassenc) {
 		BASS_Encode_Stop(KSStream);
 		CheckUp(ERRORCODE, L"KSFreeBASSenc", TRUE);
-		FreeLibrary(bassenc);
-		bassenc = 0;
-	}
-	if (bass) {
-		BASS_Free();
-		CheckUp(ERRORCODE, L"KSFreeBASS", TRUE);
-		FreeLibrary(bass);
-		bass = 0;
-	}
-	if (bassasio) {
 		BASS_ASIO_Free();
 		CheckUp(ERRORCODE, L"KSFreeASIO", TRUE);
-		FreeLibrary(bassasio);
-		bassasio = 0;
+		BASS_Free();
+		CheckUp(ERRORCODE, L"KSFreeBASS", TRUE);
 	}
 }

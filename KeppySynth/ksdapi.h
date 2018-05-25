@@ -44,7 +44,7 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 				Sleep(10);
 			}
 			stop_rtthread = FALSE;
-			FreeUpLibraries();
+			FreeUpStream();
 			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
 			ExitThread(0);
 			return 0;
@@ -90,7 +90,6 @@ void DoStartClient() {
 		AppName();
 		StartDebugPipe(FALSE);
 
-		DWORD result;
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 		load_sfevent = CreateEvent(
@@ -101,11 +100,10 @@ void DoStartClient() {
 		);
 		hCalcThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)thrdaddrC);
 		SetThreadPriority(hCalcThread, prioval[driverprio]);
-		result = WaitForSingleObject(load_sfevent, INFINITE);
-		if (result == WAIT_OBJECT_0)
-		{
+
+		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)
 			CloseHandle(load_sfevent);
-		}
+
 		modm_closed = FALSE;
 	}
 }

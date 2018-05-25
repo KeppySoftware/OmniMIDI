@@ -735,6 +735,7 @@ namespace KeppySynthDebugWindow
                     KSPipes = new BindingList<String>(KSPipesCheck);
                     SelectedDebug.DataSource = KSPipes;
                     if (!PreviousItem.Equals(NoPipes)) SelectedDebug.Text = PreviousItem;
+                    else SelectedDebug_SelectionChangeCommitted(null, null);
                 }
                 SelectedDebug.Enabled = true;
             }
@@ -912,7 +913,6 @@ namespace KeppySynthDebugWindow
         {
             ParseInfoFromPipe(null, true);
             DebugInfoCheck.RunWorkerAsync();
-            TimerFuncs.MicroSleep(100);
         }
 
         private void SelectedDebug_SelectionChangeCommitted(object sender, EventArgs e)

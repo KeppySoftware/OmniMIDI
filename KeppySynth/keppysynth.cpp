@@ -364,6 +364,10 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_RESET:
 		DoResetClient();
 		return MMSYSERR_NOERROR;
+	case MODM_STOP:
+		DoResetClient();
+		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, 0, 0);
+		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
 		// The driver is sleeping now (Sort of), tell the app about this and that everything is oki-doki
 		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_CLOSE, KSInstance, 0, 0);
