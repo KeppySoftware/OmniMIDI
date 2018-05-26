@@ -234,15 +234,7 @@ void LoadFonts(UINT list, const TCHAR * name)
 	{
 		const TCHAR * ext = _tcsrchr(name, _T('.'));
 		if (ext) ext++;
-		if (!_tcsicmp(ext, _T("sf2")) || !_tcsicmp(ext, _T("sf2pack")) || !_tcsicmp(ext, _T("sfz")))
-		{
-			if (!load_font_item(list, name))
-			{
-				FreeFonts(list);
-				return;
-			}
-		}
-		else if (!_tcsicmp(ext, _T("sflist")))
+		if (!_tcsicmp(ext, _T("sf2")) || !_tcsicmp(ext, _T("sf2pack")) || !_tcsicmp(ext, _T("sfz")) || !_tcsicmp(ext, _T("sflist")))
 		{
 			if (!load_font_item(list, name))
 			{

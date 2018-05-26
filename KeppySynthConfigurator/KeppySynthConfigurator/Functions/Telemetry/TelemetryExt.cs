@@ -174,7 +174,7 @@ namespace KeppySynthConfigurator
             catch (Exception ex)
             {
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Oh snap!\nThe configurator encountered an error while sending the telemetry info!", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Oh snap!\nThe configurator encountered an error while sending the telemetry info!", true, ex);
                 return false;
             }
         }

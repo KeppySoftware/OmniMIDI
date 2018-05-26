@@ -36,6 +36,12 @@ namespace KeppySynthConfigurator
         public const int WASAPI_ENGINE = 3;
     }
 
+    static class ErrorType
+    {
+        public const int Information = 0;
+        public const int Error = 1;
+    }
+
     class Functions
     {
         // Disable WoW64 directory redirection
@@ -215,7 +221,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
             }
         }
 
@@ -237,7 +243,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
             }
         }
 
@@ -479,7 +485,7 @@ namespace KeppySynthConfigurator
             {
                 if (DefaultASIOAudioOutput.GetASIODevicesCount() < 1)
                 {
-                    ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to switch to WASAPI.", false, null);
+                    ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to switch to WASAPI.", false, null);
                     KeppySynthConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = 3;
                     AudioEngBoxTrigger(true);
                     return;
@@ -677,7 +683,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings(thisform);
             }
@@ -747,7 +753,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while saving the driver's settings.", true, ex);
+                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while saving the driver's settings.", true, ex);
                 Program.DebugToConsole(true, null, ex);
                 ReinitializeSettings(thisform);
                 return false;
@@ -801,7 +807,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Fatal error", "Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Missing registry settings!\nPlease reinstall Keppy's Synthesizer to solve the issue.\n\nPress OK to quit.", true, ex);
                 System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(ignored =>
                 {
                     KeppySynthConfiguratorMain.ActiveForm.Hide();
@@ -843,7 +849,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                 Application.Exit();
             }
         }
@@ -993,7 +999,7 @@ namespace KeppySynthConfigurator
                             else if (SettingName(x) == "PID") KeppySynthConfiguratorMain.SynthSettings.SetValue("PID", SettingValue(x), RegistryValueKind.DWord);
                         }
                         catch (Exception ex) {
-                            Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Error", "Invalid preset!", false, ex);
+                            Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "Invalid preset!", false, ex);
 
                             // Set some values...
                             Functions.ApplyPresetValues(10000, 500, 75, 44100, 30, true, false, false, 2, true, false, false, AudioEngine.WASAPI_ENGINE);
@@ -1022,7 +1028,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
                 Application.Exit();
             }
         }
@@ -1089,7 +1095,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
                 Application.Exit();
             }
         }
@@ -1158,7 +1164,7 @@ namespace KeppySynthConfigurator
             {
                 // Something bad happened hehe
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit", true, ex);
                 Application.Exit();
             }
         }
@@ -1399,7 +1405,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
+                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
                 goto TryAgain;
             }
 
@@ -1423,7 +1429,7 @@ namespace KeppySynthConfigurator
             }
             catch
             {
-                ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
                 goto TryAgain;
             }
 
@@ -1440,7 +1446,7 @@ namespace KeppySynthConfigurator
             }
             catch
             {
-                ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
+                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
                 goto TryAgain;
             }
             if (!Silent) MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "Keppy's Synthesizer - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -68,7 +68,9 @@ void LoadSoundfont(int whichsf){
 		FreeFonts(0);
 		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
 		RegCloseKey(hKey);
-		LoadFonts(0, sflistloadme[whichsf - 1]);
+
+		if (lResult != ERROR_SUCCESS) LoadFonts(0, L"SoundFont.sf2");
+		else LoadFonts(0, sflistloadme[whichsf - 1]);
 		BASS_MIDI_StreamLoadSamples(KSStream);
 		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}

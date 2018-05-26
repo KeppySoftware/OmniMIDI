@@ -53,7 +53,7 @@ namespace KeppySynthConfigurator
                 sf = SoundFont.Substring(SoundFont.LastIndexOf('|') + 1);
                 if (!File.Exists(sf))
                 {
-                    Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
                     ERROR = true;
                     Close();
                     return;
@@ -68,7 +68,7 @@ namespace KeppySynthConfigurator
                 sf = SoundFont;
                 if (!File.Exists(SoundFont))
                 {
-                    Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", SoundFont), false, null);
                     ERROR = true;
                     Close();
                     return;

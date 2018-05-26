@@ -130,7 +130,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "Something went wrong during the starting process of the configurator.\n\nClick OK to continue.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "Something went wrong during the starting process of the configurator.\n\nClick OK to continue.", true, ex);
             }
         }
 
@@ -169,7 +169,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while initializing the volume label's font.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while initializing the volume label's font.", true, ex);
             }
         }
 
@@ -273,7 +273,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.\n\nPress OK to reinstall the driver.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while loading the driver's settings.\n\nPress OK to reinstall the driver.", true, ex);
                 var p = new Process();
                 p.StartInfo.FileName = Application.ExecutablePath;
                 p.StartInfo.Arguments = "/REI";
@@ -324,7 +324,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, SystemSounds.Asterisk, "Error", "Error during access to the registry!", true, ex);
             }
         }
 
@@ -576,7 +576,7 @@ namespace KeppySynthConfigurator
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
                     if (SFListFunc.OpenSFWithDefaultApp(name)) Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
-                    else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
+                    else Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
                 }
                 else if (howmany > 1)
                 {
@@ -584,7 +584,7 @@ namespace KeppySynthConfigurator
                     {
                         String name = Lis.SelectedItems[i].Text.ToString();
                         if (SFListFunc.OpenSFWithDefaultApp(name)) Program.DebugToConsole(false, String.Format("Opened soundfont from list: {0}", name), null);
-                        else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
+                        else Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("The SoundFont \"{0}\" doesn't exist.", name), false, null);
                     }
                 }
             }
@@ -603,7 +603,7 @@ namespace KeppySynthConfigurator
                 {
                     String name = Lis.SelectedItems[0].Text.ToString();
                     if (SFListFunc.OpenSFDirectory(name)) Program.DebugToConsole(false, String.Format("Opened soundfont's root folder from list: {0}", name), null);
-                    else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The folder \"{0}\" doesn't exist.", Path.GetDirectoryName(name)), false, null);
+                    else Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("The folder \"{0}\" doesn't exist.", Path.GetDirectoryName(name)), false, null);
                 }
                 else if (howmany > 1)
                 {
@@ -611,7 +611,7 @@ namespace KeppySynthConfigurator
                     {
                         String name = Lis.SelectedItems[i].Text.ToString();
                         if (SFListFunc.OpenSFDirectory(name)) Program.DebugToConsole(false, String.Format("Opened soundfont's root folder from list: {0}", name), null);
-                        else Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", String.Format("The folder \"{0}\" doesn't exist.", Path.GetDirectoryName(name)), false, null);
+                        else Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("The folder \"{0}\" doesn't exist.", Path.GetDirectoryName(name)), false, null);
                     }
                 }
             }
@@ -766,7 +766,7 @@ namespace KeppySynthConfigurator
                 }
                 catch (Exception ex)
                 {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex);
                     Environment.Exit(-1);
                 }
             }
@@ -949,7 +949,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "Error during the import process of the list!", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "Error during the import process of the list!", true, ex);
             }
         }
 
@@ -968,7 +968,7 @@ namespace KeppySynthConfigurator
                 }
                 SaveFile.Close();
                 Program.DebugToConsole(false, String.Format("Exported list {0} to {1}.", CurrentList, ExternalListExport.FileName), null);
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Question, "Soundfont list exported!", String.Format("Soundfont list exported succesfully to \"{0}\\\"", Path.GetDirectoryName(ExternalListExport.FileName)), false, null);               
+                Functions.ShowErrorDialog(ErrorType.Information, System.Media.SystemSounds.Question, "Soundfont list exported!", String.Format("Soundfont list exported succesfully to \"{0}\\\"", Path.GetDirectoryName(ExternalListExport.FileName)), false, null);               
             }
         }
 
@@ -1322,7 +1322,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
             }
         }
 
@@ -1335,7 +1335,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
             }
         }
 
@@ -1839,7 +1839,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "Can not open the Alternative MIDI Mapper applet!", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "Can not open the Alternative MIDI Mapper applet!", true, ex);
             }
         }
 

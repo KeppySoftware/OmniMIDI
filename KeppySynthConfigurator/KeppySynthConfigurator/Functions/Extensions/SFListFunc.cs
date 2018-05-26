@@ -103,7 +103,7 @@ namespace KeppySynthConfigurator
                     // Oops, list is missing
                     File.Create(WhichList).Dispose();
                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
-                    Functions.ShowErrorDialog(0, System.Media.SystemSounds.Question, "Information", "The soundfont list was missing, so the configurator automatically created it for you.", false, null);
+                    Functions.ShowErrorDialog(ErrorType.Information, System.Media.SystemSounds.Question, "Information", "The soundfont list was missing, so the configurator automatically created it for you.", false, null);
                 }
                 try
                 {
@@ -154,7 +154,7 @@ namespace KeppySynthConfigurator
                     // Oops, list is missing
                     File.Create(WhichList).Dispose();
                     KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
-                    Functions.ShowErrorDialog(0, System.Media.SystemSounds.Question, "Information", "The soundfont list was missing, so the configurator automatically created it for you.", false, null);
+                    Functions.ShowErrorDialog(ErrorType.Information, System.Media.SystemSounds.Question, "Information", "The soundfont list was missing, so the configurator automatically created it for you.", false, null);
                 }
                 Program.DebugToConsole(false, String.Format("Switched to soundfont list {0}.", SelectedList + 1), null);
             }
@@ -162,7 +162,7 @@ namespace KeppySynthConfigurator
             {
                 // Oops, something went wrong
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Fatal error", "Fatal error during the execution of the program.\n\nPress OK to quit.", true, ex);
                 Application.ExitThread();
             }
         }
@@ -176,7 +176,7 @@ namespace KeppySynthConfigurator
                     int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i], BASSFlag.BASS_DEFAULT);
                     if (Bass.BASS_ErrorGetCode() != 0)
                     {
-                        Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
+                        Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
                     }
                     else
                     {
@@ -221,7 +221,7 @@ namespace KeppySynthConfigurator
                     int test = BassMidi.BASS_MIDI_FontInit(Soundfonts[i], BASSFlag.BASS_DEFAULT);
                     if (Bass.BASS_ErrorGetCode() != 0)
                     {
-                        Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
+                        Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error while adding soundfont", String.Format("{0} is not a valid soundfont file!", Path.GetFileName(Soundfonts[i])), false, null);
                     }
                     else
                     {
@@ -250,15 +250,15 @@ namespace KeppySynthConfigurator
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dls")
                 {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "Error", "BASSMIDI does NOT support the downloadable sounds (DLS) format!", false, null);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "BASSMIDI does NOT support the downloadable sounds (DLS) format!", false, null);
                 }
                 else if (Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".exe" | Path.GetExtension(Soundfonts[i]).ToLowerInvariant() == ".dll")
                 {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "Error", "Are you really trying to add executables to the soundfonts list?", false, null);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Are you really trying to add executables to the soundfonts list?", false, null);
                 }
                 else
                 {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Exclamation, "Error", String.Format("Invalid soundfont!\n\nFile: {0}\n\nPlease select a valid soundfont and try again!", Soundfonts[i]), false, null);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", String.Format("Invalid soundfont!\n\nFile: {0}\n\nPlease select a valid soundfont and try again!", Soundfonts[i]), false, null);
                 }
             }
         }
@@ -268,7 +268,7 @@ namespace KeppySynthConfigurator
             try
             {
                 Program.DebugToConsole(true, null, ex);
-                Functions.ShowErrorDialog(2, System.Media.SystemSounds.Exclamation, "Error", "Oh snap!\nThe configurator encountered an error while editing the following list:\n" + selectedlistpath, true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Oh snap!\nThe configurator encountered an error while editing the following list:\n" + selectedlistpath, true, ex);
                 KeppySynthConfiguratorMain.Delegate.Lis.Items.Clear();
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {
@@ -298,7 +298,7 @@ namespace KeppySynthConfigurator
             catch (Exception ex2)
             {
                 Program.DebugToConsole(true, null, ex2);
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex2);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Fatal error", "Fatal error during the execution of this program!\n\nPress OK to quit.", true, ex2);
                 Environment.Exit(-1);
             }
         }

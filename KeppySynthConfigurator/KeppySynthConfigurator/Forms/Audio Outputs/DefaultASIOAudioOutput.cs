@@ -34,7 +34,7 @@ namespace KeppySynthConfigurator
             {
                 if (GetASIODevicesCount() < 1)
                 {
-                    Functions.ShowErrorDialog(1, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to close this window.", false, null);
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to close this window.", false, null);
                     Close();
                     Dispose();
                 }

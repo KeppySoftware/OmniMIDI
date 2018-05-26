@@ -63,11 +63,11 @@ namespace KeppySynthConfigurator
 
                 if (x < y)
                 {
-                    HtmlAgilityPack.HtmlNode rateNode = ReturnSelectedNode(x.ToString());
-                    VersionLabel.Text = String.Format("Changelog for version {0} (Preview)", version);
+                    VersionLabel.Text = String.Format("Changelog for version {0} (Unreleased)", version);
+                    HtmlNode rateNode = ReturnSelectedNode(x.ToString());
 
                     htmltext = String.Format(
-                        "<html><font face=\"Microsoft Sans Serif\">You're using an unreleased version of the driver. Here's the changelog from version {0}:<br/><hr/><br/>",
+                        "<html><body><font face=\"Tahoma\">You're using an unreleased version of the driver. Here's the changelog from version {0}:<br/><hr/><br/>",
                         x.ToString());
 
                     htmltext += rateNode.InnerHtml;
@@ -77,14 +77,14 @@ namespace KeppySynthConfigurator
                 else
                 {
                     VersionLabel.Text = String.Format("Changelog for version {0}", version);
-                    HtmlAgilityPack.HtmlNode rateNode = ReturnSelectedNode(version);
+                    HtmlNode rateNode = ReturnSelectedNode(version);
 
-                    htmltext = "<html><font face=\"Microsoft Sans Serif\">" + rateNode.InnerHtml;
+                    htmltext = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml;
 
                     if (x > y)
                         htmltext += String.Format("<br/><br/>Latest version available: <a href=\"https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/tag/{0}\">{0}</a href>", x.ToString());
 
-                    htmltext += "</font></html>";
+                    htmltext += "</font></body></html>";
 
                 }
 
@@ -92,7 +92,7 @@ namespace KeppySynthConfigurator
             }
             catch (WebException ex)
             {
-                Functions.ShowErrorDialog(1, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", true, ex);
                 Close();
             }
         }
@@ -100,25 +100,12 @@ namespace KeppySynthConfigurator
         private void DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             var linkElements = ChangelogBrowser.Document.GetElementsByTagName("a");
-            foreach (HtmlElement link in linkElements)
-            {
-                link.Click += (s, args) =>
-                {
-                    Process.Start(link.GetAttribute("href"));
-                };
-            }
+            foreach (HtmlElement link in linkElements) link.Click += (s, args) => { Process.Start(link.GetAttribute("href")); };
         }
 
         private void UpdateBtn_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                UpdateSystem.CheckForUpdates(true, false, true);
-            }
-            else
-            {
-                UpdateSystem.CheckForUpdates(false, false, true);
-            }
+            UpdateSystem.CheckForUpdates((ModifierKeys == Keys.Shift), false, true);
         }
     }
 }
