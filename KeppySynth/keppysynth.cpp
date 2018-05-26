@@ -4,6 +4,8 @@ Keppy's Synthesizer, a fork of BASSMIDI Driver
 Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
+#pragma once
+
 #if !_WIN32
 #error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
 #endif
@@ -49,12 +51,16 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <bassasio.h>
 #include <bassmix.h>
 
+// Sleep
+typedef LONG(NTAPI*NDE)(BOOLEAN dwAlertable, PLARGE_INTEGER dwDelayInterval);
+static NDE NtDelayExecution = 0;
+
 // Hyper switch
-DWORD HyperMode = 0;
-DWORD HyperCheckedAlready = FALSE;
-MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) = 0;
-DWORD(*_PlayBufData)(void) = 0;
-DWORD(*_PlayBufDataChk)(void) = 0;
+static DWORD HyperMode = 0;
+static DWORD HyperCheckedAlready = FALSE;
+static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) = 0;
+static DWORD(*_PlayBufData)(void) = 0;
+static DWORD(*_PlayBufDataChk)(void) = 0;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 
@@ -69,17 +75,19 @@ static HINSTANCE bassmidi = 0;			// bassmidi handle
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
 
 // F**k Sleep() tbh
-void usleep(__int64 usec) {
+void NTSleep(__int64 usec) {
 	HANDLE timer;
 	LARGE_INTEGER ft;
 
-	ft.QuadPart = -(10 * usec);
-
-	timer = CreateWaitableTimer(NULL, TRUE, NULL);
-	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
-	WaitForSingleObject(timer, INFINITE);
-	CloseHandle(timer);
+	ft.QuadPart = usec;
+	NtDelayExecution(FALSE, &ft);
 }
+
+#define _WAIT NTSleep(-100)							// Normal wait
+#define _FWAIT NTSleep(rco ? -100 : 0)				// Fast wait
+#define _LWAIT NTSleep(rco ? -1000 : 0)				// Slow wait
+#define _VLWAIT NTSleep(-200000)					// Very slow wait
+#define _CFRWAIT NTSleep(rco ? -15667 : -16667)		// Cap framerate wait
 
 // LightweightLock by Brad Wilson
 #include "LwL.h"
@@ -101,6 +109,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH){
 		hinst = hinstDLL;
+		NtDelayExecution = (NDE)GetProcAddress(LoadLibrary(L"ntdll"), "NtDelayExecution");
 		DisableThreadLibraryCalls(hinstDLL);
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH)

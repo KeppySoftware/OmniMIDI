@@ -32,21 +32,18 @@ void MT32SetInstruments() {
 }
 
 DWORD WINAPI DebugThread(LPVOID lpV) {
-	hThreadDBGRunning = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
 	while (!stop_thread) {
 		SendDebugDataToPipe();
-		usleep(100);
+		_WAIT;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
-	hThreadDBGRunning = FALSE;
-	CloseHandle(hThreadDBG);
-	hThreadDBG = NULL;
+	CloseHandle(DThread);
+	DThread = NULL;
 	return 0;
 }
 
-DWORD WINAPI EventsParser(LPVOID lpV) {
-	hThread4Running = TRUE;
+DWORD WINAPI EventsProcesser(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -55,9 +52,9 @@ DWORD WINAPI EventsParser(LPVOID lpV) {
 			if (oldbuffermode) break;
 
 			MT32SetInstruments();
-			if (_PlayBufData()) usleep(rco);
+			if (_PlayBufData()) _LWAIT;
 
-			if (capframerate) usleep(16666);
+			if (capframerate) _CFRWAIT;
 		}
 	}
 	catch (...) {
@@ -65,14 +62,12 @@ DWORD WINAPI EventsParser(LPVOID lpV) {
 		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
-	hThread4Running = FALSE;
-	CloseHandle(hThread4);
-	hThread4 = NULL;
+	CloseHandle(EPThread);
+	EPThread = NULL;
 	return 0;
 }
 
 DWORD WINAPI RTSettings(LPVOID lpV) {
-	hThread3Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	try {
 		while (!stop_thread) {
@@ -83,7 +78,7 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 			WatchdogCheck();
 			mixervoid();
 			RevbNChor();
-			usleep(50000);
+			_VLWAIT;
 		}
 	}
 	catch (...) {
@@ -91,21 +86,19 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
-	hThread3Running = FALSE;
-	CloseHandle(hThread3);
-	hThread3 = NULL;
+	CloseHandle(RTSThread);
+	RTSThread = NULL;
 	return 0;
 }
 
 void InitializeNotesCatcherThread() {
-	if (hThread4 == NULL) {
-		hThread4 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)EventsParser, NULL, 0, (LPDWORD)thrdaddr4);
-		SetThreadPriority(hThread4, prioval[driverprio]);
+	if (EPThread == NULL) {
+		EPThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)EventsProcesser, NULL, 0, (LPDWORD)EPThreadAddress);
+		SetThreadPriority(EPThread, prioval[driverprio]);
 	}
 }
 
 DWORD WINAPI AudioThread(LPVOID lpParam) {
-	hThread2Running = TRUE;
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	try {
 		if (currentengine != ASIO_ENGINE) {
@@ -121,11 +114,11 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 
 				if (oldbuffermode) {
 					MT32SetInstruments();
-					if (_PlayBufDataChk()) usleep(rco);
+					_PlayBufDataChk();
 				}
-				else if (!hThread4) InitializeNotesCatcherThread();
+				else if (!EPThread) InitializeNotesCatcherThread();
 
-				usleep(rco);
+				_FWAIT;
 			}
 		}
 	}
@@ -134,9 +127,8 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
-	hThread2Running = FALSE;
-	CloseHandle(hThread2);
-	hThread2 = NULL;
+	CloseHandle(ATThread);
+	ATThread = NULL;
 	return 0;
 }
 
@@ -154,7 +146,7 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 		MT32SetInstruments();
 		_PlayBufDataChk();
 	}
-	else if (!hThread4) InitializeNotesCatcherThread();
+	else if (!EPThread) InitializeNotesCatcherThread();
 
 	if (data == -1) return 0;
 	return data;
@@ -468,17 +460,17 @@ bool InitializeBASS(BOOL restart) {
 void CloseThreads() {
 	stop_thread = TRUE;
 
-	WaitForSingleObject(hThread2, INFINITE);
-	CloseHandle(hThread2);
-	hThread2 = NULL;
+	WaitForSingleObject(ATThread, INFINITE);
+	CloseHandle(ATThread);
+	ATThread = NULL;
 
-	WaitForSingleObject(hThread3, INFINITE);
-	CloseHandle(hThread3);
-	hThread3 = NULL;
+	WaitForSingleObject(RTSThread, INFINITE);
+	CloseHandle(RTSThread);
+	RTSThread = NULL;
 
-	WaitForSingleObject(hThread4, INFINITE);
-	CloseHandle(hThread4);
-	hThread4 = NULL;
+	WaitForSingleObject(EPThread, INFINITE);
+	CloseHandle(EPThread);
+	EPThread = NULL;
 
 	stop_thread = FALSE;
 }
@@ -489,12 +481,12 @@ int CreateThreads(bool startup) {
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 
 	reset_synth = 0;
-	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AudioThread, NULL, 0, (LPDWORD)thrdaddr2);
-	SetThreadPriority(hThread2, prioval[driverprio]);
-	hThread3 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)thrdaddr3);
-	SetThreadPriority(hThread3, prioval[driverprio]);
-	hThreadDBG = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)thrdaddrDBG);
-	SetThreadPriority(hThreadDBG, prioval[driverprio]);
+	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AudioThread, NULL, 0, (LPDWORD)ATThreadAddress);
+	SetThreadPriority(ATThread, prioval[driverprio]);
+	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)RTSThreadAddress);
+	SetThreadPriority(RTSThread, prioval[driverprio]);
+	DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
+	SetThreadPriority(DThread, prioval[driverprio]);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 	return 1;

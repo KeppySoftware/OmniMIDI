@@ -44,12 +44,13 @@ static volatile BOOL stop_thread = FALSE;
 static volatile BOOL stop_rtthread = FALSE;
 static ULONGLONG start1, start2, start3, start4;
 static FLOAT Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
-static HANDLE hCalcThread = NULL, hThread2 = NULL, hThread3 = NULL, hThread4 = NULL, hThreadDBG = NULL;
-static ULONG thrdaddrC = NULL, thrdaddr2 = NULL, thrdaddr3 = NULL, thrdaddr4 = NULL, thrdaddrDBG = NULL;
-static BOOL hThread2Running = FALSE, hThread3Running = FALSE, hThread4Running = FALSE, hThreadDBGRunning = FALSE;
+
+static HANDLE MainThread = NULL, ATThread = NULL, RTSThread = NULL, EPThread = NULL, DThread = NULL;
+static ULONG MainThreadAddress = NULL, ATThreadAddress = NULL, RTSThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
 
 // Mandatory values
 static HINSTANCE hinst = NULL;							// main DLL handle
+static HINSTANCE ntdll = NULL;							// ?
 
 static CHAR modulename[MAX_PATH];		// debug info
 static CHAR bitapp[MAX_PATH];			// debug info

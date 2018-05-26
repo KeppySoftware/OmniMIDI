@@ -907,6 +907,7 @@ namespace KeppySynthDebugWindow
                     else DebugInfoCheck.CancelAsync();
                 }
             }
+            System.Threading.Thread.Sleep(1);
         }
 
         private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -939,14 +940,17 @@ namespace KeppySynthDebugWindow
         {
             try
             {
-                Int32 SelectedValueToCheck = Convert.ToInt32(Regex.Match((String)SelectedDebug.Items[SelectedDebug.SelectedIndex], @"\d+").Value);
-                if (DoesPipeStillExist(SelectedValueToCheck))
+                if (SelectedDebug.Enabled)
                 {
-                    SelectedDebugVal = SelectedValueToCheck;
-                    if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
-                    else DebugInfoCheck.RunWorkerAsync();
+                    Int32 SelectedValueToCheck = Convert.ToInt32(Regex.Match((String)SelectedDebug.Items[SelectedDebug.SelectedIndex], @"\d+").Value);
+                    if (DoesPipeStillExist(SelectedValueToCheck))
+                    {
+                        SelectedDebugVal = SelectedValueToCheck;
+                        if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
+                        else DebugInfoCheck.RunWorkerAsync();
+                    }
+                    else { if (!silent) MessageBox.Show("This debug pipe is not available anymore.", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information); } 
                 }
-                else { if (!silent) MessageBox.Show("This debug pipe is not available anymore.", "Keppy's Synthesizer - Info", MessageBoxButtons.OK, MessageBoxIcon.Information); }
             }
             catch { }
         }

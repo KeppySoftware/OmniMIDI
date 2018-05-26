@@ -65,7 +65,7 @@
 #endif
 
 #ifndef __LW_LOCK_SPIN
-#define __LW_LOCK_SPIN usleep(0)
+#define __LW_LOCK_SPIN NTSleep(0)
 #endif
 
 

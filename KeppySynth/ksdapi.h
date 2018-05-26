@@ -98,8 +98,8 @@ void DoStartClient() {
 			FALSE,              // initial state is nonsignaled
 			TEXT("SoundFontEvent")  // object name
 		);
-		hCalcThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)thrdaddrC);
-		SetThreadPriority(hCalcThread, prioval[driverprio]);
+		MainThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)MainThreadAddress);
+		SetThreadPriority(MainThread, prioval[driverprio]);
 
 		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)
 			CloseHandle(load_sfevent);
@@ -112,8 +112,8 @@ void DoStopClient() {
 	if (modm_closed == FALSE) {
 		stop_thread = TRUE;
 		stop_rtthread = TRUE;
-		WaitForSingleObject(hCalcThread, INFINITE);
-		CloseHandle(hCalcThread);
+		WaitForSingleObject(MainThread, INFINITE);
+		CloseHandle(MainThread);
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 		timeEndPeriod(1);
