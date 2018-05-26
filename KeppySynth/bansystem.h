@@ -48,8 +48,8 @@ BOOL BlackListSystem(){
 			long lResult;
 			DWORD dwType = REG_DWORD;
 			DWORD dwSize = sizeof(DWORD);
-			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-			RegQueryValueEx(hKey, L"noblacklistmsg", NULL, &dwType, (LPBYTE)&noblacklistmsg, &dwSize);
+			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
+			RegQueryValueEx(hKey, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&NoBlacklistMessage, &dwSize);
 			RegCloseKey(hKey);
 
 			PathAppend(userblacklistdirectory, _T("\\Keppy's Synthesizer\\blacklist\\keppymididrv.blacklist"));
@@ -58,7 +58,7 @@ BOOL BlackListSystem(){
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
 				if (_tcsicmp(modulename, userstring) == 0 || _tcsicmp(fullmodulename, userstring) == 0) {
-					if (noblacklistmsg != 1) {
+					if (NoBlacklistMessage != 1) {
 						std::wstring modulenamelpcwstr(modulename);
 						std::wstring concatted_stdstr = L"Keppy's Synthesizer - " + modulenamelpcwstr + L" is blacklisted";
 						LPCWSTR messageboxtitle = concatted_stdstr.c_str();

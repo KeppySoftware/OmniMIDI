@@ -55,7 +55,7 @@ namespace KeppySynthConfigurator
             try
             {
                 RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
-                int potato = Convert.ToInt32(Settings.GetValue("defaultsflist", 1));
+                int potato = Convert.ToInt32(Settings.GetValue("DefaultSFList", 1));
                 numericUpDown1.Value = potato;
             }
             catch (Exception ex)

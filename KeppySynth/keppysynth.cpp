@@ -83,11 +83,11 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
-#define _WAIT NTSleep(-100)							// Normal wait
-#define _FWAIT NTSleep(rco ? -100 : 0)				// Fast wait
-#define _LWAIT NTSleep(rco ? -1000 : 0)				// Slow wait
-#define _VLWAIT NTSleep(-200000)					// Very slow wait
-#define _CFRWAIT NTSleep(rco ? -15667 : -16667)		// Cap framerate wait
+#define _WAIT NTSleep(-100)									// Normal wait
+#define _FWAIT NTSleep(SleepStates ? -100 : 0)				// Fast wait
+#define _LWAIT NTSleep(SleepStates ? -1000 : 0)				// Slow wait
+#define _VLWAIT NTSleep(-200000)							// Very slow wait
+#define _CFRWAIT NTSleep(SleepStates ? -15667 : -16667)		// Cap framerate wait
 
 // LightweightLock by Brad Wilson
 #include "LwL.h"
@@ -176,24 +176,22 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		DWORD dwSizeA = sizeof(SynthName);
 		DWORD dwSizeW = sizeof(SynthNameW);
 
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"shortname", NULL, &dwType, (LPBYTE)&shortname, &dwSize);
-		RegQueryValueEx(hKey, L"defaultmidiout", NULL, &dwType, (LPBYTE)&defaultmidiout, &dwSize);
-		RegQueryValueEx(hKey, L"synthtype", NULL, &dwType, (LPBYTE)&selectedtype, &dwSize);
-		RegQueryValueEx(hKey, L"debugmode", NULL, &dwType, (LPBYTE)&debugmode, &dwSize);
-		RegQueryValueEx(hKey, L"vid", NULL, &dwType, (LPBYTE)&VID, &dwSize);
-		RegQueryValueEx(hKey, L"pid", NULL, &dwType, (LPBYTE)&PID, &dwSize);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
+		RegQueryValueEx(hKey, L"DebugMode", NULL, &dwType, (LPBYTE)&DebugMode, &dwSize);
+		RegQueryValueEx(hKey, L"VID", NULL, &dwType, (LPBYTE)&VID, &dwSize);
+		RegQueryValueEx(hKey, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 
 		dwType = REG_SZ;
-		RegQueryValueExA(hKey, "synthname", NULL, &dwType, (LPBYTE)&SynthName, &dwSizeA);
-		RegQueryValueExW(hKey, L"synthname", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
+		RegQueryValueExA(hKey, "SynthName", NULL, &dwType, (LPBYTE)&SynthName, &dwSizeA);
+		RegQueryValueExW(hKey, L"SynthName", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
 		RegCloseKey(hKey);
 
-		if (defaultmidiout == 1 || (selectedtype > MOD_SWSYNTH))
+		if (SynthType > MOD_SWSYNTH)
 			Technology = MOD_SWSYNTH;
-		else Technology = SynthNamesTypes[selectedtype];
+		else Technology = SynthNamesTypes[SynthType];
 
-		if (debugmode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
+		if (DebugMode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
 
 		if (strlen(SynthName) < 1 || isspace(SynthName[0])) {
 			ZeroMemory(SynthName, MAXPNAMELEN);
@@ -309,7 +307,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 		// Do the stuff with it, if it's not to be ignored
-		if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+		if (!IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 		// It has to be ignored, send info to console
 		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 

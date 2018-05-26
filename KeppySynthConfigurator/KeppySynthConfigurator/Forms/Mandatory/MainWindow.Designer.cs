@@ -203,7 +203,6 @@
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapCpl = new System.Windows.Forms.MenuItem();
-            this.SetSynthDefault = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -292,7 +291,6 @@
             this.BASSNetLink = new System.Windows.Forms.MenuItem();
             this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.menuItem45 = new System.Windows.Forms.MenuItem();
-            this.DiscordRPCCredit = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuItem59 = new System.Windows.Forms.MenuItem();
             this.KSDAPIDoc = new System.Windows.Forms.MenuItem();
@@ -2431,42 +2429,35 @@
             this.AMIDIMapCpl.Visible = false;
             this.AMIDIMapCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
             // 
-            // SetSynthDefault
-            // 
-            this.SetSynthDefault.Index = 7;
-            this.SetSynthDefault.Text = "Set the synthesizer as default MIDI out device";
-            this.SetSynthDefault.Visible = false;
-            this.SetSynthDefault.Click += new System.EventHandler(this.SetSynthDefault_Click);
-            // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem1
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 8;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 7;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 9;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 8;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefault64bitMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 10;
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 9;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // menuItem13
             // 
-            this.menuItem13.Index = 11;
+            this.menuItem13.Index = 10;
             this.menuItem13.Text = "-";
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Index = 12;
+            this.exitToolStripMenuItem.Index = 11;
             this.exitToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.AltF4;
             this.exitToolStripMenuItem.Text = "Close the configurator";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
@@ -2482,7 +2473,6 @@
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem,
             this.menuItem9,
             this.AMIDIMapCpl,
-            this.SetSynthDefault,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem,
@@ -3033,15 +3023,8 @@
             this.HAPLink,
             this.BASSLink,
             this.BASSNetLink,
-            this.FodyCredit,
-            this.DiscordRPCCredit});
+            this.FodyCredit});
             this.menuItem45.Text = "Credits";
-            // 
-            // DiscordRPCCredit
-            // 
-            this.DiscordRPCCredit.Index = 4;
-            this.DiscordRPCCredit.Text = "C# Discord RPC wrapper by nostrenz";
-            this.DiscordRPCCredit.Click += new System.EventHandler(this.DiscordRPCCredit_Click);
             // 
             // menuItem3
             // 
@@ -4374,7 +4357,6 @@
         private System.Windows.Forms.MenuItem assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem9;
         public System.Windows.Forms.MenuItem AMIDIMapCpl;
-        public System.Windows.Forms.MenuItem SetSynthDefault;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
@@ -4568,7 +4550,6 @@
         private System.Windows.Forms.MenuItem FineTuneKnobIt;
         private System.Windows.Forms.MenuItem menuItem57;
         public System.Windows.Forms.MenuItem VolumeBoost;
-        private System.Windows.Forms.MenuItem DiscordRPCCredit;
         private System.Windows.Forms.MenuItem menuItem37;
         public System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.MenuItem menuItem59;

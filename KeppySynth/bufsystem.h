@@ -8,7 +8,7 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
 int BufferCheck(void) {
-	return vms2emu ? eventcount : (readhead != writehead) ? ~0 : 0;
+	return DontMissNotes ? eventcount : (readhead != writehead) ? ~0 : 0;
 }
 
 int BufferCheckHyper(void) {
@@ -48,17 +48,17 @@ void SendLongToBASSMIDI(const void* sysexbuffer, DWORD exlen) {
 }
 
 DWORD __inline PlayBufferedData(void) {
-	if (allnotesignore || !BufferCheck()) return 1;
+	if (IgnoreAllEvents || !BufferCheck()) return 1;
 
 	do {
 		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead = 0;
+		if (++readhead >= EvBufferSize) readhead = 0;
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
 		SendToBASSMIDI(TempBuffer.dwParam1);
-	} while (vms2emu ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
+	} while (DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
 }
@@ -69,7 +69,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 	do {
 		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead = 0;
+		if (++readhead >= EvBufferSize) readhead = 0;
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
@@ -80,20 +80,18 @@ DWORD __inline PlayBufferedDataHyper(void) {
 }
 
 DWORD __inline PlayBufferedDataChunk(void) {
-	if (allnotesignore || !BufferCheck()) return 1;
+	if (IgnoreAllEvents || !BufferCheck()) return 1;
 
 	ULONGLONG whe = writehead;
 	do {
 		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead = 0;
+		if (++readhead >= EvBufferSize) readhead = 0;
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
 		SendToBASSMIDI(TempBuffer.dwParam1);
-	} while (vms2emu ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
-
-	return 0;
+	} while (DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
@@ -103,14 +101,12 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 	do {
 		LockSystem.LockForReading();
 		ULONGLONG tempevent = readhead;
-		if (++readhead >= evbuffsize) readhead = 0;
+		if (++readhead >= EvBufferSize) readhead = 0;
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
 		SendToBASSMIDI(TempBuffer.dwParam1);
 	} while ((readhead != whe) ? ~0 : 0);
-
-	return 0;
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -147,16 +143,16 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 	Understandable version of what the following function does
 	*/
 
-	if (ignorenotes1)
+	if (IgnoreNotesBetweenVel)
 	{
 		if (!((dwParam1 - 0x80) & 0xE0)
-			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel))
+			&& ((HIWORD(dwParam1) & 0xFF) >= MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= MaxVelIgnore))
 		{
 			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
 			return TRUE;
 		}
 	}
-	if (limit88)
+	if (LimitTo88Keys)
 	{
 		if (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89)
 		{
@@ -190,36 +186,36 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	Understandable version of what the following function does
 	*/
 
-	if (pitchshift != 0x7F)
+	if (TransposeValue != 0x7F)
 	{
 		if (!((dwParam1 - 0x80) & 0xE0) && (dwParam1 & 0xF) != 9)
 		{
 			if (pitchshiftchan[dwParam1 & 0xF])
 			{
-				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + pitchshift;
+				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + TransposeValue;
 				if (newnote > 0x7F) { newnote = 0x7F; }
 				else if (newnote < 0) { newnote = 0; }
 				SETNOTE(dwParam1, newnote);
 			}
 		}
 	}
-	if (fullvelocity && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
+	if (FullVelocityMode && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
 		SETVELOCITY(dwParam1, 0x7F);
 
 	return dwParam1;
 }
 
 MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
-	if (!bufferinitialized || (uMsg != MODM_LONGDATA && (ignorenotes1 || limit88) && CheckIfEventIsToIgnore(dwParam1)))
+	if (!EVBuffReady || (uMsg != MODM_LONGDATA && CheckIfEventIsToIgnore(dwParam1)))
 		return MMSYSERR_NOERROR;
 
-	if ((uMsg != MODM_LONGDATA) && (fullvelocity || pitchshift != 0x7F))
+	if ((uMsg != MODM_LONGDATA) && (FullVelocityMode || TransposeValue != 0x7F))
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 	long long tempevent = writehead;
-	if (++writehead >= evbuffsize) writehead = 0;
+	if (++writehead >= EvBufferSize) writehead = 0;
 
 	evbuf_t evtobuf{
 		uMsg = uMsg,
@@ -231,7 +227,7 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	LockSystem.UnlockForWriting();
 
 	// Some checks
-	if (vms2emu && InterlockedIncrement64(&eventcount) >= evbuffsize) do { /* Absolutely nothing */ } while (eventcount >= evbuffsize);
+	if (DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;
@@ -241,7 +237,7 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 	long long tempevent = writehead;
-	if (++writehead >= evbuffsize) writehead = 0;
+	if (++writehead >= EvBufferSize) writehead = 0;
 
 	evbuf_t evtobuf{
 		uMsg = uMsg,
@@ -257,6 +253,5 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 }
 
 void AudioRender() {
-	DWORD decoded;
-	decoded = BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + newsndbfvalue * sizeof(float));
+	BASS_ChannelGetData(KSStream, sndbf, BASS_DATA_FLOAT + 256.0f * sizeof(float));
 }

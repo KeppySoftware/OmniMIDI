@@ -25,16 +25,16 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                previouslovel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("lovelign", "0"));
-                previoushivel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hivelign", "1"));
+                previouslovel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("MinVelIgnore", "0"));
+                previoushivel = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("MaxVelIgnore", "1"));
                 LoVel.Value = previouslovel;
                 HiVel.Value = previoushivel;
                 PrevSett.Text = String.Format("Previous settings: Lo. {0}, Hi. {1}", previouslovel, previoushivel);
             }
             catch
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", "1", RegistryValueKind.DWord);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MinVelIgnore", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MaxVelIgnore", "1", RegistryValueKind.DWord);
                 LoVel.Value = previouslovel = 1;
                 HiVel.Value = previoushivel = 1;
                 PrevSett.Text = String.Format("Previous settings: Lo. {0}, Hi. {1}", previouslovel, previoushivel);
@@ -53,7 +53,7 @@ namespace KeppySynthConfigurator
                     LoVel.Value = x - 1;
                 }
 
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", Convert.ToInt32(LoVel.Value), RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MinVelIgnore", Convert.ToInt32(LoVel.Value), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace KeppySynthConfigurator
                     HiVel.Value = x;
                 }
 
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", Convert.ToInt32(HiVel.Value), RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MaxVelIgnore", Convert.ToInt32(HiVel.Value), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -97,8 +97,8 @@ namespace KeppySynthConfigurator
         {
             if (Confirmed == false)
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("lovelign", previouslovel, RegistryValueKind.DWord);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("hivelign", previoushivel, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MinVelIgnore", previouslovel, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MaxVelIgnore", previoushivel, RegistryValueKind.DWord);
             }
             Dispose();
         }

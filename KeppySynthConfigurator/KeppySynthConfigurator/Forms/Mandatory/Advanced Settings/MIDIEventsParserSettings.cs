@@ -19,31 +19,31 @@ namespace KeppySynthConfigurator
 
         private void MIDIEventsParserSettings_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allnotesignore", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0)) == 1)
             {
                 AllNotesIgnore.Checked = true;
                 SysExIgnore.Checked = true;
             }
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("ignorenotes1", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0)) == 1)
             {
                 IgnoreNotes.Checked = true;
                 IgnoreNotesInterval.Enabled = true;
             }
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("capframerate", 1)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("CapFramerate", 1)) == 1)
                 CapFram.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("limit88", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("LimitTo88Keys", 0)) == 1)
                 Limit88.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("sysexignore", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0)) == 1)
                 SysExIgnore.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fullvelocity", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0)) == 1)
                 FullVelocityMode.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("mt32mode", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0)) == 1)
                 MT32Mode.Checked = true;
 
             CAE.Text = String.Format(CAE.Text, KeppySynthConfiguratorMain.Delegate.AudioEngBox.Text);
@@ -60,37 +60,37 @@ namespace KeppySynthConfigurator
         private void Limit88_CheckedChanged(object sender, EventArgs e)
         {
             if (Limit88.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("limit88", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("LimitTo88Keys", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("limit88", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("LimitTo88Keys", "0", RegistryValueKind.DWord);
         }
 
         private void SysExIgnore_CheckedChanged(object sender, EventArgs e)
         {
             if (SysExIgnore.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("sysexignore", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("IgnoreSysEx", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("sysexignore", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("IgnoreSysEx", "0", RegistryValueKind.DWord);
         }
 
         private void AllNotesIgnore_CheckedChanged(object sender, EventArgs e)
         {
             if (AllNotesIgnore.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("allnotesignore", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("IgnoreAllNotes", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("allnotesignore", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("IgnoreAllNotes", "0", RegistryValueKind.DWord);
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)
         {
             if (IgnoreNotes.Checked)
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("ignorenotes1", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("IgnoreNotesBetweenVel", "1", RegistryValueKind.DWord);
                 IgnoreNotesInterval.Enabled = true;
             }
             else
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("ignorenotes1", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("IgnoreNotesBetweenVel", "0", RegistryValueKind.DWord);
                 IgnoreNotesInterval.Enabled = false;
             }
         }
@@ -98,17 +98,17 @@ namespace KeppySynthConfigurator
         private void FullVelocityMode_CheckedChanged(object sender, EventArgs e)
         {
             if (FullVelocityMode.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("fullvelocity", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("FullVelocityMode", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("fullvelocity", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("FullVelocityMode", "0", RegistryValueKind.DWord);
         }
 
         private void MT32Mode_CheckedChanged(object sender, EventArgs e)
         {
             if (MT32Mode.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("mt32mode", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MT32Mode", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("mt32mode", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MT32Mode", "0", RegistryValueKind.DWord);
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)

@@ -19,7 +19,7 @@ namespace KeppySynthConfigurator
 
         private void RevbNChorForm_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rcoverride", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("RCOverride", 0)) == 1)
                 EnableRCOverride.Checked = true;
             else
                 EnableRCOverride.Checked = false;
@@ -39,7 +39,7 @@ namespace KeppySynthConfigurator
                 ReverbV.Enabled = true;
                 ChorusL.Enabled = true;
                 ChorusV.Enabled = true;
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("rcoverride", 1, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("RCOverride", 1, RegistryValueKind.DWord);
             }
             else
             {
@@ -47,10 +47,10 @@ namespace KeppySynthConfigurator
                 ReverbV.Enabled = false;
                 ChorusL.Enabled = false;
                 ChorusV.Enabled = false;
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("rcoverride", 0, RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("RCOverride", 0, RegistryValueKind.DWord);
             }
-            ReverbV.Value = Between0And127(Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("reverb", 64)));
-            ChorusV.Value = Between0And127(Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("chorus", 64)));
+            ReverbV.Value = Between0And127(Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("Reverb", 64)));
+            ChorusV.Value = Between0And127(Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("Chorus", 64)));
         }
 
         private int Between0And127(int integer)
@@ -65,20 +65,20 @@ namespace KeppySynthConfigurator
 
         private void ReverbV_ValueChanged(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("reverb", ReverbV.Value, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
         }
 
         private void ChorusV_ValueChanged(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("chorus", ChorusV.Value, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
         }
 
         private void ResDef_Click(object sender, EventArgs e)
         {
             ReverbV.Value = 64;
             ChorusV.Value = 64;
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("reverb", ReverbV.Value, RegistryValueKind.DWord);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("chorus", ReverbV.Value, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("Chorus", ReverbV.Value, RegistryValueKind.DWord);
         }
 
         private void OK_Click(object sender, EventArgs e)

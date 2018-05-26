@@ -27,10 +27,10 @@ namespace KeppySynthConfigurator
         {
             try
             {
-                PreviousName = KeppySynthConfiguratorMain.SynthSettings.GetValue("synthname", "Keppy's Synthesizer").ToString();
-                PreviousType = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("synthtype", 4));
-                PreviousVID = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vid", 0xFFFF));
-                PreviousPID = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("pid", 0x000A));
+                PreviousName = KeppySynthConfiguratorMain.SynthSettings.GetValue("SynthName", "Keppy's Synthesizer").ToString();
+                PreviousType = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("SynthType", 4));
+                PreviousVID = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("VID", 0xFFFF));
+                PreviousPID = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("Pid", 0x000A));
                 Names.Text = PreviousName;
                 SynthType.SelectedIndex = PreviousType;
                 VIDValue.Value = PreviousVID;
@@ -45,10 +45,10 @@ namespace KeppySynthConfigurator
 
         private void CancelBtn_Click(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", PreviousName, RegistryValueKind.String);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", PreviousType, RegistryValueKind.String);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("vid", PreviousVID, RegistryValueKind.String);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", PreviousPID, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("SynthName", PreviousName, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("SynthType", PreviousType, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("VID", PreviousVID, RegistryValueKind.String);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("PID", PreviousPID, RegistryValueKind.String);
             Close();
         }
 
@@ -58,7 +58,7 @@ namespace KeppySynthConfigurator
             {
                 if (Names.Text.Length >= 1)
                 {
-                    KeppySynthConfiguratorMain.SynthSettings.SetValue("synthname", Names.Text, RegistryValueKind.String);
+                    KeppySynthConfiguratorMain.SynthSettings.SetValue("SynthName", Names.Text, RegistryValueKind.String);
                     Close();
                 }
                 else
@@ -88,17 +88,17 @@ namespace KeppySynthConfigurator
 
         private void SynthType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("synthtype", SynthType.SelectedIndex, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("SynthType", SynthType.SelectedIndex, RegistryValueKind.DWord);
         }
 
         private void VIDValue_ValueChanged(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("vid", VIDValue.Value, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("VID", VIDValue.Value, RegistryValueKind.DWord);
         }
 
         private void PIDValue_ValueChanged(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("pid", PIDValue.Value, RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("PID", PIDValue.Value, RegistryValueKind.DWord);
         }
 
         private void Names_TextChanged(object sender, EventArgs e)

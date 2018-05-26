@@ -19,7 +19,7 @@ namespace KeppySynthConfigurator
         {
             InitializeComponent();
             InfoMessage.Text = String.Format(InfoMessage.Text, Path.GetFileNameWithoutExtension(SF));
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("extra8lists", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("Extra8Lists", 0)) == 1)
             {
                 ListSel.Items.Add("List 9");
                 ListSel.Items.Add("List 10");

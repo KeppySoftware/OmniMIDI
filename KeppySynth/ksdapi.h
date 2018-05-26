@@ -2,7 +2,7 @@
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
-	if (BASS_ErrorGetCode() == 5 || livechange) {
+	if (BASS_ErrorGetCode() == 5 || LiveChanges) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 		CloseThreads();
 		LoadSettings(TRUE);
@@ -68,10 +68,10 @@ void DoStartClient() {
 		DWORD dwSize = sizeof(DWORD);
 		int One = 0;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"driverprio", NULL, &dwType, (LPBYTE)&driverprio, &dwSize);
+		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&DriverPriority, &dwSize);
 		RegCloseKey(hKey);
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"hypermode", NULL, &dwType, (LPBYTE)&HyperMode, &dwSize);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&HyperMode, &dwSize);
 		RegCloseKey(hKey);
 
 		if (HyperMode && !HyperCheckedAlready) {
@@ -99,7 +99,7 @@ void DoStartClient() {
 			TEXT("SoundFontEvent")  // object name
 		);
 		MainThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)MainThreadAddress);
-		SetThreadPriority(MainThread, prioval[driverprio]);
+		SetThreadPriority(MainThread, prioval[DriverPriority]);
 
 		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)
 			CloseHandle(load_sfevent);
@@ -130,14 +130,14 @@ char const* WINAPI ReturnKSDAPIVer() {
 
 BOOL WINAPI IsKSDAPIAvailable()  {
 	HKEY hKey;
-	long lResult;
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
-	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Settings", 0, KEY_READ, &hKey);
-	RegQueryValueEx(hKey, L"allowksdapi", NULL, &dwType, (LPBYTE)&ksdirectenabled, &dwSize);
+	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_READ, &hKey);
+	long lResult = RegQueryValueEx(hKey, L"KSDAPIEnabled", NULL, &dwType, (LPBYTE)&KSDAPIEnabled, &dwSize);
 	RegCloseKey(hKey);
 
-	return ksdirectenabled;
+	if (lResult != ERROR_SUCCESS) return TRUE;
+	else return KSDAPIEnabled;
 }
 
 void InitializeKSStream() {
@@ -158,7 +158,7 @@ MMRESULT WINAPI SendDirectData(DWORD dwMsg) {
 
 MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	try {
-		if (bufferinitialized) SendToBASSMIDI(dwMsg);
+		if (EVBuffReady) SendToBASSMIDI(dwMsg);
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) { return MMSYSERR_INVALPARAM; }
@@ -166,7 +166,7 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	try {
-		if (bufferinitialized) {
+		if (EVBuffReady) {
 			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 
 			// Mark the buffer as in queue
@@ -174,7 +174,7 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 			// Do the stuff with it, if it's not to be ignored
-			if (!sysexignore) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+			if (!IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 			// It has to be ignored, send info to console
 			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 

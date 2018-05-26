@@ -45,14 +45,14 @@ namespace KeppySynthConfigurator
             }
 
             KeppySynthConfiguratorMain.Channels.SetValue(names[9], 0, RegistryValueKind.DWord);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("pitchshift", (NewPitch.Value + 127), RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
             Dispose();
         }
 
         private void KeppySynthPitchShifting_Load(object sender, EventArgs e)
         {
             LoadChannels();
-            NewPitch.Value = (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("pitchshift", "127")) - 127);
+            NewPitch.Value = (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("TransposeValue", "127")) - 127);
         }
 
         private void LoadChannels()
@@ -284,7 +284,7 @@ namespace KeppySynthConfigurator
                 }
 
                 KeppySynthConfiguratorMain.Channels.SetValue(names[9], 0, RegistryValueKind.DWord);
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("pitchshift", (NewPitch.Value + 127), RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
 
                 System.Threading.Thread.Sleep(1);
             }

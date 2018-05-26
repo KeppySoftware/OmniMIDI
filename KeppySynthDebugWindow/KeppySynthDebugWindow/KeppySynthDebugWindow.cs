@@ -80,7 +80,7 @@ namespace KeppySynthDebugWindow
         // Required for KS
         FileVersionInfo Driver { get; set; }
         RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", false);
-        RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", false);
+        RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Configuration", false);
         RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", false);
         RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
         String LogPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Keppy's Synthesizer\\DebugOutput.txt";
@@ -763,9 +763,9 @@ namespace KeppySynthDebugWindow
                 RAMUsageV.Text = GetCurrentRAMUsage(RAMUsage);
                 CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
 
-                Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("polyphony", "512")));
+                Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("VoicesLimit", "512")));
 
-                if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("polyphony", "512")))
+                if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("VoicesLimit", "512")))
                     AV.Font = new Font(AV.Font, FontStyle.Bold);
                 else
                     AV.Font = new Font(AV.Font, FontStyle.Regular);
@@ -774,7 +774,7 @@ namespace KeppySynthDebugWindow
                 AV.Text = GetActiveVoices();
                 AvV.Text = GetAverageVoices();
 
-                if (Convert.ToInt32(Settings.GetValue("encmode", "0")) == 1)
+                if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "0")) == 1)
                 {
                     RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Italic);
                     RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.
@@ -783,7 +783,7 @@ namespace KeppySynthDebugWindow
                 {
                     Int32 RTColor = (int)Math.Round((double)(100 * CurCPU) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
 
-                    if ((CurCPU > Convert.ToInt32(Settings.GetValue("cpu", "75"))) && (Convert.ToInt32(Settings.GetValue("cpu", "75")) != 0))
+                    if ((CurCPU > Convert.ToInt32(Settings.GetValue("MaxRenderingTime", "75"))) && (Convert.ToInt32(Settings.GetValue("MaxRenderingTime", "75")) != 0))
                     {
                         RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
                         RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU.ToString("0.0"), Settings.GetValue("cpu", "75").ToString());
@@ -797,7 +797,7 @@ namespace KeppySynthDebugWindow
                     RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitIntToRange(0, 100));
                 }
 
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
+                if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
                 else ASIOL.Text = (Handles > 0) ? "Not in use." : "Unavailable";
 
                 if (KSDAPIStatus == 0)

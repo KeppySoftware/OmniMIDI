@@ -94,7 +94,7 @@ namespace KeppySynthConfigurator
         public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         public static RegistryKey Mixer = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", true);
-        public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+        public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Configuration", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
         public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Watchdog", true);
         public static RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
@@ -320,7 +320,7 @@ namespace KeppySynthConfigurator
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
                 VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
-                SynthSettings.SetValue("volume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+                SynthSettings.SetValue("OutputVolume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -1672,12 +1672,12 @@ namespace KeppySynthConfigurator
         {
             if (autopanicmode.Checked == false)
             {
-                SynthSettings.SetValue("alternativecpu", "1", RegistryValueKind.DWord);
+                SynthSettings.SetValue("AlternativeCPU", "1", RegistryValueKind.DWord);
                 autopanicmode.Checked = true;
             }
             else
             {
-                SynthSettings.SetValue("alternativecpu", "0", RegistryValueKind.DWord);
+                SynthSettings.SetValue("AlternativeCPU", "0", RegistryValueKind.DWord);
                 autopanicmode.Checked = false;
             }
         }
@@ -1686,12 +1686,12 @@ namespace KeppySynthConfigurator
         {
             if (hotkeys.Checked == false)
             {
-                SynthSettings.SetValue("allhotkeys", "1", RegistryValueKind.DWord);
+                SynthSettings.SetValue("FastHotkeys", "1", RegistryValueKind.DWord);
                 hotkeys.Checked = true;
             }
             else
             {
-                SynthSettings.SetValue("allhotkeys", "0", RegistryValueKind.DWord);
+                SynthSettings.SetValue("FastHotkeys", "0", RegistryValueKind.DWord);
                 hotkeys.Checked = false;
             }
         }
@@ -1745,12 +1745,12 @@ namespace KeppySynthConfigurator
         {
             if (DebugModePls.Checked == false)
             {
-                SynthSettings.SetValue("debugmode", "1", RegistryValueKind.DWord);
+                SynthSettings.SetValue("DebugMode", "1", RegistryValueKind.DWord);
                 DebugModePls.Checked = true;
             }
             else
             {
-                SynthSettings.SetValue("debugmode", "0", RegistryValueKind.DWord);
+                SynthSettings.SetValue("DebugMode", "0", RegistryValueKind.DWord);
                 DebugModePls.Checked = false;
             }
         }
@@ -1827,20 +1827,6 @@ namespace KeppySynthConfigurator
         private void ExportPres_Click(object sender, EventArgs e)
         {
             Functions.ExportPreset();
-        }
-
-        private void SetSynthDefault_Click(object sender, EventArgs e)
-        {
-            if (!SetSynthDefault.Checked)
-            {
-                SynthSettings.SetValue("defaultmidiout", "1", RegistryValueKind.DWord);
-                SetSynthDefault.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("defaultmidiout", "0", RegistryValueKind.DWord);
-                SetSynthDefault.Checked = false;
-            }
         }
 
         private void AMIDIMapCpl_Click(object sender, EventArgs e)
@@ -2109,12 +2095,6 @@ namespace KeppySynthConfigurator
             Process.Start("https://github.com/Fody");
         }
 
-        private void DiscordRPCCredit_Click(object sender, EventArgs e)
-        {
-            Program.DebugToConsole(false, "Showing nostrenz's main GitHub page.", null);
-            Process.Start("https://github.com/nostrenz");
-        }
-
         private void KSUSJoinNow_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Creating Discord invite...", null);
@@ -2166,7 +2146,7 @@ namespace KeppySynthConfigurator
                     if (Properties.Settings.Default.ShowMixerUnder == true) VolLevel.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
                     else VolLevelS.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
 
-                    if (Convert.ToInt32(SynthSettings.GetValue("monorendering", 0)) == 1)
+                    if (Convert.ToInt32(SynthSettings.GetValue("MonoRendering", 0)) == 1)
                     {
                         MeterFunc.ChangeMeter(0, left);
                         MeterFunc.ChangeMeter(1, left);

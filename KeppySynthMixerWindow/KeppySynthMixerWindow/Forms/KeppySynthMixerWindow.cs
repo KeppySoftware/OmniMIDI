@@ -13,7 +13,7 @@ namespace KeppySynthMixerWindow
         public static KeppySynthMixerWindow Delegate;
         public static RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Channels", true);
-        public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Settings", true);
+        public static RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Configuration", true);
         public static Boolean VUStatus = false;
         int MaxStockClock;
 
@@ -134,7 +134,7 @@ namespace KeppySynthMixerWindow
 
                 VolLevel.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
 
-                if (Convert.ToInt32(Settings.GetValue("monorendering", 0)) == 1) {
+                if (Convert.ToInt32(Settings.GetValue("MonoRendering", 0)) == 1) {
                     Size UseSize = new Size(39, 5);
                     LLab.Size = new Size(39, 16);
                     LLab.Text = "LVL";
@@ -206,7 +206,7 @@ namespace KeppySynthMixerWindow
                 CH16VOL.Value = RegValInt[15];
                 MainVol.Value = RegValInt[16];
 
-                if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
+                if (Convert.ToInt32(Settings.GetValue("VolumeMonitor")) == 1)
                 {
                     VolumeMonitor.Checked = true;
                     MeterFunc.EnableLEDs();
@@ -258,7 +258,7 @@ namespace KeppySynthMixerWindow
                         if (dialogResult == DialogResult.Yes)
                         {
                             VolumeMonitor.Checked = true;
-                            Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                            Settings.SetValue("VolumeMonitor", "1", RegistryValueKind.DWord);
                             MeterFunc.EnableLEDs();
                             VUStatus = true;
                             MeterFunc.ChangeMeter(0, 0);
@@ -268,7 +268,7 @@ namespace KeppySynthMixerWindow
                     else if (MaxStockClock >= 1100)
                     {
                         VolumeMonitor.Checked = true;
-                        Settings.SetValue("volumemon", "1", RegistryValueKind.DWord);
+                        Settings.SetValue("VolumeMonitor", "1", RegistryValueKind.DWord);
                         MeterFunc.EnableLEDs();
                         VUStatus = true;
                         MeterFunc.ChangeMeter(0, 0);
@@ -278,7 +278,7 @@ namespace KeppySynthMixerWindow
                 else
                 {
                     VolumeMonitor.Checked = false;
-                    Settings.SetValue("volumemon", "0", RegistryValueKind.DWord);
+                    Settings.SetValue("VolumeMonitor", "0", RegistryValueKind.DWord);
                     MeterFunc.DisableLEDs();
                     VUStatus = false;
                 }
@@ -480,7 +480,7 @@ namespace KeppySynthMixerWindow
         {
             try
             {
-                if (Convert.ToInt32(Settings.GetValue("xaudiodisabled")) == 0)
+                if (Convert.ToInt32(Settings.GetValue("CurrentEngine")) == 0)
                 {
                     if (VUStatus != false)
                     {
@@ -490,7 +490,7 @@ namespace KeppySynthMixerWindow
                 }
                 else
                 {
-                    if (Convert.ToInt32(Settings.GetValue("volumemon")) == 1)
+                    if (Convert.ToInt32(Settings.GetValue("VolumeMonitor")) == 1)
                     {
                         if (VUStatus != true)
                         {

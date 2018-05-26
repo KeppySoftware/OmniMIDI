@@ -318,7 +318,7 @@ namespace KeppySynthMixerWindow
 
         private void CheckMT32_Tick(object sender, EventArgs e)
         {
-            if ((Int32)KeppySynthMixerWindow.Settings.GetValue("mt32mode", 0) == 1)
+            if ((Int32)KeppySynthMixerWindow.Settings.GetValue("MT32Mode", 0) == 1)
             {
                 EnableOrNot.Enabled = false;
                 ControlsBox.Enabled = false;

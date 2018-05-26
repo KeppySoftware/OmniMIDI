@@ -178,7 +178,7 @@ static TCHAR * BASSWASAPIErrorFix[2] =
 
 
 void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
-	if (debugmode == 1) {
+	if (DebugMode) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
 
@@ -258,7 +258,6 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 		}
 
 		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
-		if (isoverrideenabled == 1) lstrcat(main, L"\n\n(This might be caused by using old BASS libraries through the DLL override function.)");
 
 		if (engine == L"ASIO") {
 			lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");

@@ -15,8 +15,9 @@ LPCWSTR ReturnAppName(void) {
 	return final;
 }
 
+BOOL IntroAlreadyShown = FALSE;
 void CreateConsole() {
-	if (alreadyshown != 1) {
+	if (!IntroAlreadyShown) {
 		MessageBox(NULL, L"You're running the driver in debug mode.", L"Keppy's Synthesizer - Notice", MB_ICONWARNING | MB_OK);
 
 		// Create file and start console output
@@ -40,7 +41,7 @@ void CreateConsole() {
 		std::cout << "Keppy's Synthesizer Version " << major << "." << minor << "." << build << "." << revision;
 		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
 		std::cout << std::endl;
-		alreadyshown = 1;
+		IntroAlreadyShown = TRUE;
 	}
 }
 
@@ -109,7 +110,7 @@ void StatusType(int status, char* &statustoprint) {
 }
 
 void PrintToConsole(int color, long stage, const char* text) {
-	if (debugmode) {
+	if (DebugMode) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
 

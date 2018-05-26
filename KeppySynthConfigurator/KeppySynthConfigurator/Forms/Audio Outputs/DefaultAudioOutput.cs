@@ -28,7 +28,7 @@ namespace KeppySynthConfigurator
                 if (IsIt) Text = String.Format(Text, "WASAPI");
                 else Text = String.Format(Text, "DirectSound");
 
-                int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("defaultdev", 0);
+                int selecteddeviceprev = (int)KeppySynthConfiguratorMain.SynthSettings.GetValue("AudioOutput", 0);
                 BASS_DEVICEINFO info = new BASS_DEVICEINFO();
                 DevicesList.Items.Add("Default Windows audio output");
                 Bass.BASS_GetDeviceInfo(selecteddeviceprev - 1, info);

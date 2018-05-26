@@ -19,28 +19,28 @@ namespace KeppySynthConfigurator
 
         private void AdvancedAudioSettings_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("fadeoutdisable", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("DisableNotesFadeOut", 0)) == 1)
                 FadeoutDisable.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("monorendering", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("MonoRendering", 0)) == 1)
                 MonophonicFunc.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("vms2emu", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("DontMissNotes", 0)) == 1)
                 SlowDownPlayback.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("allowksdapi", 1)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("KSDAPIEnabled", 1)) == 1)
                 KSDAPIBox.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("hypermode", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) == 1)
                 HMode.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("oldbuffermode", 0)) == 1)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("NotesCatcherWithAudio", 0)) == 1)
                 OldBuff.Checked = true;
 
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("rco", 1)) == 0)
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("SleepStates", 1)) == 0)
                 NoSleep.Checked = true;
 
-            int floatingpointaudioval = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("32bit", 1));
+            int floatingpointaudioval = Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("AudioBitDepth", 1));
             if (floatingpointaudioval == 1)
                 AudioBitDepth.SelectedIndex = 0;
             else if (floatingpointaudioval == 2 || floatingpointaudioval == 0)
@@ -64,53 +64,53 @@ namespace KeppySynthConfigurator
         private void AudioBitDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (AudioBitDepth.SelectedIndex == 0)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", 1);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 1);
             else if (AudioBitDepth.SelectedIndex == 1)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", 2);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 2);
             else if (AudioBitDepth.SelectedIndex == 2)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", 3);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 3);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("32bit", 1);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 1);
         }
 
         private void MonophonicFunc_CheckedChanged(object sender, EventArgs e)
         {
             if (MonophonicFunc.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MonoRendering", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("monorendering", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("MonoRendering", "0", RegistryValueKind.DWord);
         }
 
         private void FadeoutDisable_CheckedChanged(object sender, EventArgs e)
         {
             if (FadeoutDisable.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("fadeoutdisable", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", "0", RegistryValueKind.DWord);
         }
 
         private void SlowDownPlayback_CheckedChanged(object sender, EventArgs e)
         {
             if (SlowDownPlayback.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("vms2emu", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("DontMissNotes", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("vms2emu", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("DontMissNotes", "0", RegistryValueKind.DWord);
         }
 
         private void KSDAPIBox_CheckedChanged(object sender, EventArgs e)
         {
             if (KSDAPIBox.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("KSDAPIEnabled", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("allowksdapi", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("KSDAPIEnabled", "0", RegistryValueKind.DWord);
         }
 
         private void HMode_CheckedChanged(object sender, EventArgs e)
         {
             if (HMode.Checked)
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("hypermode", "1", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("HyperPlayback", "1", RegistryValueKind.DWord);
             else
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("hypermode", "0", RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("HyperPlayback", "0", RegistryValueKind.DWord);
         }
 
         private void OldBuff_CheckedChanged(object sender, EventArgs e)

@@ -32,7 +32,7 @@ namespace KeppySynthConfigurator
                     return;
                 }
 
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("volumeboost")) == 1)
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("VolumeBoost")) == 1)
                 {
                     MeterFunc.SetMaximum(200);
                     for (int i = 0; i <= 16; ++i)

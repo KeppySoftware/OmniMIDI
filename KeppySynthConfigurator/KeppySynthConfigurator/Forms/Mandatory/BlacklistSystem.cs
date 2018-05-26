@@ -74,7 +74,7 @@ namespace KeppySynthConfigurator
 
         private void KeppyDriverBlacklistSystem_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("noblacklistmsg", "0")) == 1) NoBlockMessage.Checked = true;
+            if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("NoBlacklistMessage", "0")) == 1) NoBlockMessage.Checked = true;
             else NoBlockMessage.Checked = false;
 
             if (System.IO.Directory.Exists(blacklistoldlocation + "\\Keppy's Synthesizer\\blacklist\\"))
@@ -273,11 +273,11 @@ namespace KeppySynthConfigurator
         {
             if (NoBlockMessage.Checked == true)
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("noblacklistmsg", "1", Microsoft.Win32.RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("NoBlacklistMessage", "1", Microsoft.Win32.RegistryValueKind.DWord);
             }
             else
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("noblacklistmsg", "0", Microsoft.Win32.RegistryValueKind.DWord);
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("NoBlacklistMessage", "0", Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
     }

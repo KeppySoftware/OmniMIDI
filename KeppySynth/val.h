@@ -57,72 +57,62 @@ static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
 // Potato
-static BOOL bufferinitialized = FALSE;
-static BOOL ksdirectenabled = FALSE;
+static BOOL EVBuffReady = FALSE;
+static BOOL KSDAPIEnabled = FALSE;
 static BOOL bufferoverload = FALSE;
-static FLOAT currentcpuusage0;
-static DWORD isoverrideenabled = 0;
-static ULONGLONG evbuffsize = 4096;
-static ULONGLONG sevbuffsize = evbuffsize;
-static DWORD evbuffratio = 1;
-static DWORD evbuffbyram = 0;
+static FLOAT RenderingTime = 0.0f;
+static ULONGLONG EvBufferSize = 4096;
+static ULONGLONG TempEvBufferSize = EvBufferSize;
+static DWORD EvBufferMultRatio = 1;
+static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Main values
-static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume (whole)
-static HFX ChVolume;						// Volume (whole)
+static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
+static DWORD OutputVolume = 10000;			// Volume
+static HFX ChVolume;						// Volume
+static DWORD RestartValue = 0;				// For AudToWAV
 
 static HANDLE hConsole;						// Debug console
-static FLOAT *sndbf;						// Cake
-static INT AudioOutput = 0;					// Audio output (All devices except AudToWAV and WASAPI)
-static DWORD allhotkeys = 0;				// Enable/Disable all the hotkeys
-static DWORD allnotesignore = 0;			// Ignore all MIDI events
-static DWORD alreadyshown = 0;				// Check if the info about the drivers have been already shown.
-static DWORD autopanic = 0;					// Autopanic switch
-static DWORD bassoutputfinal = 0;			// DO NOT TOUCH
-static DWORD capframerate = 0;				// Cap input framerate
-static DWORD currentengine = WASAPI_ENGINE;	// Current engine
-static DWORD debugmode = 0;					// Debug console
-static DWORD defaultAoutput = 0;			// Default audio output (ASIO)
-static DWORD defaultmidiindev = 0;			// MIDI Input device
-static DWORD defaultmidiout = 0;			// Set as default MIDI out device for 8.x or newer
-static DWORD defaultoutput = 0;				// Default audio output (DSound)
-static DWORD defaultsflist = 1;				// Default soundfont list
-static DWORD driverprio = 0;				// Process priority
-static DWORD fadeoutdisable = 0;			// Disable fade-out
-static DWORD floatrendering = 1;			// Floating postatic DWORD audio
-static DWORD frames = 0;					// Default
-static DWORD frequency = 0;					// Audio frequency
-static DWORD fullvelocity = 0;				// Enable full velocity mode
-static DWORD ignorenotes1 = 0;				// Ignores notes with velocity of 1
-static DWORD ischangingbuffermode = 0;		// Stuff
-static DWORD limit88 = 0;					// Limit to 88 keys
-static DWORD livechange = 0;				// Live changes
-static DWORD maxcpu = 0;					// CPU usage INT
-static DWORD midiinenabled = 0;				// MIDI Input
-static DWORD midivoices = 0;				// Max voices INT
-static DWORD midivolumeoverride = 0;		// MIDI track volume override
-static DWORD monorendering = 0;				// Mono rendering (Instead of stereo by default)
-static DWORD mt32mode = 0;					// Roland MT-32 mode
-static DWORD newsndbfvalue = 128;			// DO NOT TOUCH
-static DWORD noblacklistmsg = 0;			// Disable blacklist message
-static DWORD noFLOAT = 1;					// Enable or disable the FLOAT engine
-static DWORD nofx = 0;						// Enable or disable FXs
-static DWORD noteoff1 = 0;					// Note cut INT
-static BOOL oldbuffermode = TRUE;			// For old-ass PCs
-static DWORD overrideinstruments = 0;		// Override channel instruments
-static DWORD pitchshift = 127;				// Pitch shift
-static DWORD preload = 0;					// Soundfont preloading
-static DWORD rco = 0;						// Reduce CPU overhead
-static DWORD restartvalue = 0;				// How many times you changed the settings in real-time
-static DWORD shortname = 0;					// Use short name or nah
-static DWORD sinc = 0;						// Sinc
-static DWORD sincconv = 2;					// Sinc
-static DWORD sysexignore = 0;				// Ignore SysEx events
-static DWORD sysresetignore = 0;			// Ignore sysex messages
-static DWORD vms2emu = 0;					// VirtualMIDISynth 2.x buffer emulation
-static DWORD volume = 0;					// Volume limit
-static DWORD volumehotkeys = 1;				// Enable/Disable volume hotkeys
-static DWORD volumemon = 1;					// Volume monitoring
+static FLOAT *sndbf;						// AudToWAV
+
+static DWORD AudioOutputReg = 0;			// Audio output (All devices except AudToWAV and ASIO)
+static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
+
+static BOOL AlternativeCPU = FALSE;			// Autopanic switch
+static BOOL CapFramerate = FALSE;			// Cap input framerate
+static BOOL DebugMode = FALSE;				// Debug console
+static BOOL DisableNotesFadeOut = 0;		// Disable fade-out
+static BOOL DontMissNotes = FALSE;			// Slow down instead of missing notes
+static BOOL EnableSFX = TRUE;				// Enable or disable FXs
+static BOOL FastHotkeys = FALSE;			// Enable/Disable fast hotkeys
+static BOOL FullVelocityMode = FALSE;		// Enable full velocity mode
+static BOOL IgnoreNotesBetweenVel = FALSE;	// Ignore notes in between two velocity values
+static BOOL IgnoreAllEvents = FALSE;		// Ignore all MIDI events
+static BOOL IgnoreSysEx = FALSE;			// Ignore SysEx events
+static BOOL IgnoreSysReset = FALSE;			// Ignore sysex messages
+static BOOL LimitTo88Keys = FALSE;			// Limit to 88 keys
+static BOOL LiveChanges = FALSE;			// Live changes
+static BOOL MT32Mode = FALSE;				// Roland MT-32 mode
+static BOOL MonoRendering = TRUE;			// Mono rendering (Instead of stereo by default)
+static BOOL NoBlacklistMessage = TRUE;		// Disable blacklist message
+static BOOL NoteOff1 = 0;					// Note cut INT
+static BOOL NotesCatcherWithAudio = FALSE;	// For old-ass PCs
+static BOOL OverrideInstruments = TRUE;		// Override channel instruments
+static BOOL PreloadSoundFonts = TRUE;		// Soundfont preloading
+static BOOL SincInter = FALSE;				// Sinc
+static BOOL SleepStates = TRUE;				// Reduce CPU overhead
+static BOOL VolumeMonitor = TRUE;			// Volume monitoring
+
+static DWORD AudioBitDepth = 1;				// Floating postatic DWORD audio
+static DWORD AudioFrequency = 48000;		// Audio frequency
+static DWORD BufferLength = 0;				// Default
+static DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
+static DWORD DefaultSFList = 1;				// Default soundfont list
+static DWORD DriverPriority = 0;			// Process priority
+static DWORD MaxRenderingTime = 75;			// CPU usage INT
+static DWORD TransposeValue = 127;			// Pitch shift (127 = None)
+static DWORD MaxVoices = 500;				// Voices limit
+static DWORD SincConv = 2;					// Sinc
 
 // Priority values
 static DWORD prioval[7] =
@@ -199,7 +189,7 @@ static DWORD cpreset[16] =
 	0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static DWORD selectedtype = 4;
+static DWORD SynthType = 4;
 static DWORD SynthNamesTypes[7] =
 {
 	MOD_FMSYNTH,
@@ -237,9 +227,9 @@ static DWORD rvalues[16] =
 
 // Other
 static DWORD buffull = 0;
-static DWORD extra8lists = 0;
-static DWORD lovel = 1;
-static DWORD hivel = 1;
+static DWORD Extra8Lists = 0;
+static DWORD MaxVelIgnore = 1;
+static DWORD MinVelIgnore = 1;
 
 // Soundfont lists
 static TCHAR userprofile[MAX_PATH];

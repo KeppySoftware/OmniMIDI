@@ -28,7 +28,7 @@ namespace KeppySynthConfigurator
                 if (!Functions.GlobalMemoryStatusEx(memStatus)) MessageBox.Show("Unknown error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 installedMemory = memStatus.ullTotalPhys;
 
-                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffbyram", "0")) == 1)
+                if (Convert.ToInt32(KeppySynthConfiguratorMain.SynthSettings.GetValue("GetEvBuffSizeFromRAM", "0")) == 1)
                     GetRAMSize.Checked = true;
                 else
                     GetRAMSize.Checked = false;
@@ -48,8 +48,8 @@ namespace KeppySynthConfigurator
         {
             if (GetRAMSize.Checked == true)
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", "1", Microsoft.Win32.RegistryValueKind.DWord);
-                decimal evbuffratiotemp = Convert.ToDecimal(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffratio", "1"));
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "1", Microsoft.Win32.RegistryValueKind.DWord);
+                decimal evbuffratiotemp = Convert.ToDecimal(KeppySynthConfiguratorMain.SynthSettings.GetValue("EvBufferMultRatio", "1"));
                 BytesVal.Enabled = false;
                 RatioVal.Enabled = true;
                 BytesVal.Value = installedMemory;
@@ -58,8 +58,8 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", "0", Microsoft.Win32.RegistryValueKind.DWord);
-                ulong evbuffsizetemp = Convert.ToUInt64(KeppySynthConfiguratorMain.SynthSettings.GetValue("evbuffsize", "16384"));
+                KeppySynthConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "0", Microsoft.Win32.RegistryValueKind.DWord);
+                ulong evbuffsizetemp = Convert.ToUInt64(KeppySynthConfiguratorMain.SynthSettings.GetValue("EvBufferSize", "4096"));
                 BytesVal.Enabled = true;
                 RatioVal.Enabled = false;
                 if (evbuffsizetemp >= installedMemory) BytesVal.Value = 16384;
@@ -120,15 +120,15 @@ namespace KeppySynthConfigurator
             GetRAMSize.Checked = false;
             BytesVal.Value = 16384;
             RatioVal.Value = 1;
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffbyram", "0", Microsoft.Win32.RegistryValueKind.DWord);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffsize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "0", Microsoft.Win32.RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("EvBufferSize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("EvBufferMultRatio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
         }
 
         private void ApplySettings_Click(object sender, EventArgs e)
         {
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffsize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
-            KeppySynthConfiguratorMain.SynthSettings.SetValue("evbuffratio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("EvBufferSize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
+            KeppySynthConfiguratorMain.SynthSettings.SetValue("EvBufferMultRatio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
             Close();
         }
 

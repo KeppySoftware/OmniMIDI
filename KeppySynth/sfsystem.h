@@ -198,7 +198,7 @@ static bool load_font_item(unsigned list, const TCHAR * in_path)
 								return false;
 							}
 
-							if (preload)
+							if (PreloadSoundFonts)
 								BASS_MIDI_FontLoad(font, it->spreset, it->sbank);
 
 							std::wstring appdatapath = L"This error might have been caused by a missing instrument/preset in the SoundFont.\nPlease check if the instrument/preset you selected exists inside the SoundFont, then try again.\n\nAffected SoundFont: ";
