@@ -10,7 +10,7 @@
 #define MixerWindow "KeppySynthMixerWindow"
 #define OutputName "KeppysSynthUpdate"
 #define ProductName "Keppy's Synthesizer"
-#define Version '5.1.0.16'
+#define Version '5.1.0.17'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'

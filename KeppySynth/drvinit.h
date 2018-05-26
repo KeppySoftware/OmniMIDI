@@ -33,7 +33,7 @@ void MT32SetInstruments() {
 
 DWORD WINAPI DebugThread(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
-	while (!stop_thread) {
+	while (!stop_rtthread) {
 		SendDebugDataToPipe();
 		_WAIT;
 	}
@@ -485,8 +485,11 @@ int CreateThreads(bool startup) {
 	SetThreadPriority(ATThread, prioval[driverprio]);
 	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)RTSThreadAddress);
 	SetThreadPriority(RTSThread, prioval[driverprio]);
-	DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
-	SetThreadPriority(DThread, prioval[driverprio]);
+	if (!DThread)
+	{
+		DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
+		SetThreadPriority(DThread, prioval[driverprio]);
+	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
 	return 1;
