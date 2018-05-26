@@ -204,17 +204,6 @@ namespace KeppySynthConfigurator
             catch { }
         }
 
-        public static void UserProfileMigration() // Migrates the Keppy's Synthesizer folder from %localappdata% (Unsupported on XP) to %userprofile% (Supported on XP, now used on Vista+ too)
-        {
-            try
-            {
-                string oldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Keppy's Synthesizer\\";
-                string newlocation = System.Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
-                Directory.Move(oldlocation, newlocation);
-            }
-            catch { }
-        }
-
         public static void DriverRegistry()
         {
             try

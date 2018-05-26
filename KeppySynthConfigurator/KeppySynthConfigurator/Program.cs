@@ -82,28 +82,8 @@ namespace KeppySynthConfigurator
                     return;
                 }
             }
-            try
-            {
-                RegistryKey rkCurrentUser = Registry.CurrentUser;
-                CopyKey(rkCurrentUser, "SOFTWARE\\Keppy's Driver", "SOFTWARE\\Keppy's Synthesizer");
-                Directory.Move(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\", System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\");
-                Directory.Delete(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Driver\\");
-            }
-            catch
-            {
-                RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Driver", true);
-                if (sourceKey != null)
-                {
-                    RegistryKey deleteme = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                    deleteme.DeleteSubKeyTree("Keppy's Driver");
-                    deleteme.Close();
-                    sourceKey.Close();
-                }
-            }
-            finally
-            {
-                DoAnyway(args);
-            }
+
+            DoAnyway(args);
         }
 
         public static string Truncate(this string value, int maxChars)
@@ -194,12 +174,7 @@ namespace KeppySynthConfigurator
                 {
                     foreach (String s in args)
                     {
-                        if (s.ToLowerInvariant() == "/asp")
-                        {
-                            Functions.UserProfileMigration();
-                            return;
-                        }
-                        else if (s.ToLowerInvariant() == "/rei")
+                        if (s.ToLowerInvariant() == "/rei")
                         {
                             TLS12Enable(true);
 
