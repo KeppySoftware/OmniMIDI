@@ -2,7 +2,7 @@
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
-	if (BASS_ErrorGetCode() == 5 || LiveChanges) {
+	if (BASS_ErrorGetCode() == 5 || ManagedSettings.LiveChanges) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 		CloseThreads();
 		LoadSettings(TRUE);
@@ -68,7 +68,7 @@ void DoStartClient() {
 		DWORD dwSize = sizeof(DWORD);
 		int One = 0;
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&DriverPriority, &dwSize);
+		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 		RegCloseKey(hKey);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&HyperMode, &dwSize);
@@ -99,7 +99,7 @@ void DoStartClient() {
 			TEXT("SoundFontEvent")  // object name
 		);
 		MainThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)MainThreadAddress);
-		SetThreadPriority(MainThread, prioval[DriverPriority]);
+		SetThreadPriority(MainThread, prioval[ManagedSettings.DriverPriority]);
 
 		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)
 			CloseHandle(load_sfevent);
@@ -174,7 +174,7 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 			// Do the stuff with it, if it's not to be ignored
-			if (!IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+			if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 			// It has to be ignored, send info to console
 			else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 
@@ -192,4 +192,53 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 
 MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 	return SendDirectLongData(IIMidiHdr);
+}
+
+VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
+	if (Struct == nullptr) {
+		SettingsManagedByClient = FALSE;
+		if (RTSThread == NULL) {
+			RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)RTSThreadAddress);
+			SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
+		}
+		return;
+	}
+
+	BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
+
+	// Copy the struct from the app to the driver
+	memcpy(&ManagedSettings, Struct, min(sizeof(Settings), StructSize));
+	SettingsManagedByClient = TRUE;
+
+	if (DontMissNotesTemp != ManagedSettings.DontMissNotes) {
+		ResetSynth(1);
+	}
+	if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
+	if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
+
+	sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
+	ChVolumeStruct.fCurrent = 1.0f;
+	ChVolumeStruct.fTarget = sound_out_volume_float;
+	ChVolumeStruct.fTime = 0.0f;
+	ChVolumeStruct.lCurve = 0;
+	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+	CheckUp(ERRORCODE, L"KSVolFXSet", FALSE);
+
+	if (ManagedSettings.AlternativeCPU != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+
+	BASS_ChannelFlags(KSStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+	BASS_ChannelFlags(KSStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+	BASS_ChannelFlags(KSStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+	BASS_ChannelFlags(KSStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+
+	BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+	BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+}
+
+VOID WINAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
+	LoadFonts(Directory);
+}
+
+DebugInfo* WINAPI GetDriverDebugInfo() {
+	return &ManagedDebugInfo;
 }

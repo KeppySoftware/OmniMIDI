@@ -110,7 +110,7 @@ void StatusType(int status, char* &statustoprint) {
 }
 
 void PrintToConsole(int color, long stage, const char* text) {
-	if (DebugMode) {
+	if (ManagedSettings.DebugMode) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
 

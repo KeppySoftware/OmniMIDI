@@ -174,6 +174,7 @@ namespace KeppySynthConfigurator
             "Focusrite USB ASIO",
             "Jack",
             "JackRouter",
+            "Magix Low Latency 2016",
             "Native Instruments Komplete Audio 6",
             "ReaRoute ASIO",
             "USB Audio ASIO Driver",

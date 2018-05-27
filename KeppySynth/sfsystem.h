@@ -2,17 +2,17 @@
 Keppy's Synthesizer soundfont lists loading system
 */
 
-static void FreeFonts(UINT list)
+static void FreeFonts()
 {
 	unsigned i;
-	if (_soundFonts[list].size())
+	if (_soundFonts.size())
 	{
-		for (auto it = _soundFonts[list].begin(); it != _soundFonts[list].end(); ++it)
+		for (auto it = _soundFonts.begin(); it != _soundFonts.end(); ++it)
 		{
 			BASS_MIDI_FontFree(*it);
 		}
-		_soundFonts[list].resize(0);
-		presetList[list].resize(0);
+		_soundFonts.resize(0);
+		presetList.resize(0);
 	}
 }
 
@@ -26,7 +26,7 @@ static void checksferror(LPCWSTR name) {
 	}
 }
 
-static bool load_font_item(unsigned list, const TCHAR * in_path)
+static bool load_font_item(const TCHAR * in_path)
 {
 	const TCHAR * ext = _T("");
 	const TCHAR * dot = _tcsrchr(in_path, _T('.'));
@@ -41,9 +41,9 @@ static bool load_font_item(unsigned list, const TCHAR * in_path)
 		{
 			return false;
 		}
-		_soundFonts[list].push_back(font);
+		_soundFonts.push_back(font);
 		BASS_MIDI_FONTEX fex = { font, -1, -1, -1, 0, 0 };
-		presetList[list].push_back(fex);
+		presetList.push_back(fex);
 		return true;
 	}
 	else if (!_tcsicmp(ext, _T("sflist")))
@@ -198,7 +198,7 @@ static bool load_font_item(unsigned list, const TCHAR * in_path)
 								return false;
 							}
 
-							if (PreloadSoundFonts)
+							if (ManagedSettings.PreloadSoundFonts)
 								BASS_MIDI_FontLoad(font, it->spreset, it->sbank);
 
 							std::wstring appdatapath = L"This error might have been caused by a missing instrument/preset in the SoundFont.\nPlease check if the instrument/preset you selected exists inside the SoundFont, then try again.\n\nAffected SoundFont: ";
@@ -207,9 +207,9 @@ static bool load_font_item(unsigned list, const TCHAR * in_path)
 							CheckUp(CAUSE, (wchar_t *)appdatapath.c_str(), TRUE);
 
 							it->font = font;
-							presetList[list].push_back(*it);
+							presetList.push_back(*it);
 						}
-						_soundFonts[list].push_back(font);
+						_soundFonts.push_back(font);
 					}
 					else {
 						std::wstring appdatapath = L"The following SoundFont does not exist.\n\nAffected SoundFont: ";
@@ -226,9 +226,9 @@ static bool load_font_item(unsigned list, const TCHAR * in_path)
 	return false;
 }
 
-void LoadFonts(UINT list, const TCHAR * name)
+void LoadFonts(const TCHAR * name)
 {
-	FreeFonts(list);
+	FreeFonts();
 
 	if (name && *name)
 	{
@@ -236,17 +236,17 @@ void LoadFonts(UINT list, const TCHAR * name)
 		if (ext) ext++;
 		if (!_tcsicmp(ext, _T("sf2")) || !_tcsicmp(ext, _T("sf2pack")) || !_tcsicmp(ext, _T("sfz")) || !_tcsicmp(ext, _T("sflist")))
 		{
-			if (!load_font_item(list, name))
+			if (!load_font_item(name))
 			{
-				FreeFonts(list);
+				FreeFonts();
 				return;
 			}
 		}
 
 		std::vector< BASS_MIDI_FONTEX > fonts;
-		for (unsigned long i = 0, j = presetList[list].size(); i < j; ++i)
+		for (unsigned long i = 0, j = presetList.size(); i < j; ++i)
 		{
-			fonts.push_back(presetList[list][j - i - 1]);
+			fonts.push_back(presetList[j - i - 1]);
 		}
 		BASS_MIDI_StreamSetFonts(KSStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 	}

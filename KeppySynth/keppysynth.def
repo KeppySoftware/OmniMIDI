@@ -7,6 +7,9 @@ EXPORTS
 	InitializeKSStream
 	TerminateKSStream
 	ResetKSStream
+	ChangeDriverSettings
+	GetDriverDebugInfo
+	LoadCustomSoundFontsList
 	SendDirectData
 	SendDirectLongData
 	SendDirectDataNoBuf

@@ -178,7 +178,7 @@ static TCHAR * BASSWASAPIErrorFix[2] =
 
 
 void basserrconsole(int color, TCHAR * error, TCHAR * desc) {
-	if (DebugMode) {
+	if (ManagedSettings.DebugMode) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);
 

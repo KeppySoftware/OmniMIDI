@@ -8,7 +8,7 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
 int BufferCheck(void) {
-	return DontMissNotes ? eventcount : (readhead != writehead) ? ~0 : 0;
+	return ManagedSettings.DontMissNotes ? eventcount : (readhead != writehead) ? ~0 : 0;
 }
 
 int BufferCheckHyper(void) {
@@ -48,7 +48,7 @@ void SendLongToBASSMIDI(const void* sysexbuffer, DWORD exlen) {
 }
 
 DWORD __inline PlayBufferedData(void) {
-	if (IgnoreAllEvents || !BufferCheck()) return 1;
+	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	do {
 		LockSystem.LockForReading();
@@ -58,7 +58,7 @@ DWORD __inline PlayBufferedData(void) {
 		LockSystem.UnlockForReading();
 
 		SendToBASSMIDI(TempBuffer.dwParam1);
-	} while (DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
+	} while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
 }
@@ -80,7 +80,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 }
 
 DWORD __inline PlayBufferedDataChunk(void) {
-	if (IgnoreAllEvents || !BufferCheck()) return 1;
+	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	ULONGLONG whe = writehead;
 	do {
@@ -91,7 +91,7 @@ DWORD __inline PlayBufferedDataChunk(void) {
 		LockSystem.UnlockForReading();
 
 		SendToBASSMIDI(TempBuffer.dwParam1);
-	} while (DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
+	} while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
@@ -143,16 +143,16 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 	Understandable version of what the following function does
 	*/
 
-	if (IgnoreNotesBetweenVel)
+	if (ManagedSettings.IgnoreNotesBetweenVel)
 	{
 		if (!((dwParam1 - 0x80) & 0xE0)
-			&& ((HIWORD(dwParam1) & 0xFF) >= MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= MaxVelIgnore))
+			&& ((HIWORD(dwParam1) & 0xFF) >= ManagedSettings.MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= ManagedSettings.MaxVelIgnore))
 		{
 			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
 			return TRUE;
 		}
 	}
-	if (LimitTo88Keys)
+	if (ManagedSettings.LimitTo88Keys)
 	{
 		if (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89)
 		{
@@ -186,20 +186,20 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	Understandable version of what the following function does
 	*/
 
-	if (TransposeValue != 0x7F)
+	if (ManagedSettings.TransposeValue != 0x7F)
 	{
 		if (!((dwParam1 - 0x80) & 0xE0) && (dwParam1 & 0xF) != 9)
 		{
 			if (pitchshiftchan[dwParam1 & 0xF])
 			{
-				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + TransposeValue;
+				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + ManagedSettings.TransposeValue;
 				if (newnote > 0x7F) { newnote = 0x7F; }
 				else if (newnote < 0) { newnote = 0; }
 				SETNOTE(dwParam1, newnote);
 			}
 		}
 	}
-	if (FullVelocityMode && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
+	if (ManagedSettings.FullVelocityMode && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
 		SETVELOCITY(dwParam1, 0x7F);
 
 	return dwParam1;
@@ -209,7 +209,7 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	if (!EVBuffReady || (uMsg != MODM_LONGDATA && CheckIfEventIsToIgnore(dwParam1)))
 		return MMSYSERR_NOERROR;
 
-	if ((uMsg != MODM_LONGDATA) && (FullVelocityMode || TransposeValue != 0x7F))
+	if ((uMsg != MODM_LONGDATA) && (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F))
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	// Prepare the event in the buffer
@@ -227,7 +227,7 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	LockSystem.UnlockForWriting();
 
 	// Some checks
-	if (DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
+	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;

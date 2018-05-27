@@ -84,10 +84,10 @@ void NTSleep(__int64 usec) {
 }
 
 #define _WAIT NTSleep(-100)									// Normal wait
-#define _FWAIT NTSleep(SleepStates ? -100 : 0)				// Fast wait
-#define _LWAIT NTSleep(SleepStates ? -1000 : 0)				// Slow wait
+#define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
+#define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)							// Very slow wait
-#define _CFRWAIT NTSleep(SleepStates ? -15667 : -16667)		// Cap framerate wait
+#define _CFRWAIT NTSleep(ManagedSettings.SleepStates ? -15667 : -16667)		// Cap framerate wait
 
 // LightweightLock by Brad Wilson
 #include "LwL.h"
@@ -178,7 +178,7 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
-		RegQueryValueEx(hKey, L"DebugMode", NULL, &dwType, (LPBYTE)&DebugMode, &dwSize);
+		RegQueryValueEx(hKey, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
 		RegQueryValueEx(hKey, L"VID", NULL, &dwType, (LPBYTE)&VID, &dwSize);
 		RegQueryValueEx(hKey, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 
@@ -191,7 +191,7 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 			Technology = MOD_SWSYNTH;
 		else Technology = SynthNamesTypes[SynthType];
 
-		if (DebugMode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
+		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
 
 		if (strlen(SynthName) < 1 || isspace(SynthName[0])) {
 			ZeroMemory(SynthName, MAXPNAMELEN);
@@ -307,7 +307,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 		// Do the stuff with it, if it's not to be ignored
-		if (!IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+		if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
 		// It has to be ignored, send info to console
 		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 

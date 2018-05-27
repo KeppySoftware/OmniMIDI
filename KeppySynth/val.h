@@ -9,6 +9,64 @@
 // Things
 #define SizeOfArray(type) sizeof(type)/sizeof(type[0])
 
+// Settings managed by client
+typedef struct Settings
+{
+	BOOL AlternativeCPU = FALSE;			// Autopanic switch
+	BOOL CapFramerate = FALSE;				// Cap input framerate
+	BOOL DebugMode = FALSE;					// Debug console
+	BOOL DisableNotesFadeOut = 0;			// Disable fade-out
+	BOOL DontMissNotes = FALSE;				// Slow down instead of missing notes
+
+	BOOL EnableSFX = TRUE;					// Enable or disable FXs
+	BOOL FastHotkeys = FALSE;				// Enable/Disable fast hotkeys
+	BOOL FullVelocityMode = FALSE;			// Enable full velocity mode
+	BOOL IgnoreNotesBetweenVel = FALSE;		// Ignore notes in between two velocity values
+	BOOL IgnoreAllEvents = FALSE;			// Ignore all MIDI events
+	BOOL IgnoreSysEx = FALSE;				// Ignore SysEx events
+	BOOL IgnoreSysReset = FALSE;			// Ignore sysex messages
+	BOOL LimitTo88Keys = FALSE;				// Limit to 88 keys
+	BOOL LiveChanges = FALSE;				// Live changes
+	BOOL MT32Mode = FALSE;					// Roland MT-32 mode
+	BOOL MonoRendering = TRUE;				// Mono rendering (Instead of stereo by default)
+	BOOL NoBlacklistMessage = TRUE;			// Disable blacklist message
+	BOOL NoteOff1 = 0;						// Note cut INT
+	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
+	BOOL OverrideInstruments = TRUE;		// Override channel instruments
+	BOOL PreloadSoundFonts = TRUE;			// Soundfont preloading
+	BOOL SincInter = FALSE;					// Sinc
+	BOOL SleepStates = TRUE;				// Reduce CPU overhead
+	BOOL VolumeMonitor = TRUE;				// Volume monitoring
+
+	DWORD AudioBitDepth = 1;				// Floating poDWORD audio
+	DWORD AudioFrequency = 48000;			// Audio frequency
+	DWORD AudioOutputReg = 0;				// Audio output (All devices except AudToWAV and ASIO)
+	DWORD BufferLength = 0;					// Default
+	DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
+	DWORD DefaultSFList = 1;				// Default soundfont list
+	DWORD DriverPriority = 0;				// Process priority
+	DWORD Extra8Lists = 0;					// Enable extra 8 SoundFont lists
+	DWORD MaxRenderingTime = 75;			// CPU usage INT
+	DWORD MaxVelIgnore = 1;					// Ignore notes in between two velocity values
+	DWORD MinVelIgnore = 1;					// Ignore notes in between two velocity values
+	DWORD OutputVolume = 10000;				// Volume
+	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
+	DWORD MaxVoices = 500;					// Voices limit
+	DWORD SincConv = 2;						// Sinc
+
+	// Add more down here
+	// ------------------
+};
+
+typedef struct DebugInfo
+{
+	FLOAT RenderingTime = 0.0f;
+	DWORD ActiveVoices[16];
+
+	// Add more down here
+	// ------------------
+};
+
 // EVBuffer
 struct evbuf_t {
 	UINT			uMsg;
@@ -59,7 +117,6 @@ static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 // Potato
 static BOOL EVBuffReady = FALSE;
 static BOOL KSDAPIEnabled = FALSE;
-static BOOL bufferoverload = FALSE;
 static FLOAT RenderingTime = 0.0f;
 static ULONGLONG EvBufferSize = 4096;
 static ULONGLONG TempEvBufferSize = EvBufferSize;
@@ -67,52 +124,18 @@ static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Main values
+static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
-static DWORD OutputVolume = 10000;			// Volume
 static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
 
 static HANDLE hConsole;						// Debug console
 static FLOAT *sndbf;						// AudToWAV
 
-static DWORD AudioOutputReg = 0;			// Audio output (All devices except AudToWAV and ASIO)
-static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
-
-static BOOL AlternativeCPU = FALSE;			// Autopanic switch
-static BOOL CapFramerate = FALSE;			// Cap input framerate
-static BOOL DebugMode = FALSE;				// Debug console
-static BOOL DisableNotesFadeOut = 0;		// Disable fade-out
-static BOOL DontMissNotes = FALSE;			// Slow down instead of missing notes
-static BOOL EnableSFX = TRUE;				// Enable or disable FXs
-static BOOL FastHotkeys = FALSE;			// Enable/Disable fast hotkeys
-static BOOL FullVelocityMode = FALSE;		// Enable full velocity mode
-static BOOL IgnoreNotesBetweenVel = FALSE;	// Ignore notes in between two velocity values
-static BOOL IgnoreAllEvents = FALSE;		// Ignore all MIDI events
-static BOOL IgnoreSysEx = FALSE;			// Ignore SysEx events
-static BOOL IgnoreSysReset = FALSE;			// Ignore sysex messages
-static BOOL LimitTo88Keys = FALSE;			// Limit to 88 keys
-static BOOL LiveChanges = FALSE;			// Live changes
-static BOOL MT32Mode = FALSE;				// Roland MT-32 mode
-static BOOL MonoRendering = TRUE;			// Mono rendering (Instead of stereo by default)
-static BOOL NoBlacklistMessage = TRUE;		// Disable blacklist message
-static BOOL NoteOff1 = 0;					// Note cut INT
-static BOOL NotesCatcherWithAudio = FALSE;	// For old-ass PCs
-static BOOL OverrideInstruments = TRUE;		// Override channel instruments
-static BOOL PreloadSoundFonts = TRUE;		// Soundfont preloading
-static BOOL SincInter = FALSE;				// Sinc
-static BOOL SleepStates = TRUE;				// Reduce CPU overhead
-static BOOL VolumeMonitor = TRUE;			// Volume monitoring
-
-static DWORD AudioBitDepth = 1;				// Floating postatic DWORD audio
-static DWORD AudioFrequency = 48000;		// Audio frequency
-static DWORD BufferLength = 0;				// Default
-static DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
-static DWORD DefaultSFList = 1;				// Default soundfont list
-static DWORD DriverPriority = 0;			// Process priority
-static DWORD MaxRenderingTime = 75;			// CPU usage INT
-static DWORD TransposeValue = 127;			// Pitch shift (127 = None)
-static DWORD MaxVoices = 500;				// Voices limit
-static DWORD SincConv = 2;					// Sinc
+// Settings and debug
+static BOOL SettingsManagedByClient = FALSE;
+static Settings ManagedSettings;
+static DebugInfo ManagedDebugInfo;
 
 // Priority values
 static DWORD prioval[7] =
@@ -227,9 +250,6 @@ static DWORD rvalues[16] =
 
 // Other
 static DWORD buffull = 0;
-static DWORD Extra8Lists = 0;
-static DWORD MaxVelIgnore = 1;
-static DWORD MinVelIgnore = 1;
 
 // Soundfont lists
 static TCHAR userprofile[MAX_PATH];
@@ -326,8 +346,8 @@ static TCHAR * listsanalyze[16] =
 
 // -----------------------------------------------------------------------
 
-std::vector<DWORD> _soundFonts[16];
-std::vector<BASS_MIDI_FONTEX> presetList[16];
+static std::vector<DWORD> _soundFonts;
+static std::vector<BASS_MIDI_FONTEX> presetList;
 
 // -----------------------------------------------------------------------
 

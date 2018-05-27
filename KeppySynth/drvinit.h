@@ -3,7 +3,7 @@ Keppy's Synthesizer stream init
 */
 
 void MT32SetInstruments() {
-	if (MT32Mode == 1) {
+	if (ManagedSettings.MT32Mode == 1) {
 		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_PROGRAM, 0);
 		BASS_MIDI_StreamEvent(KSStream, 1, MIDI_EVENT_PROGRAM, 36);
 		BASS_MIDI_StreamEvent(KSStream, 2, MIDI_EVENT_PROGRAM, 48);
@@ -22,7 +22,7 @@ void MT32SetInstruments() {
 		BASS_MIDI_StreamEvent(KSStream, 15, MIDI_EVENT_PROGRAM, 0);
 	}
 	else {
-		if (OverrideInstruments == 1) {
+		if (ManagedSettings.OverrideInstruments == 1) {
 			for (int i = 0; i <= 15; ++i) {
 				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_BANK, cbank[i]);
 				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
@@ -49,12 +49,12 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 		while (!stop_thread) {
 			start4 = TimeNow();
 
-			if (NotesCatcherWithAudio) break;
+			if (ManagedSettings.NotesCatcherWithAudio) break;
 
 			MT32SetInstruments();
 			if (_PlayBufData()) _LWAIT;
 
-			if (CapFramerate) _CFRWAIT;
+			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
 	catch (...) {
@@ -70,7 +70,7 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 DWORD WINAPI RTSettings(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	try {
-		while (!stop_thread) {
+		while (!stop_thread && !SettingsManagedByClient) {
 			start3 = TimeNow();
 			LoadSettingsRT();
 			Panic();
@@ -94,14 +94,14 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 void InitializeNotesCatcherThread() {
 	if (EPThread == NULL) {
 		EPThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)EventsProcesser, NULL, 0, (LPDWORD)EPThreadAddress);
-		SetThreadPriority(EPThread, prioval[DriverPriority]);
+		SetThreadPriority(EPThread, prioval[ManagedSettings.DriverPriority]);
 	}
 }
 
 DWORD WINAPI AudioThread(LPVOID lpParam) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
 	try {
-		if (CurrentEngine != ASIO_ENGINE) {
+		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
 				start2 = TimeNow();
 				if (reset_synth) {
@@ -109,10 +109,10 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 					BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				}
 
-				if (CurrentEngine == AUDTOWAV) AudioRender();
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
 				else BASS_ChannelUpdate(KSStream, 0);
 
-				if (NotesCatcherWithAudio) {
+				if (ManagedSettings.NotesCatcherWithAudio) {
 					MT32SetInstruments();
 					_PlayBufDataChk();
 				}
@@ -142,7 +142,7 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 
 	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
 
-	if (NotesCatcherWithAudio) {
+	if (ManagedSettings.NotesCatcherWithAudio) {
 		MT32SetInstruments();
 		_PlayBufDataChk();
 	}
@@ -204,7 +204,7 @@ void InitializeStream(INT32 mixfreq) {
 	bool isdecode = FALSE;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating stream for external engine...");
-	if (CurrentEngine == DSOUND_ENGINE || CurrentEngine == WASAPI_ENGINE) {
+	if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
 		if (AudioOutput == 0) {
 			isdecode = TRUE;
 		}
@@ -215,8 +215,8 @@ void InitializeStream(INT32 mixfreq) {
 	if (KSStream) BASS_StreamFree(KSStream);
 
 	KSStream = BASS_MIDI_StreamCreate(16,
-		(isdecode ? BASS_STREAM_DECODE : 0) | (IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) | (MonoRendering ? BASS_SAMPLE_MONO : 0) |
-		AudioRenderingType(AudioBitDepth) | (NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | (EnableSFX ? 0 : BASS_MIDI_NOFX) | (SincInter ? BASS_MIDI_SINCINTER : 0),
+		(isdecode ? BASS_STREAM_DECODE : 0) | (ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) | (ManagedSettings.MonoRendering ? BASS_SAMPLE_MONO : 0) |
+		AudioRenderingType(ManagedSettings.AudioBitDepth) | (ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | (ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX) | (ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0),
 		mixfreq);
 	// BASS_MIDI_StreamSetFilter(KSStream, TRUE, MidiFilterProc, NULL);
 	CheckUp(ERRORCODE, L"KSStreamCreate", TRUE);
@@ -320,8 +320,8 @@ void InitializeBASSFinal() {
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 	BASS_GetInfo(&info);
-	BASS_SetConfig(BASS_CONFIG_BUFFER, BufferLength);
-	InitializeStream(AudioFrequency);
+	BASS_SetConfig(BASS_CONFIG_BUFFER, ManagedSettings.BufferLength);
+	InitializeStream(ManagedSettings.AudioFrequency);
 	if (AudioOutput != NULL)
 	{
 		BASS_ChannelPlay(KSStream, false);
@@ -330,7 +330,7 @@ void InitializeBASSFinal() {
 }
 
 void InitializeWAVEnc() {
-	InitializeStream(AudioFrequency);
+	InitializeStream(ManagedSettings.AudioFrequency);
 	InitializeBASSEnc();
 	CheckUp(ERRORCODE, L"KSInitEnc", TRUE);
 }
@@ -338,26 +338,26 @@ void InitializeWAVEnc() {
 void InitializeASIO() {
 	if (ASIODevicesCount() < 1) {
 		MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"Keppy's Synthesizer - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-		CurrentEngine = WASAPI_ENGINE;
+		ManagedSettings.CurrentEngine = WASAPI_ENGINE;
 		BASS_Free();
 		PrintToConsole(FOREGROUND_RED, 1, "ASIO devices not available, using WASAPI...");
-		BASS_Init(AudioOutput, AudioFrequency, BASS_DEVICE_STEREO, 0, NULL);
+		BASS_Init(AudioOutput, ManagedSettings.AudioFrequency, BASS_DEVICE_STEREO, 0, NULL);
 		CheckUp(ERRORCODE, L"BASSInit", TRUE);
 		InitializeBASSFinal();
 		return;
 	}
 
-	InitializeStream(AudioFrequency);
+	InitializeStream(ManagedSettings.AudioFrequency);
 	if (BASS_ASIO_Init(ASIODetectID(), BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
-		BASS_ASIO_SetRate(AudioFrequency);
+		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
 		CheckUpASIO(ERRORCODE, L"KSFormatASIO", FALSE);
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-		if (MonoRendering == 1) BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
+		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
 		CheckUpASIO(ERRORCODE, L"KSChanSetMono", TRUE);
 		BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
 		CheckUpASIO(ERRORCODE, L"KSChanSetFormatASIO", TRUE);
-		if (MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, AudioFrequency / 2);
-		else BASS_ASIO_ChannelSetRate(FALSE, 0, AudioFrequency);
+		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
+		else BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency);
 		CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO", TRUE);
 		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, 0);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
@@ -372,15 +372,15 @@ bool InitializeBASS(BOOL restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
 
 	BOOL init;
-	BOOL isds = (CurrentEngine == DSOUND_ENGINE || CurrentEngine == WASAPI_ENGINE);
-	DWORD flags = BASS_DEVICE_STEREO | ((CurrentEngine == DSOUND_ENGINE) ? BASS_DEVICE_DSOUND : 0);
-	AudioOutput = AudioOutputReg - 1;
+	BOOL isds = (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
+	DWORD flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DSOUND_ENGINE) ? BASS_DEVICE_DSOUND : 0);
+	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Settings are valid, continue...");
 
 	if (restart == TRUE) {
 		PrintToConsole(FOREGROUND_RED, 1, "The driver requested to restart the stream.");
-		if (CurrentEngine == AUDTOWAV) RestartValue++;
+		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 	}
 
 	// Free BASS
@@ -404,16 +404,16 @@ bool InitializeBASS(BOOL restart) {
 
 	Retry:
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
-	init = BASS_Init(isds ? AudioOutput : 0, AudioFrequency, flags, 0, NULL);
+	init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, flags, 0, NULL);
 	CheckUp(ERRORCODE, L"BASSInit", TRUE);
 
-	if (CurrentEngine == AUDTOWAV) {
+	if (ManagedSettings.CurrentEngine == AUDTOWAV) {
 		InitializeWAVEnc();
 	}
-	else if (CurrentEngine == DSOUND_ENGINE || CurrentEngine == WASAPI_ENGINE) {
+	else if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
 		InitializeBASSFinal();
 	}
-	else if (CurrentEngine == ASIO_ENGINE) {
+	else if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 		InitializeASIO();
 	}
 
@@ -436,11 +436,11 @@ bool InitializeBASS(BOOL restart) {
 		return false;
 	}
 	else {
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, MaxVoices);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
 		CheckUp(ERRORCODE, L"KSAttributes1", TRUE);
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, MaxRenderingTime);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 		CheckUp(ERRORCODE, L"KSAttributes2", TRUE);
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, DisableNotesFadeOut);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
 		CheckUp(ERRORCODE, L"KSAttributes3", FALSE);
 	}
 
@@ -475,13 +475,13 @@ int CreateThreads(bool startup) {
 
 	reset_synth = 0;
 	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AudioThread, NULL, 0, (LPDWORD)ATThreadAddress);
-	SetThreadPriority(ATThread, prioval[DriverPriority]);
+	SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
 	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)RTSThreadAddress);
-	SetThreadPriority(RTSThread, prioval[DriverPriority]);
+	SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
 	if (!DThread)
 	{
 		DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
-		SetThreadPriority(DThread, prioval[DriverPriority]);
+		SetThreadPriority(DThread, prioval[ManagedSettings.DriverPriority]);
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
@@ -494,7 +494,7 @@ void LoadSoundFontsToStream() {
 		PrintToConsole(FOREGROUND_RED, 1, "Default list for app loaded.");
 	}
 	else {
-		LoadSoundfont(DefaultSFList);
+		LoadSoundfont(ManagedSettings.DefaultSFList);
 		PrintToConsole(FOREGROUND_RED, 1, "Default global list loaded.");
 	}
 }

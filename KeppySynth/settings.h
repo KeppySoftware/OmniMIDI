@@ -65,12 +65,12 @@ void LoadSoundfont(int whichsf){
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
-		FreeFonts(0);
+		FreeFonts();
 		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
 		RegCloseKey(hKey);
 
-		if (lResult != ERROR_SUCCESS) LoadFonts(0, L"SoundFont.sf2");
-		else LoadFonts(0, sflistloadme[whichsf - 1]);
+		if (lResult != ERROR_SUCCESS) LoadFonts(L"SoundFont.sf2");
+		else LoadFonts(sflistloadme[whichsf - 1]);
 		BASS_MIDI_StreamLoadSamples(KSStream);
 		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
@@ -341,47 +341,47 @@ void LoadSettings(bool streamreload)
 			RegQueryValueEx(hKey, L"GetEvBuffSizeFromRAM", NULL, &dwType, (LPBYTE)&GetEvBuffSizeFromRAM, &dwSize);
 			RegQueryValueEx(hKey, L"EvBufferMultRatio", NULL, &dwType, (LPBYTE)&EvBufferMultRatio, &dwSize);
 		}
-		RegQueryValueEx(hKey, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&AudioBitDepth, &dwSize);
-		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&FastHotkeys, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&IgnoreAllEvents, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&IgnoreNotesBetweenVel, &dwSize);
-		RegQueryValueEx(hKey, L"AlternativeCPU", NULL, &dwType, (LPBYTE)&AlternativeCPU, &dwSize);
-		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&EnableSFX, &dwSize);
-		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&BufferLength, &dwSize);
-		RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&CapFramerate, &dwSize);
-		RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&MaxRenderingTime, &dwSize);
+		RegQueryValueEx(hKey, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioBitDepth, &dwSize);
+		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
+		RegQueryValueEx(hKey, L"AlternativeCPU", NULL, &dwType, (LPBYTE)&ManagedSettings.AlternativeCPU, &dwSize);
+		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&ManagedSettings.EnableSFX, &dwSize);
+		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
+		RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
+		RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxRenderingTime, &dwSize);
 		RegQueryValueEx(hKey, L"AudioOutput", NULL, &dwType, (LPBYTE)&AudioOutput, &dwSize);
-		RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&DefaultSFList, &dwSize);
-		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&DriverPriority, &dwSize);
-		RegQueryValueEx(hKey, L"Extra8Lists", NULL, &dwType, (LPBYTE)&Extra8Lists, &dwSize);
-		RegQueryValueEx(hKey, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&DisableNotesFadeOut, &dwSize);
-		RegQueryValueEx(hKey, L"AudioFrequency", NULL, &dwType, (LPBYTE)&AudioFrequency, &dwSize);
-		RegQueryValueEx(hKey, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&FullVelocityMode, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&MaxVelIgnore, &dwSize);
-		RegQueryValueEx(hKey, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&LimitTo88Keys, &dwSize);
-		RegQueryValueEx(hKey, L"MinVelIgnore", NULL, &dwType, (LPBYTE)&MinVelIgnore, &dwSize);
-		RegQueryValueEx(hKey, L"MonoRendering", NULL, &dwType, (LPBYTE)&MonoRendering, &dwSize);
-		RegQueryValueEx(hKey, L"MT32Mode", NULL, &dwType, (LPBYTE)&MT32Mode, &dwSize);
-		if (CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&NotesCatcherWithAudio, &dwSize);
-		else NotesCatcherWithAudio = FALSE;
-		RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&TransposeValue, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&MaxVoices, &dwSize);
-		RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&PreloadSoundFonts, &dwSize);
-		RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&SleepStates, &dwSize);
-		RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&SincInter, &dwSize);
-		RegQueryValueEx(hKey, L"SincConv", NULL, &dwType, (LPBYTE)&SincConv, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreSysEx", NULL, &dwType, (LPBYTE)&IgnoreSysEx, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&IgnoreSysReset, &dwSize);
-		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&DontMissNotes, &dwSize);
-		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&OutputVolume, &dwSize);
-		RegQueryValueEx(hKey, L"CurrentEngine", NULL, &dwType, (LPBYTE)&CurrentEngine, &dwSize);
+		RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&ManagedSettings.DefaultSFList, &dwSize);
+		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
+		RegQueryValueEx(hKey, L"Extra8Lists", NULL, &dwType, (LPBYTE)&ManagedSettings.Extra8Lists, &dwSize);
+		RegQueryValueEx(hKey, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableNotesFadeOut, &dwSize);
+		RegQueryValueEx(hKey, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
+		RegQueryValueEx(hKey, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&ManagedSettings.FullVelocityMode, &dwSize);
+		RegQueryValueEx(hKey, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVelIgnore, &dwSize);
+		RegQueryValueEx(hKey, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&ManagedSettings.LimitTo88Keys, &dwSize);
+		RegQueryValueEx(hKey, L"MinVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MinVelIgnore, &dwSize);
+		RegQueryValueEx(hKey, L"MonoRendering", NULL, &dwType, (LPBYTE)&ManagedSettings.MonoRendering, &dwSize);
+		RegQueryValueEx(hKey, L"MT32Mode", NULL, &dwType, (LPBYTE)&ManagedSettings.MT32Mode, &dwSize);
+		if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
+		else ManagedSettings.NotesCatcherWithAudio = FALSE;
+		RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
+		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVoices, &dwSize);
+		RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&ManagedSettings.PreloadSoundFonts, &dwSize);
+		RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&ManagedSettings.SleepStates, &dwSize);
+		RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&ManagedSettings.SincInter, &dwSize);
+		RegQueryValueEx(hKey, L"SincConv", NULL, &dwType, (LPBYTE)&ManagedSettings.SincConv, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreSysEx", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreSysEx, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreSysReset, &dwSize);
+		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&ManagedSettings.DontMissNotes, &dwSize);
+		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&ManagedSettings.OutputVolume, &dwSize);
+		RegQueryValueEx(hKey, L"CurrentEngine", NULL, &dwType, (LPBYTE)&ManagedSettings.CurrentEngine, &dwSize);
 		RegSetValueEx(hKey, L"LiveChanges", 0, dwType, (LPBYTE)&zero, sizeof(zero));
 		RegCloseKey(hKey);
 
-		if (!Between(MinVelIgnore, 1, 127)) { MinVelIgnore = 1; }
-		if (!Between(MaxVelIgnore, 1, 127)) { MaxVelIgnore = 1; }
+		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
+		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
-		sound_out_volume_float = (float)OutputVolume / 10000.0f;
+		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
 	}
@@ -399,49 +399,48 @@ void LoadSettingsRT()
 		long lResult;
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
-		int vms2emutemp = DontMissNotes;
-		int frequencyttemp = AudioFrequency;
+		BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
+
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&FastHotkeys, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&IgnoreAllEvents, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&IgnoreNotesBetweenVel, &dwSize);
-		RegQueryValueEx(hKey, L"AlternativeCPU", NULL, &dwType, (LPBYTE)&AlternativeCPU, &dwSize);
-		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&EnableSFX, &dwSize);
-		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&BufferLength, &dwSize);
-		RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&CapFramerate, &dwSize);
-		RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&MaxRenderingTime, &dwSize);
-		RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&DefaultSFList, &dwSize);
-		RegQueryValueEx(hKey, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&DisableNotesFadeOut, &dwSize);
-		RegQueryValueEx(hKey, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&FullVelocityMode, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&MaxVelIgnore, &dwSize);
-		RegQueryValueEx(hKey, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&LimitTo88Keys, &dwSize);
-		RegQueryValueEx(hKey, L"LiveChanges", NULL, &dwType, (LPBYTE)&LiveChanges, &dwSize);
-		RegQueryValueEx(hKey, L"MinVelIgnore", NULL, &dwType, (LPBYTE)&MinVelIgnore, &dwSize);
-		RegQueryValueEx(hKey, L"MT32Mode", NULL, &dwType, (LPBYTE)&MT32Mode, &dwSize);
-		if (CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&NotesCatcherWithAudio, &dwSize);
-		else NotesCatcherWithAudio = FALSE;
-		RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&TransposeValue, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&MaxVoices, &dwSize);
-		RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&PreloadSoundFonts, &dwSize);
-		RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&SleepStates, &dwSize);
-		RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&SincInter, &dwSize);
-		RegQueryValueEx(hKey, L"SincConv", NULL, &dwType, (LPBYTE)&SincConv, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreSysEx", NULL, &dwType, (LPBYTE)&IgnoreSysEx, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&IgnoreSysReset, &dwSize);
-		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&DontMissNotes, &dwSize);
-		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&OutputVolume, &dwSize);
-		RegQueryValueEx(hKey, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&VolumeMonitor, &dwSize);
+		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
+		RegQueryValueEx(hKey, L"AlternativeCPU", NULL, &dwType, (LPBYTE)&ManagedSettings.AlternativeCPU, &dwSize);
+		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&ManagedSettings.EnableSFX, &dwSize);
+		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
+		RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
+		RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxRenderingTime, &dwSize);
+		RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&ManagedSettings.DefaultSFList, &dwSize);
+		RegQueryValueEx(hKey, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableNotesFadeOut, &dwSize);
+		RegQueryValueEx(hKey, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&ManagedSettings.FullVelocityMode, &dwSize);
+		RegQueryValueEx(hKey, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVelIgnore, &dwSize);
+		RegQueryValueEx(hKey, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&ManagedSettings.LimitTo88Keys, &dwSize);
+		RegQueryValueEx(hKey, L"LiveChanges", NULL, &dwType, (LPBYTE)&ManagedSettings.LiveChanges, &dwSize);
+		RegQueryValueEx(hKey, L"MinVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MinVelIgnore, &dwSize);
+		RegQueryValueEx(hKey, L"MT32Mode", NULL, &dwType, (LPBYTE)&ManagedSettings.MT32Mode, &dwSize);
+		if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
+		else ManagedSettings.NotesCatcherWithAudio = FALSE;
+		RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
+		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVoices, &dwSize);
+		RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&ManagedSettings.PreloadSoundFonts, &dwSize);
+		RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&ManagedSettings.SleepStates, &dwSize);
+		RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&ManagedSettings.SincInter, &dwSize);
+		RegQueryValueEx(hKey, L"SincConv", NULL, &dwType, (LPBYTE)&ManagedSettings.SincConv, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreSysEx", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreSysEx, &dwSize);
+		RegQueryValueEx(hKey, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreSysReset, &dwSize);
+		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&ManagedSettings.DontMissNotes, &dwSize);
+		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&ManagedSettings.OutputVolume, &dwSize);
+		RegQueryValueEx(hKey, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
 		RegCloseKey(hKey);
 
-		if (vms2emutemp != DontMissNotes) {
+		if (DontMissNotesTemp != ManagedSettings.DontMissNotes) {
 			ResetSynth(1);
 		}
-		if (!Between(MinVelIgnore, 1, 127)) { MinVelIgnore = 1; }
-		if (!Between(MaxVelIgnore, 1, 127)) { MaxVelIgnore = 1; }
-
+		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
+		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
 		//cake
-		sound_out_volume_float = (float)OutputVolume / 10000.0f;
+		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
 		ChVolumeStruct.fCurrent = 1.0f;
 		ChVolumeStruct.fTarget = sound_out_volume_float;
 		ChVolumeStruct.fTime = 0.0f;
@@ -450,15 +449,15 @@ void LoadSettingsRT()
 		CheckUp(ERRORCODE, L"KSVolFXSet", FALSE);
 
 		// stuff
-		if (AlternativeCPU != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, MaxRenderingTime);
+		if (ManagedSettings.AlternativeCPU != 1) BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 
-		BASS_ChannelFlags(KSStream, EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		BASS_ChannelFlags(KSStream, NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		BASS_ChannelFlags(KSStream, IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		BASS_ChannelFlags(KSStream, SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+		BASS_ChannelFlags(KSStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+		BASS_ChannelFlags(KSStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+		BASS_ChannelFlags(KSStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+		BASS_ChannelFlags(KSStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
 
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_SRC, SincConv);
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, DisableNotesFadeOut);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
 	}
 	catch (...) {
 		CrashMessage(L"LoadSettingsRT");
@@ -472,7 +471,7 @@ void LoadCustomInstruments() {
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
 	lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\ChanOverride", 0, KEY_ALL_ACCESS, &hKey);
-	RegQueryValueEx(hKey, L"overrideinstruments", NULL, &dwType, (LPBYTE)&OverrideInstruments, &dwSize);
+	RegQueryValueEx(hKey, L"overrideinstruments", NULL, &dwType, (LPBYTE)&ManagedSettings.OverrideInstruments, &dwSize);
 	for (int i = 0; i <= 15; ++i) {
 		RegQueryValueEx(hKey, cbankname[i], NULL, &dwType, (LPBYTE)&cbank[i], &dwSize);
 		RegQueryValueEx(hKey, cpresetname[i], NULL, &dwType, (LPBYTE)&cpreset[i], &dwSize);
@@ -482,12 +481,12 @@ void LoadCustomInstruments() {
 
 void Panic() {
 	//Panic system
-	if (AlternativeCPU == 1) {
+	if (ManagedSettings.AlternativeCPU == 1) {
 		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_CPU, 100.0f);
-		float MaxRenderingTimeF = (float)MaxRenderingTime;
+		float MaxRenderingTimeF = (float)ManagedSettings.MaxRenderingTime;
 
 		if (RenderingTime >= (MaxRenderingTimeF - 3.0f)) {
-			int NewMaxVoices = MaxVoices - ((MaxVoices / 8) * (int)(RenderingTime - MaxRenderingTimeF));
+			int NewMaxVoices = ManagedSettings.MaxVoices - ((ManagedSettings.MaxVoices / 8) * (int)(RenderingTime - MaxRenderingTimeF));
 
 			if (NewMaxVoices < 1) {
 				NewMaxVoices = 1;
@@ -496,16 +495,16 @@ void Panic() {
 			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, NewMaxVoices);
 		}
 		else {
-			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, MaxVoices);
+			BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
 		}
 	}
 	else {
-		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, MaxVoices);
+		BASS_ChannelSetAttribute(KSStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
 	}
 }
 
 int AudioRenderingType(int value) {
-	if (CurrentEngine == ASIO_ENGINE) return BASS_SAMPLE_FLOAT;
+	if (ManagedSettings.CurrentEngine == ASIO_ENGINE) return BASS_SAMPLE_FLOAT;
 	else {
 		if (value == 1)
 			return BASS_SAMPLE_FLOAT;
@@ -546,7 +545,7 @@ void WatchdogCheck()
 
 void CheckVolume() {
 	try {
-		if (VolumeMonitor == 1 && CurrentEngine > 0) {
+		if (ManagedSettings.VolumeMonitor == 1 && ManagedSettings.CurrentEngine > AUDTOWAV) {
 			HKEY hKey;
 			long lResult;
 			float levels[2];
@@ -555,10 +554,10 @@ void CheckVolume() {
 			DWORD left, right;
 			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 
-			if (CurrentEngine == DSOUND_ENGINE || CurrentEngine == WASAPI_ENGINE) {
-				BASS_ChannelGetLevelEx(KSStream, levels, (MonoRendering ? 0.01f : 0.02f), (MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+			if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+				BASS_ChannelGetLevelEx(KSStream, levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 			}
-			else if (CurrentEngine == ASIO_ENGINE)
+			else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
 			{
 				levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
 				levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
@@ -603,8 +602,12 @@ void FillContentDebug(
 	PipeContent += "\nBitApp = ";
 	PipeContent += bitapp;
 
-	for (int i = 0; i <= 15; ++i) PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
+	for (int i = 0; i <= 15; ++i) {
+		ManagedDebugInfo.ActiveVoices[i] = cvvalues[i];
+		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
+	}
 
+	ManagedDebugInfo.RenderingTime = CCUI0;
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
@@ -630,7 +633,7 @@ double outlatency = 0.0;
 void ParseDebugData() {
 	BASS_ChannelGetAttribute(KSStream, BASS_ATTRIB_CPU, &RenderingTime);
 
-	if (CurrentEngine == ASIO_ENGINE) {
+	if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 		rate = BASS_ASIO_GetRate();
 		CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
 		inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
@@ -653,10 +656,10 @@ void SendDebugDataToPipe() {
 		QWORD ramusageint = static_cast<QWORD>(ramusage);
 
 		long long TimeDuringDebug = TimeNow();
-
+		
 		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KSDAPIEnabled,
-			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, NotesCatcherWithAudio ? 0.0f : TimeDuringDebug - start4,
-			inlatency, outlatency, bufferoverload);
+			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, ManagedSettings.NotesCatcherWithAudio ? 0.0f : TimeDuringDebug - start4,
+			inlatency, outlatency, FALSE /* It's supposed to be a buffer overload check */);
 	}
 	catch (...) {
 		CrashMessage(L"DebugPipePush");
@@ -729,7 +732,7 @@ void ReloadSFList(DWORD whichsflist){
 void keybindings()
 {
 	try {
-		if (FastHotkeys == 1) {
+		if (ManagedSettings.FastHotkeys == 1) {
 			BOOL ControlPressed = (GetAsyncKeyState(VK_CONTROL) & (1 << 15));
 			if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
 				ReloadSFList(1);
@@ -763,7 +766,7 @@ void keybindings()
 				ReloadSFList(8);
 				return;
 			}
-			if (Extra8Lists == 1) {
+			if (ManagedSettings.Extra8Lists == 1) {
 				if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
 					ReloadSFList(9);
 					return;
@@ -799,7 +802,7 @@ void keybindings()
 			}
 
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
-				if (CurrentEngine == ASIO_ENGINE) {
+				if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 					BASS_ASIO_ControlPanel();
 				}
 				else {
