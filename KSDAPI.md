@@ -5,7 +5,7 @@ KSDAPI is a group of calls, that allows you to bypass the Windows Multimedia API
 ## How can I implement it in my program?
 It's quite easy actually.
 
-Here's a generic example by [Sono (MarcuzD)](https://github.com/MarcuzD), on how to make use of the KSDirect API.
+Here's a generic example by [Sono (MarcuzD)](https://github.com/MarcuzD), on how to make use of the KSDirect API.<br />
 It works just like WinMM would, we'll see later the differences between using WinMM as usual, and using WinMM together with KSDirect:
 ```c
 ...
@@ -92,21 +92,22 @@ MMRESULT WINAPI _KOutShortMsg(HMIDIOUT hmo, DWORD msg) {
 
 As you can see, we're basically replacing the loaded **midiOutShortMsg** call with our own call, **_KOutShortMsg**, which redirects the messages from WinMM directly to (*lol*) the KSDirect API calls.
 
-## Is it mandatory for me to implement these features, to use Keppy's Synthesizer?
-Of course not! These calls are a thing for people who care about low latency and performance.
-The driver will work fine with the default WinMM => modMessage system too.
+## Is it mandatory for me to implement these features, to use Keppy's Synthesizer?<br />
+Of course not! These calls are a thing for people who care about low latency and performance.<br />
+The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of May 1st 2018, these are the functions available in the KSDirect API.
-The **"NoBuf"** calls bypass the built-in buffer in Keppy's Synthesizer, and directly send the events to the events processing system.
-### **InitializeKSStream**
+As of May 1st 2018, these are the functions available in the KSDirect API.<br />
+The **"NoBuf"** calls bypass the built-in buffer in Keppy's Synthesizer, and directly send the events to the events processing system.<br />
+### **InitializeKSStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.
 
 ```c
 void(WINAPI*KSInit)() = 0;
 KSInit = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "InitializeKSStream");
 ```
+<hr />
 
 ### **TerminateKSStream**
 It tells the driver to wrap up its stuff and to leave! There are no arguments.
@@ -115,6 +116,7 @@ It tells the driver to wrap up its stuff and to leave! There are no arguments.
 void(WINAPI*KSStop)() = 0;
 KSStop = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "TerminateKSStream");
 ```
+<hr />
 
 ### **ResetKSStream**
 Resets the MIDI channels. There are no arguments.
@@ -123,6 +125,7 @@ Resets the MIDI channels. There are no arguments.
 void(WINAPI*KSReset)() = 0;
 KSReset = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "ResetKSStream");
 ```
+<hr />
 
 ### **ReturnKSDAPIVer**
 It returns the version of the KSDirect API, as a string. There are no arguments available.
@@ -132,33 +135,100 @@ Used by Keppy's Synthesizer Configurator.
 char const*(WINAPI*KSDAPIVer)() = 0;
 KSDAPIVer = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "ReturnKSDAPIVer");
 ```
+<hr />
 
 ### **IsKSDAPIAvailable**
-A generic check, useful for people who want to see if KSDAPI v1.2+ is available.
-You NEED to call this function at least once, in order to switch the KSDAPI status value in the debug window to active.
+A generic check, useful for people who want to see if KSDAPI v1.2+ is available.<br />
+You NEED to call this function at least once, in order to switch the KSDAPI status value in the debug window to active.<br />
 There are no arguments available, and you have to manually catch the exception, if the function isn't available.
 
 ```c
 BOOL(WINAPI*KSDAPIStatus)() = 0;
 KSDAPIStatus = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "IsKSDAPIAvailable");
 ```
+<hr />
+
+### **ChangeDriverSettings**
+Allows developers to change the driver's settings from within the app, rather than asking the user to change them in the configurator.<br/>
+Sending **0/nullptr** will make it fallback to the settings from the registry.<br />
+The available arguments are:
+
+- `const Settings* Struct`: A pointer to your struct.
+- `DWORD StructSize`: The size of the struct.
+```c
+VOID(WINAPI*KSChangeSettings)(const Settings* Struct, DWORD StructSize) = 0;
+KSChangeSettings = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "ChangeDriverSettings");
+...
+	Settings MySettings;
+	
+	// Change your settings
+	Settings.MaxVoices = 4;
+	Settings.AudioFrequency = 22050;
+	Settings.LiveChanges = TRUE;
+	
+	// Push the settings to the driver
+	KSChangeSettings(&MySettings, sizeof(MySettings));
+	
+	// Now make the driver fallback to the settings from the registry
+	KSChangeSettings(0, 0);
+...
+```
+You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/Keppy-s-Synthesizer/blob/master/KeppySynth/val.h)
+<hr />
+
+### **GetDriverDebugInfo**
+Allows developers to get the driver's current rendering time and the voices that are currently active in the audio stream.<br />
+
+```c
+DebugInfo*(WINAPI*KSGetDebugInfo)() = 0;
+KSGetDebugInfo = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "GetDriverDebugInfo");
+...
+	DebugInfo* DebugInfoFromDriver;
+	DebugInfoFromDriver = KSGetDebugInfo();
+	
+	//Do something with the info
+	printf("Current rendering time: %d\n", DebugInfoFromDriver->RenderingTime); 
+...
+```
+You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/Keppy-s-Synthesizer/blob/master/KeppySynth/val.h)
+<hr />
+
+### **LoadCustomSoundFontsList**
+Allows developers to load their own custom SoundFonts or SoundFonts lists.<br />
+The available arguments are:
+
+- `const TCHAR* Directory`: A pointer to the unicode char array, containing the path.
+```c
+VOID(WINAPI*KSLoadCustomSFList)(const TCHAR* Directory) = 0;
+KSLoadCustomSFList = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "LoadCustomSoundFontsList");
+...
+	TCHAR Directory[MAX_PATH];
+	wcscpy_s(Directory, MAX_PATH, _TEXT("C:\\MySF.sf2"));
+	
+	// Forward it to the driver
+	KSLoadCustomSFList(&Directory);
+...
+```
+<hr />
 
 ### **SendDirectData/SendDirectDataNoBuf**
-Allows you to send MIDI events to the driver. The available arguments are:
+Allows you to send MIDI events to the driver.<br />
+The available arguments are:
 
-- *DWORD dwMsg*: The MIDI event to send to the driver.
+- `DWORD dwMsg`: The MIDI event to send to the driver.
 ```c
 MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
 KShortMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectData"); // Or SendDirectDataNoBuf
 ```
+<hr />
 
 ### **SendDirectLongData/SendDirectLongDataNoBuf**
-Allows you to send MIDIHDR/System Exclusive events to the driver.
-Both functions do the same thing. SendDirectLongDataNoBuf directly calls SendDirectLongData. I left NoBuf for retrocompatibility purpose with old patches.
-**REMEMBER** to handle the MIDIHDR preparation and the callbacks yourself, if you're not using Keppy's Synthesizer through WinMM!
+Allows you to send MIDIHDR/System Exclusive events to the driver.<br />
+Both functions do the same thing. SendDirectLongDataNoBuf directly calls SendDirectLongData. I left NoBuf for retrocompatibility purpose with old patches.<br />
+**REMEMBER** to handle the MIDIHDR preparation and the callbacks yourself, if you're not using Keppy's Synthesizer through WinMM!<br />
 The available arguments are:
 
-- *MIDIHDR* IIMidiHdr*: The pointer to the MIDIHDR.
+- `MIDIHDR* IIMidiHdr`: The pointer to the MIDIHDR.
 ```c
 MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr) = 0;
 KLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectLongData"); // Or SendDirectLongDataNoBuf

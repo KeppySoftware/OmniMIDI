@@ -125,7 +125,7 @@ void DoResetClient() {
 }
 
 char const* WINAPI ReturnKSDAPIVer() {
-	return "v1.11 (Release)";
+	return "v1.12 (Release)";
 }
 
 BOOL WINAPI IsKSDAPIAvailable()  {
