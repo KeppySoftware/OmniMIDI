@@ -1363,7 +1363,7 @@ namespace KeppySynthConfigurator
             return ((MachineType)machineUint).ToString();
         }
 
-        public static Boolean ApplyWinMMWRPPatch(Boolean Is64Bit)
+        public static Boolean ApplyWinMMWRPPatch(Boolean Is64Bit, Boolean DAWMode)
         {
             if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1) && Properties.Settings.Default.PatchInfoShow == true)
             {
@@ -1396,8 +1396,8 @@ namespace KeppySynthConfigurator
                     {
                         RemovePatchFiles(WinMMDialog.FileName, true);
 
-                        if (Is64Bit) File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64wrp);
-                        else File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32wrp);
+                        if (Is64Bit) File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm64wrp);
+                        else File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm32wrp);
 
                         return true;
                     }

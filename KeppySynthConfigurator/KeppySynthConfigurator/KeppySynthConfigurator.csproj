@@ -207,7 +207,7 @@
       <DependentUpon>Telemetry.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\Telemetry\TelemetryExt.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
+	<Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -381,7 +381,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
@@ -401,6 +401,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\WinMM64WRP\winmm64DAW.dll" />
+    <None Include="Resources\WinMM32WRP\winmm32DAW.dll" />
     <None Include="Resources\Pictures\InfoBk.png" />
     <None Include="Resources\WinMM64WRP\winmm64wrp.dll" />
     <None Include="Resources\WinMM32WRP\winmm32wrp.dll" />

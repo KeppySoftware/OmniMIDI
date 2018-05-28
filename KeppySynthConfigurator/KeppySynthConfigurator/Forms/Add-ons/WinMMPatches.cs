@@ -22,10 +22,10 @@ namespace KeppySynthConfigurator
 
         private void WMMW32_Click(object sender, EventArgs e)
         {
-            if (Functions.ApplyWinMMWRPPatch(false))
+            if (Functions.ApplyWinMMWRPPatch(false, false))
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "Successfully patched!";
+                PatchStatusLabel.Text = "x86 stock patch installed!";
             }
             else
             {
@@ -36,10 +36,38 @@ namespace KeppySynthConfigurator
 
         private void WMMW64_Click(object sender, EventArgs e)
         {
-            if (Functions.ApplyWinMMWRPPatch(true))
+            if (Functions.ApplyWinMMWRPPatch(true, false))
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "Successfully patched!";
+                PatchStatusLabel.Text = "x64 stock patch installed!";
+            }
+            else
+            {
+                PatchStatusLabel.ForeColor = Color.DarkRed;
+                PatchStatusLabel.Text = "Error!";
+            }
+        }
+
+        private void WMMD32_Click(object sender, EventArgs e)
+        {
+            if (Functions.ApplyWinMMWRPPatch(false, true))
+            {
+                PatchStatusLabel.ForeColor = Color.DarkGreen;
+                PatchStatusLabel.Text = "x86 DAW patch installed!";
+            }
+            else
+            {
+                PatchStatusLabel.ForeColor = Color.DarkRed;
+                PatchStatusLabel.Text = "Error!";
+            }
+        }
+
+        private void WMMD64_Click(object sender, EventArgs e)
+        {
+            if (Functions.ApplyWinMMWRPPatch(true, true))
+            {
+                PatchStatusLabel.ForeColor = Color.DarkGreen;
+                PatchStatusLabel.Text = "x64 DAW patch installed!";
             }
             else
             {
@@ -53,7 +81,7 @@ namespace KeppySynthConfigurator
             if (Functions.RemoveWinMMPatch())
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "Successfully unpatched!";
+                PatchStatusLabel.Text = "Successfully removed patch!";
             }
             else
             {
@@ -62,9 +90,16 @@ namespace KeppySynthConfigurator
             }
         }
 
-        private void DifferencesPatch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void BMPatch_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            Process.Start("https://github.com/KeppySoftware/Keppy-s-Synthesizer/wiki/What's-the-difference-between-the-WinMM-patches%3F");
+            MessageBox.Show("This patch should be used when pure raw performance is needed, and you don't need to communicate with other MIDI out devices.\n\n" +
+                "You should use this patch if you want the best MIDI performance with Black MIDIs.", "Keppy's Synthesizer - Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void DAWPatch_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            MessageBox.Show("This patch should be used when you want good performance without losing access to other MIDI out devices.\n\n" +
+                "You should use this patch if you want to use KSDAPI together with other MIDI out devices, such as on FL Studio or Cubase.", "Keppy's Synthesizer - Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void OKClose_Click(object sender, EventArgs e)

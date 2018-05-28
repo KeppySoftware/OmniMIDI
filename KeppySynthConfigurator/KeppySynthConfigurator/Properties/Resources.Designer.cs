@@ -537,6 +537,26 @@ namespace KeppySynthConfigurator.Properties {
                 return ((byte[])(obj));
             }
         }
+		
+		/// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] winmm32DAW {
+            get {
+                object obj = ResourceManager.GetObject("winmm32DAW", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] winmm64DAW {
+            get {
+                object obj = ResourceManager.GetObject("winmm64DAW", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
         
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
