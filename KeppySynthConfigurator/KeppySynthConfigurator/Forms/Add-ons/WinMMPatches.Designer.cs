@@ -134,7 +134,7 @@
             this.DAWPatch.Size = new System.Drawing.Size(223, 71);
             this.DAWPatch.TabIndex = 9;
             this.DAWPatch.TabStop = false;
-            this.DAWPatch.Text = "For DAWSs";
+            this.DAWPatch.Text = "For DAWs";
             this.DAWPatch.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.DAWPatch_HelpRequested);
             // 
             // WMMD32
