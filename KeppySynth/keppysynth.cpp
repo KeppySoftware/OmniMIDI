@@ -22,8 +22,9 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSWASAPIDEF(f) (WINAPI *f)
 #define Between(value, a, b) (value <= b && value >= a)
 
-#define ERRORCODE 0
-#define CAUSE 1
+#define ERRORCODE		0
+#define CAUSE			1
+#define LONGMSG_MAXSIZE	65535
 
 #include "stdafx.h"
 #include <Psapi.h>
@@ -152,7 +153,7 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 	}
 }
 
-DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
+DWORD modGetCaps(INT_PTR uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	try {
 		MIDIOUTCAPSA * myCapsA;
 		MIDIOUTCAPSW * myCapsW;
@@ -206,6 +207,9 @@ DWORD modGetCaps(UINT uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
 
 		const GUID CLSIDKEPSYNTH = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
+
+		// Not yet
+		// CapsSupport |= MIDICAPS_STREAM;
 
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
@@ -288,7 +292,7 @@ LONG DoOpenClient() {
 	return MMSYSERR_NOERROR;
 }
 
-STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
+STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
 	DWORD retval = MMSYSERR_NOERROR;
 
@@ -296,18 +300,20 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_DATA:
 		// Parse the data lol
 		return _PrsData(uMsg, dwParam1, dwParam2);
-	case MODM_LONGDATA:
+	case MODM_LONGDATA: // case MODM_STRMDATA:
 		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR *)dwParam1;
+		IIMidiHdr = (MIDIHDR*)dwParam1;
 
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+		if (!IIMidiHdr || (sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE)) return MMSYSERR_INVALPARAM;	// The buffer doesn't exist, invalid 
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;							// The buffer is not prepared
+		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;								// The buffer is already being played
 
 		// Mark the buffer as in queue
 		IIMidiHdr->dwFlags &= ~MHDR_DONE;
 		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 		// Do the stuff with it, if it's not to be ignored
-		if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+		if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
 		// It has to be ignored, send info to console
 		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
 
@@ -318,6 +324,31 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		// Tell the app that the buffer has been played
 		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, dwParam1, 0);
 		return MMSYSERR_NOERROR;
+	case MODM_STRMDATA:
+		/* 
+		// Reference the MIDIHDR
+		IIMidiHdr = (MIDIHDR*)dwParam1;
+
+		if (!IIMidiHdr || !(IIMidiHdr->dwFlags & MHDR_ISSTRM)) return MMSYSERR_INVALPARAM;		// The buffer doesn't exist, invalid 
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;					// The buffer is not prepared
+		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;						// The buffer is already being played
+
+		// Mark the buffer as in queue
+		IIMidiHdr->dwFlags &= ~MHDR_DONE;
+		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+
+		// Todo, I don't know how to play the stream yet.		
+
+		// Mark the buffer as done
+		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+		IIMidiHdr->dwFlags |= MHDR_DONE;
+
+		// Tell the app that the buffer has been played
+		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, dwParam1, 0);
+		return MMSYSERR_NOERROR;
+		*/
+
+		return MMSYSERR_NOTSUPPORTED;
 	case MODM_OPEN:
 		// Parse callback and instance
 		KSCallback = reinterpret_cast<MIDIOPENDESC*>(dwParam1)->dwCallback;
@@ -332,20 +363,24 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return retval;
 	case MODM_PREPARE:
 		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR *)dwParam1;
+		IIMidiHdr = (MIDIHDR*)dwParam1;
+
+		if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;			// The buffer doesn't exist or is too big, invalid parameter
 
 		// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-		VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
+		if (!VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
+			return MMSYSERR_NOMEM;
 
 		// Mark the buffer as prepared, and say that everything is oki-doki
 		IIMidiHdr->dwFlags |= MHDR_PREPARED;
 		return MMSYSERR_NOERROR;
 	case MODM_UNPREPARE:
 		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR *)dwParam1;
+		IIMidiHdr = (MIDIHDR*)dwParam1;
 
 		// Check if the MIDIHDR buffer is valid
 		if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
 		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
 
 		IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
@@ -359,8 +394,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_GETDEVCAPS:
 		// Return KS' caps to the app
 		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
-	case MODM_STRMDATA:
-		return MMSYSERR_NOTSUPPORTED;
 	case MODM_GETVOLUME:
 		// Tell the app the current output volume of the driver
 		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
