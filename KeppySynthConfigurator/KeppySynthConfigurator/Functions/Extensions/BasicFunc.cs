@@ -1372,9 +1372,8 @@ namespace KeppySynthConfigurator
                 MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "Keppy's Synthesizer - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            OpenFileDialog WinMMDialog;
             TryAgain:
-            WinMMDialog = new OpenFileDialog();
+            OpenFileDialog WinMMDialog = new OpenFileDialog();
             try
             {
                 WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
@@ -1405,6 +1404,7 @@ namespace KeppySynthConfigurator
             }
             catch (Exception ex)
             {
+                WinMMDialog.Dispose();
                 ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
                 goto TryAgain;
             }
@@ -1414,8 +1414,8 @@ namespace KeppySynthConfigurator
 
         public static Boolean RemoveWinMMPatch()
         {
-            OpenFileDialog WinMMDialog = new OpenFileDialog();
             TryAgain:
+            OpenFileDialog WinMMDialog = new OpenFileDialog();
             try
             {
                 WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
@@ -1429,6 +1429,7 @@ namespace KeppySynthConfigurator
             }
             catch
             {
+                WinMMDialog.Dispose();
                 ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
                 goto TryAgain;
             }

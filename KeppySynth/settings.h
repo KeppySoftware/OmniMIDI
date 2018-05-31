@@ -801,13 +801,13 @@ void keybindings()
 				}
 			}
 
+			TCHAR configuratorapp[MAX_PATH];
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
 				if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 					BASS_ASIO_ControlPanel();
 				}
 				else {
-					TCHAR configuratorapp[MAX_PATH];
-					BOOL run = TRUE;
+
 					if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 					{
 						PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthMixerWindow.exe"));
@@ -818,15 +818,13 @@ void keybindings()
 				}
 			}
 			else if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x30) & 0x8000) {
-				TCHAR configuratorapp[MAX_PATH];
-				BOOL run = TRUE;
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
 				{
 					PathAppend(configuratorapp, _T("\\keppysynth\\KeppySynthDebugWindow.exe"));
 					ShellExecute(NULL, L"open", configuratorapp, NULL, NULL, SW_SHOWNORMAL);
 					Sleep(10);
-					return;
 				}
+				return;
 			}
 			if (GetAsyncKeyState(VK_INSERT) & 1) {
 				ResetSynth(0);
