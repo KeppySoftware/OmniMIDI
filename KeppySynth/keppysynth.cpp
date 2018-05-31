@@ -19,7 +19,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define BASSDEF(f) (WINAPI *f)
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
-#define BASSWASAPIDEF(f) (WINAPI *f)
+// #define BASSWASAPIDEF(f) (WINAPI *f)
 #define Between(value, a, b) (value <= b && value >= a)
 
 #define ERRORCODE		0
@@ -50,7 +50,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>
-#include <bassmix.h>
+// #include <basswasapi.h>
 
 // Sleep
 typedef LONG(NTAPI*NDE)(BOOLEAN dwAlertable, PLARGE_INTEGER dwDelayInterval);
@@ -66,28 +66,28 @@ static DWORD(*_PlayBufDataChk)(void) = 0;
 // and passes the events without checking for anything
 
 // Blinx best game
-static HINSTANCE bass = 0;				// bass handle
-static HINSTANCE bassasio = 0;			// bassasio handle
-static HINSTANCE bassenc = 0;			// bassenc handle
-static HINSTANCE bassmidi = 0;			// bassmidi handle
+static HMODULE bass = 0;			// bass handle
+static HMODULE bassasio = 0;		// bassasio handle
+static HMODULE bassenc = 0;			// bassenc handle
+static HMODULE bassmidi = 0;		// bassmidi handle
+// static HMODULE basswasapi = 0;	// basswasapi handle
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
+// #define LOADBASSWASAPIFUNCTION(f) *((void**)&f) = GetProcAddress(basswasapi, #f)
 
 // F**k Sleep() tbh
 void NTSleep(__int64 usec) {
-	HANDLE timer;
 	LARGE_INTEGER ft;
-
 	ft.QuadPart = usec;
 	NtDelayExecution(FALSE, &ft);
 }
 
-#define _WAIT NTSleep(-100)									// Normal wait
+#define _WAIT NTSleep(-100)													// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
-#define _VLWAIT NTSleep(-200000)							// Very slow wait
+#define _VLWAIT NTSleep(-200000)											// Very slow wait
 #define _CFRWAIT NTSleep(ManagedSettings.SleepStates ? -15667 : -16667)		// Cap framerate wait
 
 // LightweightLock by Brad Wilson

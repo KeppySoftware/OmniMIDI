@@ -3,7 +3,7 @@ Keppy's Synthesizer stream init
 */
 
 void MT32SetInstruments() {
-	if (ManagedSettings.MT32Mode == 1) {
+	if (ManagedSettings.MT32Mode) {
 		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_PROGRAM, 0);
 		BASS_MIDI_StreamEvent(KSStream, 1, MIDI_EVENT_PROGRAM, 36);
 		BASS_MIDI_StreamEvent(KSStream, 2, MIDI_EVENT_PROGRAM, 48);
@@ -22,7 +22,7 @@ void MT32SetInstruments() {
 		BASS_MIDI_StreamEvent(KSStream, 15, MIDI_EVENT_PROGRAM, 0);
 	}
 	else {
-		if (ManagedSettings.OverrideInstruments == 1) {
+		if (ManagedSettings.OverrideInstruments) {
 			for (int i = 0; i <= 15; ++i) {
 				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_BANK, cbank[i]);
 				BASS_MIDI_StreamEvent(KSStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
@@ -153,6 +153,28 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 }
 
 /*
+DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
+{
+	start2 = TimeNow();
+	if (reset_synth) {
+		reset_synth = 0;
+		BASS_MIDI_StreamEvent(KSStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+	}
+
+	DWORD data = BASS_ChannelGetData(KSStream, buffer, length);
+
+	if (ManagedSettings.NotesCatcherWithAudio) {
+		MT32SetInstruments();
+		_PlayBufDataChk();
+	}
+	else if (!EPThread) InitializeNotesCatcherThread();
+
+	if (data == -1) return 0;
+	return data;
+}
+*/
+
+/*
 / Something I could use in Keppy's MIDI Converter
 BOOL CALLBACK MidiFilterProc(HSTREAM handle, DWORD track, BASS_MIDI_EVENT *event, BOOL seeking, void *user)
 {
@@ -203,13 +225,8 @@ BOOL CALLBACK MidiFilterProc(HSTREAM handle, DWORD track, BASS_MIDI_EVENT *event
 void InitializeStream(INT32 mixfreq) {
 	bool isdecode = FALSE;
 
-	PrintToConsole(FOREGROUND_RED, 1, "Creating stream for external engine...");
-	if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
-		if (AudioOutput == 0) {
-			isdecode = TRUE;
-		}
-		else isdecode = FALSE;
-	}
+	PrintToConsole(FOREGROUND_RED, 1, "Creating stream...");
+	if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) isdecode = FALSE;
 	else isdecode = TRUE;
 
 	if (KSStream) BASS_StreamFree(KSStream);
@@ -221,11 +238,11 @@ void InitializeStream(INT32 mixfreq) {
 	// BASS_MIDI_StreamSetFilter(KSStream, TRUE, MidiFilterProc, NULL);
 	CheckUp(ERRORCODE, L"KSStreamCreate", TRUE);
 	
-	PrintToConsole(FOREGROUND_RED, 1, "External engine stream enabled.");
+	PrintToConsole(FOREGROUND_RED, 1, "Stream enabled.");
 }
 
 void InitializeBASSEnc() {
-	PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc stream...");
+	PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc output...");
 
 	// Cast restart values
 	std::wostringstream rv;
@@ -275,6 +292,45 @@ void InitializeBASSEnc() {
 
 	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
 }
+
+/* 
+LONG WASAPIDetectID() {
+	try {
+		BASS_WASAPI_DEVICEINFO info;
+		char OutputName[MAX_PATH] = "None";
+
+		HKEY hKey;
+		LSTATUS lResultA;
+		LSTATUS lResultB;
+		DWORD dwType = REG_SZ;
+		DWORD dwSize = sizeof(OutputName);
+
+		lResultA = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_READ, &hKey);
+		lResultB = RegQueryValueExA(hKey, "WASAPIOutput", NULL, &dwType, (LPBYTE)&OutputName, &dwSize);
+
+		for (DWORD CurrentDevice = 0; BASS_WASAPI_GetDeviceInfo(CurrentDevice, &info); CurrentDevice++)
+		{
+			if ((strcmp(OutputName, info.name) == 0) &&
+				!(info.flags & BASS_DEVICE_LOOPBACK) &&
+				!(info.flags & BASS_DEVICE_INPUT) &&
+				!(info.flags & BASS_DEVICE_UNPLUGGED) &&
+				!(info.flags & BASS_DEVICE_DISABLED))
+			{
+				RegCloseKey(hKey);
+				return CurrentDevice;
+			}
+		}
+
+		RegCloseKey(hKey);
+		return 0;
+	}
+	catch (...) {
+		CrashMessage(L"WASAPIDetectID");
+		ExitThread(0);
+		throw;
+	}
+}
+*/
 
 ULONG ASIODevicesCount() {
 	int count = 0;
@@ -328,6 +384,43 @@ void InitializeBASSFinal() {
 		CheckUp(ERRORCODE, L"KSChannelPlay", TRUE);
 	}
 }
+
+/*
+void InitializeWASAPI() {
+	ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+
+	BASS_WASAPI_INFO infoW;
+	BASS_WASAPI_DEVICEINFO infoDW;
+	LONG DeviceID = WASAPIDetectID();
+
+	BASS_WASAPI_Init(DeviceID, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
+	CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
+	BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
+	CheckUp(ERRORCODE, L"KSWASAPIGetDeviceInfo");
+	BASS_WASAPI_GetInfo(&infoW);
+	CheckUp(ERRORCODE, L"KSWASAPIGetBufInfo");
+	BASS_WASAPI_Free();
+	CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
+
+	InitializeStream(infoDW.mixfreq);
+
+	if (BASS_WASAPI_Init(DeviceID, 0, 2,
+		BASS_WASAPI_BUFFER | BASS_WASAPI_EVENT,
+		(wasapiex ? ((float)frames / 1000.0f) : infoW.buflen + 5),
+		0, WASAPIProc, NULL)) {
+		CheckUp(ERRORCODE, L"KSInitWASAPI");
+		BASS_WASAPI_Start();
+		CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
+	}
+	else {
+		MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to BASSEnc...\nPress OK to continue.", L"Keppy's Synthesizer - Can not open WASAPI device", MB_OK | MB_ICONERROR);
+		ManagedSettings.CurrentEngine = AUDTOWAV;
+		InitializeStream(ManagedSettings.AudioFrequency);
+		InitializeBASSEnc();
+		CheckUp(ERRORCODE, L"KSInitEnc");
+	}
+}
+*/
 
 void InitializeWAVEnc() {
 	InitializeStream(ManagedSettings.AudioFrequency);

@@ -763,9 +763,9 @@ namespace KeppySynthDebugWindow
                 RAMUsageV.Text = GetCurrentRAMUsage(RAMUsage);
                 CMA.Text = String.Format("{0} ({1})", currentappreturn, bitappreturn); // Removes garbage characters
 
-                Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("VoicesLimit", "512")));
+                Int32 AVColor = (int)Math.Round((double)(100 * Convert.ToInt32(GetActiveVoices())) / Convert.ToInt32(Settings.GetValue("MaxVoices", "512")));
 
-                if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("VoicesLimit", "512")))
+                if (Convert.ToInt32(GetActiveVoices()) > Convert.ToInt32(Settings.GetValue("MaxVoices", "512")))
                     AV.Font = new Font(AV.Font, FontStyle.Bold);
                 else
                     AV.Font = new Font(AV.Font, FontStyle.Regular);
@@ -774,19 +774,19 @@ namespace KeppySynthDebugWindow
                 AV.Text = GetActiveVoices();
                 AvV.Text = GetAverageVoices();
 
-                if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "0")) == 1)
+                if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "3")) == 0)
                 {
                     RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Italic);
                     RT.Text = "Unavailable"; // If BASS is in encoding mode, BASS usage will stay at constant 100%.
                 }
                 else
                 {
-                    Int32 RTColor = (int)Math.Round((double)(100 * CurCPU) / Convert.ToInt32(Settings.GetValue("cpu", "75")));
+                    Int32 RTColor = (int)Math.Round((double)(100 * CurCPU) / Convert.ToInt32(Settings.GetValue("MaxRenderingTime", "75")));
 
                     if ((CurCPU > Convert.ToInt32(Settings.GetValue("MaxRenderingTime", "75"))) && (Convert.ToInt32(Settings.GetValue("MaxRenderingTime", "75")) != 0))
                     {
                         RT.Font = new System.Drawing.Font(RT.Font, System.Drawing.FontStyle.Bold);
-                        RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU.ToString("0.0"), Settings.GetValue("cpu", "75").ToString());
+                        RT.Text = String.Format("{0}% (Beyond limit!)", CurCPU.ToString("0.0"), Settings.GetValue("MaxRenderingTime", "75").ToString());
                     }
                     else
                     {
