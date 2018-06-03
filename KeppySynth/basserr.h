@@ -277,17 +277,22 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 }
 
 void CrashMessage(LPCWSTR part) {
-	std::wstring ErrorMessage;
-	ErrorMessage.append(L"An error has been detected while trying to execute the following action: ");
-	ErrorMessage.append(part);
-	ErrorMessage.append(L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.");
+	DWORD ErrorID = GetLastError();
+
+	std::wstringstream ErrorMessage;
+	ErrorMessage << L"An error has been detected while trying to execute the following action: " << part;
+	ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID;
+	ErrorMessage << L"\n\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Error at \"" << part << "\) - Fatal error during the execution of the driver." << std::endl;
 
-	MessageBox(NULL, ErrorMessage.c_str() , L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-	exit(0);
-	return;
+	MessageBox(NULL, ErrorMessage.str().c_str() , L"Keppy's Synthesizer - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+
+	stop_thread = TRUE;
+	stop_rtthread = TRUE;
+
+	DebugBreak();
 }
 
 BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {

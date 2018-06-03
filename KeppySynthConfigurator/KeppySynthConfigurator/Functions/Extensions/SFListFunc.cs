@@ -69,7 +69,7 @@ namespace KeppySynthConfigurator
                 return "Unknown format";
         }
 
-        private static Color ReturnColor(String result)
+        public static Color ReturnColor(String result)
         {
             if (result == "@")
                 return SFDisabled;
@@ -303,18 +303,28 @@ namespace KeppySynthConfigurator
             }
         }
 
+        public static string GetSFZValues(string SFToAnalyze)
+        {
+            if (SFToAnalyze.ToLower().IndexOf('=') != -1)
+                return SFToAnalyze.Substring(0, SFToAnalyze.IndexOf('|'));
+            else
+                return null;
+        }
 
         public static string StripSFZValues(string SFToStrip)
         {
             if (SFToStrip.ToLower().IndexOf('=') != -1)
-            {
-                var matches = System.Text.RegularExpressions.Regex.Matches(SFToStrip, "[0-9]+");
                 return SFToStrip.Substring(SFToStrip.LastIndexOf('|') + 1);
-            }
             else
-            {
                 return SFToStrip;
-            }
+        }
+
+        public static string StripDisabledState(string SFToStrip)
+        {
+            if (SFToStrip.Substring(0, 1) == "@")
+                return SFToStrip.Remove(0, 1);
+            else
+                return SFToStrip;
         }
 
         public static void SaveList(String SelectedList) // Saves the selected list to the hard drive

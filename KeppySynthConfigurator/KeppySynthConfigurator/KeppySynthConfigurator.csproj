@@ -207,7 +207,13 @@
       <DependentUpon>Telemetry.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions\Telemetry\TelemetryExt.cs" />
-	<Compile Include="Properties\Resources.Designer.cs">
+    <Compile Include="Forms\Add-ons\MIDIInPlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Add-ons\MIDIInPlay.Designer.cs">
+      <DependentUpon>MIDIInPlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -285,6 +291,9 @@
     <Compile Include="Forms\Add-ons\WinMMPatches.Designer.cs">
       <DependentUpon>WinMMPatches.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\Add-ons\MIDIInPlay.resx">
+      <DependentUpon>MIDIInPlay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\WinMMPatches.resx">
       <DependentUpon>WinMMPatches.cs</DependentUpon>
     </EmbeddedResource>
@@ -381,7 +390,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />

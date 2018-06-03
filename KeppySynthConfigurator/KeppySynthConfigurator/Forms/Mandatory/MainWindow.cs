@@ -917,28 +917,43 @@ namespace KeppySynthConfigurator
                 if (ExternalListImport.ShowDialog(this) == DialogResult.OK)
                 {
                     SFListFunc.SetLastImportExportPath(Path.GetDirectoryName(ExternalListImport.FileNames[0]));
-                    foreach (string file in ExternalListImport.FileNames)
+                    foreach (string listw in ExternalListImport.FileNames)
                     {
-                        using (StreamReader r = new StreamReader(file))
+                        using (StreamReader r = new StreamReader(listw))
                         {
                             List<string> SFList = new List<string>();
                             string line;
-                            while ((line = r.ReadLine()) != null) // Read the external list and add the items to the selected list
-                            {
 
-                                bool isabsolute = Path.IsPathRooted(line);  // Check if the path to the soundfont is absolute or relative
-                                string relativepath;
-                                string absolutepath;
-                                if (isabsolute == false) // Not absolute, let's convert it
+                            // Read the external list and add the items to the selected list
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                try
                                 {
-                                    relativepath = String.Format("{0}{1}", Path.GetDirectoryName(file), String.Format("\\{0}", line));
-                                    absolutepath = new Uri(relativepath).LocalPath;
-                                    SFList.Add(absolutepath);
+                                    string result = line.Substring(0, 1);
+                                    string newvalue;
+
+                                    if (result == "@")
+                                        line = line.Remove(0, 1);
+
+                                    if (!Path.IsPathRooted(SFListFunc.StripSFZValues(line)))
+                                        line = new Uri(String.Format("{0}{1}{2}",
+                                            SFListFunc.GetSFZValues(line), 
+                                            Path.GetDirectoryName(listw),
+                                            String.Format("\\{0}", SFListFunc.StripSFZValues(line))))
+                                            .LocalPath;
+
+                                    FileInfo file = new FileInfo(SFListFunc.StripSFZValues(line));
+
+                                    ListViewItem SF = new ListViewItem(new[] {
+                                        line,
+                                        SFListFunc.ReturnSoundFontFormat(Path.GetExtension(SFListFunc.StripSFZValues(line))),
+                                        SFListFunc.ReturnSoundFontSize(SFListFunc.StripSFZValues(line), Path.GetExtension(SFListFunc.StripSFZValues(line)), file.Length)
+                                    });
+
+                                    SF.ForeColor = SFListFunc.ReturnColor(result);
+                                    KeppySynthConfiguratorMain.Delegate.Lis.Items.Add(SF);
                                 }
-                                else // Absolute, let's just add it straight away
-                                {
-                                    SFList.Add(line);
-                                }                           
+                                catch { }
                             }
                             SFListFunc.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
                         }
@@ -2099,6 +2114,12 @@ namespace KeppySynthConfigurator
         {
             Program.DebugToConsole(false, "Creating Discord invite...", null);
             Process.Start("https://discord.gg/jUaHPrP");
+        }
+
+        private void MIDIInOutTest_Click(object sender, EventArgs e)
+        {
+            if (Application.OpenForms.OfType<MIDIInPlay>().Count() < 1)
+                new MIDIInPlay().Show();
         }
 
         private void menuItem46_Click(object sender, EventArgs e)

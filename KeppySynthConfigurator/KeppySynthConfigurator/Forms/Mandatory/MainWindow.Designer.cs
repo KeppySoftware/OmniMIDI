@@ -388,6 +388,7 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
+            this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -2758,18 +2759,18 @@
             // 
             // menuItem46
             // 
-            this.menuItem46.Index = 8;
+            this.menuItem46.Index = 9;
             this.menuItem46.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 9;
+            this.DeleteUserData.Index = 10;
             this.DeleteUserData.Text = "Delete driver\'s data from user profile";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ResetToDefault
             // 
-            this.ResetToDefault.Index = 10;
+            this.ResetToDefault.Index = 11;
             this.ResetToDefault.Text = "Reinstall the driver from scratch";
             this.ResetToDefault.Click += new System.EventHandler(this.ResetToDefault_Click);
             // 
@@ -2785,6 +2786,7 @@
             this.RegDriver,
             this.menuItem39,
             this.SetAssociationWithSFs,
+            this.MIDIInOutTest,
             this.menuItem46,
             this.DeleteUserData,
             this.ResetToDefault});
@@ -4128,6 +4130,12 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
+            // MIDIInOutTest
+            // 
+            this.MIDIInOutTest.Index = 8;
+            this.MIDIInOutTest.Text = "Test MIDI input and output";
+            this.MIDIInOutTest.Click += new System.EventHandler(this.MIDIInOutTest_Click);
+            // 
             // KeppySynthConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4556,6 +4564,7 @@
         private System.Windows.Forms.MenuItem KSDAPIDoc;
         private System.Windows.Forms.MenuItem menuItem60;
         private System.Windows.Forms.MenuItem WMMPatches;
+        private System.Windows.Forms.MenuItem MIDIInOutTest;
     }
 }
 
