@@ -36,7 +36,6 @@
             this.RemoveFolder = new System.Windows.Forms.Button();
             this.AddFolder = new System.Windows.Forms.Button();
             this.FolderList = new System.Windows.Forms.ListBox();
-            this.AddFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // ClearFolderList
@@ -163,6 +162,5 @@
         internal System.Windows.Forms.Button RemoveFolder;
         internal System.Windows.Forms.Button AddFolder;
         internal System.Windows.Forms.ListBox FolderList;
-        private System.Windows.Forms.FolderBrowserDialog AddFolderDialog;
     }
 }

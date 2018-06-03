@@ -34,7 +34,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.BrowseButton = new System.Windows.Forms.Button();
-            this.NewOutputDir = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -59,7 +58,7 @@
             this.NewDir.Enabled = false;
             this.NewDir.Location = new System.Drawing.Point(12, 76);
             this.NewDir.Name = "NewDir";
-            this.NewDir.Size = new System.Drawing.Size(461, 20);
+            this.NewDir.Size = new System.Drawing.Size(380, 20);
             this.NewDir.TabIndex = 3;
             // 
             // label2
@@ -85,23 +84,13 @@
             // BrowseButton
             // 
             this.BrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.BrowseButton.Location = new System.Drawing.Point(317, 107);
+            this.BrowseButton.Location = new System.Drawing.Point(398, 75);
             this.BrowseButton.Name = "BrowseButton";
-            this.BrowseButton.Size = new System.Drawing.Size(75, 23);
+            this.BrowseButton.Size = new System.Drawing.Size(75, 22);
             this.BrowseButton.TabIndex = 5;
             this.BrowseButton.Text = "Browse...";
             this.BrowseButton.UseVisualStyleBackColor = true;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
-            // 
-            // NewOutputDir
-            // 
-            this.NewOutputDir.AddExtension = false;
-            this.NewOutputDir.FileName = "Save here";
-            this.NewOutputDir.Filter = "Select a folder|*.*";
-            this.NewOutputDir.OverwritePrompt = false;
-            this.NewOutputDir.RestoreDirectory = true;
-            this.NewOutputDir.Title = "Where do you want the WAV output to go?";
-            this.NewOutputDir.ValidateNames = false;
             // 
             // KeppySynthOutputWAVDir
             // 
@@ -138,6 +127,5 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button BrowseButton;
-        private System.Windows.Forms.SaveFileDialog NewOutputDir;
     }
 }

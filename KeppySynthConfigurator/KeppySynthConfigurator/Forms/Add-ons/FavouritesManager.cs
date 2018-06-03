@@ -8,18 +8,21 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace KeppySynthConfigurator
 {
     public partial class KeppySynthFavouritesManager : Form
     {
-        public string LastBrowserPath { get; set; }
-        public string FolderListPathWithFile { get; set; }
-        public string folderlistpath = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\";
+        private CommonOpenFileDialog AddFolderDialog = new CommonOpenFileDialog();
+        private string LastBrowserPath { get; set; }
+        private string FolderListPathWithFile { get; set; }
+        private string folderlistpath = Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\Keppy's Synthesizer\\";
 
         public KeppySynthFavouritesManager()
         {
             InitializeComponent();
+            AddFolderDialog.IsFolderPicker = true;
         }
 
         private void SaveFavourites()
@@ -28,10 +31,7 @@ namespace KeppySynthConfigurator
             {
                 try
                 {
-                    foreach (var item in FolderList.Items)
-                    {
-                        sw.WriteLine(item.ToString());
-                    }
+                    foreach (var item in FolderList.Items) sw.WriteLine(item.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -48,13 +48,13 @@ namespace KeppySynthConfigurator
                 if (SynthPaths.GetValue("lastpathblacklist", null) != null)
                 {
                     LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();
-                    AddFolderDialog.SelectedPath = LastBrowserPath;
+                    AddFolderDialog.InitialDirectory = LastBrowserPath;
                 }
                 else
                 {
                     SynthPaths.SetValue("lastpathblacklist", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                     LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();
-                    AddFolderDialog.SelectedPath = LastBrowserPath;
+                    AddFolderDialog.InitialDirectory = LastBrowserPath;
                 }
                 SynthPaths.Close();
             }
@@ -64,7 +64,7 @@ namespace KeppySynthConfigurator
                 RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
                 SynthPaths.SetValue("lastpathblacklist", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), RegistryValueKind.String);
                 LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();
-                AddFolderDialog.SelectedPath = LastBrowserPath;
+                AddFolderDialog.InitialDirectory = LastBrowserPath;
                 SynthPaths.Close();
             }
         }
@@ -82,10 +82,7 @@ namespace KeppySynthConfigurator
                 using (StreamReader r = new StreamReader(FolderListPathWithFile))
                 {
                     string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        FolderList.Items.Add(line); // The program is copying the entire text file to the List I's listbox.
-                    }
+                    while ((line = r.ReadLine()) != null) FolderList.Items.Add(line);
                 }
             }
             catch
@@ -102,13 +99,13 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                if (AddFolderDialog.ShowDialog() == DialogResult.OK)
+                if (AddFolderDialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Keppy's Synthesizer\\Paths", true);
-                    LastBrowserPath = AddFolderDialog.SelectedPath;
+                    LastBrowserPath = AddFolderDialog.FileName;
                     SynthPaths.SetValue("lastpathblacklist", LastBrowserPath, RegistryValueKind.String);
                     SynthPaths.Close();
-                    FolderList.Items.Add(AddFolderDialog.SelectedPath);
+                    FolderList.Items.Add(AddFolderDialog.FileName);
                 }
             }
             SaveFavourites();

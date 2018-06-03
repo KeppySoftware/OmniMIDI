@@ -262,7 +262,7 @@ void InitializeBASSEnc() {
 	DWORD cbValueLength = sizeof(confpath);
 	DWORD dwType = REG_SZ;
 	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-	if (RegQueryValueEx(hKey, L"lastexportfolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+	if (RegQueryValueEx(hKey, L"AudToWAVFolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
 	}
 	else {
