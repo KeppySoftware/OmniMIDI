@@ -233,3 +233,27 @@ The available arguments are:
 MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr) = 0;
 KLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "SendDirectLongData"); // Or SendDirectLongDataNoBuf
 ```
+<hr />
+
+### **PrepareLongData**
+Allows you to prepare the MIDIHDR buffer, before sending it to the driver through SendDirectLongData/SendDirectLongDataNoBuf.<br />
+Once a buffer is prepared, it becomes read-only.<br />
+The available arguments are:
+
+- `MIDIHDR* IIMidiHdr`: The pointer to the MIDIHDR.
+```c
+MMRESULT(WINAPI*KPrepLongMsg)(MIDIHDR* IIMidiHdr) = 0;
+KPrepLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "PrepareLongData");
+```
+<hr />
+
+### **UnprepareLongData**
+Allows you to unprepare the MIDIHDR buffer, to make it writable again.<br />
+It is **MANDATORY** to unprepare a MIDIHDR before editing it, since PrepareLongData locks its data.<br />
+The available arguments are:
+
+- `MIDIHDR* IIMidiHdr`: The pointer to the MIDIHDR.
+```c
+MMRESULT(WINAPI*KUnprepLongMsg)(MIDIHDR* IIMidiHdr) = 0;
+KUnprepLongMsg = (void*)GetProcAddress(GetModuleHandle("keppysynth"), "UnprepareLongData");
+```
