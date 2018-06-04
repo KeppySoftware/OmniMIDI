@@ -115,7 +115,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH)
 	{
-		DisconnectNamedPipe(hPipe);
 		DoStopClient();
 	}
 	return TRUE;
@@ -365,29 +364,14 @@ STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_
 		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR*)dwParam1;
 
-		if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;			// The buffer doesn't exist or is too big, invalid parameter
-
-		// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-		if (!VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
-			return MMSYSERR_NOMEM;
-
-		// Mark the buffer as prepared, and say that everything is oki-doki
-		IIMidiHdr->dwFlags |= MHDR_PREPARED;
-		return MMSYSERR_NOERROR;
+		// Pass it to a KSDAPI function
+		return PrepareLongData(IIMidiHdr);
 	case MODM_UNPREPARE:
 		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR*)dwParam1;
 
-		// Check if the MIDIHDR buffer is valid
-		if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
-		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
-
-		IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
-
-		// Unlock the buffer, and say that everything is oki-doki
-		VirtualUnlock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
-		return MMSYSERR_NOERROR;
+		// Pass it to a KSDAPI function
+		return UnprepareLongData(IIMidiHdr);
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO
 		return BlackListInit();
@@ -409,7 +393,7 @@ STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_
 		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		// The driver is sleeping now (Sort of), tell the app about this and that everything is oki-doki
+		DoStopClient();
 		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_CLOSE, KSInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	default:

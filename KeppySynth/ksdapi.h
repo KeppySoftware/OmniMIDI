@@ -4,7 +4,7 @@ void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(KSStream);
 	if (BASS_ErrorGetCode() == 5 || ManagedSettings.LiveChanges) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
-		CloseThreads();
+		CloseThreads(FALSE);
 		LoadSettings(TRUE);
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		if (InitializeBASS(FALSE)) {
@@ -18,14 +18,14 @@ void keepstreamsalive(int& opend) {
 DWORD WINAPI DriverHeart(LPVOID lpV) {
 	try {
 		if (BannedSystemProcess() == TRUE) {
-			_endthread();
+			ExitThread(0);
 			return 0;
 		}
 		else {
 			int opend = 0;
 			while (opend == 0) {
 				LoadSettings(FALSE);
-				allocate_memory();
+				AllocateMemory();
 				load_bassfuncs();
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 				if (InitializeBASS(FALSE)) {
@@ -39,22 +39,21 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 				start1 = TimeNow();
 				keepstreamsalive(opend);
 				LoadCustomInstruments();
-				CheckVolume();
+				CheckVolume(FALSE);
 				ParseDebugData();
 				Sleep(10);
 			}
-			stop_rtthread = FALSE;
+			FreeFonts();
 			FreeUpStream();
 			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-			ExitThread(0);
+			CloseHandle(MainThread);
+			MainThread = NULL;
 			return 0;
 		}
 	}
 	catch (...) {
 		CrashMessage(L"DriverHeartThread");
-		ExitThread(0);
 		throw;
-		return 0;
 	}
 }
 
@@ -110,10 +109,9 @@ void DoStartClient() {
 
 void DoStopClient() {
 	if (modm_closed == FALSE) {
-		stop_thread = TRUE;
-		stop_rtthread = TRUE;
-		WaitForSingleObject(MainThread, INFINITE);
-		CloseHandle(MainThread);
+		CloseThreads(TRUE);
+		FreeUpMemory();
+		CloseDebugPipe();
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 		timeEndPeriod(1);
@@ -162,6 +160,31 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) { return MMSYSERR_INVALPARAM; }
+}
+
+MMRESULT WINAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
+	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;			// The buffer doesn't exist or is too big, invalid parameter
+
+	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
+	if (!VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
+		return MMSYSERR_NOMEM;
+
+	// Mark the buffer as prepared, and say that everything is oki-doki
+	IIMidiHdr->dwFlags |= MHDR_PREPARED;
+	return MMSYSERR_NOERROR;
+}
+
+MMRESULT WINAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
+	// Check if the MIDIHDR buffer is valid
+	if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
+	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
+
+	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
+
+	// Unlock the buffer, and say that everything is oki-doki
+	VirtualUnlock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
+	return MMSYSERR_NOERROR;
 }
 
 MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {

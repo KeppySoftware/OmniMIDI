@@ -264,7 +264,12 @@ void AppName() {
 	}
 }
 
-void allocate_memory() {
+void FreeUpMemory() {
+	free(evbuf);
+	free(sndbf);
+}
+
+void AllocateMemory() {
 	try {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
 
@@ -316,6 +321,8 @@ void allocate_memory() {
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
 		sndbf = (float *)malloc(256.0f * sizeof(float));
+		PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing audio buffer...");
+		memset(sndbf, 0, sizeof(float));
 		PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
 	}
 	catch (...) {
@@ -543,34 +550,43 @@ void WatchdogCheck()
 	}
 }
 
-void CheckVolume() {
+void CheckVolume(BOOL Closing) {
 	try {
-		if (ManagedSettings.VolumeMonitor == 1 && ManagedSettings.CurrentEngine > AUDTOWAV) {
-			HKEY hKey;
-			long lResult;
-			float levels[2];
-			DWORD dwType = REG_DWORD;
-			DWORD dwSize = sizeof(DWORD);
-			DWORD left, right;
-			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
+		HKEY hKey;
+		long lResult;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Keppy's Synthesizer", 0, KEY_ALL_ACCESS, &hKey);
 
-			if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
-				BASS_ChannelGetLevelEx(KSStream, levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+		if (!Closing) {
+			if (ManagedSettings.VolumeMonitor == 1 && ManagedSettings.CurrentEngine > AUDTOWAV) {
+				float levels[2];
+				DWORD left, right;
+
+				if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+					BASS_ChannelGetLevelEx(KSStream, levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+				}
+				else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
+				{
+					levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
+					levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
+				}
+
+				DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
+				left = LOWORD(level); // the left level
+				right = HIWORD(level); // the right level
+
+				RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
+				RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
 			}
-			else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
-			{
-				levels[0] = BASS_ASIO_ChannelGetLevel(FALSE, 0);
-				levels[1] = BASS_ASIO_ChannelGetLevel(FALSE, 1);
-			}
-
-			DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
-			left = LOWORD(level); // the left level
-			right = HIWORD(level); // the right level
-
-			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
-			RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
-			RegCloseKey(hKey);
 		}
+		else {
+			int zero = 0;
+			RegSetValueEx(hKey, L"leftvol", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+			RegSetValueEx(hKey, L"rightvol", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+		}
+
+		RegCloseKey(hKey);
 	}
 	catch (...) {
 		CrashMessage(L"VolumeMonitor");

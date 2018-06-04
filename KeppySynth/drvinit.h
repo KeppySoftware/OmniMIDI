@@ -70,7 +70,9 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 DWORD WINAPI RTSettings(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	try {
-		while (!stop_thread && !SettingsManagedByClient) {
+		while (!stop_thread) {
+			if (SettingsManagedByClient) break;
+
 			start3 = TimeNow();
 			LoadSettingsRT();
 			Panic();
@@ -78,6 +80,7 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 			WatchdogCheck();
 			mixervoid();
 			RevbNChor();
+
 			_VLWAIT;
 		}
 	}
@@ -326,7 +329,6 @@ LONG WASAPIDetectID() {
 	}
 	catch (...) {
 		CrashMessage(L"WASAPIDetectID");
-		ExitThread(0);
 		throw;
 	}
 }
@@ -367,7 +369,6 @@ LONG ASIODetectID() {
 	}
 	catch (...) {
 		CrashMessage(L"ASIODetectID");
-		ExitThread(0);
 		throw;
 	}
 }
@@ -543,7 +544,7 @@ bool InitializeBASS(BOOL restart) {
 	return init;
 }
 
-void CloseThreads() {
+void CloseThreads(BOOL MainClose) {
 	stop_thread = TRUE;
 
 	WaitForSingleObject(ATThread, INFINITE);
@@ -557,6 +558,20 @@ void CloseThreads() {
 	WaitForSingleObject(EPThread, INFINITE);
 	CloseHandle(EPThread);
 	EPThread = NULL;
+
+	if (MainClose) {
+		stop_rtthread = TRUE;
+
+		WaitForSingleObject(DThread, INFINITE);
+		CloseHandle(DThread);
+		DThread = NULL;
+
+		WaitForSingleObject(MainThread, INFINITE);
+		CloseHandle(MainThread);
+		MainThread = NULL;
+
+		stop_rtthread = FALSE;
+	}
 
 	stop_thread = FALSE;
 }
@@ -601,22 +616,17 @@ void SetUpStream() {
 
 void FreeUpStream() {
 	FillContentDebug(0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
-	FlushFileBuffers(hPipe);
-	CloseHandle(hPipe);
+	CheckVolume(TRUE);
 
 	if (KSStream)
 	{
 		ResetSynth(0);
 		BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
-		CheckUp(ERRORCODE, L"KSResetChannelASIO", TRUE);
 		BASS_ASIO_Stop();
-		CheckUp(ERRORCODE, L"KSStopASIO", TRUE);
 		BASS_StreamFree(KSStream);
 		CheckUp(ERRORCODE, L"KSStreamFreeBASS", TRUE);
 		BASS_Encode_Stop(KSStream);
-		CheckUp(ERRORCODE, L"KSFreeBASSenc", TRUE);
 		BASS_ASIO_Free();
-		CheckUp(ERRORCODE, L"KSFreeASIO", TRUE);
 		BASS_Free();
 		CheckUp(ERRORCODE, L"KSFreeBASS", TRUE);
 	}

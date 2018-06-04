@@ -208,3 +208,10 @@ Retry:
 		}
 	}
 }
+
+void CloseDebugPipe() {
+	FlushFileBuffers(hPipe);
+	DisconnectNamedPipe(hPipe);
+	CloseHandle(hPipe);
+	hPipe = NULL;
+}

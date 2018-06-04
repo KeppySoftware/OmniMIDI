@@ -16,8 +16,9 @@ namespace KeppySynthConfigurator
         private static WinMM.MidiInProc midiInProc;
         private static IntPtr handle;
 
-        private static Stopwatch FromWhenItGotReceived;
-        private static Boolean CurrentReceiving = false;
+        private static Stopwatch WhenItGotReceived;
+        private static String LastEvent = "NONE";
+        private static Boolean LastEventFailed = false;
 
         public MIDIInPlay()
         {
@@ -30,11 +31,42 @@ namespace KeppySynthConfigurator
             KeppySynth.ResetKSStream();
         }
 
-        private void MidiProc(IntPtr hMidiIn, uint wMsg, IntPtr dwInstance, uint dwParam1, uint dwParam2)
+        private void SetLastEvent(String EventName, Boolean Failed)
         {
-            FromWhenItGotReceived = Stopwatch.StartNew();
-            CurrentReceiving = true;
-            KeppySynth.SendDirectData(dwParam1);
+            LastEvent = EventName;
+            LastEventFailed = Failed;
+            WhenItGotReceived = Stopwatch.StartNew();
+        }
+
+        private void MidiProc(IntPtr hMidiIn, uint wMsg, UIntPtr dwInstance, UIntPtr dwParam1, UIntPtr dwParam2)
+        {
+            switch (wMsg)
+            {
+                case MIDIInEvent.MIM_DATA:
+                    KeppySynth.SendDirectData(dwParam1.ToUInt32());
+                    SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
+                    break;
+                case MIDIInEvent.MIM_LONGDATA:
+                    KeppySynth.SendDirectLongData(dwParam1);
+                    SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
+                    break;
+                case MIDIInEvent.MIM_ERROR:
+                    MessageBox.Show(
+                        String.Format("Failed to parse the following message: {0:X}", dwParam1.ToUInt32()),
+                        "Keppy's Synthesizer - Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    SetLastEvent("MIM_ERROR", true);
+                    break;
+                case MIDIInEvent.MIM_LONGERROR:
+                    MessageBox.Show(
+                        String.Format("Failed to parse the following long message: {0:X}", dwParam1.ToUInt32()),
+                        "Keppy's Synthesizer - Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    SetLastEvent("MIM_LONGERROR", true);
+                    break;
+            }
         }
 
         private void MIDIInPlay_Load(object sender, EventArgs e)
@@ -71,17 +103,19 @@ namespace KeppySynthConfigurator
                 WinMM.midiInClose(handle);
             }
 
+            KeppySynth.TerminateKSStream();
+
             if (e.CloseReason == CloseReason.WindowsShutDown) return;
         }
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
-            if (handle != IntPtr.Zero && FromWhenItGotReceived != null)
+            if (handle != IntPtr.Zero && WhenItGotReceived != null)
             {
-                if (FromWhenItGotReceived != null && FromWhenItGotReceived.ElapsedMilliseconds < 200)
+                if (WhenItGotReceived != null && WhenItGotReceived.ElapsedMilliseconds < 200)
                 {
                     ActivityPanel.BackColor = Color.DarkGreen;
-                    ActivityLabel.Text = "Activity detected.";
+                    ActivityLabel.Text = String.Format("Received {0}.", LastEvent);
                 }
                 else
                 {
@@ -91,8 +125,8 @@ namespace KeppySynthConfigurator
             }
             else
             {
-                ActivityPanel.BackColor = Color.DarkGray;
-                ActivityLabel.Text = "No MIDI input selected.";
+                ActivityPanel.BackColor = Color.DarkRed;
+                ActivityLabel.Text = "zZᶻ⋯";
             }
         }
     }
@@ -118,10 +152,10 @@ namespace KeppySynthConfigurator
         internal static extern int SendDirectDataNoBuf(uint dwMsg);
 
         [DllImport("keppysynth.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int SendDirectLongData([Out] MIDIHDR IIMidiHdr);
+        internal static extern int SendDirectLongData(UIntPtr IIMidiHdr);
 
         [DllImport("keppysynth.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int SendDirectLongDataNoBuf([Out] MIDIHDR IIMidiHdr);
+        internal static extern int SendDirectLongDataNoBuf(UIntPtr IIMidiHdr);
     }
 
     internal static class WinMM
@@ -132,9 +166,9 @@ namespace KeppySynthConfigurator
         internal delegate void MidiInProc(
             IntPtr hMidiIn,
             uint wMsg,
-            IntPtr dwInstance,
-            uint dwParam1,
-            uint dwParam2);
+            UIntPtr dwInstance,
+            UIntPtr dwParam1,
+            UIntPtr dwParam2);
 
         [DllImport("winmm.dll")]
         internal static extern int midiInGetNumDevs();
@@ -166,18 +200,13 @@ namespace KeppySynthConfigurator
             IntPtr hMidiIn);
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MIDIHDR
+    internal static class MIDIInEvent
     {
-        public string lpdata;
-        public int dwBufferLength;
-        public int dwBytesRecorded;
-        public IntPtr dwUser;
-        public  int dwFlags;
-        public  IntPtr lpNext;
-        public IntPtr reserved;
-        public int dwOffset;
-        public IntPtr dwReserved;
+        // Internal
+        public const int MIM_DATA = 0x3C3;
+        public const int MIM_LONGDATA = 0x3C4;
+        public const int MIM_ERROR = 0x3C5;
+        public const int MIM_LONGERROR = 0x3C6;
     }
 
     [StructLayout(LayoutKind.Sequential)]

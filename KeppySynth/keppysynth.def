@@ -10,7 +10,9 @@ EXPORTS
 	ChangeDriverSettings
 	GetDriverDebugInfo
 	LoadCustomSoundFontsList
+	PrepareLongData
+	UnprepareLongData
 	SendDirectData
-	SendDirectLongData
 	SendDirectDataNoBuf
+	SendDirectLongData
 	SendDirectLongDataNoBuf
