@@ -566,6 +566,8 @@ void CloseThreads(BOOL MainClose) {
 		CloseHandle(DThread);
 		DThread = NULL;
 
+		SendDummyDataToPipe();
+
 		WaitForSingleObject(MainThread, INFINITE);
 		CloseHandle(MainThread);
 		MainThread = NULL;
@@ -615,7 +617,6 @@ void SetUpStream() {
 }
 
 void FreeUpStream() {
-	FillContentDebug(0.0f, 0, 0, FALSE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
 	CheckVolume(TRUE);
 
 	if (KSStream)

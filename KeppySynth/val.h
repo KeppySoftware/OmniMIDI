@@ -10,6 +10,8 @@
 #define SizeOfArray(type) sizeof(type)/sizeof(type[0])
 
 // Settings managed by client
+static BOOL AlreadyStartedOnce = FALSE;
+
 typedef struct Settings
 {
 	BOOL AlternativeCPU = FALSE;			// Autopanic switch

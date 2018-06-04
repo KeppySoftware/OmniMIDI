@@ -87,7 +87,7 @@ void DoStartClient() {
 		HyperCheckedAlready = TRUE;
 
 		AppName();
-		StartDebugPipe(FALSE);
+		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
 		processPriority = GetPriorityClass(GetCurrentProcess());
 		SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
@@ -104,6 +104,7 @@ void DoStartClient() {
 			CloseHandle(load_sfevent);
 
 		modm_closed = FALSE;
+		AlreadyStartedOnce = TRUE;
 	}
 }
 
@@ -111,7 +112,6 @@ void DoStopClient() {
 	if (modm_closed == FALSE) {
 		CloseThreads(TRUE);
 		FreeUpMemory();
-		CloseDebugPipe();
 		modm_closed = TRUE;
 		SetPriorityClass(GetCurrentProcess(), processPriority);
 		timeEndPeriod(1);

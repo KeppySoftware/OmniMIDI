@@ -175,7 +175,6 @@ std::wstring GetLastErrorAsWString()
 	return message;
 }
 
-
 void StartDebugPipe(BOOL restart) {
 	static unsigned int PipeVal = 0;
 	static const WCHAR PipeName[] = TEXT("\\\\.\\pipe\\KSDEBUG%u");
@@ -207,11 +206,4 @@ Retry:
 			throw;
 		}
 	}
-}
-
-void CloseDebugPipe() {
-	FlushFileBuffers(hPipe);
-	DisconnectNamedPipe(hPipe);
-	CloseHandle(hPipe);
-	hPipe = NULL;
 }

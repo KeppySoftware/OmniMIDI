@@ -672,13 +672,26 @@ void SendDebugDataToPipe() {
 		QWORD ramusageint = static_cast<QWORD>(ramusage);
 
 		long long TimeDuringDebug = TimeNow();
-		
+
 		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KSDAPIEnabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, ManagedSettings.NotesCatcherWithAudio ? 0.0f : TimeDuringDebug - start4,
 			inlatency, outlatency, FALSE /* It's supposed to be a buffer overload check */);
+
+		FlushFileBuffers(hPipe);
 	}
 	catch (...) {
 		CrashMessage(L"DebugPipePush");
+		throw;
+	}
+}
+
+void SendDummyDataToPipe() {
+	try {
+		FillContentDebug(0.0f, 0, 0, KSDAPIEnabled, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
+		FlushFileBuffers(hPipe);
+	}
+	catch (...) {
+		CrashMessage(L"DebugPipeDummyPush");
 		throw;
 	}
 }
