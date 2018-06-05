@@ -11,42 +11,42 @@
 /external_packages/lib/*.dll
 /external_packages/lib64/*.dll
 /Debug
-/KSDriverRegister/KSDriverRegister/bin/
-/KSDriverRegister/KSDriverRegister/obj/
-/KSDriverRegister/output/
-/KeppySynth/*.dll
-/KeppySynth/*.exe
-/KeppySynth/*.exp
-/KeppySynth/*.ilk
-/KeppySynth/*.lib
-/KeppySynth/*.obj
-/KeppySynth/*.opensdf
-/KeppySynth/*.pdb
-/KeppySynth/*.sdf
-/KeppySynth/*.suo
-/KeppySynth/*.user
-/KeppySynth/*.vcxproj.user
-/KeppySynth/.vs/
-/KeppySynth/Debug
-/KeppySynth/Release
-/KeppySynth/ipch
-/KeppySynth/out
-/KeppySynth/output
-/KeppySynth/x64
-/KeppySynthConfigurator/packages
-/KeppySynthConfigurator/KeppySynthConfigurator/Resources/LoudMax
-/KeppySynthConfigurator/KeppySynthConfigurator/Resources/Text/TelemetryLoginData.txt
-/KeppySynthConfigurator/KeppySynthConfigurator/bin
-/KeppySynthConfigurator/KeppySynthConfigurator/obj
-/KeppySynthDebugWindow/KeppySynthDebugWindow/bin/
-/KeppySynthDebugWindow/KeppySynthDebugWindow/obj/
-/KeppySynthDebugWindow/output/
-/KeppySynthMixerWindow/KeppySynthMixerWindow/bin
-/KeppySynthMixerWindow/KeppySynthMixerWindow/obj
-/KeppySynthWatchdog/KeppySynthWatchdog/bin/
-/KeppySynthWatchdog/KeppySynthWatchdog/obj/
-/KeppySynthWatchdog/output/
-/KeppySynthconfig
+/OmniMIDIDriverRegister/KSDriverRegister/bin/
+/OmniMIDIDriverRegister/KSDriverRegister/obj/
+/OmniMIDIDriverRegister/output/
+/OmniMIDI/*.dll
+/OmniMIDI/*.exe
+/OmniMIDI/*.exp
+/OmniMIDI/*.ilk
+/OmniMIDI/*.lib
+/OmniMIDI/*.obj
+/OmniMIDI/*.opensdf
+/OmniMIDI/*.pdb
+/OmniMIDI/*.sdf
+/OmniMIDI/*.suo
+/OmniMIDI/*.user
+/OmniMIDI/*.vcxproj.user
+/OmniMIDI/.vs/
+/OmniMIDI/Debug
+/OmniMIDI/Release
+/OmniMIDI/ipch
+/OmniMIDI/out
+/OmniMIDI/output
+/OmniMIDI/x64
+/OmniMIDIConfigurator/packages
+/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/LoudMax
+/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/Text/TelemetryLoginData.txt
+/OmniMIDIConfigurator/OmniMIDIConfigurator/bin
+/OmniMIDIConfigurator/OmniMIDIConfigurator/obj
+/OmniMIDIDebugWindow/OmniMIDIDebugWindow/bin/
+/OmniMIDIDebugWindow/OmniMIDIDebugWindow/obj/
+/OmniMIDIDebugWindow/output/
+/OmniMIDIMixerWindow/OmniMIDIMixerWindow/bin
+/OmniMIDIMixerWindow/OmniMIDIMixerWindow/obj
+/OmniMIDIWatchdog/OmniMIDIWatchdog/bin/
+/OmniMIDIWatchdog/OmniMIDIWatchdog/obj/
+/OmniMIDIWatchdog/output/
+/OmniMIDIconfig
 /Release
 /ipch
 /sign
@@ -66,7 +66,7 @@
 README.txt
 
 // Ignore some output files
-KeppySynth/signature.kep
+OmniMIDI/signature.kep
 output/*.config
 output/*.dll
 output/*.manifest
@@ -75,14 +75,14 @@ output/*.vshost.exe
 output/*.xml
 output/64
 output/Copy 64-bit test library.bat
-output/KSDriverRegister.exe
-output/KeppySynthConfigurator.exe
-output/KeppySynthDebugWindow.exe
-output/KeppySynthMixerWindow.exe
-output/KeppySynthWatchdog.exe
-output/KeppysSynthSetup.exe
-output/KeppysSynthUpdate.exe
-output/Test Keppy's Synthesizer Configurator.bat
+output/OmniMIDIDriverRegister.exe
+output/OmniMIDIConfigurator.exe
+output/OmniMIDIDebugWindow.exe
+output/OmniMIDIMixerWindow.exe
+output/OmniMIDIWatchdog.exe
+output/OmniMIDISetup.exe
+output/OmniMIDIUpdate.exe
+output/Test OmniMIDI Configurator.bat
 Sign and compile setup.bat
 Sign runtime.bat
 Sign WinMM patches and BASS.bat

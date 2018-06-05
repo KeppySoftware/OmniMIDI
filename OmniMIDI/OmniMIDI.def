@@ -1,0 +1,18 @@
+LIBRARY		OmniMIDI.dll
+EXPORTS
+	DriverProc
+	modMessage
+	ReturnKDMAPIVer
+	IsKDMAPIAvailable
+	InitializeKDMAPIStream
+	TerminateKDMAPIStream
+	ResetKDMAPIStream
+	ChangeDriverSettings
+	GetDriverDebugInfo
+	LoadCustomSoundFontsList
+	PrepareLongData
+	UnprepareLongData
+	SendDirectData
+	SendDirectDataNoBuf
+	SendDirectLongData
+	SendDirectLongDataNoBuf
