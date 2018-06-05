@@ -53,7 +53,7 @@ namespace OmniMIDIConfigurator.Forms
                         CancelBtn.Visible = false;
                         progressBar1.Size = new Size(271, 23);
                     }
-                    URL = new Uri(String.Format("https://github.com/KaleidonKep99/Keppy-s-Synthesizer/releases/download/{0}/KeppysSynthUpdate.exe", VersionToDownload));
+                    URL = new Uri(String.Format("https://github.com/KaleidonKep99/OmniMIDI/releases/download/{0}/OmniMIDIUpdate.exe", VersionToDownload));
                 }
                 else
                 {
