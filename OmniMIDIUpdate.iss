@@ -25,7 +25,7 @@ AlwaysShowGroupOnReadyPage=True
 AppComments={#Description}     
 AppContact={#Email}
 AppCopyright={#Copyright}
-AppId={{42285B8E-1B4D-4380-B085-50ED7E2C369D}
+AppId={{950DEC78-2D12-4917-BE69-CB04FE84B21F}
 AppName={#ProductName}
 AppPublisher={#Author}
 AppPublisherURL={#Link}
@@ -228,12 +228,12 @@ Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\
 Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: not Is64BitInstallMode
 
 [InstallDelete]
-Type: filesandordirs; Name: "{syswow64}\Keppy''s Synthesizer\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\Keppy''s Synthesizer\"
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\"
 Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"
+Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\keppysynth\"
 Type: filesandordirs; Name: "{group}\"
 Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
