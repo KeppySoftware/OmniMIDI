@@ -340,6 +340,11 @@ namespace OmniMIDIConfigurator
             {
                 RegistryKey Destination = Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI");
                 Source.CopyTo(Destination);
+
+                Source.Close();
+                Destination.Close();
+
+                try { Registry.CurrentUser.DeleteSubKeyTree("SOFTWARE\\Keppy's Synthesizer", true); } catch { }
             }
 
             if (Directory.Exists(UPSource))

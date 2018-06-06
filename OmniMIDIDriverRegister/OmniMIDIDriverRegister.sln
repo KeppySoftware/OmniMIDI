@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmniMIDIDriverRegister", "OmniMIDIDriverRegister\OmniMIDIDriverRegister.csproj", "{6F8FA14F-BDEC-412F-A6C4-5AEFFC25FB88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F8FA14F-BDEC-412F-A6C4-5AEFFC25FB88}.Release|x86.ActiveCfg = Release|x86
+		{6F8FA14F-BDEC-412F-A6C4-5AEFFC25FB88}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F3316AE8-EF2E-45EB-8B96-8244F9605837}
+	EndGlobalSection
+EndGlobal

@@ -89,7 +89,7 @@ namespace OmniMIDIConfigurator
             InitializeLastPath();
 
             // Initialize blacklist
-            BlacklistPath = blacklistnewlocation + "\\OmniMIDI\\blacklist\\keppymididrv.blacklist";
+            BlacklistPath = blacklistnewlocation + "\\OmniMIDI\\blacklist\\OmniMIDI.blacklist";
             DefBlacklistPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\OmniMIDI.dbl";
 
             if (!System.IO.Directory.Exists(blacklistnewlocation + "\\OmniMIDI\\blacklist\\"))

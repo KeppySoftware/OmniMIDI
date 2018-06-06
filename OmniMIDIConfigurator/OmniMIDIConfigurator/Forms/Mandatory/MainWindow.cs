@@ -1449,12 +1449,12 @@ namespace OmniMIDIConfigurator
 
         private void AMIDIMapInstallMenu_Click(object sender, EventArgs e)
         {
-            Functions.MIDIMapRegistry(0);
+            Functions.MIDIMapRegistry(false);
         }
 
         private void AMIDIMapUninstallMenu_Click(object sender, EventArgs e)
         {
-            Functions.MIDIMapRegistry(1);
+            Functions.MIDIMapRegistry(true);
         }
 
         // Priority stuff

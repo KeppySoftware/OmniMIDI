@@ -1,2 +1,2 @@
-copy "keppysynth.dll" "C:\Windows\SysWOW64\keppysynth\keppysynth.dll"
+copy "OmniMIDI.dll" "C:\Windows\SysWOW64\OmniMIDI\OmniMIDI.dll"
 pause

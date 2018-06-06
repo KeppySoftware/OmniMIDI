@@ -215,7 +215,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 Program.DebugToConsole(false, "Opening register/unregister dialog...", null);
-                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniDriverRegister.exe");
+                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe");
                 process.WaitForExit();
                 Program.DebugToConsole(false, "Done.", null);
             }
@@ -225,25 +225,17 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        public static void MIDIMapRegistry(int integer)
+        public static void MIDIMapRegistry(Boolean Uninstall)
         {
             try
             {
-                if (integer == 0)
-                {
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniDriverRegister.exe", "/rmidimapv");
-                    process.WaitForExit();
-                }
-                else
-                {
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniDriverRegister.exe", "/umidimapv");
-                    process.WaitForExit();
-                }
+                Process Proc = Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", Uninstall ? "/umidimapv" : "/rmidimapv");
+                Proc.WaitForExit();
                 CheckMIDIMapper();
             }
             catch (Exception ex)
             {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
+                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "There was an error while trying to register/unregister the driver.", true, ex);
             }
         }
 
@@ -364,7 +356,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 // Import the blacklist file
-                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\OmniMIDI\\keppymididrv.favlist"))
+                using (StreamReader r = new StreamReader(System.Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\OmniMIDI\\OmniMIDI.favlist"))
                 {
                     string line;
                     while ((line = r.ReadLine()) != null)
