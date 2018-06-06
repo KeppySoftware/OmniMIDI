@@ -67,7 +67,7 @@ namespace OmniMIDIConfigurator
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
-            KSDAPIVer.Text = KSDAPI.KDMAPIVer;
+            KDMAPIVer.Text = KSDAPI.KDMAPIVer;
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
@@ -188,7 +188,7 @@ namespace OmniMIDIConfigurator
                 sb.Append(String.Format("Driver version: {0}\n", DriverVer.Text));
                 sb.Append(String.Format("BASS version: {0}\n", BASSVer.Text));
                 sb.Append(String.Format("BASSMIDI version: {0}\n", BASSMIDIVer.Text));
-                sb.Append(String.Format("Compiled on: {0}\n\n", KSDAPIVer.Text));
+                sb.Append(String.Format("Compiled on: {0}\n\n", KDMAPIVer.Text));
                 sb.Append("== Windows installation info ===================================\n");
                 sb.Append(String.Format("Name: {0}\n", WinName.Text));
                 sb.Append(String.Format("Version: {0}\n\n", WinVer.Text));

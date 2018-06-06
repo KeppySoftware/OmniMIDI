@@ -45,7 +45,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.KSDAPIVer = new System.Windows.Forms.Label();
+            this.KDMAPIVer = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
             this.BASSVer = new System.Windows.Forms.Label();
             this.DriverVer = new System.Windows.Forms.Label();
@@ -81,8 +81,7 @@
             this.VerLabel.Name = "VerLabel";
             this.VerLabel.Size = new System.Drawing.Size(172, 52);
             this.VerLabel.TabIndex = 1;
-            this.VerLabel.Text = "Keppy\'s Synthesizer VERSION\r\n\r\nCopyright Ⓒ 2011\r\nKaleidonKep99, Kode54 && Mudlord" +
-    "";
+            this.VerLabel.Text = "OmniMIDI VERSION\r\n\r\nCopyright Ⓒ 2011\r\nKaleidonKep99, Kode54 && Mudlord";
             // 
             // label2
             // 
@@ -126,9 +125,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 77);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(86, 13);
+            this.label6.Size = new System.Drawing.Size(88, 13);
             this.label6.TabIndex = 3;
-            this.label6.Text = "KSDAPI version:";
+            this.label6.Text = "KDMAPI version:";
             // 
             // groupBox2
             // 
@@ -195,7 +194,7 @@
             this.groupBox1.Controls.Add(this.ChangeBranch);
             this.groupBox1.Controls.Add(this.CurBranch);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.KSDAPIVer);
+            this.groupBox1.Controls.Add(this.KDMAPIVer);
             this.groupBox1.Controls.Add(this.BASSMIDIVer);
             this.groupBox1.Controls.Add(this.BASSVer);
             this.groupBox1.Controls.Add(this.DriverVer);
@@ -230,14 +229,14 @@
             this.label9.TabIndex = 8;
             this.label9.Text = "Update branch:";
             // 
-            // KSDAPIVer
+            // KDMAPIVer
             // 
-            this.KSDAPIVer.AutoSize = true;
-            this.KSDAPIVer.Location = new System.Drawing.Point(110, 77);
-            this.KSDAPIVer.Name = "KSDAPIVer";
-            this.KSDAPIVer.Size = new System.Drawing.Size(71, 13);
-            this.KSDAPIVer.TabIndex = 7;
-            this.KSDAPIVer.Text = "KSDAPI VER";
+            this.KDMAPIVer.AutoSize = true;
+            this.KDMAPIVer.Location = new System.Drawing.Point(110, 77);
+            this.KDMAPIVer.Name = "KDMAPIVer";
+            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
+            this.KDMAPIVer.TabIndex = 7;
+            this.KDMAPIVer.Text = "KDMAPI VER";
             // 
             // BASSMIDIVer
             // 
@@ -369,7 +368,7 @@
             this.GitHubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.GitHubLink.Location = new System.Drawing.Point(97, 77);
             this.GitHubLink.Name = "GitHubLink";
-            this.GitHubLink.Size = new System.Drawing.Size(277, 13);
+            this.GitHubLink.Size = new System.Drawing.Size(229, 13);
             this.GitHubLink.TabIndex = 3;
             this.GitHubLink.TabStop = true;
             this.GitHubLink.Text = "https://github.com/KaleidonKep99/OmniMIDI/";
@@ -431,7 +430,7 @@
         private System.Windows.Forms.Label WinName;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label KSDAPIVer;
+        private System.Windows.Forms.Label KDMAPIVer;
         private System.Windows.Forms.Label BASSMIDIVer;
         private System.Windows.Forms.Label BASSVer;
         private System.Windows.Forms.Label DriverVer;

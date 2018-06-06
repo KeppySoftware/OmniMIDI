@@ -151,7 +151,7 @@ namespace KnobControl
 		{
 			
 			// This call is required by the Windows.Forms Form Designer.
-			DottedPen = new Pen(Utility.getDarkColor(this.BackColor,40));
+			DottedPen = new Pen(Utility.getDarkColor(BackColor,40));
 			DottedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 			DottedPen.DashCap = System.Drawing.Drawing2D.DashCap.Flat;
 			
@@ -363,7 +363,7 @@ namespace KnobControl
 			this.gOffScreen = Graphics.FromImage(OffScreenImage);	
 
 			// create LinearGradientBrush for creating knob            
-			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.SkyBlue, Color.RoyalBlue, LinearGradientMode.BackwardDiagonal);
+			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.MediumPurple, Color.Purple, LinearGradientMode.BackwardDiagonal);
 			// create LinearGradientBrush for knobPoint                
 			bKnobPoint = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.Black, Color.DarkGray, LinearGradientMode.BackwardDiagonal);
         }

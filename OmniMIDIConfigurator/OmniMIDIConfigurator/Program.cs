@@ -83,6 +83,7 @@ namespace OmniMIDIConfigurator
                 }
             }
 
+            UpdateToOmniMIDI();
             DoAnyway(args);
         }
 
@@ -190,6 +191,11 @@ namespace OmniMIDIConfigurator
                             UpdateSystem.CheckForUpdates(true, true, false);
                             return;
                         }
+                        else if (s.ToLowerInvariant() == "/toomni")
+                        {
+                            UpdateToOmniMIDI();
+                            return;
+                        }
                         else if (s.ToLowerInvariant() == "/inf")
                         {
                             runmode = 2;
@@ -207,7 +213,6 @@ namespace OmniMIDIConfigurator
                     TLS12Enable(false);
                     if (Properties.Settings.Default.UpdateBranch == "choose")
                     {
-                        MessageBox.Show("The driver's update system is divided into three branches. For future update notifications, you can pick between the following branches, which are the Canary Branch, the Normal Branch, and the Delayed Branch. These preferences can be changed at any time.\n\nCanary Branch: all updates\nNormal Branch: occasional updates (default, recommended)\nDelayed Branch: very infrequent updates (not recommended)\n\nClick OK to choose a branch.", "OmniMIDI - New update branches", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         SelectBranch frm = new SelectBranch();
                         frm.ShowInTaskbar = true;
                         frm.StartPosition = FormStartPosition.CenterScreen;
@@ -305,47 +310,78 @@ namespace OmniMIDIConfigurator
             GC.KeepAlive(m);
         }
 
-        public static bool CopyKey(RegistryKey parentKey, string keyNameToCopy, string newKeyName)
+        public static void UpdateToOmniMIDI()
         {
-            RegistryKey destinationKey = parentKey.CreateSubKey(newKeyName);
-            RegistryKey sourceKey = parentKey.OpenSubKey(keyNameToCopy, true);
-            RecurseCopyKey(sourceKey, destinationKey);
-            sourceKey.DeleteSubKey(keyNameToCopy);
-            destinationKey.Close();
-            sourceKey.Close();
-            return true;
-        }
+            String UPSource = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
+            String UPDestination = Environment.GetEnvironmentVariable("USERPROFILE") + "\\OmniMIDI\\";
 
-        private static void RecurseCopyKey(RegistryKey sourceKey, RegistryKey destinationKey)
-        {
-            foreach (string valueName in sourceKey.GetValueNames())
+            String[] OldLists =
             {
-                object objValue = sourceKey.GetValue(valueName);
-                RegistryValueKind valKind = sourceKey.GetValueKind(valueName);
-                destinationKey.SetValue(valueName, objValue, valKind);
+                UPDestination + "lists\\keppymidi.sflist",
+                UPDestination + "lists\\keppymidib.sflist",
+                UPDestination + "lists\\keppymidic.sflist",
+                UPDestination + "lists\\keppymidid.sflist",
+                UPDestination + "lists\\keppymidie.sflist",
+                UPDestination + "lists\\keppymidif.sflist",
+                UPDestination + "lists\\keppymidig.sflist",
+                UPDestination + "lists\\keppymidih.sflist",
+                UPDestination + "lists\\keppymidii.sflist",
+                UPDestination + "lists\\keppymidij.sflist",
+                UPDestination + "lists\\keppymidik.sflist",
+                UPDestination + "lists\\keppymidil.sflist",
+                UPDestination + "lists\\keppymidim.sflist",
+                UPDestination + "lists\\keppymidin.sflist",
+                UPDestination + "lists\\keppymidio.sflist",
+                UPDestination + "lists\\keppymidip.sflist",
+            };
+
+            RegistryKey Source = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer");
+            if (Source != null)
+            {
+                RegistryKey Destination = Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI");
+                Source.CopyTo(Destination);
             }
 
-            foreach (string sourceSubKeyName in sourceKey.GetSubKeyNames())
+            if (Directory.Exists(UPSource))
             {
-                RegistryKey sourceSubKey = sourceKey.OpenSubKey(sourceSubKeyName);
-                RegistryKey destSubKey = destinationKey.CreateSubKey(sourceSubKeyName);
-                RecurseCopyKey(sourceSubKey, destSubKey);
+                try
+                {
+                    Directory.Delete(UPDestination, true);
+                    Directory.Move(UPSource, UPDestination);
+                    Directory.Delete(UPSource, true);
+                }
+                catch { }
+            }
+
+            // Some files
+            try { File.Move(UPDestination + "\\keppymididrv.favlist", UPDestination + "\\OmniMIDI.favlist"); } catch { }
+            try { File.Move(UPDestination + "\\blacklist\\keppysynth.blacklist", UPDestination + "\\blacklist\\OmniMIDI.blacklist"); } catch { }
+
+            // SF lists
+            for (int i = 0; i < OldLists.Length; i++)
+            {
+                try { File.Move(OldLists[i], OmniMIDIConfiguratorMain.ListsPath[i]); } catch { }
+                try { File.Delete(String.Format("{0}{1}", UPDestination, Path.GetFileName(OldLists[i]))); } catch { }
             }
         }
 
-        private static void ReadyCallback()
+        public static void CopyTo(this RegistryKey src, RegistryKey dst)
         {
-            DebugToConsole(false, "Connected to the Discord RPC service.", null);
-        }
+            // copy the values
+            foreach (var name in src.GetValueNames())
+            {
+                dst.SetValue(name, src.GetValue(name), src.GetValueKind(name));
+            }
 
-        private static void DisconnectedCallback(int errorCode, string message)
-        {
-            DebugToConsole(false, String.Format("Disconnected from the Discord RPC service. Error: {0}, {1}", errorCode, message), null);
-        }
-
-        private static void ErrorCallback(int errorCode, string message)
-        {
-            DebugToConsole(false, String.Format("Error in the Discord RPC service. Error: {0}, {1}", errorCode, message), null);
+            // copy the subkeys
+            foreach (var name in src.GetSubKeyNames())
+            {
+                using (var srcSubKey = src.OpenSubKey(name, false))
+                {
+                    var dstSubKey = dst.CreateSubKey(name);
+                    srcSubKey.CopyTo(dstSubKey);
+                }
+            }
         }
     }
 }

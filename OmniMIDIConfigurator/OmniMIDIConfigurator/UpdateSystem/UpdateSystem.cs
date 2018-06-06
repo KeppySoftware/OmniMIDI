@@ -17,7 +17,8 @@ namespace OmniMIDIConfigurator
         public extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
 
         public static string ProductName = "OmniMIDI";
-        public static string UpdateTextFile = "https://raw.githubusercontent.com/KaleidonKep99/OmniMIDI/master/output/OmniMIDICurVer.txt";
+        public static string UpdateTextFile = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/output/OmniMIDICurVer.txt";
+        public static string UpdateFile = "https://github.com/KeppySoftware/OmniMIDI/releases/download/{0}/OmniMIDIUpdate.exe";
         public static string UpdatePage = "https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}";
         public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
 
@@ -37,7 +38,7 @@ namespace OmniMIDIConfigurator
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
-                else Process.Start(String.Format("https://github.com/KeppySoftware/OmniMIDI/releases/tag/{0}", ReturnVal));
+                else Process.Start(String.Format(UpdatePage, ReturnVal));
             }
         }
 

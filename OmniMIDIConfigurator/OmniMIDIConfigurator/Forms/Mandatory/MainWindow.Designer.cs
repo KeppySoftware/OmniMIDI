@@ -1845,7 +1845,7 @@
             this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Lis.BackColor = System.Drawing.Color.White;
+            this.Lis.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.SoundFont,
@@ -2152,6 +2152,7 @@
             // 
             // DebugLog
             // 
+            this.DebugLog.BackColor = System.Drawing.Color.Ivory;
             this.DebugLog.Controls.Add(this.DebugLogShow);
             this.DebugLog.Controls.Add(this.RefreshDebugList);
             this.DebugLog.Controls.Add(this.DebugList);
@@ -2162,7 +2163,6 @@
             this.DebugLog.Size = new System.Drawing.Size(643, 395);
             this.DebugLog.TabIndex = 5;
             this.DebugLog.Text = "Debug log";
-            this.DebugLog.UseVisualStyleBackColor = true;
             // 
             // DebugLogShow
             // 
@@ -2823,7 +2823,7 @@
             // KSynthWiki
             // 
             this.KSynthWiki.Index = 2;
-            this.KSynthWiki.Text = "Open the \"Keppy\'s Synthesizer Wiki\"";
+            this.KSynthWiki.Text = "Open the \"OmniMIDI Wiki\"";
             this.KSynthWiki.Click += new System.EventHandler(this.KSynthWiki_Click);
             // 
             // menuItem27

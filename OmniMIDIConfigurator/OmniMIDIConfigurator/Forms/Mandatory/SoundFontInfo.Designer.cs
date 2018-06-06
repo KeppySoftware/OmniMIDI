@@ -343,7 +343,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Keppy\'s Synthesizer - Information about the SoundFont";
+            this.Text = "OmniMIDI - Information about the SoundFont";
             this.Load += new System.EventHandler(this.OmniMIDISoundfontInfo_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -215,7 +215,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 Program.DebugToConsole(false, "Opening register/unregister dialog...", null);
-                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\KSDriverRegister.exe");
+                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniDriverRegister.exe");
                 process.WaitForExit();
                 Program.DebugToConsole(false, "Done.", null);
             }
@@ -231,12 +231,12 @@ namespace OmniMIDIConfigurator
             {
                 if (integer == 0)
                 {
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\KSDriverRegister.exe", "/rmidimapv");
+                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniDriverRegister.exe", "/rmidimapv");
                     process.WaitForExit();
                 }
                 else
                 {
-                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\KSDriverRegister.exe", "/umidimapv");
+                    var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniDriverRegister.exe", "/umidimapv");
                     process.WaitForExit();
                 }
                 CheckMIDIMapper();

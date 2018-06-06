@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label2.Text" xml:space="preserve">
-    <value>Canary: Receive all updates. You may get broken updates that haven't been fully tested. Designed for testers and early adopters.
+    <value>Canary: Receive all updates. You may get broken updates that haven't been fully tested, or have features that may get removed in the next canary release. Designed for testers and early adopters.
 
 Normal: Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x). Recommended.
 
-Delayed: You will only get major releases (Eg. from version x.1.x.x to x.2.x.x). For those who do not wish to update often. Not recommended.</value>
+Delayed: You will only get major releases (Eg. from version x.1.x.x to x.2.x.x). For those who do not wish to update often. Some issues sent on GitHub using this release may not get accepted. Not recommended.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -168,7 +168,7 @@
             // 
             this.KSDAPIBoxWhat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.KSDAPIBoxWhat.Image = global::OmniMIDIConfigurator.Properties.Resources.what;
-            this.KSDAPIBoxWhat.Location = new System.Drawing.Point(197, 19);
+            this.KSDAPIBoxWhat.Location = new System.Drawing.Point(249, 19);
             this.KSDAPIBoxWhat.Name = "KSDAPIBoxWhat";
             this.KSDAPIBoxWhat.Size = new System.Drawing.Size(14, 14);
             this.KSDAPIBoxWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -181,9 +181,9 @@
             this.KSDAPIBox.AutoSize = true;
             this.KSDAPIBox.Location = new System.Drawing.Point(6, 18);
             this.KSDAPIBox.Name = "KSDAPIBox";
-            this.KSDAPIBox.Size = new System.Drawing.Size(192, 17);
+            this.KSDAPIBox.Size = new System.Drawing.Size(244, 17);
             this.KSDAPIBox.TabIndex = 7;
-            this.KSDAPIBox.Text = "Allow apps to use the KSDirect API";
+            this.KSDAPIBox.Text = "Allow apps to use the Keppy\'s Direct MIDI API";
             this.KSDAPIBox.UseVisualStyleBackColor = true;
             this.KSDAPIBox.CheckedChanged += new System.EventHandler(this.KSDAPIBox_CheckedChanged);
             // 

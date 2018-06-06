@@ -53,8 +53,8 @@
             this.label1.Size = new System.Drawing.Size(461, 54);
             this.label1.TabIndex = 1;
             this.label1.Text = "Some apps might be hardwired to a specific synthesizer.\r\nYou can try and fool the" +
-    "m by renaming Keppy\'s Synthesizer to another synthesizer/driver.\r\n\r\nSelect a mas" +
-    "k in the list below:";
+    "m by renaming OmniMIDI to another synthesizer/driver.\r\n\r\nSelect a mask in the li" +
+    "st below:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label2

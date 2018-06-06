@@ -1,5 +1,5 @@
 #define Author "KaleidonKep99"
-#define Icon "OMIcons\OMSetupICO.ico"
+#define Icon "Branding\OMSetupICO.ico"
 #define Configurator "OmniMIDIConfigurator"
 #define Copyright 'Copyright (c) 2011 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.'
 #define DebugWindow "OmniMIDIDebugWindow"
@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '5.1.1.7'
+#define Version '5.1.1.8'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -47,7 +47,7 @@ LicenseFile=license.txt
 MinVersion=0,6.0.6001sp2
 OutputBaseFilename={#OutputName}
 PrivilegesRequired=lowest
-SetupIconFile=midiicon.ico
+SetupIconFile={#Icon}
 ShowLanguageDialog=no
 SolidCompression=yes
 TimeStampsInUTC=True
@@ -243,6 +243,8 @@ Type: files; Name: "{tmp}\LoudMax64.dll"
 [Run]
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Is64BitInstallMode
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: not Is64BitInstallMode
+Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/toomni"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Updating folders to OmniMIDI..."; Check: Is64BitInstallMode
+Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/toomni"; Flags: waituntilterminated runascurrentuser; StatusMsg: "Updating folders to OmniMIDI..."; Check: not Is64BitInstallMode
 
 [Messages]
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.

@@ -65,7 +65,7 @@
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label2.Location = new System.Drawing.Point(3, 16);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(386, 108);
+            this.label2.Size = new System.Drawing.Size(386, 134);
             this.label2.TabIndex = 2;
             this.label2.Text = resources.GetString("label2.Text");
             // 
@@ -77,7 +77,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(12, 47);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(392, 127);
+            this.groupBox1.Size = new System.Drawing.Size(392, 153);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Description of branches";
@@ -85,7 +85,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(325, 183);
+            this.button1.Location = new System.Drawing.Point(325, 209);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(79, 23);
             this.button1.TabIndex = 4;
@@ -98,7 +98,7 @@
             this.CurrentBranch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CurrentBranch.AutoSize = true;
             this.CurrentBranch.Enabled = false;
-            this.CurrentBranch.Location = new System.Drawing.Point(16, 188);
+            this.CurrentBranch.Location = new System.Drawing.Point(16, 214);
             this.CurrentBranch.Name = "CurrentBranch";
             this.CurrentBranch.Size = new System.Drawing.Size(188, 13);
             this.CurrentBranch.TabIndex = 5;
@@ -108,7 +108,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 218);
+            this.ClientSize = new System.Drawing.Size(416, 244);
             this.Controls.Add(this.CurrentBranch);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);

@@ -24,7 +24,7 @@ namespace OmniMIDIConfigurator
         {
             InitializeComponent();
             SelectedSF = Target;
-            SelectedSFLabel.Text = "Selected soundfont:\n" + SelectedSF;
+            SelectedSFLabel.Text = "Selected soundfont:\n" + Path.GetFileNameWithoutExtension(SelectedSF);
             BankVal.Value = 0;
             PresetVal.Value = 0;
             if (typeofsf == 1)
@@ -67,8 +67,13 @@ namespace OmniMIDIConfigurator
         private void WikipediaLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var helpFile = Path.Combine(Path.GetTempPath(), "help.txt");
-            File.WriteAllText(helpFile, OmniMIDIConfigurator.Properties.Resources.gmlist);
+            File.WriteAllText(helpFile, Properties.Resources.gmlist);
             Process.Start(helpFile);
+        }
+
+        private void BankNPresetSel_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

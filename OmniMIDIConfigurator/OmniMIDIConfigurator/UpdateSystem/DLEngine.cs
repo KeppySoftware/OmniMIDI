@@ -15,6 +15,7 @@ namespace OmniMIDIConfigurator.Forms
     public partial class DLEngine : Form
     {
         WebClient DLSystem;
+        System.Timers.Timer DLSystemTimeout = new System.Timers.Timer(5000);
         String VersionToDownload;
         String FullURL;
         String thestring;
@@ -53,20 +54,42 @@ namespace OmniMIDIConfigurator.Forms
                         CancelBtn.Visible = false;
                         progressBar1.Size = new Size(271, 23);
                     }
-                    URL = new Uri(String.Format("https://github.com/KaleidonKep99/OmniMIDI/releases/download/{0}/OmniMIDIUpdate.exe", VersionToDownload));
+                    URL = new Uri(String.Format(UpdateSystem.UpdateFile, VersionToDownload));
                 }
                 else
                 {
                     URL = new Uri(FullURL);
                 }
 
-                try { DLSystem.DownloadDataAsync(URL); Program.DebugToConsole(false, String.Format(thestring, 0), null); }
+                try {
+                    DLSystemTimeout.Elapsed += TimeOutCheck;
+                    DLSystem.DownloadDataAsync(URL);
+                    DLSystemTimeout.Start();
+                    Program.DebugToConsole(false, String.Format(thestring, 0), null); }
                 catch { }
             }
         }
 
+        private void ResetTimeout()
+        {
+            DLSystemTimeout.Stop();
+            DLSystemTimeout.Start();
+        }
+
+        private void TimeOutCheck(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            DLSystemTimeout.Elapsed -= TimeOutCheck;
+            DLSystem.CancelAsync();
+            DLSystem.Dispose();
+            Program.DebugToConsole(false, "An error has occurred while downloading the update.", null);
+            MessageBox.Show("The download process has timed out.\nYour Internet may be slow, or GitHub may be experiencing high server load.\n\nIf your connection is working, wait a few minutes before updating.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Timed out", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            DialogResult = DialogResult.No;
+            Close();
+        }
+
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            ResetTimeout();
             progressBar1.Value = e.ProgressPercentage;
             Status.Text = String.Format(thestring, 0);
             DLPercent.Text = String.Format("{0}%", e.ProgressPercentage);
@@ -85,7 +108,7 @@ namespace OmniMIDIConfigurator.Forms
             else if (e.Error != null)
             {
                 DLSystem.Dispose();
-                Program.DebugToConsole(false, "An error as occurred while downloading the update.", null);
+                Program.DebugToConsole(false, "An error has occurred while downloading the update.", null);
                 MessageBox.Show("The configurator is unable to download the latest version.\nIt might not be available yet, or you might not be connected to the Internet.\n\nIf your connection is working, wait a few minutes for the update to appear online.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.No;
                 Close();

@@ -285,9 +285,9 @@
             this.KSDAPILabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KSDAPILabel.Location = new System.Drawing.Point(2, 132);
             this.KSDAPILabel.Name = "KSDAPILabel";
-            this.KSDAPILabel.Size = new System.Drawing.Size(94, 13);
+            this.KSDAPILabel.Size = new System.Drawing.Size(96, 13);
             this.KSDAPILabel.TabIndex = 46;
-            this.KSDAPILabel.Text = "KSDAPI status:";
+            this.KSDAPILabel.Text = "KDMAPI status:";
             this.KSDAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ASIOL
@@ -1299,7 +1299,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(432, 251);
             this.Controls.Add(this.RefreshDebugApps);
             this.Controls.Add(this.Tabs);

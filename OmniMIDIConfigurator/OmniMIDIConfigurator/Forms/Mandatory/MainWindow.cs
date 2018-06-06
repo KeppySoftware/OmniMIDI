@@ -57,28 +57,28 @@ namespace OmniMIDIConfigurator
         public int CurrentIndexFreq { get; set; }
 
         // Lists
-        public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE");
+        public static string soundfontnewlocation = Environment.GetEnvironmentVariable("USERPROFILE");
         public static string AbsolutePath = soundfontnewlocation + "\\OmniMIDI";
         public static string PathToAllLists = soundfontnewlocation + "\\OmniMIDI\\lists";
         public static string DebugTextFiles = soundfontnewlocation + "\\OmniMIDI\\debug";
         public static string[] ListsPath = new string[]
         {
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidi.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidib.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidic.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidid.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidie.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidif.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidig.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidih.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidii.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidij.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidik.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidil.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidim.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidin.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidio.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\keppymidip.sflist"
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_A.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_B.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_C.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_D.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_E.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_F.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_G.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_H.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_I.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_L.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_M.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_N.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_O.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_P.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_Q.sflist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_R.sflist"
         };
 
         // Work

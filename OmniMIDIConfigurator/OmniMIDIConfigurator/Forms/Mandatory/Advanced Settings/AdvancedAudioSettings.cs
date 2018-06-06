@@ -154,7 +154,7 @@ namespace OmniMIDIConfigurator
         private void KSDAPIBoxWhat_Click(object sender, EventArgs e)
         {
             MessageBox.Show("If you uncheck this option, some apps might be forced to fallback to the stock Windows Multimedia API, which increases latency." +
-                "\nKeep in mind that not all KSDAPI-ready apps do check for this value, and they might use it whether you want them to or not." +
+                "\nKeep in mind that not all KDMAPI-ready apps do check for this value, and they might use it whether you want them to or not." +
                 "\n\n(This value will not affect the Windows Multimedia Wrapper.)", 
                 "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

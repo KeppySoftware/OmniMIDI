@@ -701,13 +701,13 @@ namespace OmniMIDIDebugWindow
                 var ptr = FindFirstFile(@"\\.\pipe\*", out lpFindFileData);
                 PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
                 if (PipeToAdd.Contains("OmniMIDIDbg"))
-                    KSPipesCheck.Add(PipeToAdd);
+                    KSPipesCheck.Add(String.Format("Debug pipe {0}", Regex.Match(PipeToAdd, @"\d+").Value));
 
                 while (FindNextFile(ptr, out lpFindFileData))
                 {
                     PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
                     if (PipeToAdd.Contains("OmniMIDIDbg"))
-                        KSPipesCheck.Add(PipeToAdd);
+                        KSPipesCheck.Add(String.Format("Debug pipe {0}", Regex.Match(PipeToAdd, @"\d+").Value));
                 }
                 FindClose(ptr);
 

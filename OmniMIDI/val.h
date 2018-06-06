@@ -283,22 +283,22 @@ static TCHAR * sflistloadme[16] =
 
 static TCHAR * sfdirs[16] =
 {
-	L"\\OmniMIDI\\lists\\keppymidi.sflist",
-	L"\\OmniMIDI\\lists\\keppymidib.sflist",
-	L"\\OmniMIDI\\lists\\keppymidic.sflist",
-	L"\\OmniMIDI\\lists\\keppymidid.sflist",
-	L"\\OmniMIDI\\lists\\keppymidie.sflist",
-	L"\\OmniMIDI\\lists\\keppymidif.sflist",
-	L"\\OmniMIDI\\lists\\keppymidig.sflist",
-	L"\\OmniMIDI\\lists\\keppymidih.sflist",
-	L"\\OmniMIDI\\lists\\keppymidii.sflist",
-	L"\\OmniMIDI\\lists\\keppymidij.sflist",
-	L"\\OmniMIDI\\lists\\keppymidik.sflist",
-	L"\\OmniMIDI\\lists\\keppymidil.sflist",
-	L"\\OmniMIDI\\lists\\keppymidim.sflist",
-	L"\\OmniMIDI\\lists\\keppymidin.sflist",
-	L"\\OmniMIDI\\lists\\keppymidio.sflist",
-	L"\\OmniMIDI\\lists\\keppymidip.sflist"
+	L"\\OmniMIDI\\lists\\OmniMIDI_A.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_B.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_C.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_D.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_E.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_F.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_G.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_H.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_I.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_L.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_M.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_N.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_O.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_P.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_Q.sflist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_R.sflist"
 };
 
 // -----------------------------------------------------------------------

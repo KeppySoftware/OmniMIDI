@@ -16,8 +16,7 @@ namespace OmniMIDIConfigurator
     {
         private CommonOpenFileDialog AddFolderDialog = new CommonOpenFileDialog();
         private string LastBrowserPath { get; set; }
-        private string FolderListPathWithFile { get; set; }
-        private string folderlistpath = Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\OmniMIDI\\";
+        private string FolderListPathWithFile = Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\OmniMIDI\\OmniMIDI.favlist";
 
         public KeppySynthFavouritesManager()
         {
@@ -72,9 +71,6 @@ namespace OmniMIDIConfigurator
         private void KeppyDriverFavouritesManager_Load(object sender, EventArgs e)
         {
             InitializeLastPath();
-
-            // Initialize blacklist
-            FolderListPathWithFile = folderlistpath + "keppymididrv.favlist";
 
             try
             {

@@ -127,7 +127,7 @@
             this.Name = "UpdateYesNo";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Keppy\'s Synthesizer - Event here";
+            this.Text = "OmniMIDI - Event here";
             this.Load += new System.EventHandler(this.UpdateYesNo_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CurrentIcon)).EndInit();
