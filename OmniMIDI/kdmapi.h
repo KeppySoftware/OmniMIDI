@@ -1,4 +1,4 @@
-// KSDAPI calls
+// KDMAPI calls
 
 void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(OMStream);
@@ -123,7 +123,7 @@ void DoResetClient() {
 }
 
 char const* WINAPI ReturnKDMAPIVer() {
-	return "v1.12 (Release)";
+	return "v1.20 (Release)";
 }
 
 BOOL WINAPI IsKDMAPIAvailable()  {

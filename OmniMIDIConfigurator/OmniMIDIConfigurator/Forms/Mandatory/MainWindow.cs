@@ -316,7 +316,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 if (VolTrackBar.Value <= 49) VolSimView.ForeColor = Color.Red;
-                else VolSimView.ForeColor = Color.Blue;
+                else VolSimView.ForeColor = Color.Purple;
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
                 VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
@@ -1879,10 +1879,10 @@ namespace OmniMIDIConfigurator
                         if (CurrentTheme != 1)
                         {
                             CurrentTheme = 1;
-                            SoundFontTab.Invoke((MethodInvoker)delegate { SoundFontTab.BackColor = Color.White; });
-                            Settings.Invoke((MethodInvoker)delegate { Settings.BackColor = Color.White; });
-                            VolPanel.Invoke((MethodInvoker)delegate { VolPanel.BackColor = Color.White; });
-                            MixerPanel.Invoke((MethodInvoker)delegate { MixerPanel.BackColor = Color.White; });
+                            SoundFontTab.Invoke((MethodInvoker)delegate { SoundFontTab.BackColor = SystemColors.ControlLightLight; });
+                            Settings.Invoke((MethodInvoker)delegate { Settings.BackColor = SystemColors.ControlLightLight; });
+                            VolPanel.Invoke((MethodInvoker)delegate { VolPanel.BackColor = SystemColors.ControlLightLight; });
+                            MixerPanel.Invoke((MethodInvoker)delegate { MixerPanel.BackColor = SystemColors.ControlLightLight; });
                             this.Invoke(new MethodInvoker(delegate { this.Refresh(); }));
                         }
                     }

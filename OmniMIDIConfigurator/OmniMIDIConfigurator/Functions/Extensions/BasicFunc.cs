@@ -661,7 +661,7 @@ namespace OmniMIDIConfigurator
                 if (OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value <= 49)
                     OmniMIDIConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Red;
                 else
-                    OmniMIDIConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Blue;
+                    OmniMIDIConfiguratorMain.Delegate.VolSimView.ForeColor = Color.Purple;
 
                 OmniMIDIConfiguratorMain.Delegate.VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
 

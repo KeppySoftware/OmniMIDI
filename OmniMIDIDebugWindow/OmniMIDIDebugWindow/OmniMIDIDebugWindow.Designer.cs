@@ -218,6 +218,7 @@
             // 
             // SynthDbg
             // 
+            this.SynthDbg.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.SynthDbg.Controls.Add(this.BufStatus);
             this.SynthDbg.Controls.Add(this.BufStatusLabel);
             this.SynthDbg.Controls.Add(this.KSDAPI);
@@ -242,7 +243,6 @@
             this.SynthDbg.Size = new System.Drawing.Size(424, 170);
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
-            this.SynthDbg.UseVisualStyleBackColor = true;
             // 
             // BufStatus
             // 
@@ -450,6 +450,7 @@
             // 
             // ChannelVoices
             // 
+            this.ChannelVoices.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ChannelVoices.Controls.Add(this.CHV16);
             this.ChannelVoices.Controls.Add(this.CHV16L);
             this.ChannelVoices.Controls.Add(this.CHV15);
@@ -488,7 +489,6 @@
             this.ChannelVoices.Size = new System.Drawing.Size(424, 170);
             this.ChannelVoices.TabIndex = 2;
             this.ChannelVoices.Text = "Channels voice count";
-            this.ChannelVoices.UseVisualStyleBackColor = true;
             // 
             // CHV16
             // 
@@ -844,6 +844,7 @@
             // 
             // ThreadTime
             // 
+            this.ThreadTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ThreadTime.Controls.Add(this.SLRT);
             this.ThreadTime.Controls.Add(this.SLRTLabel);
             this.ThreadTime.Controls.Add(this.NCRT);
@@ -858,7 +859,6 @@
             this.ThreadTime.Size = new System.Drawing.Size(424, 170);
             this.ThreadTime.TabIndex = 3;
             this.ThreadTime.Text = "Threads time";
-            this.ThreadTime.UseVisualStyleBackColor = true;
             // 
             // SLRT
             // 
@@ -954,6 +954,7 @@
             // 
             // PCSpecs
             // 
+            this.PCSpecs.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.PCSpecs.Controls.Add(this.CPULogo);
             this.PCSpecs.Controls.Add(this.MT);
             this.PCSpecs.Controls.Add(this.MTLabel);
@@ -980,7 +981,6 @@
             this.PCSpecs.Size = new System.Drawing.Size(424, 170);
             this.PCSpecs.TabIndex = 1;
             this.PCSpecs.Text = "Computer specifications";
-            this.PCSpecs.UseVisualStyleBackColor = true;
             // 
             // CPULogo
             // 
@@ -1207,9 +1207,9 @@
             this.SelectedDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedDebug.FormattingEnabled = true;
-            this.SelectedDebug.Location = new System.Drawing.Point(294, 225);
+            this.SelectedDebug.Location = new System.Drawing.Point(310, 225);
             this.SelectedDebug.Name = "SelectedDebug";
-            this.SelectedDebug.Size = new System.Drawing.Size(134, 21);
+            this.SelectedDebug.Size = new System.Drawing.Size(118, 21);
             this.SelectedDebug.TabIndex = 46;
             this.SelectedDebug.SelectedIndexChanged += new System.EventHandler(this.SelectedDebug_SelectedIndexChanged);
             this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
@@ -1217,11 +1217,12 @@
             // VersionLabel
             // 
             this.VersionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.VersionLabel.Enabled = false;
-            this.VersionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.VersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.VersionLabel.Location = new System.Drawing.Point(42, 207);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(214, 32);
+            this.VersionLabel.Size = new System.Drawing.Size(237, 32);
             this.VersionLabel.TabIndex = 35;
             this.VersionLabel.Text = "Checking version...";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1229,9 +1230,9 @@
             // CopyToClip1
             // 
             this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip1.Location = new System.Drawing.Point(266, 199);
+            this.CopyToClip1.Location = new System.Drawing.Point(281, 199);
             this.CopyToClip1.Name = "CopyToClip1";
-            this.CopyToClip1.Size = new System.Drawing.Size(163, 23);
+            this.CopyToClip1.Size = new System.Drawing.Size(148, 23);
             this.CopyToClip1.TabIndex = 34;
             this.CopyToClip1.Text = "Copy all tabs to clipboard";
             this.CopyToClip1.UseVisualStyleBackColor = true;
@@ -1282,7 +1283,7 @@
             // RefreshDebugApps
             // 
             this.RefreshDebugApps.Image = global::OmniMIDIDebugWindow.Properties.Resources.ReloadIcon;
-            this.RefreshDebugApps.Location = new System.Drawing.Point(266, 224);
+            this.RefreshDebugApps.Location = new System.Drawing.Point(282, 224);
             this.RefreshDebugApps.Name = "RefreshDebugApps";
             this.RefreshDebugApps.Size = new System.Drawing.Size(24, 24);
             this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;

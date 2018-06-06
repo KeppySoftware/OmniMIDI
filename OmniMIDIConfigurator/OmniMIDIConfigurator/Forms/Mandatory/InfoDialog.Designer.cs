@@ -96,7 +96,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 20);
+            this.label3.Location = new System.Drawing.Point(6, 19);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 13);
             this.label3.TabIndex = 0;
@@ -105,7 +105,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 39);
+            this.label4.Location = new System.Drawing.Point(6, 38);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 1;
@@ -114,7 +114,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 58);
+            this.label5.Location = new System.Drawing.Point(6, 57);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 2;
@@ -123,7 +123,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 77);
+            this.label6.Location = new System.Drawing.Point(6, 76);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(88, 13);
             this.label6.TabIndex = 3;
@@ -138,7 +138,7 @@
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.WinName);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Location = new System.Drawing.Point(10, 274);
+            this.groupBox2.Location = new System.Drawing.Point(10, 273);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(362, 59);
             this.groupBox2.TabIndex = 6;
@@ -204,17 +204,17 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(10, 151);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(362, 117);
+            this.groupBox1.Size = new System.Drawing.Size(362, 116);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Driver info";
+            this.groupBox1.Text = "OmniMIDI library info";
             // 
             // CurBranch
             // 
             this.CurBranch.AutoSize = true;
             this.CurBranch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurBranch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.CurBranch.Location = new System.Drawing.Point(110, 96);
+            this.CurBranch.Location = new System.Drawing.Point(110, 95);
             this.CurBranch.Name = "CurBranch";
             this.CurBranch.Size = new System.Drawing.Size(58, 13);
             this.CurBranch.TabIndex = 9;
@@ -223,7 +223,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 96);
+            this.label9.Location = new System.Drawing.Point(6, 95);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(81, 13);
             this.label9.TabIndex = 8;
@@ -232,7 +232,7 @@
             // KDMAPIVer
             // 
             this.KDMAPIVer.AutoSize = true;
-            this.KDMAPIVer.Location = new System.Drawing.Point(110, 77);
+            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
             this.KDMAPIVer.Name = "KDMAPIVer";
             this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
             this.KDMAPIVer.TabIndex = 7;
@@ -241,7 +241,7 @@
             // BASSMIDIVer
             // 
             this.BASSMIDIVer.AutoSize = true;
-            this.BASSMIDIVer.Location = new System.Drawing.Point(110, 58);
+            this.BASSMIDIVer.Location = new System.Drawing.Point(110, 57);
             this.BASSMIDIVer.Name = "BASSMIDIVer";
             this.BASSMIDIVer.Size = new System.Drawing.Size(54, 13);
             this.BASSMIDIVer.TabIndex = 6;
@@ -250,7 +250,7 @@
             // BASSVer
             // 
             this.BASSVer.AutoSize = true;
-            this.BASSVer.Location = new System.Drawing.Point(110, 39);
+            this.BASSVer.Location = new System.Drawing.Point(110, 38);
             this.BASSVer.Name = "BASSVer";
             this.BASSVer.Size = new System.Drawing.Size(54, 13);
             this.BASSVer.TabIndex = 5;
@@ -259,7 +259,7 @@
             // DriverVer
             // 
             this.DriverVer.AutoSize = true;
-            this.DriverVer.Location = new System.Drawing.Point(110, 20);
+            this.DriverVer.Location = new System.Drawing.Point(110, 19);
             this.DriverVer.Name = "DriverVer";
             this.DriverVer.Size = new System.Drawing.Size(62, 13);
             this.DriverVer.TabIndex = 4;
@@ -378,10 +378,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::OmniMIDIConfigurator.Properties.Resources.InfoBk;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(382, 371);
+            this.ClientSize = new System.Drawing.Size(382, 370);
             this.Controls.Add(this.PatreonBtn);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
@@ -394,6 +394,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.VerLabel);
             this.Controls.Add(this.CurrentLogo);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

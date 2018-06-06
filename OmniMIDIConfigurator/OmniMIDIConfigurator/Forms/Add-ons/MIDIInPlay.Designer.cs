@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MIDIInPlay));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.MIDIInList = new System.Windows.Forms.ComboBox();
@@ -49,7 +48,9 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(315, 94);
             this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            this.label1.Text = "From within this test window, you can test if the MIDI inputs work properly,\r\nand" +
+    " if OmniMIDI detects the events.\r\nKeep this window open to keep the stream alive" +
+    ", or close it to close the stream too.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
@@ -118,6 +119,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(314, 153);
             this.Controls.Add(this.ActivityPanel);
             this.Controls.Add(this.label3);
