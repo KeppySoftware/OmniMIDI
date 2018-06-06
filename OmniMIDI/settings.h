@@ -598,7 +598,7 @@ void FillContentDebug(
 	float CCUI0,				// Rendering time
 	int HC,						// App's handles
 	unsigned long long RUI,		// App's working size/RAM usage
-	bool KSDAPI,				// KSDAPI status
+	bool KDMAPI,				// KDMAPI status
 	double TD1,					// Thread 1's latency
 	double TD2,					// Thread 2's latency
 	double TD3,					// Thread 3's latency
@@ -627,7 +627,7 @@ void FillContentDebug(
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
-	PipeContent += "\nKSDirect = " + std::to_string(KSDAPI);
+	PipeContent += "\nKSDirect = " + std::to_string(KDMAPI);
 	PipeContent += "\nTd1 = " + std::to_string(TD1);
 	PipeContent += "\nTd2 = " + std::to_string(TD2);
 	PipeContent += "\nTd3 = " + std::to_string(TD3);
@@ -673,7 +673,7 @@ void SendDebugDataToPipe() {
 
 		long long TimeDuringDebug = TimeNow();
 
-		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KSDAPIEnabled,
+		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KDMAPIEnabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, ManagedSettings.NotesCatcherWithAudio ? 0.0f : TimeDuringDebug - start4,
 			inlatency, outlatency, FALSE /* It's supposed to be a buffer overload check */);
 
@@ -687,7 +687,7 @@ void SendDebugDataToPipe() {
 
 void SendDummyDataToPipe() {
 	try {
-		FillContentDebug(0.0f, 0, 0, KSDAPIEnabled, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
+		FillContentDebug(0.0f, 0, 0, KDMAPIEnabled, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
 		FlushFileBuffers(hPipe);
 	}
 	catch (...) {

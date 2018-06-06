@@ -61,14 +61,14 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                if (!System.IO.Directory.Exists(PathToAllLists))
+                if (!Directory.Exists(PathToAllLists))
                 {
                     Directory.CreateDirectory(PathToAllLists);
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
                     return;
                 }
-                if (!System.IO.File.Exists(WhichList))
+                if (!File.Exists(WhichList))
                 {
                     File.Create(WhichList).Dispose();
                     Lis.Items.Clear();
@@ -197,10 +197,7 @@ namespace OmniMIDIConfigurator
             AddApp.InitialDirectory = LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
-                foreach (string str in AddApp.FileNames)
-                {
-                    AddAppNameOnlyToList(str);
-                }
+                foreach (string str in AddApp.FileNames) AddAppNameOnlyToList(str);
             }
         }
 

@@ -131,11 +131,11 @@ BOOL WINAPI IsKDMAPIAvailable()  {
 	DWORD dwType = REG_DWORD;
 	DWORD dwSize = sizeof(DWORD);
 	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_READ, &hKey);
-	long lResult = RegQueryValueEx(hKey, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KSDAPIEnabled, &dwSize);
+	long lResult = RegQueryValueEx(hKey, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KDMAPIEnabled, &dwSize);
 	RegCloseKey(hKey);
 
 	if (lResult != ERROR_SUCCESS) return TRUE;
-	else return KSDAPIEnabled;
+	else return KDMAPIEnabled;
 }
 
 void InitializeKDMAPIStream() {

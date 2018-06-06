@@ -364,13 +364,13 @@ STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_
 		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR*)dwParam1;
 
-		// Pass it to a KSDAPI function
+		// Pass it to a KDMAPI function
 		return PrepareLongData(IIMidiHdr);
 	case MODM_UNPREPARE:
 		// Reference the MIDIHDR
 		IIMidiHdr = (MIDIHDR*)dwParam1;
 
-		// Pass it to a KSDAPI function
+		// Pass it to a KDMAPI function
 		return UnprepareLongData(IIMidiHdr);
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO

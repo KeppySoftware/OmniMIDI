@@ -118,7 +118,7 @@ static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
 // Potato
 static BOOL EVBuffReady = FALSE;
-static BOOL KSDAPIEnabled = FALSE;
+static BOOL KDMAPIEnabled = FALSE;
 static FLOAT RenderingTime = 0.0f;
 static ULONGLONG EvBufferSize = 4096;
 static ULONGLONG TempEvBufferSize = EvBufferSize;
@@ -328,22 +328,22 @@ static TCHAR * listsloadme[16] =
 
 static TCHAR * listsanalyze[16] =
 {
-	L"\\OmniMIDI\\applists\\keppymidi.applist",
-	L"\\OmniMIDI\\applists\\keppymidib.applist",
-	L"\\OmniMIDI\\applists\\keppymidic.applist",
-	L"\\OmniMIDI\\applists\\keppymidid.applist",
-	L"\\OmniMIDI\\applists\\keppymidie.applist",
-	L"\\OmniMIDI\\applists\\keppymidif.applist",
-	L"\\OmniMIDI\\applists\\keppymidig.applist",
-	L"\\OmniMIDI\\applists\\keppymidih.applist",
-	L"\\OmniMIDI\\applists\\keppymidii.applist",
-	L"\\OmniMIDI\\applists\\keppymidij.applist",
-	L"\\OmniMIDI\\applists\\keppymidik.applist",
-	L"\\OmniMIDI\\applists\\keppymidil.applist",
-	L"\\OmniMIDI\\applists\\keppymidim.applist",
-	L"\\OmniMIDI\\applists\\keppymidin.applist",
-	L"\\OmniMIDI\\applists\\keppymidio.applist",
-	L"\\OmniMIDI\\applists\\keppymidip.applist"
+	L"\\OmniMIDI\\applists\\OmniMIDI_A.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_B.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_C.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_D.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_E.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_F.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_G.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_H.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_I.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_L.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_M.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_N.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_O.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_P.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_Q.applist",
+	L"\\OmniMIDI\\applists\\OmniMIDI_R.applist"
 };
 
 // -----------------------------------------------------------------------

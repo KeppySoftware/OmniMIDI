@@ -52,7 +52,7 @@ BOOL BlackListSystem(){
 			RegQueryValueEx(hKey, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&ManagedSettings.NoBlacklistMessage, &dwSize);
 			RegCloseKey(hKey);
 
-			PathAppend(userblacklistdirectory, _T("\\OmniMIDI\\blacklist\\keppymididrv.blacklist"));
+			PathAppend(userblacklistdirectory, _T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist"));
 			std::wifstream file(userblacklistdirectory);
 			OutputDebugString(userblacklistdirectory);
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
