@@ -429,7 +429,6 @@
     <None Include="Resources\Pictures\InfoBk.png" />
     <None Include="Resources\WinMM64WRP\winmm64wrp.dll" />
     <None Include="Resources\WinMM32WRP\winmm32wrp.dll" />
-    <None Include="Resources\Text\TelemetryLoginData.txt" />
     <None Include="Resources\LoudMax\LoudMax64.dll" />
     <None Include="Resources\LoudMax\LoudMax.dll" />
     <None Include="Resources\List Editor\ReloadIcon.png" />

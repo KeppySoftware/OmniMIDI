@@ -1,5 +1,5 @@
 ﻿namespace OmniMIDIConfigurator{
-    partial class KeppySynthSFListAssign
+    partial class SFListAssign
     {
         /// <summary>
         /// Required designer variable.
@@ -27,7 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthSFListAssign));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SFListAssign));
             this.AddApp = new System.Windows.Forms.OpenFileDialog();
             this.label5 = new System.Windows.Forms.Label();
             this.Lis = new System.Windows.Forms.ListBox();
@@ -134,7 +134,7 @@
             this.clearListToolStripMenuItem.Text = "Clear list";
             this.clearListToolStripMenuItem.Click += new System.EventHandler(this.clearListToolStripMenuItem_Click);
             // 
-            // KeppySynthSFListAssign
+            // SFListAssign
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthDefaultSFList : Form
+    public partial class DefaultSFList : Form
     {
-        public KeppySynthDefaultSFList()
+        public DefaultSFList()
         {
             InitializeComponent();
         }

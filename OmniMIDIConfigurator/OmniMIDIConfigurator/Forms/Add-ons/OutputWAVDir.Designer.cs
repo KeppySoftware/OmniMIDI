@@ -1,5 +1,5 @@
 ﻿namespace OmniMIDIConfigurator{
-    partial class KeppySynthOutputWAVDir
+    partial class OutputWAVDir
     {
         /// <summary>
         /// Required designer variable.
@@ -91,7 +91,7 @@
             this.BrowseButton.UseVisualStyleBackColor = true;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
-            // KeppySynthOutputWAVDir
+            // OutputWAVDir
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -107,7 +107,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppySynthOutputWAVDir";
+            this.Name = "OutputWAVDir";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

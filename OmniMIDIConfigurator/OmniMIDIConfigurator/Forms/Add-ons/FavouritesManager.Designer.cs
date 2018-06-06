@@ -1,6 +1,6 @@
 ﻿namespace OmniMIDIConfigurator
 {
-    partial class KeppySynthFavouritesManager
+    partial class FavouritesManager
     {
         /// <summary>
         /// Required designer variable.
@@ -126,7 +126,7 @@
             this.FolderList.Size = new System.Drawing.Size(695, 287);
             this.FolderList.TabIndex = 32;
             // 
-            // KeppySynthFavouritesManager
+            // FavouritesManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

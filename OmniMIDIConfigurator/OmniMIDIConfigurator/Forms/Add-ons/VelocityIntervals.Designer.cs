@@ -1,6 +1,6 @@
 ﻿namespace OmniMIDIConfigurator
 {
-    partial class KeppySynthVelocityIntervals
+    partial class VelocityIntervals
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthVelocityIntervals));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VelocityIntervals));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.HiVel = new System.Windows.Forms.NumericUpDown();
@@ -142,7 +142,7 @@
             0});
             this.LoVel.ValueChanged += new System.EventHandler(this.LoVel_ValueChanged);
             // 
-            // KeppySynthVelocityIntervals
+            // VelocityIntervals
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -159,12 +159,12 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeppySynthVelocityIntervals";
+            this.Name = "VelocityIntervals";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Set velocity values to ignore";
-            this.Load += new System.EventHandler(this.KeppySynthVelocityIntervals_Load);
+            this.Load += new System.EventHandler(this.VelocityIntervals_Load);
             ((System.ComponentModel.ISupportInitialize)(this.HiVel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LoVel)).EndInit();
             this.ResumeLayout(false);

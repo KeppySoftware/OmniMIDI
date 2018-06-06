@@ -1,6 +1,6 @@
 ﻿namespace OmniMIDIConfigurator 
 {
-    partial class KeppySynthDefaultSFList
+    partial class DefaultSFList
     {
         /// <summary>
         /// Required designer variable.
@@ -100,7 +100,7 @@
             this.Default.UseVisualStyleBackColor = true;
             this.Default.Click += new System.EventHandler(this.Default_Click);
             // 
-            // KeppySynthDefaultSFList
+            // DefaultSFList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;

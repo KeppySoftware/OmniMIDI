@@ -113,7 +113,7 @@ namespace OmniMIDIConfigurator
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)
         {
-            new KeppySynthVelocityIntervals().ShowDialog();
+            new VelocityIntervals().ShowDialog();
         }
 
         private void RevbNChor_Click(object sender, EventArgs e)

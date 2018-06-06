@@ -12,13 +12,13 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthFavouritesManager : Form
+    public partial class FavouritesManager : Form
     {
         private CommonOpenFileDialog AddFolderDialog = new CommonOpenFileDialog();
         private string LastBrowserPath { get; set; }
         private string FolderListPathWithFile = Environment.GetEnvironmentVariable("USERPROFILE").ToString() + "\\OmniMIDI\\OmniMIDI.favlist";
 
-        public KeppySynthFavouritesManager()
+        public FavouritesManager()
         {
             InitializeComponent();
             AddFolderDialog.IsFolderPicker = true;

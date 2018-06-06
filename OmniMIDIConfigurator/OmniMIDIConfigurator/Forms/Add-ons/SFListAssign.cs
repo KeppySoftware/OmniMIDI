@@ -11,7 +11,7 @@ using Microsoft.Win32;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthSFListAssign : Form
+    public partial class SFListAssign : Form
     {
         public string LastBrowserPath { get; set; }
 
@@ -19,33 +19,32 @@ namespace OmniMIDIConfigurator
         public static string PathToAllLists = soundfontnewlocation + "\\OmniMIDI\\applists";
         public string[] ListsPath = new string[]
         {
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidi.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidib.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidic.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidid.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidie.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidif.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidig.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidih.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidii.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidij.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidik.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidil.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidim.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidin.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidio.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\keppymidip.applist"
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_A.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_B.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_C.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_D.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_E.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_F.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_G.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_H.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_I.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_L.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_M.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_N.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_O.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_P.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_Q.applist",
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_R.applist"
         };
 
         public int whichone { get; set; }
 
         public string CurrentList { get; set; }
 
-        public KeppySynthSFListAssign()
+        public SFListAssign()
         {
             InitializeComponent();
-            RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
-            if (Convert.ToInt32(SynthSettings.GetValue("extra8lists", 0)) == 1)
+            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("Extra8Lists", 0)) == 1)
             {
                 SelectedListBox.Items.Add("List 9");
                 SelectedListBox.Items.Add("List 10");

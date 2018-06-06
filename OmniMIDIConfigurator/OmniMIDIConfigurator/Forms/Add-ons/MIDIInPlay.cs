@@ -24,11 +24,11 @@ namespace OmniMIDIConfigurator
         {
             InitializeComponent();
 
-            if (KeppySynth.IsKDMAPIAvailable())
-                KeppySynth.InitializeKDMAPIStream();
+            if (OmniMIDI.IsKDMAPIAvailable())
+                OmniMIDI.InitializeKDMAPIStream();
             else return;
 
-            KeppySynth.ResetKDMAPIStream();
+            OmniMIDI.ResetKDMAPIStream();
         }
 
         private void SetLastEvent(String EventName, Boolean Failed)
@@ -43,11 +43,11 @@ namespace OmniMIDIConfigurator
             switch (wMsg)
             {
                 case MIDIInEvent.MIM_DATA:
-                    KeppySynth.SendDirectData(dwParam1.ToUInt32());
+                    OmniMIDI.SendDirectData(dwParam1.ToUInt32());
                     SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
                     break;
                 case MIDIInEvent.MIM_LONGDATA:
-                    KeppySynth.SendDirectLongData(dwParam1);
+                    OmniMIDI.SendDirectLongData(dwParam1);
                     SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
                     break;
                 case MIDIInEvent.MIM_ERROR:
@@ -103,7 +103,7 @@ namespace OmniMIDIConfigurator
                 WinMM.midiInClose(handle);
             }
 
-            KeppySynth.TerminateKDMAPIStream();
+            OmniMIDI.TerminateKDMAPIStream();
 
             if (e.CloseReason == CloseReason.WindowsShutDown) return;
         }
@@ -131,7 +131,7 @@ namespace OmniMIDIConfigurator
         }
     }
 
-    public static class KeppySynth
+    public static class OmniMIDI
     {
         [DllImport("OmniMIDI.dll")]
         internal static extern void InitializeKDMAPIStream();

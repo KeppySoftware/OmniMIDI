@@ -133,13 +133,13 @@ namespace OmniMIDIConfigurator
         {
             if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
             {
-                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput(false);
+                DefaultOutput frm = new DefaultOutput(false);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
             else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
             {
-                KeppySynthDefaultOutput frm = new KeppySynthDefaultOutput(true);
+                DefaultOutput frm = new DefaultOutput(true);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
@@ -169,7 +169,7 @@ namespace OmniMIDIConfigurator
 
         private void ChangePitchShifting_Click(object sender, EventArgs e)
         {
-            KeppySynthPitchShifting frm = new KeppySynthPitchShifting();
+            PitchShifting frm = new PitchShifting();
             frm.ShowDialog(this);
             frm.Dispose();
         }

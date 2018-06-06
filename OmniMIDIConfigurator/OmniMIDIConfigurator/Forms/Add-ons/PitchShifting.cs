@@ -10,13 +10,13 @@ using Microsoft.Win32;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthPitchShifting : Form
+    public partial class PitchShifting : Form
     {
         public static String[] names = new String[] { "ch1pshift", "ch2pshift", "ch3pshift", "ch4pshift", "ch5pshift",
                 "ch6pshift", "ch7pshift", "ch8pshift", "ch9pshift", "ch10pshift",
                 "ch11pshift", "ch12pshift", "ch13pshift", "ch14pshift", "ch15pshift", "ch16pshift",};
 
-        public KeppySynthPitchShifting()
+        public PitchShifting()
         {
             InitializeComponent();
         }
@@ -49,7 +49,7 @@ namespace OmniMIDIConfigurator
             Dispose();
         }
 
-        private void KeppySynthPitchShifting_Load(object sender, EventArgs e)
+        private void PitchShifting_Load(object sender, EventArgs e)
         {
             LoadChannels();
             NewPitch.Value = (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("TransposeValue", "127")) - 127);

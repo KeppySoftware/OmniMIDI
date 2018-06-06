@@ -1,6 +1,6 @@
 ﻿namespace OmniMIDIConfigurator
 {
-    partial class KeppySynthPitchShifting
+    partial class PitchShifting
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthPitchShifting));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PitchShifting));
             this.label1 = new System.Windows.Forms.Label();
             this.NewPitch = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
@@ -483,7 +483,7 @@
             // 
             this.TimerLive.Tick += new System.EventHandler(this.TimerLive_Tick);
             // 
-            // KeppySynthPitchShifting
+            // PitchShifting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -532,12 +532,12 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "KeppySynthPitchShifting";
+            this.Name = "PitchShifting";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change transpose value";
-            this.Load += new System.EventHandler(this.KeppySynthPitchShifting_Load);
+            this.Load += new System.EventHandler(this.PitchShifting_Load);
             ((System.ComponentModel.ISupportInitialize)(this.NewPitch)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

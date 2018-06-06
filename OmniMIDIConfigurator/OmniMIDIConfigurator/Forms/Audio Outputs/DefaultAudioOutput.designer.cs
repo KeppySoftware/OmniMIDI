@@ -1,5 +1,5 @@
 ﻿namespace OmniMIDIConfigurator{
-    partial class KeppySynthDefaultOutput
+    partial class DefaultOutput
     {
         /// <summary>
         /// Required designer variable.
@@ -71,7 +71,7 @@
             this.Quit.UseVisualStyleBackColor = true;
             this.Quit.Click += new System.EventHandler(this.Quit_Click);
             // 
-            // KeppySynthDefaultOutput
+            // DefaultOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -89,7 +89,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change default {0} output";
-            this.Load += new System.EventHandler(this.KeppySynthDefaultOutput_Load);
+            this.Load += new System.EventHandler(this.DefaultOutput_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

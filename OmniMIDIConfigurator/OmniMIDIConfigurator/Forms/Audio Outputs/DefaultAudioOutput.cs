@@ -11,17 +11,17 @@ using Un4seen.Bass;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthDefaultOutput : Form
+    public partial class DefaultOutput : Form
     {
         bool IsIt = false;
 
-        public KeppySynthDefaultOutput(bool IsItWasapi)
+        public DefaultOutput(bool IsItWasapi)
         {
             InitializeComponent();
             IsIt = IsItWasapi;
         }
 
-        private void KeppySynthDefaultOutput_Load(object sender, EventArgs e)
+        private void DefaultOutput_Load(object sender, EventArgs e)
         {
             try
             {

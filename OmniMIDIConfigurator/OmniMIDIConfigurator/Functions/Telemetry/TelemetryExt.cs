@@ -37,7 +37,6 @@ namespace OmniMIDIConfigurator
     class TelemetryExt
     {
         static Guid GuidKey;
-        static String[] Data = Properties.Resources.TelemetryLoginData.Split(new String[] { Environment.NewLine }, StringSplitOptions.None);
         public static CultureInfo cultureTelemetry = new CultureInfo("en-US");
         public static Random RandomID = new Random();
         static String MACAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()

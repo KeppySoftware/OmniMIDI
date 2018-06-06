@@ -12,11 +12,11 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthOutputWAVDir : Form
+    public partial class OutputWAVDir : Form
     {
         private CommonOpenFileDialog NewOutputDir = new CommonOpenFileDialog();
 
-        public KeppySynthOutputWAVDir()
+        public OutputWAVDir()
         {
             InitializeComponent();
             NewOutputDir.IsFolderPicker = true;

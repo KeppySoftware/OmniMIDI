@@ -1279,7 +1279,7 @@ namespace OmniMIDIConfigurator
 
         private void openTheBlacklistManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new KeppySynthBlacklistSystem().ShowDialog();
+            new BlacklistSystem().ShowDialog();
         }
 
         private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1409,7 +1409,7 @@ namespace OmniMIDIConfigurator
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening WAV output dialog.", null);
-            new KeppySynthOutputWAVDir().ShowDialog();
+            new OutputWAVDir().ShowDialog();
         }
 
         private void AASMenu_Click(object sender, EventArgs e)
@@ -1427,19 +1427,19 @@ namespace OmniMIDIConfigurator
         private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening default SoundFont list dialog.", null);
-            new KeppySynthDefaultSFList().ShowDialog();
+            new DefaultSFList().ShowDialog();
         }
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening SoundFont list assign dialog.", null);
-            new KeppySynthSFListAssign().ShowDialog();
+            new SFListAssign().ShowDialog();
         }
 
         private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening folder favourites dialog.", null);
-            new KeppySynthFavouritesManager().ShowDialog();
+            new FavouritesManager().ShowDialog();
         }
 
         private void RegDriver_Click(object sender, EventArgs e)

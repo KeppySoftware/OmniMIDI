@@ -2,7 +2,7 @@
 
 namespace OmniMIDIConfigurator
 {
-    partial class KeppySynthBlacklistSystem
+    partial class BlacklistSystem
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace OmniMIDIConfigurator
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeppySynthBlacklistSystem));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BlacklistSystem));
             this.BlackListDef = new System.Windows.Forms.Label();
             this.ProgramsBlackList = new System.Windows.Forms.ListBox();
             this.AddBlacklistedProgram = new System.Windows.Forms.OpenFileDialog();
@@ -155,7 +155,7 @@ namespace OmniMIDIConfigurator
             this.NoBlockMessage.UseVisualStyleBackColor = true;
             this.NoBlockMessage.CheckedChanged += new System.EventHandler(this.NoBlockMessage_CheckedChanged);
             // 
-            // KeppySynthBlacklistSystem
+            // BlacklistSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;

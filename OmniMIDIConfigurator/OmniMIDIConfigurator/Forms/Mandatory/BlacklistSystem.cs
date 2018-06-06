@@ -12,7 +12,7 @@ using System.Security.Permissions;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthBlacklistSystem : Form
+    public partial class BlacklistSystem : Form
     {
         public string LastBrowserPath { get; set; }
         public string BlacklistPath { get; set; }
@@ -20,7 +20,7 @@ namespace OmniMIDIConfigurator
         public string blacklistnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
         public string blacklistoldlocation = System.Environment.GetEnvironmentVariable("LOCALAPPDATA").ToString();
 
-        public KeppySynthBlacklistSystem()
+        public BlacklistSystem()
         {
             InitializeComponent();
         }

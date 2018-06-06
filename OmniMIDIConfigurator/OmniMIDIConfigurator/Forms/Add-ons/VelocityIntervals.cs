@@ -10,18 +10,18 @@ using Microsoft.Win32;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class KeppySynthVelocityIntervals : Form
+    public partial class VelocityIntervals : Form
     {
         public static int previouslovel;
         public static int previoushivel;
         public static bool Confirmed = false;
 
-        public KeppySynthVelocityIntervals()
+        public VelocityIntervals()
         {
             InitializeComponent();
         }
 
-        private void KeppySynthVelocityIntervals_Load(object sender, EventArgs e)
+        private void VelocityIntervals_Load(object sender, EventArgs e)
         {
             try
             {

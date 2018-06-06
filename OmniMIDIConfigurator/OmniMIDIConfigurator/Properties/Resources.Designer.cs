@@ -437,17 +437,6 @@ namespace OmniMIDIConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a 88.198.45.18
-        ///keppysynthtm@kaleidonkep99
-        ///R~9+J.&lt;aw6:PAeNE.
-        /// </summary>
-        internal static string TelemetryLoginData {
-            get {
-                return ResourceManager.GetString("TelemetryLoginData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap updatebk {
@@ -498,7 +487,7 @@ namespace OmniMIDIConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a This folder allows you to override the default BASS libraries shipped with the Keppy&apos;s Synthesizer setup.
+        ///   Cerca una stringa localizzata simile a This folder allows you to override the default BASS libraries shipped with the OmniMIDI setup.
         ///
         ///Useful when you want to try old DLLs, or the latest DLLs from the Un4seen forums. (Ian updates them frequently).
         /// </summary>
