@@ -83,7 +83,7 @@ namespace OmniMIDIConfigurator
 
         private void VIDPIDList_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://pci-ids.ucw.cz/read/PC/");
+            Process.Start("https://www.pcilookup.com/?ven=&dev=&action=submit");
         }
 
         private void SynthType_SelectedIndexChanged(object sender, EventArgs e)

@@ -6,6 +6,16 @@
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
+// MIDI output technology IDs
+#define MM_MIDI_MAPPER					1		/* MIDI Mapper */
+#define MM_SNDBLST_MIDIOUT				3		/* Sound Blaster MIDI output port */
+#define MM_SNDBLST_SYNTH				5		/* Sound Blaster internal synthesizer */
+#define MM_ADLIB						9		/* Ad Lib-compatible synthesizer */
+#define MM_MPU401_MIDIOUT				10		/* MPU401-compatible MIDI output port */
+#define MM_MSFT_WSS_OEM_FMSYNTH_STEREO	20		/* MS OEM Audio Board Stereo FM Synth */. 
+#define MM_MSFT_GENERIC_MIDIOUT			26      /*  MS Vanilla driver MIDI  external out  */
+#define MM_MSFT_GENERIC_MIDISYNTH		27      /*  MS Vanilla driver MIDI synthesizer  */
+
 // Things
 #define SizeOfArray(type) sizeof(type)/sizeof(type[0])
 
@@ -124,6 +134,7 @@ static ULONGLONG EvBufferSize = 4096;
 static ULONGLONG TempEvBufferSize = EvBufferSize;
 static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
+static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 
 // Main values
 static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
@@ -214,15 +225,19 @@ static DWORD cpreset[16] =
 	0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static DWORD SynthType = 4;
-static DWORD SynthNamesTypes[7] =
+static DWORD SynthType = 5;
+static DWORD SynthNamesTypes[11] =
 {
-	MOD_FMSYNTH,
-	MOD_SYNTH,
-	MOD_WAVETABLE,
-	MOD_MAPPER,
-	MOD_MIDIPORT,
+	MM_MIDI_MAPPER,
 	MOD_SWSYNTH,
+	MOD_WAVETABLE,
+	MM_MPU401_MIDIOUT,
+	MM_SNDBLST_MIDIOUT,
+	MOD_MIDIPORT,
+	MOD_SYNTH,
+	MM_ADLIB,
+	MM_SNDBLST_SYNTH,
+	MOD_FMSYNTH,
 	MOD_SQSYNTH
 };
 

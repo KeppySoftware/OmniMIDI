@@ -33,17 +33,17 @@
             this.Names = new System.Windows.Forms.ComboBox();
             this.OK = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
-            this.AddNewNamePl0x = new System.Windows.Forms.LinkLabelEx();
             this.DefName = new System.Windows.Forms.Button();
             this.SynthType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.VIDValue = new OmniMIDIConfigurator.HexNumericUpDown();
-            this.PIDValue = new OmniMIDIConfigurator.HexNumericUpDown();
             this.VIDPIDList = new System.Windows.Forms.LinkLabelEx();
-            ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).BeginInit();
+            this.PIDValue = new OmniMIDIConfigurator.HexNumericUpDown();
+            this.VIDValue = new OmniMIDIConfigurator.HexNumericUpDown();
+            this.AddNewNamePl0x = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.PIDValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -76,10 +76,10 @@
             "BASSMIDI Driver (Port B)",
             "CoolSoft VirtualMIDISynth",
             "Creative OPL3 FM",
-            "Keppy\'s Synthesizer",
             "Microsoft GS Wavetable Synth",
             "Microsoft Synthesizer",
             "NVIDIA® Wavetable Synthesizer",
+            "OmniMIDI",
             "SB AWE32 MIDI Synth",
             "SB Live! Synth A",
             "SB Live! Synth B",
@@ -121,19 +121,6 @@
             this.CancelBtn.UseVisualStyleBackColor = true;
             this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
             // 
-            // AddNewNamePl0x
-            // 
-            this.AddNewNamePl0x.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddNewNamePl0x.AutoSize = true;
-            this.AddNewNamePl0x.LinkColor = System.Drawing.Color.Teal;
-            this.AddNewNamePl0x.Location = new System.Drawing.Point(7, 201);
-            this.AddNewNamePl0x.Name = "AddNewNamePl0x";
-            this.AddNewNamePl0x.Size = new System.Drawing.Size(186, 13);
-            this.AddNewNamePl0x.TabIndex = 6;
-            this.AddNewNamePl0x.TabStop = true;
-            this.AddNewNamePl0x.Text = "Can you add another name to the list?";
-            this.AddNewNamePl0x.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AddNewNamePl0x_LinkClicked);
-            // 
             // DefName
             // 
             this.DefName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -150,13 +137,17 @@
             this.SynthType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SynthType.FormattingEnabled = true;
             this.SynthType.Items.AddRange(new object[] {
-            "FM internal synth",
-            "Generic internal synth",
-            "Hardware wavetable synth",
-            "MIDI mapper",
-            "Output port",
-            "Software synth",
-            "Square wave internal synth"});
+            "Microsoft MIDI Mapper",
+            "Software synthesizer",
+            "Hardware wavetable synthesizer",
+            "SoundBlaster MIDI output port",
+            "MPU401-compatible MIDI output port",
+            "Hardware MIDI output port",
+            "Generic internal synthesizer",
+            "AdLib-compatibile synthesizer",
+            "SoundBlaster internal synthesizer",
+            "FM internal synthesizer",
+            "Square wave internal synthesizer"});
             this.SynthType.Location = new System.Drawing.Point(156, 98);
             this.SynthType.Name = "SynthType";
             this.SynthType.Size = new System.Drawing.Size(241, 21);
@@ -190,24 +181,18 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "VID:";
             // 
-            // VIDValue
+            // VIDPIDList
             // 
-            this.VIDValue.Hexadecimal = true;
-            this.VIDValue.Location = new System.Drawing.Point(156, 123);
-            this.VIDValue.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.VIDValue.Name = "VIDValue";
-            this.VIDValue.Size = new System.Drawing.Size(241, 20);
-            this.VIDValue.TabIndex = 13;
-            this.VIDValue.Value = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.VIDValue.ValueChanged += new System.EventHandler(this.VIDValue_ValueChanged);
+            this.VIDPIDList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.VIDPIDList.AutoSize = true;
+            this.VIDPIDList.LinkColor = System.Drawing.Color.Teal;
+            this.VIDPIDList.Location = new System.Drawing.Point(7, 185);
+            this.VIDPIDList.Name = "VIDPIDList";
+            this.VIDPIDList.Size = new System.Drawing.Size(167, 13);
+            this.VIDPIDList.TabIndex = 15;
+            this.VIDPIDList.TabStop = true;
+            this.VIDPIDList.Text = "Vendor and product IDs database";
+            this.VIDPIDList.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.VIDPIDList_LinkClicked);
             // 
             // PIDValue
             // 
@@ -222,24 +207,43 @@
             this.PIDValue.Size = new System.Drawing.Size(241, 20);
             this.PIDValue.TabIndex = 14;
             this.PIDValue.Value = new decimal(new int[] {
-            10,
+            45067,
             0,
             0,
             0});
             this.PIDValue.ValueChanged += new System.EventHandler(this.PIDValue_ValueChanged);
             // 
-            // VIDPIDList
+            // VIDValue
             // 
-            this.VIDPIDList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.VIDPIDList.AutoSize = true;
-            this.VIDPIDList.LinkColor = System.Drawing.Color.Teal;
-            this.VIDPIDList.Location = new System.Drawing.Point(7, 185);
-            this.VIDPIDList.Name = "VIDPIDList";
-            this.VIDPIDList.Size = new System.Drawing.Size(167, 13);
-            this.VIDPIDList.TabIndex = 15;
-            this.VIDPIDList.TabStop = true;
-            this.VIDPIDList.Text = "Vendor and product IDs database";
-            this.VIDPIDList.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.VIDPIDList_LinkClicked);
+            this.VIDValue.Hexadecimal = true;
+            this.VIDValue.Location = new System.Drawing.Point(156, 123);
+            this.VIDValue.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.VIDValue.Name = "VIDValue";
+            this.VIDValue.Size = new System.Drawing.Size(241, 20);
+            this.VIDValue.TabIndex = 13;
+            this.VIDValue.Value = new decimal(new int[] {
+            51966,
+            0,
+            0,
+            0});
+            this.VIDValue.ValueChanged += new System.EventHandler(this.VIDValue_ValueChanged);
+            // 
+            // AddNewNamePl0x
+            // 
+            this.AddNewNamePl0x.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddNewNamePl0x.AutoSize = true;
+            this.AddNewNamePl0x.LinkColor = System.Drawing.Color.Teal;
+            this.AddNewNamePl0x.Location = new System.Drawing.Point(7, 201);
+            this.AddNewNamePl0x.Name = "AddNewNamePl0x";
+            this.AddNewNamePl0x.Size = new System.Drawing.Size(186, 13);
+            this.AddNewNamePl0x.TabIndex = 6;
+            this.AddNewNamePl0x.TabStop = true;
+            this.AddNewNamePl0x.Text = "Can you add another name to the list?";
+            this.AddNewNamePl0x.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AddNewNamePl0x_LinkClicked);
             // 
             // MaskSynthAsAnother
             // 
@@ -270,8 +274,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Mask synthesizer as another";
             this.Load += new System.EventHandler(this.MaskSynthAsAnother_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PIDValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

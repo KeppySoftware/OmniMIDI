@@ -135,12 +135,16 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 {
 	switch (uMsg) {
 	case DRV_QUERYCONFIGURE:
-		return DRV_CANCEL;
+		return DRV_OK;
 	case DRV_CONFIGURE:
 		return DoDriverConfiguration();
 	case DRV_LOAD:
 		return DRV_OK;
+	case DRV_ENABLE:
+		return DRV_OK;
 	case DRV_REMOVE:
+		return DRV_OK;
+	case DRV_FREE:
 		return DRV_OK;
 	case DRV_OPEN:
 		OMDevice = hdrvr;
@@ -152,12 +156,9 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 	}
 }
 
-DWORD modGetCaps(INT_PTR uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
+DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 	try {
-		MIDIOUTCAPSA * myCapsA;
-		MIDIOUTCAPSW * myCapsW;
-		MIDIOUTCAPS2A * myCaps2A;
-		MIDIOUTCAPS2W * myCaps2W;
+		static MIDIOUTCAPS2 MIDICaps = { 0 };
 		
 		WORD maximumvoices = 0xFFFF;
 		WORD maximumnotes = 0xFFFF;
@@ -166,14 +167,11 @@ DWORD modGetCaps(INT_PTR uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 		WORD VID = 0x0000;
 		WORD PID = 0x0000;
-		CHAR SynthName[MAXPNAMELEN];
-		WCHAR SynthNameW[MAXPNAMELEN];
 
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
-		DWORD dwSizeA = sizeof(SynthName);
 		DWORD dwSizeW = sizeof(SynthNameW);
 
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
@@ -183,99 +181,45 @@ DWORD modGetCaps(INT_PTR uDeviceID, MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		RegQueryValueEx(hKey, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 
 		dwType = REG_SZ;
-		RegQueryValueExA(hKey, "SynthName", NULL, &dwType, (LPBYTE)&SynthName, &dwSizeA);
-		RegQueryValueExW(hKey, L"SynthName", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
+		RegQueryValueEx(hKey, L"SynthName", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
 		RegCloseKey(hKey);
 
-		if (SynthType > MOD_SWSYNTH)
-			Technology = MOD_SWSYNTH;
+		if (SynthType >= (SizeOfArray(SynthNamesTypes)))
+			Technology = MOD_MIDIPORT;
 		else Technology = SynthNamesTypes[SynthType];
 
 		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
-
-		if (strlen(SynthName) < 1 || isspace(SynthName[0])) {
-			ZeroMemory(SynthName, MAXPNAMELEN);
-			strncpy(SynthName, "OmniMIDI\0", MAXPNAMELEN);
-		}
 
 		if (wcslen(SynthNameW) < 1 || iswspace(SynthNameW[0])) {
 			ZeroMemory(SynthNameW, MAXPNAMELEN);
 			wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 		}
 
-		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI caps with application...");
+		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI device caps with application...");
 
 		const GUID CLSIDKEPSYNTH = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
 
 		// Not yet
 		// CapsSupport |= MIDICAPS_STREAM;
 
-		switch (capsSize) {
-		case (sizeof(MIDIOUTCAPSA)):
-			myCapsA = (MIDIOUTCAPSA *)capsPtr;
-			memcpy(myCapsA->szPname, SynthName, sizeof(SynthName));
-			myCapsA->dwSupport = CapsSupport;
-			myCapsA->wChannelMask = 0xffff;
-			myCapsA->wMid = VID;
-			myCapsA->wNotes = maximumnotes;
-			myCapsA->wPid = PID;
-			myCapsA->wTechnology = Technology;
-			myCapsA->wVoices = maximumvoices;
-			myCapsA->vDriverVersion = 0x0501;
-			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSA)");
-			return MMSYSERR_NOERROR;
-
-		case (sizeof(MIDIOUTCAPSW)):
-			myCapsW = (MIDIOUTCAPSW *)capsPtr;
-			memcpy(myCapsW->szPname, SynthNameW, sizeof(SynthNameW));
-			myCapsW->dwSupport = CapsSupport;
-			myCapsW->wChannelMask = 0xffff;
-			myCapsW->wMid = VID;
-			myCapsW->wNotes = maximumnotes;
-			myCapsW->wPid = PID;
-			myCapsW->wTechnology = Technology;
-			myCapsW->wVoices = maximumvoices;
-			myCapsW->vDriverVersion = 0x0501;
-			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPSW)");
-			return MMSYSERR_NOERROR;
-
-		case (sizeof(MIDIOUTCAPS2A)):
-			myCaps2A = (MIDIOUTCAPS2A *)capsPtr;
-			memcpy(myCaps2A->szPname, SynthName, sizeof(SynthName));
-			myCaps2A->ManufacturerGuid = CLSIDKEPSYNTH;
-			myCaps2A->NameGuid = CLSIDKEPSYNTH;
-			myCaps2A->ProductGuid = CLSIDKEPSYNTH;
-			myCaps2A->dwSupport = CapsSupport;
-			myCaps2A->wChannelMask = 0xffff;
-			myCaps2A->wMid = VID;
-			myCaps2A->wNotes = maximumnotes;
-			myCaps2A->wPid = PID;
-			myCaps2A->wTechnology = Technology;
-			myCaps2A->wVoices = maximumvoices;
-			myCaps2A->vDriverVersion = 0x0501;
-			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2A)");
-			return MMSYSERR_NOERROR;
-
-		case (sizeof(MIDIOUTCAPS2W)):
-			myCaps2W = (MIDIOUTCAPS2W *)capsPtr;
-			memcpy(myCaps2W->szPname, SynthNameW, sizeof(SynthNameW));
-			myCaps2W->ManufacturerGuid = CLSIDKEPSYNTH;
-			myCaps2W->NameGuid = CLSIDKEPSYNTH;
-			myCaps2W->ProductGuid = CLSIDKEPSYNTH;
-			myCaps2W->dwSupport = CapsSupport;
-			myCaps2W->wChannelMask = 0xffff;
-			myCaps2W->wMid = VID;
-			myCaps2W->wNotes = maximumnotes;
-			myCaps2W->wPid = PID;
-			myCaps2W->wTechnology = Technology;
-			myCaps2W->wVoices = maximumvoices;
-			myCaps2W->vDriverVersion = 0x0501;
-			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing caps. (MIDIOUTCAPS2W)");
-			return MMSYSERR_NOERROR;
-
-		default:
-			return MMSYSERR_NOTENABLED;
+		if (!MIDICaps.wMid) {
+			memcpy(MIDICaps.szPname, SynthNameW, sizeof(SynthNameW));
+			MIDICaps.ManufacturerGuid = CLSIDKEPSYNTH;
+			MIDICaps.NameGuid = CLSIDKEPSYNTH;
+			MIDICaps.ProductGuid = CLSIDKEPSYNTH;
+			MIDICaps.dwSupport = CapsSupport;
+			MIDICaps.wChannelMask = 0xffff;
+			MIDICaps.wMid = VID;
+			MIDICaps.wNotes = maximumnotes;
+			MIDICaps.wPid = PID;
+			MIDICaps.wTechnology = Technology;
+			MIDICaps.wVoices = maximumvoices;
+			MIDICaps.vDriverVersion = 0x0501;
+			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing MIDI device caps.");
 		}
+
+		memcpy(capsPtr, &MIDICaps, min(sizeof(MIDICaps), capsSize));
+		return MMSYSERR_NOERROR;
 	}
 	catch (...) {
 		CrashMessage(L"MIDICapsException");
@@ -291,7 +235,7 @@ LONG DoOpenClient() {
 	return MMSYSERR_NOERROR;
 }
 
-STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
+STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
 	DWORD retval = MMSYSERR_NOERROR;
 
@@ -350,9 +294,9 @@ STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_OPEN:
 		// Parse callback and instance
-		OMCallback = reinterpret_cast<MIDIOPENDESC*>(dwParam1)->dwCallback;
-		OMInstance = reinterpret_cast<MIDIOPENDESC*>(dwParam1)->dwInstance;
-		OMFlags = HIWORD(static_cast<DWORD>(dwParam2));
+		OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
+		OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
+		OMFlags = HIWORD((DWORD)dwParam2);
 
 		// Open the driver
 		retval = DoOpenClient();
@@ -377,10 +321,10 @@ STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_
 		return BlackListInit();
 	case MODM_GETDEVCAPS:
 		// Return OM's caps to the app
-		return modGetCaps(uDeviceID, reinterpret_cast<MIDIOUTCAPS*>(dwParam1), static_cast<DWORD>(dwParam2));
+		return modGetCaps((PVOID)dwParam1, (DWORD)dwParam2);
 	case MODM_GETVOLUME:
 		// Tell the app the current output volume of the driver
-		*(LONG*)dwParam1 = static_cast<LONG>(sound_out_volume_float * 0xFFFF);
+		*(LONG*)dwParam1 = (LONG)(sound_out_volume_float * 0xFFFF);
 		return MMSYSERR_NOERROR;
 	case MODM_SETVOLUME: 
 		// The app isn't allowed to set the volume, everything's fine anyway
@@ -396,7 +340,12 @@ STDAPI_(DWORD) modMessage(INT_PTR uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_
 		DoStopClient();
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
-	default:
+	case DRV_QUERYDEVICEINTERFACESIZE:
+		*(LONG*)dwParam1 = 65535;
+		return MMSYSERR_NOERROR;
+	case DRV_QUERYDEVICEINTERFACE:
+		memcpy((VOID*)dwParam1, SynthNameW, sizeof(SynthNameW));
+		*(LONG*)dwParam2 = 65535;
 		return MMSYSERR_NOERROR;
 	}
 }

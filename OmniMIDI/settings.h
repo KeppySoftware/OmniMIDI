@@ -65,12 +65,15 @@ void LoadSoundfont(int whichsf){
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Watchdog", 0, KEY_ALL_ACCESS, &hKey);
+		PrintToConsole(FOREGROUND_RED, lResult, "RegOpenKeyEx status.");
 		FreeFonts();
-		RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+		long temp = RegSetValueEx(hKey, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+		PrintToConsole(FOREGROUND_RED, temp, "RegSetValueEx status.");
 		RegCloseKey(hKey);
 
 		if (lResult != ERROR_SUCCESS) LoadFonts(L"SoundFont.sf2");
 		else LoadFonts(sflistloadme[whichsf - 1]);
+
 		BASS_MIDI_StreamLoadSamples(OMStream);
 		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
 	}
