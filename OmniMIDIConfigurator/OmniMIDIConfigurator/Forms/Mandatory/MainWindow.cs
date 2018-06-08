@@ -37,9 +37,6 @@ namespace OmniMIDIConfigurator
         private static extern void ReleaseID(StringBuilder SHA256Code, Int32 length);
 
         // Themes handler
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
-        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
-        public static PrivateFontCollection privateFontCollection = new PrivateFontCollection();
         public static int CurrentTheme = -1;
 
         // Lists
@@ -153,26 +150,6 @@ namespace OmniMIDIConfigurator
             Watchdog.Close();
         }
 
-        // Just stuff to reduce code's length
-        private void InitializeVolumeLabelFont()
-        {
-            try
-            {
-                uint dummy = 0;
-                byte[] fontData = Properties.Resources.volnum;
-                IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
-                Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
-                privateFontCollection.AddMemoryFont(fontPtr, Properties.Resources.volnum.Length);
-                AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.volnum.Length, IntPtr.Zero, ref dummy);
-                Marshal.FreeCoTaskMem(fontPtr);
-                VolSimView.Font = new Font(privateFontCollection.Families[0], VolSimView.Font.Size, FontStyle.Regular);
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while initializing the volume label's font.", true, ex);
-            }
-        }
-
         private void SFZCompliant()
         {
             MessageBox.Show("This driver is \"SFZ format 2.0\" compliant.", "SFZ format support", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -243,7 +220,6 @@ namespace OmniMIDIConfigurator
                 SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
                 Functions.InitializeLastPath();
 
-                InitializeVolumeLabelFont();
                 Functions.LoadSettings(this);
 
                 AudioEngBox_SelectedIndexChanged(null, null);
@@ -288,7 +264,7 @@ namespace OmniMIDIConfigurator
 
         private void CheckUpdatesStartUp(object sender, EventArgs e)
         {
-            CheckUpdates.RunWorkerAsync();
+            try { CheckUpdates.RunWorkerAsync(); } catch { }
         }
 
         private void VolumeMouseWheel(object sender, MouseEventArgs e)
@@ -316,7 +292,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 if (VolTrackBar.Value <= 49) VolSimView.ForeColor = Color.Red;
-                else VolSimView.ForeColor = Color.Purple;
+                else VolSimView.ForeColor = Color.FromArgb(255, 53, 0, 119);
 
                 decimal VolVal = (decimal)VolTrackBar.Value / 100;
                 VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
@@ -1927,7 +1903,6 @@ namespace OmniMIDIConfigurator
             });
 
             String IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
-            System.Threading.Thread.Sleep(100);
 
             if (IsUpdateAvailable == "yes") this.Invoke((MethodInvoker)delegate 
             {
@@ -1957,7 +1932,7 @@ namespace OmniMIDIConfigurator
                 UpdateStatus.Click += CheckUpdatesStartUp;
                 VersionLabel.Click += CheckUpdatesStartUp;
 
-                UpdateStatus.Image = Properties.Resources.ClearIcon;
+                UpdateStatus.Image = Properties.Resources.dlerror;
                 informationAboutTheDriverToolStripMenuItem.Enabled = true;
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
@@ -2217,14 +2192,14 @@ namespace OmniMIDIConfigurator
             else new Telemetry().ShowDialog();
         }
 
-        private void KSDAPIDoc_Click(object sender, EventArgs e)
+        private void KDMAPIDoc_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/Keppy-s-Synthesizer/blob/master/KSDAPI.md");
+            Process.Start("https://github.com/KeppySoftware/OmniMIDI/blob/master/KDMAPI.md");
         }
 
         private void DifferencePatches_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/Keppy-s-Synthesizer/wiki/What's-the-difference-between-the-WinMM-patches%3F");
+            Process.Start("https://github.com/KeppySoftware/OmniMIDI/wiki/What's-the-difference-between-the-WinMM-patches%3F");
         }
 
         // Mixer functions

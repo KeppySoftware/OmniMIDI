@@ -218,16 +218,14 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        private void KDMAPIVer_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/KeppySoftware/OmniMIDI/blob/master/KDMAPI.md");
+        }
+
         private void CFU_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                UpdateSystem.CheckForUpdates(true, false, false);
-            }
-            else
-            {
-                UpdateSystem.CheckForUpdates(false, false, false);
-            }
+            UpdateSystem.CheckForUpdates((ModifierKeys == Keys.Shift), false, false);
         }
 
         private void DonateBtn_Click(object sender, EventArgs e)

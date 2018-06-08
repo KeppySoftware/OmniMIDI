@@ -104,7 +104,7 @@
             // 
             this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ASIODevicesSupport.AutoSize = true;
-            this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.ASIODevicesSupport.Location = new System.Drawing.Point(356, 70);
             this.ASIODevicesSupport.Name = "ASIODevicesSupport";
             this.ASIODevicesSupport.Size = new System.Drawing.Size(153, 13);

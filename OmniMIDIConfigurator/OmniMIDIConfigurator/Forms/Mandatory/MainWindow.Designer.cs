@@ -294,7 +294,7 @@
             this.menuItem45 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuItem59 = new System.Windows.Forms.MenuItem();
-            this.KSDAPIDoc = new System.Windows.Forms.MenuItem();
+            this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.SynthMenu = new System.Windows.Forms.MainMenu(this.components);
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MixerPanel = new System.Windows.Forms.Panel();
@@ -632,7 +632,7 @@
             this.VolLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolLabel.Location = new System.Drawing.Point(2, 88);
             this.VolLabel.Name = "VolLabel";
-            this.VolLabel.Size = new System.Drawing.Size(41, 14);
+            this.VolLabel.Size = new System.Drawing.Size(54, 14);
             this.VolLabel.TabIndex = 3;
             this.VolLabel.Text = "VOLUME:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -641,16 +641,24 @@
             // 
             this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
             this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
             this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
             this.VolTrackBar.LargeChange = 1000;
             this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Minimum = 0;
             this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.ShowLargeScale = true;
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
             this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(79, 80);
+            this.VolTrackBar.Size = new System.Drawing.Size(79, 79);
             this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
             this.VolTrackBar.TabIndex = 5;
             this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
             this.VolTrackBar.Value = 0;
@@ -660,11 +668,11 @@
             // 
             this.VolSimView.BackColor = System.Drawing.Color.Transparent;
             this.VolSimView.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VolSimView.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolSimView.ForeColor = System.Drawing.Color.MediumBlue;
-            this.VolSimView.Location = new System.Drawing.Point(0, 86);
+            this.VolSimView.Location = new System.Drawing.Point(0, 82);
             this.VolSimView.Name = "VolSimView";
-            this.VolSimView.Size = new System.Drawing.Size(94, 18);
+            this.VolSimView.Size = new System.Drawing.Size(94, 22);
             this.VolSimView.TabIndex = 4;
             this.VolSimView.Text = "100";
             this.VolSimView.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1399,7 +1407,7 @@
             // WhatIsXAudio
             // 
             this.WhatIsXAudio.AutoSize = true;
-            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
             this.WhatIsXAudio.Name = "WhatIsXAudio";
             this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
@@ -1411,7 +1419,7 @@
             // WhatIsOutput
             // 
             this.WhatIsOutput.AutoSize = true;
-            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
@@ -3052,7 +3060,7 @@
             this.menuItem24,
             this.menuItem45,
             this.menuItem59,
-            this.KSDAPIDoc});
+            this.KDMAPIDoc});
             this.menuItem3.Text = "?";
             // 
             // menuItem59
@@ -3060,11 +3068,11 @@
             this.menuItem59.Index = 13;
             this.menuItem59.Text = "-";
             // 
-            // KSDAPIDoc
+            // KDMAPIDoc
             // 
-            this.KSDAPIDoc.Index = 14;
-            this.KSDAPIDoc.Text = "KSDirect API documentation";
-            this.KSDAPIDoc.Click += new System.EventHandler(this.KSDAPIDoc_Click);
+            this.KDMAPIDoc.Index = 14;
+            this.KDMAPIDoc.Text = "Keppy\'s Direct MIDI API documentation";
+            this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
             // 
             // SynthMenu
             // 
@@ -4278,7 +4286,6 @@
         public System.Windows.Forms.ToolStripStatusLabel StatusDoneOr;
         private System.Windows.Forms.ToolStripStatusLabel VersionLabel;
         public System.Windows.Forms.Label VolSimView;
-        public KnobControl.KnobControl VolTrackBar;
         private System.Windows.Forms.GroupBox EnginesBox;
         private System.Windows.Forms.GroupBox AdditionalSettingsBox;
         public System.Windows.Forms.Panel RV22S;
@@ -4561,10 +4568,11 @@
         private System.Windows.Forms.MenuItem menuItem37;
         public System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.MenuItem menuItem59;
-        private System.Windows.Forms.MenuItem KSDAPIDoc;
+        private System.Windows.Forms.MenuItem KDMAPIDoc;
         private System.Windows.Forms.MenuItem menuItem60;
         private System.Windows.Forms.MenuItem WMMPatches;
         private System.Windows.Forms.MenuItem MIDIInOutTest;
+        public KnobControl.KnobControl VolTrackBar;
     }
 }
 

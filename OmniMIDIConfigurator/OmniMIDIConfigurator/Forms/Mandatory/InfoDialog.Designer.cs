@@ -43,9 +43,10 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.KDMAPIVer = new System.Windows.Forms.LinkLabelEx();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.KDMAPIVer = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
             this.BASSVer = new System.Windows.Forms.Label();
             this.DriverVer = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
             this.PatreonBtn = new System.Windows.Forms.Button();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
@@ -191,10 +191,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox1.Controls.Add(this.KDMAPIVer);
             this.groupBox1.Controls.Add(this.ChangeBranch);
             this.groupBox1.Controls.Add(this.CurBranch);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.KDMAPIVer);
             this.groupBox1.Controls.Add(this.BASSMIDIVer);
             this.groupBox1.Controls.Add(this.BASSVer);
             this.groupBox1.Controls.Add(this.DriverVer);
@@ -208,6 +208,30 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OmniMIDI library info";
+            // 
+            // KDMAPIVer
+            // 
+            this.KDMAPIVer.AutoSize = true;
+            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
+            this.KDMAPIVer.Name = "KDMAPIVer";
+            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
+            this.KDMAPIVer.TabIndex = 11;
+            this.KDMAPIVer.TabStop = true;
+            this.KDMAPIVer.Text = "KDMAPI VER";
+            this.KDMAPIVer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.KDMAPIVer_LinkClicked);
+            // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
             // 
             // CurBranch
             // 
@@ -228,15 +252,6 @@
             this.label9.Size = new System.Drawing.Size(81, 13);
             this.label9.TabIndex = 8;
             this.label9.Text = "Update branch:";
-            // 
-            // KDMAPIVer
-            // 
-            this.KDMAPIVer.AutoSize = true;
-            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
-            this.KDMAPIVer.Name = "KDMAPIVer";
-            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 7;
-            this.KDMAPIVer.Text = "KDMAPI VER";
             // 
             // BASSMIDIVer
             // 
@@ -336,24 +351,12 @@
             this.PatreonBtn.UseVisualStyleBackColor = true;
             this.PatreonBtn.Click += new System.EventHandler(this.button1_Click);
             // 
-            // ChangeBranch
-            // 
-            this.ChangeBranch.AutoSize = true;
-            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
-            this.ChangeBranch.Name = "ChangeBranch";
-            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 10;
-            this.ChangeBranch.TabStop = true;
-            this.ChangeBranch.Text = "Change branch";
-            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
-            // 
             // LicenseFile
             // 
             this.LicenseFile.AutoSize = true;
             this.LicenseFile.BackColor = System.Drawing.Color.Transparent;
-            this.LicenseFile.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.LicenseFile.Location = new System.Drawing.Point(234, 127);
+            this.LicenseFile.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.LicenseFile.Location = new System.Drawing.Point(232, 127);
             this.LicenseFile.Name = "LicenseFile";
             this.LicenseFile.Size = new System.Drawing.Size(85, 13);
             this.LicenseFile.TabIndex = 4;
@@ -365,7 +368,7 @@
             // 
             this.GitHubLink.AutoSize = true;
             this.GitHubLink.BackColor = System.Drawing.Color.Transparent;
-            this.GitHubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.GitHubLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.GitHubLink.Location = new System.Drawing.Point(97, 77);
             this.GitHubLink.Name = "GitHubLink";
             this.GitHubLink.Size = new System.Drawing.Size(229, 13);
@@ -431,7 +434,6 @@
         private System.Windows.Forms.Label WinName;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label KDMAPIVer;
         private System.Windows.Forms.Label BASSMIDIVer;
         private System.Windows.Forms.Label BASSVer;
         private System.Windows.Forms.Label DriverVer;
@@ -445,5 +447,6 @@
         private System.Windows.Forms.LinkLabelEx ChangeBranch;
         private System.Windows.Forms.MenuItem DisableBB;
         private System.Windows.Forms.Button PatreonBtn;
+        private System.Windows.Forms.LinkLabelEx KDMAPIVer;
     }
 }

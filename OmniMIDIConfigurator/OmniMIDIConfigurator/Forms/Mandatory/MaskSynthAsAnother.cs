@@ -121,6 +121,11 @@ namespace OmniMIDIConfigurator
             VIDValue_ValueChanged(sender, e);
             PIDValue_ValueChanged(sender, e);
         }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public partial class HexNumericUpDown : NumericUpDown

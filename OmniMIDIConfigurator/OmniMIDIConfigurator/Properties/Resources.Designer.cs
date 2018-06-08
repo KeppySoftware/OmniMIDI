@@ -117,6 +117,16 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap dlerror {
+            get {
+                object obj = ResourceManager.GetObject("dlerror", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap dlnope {
             get {
                 object obj = ResourceManager.GetObject("dlnope", resourceCulture);
@@ -453,26 +463,6 @@ namespace OmniMIDIConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("updateicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] vollab {
-            get {
-                object obj = ResourceManager.GetObject("vollab", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] volnum {
-            get {
-                object obj = ResourceManager.GetObject("volnum", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         

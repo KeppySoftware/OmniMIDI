@@ -115,11 +115,11 @@ namespace OmniMIDIConfigurator
         public static Color GetCurrentBranchColor()
         {
             if (Properties.Settings.Default.UpdateBranch == "canary")
-                return Color.FromArgb(230, 149, 0);
+                return Color.FromArgb(221, 172, 5);
             else if (Properties.Settings.Default.UpdateBranch == "normal")
-                return SystemColors.ControlText;
+                return Color.FromArgb(158, 14, 204);
             else if (Properties.Settings.Default.UpdateBranch == "delay")
-                return SystemColors.GrayText;
+                return Color.FromArgb(84, 110, 122);
             else if (Properties.Settings.Default.UpdateBranch == "choose")
                 return Color.FromArgb(182, 0, 0);
             else
@@ -155,6 +155,7 @@ namespace OmniMIDIConfigurator
                 try
                 {
                     WebClient client = new WebClient();
+                    client.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
                     Stream stream = client.OpenRead(UpdateTextFile);
                     StreamReader reader = new StreamReader(stream);
                     String newestversion = reader.ReadToEnd();
@@ -241,6 +242,7 @@ namespace OmniMIDIConfigurator
                 try
                 {
                     WebClient client = new WebClient();
+                    client.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
                     Stream stream = client.OpenRead(UpdateTextFile);
                     StreamReader reader = new StreamReader(stream);
                     String newestversion = reader.ReadToEnd();

@@ -437,6 +437,7 @@
             // CH10Quest
             // 
             this.CH10Quest.AutoSize = true;
+            this.CH10Quest.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.CH10Quest.Location = new System.Drawing.Point(15, 112);
             this.CH10Quest.Name = "CH10Quest";
             this.CH10Quest.Size = new System.Drawing.Size(84, 13);

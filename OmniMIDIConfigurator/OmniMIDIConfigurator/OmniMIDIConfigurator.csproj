@@ -268,10 +268,10 @@
     <Compile Include="Forms\Add-ons\VelocityIntervals.Designer.cs">
       <DependentUpon>VelocityIntervals.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Add-ons\MaskSynthAsAnother.cs">
+    <Compile Include="Forms\Mandatory\MaskSynthAsAnother.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Add-ons\MaskSynthAsAnother.Designer.cs">
+    <Compile Include="Forms\Mandatory\MaskSynthAsAnother.Designer.cs">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Mandatory\InfoDialog.cs">
@@ -395,7 +395,7 @@
     <EmbeddedResource Include="UpdateSystem\UpdateYesNo.resx">
       <DependentUpon>UpdateYesNo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Add-ons\MaskSynthAsAnother.resx">
+    <EmbeddedResource Include="Forms\Mandatory\MaskSynthAsAnother.resx">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\InfoDialog.resx">
@@ -464,6 +464,7 @@
     <None Include="Resources\Icons\dlready.png" />
     <None Include="Functions\Telemetry\BugReportTemplate.txt" />
     <Content Include="gear.ico" />
+    <None Include="Resources\Icons\dlerror.png" />
     <Content Include="Resources\Icons\gear.ico" />
     <None Include="Resources\Icons\what.png" />
     <None Include="Resources\Text\gmlist.txt" />

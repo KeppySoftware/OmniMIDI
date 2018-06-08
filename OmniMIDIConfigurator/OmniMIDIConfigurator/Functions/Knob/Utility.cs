@@ -1,3 +1,41 @@
+#region License
+
+/* Copyright (c) 2017 Fabrice Lacharme
+ * This code was originally written by Jigar Desai 
+ * http://www.c-sharpcorner.com/article/knob-control-using-windows-forms-and-gdi/
+ * Note that another implementation exists in vb.net by Blong
+ * https://www.codeproject.com/Articles/2563/VB-NET-Knob-Control-using-Windows-Forms-and-GDI?msg=1884770#xx1884770xx
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software. 
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ */
+
+#endregion
+
+#region Contact
+
+/*
+ * Fabrice Lacharme
+ * Email: fabrice.lacharme@gmail.com
+ */
+
+#endregion
+
 using System;
 using System.Drawing;
 
@@ -8,7 +46,14 @@ namespace KnobControl
 	/// </summary>
 	public class Utility
 	{
-		public static Color getDarkColor(Color c,byte d)
+
+        public static float GetRadian(float val)
+        {
+            return (float)(val * Math.PI / 180);
+        }
+
+
+        public static Color getDarkColor(Color c,byte d)
 		{
 			byte r = 0 ;
 			byte g = 0;
@@ -53,14 +98,19 @@ namespace KnobControl
 		}
 		public static void DrawInsetCircle(ref Graphics g,Rectangle r,Pen p)
 		{
-			Pen p1 = new Pen(getDarkColor(p.Color,50));
-			Pen p2 = new Pen(getLightColor(p.Color,50));
-			for(int i=0;i<p.Width;i++)
+
+            Pen p1 = new Pen(getDarkColor(p.Color,50));            
+            Pen p2 = new Pen(getLightColor(p.Color,50));
+            for (int i=0;i<p.Width;i++)
 			{
 				Rectangle r1 = new Rectangle(r.X +i,r.Y +i,r.Width-i*2,r.Height-i*2);
 				g.DrawArc(p2,r1,-45,180);
 				g.DrawArc(p1,r1,135,180);
 			}
 		}
+
+
+
+
 	}
 }

@@ -60,7 +60,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(91, 77);
+            this.label2.Location = new System.Drawing.Point(86, 81);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 2;
@@ -93,7 +93,7 @@
             "Windows OPL3 Synth",
             "YMF262 Synth Emulator",
             "Yamaha S-YXG50 SoftSynthesizer"});
-            this.Names.Location = new System.Drawing.Point(156, 74);
+            this.Names.Location = new System.Drawing.Point(151, 78);
             this.Names.Name = "Names";
             this.Names.Size = new System.Drawing.Size(241, 21);
             this.Names.TabIndex = 3;
@@ -137,18 +137,14 @@
             this.SynthType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SynthType.FormattingEnabled = true;
             this.SynthType.Items.AddRange(new object[] {
+            "FM internal synthesizer",
+            "Generic internal synthesizer",
+            "Hardware MIDI output port",
+            "Hardware wavetable synthesizer",
             "Microsoft MIDI Mapper",
             "Software synthesizer",
-            "Hardware wavetable synthesizer",
-            "SoundBlaster MIDI output port",
-            "MPU401-compatible MIDI output port",
-            "Hardware MIDI output port",
-            "Generic internal synthesizer",
-            "AdLib-compatibile synthesizer",
-            "SoundBlaster internal synthesizer",
-            "FM internal synthesizer",
             "Square wave internal synthesizer"});
-            this.SynthType.Location = new System.Drawing.Point(156, 98);
+            this.SynthType.Location = new System.Drawing.Point(151, 102);
             this.SynthType.Name = "SynthType";
             this.SynthType.Size = new System.Drawing.Size(241, 21);
             this.SynthType.TabIndex = 9;
@@ -157,7 +153,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(97, 101);
+            this.label3.Location = new System.Drawing.Point(92, 105);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 13);
             this.label3.TabIndex = 8;
@@ -166,7 +162,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(128, 149);
+            this.label4.Location = new System.Drawing.Point(123, 153);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(28, 13);
             this.label4.TabIndex = 12;
@@ -175,7 +171,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(128, 125);
+            this.label5.Location = new System.Drawing.Point(123, 129);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(28, 13);
             this.label5.TabIndex = 10;
@@ -185,7 +181,7 @@
             // 
             this.VIDPIDList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.VIDPIDList.AutoSize = true;
-            this.VIDPIDList.LinkColor = System.Drawing.Color.Teal;
+            this.VIDPIDList.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.VIDPIDList.Location = new System.Drawing.Point(7, 185);
             this.VIDPIDList.Name = "VIDPIDList";
             this.VIDPIDList.Size = new System.Drawing.Size(167, 13);
@@ -197,7 +193,7 @@
             // PIDValue
             // 
             this.PIDValue.Hexadecimal = true;
-            this.PIDValue.Location = new System.Drawing.Point(156, 147);
+            this.PIDValue.Location = new System.Drawing.Point(151, 151);
             this.PIDValue.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -216,7 +212,7 @@
             // VIDValue
             // 
             this.VIDValue.Hexadecimal = true;
-            this.VIDValue.Location = new System.Drawing.Point(156, 123);
+            this.VIDValue.Location = new System.Drawing.Point(151, 127);
             this.VIDValue.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -236,7 +232,7 @@
             // 
             this.AddNewNamePl0x.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AddNewNamePl0x.AutoSize = true;
-            this.AddNewNamePl0x.LinkColor = System.Drawing.Color.Teal;
+            this.AddNewNamePl0x.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.AddNewNamePl0x.Location = new System.Drawing.Point(7, 201);
             this.AddNewNamePl0x.Name = "AddNewNamePl0x";
             this.AddNewNamePl0x.Size = new System.Drawing.Size(186, 13);
