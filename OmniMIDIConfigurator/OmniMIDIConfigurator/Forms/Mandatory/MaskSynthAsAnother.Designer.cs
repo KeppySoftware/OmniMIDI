@@ -41,26 +41,26 @@
             this.VIDPIDList = new System.Windows.Forms.LinkLabelEx();
             this.PIDValue = new OmniMIDIConfigurator.HexNumericUpDown();
             this.VIDValue = new OmniMIDIConfigurator.HexNumericUpDown();
-            this.AddNewNamePl0x = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.PIDValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VIDValue)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 12);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(461, 54);
+            this.label1.Size = new System.Drawing.Size(405, 72);
             this.label1.TabIndex = 1;
             this.label1.Text = "Some apps might be hardwired to a specific synthesizer.\r\nYou can try and fool the" +
-    "m by renaming OmniMIDI to another synthesizer/driver.\r\n\r\nSelect a mask in the li" +
+    "m by renaming OmniMIDI to another MIDI output device.\r\n\r\nSelect a mask in the li" +
     "st below:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(86, 81);
+            this.label2.Location = new System.Drawing.Point(47, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 2;
@@ -70,30 +70,75 @@
             // 
             this.Names.FormattingEnabled = true;
             this.Names.Items.AddRange(new object[] {
+            "A-PRO",
+            "A-PRO MIDI OUT",
             "AWE64 MIDI Synth",
+            "Akai APC20",
+            "Akai MAX49",
+            "AudioPCI MIDI Out",
+            "AudioPCI MIDI Synth",
+            "Automap MIDI",
+            "Automap Propellerhead",
+            "Automap Propellerhead Mixer",
             "BASSMIDI Driver",
             "BASSMIDI Driver (Port A)",
             "BASSMIDI Driver (Port B)",
+            "CEUS live",
             "CoolSoft VirtualMIDISynth",
             "Creative OPL3 FM",
+            "Creative SB Live! External MIDI",
+            "Daemon Output 0",
+            "E-MU Xboard49",
+            "FastLane USB Port A-PRO",
+            "FastLane: Port A",
+            "Impact LX49+ MIDI1",
+            "Keppy\'s Driver",
+            "Keppy\'s MIDI Driver",
+            "Keppy\'s Synthesizer",
+            "Launchpad S",
+            "Liquid56 MIDI",
+            "M-Audio Keystation Pro 88",
+            "MIDISPORT 4x4 Out A",
+            "MPC Port 1",
+            "MPKmini2",
             "Microsoft GS Wavetable Synth",
             "Microsoft Synthesizer",
+            "MiniNova",
             "NVIDIA® Wavetable Synthesizer",
+            "Network MIDI Master",
             "OmniMIDI",
+            "Out-A USB MidiSport 2x2",
+            "PSR-290",
+            "PSR-3000-1",
+            "PSR-3000-2",
+            "ReMOTE25 V2.0",
+            "Reason Midi Out",
+            "Roland MPU-401",
             "SB AWE32 MIDI Synth",
+            "SB Live! MIDI Out",
+            "SB Live! MIDI Synth",
             "SB Live! Synth A",
             "SB Live! Synth B",
+            "Scarlet 6i6 USB",
             "SoundMAX Wavetable Synth",
+            "Steinberg UR44-1",
+            "TC Near",
             "Timidity++ Driver",
             "USB Audio Device",
+            "USB Axiom 25",
+            "VMeter 1.28 A",
             "VirtualMIDISynth #1",
             "VirtualMIDISynth #2",
             "VirtualMIDISynth #3",
             "VirtualMIDISynth #4",
             "Windows OPL3 Synth",
+            "YAMAHA MOTIF XF7 Port1",
+            "YAMAHA USB OUT 0-1",
             "YMF262 Synth Emulator",
-            "Yamaha S-YXG50 SoftSynthesizer"});
-            this.Names.Location = new System.Drawing.Point(151, 78);
+            "Yamaha S-YXG50 SoftSynthesizer",
+            "loopMIDI Port",
+            "mLAN Network MOTIF XS:1"});
+            this.Names.Location = new System.Drawing.Point(112, 72);
             this.Names.Name = "Names";
             this.Names.Size = new System.Drawing.Size(241, 21);
             this.Names.TabIndex = 3;
@@ -102,9 +147,9 @@
             // OK
             // 
             this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OK.Location = new System.Drawing.Point(398, 189);
+            this.OK.Location = new System.Drawing.Point(340, 156);
             this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(75, 23);
+            this.OK.Size = new System.Drawing.Size(53, 23);
             this.OK.TabIndex = 4;
             this.OK.Text = "OK";
             this.OK.UseVisualStyleBackColor = true;
@@ -113,9 +158,9 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(317, 189);
+            this.CancelBtn.Location = new System.Drawing.Point(281, 156);
             this.CancelBtn.Name = "CancelBtn";
-            this.CancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.CancelBtn.Size = new System.Drawing.Size(53, 23);
             this.CancelBtn.TabIndex = 5;
             this.CancelBtn.Text = "Cancel";
             this.CancelBtn.UseVisualStyleBackColor = true;
@@ -124,11 +169,11 @@
             // DefName
             // 
             this.DefName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DefName.Location = new System.Drawing.Point(236, 189);
+            this.DefName.Location = new System.Drawing.Point(222, 156);
             this.DefName.Name = "DefName";
-            this.DefName.Size = new System.Drawing.Size(75, 23);
+            this.DefName.Size = new System.Drawing.Size(53, 23);
             this.DefName.TabIndex = 7;
-            this.DefName.Text = "Default";
+            this.DefName.Text = "Reset";
             this.DefName.UseVisualStyleBackColor = true;
             this.DefName.Click += new System.EventHandler(this.DefName_Click);
             // 
@@ -144,7 +189,7 @@
             "Microsoft MIDI Mapper",
             "Software synthesizer",
             "Square wave internal synthesizer"});
-            this.SynthType.Location = new System.Drawing.Point(151, 102);
+            this.SynthType.Location = new System.Drawing.Point(112, 96);
             this.SynthType.Name = "SynthType";
             this.SynthType.Size = new System.Drawing.Size(241, 21);
             this.SynthType.TabIndex = 9;
@@ -153,7 +198,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(92, 105);
+            this.label3.Location = new System.Drawing.Point(53, 99);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 13);
             this.label3.TabIndex = 8;
@@ -162,7 +207,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(123, 153);
+            this.label4.Location = new System.Drawing.Point(228, 125);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(28, 13);
             this.label4.TabIndex = 12;
@@ -171,7 +216,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(123, 129);
+            this.label5.Location = new System.Drawing.Point(132, 125);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(28, 13);
             this.label5.TabIndex = 10;
@@ -182,7 +227,7 @@
             this.VIDPIDList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.VIDPIDList.AutoSize = true;
             this.VIDPIDList.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.VIDPIDList.Location = new System.Drawing.Point(7, 185);
+            this.VIDPIDList.Location = new System.Drawing.Point(13, 161);
             this.VIDPIDList.Name = "VIDPIDList";
             this.VIDPIDList.Size = new System.Drawing.Size(167, 13);
             this.VIDPIDList.TabIndex = 15;
@@ -192,18 +237,19 @@
             // 
             // PIDValue
             // 
+            this.PIDValue.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PIDValue.Hexadecimal = true;
-            this.PIDValue.Location = new System.Drawing.Point(151, 151);
+            this.PIDValue.Location = new System.Drawing.Point(256, 123);
             this.PIDValue.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.PIDValue.Name = "PIDValue";
-            this.PIDValue.Size = new System.Drawing.Size(241, 20);
+            this.PIDValue.Size = new System.Drawing.Size(62, 22);
             this.PIDValue.TabIndex = 14;
             this.PIDValue.Value = new decimal(new int[] {
-            45067,
+            57005,
             0,
             0,
             0});
@@ -211,15 +257,16 @@
             // 
             // VIDValue
             // 
+            this.VIDValue.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VIDValue.Hexadecimal = true;
-            this.VIDValue.Location = new System.Drawing.Point(151, 127);
+            this.VIDValue.Location = new System.Drawing.Point(160, 123);
             this.VIDValue.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.VIDValue.Name = "VIDValue";
-            this.VIDValue.Size = new System.Drawing.Size(241, 20);
+            this.VIDValue.Size = new System.Drawing.Size(62, 22);
             this.VIDValue.TabIndex = 13;
             this.VIDValue.Value = new decimal(new int[] {
             51966,
@@ -228,25 +275,12 @@
             0});
             this.VIDValue.ValueChanged += new System.EventHandler(this.VIDValue_ValueChanged);
             // 
-            // AddNewNamePl0x
-            // 
-            this.AddNewNamePl0x.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddNewNamePl0x.AutoSize = true;
-            this.AddNewNamePl0x.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.AddNewNamePl0x.Location = new System.Drawing.Point(7, 201);
-            this.AddNewNamePl0x.Name = "AddNewNamePl0x";
-            this.AddNewNamePl0x.Size = new System.Drawing.Size(186, 13);
-            this.AddNewNamePl0x.TabIndex = 6;
-            this.AddNewNamePl0x.TabStop = true;
-            this.AddNewNamePl0x.Text = "Can you add another name to the list?";
-            this.AddNewNamePl0x.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AddNewNamePl0x_LinkClicked);
-            // 
             // MaskSynthAsAnother
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(485, 224);
+            this.ClientSize = new System.Drawing.Size(405, 191);
             this.Controls.Add(this.VIDPIDList);
             this.Controls.Add(this.PIDValue);
             this.Controls.Add(this.VIDValue);
@@ -255,7 +289,6 @@
             this.Controls.Add(this.SynthType);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.DefName);
-            this.Controls.Add(this.AddNewNamePl0x);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.OK);
             this.Controls.Add(this.Names);
@@ -284,7 +317,6 @@
         private System.Windows.Forms.ComboBox Names;
         private System.Windows.Forms.Button OK;
         private System.Windows.Forms.Button CancelBtn;
-        private System.Windows.Forms.LinkLabelEx AddNewNamePl0x;
         private System.Windows.Forms.Button DefName;
         private System.Windows.Forms.ComboBox SynthType;
         private System.Windows.Forms.Label label3;

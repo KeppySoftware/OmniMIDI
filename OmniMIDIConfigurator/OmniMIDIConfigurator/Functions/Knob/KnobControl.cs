@@ -964,7 +964,7 @@ namespace KnobControl
 			this.gOffScreen = Graphics.FromImage(OffScreenImage);	
 
 			// create LinearGradientBrush for creating knob            
-			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.FromArgb(255, 53, 0, 119), Color.FromArgb(255, 36, 0, 82), LinearGradientMode.BackwardDiagonal);
+			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(rKnob, Color.FromArgb(255, 121, 0, 182), Color.FromArgb(255, 53, 0, 119), LinearGradientMode.BackwardDiagonal);
 
             // create LinearGradientBrush for knobPoint                
             bKnobPoint = new System.Drawing.Drawing2D.LinearGradientBrush(

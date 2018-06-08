@@ -725,7 +725,7 @@
             // RV22
             // 
             this.RV22.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV22.BackColor = System.Drawing.Color.Red;
+            this.RV22.BackColor = System.Drawing.Color.DeepPink;
             this.RV22.Location = new System.Drawing.Point(35, 29);
             this.RV22.Name = "RV22";
             this.RV22.Size = new System.Drawing.Size(16, 5);
@@ -757,7 +757,7 @@
             // LV22
             // 
             this.LV22.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV22.BackColor = System.Drawing.Color.Red;
+            this.LV22.BackColor = System.Drawing.Color.DeepPink;
             this.LV22.Location = new System.Drawing.Point(12, 29);
             this.LV22.Name = "LV22";
             this.LV22.Size = new System.Drawing.Size(16, 5);
@@ -767,7 +767,7 @@
             // RV18
             // 
             this.RV18.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV18.BackColor = System.Drawing.Color.Goldenrod;
+            this.RV18.BackColor = System.Drawing.Color.DarkOrange;
             this.RV18.Location = new System.Drawing.Point(35, 53);
             this.RV18.Name = "RV18";
             this.RV18.Size = new System.Drawing.Size(16, 5);
@@ -777,7 +777,7 @@
             // LV18
             // 
             this.LV18.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV18.BackColor = System.Drawing.Color.Goldenrod;
+            this.LV18.BackColor = System.Drawing.Color.DarkOrange;
             this.LV18.Location = new System.Drawing.Point(12, 53);
             this.LV18.Name = "LV18";
             this.LV18.Size = new System.Drawing.Size(16, 5);
@@ -787,7 +787,7 @@
             // RV21
             // 
             this.RV21.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV21.BackColor = System.Drawing.Color.Red;
+            this.RV21.BackColor = System.Drawing.Color.Crimson;
             this.RV21.Location = new System.Drawing.Point(35, 35);
             this.RV21.Name = "RV21";
             this.RV21.Size = new System.Drawing.Size(16, 5);
@@ -797,7 +797,7 @@
             // LV21
             // 
             this.LV21.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV21.BackColor = System.Drawing.Color.Red;
+            this.LV21.BackColor = System.Drawing.Color.Crimson;
             this.LV21.Location = new System.Drawing.Point(12, 35);
             this.LV21.Name = "LV21";
             this.LV21.Size = new System.Drawing.Size(16, 5);
@@ -807,7 +807,7 @@
             // RV13
             // 
             this.RV13.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV13.BackColor = System.Drawing.Color.Yellow;
+            this.RV13.BackColor = System.Drawing.Color.GreenYellow;
             this.RV13.Location = new System.Drawing.Point(35, 83);
             this.RV13.Name = "RV13";
             this.RV13.Size = new System.Drawing.Size(16, 5);
@@ -817,7 +817,7 @@
             // LV13
             // 
             this.LV13.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV13.BackColor = System.Drawing.Color.Yellow;
+            this.LV13.BackColor = System.Drawing.Color.GreenYellow;
             this.LV13.Location = new System.Drawing.Point(12, 83);
             this.LV13.Name = "LV13";
             this.LV13.Size = new System.Drawing.Size(16, 5);
@@ -867,7 +867,7 @@
             // RV17
             // 
             this.RV17.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV17.BackColor = System.Drawing.Color.Yellow;
+            this.RV17.BackColor = System.Drawing.Color.Gold;
             this.RV17.Location = new System.Drawing.Point(35, 59);
             this.RV17.Name = "RV17";
             this.RV17.Size = new System.Drawing.Size(16, 5);
@@ -877,7 +877,7 @@
             // LV17
             // 
             this.LV17.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV17.BackColor = System.Drawing.Color.Yellow;
+            this.LV17.BackColor = System.Drawing.Color.Gold;
             this.LV17.Location = new System.Drawing.Point(12, 59);
             this.LV17.Name = "LV17";
             this.LV17.Size = new System.Drawing.Size(16, 5);
@@ -917,7 +917,7 @@
             // RV12
             // 
             this.RV12.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV12.BackColor = System.Drawing.Color.LightGreen;
+            this.RV12.BackColor = System.Drawing.Color.Chartreuse;
             this.RV12.Location = new System.Drawing.Point(35, 89);
             this.RV12.Name = "RV12";
             this.RV12.Size = new System.Drawing.Size(16, 5);
@@ -947,7 +947,7 @@
             // LV12
             // 
             this.LV12.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV12.BackColor = System.Drawing.Color.LightGreen;
+            this.LV12.BackColor = System.Drawing.Color.Chartreuse;
             this.LV12.Location = new System.Drawing.Point(12, 89);
             this.LV12.Name = "LV12";
             this.LV12.Size = new System.Drawing.Size(16, 5);
@@ -1057,7 +1057,7 @@
             // RV5
             // 
             this.RV5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV5.BackColor = System.Drawing.Color.Lime;
+            this.RV5.BackColor = System.Drawing.Color.LimeGreen;
             this.RV5.Location = new System.Drawing.Point(35, 131);
             this.RV5.Name = "RV5";
             this.RV5.Size = new System.Drawing.Size(16, 5);
@@ -1087,7 +1087,7 @@
             // LV5
             // 
             this.LV5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV5.BackColor = System.Drawing.Color.Lime;
+            this.LV5.BackColor = System.Drawing.Color.LimeGreen;
             this.LV5.Location = new System.Drawing.Point(12, 131);
             this.LV5.Name = "LV5";
             this.LV5.Size = new System.Drawing.Size(16, 5);
@@ -1097,7 +1097,7 @@
             // RV4
             // 
             this.RV4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV4.BackColor = System.Drawing.Color.Lime;
+            this.RV4.BackColor = System.Drawing.Color.Green;
             this.RV4.Location = new System.Drawing.Point(35, 137);
             this.RV4.Name = "RV4";
             this.RV4.Size = new System.Drawing.Size(16, 5);
@@ -1117,7 +1117,7 @@
             // RV3
             // 
             this.RV3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV3.BackColor = System.Drawing.Color.Lime;
+            this.RV3.BackColor = System.Drawing.Color.ForestGreen;
             this.RV3.Location = new System.Drawing.Point(35, 143);
             this.RV3.Name = "RV3";
             this.RV3.Size = new System.Drawing.Size(16, 5);
@@ -1127,7 +1127,7 @@
             // LV4
             // 
             this.LV4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV4.BackColor = System.Drawing.Color.Lime;
+            this.LV4.BackColor = System.Drawing.Color.Green;
             this.LV4.Location = new System.Drawing.Point(12, 137);
             this.LV4.Name = "LV4";
             this.LV4.Size = new System.Drawing.Size(16, 5);
@@ -1137,7 +1137,7 @@
             // RV2
             // 
             this.RV2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV2.BackColor = System.Drawing.Color.Lime;
+            this.RV2.BackColor = System.Drawing.Color.DarkGreen;
             this.RV2.Location = new System.Drawing.Point(35, 149);
             this.RV2.Name = "RV2";
             this.RV2.Size = new System.Drawing.Size(16, 5);
@@ -1147,7 +1147,7 @@
             // LV3
             // 
             this.LV3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV3.BackColor = System.Drawing.Color.Lime;
+            this.LV3.BackColor = System.Drawing.Color.ForestGreen;
             this.LV3.Location = new System.Drawing.Point(12, 143);
             this.LV3.Name = "LV3";
             this.LV3.Size = new System.Drawing.Size(16, 5);
@@ -1157,7 +1157,7 @@
             // RV1
             // 
             this.RV1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.RV1.BackColor = System.Drawing.Color.Lime;
+            this.RV1.BackColor = System.Drawing.Color.DarkSlateGray;
             this.RV1.Location = new System.Drawing.Point(35, 155);
             this.RV1.Name = "RV1";
             this.RV1.Size = new System.Drawing.Size(16, 5);
@@ -1167,7 +1167,7 @@
             // LV2
             // 
             this.LV2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV2.BackColor = System.Drawing.Color.Lime;
+            this.LV2.BackColor = System.Drawing.Color.DarkGreen;
             this.LV2.Location = new System.Drawing.Point(12, 149);
             this.LV2.Name = "LV2";
             this.LV2.Size = new System.Drawing.Size(16, 5);
@@ -1177,7 +1177,7 @@
             // LV1
             // 
             this.LV1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LV1.BackColor = System.Drawing.Color.Lime;
+            this.LV1.BackColor = System.Drawing.Color.DarkSlateGray;
             this.LV1.Location = new System.Drawing.Point(12, 155);
             this.LV1.Name = "LV1";
             this.LV1.Size = new System.Drawing.Size(16, 5);

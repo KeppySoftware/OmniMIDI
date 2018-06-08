@@ -34,15 +34,24 @@ namespace OmniMIDIConfigurator
 
         private HtmlAgilityPack.HtmlNode ReturnSelectedNode(String version)
         {
-            ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
-            HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
-            web.PreRequest += request =>
+            try
             {
-                request.CookieContainer = new System.Net.CookieContainer();
-                return true;
-            };
-            HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}", version));
-            return doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body']");
+                ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
+                HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+                web.PreRequest += request =>
+                {
+                    request.CookieContainer = new System.Net.CookieContainer();
+                    return true;
+                };
+                HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("https://github.com/KeppySoftware/OmniMIDI/releases/tag/{0}", version));
+                return doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body']");
+            }
+            catch (WebException ex)
+            {
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "Failed to parse the changelog!\n\nThe HTML node for the changelog is invalid.", true, ex);
+                Close();
+                return null;
+            }
         }
 
         private void GetChangelog(String version)
@@ -90,9 +99,9 @@ namespace OmniMIDIConfigurator
 
                 ChangelogBrowser.DocumentText = htmltext;
             }
-            catch (WebException ex)
+            catch
             {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", true, ex);
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", false, null);
                 Close();
             }
         }

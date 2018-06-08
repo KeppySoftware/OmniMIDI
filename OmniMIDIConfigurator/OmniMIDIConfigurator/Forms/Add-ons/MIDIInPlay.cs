@@ -20,15 +20,12 @@ namespace OmniMIDIConfigurator
         private static String LastEvent = "NONE";
         private static Boolean LastEventFailed = false;
 
+        private static Int32 DeviceCount;
+
         public MIDIInPlay()
         {
             InitializeComponent();
-
-            if (OmniMIDI.IsKDMAPIAvailable())
-                OmniMIDI.InitializeKDMAPIStream();
-            else return;
-
-            OmniMIDI.ResetKDMAPIStream();
+            DeviceCount = WinMM.midiInGetNumDevs();
         }
 
         private void SetLastEvent(String EventName, Boolean Failed)
@@ -71,9 +68,30 @@ namespace OmniMIDIConfigurator
 
         private void MIDIInPlay_Load(object sender, EventArgs e)
         {
-            MIDIINCAPS InCaps = new MIDIINCAPS();
+            // Check count
+            if (DeviceCount < 1)
+            {
+                // None available, close
+                MessageBox.Show("No MIDI input devices available.", "OmniMIDI - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
 
-            for (uint i = 0; i < WinMM.midiInGetNumDevs(); i++)
+            // Initialize KDMAPI
+            if (OmniMIDI.IsKDMAPIAvailable())
+                OmniMIDI.InitializeKDMAPIStream();
+            else
+            {
+                MessageBox.Show("Unable to initialize KDMAPI.", "OmniMIDI - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
+
+            OmniMIDI.ResetKDMAPIStream();
+
+            // Initialize MIDI inputs list
+            MIDIINCAPS InCaps = new MIDIINCAPS();
+            for (uint i = 0; i < DeviceCount; i++)
             {
                 WinMM.midiInGetDevCaps(i, out InCaps, (uint)Marshal.SizeOf(InCaps));
                 MIDIInList.Items.Add(InCaps.szPname);

@@ -72,15 +72,6 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private void AddNewNamePl0x_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            DialogResult dialogResult = MessageBox.Show("Sure thing, just create an issue on GitHub where you tell me which synthesizer/driver I need to add, and I'll add it asap.\n\nClicking \"Yes\" will redirect you to the GitHub page, are you sure you want to continue?", "Can you add another name to the list?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResult == DialogResult.Yes)
-            {
-                Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
-            }
-        }
-
         private void VIDPIDList_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://www.pcilookup.com/?ven=&dev=&action=submit");
@@ -115,16 +106,11 @@ namespace OmniMIDIConfigurator
         private void DefName_Click(object sender, EventArgs e)
         {
             Names.Text = "OmniMIDI";
-            SynthType.SelectedIndex = 4;
+            SynthType.SelectedIndex = 2;
             VIDValue.Value = 0xFFFF;
             PIDValue.Value = 0x000A;
             VIDValue_ValueChanged(sender, e);
             PIDValue_ValueChanged(sender, e);
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
         }
     }
 

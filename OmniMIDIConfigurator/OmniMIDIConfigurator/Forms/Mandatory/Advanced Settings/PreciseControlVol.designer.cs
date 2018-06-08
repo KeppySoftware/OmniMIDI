@@ -66,9 +66,9 @@
             this.VolIntView.BackColor = System.Drawing.Color.Transparent;
             this.VolIntView.Enabled = false;
             this.VolIntView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolIntView.Location = new System.Drawing.Point(13, 69);
+            this.VolIntView.Location = new System.Drawing.Point(14, 69);
             this.VolIntView.Name = "VolIntView";
-            this.VolIntView.Size = new System.Drawing.Size(313, 12);
+            this.VolIntView.Size = new System.Drawing.Size(311, 12);
             this.VolIntView.TabIndex = 18;
             this.VolIntView.Text = "000.00%";
             this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -86,7 +86,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(338, 125);
+            this.ClientSize = new System.Drawing.Size(334, 121);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.VolIntView);
