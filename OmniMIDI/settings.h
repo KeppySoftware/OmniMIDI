@@ -385,6 +385,7 @@ void LoadSettings(bool streamreload)
 		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&ManagedSettings.DontMissNotes, &dwSize);
 		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&ManagedSettings.OutputVolume, &dwSize);
 		RegQueryValueEx(hKey, L"CurrentEngine", NULL, &dwType, (LPBYTE)&ManagedSettings.CurrentEngine, &dwSize);
+		RegQueryValueEx(hKey, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
 		RegSetValueEx(hKey, L"LiveChanges", 0, dwType, (LPBYTE)&zero, sizeof(zero));
 		RegCloseKey(hKey);
 
@@ -441,6 +442,7 @@ void LoadSettingsRT()
 		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&ManagedSettings.DontMissNotes, &dwSize);
 		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&ManagedSettings.OutputVolume, &dwSize);
 		RegQueryValueEx(hKey, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
+		RegQueryValueEx(hKey, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
 		RegCloseKey(hKey);
 
 		if (DontMissNotesTemp != ManagedSettings.DontMissNotes) {

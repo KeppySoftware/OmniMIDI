@@ -131,6 +131,7 @@ static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
 static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
+static BOOL CloseStreamMidiOutClose = TRUE;	// Close the stream when midiOutClose is called
 
 static HANDLE hConsole;						// Debug console
 static FLOAT *sndbf;						// AudToWAV

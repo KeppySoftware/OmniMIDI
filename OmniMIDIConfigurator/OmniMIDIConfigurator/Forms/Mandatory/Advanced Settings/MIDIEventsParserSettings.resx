@@ -120,4 +120,12 @@
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="CloseStreamMidiOutClose.ToolTip" xml:space="preserve">
+    <value>Leave this unchecked if you don't want OmniMIDI to go into sleep mode,
+when midiOutClose() is called by the MIDI application.
+
+When OmniMIDI goes into sleep mode, the audio stream will be closed,
+which means it'll have to reload all the SoundFonts when midiOutOpen()
+is called by the MIDI application.</value>
+  </data>
 </root>

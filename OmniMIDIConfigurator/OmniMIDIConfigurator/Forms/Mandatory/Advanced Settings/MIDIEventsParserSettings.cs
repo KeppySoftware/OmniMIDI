@@ -19,32 +19,18 @@ namespace OmniMIDIConfigurator
 
         private void MIDIEventsParserSettings_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0)) == 1)
-            {
-                AllNotesIgnore.Checked = true;
-                SysExIgnore.Checked = true;
-            }
+            AllNotesIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0));
+            SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0));
 
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0)) == 1)
-            {
-                IgnoreNotes.Checked = true;
-                IgnoreNotesInterval.Enabled = true;
-            }
+            IgnoreNotes.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
+            IgnoreNotesInterval.Enabled = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
 
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CapFramerate", 1)) == 1)
-                CapFram.Checked = true;
-
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("LimitTo88Keys", 0)) == 1)
-                Limit88.Checked = true;
-
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0)) == 1)
-                SysExIgnore.Checked = true;
-
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0)) == 1)
-                FullVelocityMode.Checked = true;
-
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0)) == 1)
-                MT32Mode.Checked = true;
+            CapFram.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CapFramerate", 1));
+            Limit88.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("LimitTo88Keys", 0));
+            SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0));
+            FullVelocityMode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0));
+            MT32Mode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0));
+            CloseStreamMidiOutClose.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CloseStreamMidiOutClose", 1));
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
         }
@@ -59,56 +45,38 @@ namespace OmniMIDIConfigurator
 
         private void Limit88_CheckedChanged(object sender, EventArgs e)
         {
-            if (Limit88.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("LimitTo88Keys", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("LimitTo88Keys", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("LimitTo88Keys", Convert.ToInt32(Limit88.Checked), RegistryValueKind.DWord);
         }
 
         private void SysExIgnore_CheckedChanged(object sender, EventArgs e)
         {
-            if (SysExIgnore.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreSysEx", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreSysEx", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreSysEx", Convert.ToInt32(SysExIgnore.Checked), RegistryValueKind.DWord);
         }
 
         private void AllNotesIgnore_CheckedChanged(object sender, EventArgs e)
         {
-            if (AllNotesIgnore.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreAllNotes", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreAllNotes", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)
         {
-            if (IgnoreNotes.Checked)
-            {
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreNotesBetweenVel", "1", RegistryValueKind.DWord);
-                IgnoreNotesInterval.Enabled = true;
-            }
-            else
-            {
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreNotesBetweenVel", "0", RegistryValueKind.DWord);
-                IgnoreNotesInterval.Enabled = false;
-            }
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
+            IgnoreNotesInterval.Enabled = IgnoreNotes.Checked;
         }
 
         private void FullVelocityMode_CheckedChanged(object sender, EventArgs e)
         {
-            if (FullVelocityMode.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("FullVelocityMode", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("FullVelocityMode", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("FullVelocityMode", Convert.ToInt32(FullVelocityMode.Checked), RegistryValueKind.DWord);
         }
 
         private void MT32Mode_CheckedChanged(object sender, EventArgs e)
         {
-            if (MT32Mode.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("MT32Mode", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("MT32Mode", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("MT32Mode", Convert.ToInt32(MT32Mode.Checked), RegistryValueKind.DWord);
+        }
+
+        private void CloseStreamMidiOutClose_CheckedChanged(object sender, EventArgs e)
+        {
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("CloseStreamMidiOutClose", Convert.ToInt32(CloseStreamMidiOutClose.Checked), RegistryValueKind.DWord);
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)

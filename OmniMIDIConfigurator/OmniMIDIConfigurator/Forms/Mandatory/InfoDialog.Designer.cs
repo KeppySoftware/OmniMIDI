@@ -374,7 +374,7 @@
             this.GitHubLink.Size = new System.Drawing.Size(229, 13);
             this.GitHubLink.TabIndex = 3;
             this.GitHubLink.TabStop = true;
-            this.GitHubLink.Text = "https://github.com/KaleidonKep99/OmniMIDI/";
+            this.GitHubLink.Text = "https://github.com/KeppySoftware/OmniMIDI/";
             this.GitHubLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GitHubLink_LinkClicked);
             // 
             // InfoDialog

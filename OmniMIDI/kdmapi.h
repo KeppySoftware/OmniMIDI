@@ -143,7 +143,7 @@ void InitializeKDMAPIStream() {
 }
 
 void TerminateKDMAPIStream() {
-	DoStopClient();
+	if (CloseStreamMidiOutClose) DoStopClient();
 }
 
 void ResetKDMAPIStream() {

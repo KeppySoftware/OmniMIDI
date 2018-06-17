@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MIDIEventsParserSettings));
             this.ABS = new System.Windows.Forms.GroupBox();
+            this.CloseStreamMidiOutClose = new System.Windows.Forms.CheckBox();
             this.MT32Mode = new System.Windows.Forms.CheckBox();
             this.IgnoreNotes = new System.Windows.Forms.CheckBox();
             this.FullVelocityMode = new System.Windows.Forms.CheckBox();
@@ -55,6 +57,7 @@
             this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ABS.Controls.Add(this.CloseStreamMidiOutClose);
             this.ABS.Controls.Add(this.MT32Mode);
             this.ABS.Controls.Add(this.IgnoreNotes);
             this.ABS.Controls.Add(this.FullVelocityMode);
@@ -62,10 +65,22 @@
             this.ABS.Controls.Add(this.AllNotesIgnore);
             this.ABS.Location = new System.Drawing.Point(12, 79);
             this.ABS.Name = "ABS";
-            this.ABS.Size = new System.Drawing.Size(345, 118);
+            this.ABS.Size = new System.Drawing.Size(345, 138);
             this.ABS.TabIndex = 11;
             this.ABS.TabStop = false;
             this.ABS.Text = "Ignore specific stuff/Set full velocity";
+            // 
+            // CloseStreamMidiOutClose
+            // 
+            this.CloseStreamMidiOutClose.AutoSize = true;
+            this.CloseStreamMidiOutClose.Location = new System.Drawing.Point(6, 114);
+            this.CloseStreamMidiOutClose.Name = "CloseStreamMidiOutClose";
+            this.CloseStreamMidiOutClose.Size = new System.Drawing.Size(255, 17);
+            this.CloseStreamMidiOutClose.TabIndex = 9;
+            this.CloseStreamMidiOutClose.Text = "Close audio stream when midiOutClose() is called";
+            this.Requirements.SetToolTip(this.CloseStreamMidiOutClose, resources.GetString("CloseStreamMidiOutClose.ToolTip"));
+            this.CloseStreamMidiOutClose.UseVisualStyleBackColor = true;
+            this.CloseStreamMidiOutClose.CheckedChanged += new System.EventHandler(this.CloseStreamMidiOutClose_CheckedChanged);
             // 
             // MT32Mode
             // 
@@ -164,7 +179,7 @@
             this.OS.Controls.Add(this.EVBufDialog);
             this.OS.Controls.Add(this.RevbNChor);
             this.OS.Controls.Add(this.IgnoreNotesInterval);
-            this.OS.Location = new System.Drawing.Point(12, 203);
+            this.OS.Location = new System.Drawing.Point(12, 223);
             this.OS.Name = "OS";
             this.OS.Size = new System.Drawing.Size(345, 75);
             this.OS.TabIndex = 12;
@@ -207,7 +222,7 @@
             this.CAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CAE.AutoSize = true;
             this.CAE.Enabled = false;
-            this.CAE.Location = new System.Drawing.Point(15, 292);
+            this.CAE.Location = new System.Drawing.Point(15, 312);
             this.CAE.Name = "CAE";
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 14;
@@ -216,7 +231,7 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(282, 287);
+            this.OKBtn.Location = new System.Drawing.Point(282, 307);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 13;
@@ -232,13 +247,13 @@
             this.Requirements.IsBalloon = true;
             this.Requirements.ReshowDelay = 20;
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.Requirements.ToolTipTitle = "Requirement";
+            this.Requirements.ToolTipTitle = "Information";
             // 
             // MIDIEventsParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 322);
+            this.ClientSize = new System.Drawing.Size(369, 342);
             this.Controls.Add(this.ABS);
             this.Controls.Add(this.AOS);
             this.Controls.Add(this.OS);
@@ -281,5 +296,6 @@
         private System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.Button EVBufDialog;
         private System.Windows.Forms.CheckBox MT32Mode;
+        private System.Windows.Forms.CheckBox CloseStreamMidiOutClose;
     }
 }

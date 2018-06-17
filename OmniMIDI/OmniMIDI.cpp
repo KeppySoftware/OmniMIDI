@@ -337,7 +337,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		DoStopClient();
+		if (CloseStreamMidiOutClose) DoStopClient();
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
