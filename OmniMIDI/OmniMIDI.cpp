@@ -237,36 +237,19 @@ LONG DoOpenClient() {
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	MIDIHDR* IIMidiHdr;
-	DWORD retval = MMSYSERR_NOERROR;
+	MMRESULT RetVal = MMSYSERR_NOERROR;
 
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
 		return _PrsData(uMsg, dwParam1, dwParam2);
 	case MODM_LONGDATA: // case MODM_STRMDATA:
-		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR*)dwParam1;
-
-		if (!IIMidiHdr || (sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE)) return MMSYSERR_INVALPARAM;	// The buffer doesn't exist, invalid 
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;							// The buffer is not prepared
-		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;								// The buffer is already being played
-
-		// Mark the buffer as in queue
-		IIMidiHdr->dwFlags &= ~MHDR_DONE;
-		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-
-		// Do the stuff with it, if it's not to be ignored
-		if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
-		// It has to be ignored, send info to console
-		else PrintToConsole(FOREGROUND_RED, (DWORD)IIMidiHdr->lpData, "Ignored SysEx MIDI event.");
-
-		// Mark the buffer as done
-		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-		IIMidiHdr->dwFlags |= MHDR_DONE;
+		// Pass it to a KDMAPI function
+		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
 
 		// Tell the app that the buffer has been played
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, dwParam1, 0);
-		return MMSYSERR_NOERROR;
+		return RetVal;
 	case MODM_STRMDATA:
 		/* 
 		// Reference the MIDIHDR
@@ -299,23 +282,17 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		OMFlags = HIWORD((DWORD)dwParam2);
 
 		// Open the driver
-		retval = DoOpenClient();
+		RetVal = DoOpenClient();
 
 		// Tell the app that the driver is ready
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
-		return retval;
+		return RetVal;
 	case MODM_PREPARE:
-		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR*)dwParam1;
-
 		// Pass it to a KDMAPI function
-		return PrepareLongData(IIMidiHdr);
+		return PrepareLongData((MIDIHDR*)dwParam1);
 	case MODM_UNPREPARE:
-		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR*)dwParam1;
-
 		// Pass it to a KDMAPI function
-		return UnprepareLongData(IIMidiHdr);
+		return UnprepareLongData((MIDIHDR*)dwParam1);
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO
 		return BlackListInit();

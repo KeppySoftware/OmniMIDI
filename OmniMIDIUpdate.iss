@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '5.1.1.17'
+#define Version '5.1.1.18'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
