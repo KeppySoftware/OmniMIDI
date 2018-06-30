@@ -360,7 +360,7 @@ namespace OmniMIDIConfigurator
 
             // Some files
             try { File.Move(UPDestination + "\\keppymididrv.favlist", UPDestination + "\\OmniMIDI.favlist"); } catch { }
-            try { File.Move(UPDestination + "\\blacklist\\.blacklist", UPDestination + "\\blacklist\\OmniMIDI.blacklist"); } catch { }
+            try { File.Move(UPDestination + "\\blacklist\\keppymididrv.blacklist", UPDestination + "\\blacklist\\OmniMIDI.blacklist"); } catch { }
 
             // SF lists
             for (int i = 0; i < OldLists.Length; i++)

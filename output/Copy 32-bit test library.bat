@@ -1,2 +1,2 @@
 copy "OmniMIDI.dll" "C:\Windows\SysWOW64\OmniMIDI\OmniMIDI.dll"
-pause
+@if NOT ["%errorlevel%"]==["0"] pause

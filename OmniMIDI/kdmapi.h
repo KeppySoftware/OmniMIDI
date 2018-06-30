@@ -134,11 +134,14 @@ BOOL WINAPI IsKDMAPIAvailable()  {
 	long lResult = RegQueryValueEx(hKey, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KDMAPIEnabled, &dwSize);
 	RegCloseKey(hKey);
 
-	if (lResult != ERROR_SUCCESS) return TRUE;
-	else return KDMAPIEnabled;
+	if (lResult != ERROR_SUCCESS) 
+		KDMAPIEnabled = TRUE;
+
+	return KDMAPIEnabled;
 }
 
 void InitializeKDMAPIStream() {
+	KDMAPIEnabled = TRUE;
 	DoStartClient();
 }
 

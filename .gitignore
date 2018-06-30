@@ -74,7 +74,6 @@ output/*.pdb
 output/*.vshost.exe
 output/*.xml
 output/64
-output/Copy 64-bit test library.bat
 output/OmniMIDIDriverRegister.exe
 output/OmniMIDIConfigurator.exe
 output/OmniMIDIDebugWindow.exe

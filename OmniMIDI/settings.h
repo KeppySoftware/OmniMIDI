@@ -242,6 +242,13 @@ BOOL load_bassfuncs()
 		// LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFilter);
 
 		PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
+
+		// Load audio extensions
+		BASS_PluginLoad("bassflac.dll", BASS_UNICODE);
+		BASS_PluginLoad("bassopus.dll", BASS_UNICODE);
+		BASS_PluginLoad("bass_mpc.dll", BASS_UNICODE);
+		BASS_PluginLoad("basswv.dll", BASS_UNICODE);
+
 		return TRUE;
 	}
 	catch (...) {
@@ -458,7 +465,7 @@ void LoadSettingsRT()
 		ChVolumeStruct.fTime = 0.0f;
 		ChVolumeStruct.lCurve = 0;
 		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-		CheckUp(ERRORCODE, L"KSVolFXSet", FALSE);
+		CheckUp(ERRORCODE, L"VolFXSet", FALSE);
 
 		// stuff
 		if (ManagedSettings.AlternativeCPU != 1) BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
@@ -617,7 +624,7 @@ void FillContentDebug(
 	std::string PipeContent;
 	DWORD bytesWritten;								// Needed for Windows 7 apparently...
 
-	PipeContent += "KSDebugInfo";
+	PipeContent += "OMDebugInfo";
 	PipeContent += "\nCurrentApp = ";
 	PipeContent += modulename;
 	PipeContent += "\nBitApp = ";
@@ -632,7 +639,7 @@ void FillContentDebug(
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
-	PipeContent += "\nKSDirect = " + std::to_string(KDMAPI);
+	PipeContent += "\nOMDirect = " + std::to_string(KDMAPI);
 	PipeContent += "\nTd1 = " + std::to_string(TD1);
 	PipeContent += "\nTd2 = " + std::to_string(TD2);
 	PipeContent += "\nTd3 = " + std::to_string(TD3);

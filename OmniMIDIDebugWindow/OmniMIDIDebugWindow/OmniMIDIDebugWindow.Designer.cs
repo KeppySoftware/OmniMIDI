@@ -49,8 +49,8 @@
             this.SynthDbg = new System.Windows.Forms.TabPage();
             this.BufStatus = new System.Windows.Forms.Label();
             this.BufStatusLabel = new System.Windows.Forms.Label();
-            this.KSDAPI = new System.Windows.Forms.Label();
-            this.KSDAPILabel = new System.Windows.Forms.Label();
+            this.KDMAPI = new System.Windows.Forms.Label();
+            this.KDMAPILabel = new System.Windows.Forms.Label();
             this.ASIOL = new System.Windows.Forms.Label();
             this.ASIOLLabel = new System.Windows.Forms.Label();
             this.AvV = new System.Windows.Forms.Label();
@@ -221,8 +221,8 @@
             this.SynthDbg.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.SynthDbg.Controls.Add(this.BufStatus);
             this.SynthDbg.Controls.Add(this.BufStatusLabel);
-            this.SynthDbg.Controls.Add(this.KSDAPI);
-            this.SynthDbg.Controls.Add(this.KSDAPILabel);
+            this.SynthDbg.Controls.Add(this.KDMAPI);
+            this.SynthDbg.Controls.Add(this.KDMAPILabel);
             this.SynthDbg.Controls.Add(this.ASIOL);
             this.SynthDbg.Controls.Add(this.ASIOLLabel);
             this.SynthDbg.Controls.Add(this.AvV);
@@ -268,27 +268,27 @@
             this.BufStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BufStatusLabel.Visible = false;
             // 
-            // KSDAPI
+            // KDMAPI
             // 
-            this.KSDAPI.AutoSize = true;
-            this.KSDAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KSDAPI.Location = new System.Drawing.Point(96, 132);
-            this.KSDAPI.Name = "KSDAPI";
-            this.KSDAPI.Size = new System.Drawing.Size(56, 13);
-            this.KSDAPI.TabIndex = 47;
-            this.KSDAPI.Text = "Unknown.";
-            this.KSDAPI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.KDMAPI.AutoSize = true;
+            this.KDMAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KDMAPI.Location = new System.Drawing.Point(96, 132);
+            this.KDMAPI.Name = "KDMAPI";
+            this.KDMAPI.Size = new System.Drawing.Size(56, 13);
+            this.KDMAPI.TabIndex = 47;
+            this.KDMAPI.Text = "Unknown.";
+            this.KDMAPI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // KSDAPILabel
+            // KDMAPILabel
             // 
-            this.KSDAPILabel.AutoSize = true;
-            this.KSDAPILabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KSDAPILabel.Location = new System.Drawing.Point(2, 132);
-            this.KSDAPILabel.Name = "KSDAPILabel";
-            this.KSDAPILabel.Size = new System.Drawing.Size(96, 13);
-            this.KSDAPILabel.TabIndex = 46;
-            this.KSDAPILabel.Text = "KDMAPI status:";
-            this.KSDAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.KDMAPILabel.AutoSize = true;
+            this.KDMAPILabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KDMAPILabel.Location = new System.Drawing.Point(2, 132);
+            this.KDMAPILabel.Name = "KDMAPILabel";
+            this.KDMAPILabel.Size = new System.Drawing.Size(96, 13);
+            this.KDMAPILabel.TabIndex = 46;
+            this.KDMAPILabel.Text = "KDMAPI status:";
+            this.KDMAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ASIOL
             // 
@@ -1434,8 +1434,8 @@
         private System.Windows.Forms.ComboBox SelectedDebug;
         private System.Windows.Forms.ToolTip ReloadDebugInfo;
         private System.ComponentModel.BackgroundWorker CheckMem;
-        private System.Windows.Forms.Label KSDAPI;
-        private System.Windows.Forms.Label KSDAPILabel;
+        private System.Windows.Forms.Label KDMAPI;
+        private System.Windows.Forms.Label KDMAPILabel;
         private System.Windows.Forms.Label BufStatus;
         private System.Windows.Forms.Label BufStatusLabel;
         private System.Windows.Forms.PictureBox RefreshDebugApps;

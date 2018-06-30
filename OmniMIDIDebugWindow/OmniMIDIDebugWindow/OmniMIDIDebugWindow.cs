@@ -447,7 +447,7 @@ namespace OmniMIDIDebugWindow
                 sb.AppendLine(String.Format("{0} {1}", ASIOL.Text, ASIOLLabel.Text));
                 sb.AppendLine(String.Format("{0} {1}", RAMUsageVLabel.Text, RAMUsageV.Text));
                 sb.AppendLine(String.Format("{0} {1}", HCountVLabel.Text, HCountV.Text));
-                sb.AppendLine(String.Format("{0} {1}", KSDAPILabel.Text, KSDAPI.Text));
+                sb.AppendLine(String.Format("{0} {1}", KDMAPILabel.Text, KDMAPI.Text));
                 sb.AppendLine("======= Channels  information =======");
                 sb.AppendLine(String.Format("{0} {1}", CHV1L.Text, CHV1.Text));
                 sb.AppendLine(String.Format("{0} {1}", CHV2L.Text, CHV2.Text));
@@ -546,7 +546,7 @@ namespace OmniMIDIDebugWindow
             {
                 string temp = StreamDebugReader.ReadLine();
 
-                if (DebugName(temp).Equals("KSDirect")) ValueToChange = Convert.ToInt32(DebugValue(temp));
+                if (DebugName(temp).Equals("OMDirect")) ValueToChange = Convert.ToInt32(DebugValue(temp));
                 return true;
             }
             catch { return false; }
@@ -601,7 +601,7 @@ namespace OmniMIDIDebugWindow
         Single CurCPU = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
-        Int32 KSDAPIStatus = 0;
+        Int32 KDMAPIStatus = 0;
         Double Td1 = 0.0;
         Double Td2 = 0.0;
         Double Td3 = 0.0;
@@ -620,7 +620,7 @@ namespace OmniMIDIDebugWindow
                     if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
                     if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
                     if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
-                    if (!ReadPipeBoolean(StreamDebugReader, "KSDirect", ref KSDAPIStatus)) KSDAPIStatus = 0;
+                    if (!ReadPipeBoolean(StreamDebugReader, "OMDirect", ref KDMAPIStatus)) KDMAPIStatus = 0;
                     if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
@@ -637,7 +637,7 @@ namespace OmniMIDIDebugWindow
                     CurCPU = 0.0f;
                     Handles = 0;
                     RAMUsage = 0;
-                    KSDAPIStatus = 0;
+                    KDMAPIStatus = 0;
                     Td1 = 0.0f;
                     Td2 = 0.0f;
                     Td3 = 0.0f;
@@ -800,10 +800,10 @@ namespace OmniMIDIDebugWindow
                 if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
                 else ASIOL.Text = (Handles > 0) ? "Not in use." : "Unavailable";
 
-                if (KSDAPIStatus == 0)
-                    KSDAPI.Text = (Handles > 0) ? "The API is in idle." : "Unavailable";
+                if (KDMAPIStatus == 0)
+                    KDMAPI.Text = (Handles > 0) ? "The API is in idle." : "Unavailable";
                 else
-                    KSDAPI.Text = "The API is active.";
+                    KDMAPI.Text = "The API is active.";
 
                 /*
                 WIP

@@ -141,6 +141,8 @@ namespace OmniMIDIConfigurator.Forms
                             MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, or its missing the Win32PE header.\n\nThis usually indicates an issue with your connection.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         else if (ex.GetBaseException() is ObjectDisposedException)
                             MessageBox.Show("The process object has already been disposed.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else
+                            MessageBox.Show("Unknown error.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                         DialogResult = DialogResult.No;
                         Close();
