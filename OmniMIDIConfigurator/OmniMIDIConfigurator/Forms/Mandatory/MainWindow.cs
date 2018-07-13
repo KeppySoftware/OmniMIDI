@@ -1376,12 +1376,6 @@ namespace OmniMIDIConfigurator
             Process.Start("https://paypal.me/KaleidonKep99");
         }
 
-        private void patronToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Program.DebugToConsole(false, "Opening Patreon dialog.", null);
-            new BecomeAPatron().ShowDialog();
-        }
-
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening WAV output dialog.", null);
@@ -1580,23 +1574,6 @@ namespace OmniMIDIConfigurator
         {
             MessageBox.Show("To change the volume, simply press \"Add\" or \"Subtract\" buttons of the numeric keypad.\n\nYou can disable the hotkeys through \"Advanced settings > Volume hotkeys\".",
                 "What are the hotkeys to change the volume?", MessageBoxButtons.OK, MessageBoxIcon.Question);
-        }
-
-        private void howCanIChangeTheSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("To change the current soundfont list, press and hold ALT, then click a number from 1 to 8.\n\n" +
-                "ALT+1: Load soundfont list 1\nALT+2: Load soundfont list 2\nALT+3: Load soundfont list 3\nALT+4: Load soundfont list 4\nALT+5: Load soundfont list 5\nALT+6: Load soundfont list 6\nALT+7: Load soundfont list 7\nALT+8: Load soundfont list 8\nCTRL+ALT+1: Load soundfont list 9\nCTRL+ALT+2: Load soundfont list 10\nCTRL+ALT+3: Load soundfont list 11\nCTRL+ALT+4: Load soundfont list 12\nCTRL+ALT+5: Load soundfont list 13\nCTRL+ALT+6: Load soundfont list 14\nCTRL+ALT+7: Load soundfont list 15\nCTRL+ALT+8: Load soundfont list 16\n\n" +
-                "You can also reload lists that are already loaded in memory.", "How can I change the soundfont list?", MessageBoxButtons.OK, MessageBoxIcon.Question);
-        }
-
-        private void howCanIResetTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("To reset the driver, press INS.\nThis will stop all the samples that are currently playing, and it'll also send a \"System Reset\" to all the MIDI channels.", "How can I reset the driver?", MessageBoxButtons.OK, MessageBoxIcon.Question);
-        }
-
-        private void whatsTheBestSettingsForTheBufferToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("For SoundBlaster-based audio cards, it's 10.\nFor Realtek audio cards, it's 15-20.\nFor VIA audio cards, it's 20.\nFor Conexant audio cards, it's 30.\nFor USB DACs, it's 25-35.\nFor all the AC'97 audio cards, it's 35.\n\nIt's possible to set it to 10 with really fast computers.", "What's the best settings for the buffer?", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
 
         private void WhatsAutoPanic_Click(object sender, EventArgs e)

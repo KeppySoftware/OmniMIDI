@@ -56,7 +56,6 @@
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
-            this.PatreonBtn = new System.Windows.Forms.Button();
             this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
@@ -337,20 +336,6 @@
             this.DisableBB.Index = -1;
             this.DisableBB.Text = "";
             // 
-            // PatreonBtn
-            // 
-            this.PatreonBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PatreonBtn.Image = global::OmniMIDIConfigurator.Properties.Resources.patronsm;
-            this.PatreonBtn.Location = new System.Drawing.Point(285, 41);
-            this.PatreonBtn.Name = "PatreonBtn";
-            this.PatreonBtn.Size = new System.Drawing.Size(87, 23);
-            this.PatreonBtn.TabIndex = 13;
-            this.PatreonBtn.Text = "Patreon";
-            this.PatreonBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.PatreonBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.PatreonBtn.UseVisualStyleBackColor = true;
-            this.PatreonBtn.Click += new System.EventHandler(this.button1_Click);
-            // 
             // LicenseFile
             // 
             this.LicenseFile.AutoSize = true;
@@ -385,7 +370,6 @@
             this.BackgroundImage = global::OmniMIDIConfigurator.Properties.Resources.InfoBk;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(382, 370);
-            this.Controls.Add(this.PatreonBtn);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.CFU);
             this.Controls.Add(this.CTC);
@@ -446,7 +430,6 @@
         private System.Windows.Forms.ToolTip BranchToolTip;
         private System.Windows.Forms.LinkLabelEx ChangeBranch;
         private System.Windows.Forms.MenuItem DisableBB;
-        private System.Windows.Forms.Button PatreonBtn;
         private System.Windows.Forms.LinkLabelEx KDMAPIVer;
     }
 }

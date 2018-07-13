@@ -58,7 +58,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.VolPanel = new System.Windows.Forms.Panel();
             this.VolLabel = new System.Windows.Forms.Label();
-            this.VolTrackBar = new KnobControl.KnobControl();
             this.VolSimView = new System.Windows.Forms.Label();
             this.MixerBox = new System.Windows.Forms.GroupBox();
             this.MixerContext = new System.Windows.Forms.ContextMenu();
@@ -115,8 +114,6 @@
             this.RV14S = new System.Windows.Forms.Panel();
             this.LV14S = new System.Windows.Forms.Panel();
             this.EnginesBox = new System.Windows.Forms.GroupBox();
-            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
-            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
             this.label2 = new System.Windows.Forms.Label();
             this.AudioEngBox = new System.Windows.Forms.ComboBox();
             this.AdditionalSettingsBox = new System.Windows.Forms.GroupBox();
@@ -145,10 +142,6 @@
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.SoundFontTab = new System.Windows.Forms.TabPage();
             this.Separator = new System.Windows.Forms.Label();
-            this.Lis = new OmniMIDIConfigurator.ListViewEx();
-            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EL = new System.Windows.Forms.Button();
             this.LoadToApp = new System.Windows.Forms.Button();
             this.IEL = new System.Windows.Forms.Button();
@@ -257,15 +250,6 @@
             this.WMMPatches = new System.Windows.Forms.MenuItem();
             this.menuItem60 = new System.Windows.Forms.MenuItem();
             this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
-            this.menuItem47 = new System.Windows.Forms.MenuItem();
-            this.menuItem51 = new System.Windows.Forms.MenuItem();
-            this.KSynthWiki = new System.Windows.Forms.MenuItem();
-            this.menuItem27 = new System.Windows.Forms.MenuItem();
-            this.GiveFeedback = new System.Windows.Forms.MenuItem();
-            this.reportABugToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem42 = new System.Windows.Forms.MenuItem();
-            this.KSUSJoinNow = new System.Windows.Forms.MenuItem();
-            this.menuItem43 = new System.Windows.Forms.MenuItem();
             this.informationAboutTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openUpdaterToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem32 = new System.Windows.Forms.MenuItem();
@@ -273,32 +257,21 @@
             this.CheckForUpdatesMenu = new System.Windows.Forms.MenuItem();
             this.menuItem49 = new System.Windows.Forms.MenuItem();
             this.donateToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.patronToSupportUsToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.SeeChangelog = new System.Windows.Forms.MenuItem();
             this.SeeLatestChangelog = new System.Windows.Forms.MenuItem();
             this.downloadTheSourceCodeToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem33 = new System.Windows.Forms.MenuItem();
-            this.howCanIChangeTheSoundfontListToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.howCanIResetTheDriverToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.guidesToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.SoftpediaPage = new System.Windows.Forms.MenuItem();
-            this.menuItem26 = new System.Windows.Forms.MenuItem();
-            this.KepChannel = new System.Windows.Forms.MenuItem();
-            this.menuItem24 = new System.Windows.Forms.MenuItem();
             this.HAPLink = new System.Windows.Forms.MenuItem();
             this.BASSLink = new System.Windows.Forms.MenuItem();
             this.BASSNetLink = new System.Windows.Forms.MenuItem();
             this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.menuItem45 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem59 = new System.Windows.Forms.MenuItem();
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.SynthMenu = new System.Windows.Forms.MainMenu(this.components);
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
             this.MixerPanel = new System.Windows.Forms.Panel();
-            this.OpenFullMixer = new System.Windows.Forms.LinkLabelEx();
             this.Meter = new System.Windows.Forms.Panel();
             this.RV22 = new System.Windows.Forms.Panel();
             this.LV22 = new System.Windows.Forms.Panel();
@@ -389,6 +362,15 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
+            this.OpenFullMixer = new System.Windows.Forms.LinkLabelEx();
+            this.Lis = new OmniMIDIConfigurator.ListViewEx();
+            this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.VolTrackBar = new KnobControl.KnobControl();
+            this.WhatIsXAudio = new System.Windows.Forms.LinkLabelEx();
+            this.WhatIsOutput = new System.Windows.Forms.LinkLabelEx();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -636,33 +618,6 @@
             this.VolLabel.TabIndex = 3;
             this.VolLabel.Text = "VOLUME:";
             this.VolLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.EndAngle = 405F;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
-            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
-            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
-            this.VolTrackBar.ScaleDivisions = 10;
-            this.VolTrackBar.ScaleSubDivisions = 10;
-            this.VolTrackBar.ShowLargeScale = false;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(79, 79);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.StartAngle = 135F;
-            this.VolTrackBar.TabIndex = 5;
-            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
-            this.VolTrackBar.Value = 10000;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // VolSimView
             // 
@@ -1404,30 +1359,6 @@
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Engine settings";
             // 
-            // WhatIsXAudio
-            // 
-            this.WhatIsXAudio.AutoSize = true;
-            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
-            this.WhatIsXAudio.Name = "WhatIsXAudio";
-            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
-            this.WhatIsXAudio.TabIndex = 16;
-            this.WhatIsXAudio.TabStop = true;
-            this.WhatIsXAudio.Text = "Engines?";
-            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
-            // 
-            // WhatIsOutput
-            // 
-            this.WhatIsOutput.AutoSize = true;
-            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
-            this.WhatIsOutput.Name = "WhatIsOutput";
-            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
-            this.WhatIsOutput.TabIndex = 15;
-            this.WhatIsOutput.TabStop = true;
-            this.WhatIsOutput.Text = "What\'s WAV mode?";
-            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -1844,58 +1775,6 @@
             this.Separator.TabIndex = 15;
             this.Separator.Text = "|";
             // 
-            // Lis
-            // 
-            this.Lis.AccessibleDescription = "The SoundFonts list";
-            this.Lis.AccessibleName = "SoundFonts list";
-            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.Lis.AllowDrop = true;
-            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Lis.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.SoundFont,
-            this.SFFormat,
-            this.SFSize});
-            this.Lis.FullRowSelect = true;
-            this.Lis.GridLines = true;
-            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.Lis.HideSelection = false;
-            this.Lis.LabelWrap = false;
-            this.Lis.LineAfter = -1;
-            this.Lis.LineBefore = -1;
-            this.Lis.Location = new System.Drawing.Point(5, 36);
-            this.Lis.Name = "Lis";
-            this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(602, 341);
-            this.Lis.TabIndex = 3;
-            this.Lis.UseCompatibleStateImageBehavior = false;
-            this.Lis.View = System.Windows.Forms.View.Details;
-            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
-            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
-            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
-            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
-            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
-            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
-            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
-            // 
-            // SoundFont
-            // 
-            this.SoundFont.Text = "SoundFont";
-            this.SoundFont.Width = 393;
-            // 
-            // SFFormat
-            // 
-            this.SFFormat.Text = "Format";
-            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SFSize
-            // 
-            this.SFSize.Text = "Size";
-            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // EL
             // 
             this.EL.AccessibleDescription = "Export SoundFonts list";
@@ -2309,7 +2188,7 @@
             this.toolStripStatusLabel2,
             this.UpdateStatus,
             this.VersionLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 612);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 591);
             this.StatusStrip.MaximumSize = new System.Drawing.Size(0, 22);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Size = new System.Drawing.Size(649, 22);
@@ -2817,65 +2696,6 @@
             this.MIDIInOutTest.Text = "Test MIDI input and output";
             this.MIDIInOutTest.Click += new System.EventHandler(this.MIDIInOutTest_Click);
             // 
-            // menuItem47
-            // 
-            this.menuItem47.Index = 0;
-            this.menuItem47.Text = "Help Keppy by sending telemetry data";
-            this.menuItem47.Click += new System.EventHandler(this.SendTelemetry_Click);
-            // 
-            // menuItem51
-            // 
-            this.menuItem51.Index = 1;
-            this.menuItem51.Text = "-";
-            // 
-            // KSynthWiki
-            // 
-            this.KSynthWiki.Index = 2;
-            this.KSynthWiki.Text = "Open the \"OmniMIDI Wiki\"";
-            this.KSynthWiki.Click += new System.EventHandler(this.KSynthWiki_Click);
-            // 
-            // menuItem27
-            // 
-            this.menuItem27.Index = 3;
-            this.menuItem27.Text = "-";
-            // 
-            // GiveFeedback
-            // 
-            this.GiveFeedback.Index = 4;
-            this.GiveFeedback.Text = "Give feedback about the driver";
-            this.GiveFeedback.Click += new System.EventHandler(this.GiveFeedback_Click);
-            // 
-            // reportABugToolStripMenuItem
-            // 
-            this.reportABugToolStripMenuItem.Index = 5;
-            this.reportABugToolStripMenuItem.Text = "Report a bug on GitHub";
-            this.reportABugToolStripMenuItem.Click += new System.EventHandler(this.reportABugToolStripMenuItem_Click);
-            // 
-            // menuItem42
-            // 
-            this.menuItem42.Index = 6;
-            this.menuItem42.Text = "-";
-            // 
-            // KSUSJoinNow
-            // 
-            this.KSUSJoinNow.Index = 7;
-            this.KSUSJoinNow.Text = "Join the Keppy\'s Updates Server on Discord";
-            this.KSUSJoinNow.Click += new System.EventHandler(this.KSUSJoinNow_Click);
-            // 
-            // menuItem43
-            // 
-            this.menuItem43.Index = 3;
-            this.menuItem43.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem47,
-            this.menuItem51,
-            this.KSynthWiki,
-            this.menuItem27,
-            this.GiveFeedback,
-            this.reportABugToolStripMenuItem,
-            this.menuItem42,
-            this.KSUSJoinNow});
-            this.menuItem43.Text = "Feedback";
-            // 
             // informationAboutTheDriverToolStripMenuItem
             // 
             this.informationAboutTheDriverToolStripMenuItem.Index = 0;
@@ -2918,29 +2738,23 @@
             // donateToSupportUsToolStripMenuItem
             // 
             this.donateToSupportUsToolStripMenuItem.Index = 3;
-            this.donateToSupportUsToolStripMenuItem.Text = "Donate through PayPal to support my software";
+            this.donateToSupportUsToolStripMenuItem.Text = "Support me with a PayPal donation";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
-            // 
-            // patronToSupportUsToolStripMenuItem
-            // 
-            this.patronToSupportUsToolStripMenuItem.Index = 4;
-            this.patronToSupportUsToolStripMenuItem.Text = "Become a patron to support my software";
-            this.patronToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.patronToSupportUsToolStripMenuItem_Click);
             // 
             // menuItem29
             // 
-            this.menuItem29.Index = 5;
+            this.menuItem29.Index = 4;
             this.menuItem29.Text = "-";
             // 
             // SeeChangelog
             // 
-            this.SeeChangelog.Index = 6;
+            this.SeeChangelog.Index = 5;
             this.SeeChangelog.Text = "Changelog of this driver release";
             this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
             // 
             // SeeLatestChangelog
             // 
-            this.SeeLatestChangelog.Index = 7;
+            this.SeeLatestChangelog.Index = 6;
             this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
             this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
             // 
@@ -2952,61 +2766,8 @@
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 9;
+            this.menuItem33.Index = 10;
             this.menuItem33.Text = "-";
-            // 
-            // howCanIChangeTheSoundfontListToolStripMenuItem
-            // 
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Index = 0;
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Text = "How can I change the soundfont list?";
-            this.howCanIChangeTheSoundfontListToolStripMenuItem.Click += new System.EventHandler(this.howCanIChangeTheSoundfontListToolStripMenuItem_Click);
-            // 
-            // whatsTheBestSettingsForTheBufferToolStripMenuItem
-            // 
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Index = 1;
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Text = "What are the best settings for the buffer?";
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem.Click += new System.EventHandler(this.whatsTheBestSettingsForTheBufferToolStripMenuItem_Click);
-            // 
-            // howCanIResetTheDriverToolStripMenuItem
-            // 
-            this.howCanIResetTheDriverToolStripMenuItem.Index = 2;
-            this.howCanIResetTheDriverToolStripMenuItem.Text = "How can I reset the driver?";
-            this.howCanIResetTheDriverToolStripMenuItem.Click += new System.EventHandler(this.howCanIResetTheDriverToolStripMenuItem_Click);
-            // 
-            // guidesToolStripMenuItem
-            // 
-            this.guidesToolStripMenuItem.Index = 10;
-            this.guidesToolStripMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.howCanIChangeTheSoundfontListToolStripMenuItem,
-            this.whatsTheBestSettingsForTheBufferToolStripMenuItem,
-            this.howCanIResetTheDriverToolStripMenuItem});
-            this.guidesToolStripMenuItem.Text = "Guides";
-            // 
-            // SoftpediaPage
-            // 
-            this.SoftpediaPage.Index = 0;
-            this.SoftpediaPage.Text = "Keppy\'s Synthesizer Softpedia Page";
-            this.SoftpediaPage.Click += new System.EventHandler(this.SoftpediaPage_Click);
-            // 
-            // menuItem26
-            // 
-            this.menuItem26.Index = 1;
-            this.menuItem26.Text = "-";
-            // 
-            // KepChannel
-            // 
-            this.KepChannel.Index = 2;
-            this.KepChannel.Text = "KaleidonKep99\'s YouTube channel";
-            this.KepChannel.Click += new System.EventHandler(this.KepChannel_Click);
-            // 
-            // menuItem24
-            // 
-            this.menuItem24.Index = 11;
-            this.menuItem24.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.SoftpediaPage,
-            this.menuItem26,
-            this.KepChannel});
-            this.menuItem24.Text = "Useful links";
             // 
             // HAPLink
             // 
@@ -3034,7 +2795,7 @@
             // 
             // menuItem45
             // 
-            this.menuItem45.Index = 12;
+            this.menuItem45.Index = 11;
             this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HAPLink,
             this.BASSLink,
@@ -3044,33 +2805,25 @@
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 4;
+            this.menuItem3.Index = 3;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
             this.CheckForUpdatesMenu,
             this.menuItem49,
             this.donateToSupportUsToolStripMenuItem,
-            this.patronToSupportUsToolStripMenuItem,
             this.menuItem29,
             this.SeeChangelog,
             this.SeeLatestChangelog,
+            this.menuItem11,
             this.downloadTheSourceCodeToolStripMenuItem,
+            this.KDMAPIDoc,
             this.menuItem33,
-            this.guidesToolStripMenuItem,
-            this.menuItem24,
-            this.menuItem45,
-            this.menuItem59,
-            this.KDMAPIDoc});
+            this.menuItem45});
             this.menuItem3.Text = "?";
-            // 
-            // menuItem59
-            // 
-            this.menuItem59.Index = 13;
-            this.menuItem59.Text = "-";
             // 
             // KDMAPIDoc
             // 
-            this.KDMAPIDoc.Index = 14;
+            this.KDMAPIDoc.Index = 9;
             this.KDMAPIDoc.Text = "Keppy\'s Direct MIDI API documentation";
             this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
             // 
@@ -3080,7 +2833,6 @@
             this.menuItem1,
             this.menuItem2,
             this.menuItem25,
-            this.menuItem43,
             this.menuItem3});
             this.SynthMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
             // 
@@ -3127,23 +2879,11 @@
             this.MixerPanel.Controls.Add(this.CH10VOL);
             this.MixerPanel.Controls.Add(this.CH10);
             this.MixerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MixerPanel.Location = new System.Drawing.Point(0, 420);
+            this.MixerPanel.Location = new System.Drawing.Point(0, 399);
             this.MixerPanel.Name = "MixerPanel";
             this.MixerPanel.Size = new System.Drawing.Size(649, 192);
             this.MixerPanel.TabIndex = 107;
             this.MixerPanel.Visible = false;
-            // 
-            // OpenFullMixer
-            // 
-            this.OpenFullMixer.AutoSize = true;
-            this.OpenFullMixer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.OpenFullMixer.Location = new System.Drawing.Point(491, 176);
-            this.OpenFullMixer.Name = "OpenFullMixer";
-            this.OpenFullMixer.Size = new System.Drawing.Size(160, 13);
-            this.OpenFullMixer.TabIndex = 17;
-            this.OpenFullMixer.TabStop = true;
-            this.OpenFullMixer.Text = "Open the dedicated mixer applet";
-            this.OpenFullMixer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenFullMixer_LinkClicked);
             // 
             // Meter
             // 
@@ -4144,13 +3884,133 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
+            // OpenFullMixer
+            // 
+            this.OpenFullMixer.AutoSize = true;
+            this.OpenFullMixer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.OpenFullMixer.Location = new System.Drawing.Point(491, 176);
+            this.OpenFullMixer.Name = "OpenFullMixer";
+            this.OpenFullMixer.Size = new System.Drawing.Size(160, 13);
+            this.OpenFullMixer.TabIndex = 17;
+            this.OpenFullMixer.TabStop = true;
+            this.OpenFullMixer.Text = "Open the dedicated mixer applet";
+            this.OpenFullMixer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.OpenFullMixer_LinkClicked);
+            // 
+            // Lis
+            // 
+            this.Lis.AccessibleDescription = "The SoundFonts list";
+            this.Lis.AccessibleName = "SoundFonts list";
+            this.Lis.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.Lis.AllowDrop = true;
+            this.Lis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Lis.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.SoundFont,
+            this.SFFormat,
+            this.SFSize});
+            this.Lis.FullRowSelect = true;
+            this.Lis.GridLines = true;
+            this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.Lis.HideSelection = false;
+            this.Lis.LabelWrap = false;
+            this.Lis.LineAfter = -1;
+            this.Lis.LineBefore = -1;
+            this.Lis.Location = new System.Drawing.Point(5, 36);
+            this.Lis.Name = "Lis";
+            this.Lis.ShowGroups = false;
+            this.Lis.Size = new System.Drawing.Size(602, 341);
+            this.Lis.TabIndex = 3;
+            this.Lis.UseCompatibleStateImageBehavior = false;
+            this.Lis.View = System.Windows.Forms.View.Details;
+            this.Lis.SizeChanged += new System.EventHandler(this.Lis_SizeChanged);
+            this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
+            this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
+            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
+            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
+            this.Lis.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseMove);
+            this.Lis.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseUp);
+            // 
+            // SoundFont
+            // 
+            this.SoundFont.Text = "SoundFont";
+            this.SoundFont.Width = 393;
+            // 
+            // SFFormat
+            // 
+            this.SFFormat.Text = "Format";
+            this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // SFSize
+            // 
+            this.SFSize.Text = "Size";
+            this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(8, 3);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(79, 79);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
+            this.VolTrackBar.TabIndex = 5;
+            this.ButtonsDesc.SetToolTip(this.VolTrackBar, "Right-click the knob to fine tune it");
+            this.VolTrackBar.Value = 10000;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
+            // WhatIsXAudio
+            // 
+            this.WhatIsXAudio.AutoSize = true;
+            this.WhatIsXAudio.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.WhatIsXAudio.Location = new System.Drawing.Point(8, 68);
+            this.WhatIsXAudio.Name = "WhatIsXAudio";
+            this.WhatIsXAudio.Size = new System.Drawing.Size(51, 13);
+            this.WhatIsXAudio.TabIndex = 16;
+            this.WhatIsXAudio.TabStop = true;
+            this.WhatIsXAudio.Text = "Engines?";
+            this.WhatIsXAudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsXAudio_Click);
+            // 
+            // WhatIsOutput
+            // 
+            this.WhatIsOutput.AutoSize = true;
+            this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
+            this.WhatIsOutput.Name = "WhatIsOutput";
+            this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
+            this.WhatIsOutput.TabIndex = 15;
+            this.WhatIsOutput.TabStop = true;
+            this.WhatIsOutput.Text = "What\'s WAV mode?";
+            this.WhatIsOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WhatIsOutput_Click);
+            // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 7;
+            this.menuItem11.Text = "-";
+            // 
             // OmniMIDIConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(649, 634);
+            this.ClientSize = new System.Drawing.Size(649, 613);
             this.Controls.Add(this.MixerPanel);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TabsForTheControls);
@@ -4422,15 +4282,6 @@
         private System.Windows.Forms.MenuItem DeleteUserData;
         private System.Windows.Forms.MenuItem ResetToDefault;
         private System.Windows.Forms.MenuItem menuItem25;
-        private System.Windows.Forms.MenuItem menuItem47;
-        private System.Windows.Forms.MenuItem menuItem51;
-        private System.Windows.Forms.MenuItem KSynthWiki;
-        private System.Windows.Forms.MenuItem menuItem27;
-        private System.Windows.Forms.MenuItem GiveFeedback;
-        private System.Windows.Forms.MenuItem reportABugToolStripMenuItem;
-        private System.Windows.Forms.MenuItem menuItem42;
-        private System.Windows.Forms.MenuItem KSUSJoinNow;
-        private System.Windows.Forms.MenuItem menuItem43;
         private System.Windows.Forms.MenuItem informationAboutTheDriverToolStripMenuItem;
         private System.Windows.Forms.MenuItem openUpdaterToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem32;
@@ -4438,20 +4289,11 @@
         private System.Windows.Forms.MenuItem CheckForUpdatesMenu;
         private System.Windows.Forms.MenuItem menuItem49;
         private System.Windows.Forms.MenuItem donateToSupportUsToolStripMenuItem;
-        private System.Windows.Forms.MenuItem patronToSupportUsToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem29;
         private System.Windows.Forms.MenuItem SeeChangelog;
         private System.Windows.Forms.MenuItem SeeLatestChangelog;
         private System.Windows.Forms.MenuItem downloadTheSourceCodeToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem33;
-        private System.Windows.Forms.MenuItem howCanIChangeTheSoundfontListToolStripMenuItem;
-        private System.Windows.Forms.MenuItem whatsTheBestSettingsForTheBufferToolStripMenuItem;
-        private System.Windows.Forms.MenuItem howCanIResetTheDriverToolStripMenuItem;
-        private System.Windows.Forms.MenuItem guidesToolStripMenuItem;
-        private System.Windows.Forms.MenuItem SoftpediaPage;
-        private System.Windows.Forms.MenuItem menuItem26;
-        private System.Windows.Forms.MenuItem KepChannel;
-        private System.Windows.Forms.MenuItem menuItem24;
         private System.Windows.Forms.MenuItem HAPLink;
         private System.Windows.Forms.MenuItem BASSLink;
         private System.Windows.Forms.MenuItem BASSNetLink;
@@ -4523,7 +4365,6 @@
         public System.Windows.Forms.MenuItem VolumeBoost;
         private System.Windows.Forms.MenuItem menuItem37;
         public System.Windows.Forms.ToolTip Requirements;
-        private System.Windows.Forms.MenuItem menuItem59;
         private System.Windows.Forms.MenuItem KDMAPIDoc;
         private System.Windows.Forms.MenuItem menuItem60;
         private System.Windows.Forms.MenuItem WMMPatches;
@@ -4573,6 +4414,7 @@
         public System.Windows.Forms.Panel RV1;
         public System.Windows.Forms.Panel LV2;
         public System.Windows.Forms.Panel LV1;
+        private System.Windows.Forms.MenuItem menuItem11;
     }
 }
 

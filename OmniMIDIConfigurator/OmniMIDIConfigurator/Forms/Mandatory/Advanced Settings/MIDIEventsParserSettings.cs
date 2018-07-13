@@ -55,7 +55,7 @@ namespace OmniMIDIConfigurator
 
         private void AllNotesIgnore_CheckedChanged(object sender, EventArgs e)
         {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreAllEvents", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)

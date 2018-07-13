@@ -234,11 +234,6 @@ namespace OmniMIDIConfigurator
             Process.Start("https://paypal.me/KaleidonKep99");
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            new BecomeAPatron().ShowDialog();
-        }
-
         private void ChangeBranch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SelectBranch frm = new SelectBranch();
