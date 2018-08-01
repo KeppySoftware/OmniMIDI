@@ -367,7 +367,7 @@ void LoadSettings(bool streamreload)
 		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxRenderingTime, &dwSize);
-		RegQueryValueEx(hKey, L"AudioOutput", NULL, &dwType, (LPBYTE)&AudioOutput, &dwSize);
+		RegQueryValueEx(hKey, L"AudioOutput", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioOutputReg, &dwSize);
 		RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&ManagedSettings.DefaultSFList, &dwSize);
 		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 		RegQueryValueEx(hKey, L"Extra8Lists", NULL, &dwType, (LPBYTE)&ManagedSettings.Extra8Lists, &dwSize);

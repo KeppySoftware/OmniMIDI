@@ -396,7 +396,7 @@ namespace OmniMIDIConfigurator
         public static void SetDefaultDevice(int engine, int dev, string asiodev)
         {
             if (engine == AudioEngine.DSOUND_ENGINE || engine == AudioEngine.WASAPI_ENGINE)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioOutputReg", dev, RegistryValueKind.DWord);
+                OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioOutput", dev, RegistryValueKind.DWord);
             else if (engine == AudioEngine.ASIO_ENGINE)
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("ASIOOutput", asiodev, RegistryValueKind.String);
 
