@@ -320,7 +320,7 @@ namespace OmniMIDIConfigurator
 
         public static void SetFramerate(int yesno)
         {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("CapFramerrate", yesno, RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("CapFramerate", yesno, RegistryValueKind.DWord);
         }
 
         public static void SleepStates(int yesno)
