@@ -1,5 +1,6 @@
 /*
 OmniMIDI soundfont lists loading system
+Don't bother understanding this stuff, as long as it works
 */
 
 static void FreeFonts()

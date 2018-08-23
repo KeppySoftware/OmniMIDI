@@ -89,6 +89,7 @@ static DWORD OMFlags = NULL;
 static HDRVR OMDevice = NULL;
 
 // Important stuff
+static BOOL AudioThreadDone = FALSE;
 static volatile BOOL modm_closed = TRUE;
 static volatile BOOL reset_synth = FALSE;
 static DWORD processPriority = NORMAL_PRIORITY_CLASS;
