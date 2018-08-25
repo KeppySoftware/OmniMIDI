@@ -10,7 +10,7 @@ LPCWSTR ReturnAppName(void) {
 	out = PathFindFileName(buffer);
 
 	TCHAR final[MAX_PATH];
-	_stprintf(final, _T("%s  - Debug Output.txt"), out);
+	_swprintf(final, _T("%s  - Debug Output.txt"), out);
 
 	return final;
 }
@@ -39,7 +39,7 @@ void CreateConsole() {
 		std::cout << "Be the change that you wish to see in the world.";
 		std::cout << std::endl;
 		std::cout << "OmniMIDI Version " << major << "." << minor << "." << build << "." << revision;
-		std::cout << std::endl << "Copyright 2014-2017 - KaleidonKep99";
+		std::cout << std::endl << "Copyright 2014 - KaleidonKep99";
 		std::cout << std::endl;
 		IntroAlreadyShown = TRUE;
 	}

@@ -5,6 +5,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
 #pragma once
+#pragma comment(lib,"shlwapi.lib")
 
 #if !_WIN32
 #error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
@@ -58,7 +59,6 @@ static NDE NtDelayExecution = 0;
 
 // Hyper switch
 static DWORD HyperMode = 0;
-static DWORD HyperCheckedAlready = FALSE;
 static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) = 0;
 static DWORD(*_PlayBufData)(void) = 0;
 static DWORD(*_PlayBufDataChk)(void) = 0;
@@ -84,6 +84,7 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
+#define _RTWAIT NTSleep(-10000)											// RT settings wait
 #define _WAIT NTSleep(-100)													// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
@@ -100,8 +101,8 @@ void NTSleep(__int64 usec) {
 
 // OmniMIDI vital parts
 #include "sfsystem.h"
-#include "settings.h"
 #include "bufsystem.h"
+#include "settings.h"
 #include "bansystem.h"
 #include "drvinit.h"
 #include "kdmapi.h"

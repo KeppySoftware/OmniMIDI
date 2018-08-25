@@ -118,7 +118,7 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 			mixervoid();		// Send dB values to the mixer
 			RevbNChor();		// Check if custom reverb/chorus values are enabled
 
-			_VLWAIT;
+			_RTWAIT;
 		}
 	}
 	catch (...) {
@@ -143,7 +143,7 @@ DWORD WINAPI RTSettingsHP(LPVOID lpV) {
 			keybindings();		// Check for keystrokes (ALT+1, INS, etc..)
 			WatchdogCheck();	// Check current active voices, rendering time, etc..
 
-			_VLWAIT;
+            _RTWAIT;
 		}
 	}
 	catch (...) {
@@ -719,9 +719,10 @@ void CloseThreads(BOOL MainClose) {
 	stop_thread = FALSE;
 }
 
-int CreateThreads(bool startup) {
+int CreateThreads(BOOL startup) {
 	// Load the SoundFont on startup
 	if (startup == TRUE) SetEvent(load_sfevent);
+	else CloseThreads(FALSE);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 

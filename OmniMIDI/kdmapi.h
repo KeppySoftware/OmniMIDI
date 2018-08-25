@@ -4,13 +4,12 @@ void keepstreamsalive(int& opend) {
 	BASS_ChannelIsActive(OMStream);
 	if (BASS_ErrorGetCode() == 5 || ManagedSettings.LiveChanges) {
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
-		CloseThreads(FALSE);
 		LoadSettings(TRUE);
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		if (InitializeBASS(FALSE)) {
 			SetUpStream();
 			LoadSoundFontsToStream();
-			opend = CreateThreads(TRUE);
+			opend = CreateThreads(FALSE);
 		}
 	}
 }
@@ -37,6 +36,8 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == FALSE) {
 				if (!HyperMode) start1 = TimeNow();
+				if (stop_thread == TRUE) 
+					CreateThreads(FALSE);
 				keepstreamsalive(opend);
 				LoadCustomInstruments();
 				CheckVolume(FALSE);
@@ -69,22 +70,6 @@ void DoStartClient() {
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI", 0, KEY_ALL_ACCESS, &hKey);
 		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 		RegCloseKey(hKey);
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&HyperMode, &dwSize);
-		RegCloseKey(hKey);
-
-		if (HyperMode && !HyperCheckedAlready) {
-			MessageBox(NULL, L"Hyper-playback mode is enabled!", L"OmniMIDI", MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
-			_PrsData = ParseDataHyper;
-			_PlayBufData = PlayBufferedDataHyper;
-			_PlayBufDataChk = PlayBufferedDataChunkHyper;
-		}
-		else {
-			_PrsData = ParseData;
-			_PlayBufData = PlayBufferedData;
-			_PlayBufDataChk = PlayBufferedDataChunk;
-		}
-		HyperCheckedAlready = TRUE;
 
 		AppName();
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);

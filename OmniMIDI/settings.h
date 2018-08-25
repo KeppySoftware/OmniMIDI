@@ -358,6 +358,7 @@ void LoadSettings(bool streamreload)
 			RegQueryValueEx(hKey, L"GetEvBuffSizeFromRAM", NULL, &dwType, (LPBYTE)&GetEvBuffSizeFromRAM, &dwSize);
 			RegQueryValueEx(hKey, L"EvBufferMultRatio", NULL, &dwType, (LPBYTE)&EvBufferMultRatio, &dwSize);
 		}
+		RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&HyperMode, &dwSize);
 		RegQueryValueEx(hKey, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioBitDepth, &dwSize);
 		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
@@ -400,6 +401,18 @@ void LoadSettings(bool streamreload)
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
+		if (HyperMode) {
+			MessageBox(NULL, L"Hyper-playback mode is enabled!", L"OmniMIDI", MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
+			_PrsData = ParseDataHyper;
+			_PlayBufData = PlayBufferedDataHyper;
+			_PlayBufDataChk = PlayBufferedDataChunkHyper;
+		}
+		else {
+			_PrsData = ParseData;
+			_PlayBufData = PlayBufferedData;
+			_PlayBufDataChk = PlayBufferedDataChunk;
+		}
+
 		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
@@ -413,7 +426,7 @@ void LoadSettings(bool streamreload)
 void LoadSettingsRT()
 {
 	try {
-		DWORD TempSC, TempOV;
+		DWORD TempSC, TempOV, TempHP;
 		BOOL TempESFX, TempNOFF1, TempISR, TempSI, TempDNFO, TempDMN;
 
 		int zero = 0;
@@ -423,6 +436,7 @@ void LoadSettingsRT()
 		DWORD dwSize = sizeof(DWORD);
 
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
+		RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&TempHP, &dwSize);
 		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
@@ -462,6 +476,23 @@ void LoadSettingsRT()
 		}
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
+
+		if (TempHP != HyperMode) {
+			HyperMode = TempHP;
+			if (HyperMode) {
+				_PrsData = ParseDataHyper;
+				_PlayBufData = PlayBufferedDataHyper;
+				_PlayBufDataChk = PlayBufferedDataChunkHyper;
+				PrintToConsole(FOREGROUND_RED, 1, "Hyper-Playback mode enabled!");
+			}
+			else {
+				_PrsData = ParseData;
+				_PlayBufData = PlayBufferedData;
+				_PlayBufDataChk = PlayBufferedDataChunk;
+				PrintToConsole(FOREGROUND_RED, 1, "Hyper-Playback mode disabled!");
+			}
+			stop_thread = TRUE;
+		}
 
 		// Volume
 		if (TempOV != ManagedSettings.OutputVolume) {
