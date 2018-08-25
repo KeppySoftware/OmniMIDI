@@ -92,7 +92,6 @@ static HDRVR OMDevice = NULL;
 static BOOL AudioThreadDone = FALSE;
 static volatile BOOL modm_closed = TRUE;
 static volatile BOOL reset_synth = FALSE;
-static DWORD processPriority = NORMAL_PRIORITY_CLASS;
 static HANDLE load_sfevent = NULL;
 
 // Stream
@@ -114,6 +113,8 @@ static HINSTANCE hinst = NULL;							// main DLL handle
 static HINSTANCE ntdll = NULL;							// ?
 
 static CHAR modulename[MAX_PATH];		// debug info
+static TCHAR modulenameW[MAX_PATH];		// debug info
+static TCHAR * modulenameWp;			// debug info
 static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 

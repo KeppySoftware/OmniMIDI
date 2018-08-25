@@ -84,7 +84,8 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
-#define _DBGWAIT NTSleep(-1000)													// Normal wait
+// Predefined sleep values, useful for redundancy
+#define _DBGWAIT NTSleep(-1000)												// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)											// Very slow wait
@@ -231,7 +232,6 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 LONG DoOpenClient() {
 	DoStartClient();
 	DoResetClient();
-	SetPriorityClass(GetCurrentProcess(), processPriority);
 	return MMSYSERR_NOERROR;
 }
 

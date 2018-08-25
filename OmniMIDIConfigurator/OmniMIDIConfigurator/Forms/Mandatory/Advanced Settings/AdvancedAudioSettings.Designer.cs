@@ -160,7 +160,6 @@
             this.HMode.Size = new System.Drawing.Size(163, 17);
             this.HMode.TabIndex = 9;
             this.HMode.Text = "Enable hyper-playback mode";
-            this.Requirements.SetToolTip(this.HMode, "You need to restart the MIDI app, in order for this function to work.");
             this.HMode.UseVisualStyleBackColor = true;
             this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
             // 

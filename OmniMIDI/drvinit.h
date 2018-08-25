@@ -678,6 +678,11 @@ Retry:
 
 	// Enable the volume knob in the configurator
 	ChVolume = BASS_ChannelSetFX(OMStream, BASS_FX_VOLUME, 1);
+	ChVolumeStruct.fCurrent = 1.0f;
+	ChVolumeStruct.fTarget = sound_out_volume_float;
+	ChVolumeStruct.fTime = 0.0f;
+	ChVolumeStruct.lCurve = 0;
+	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
 	CheckUp(ERRORCODE, L"KSVolFX", FALSE);
 
 	return init;
@@ -719,7 +724,7 @@ void CloseThreads(BOOL MainClose) {
 	stop_thread = FALSE;
 }
 
-int CreateThreads(BOOL startup) {
+BOOL CreateThreads(BOOL startup) {
 	// Load the SoundFont on startup
 	if (startup == TRUE) SetEvent(load_sfevent);
 	else CloseThreads(FALSE);
@@ -739,7 +744,7 @@ int CreateThreads(BOOL startup) {
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
-	return 1;
+	return TRUE;
 }
 
 void LoadSoundFontsToStream() {

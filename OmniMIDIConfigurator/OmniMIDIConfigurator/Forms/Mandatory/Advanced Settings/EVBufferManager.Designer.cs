@@ -233,8 +233,8 @@
             // 
             this.ExemptRealTime.Enabled = false;
             this.ExemptRealTime.Name = "ExemptRealTime";
-            this.ExemptRealTime.Size = new System.Drawing.Size(226, 17);
-            this.ExemptRealTime.Text = "You can\'t change this setting in real-time.";
+            this.ExemptRealTime.Size = new System.Drawing.Size(219, 17);
+            this.ExemptRealTime.Text = "You can change this setting in real-time.";
             // 
             // EVBufferManager
             // 
