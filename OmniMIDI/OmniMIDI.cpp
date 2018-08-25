@@ -84,8 +84,7 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
-#define _RTWAIT NTSleep(-10000)											// RT settings wait
-#define _WAIT NTSleep(-100)													// Normal wait
+#define _DBGWAIT NTSleep(-1000)													// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)											// Very slow wait

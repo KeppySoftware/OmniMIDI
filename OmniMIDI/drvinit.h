@@ -38,7 +38,7 @@ DWORD WINAPI DebugThread(LPVOID lpV) {
 	while (!stop_rtthread) {
 		// Send the debug info to the pipes, that's it lol
 		SendDebugDataToPipe();
-		_WAIT;
+		_DBGWAIT;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
 	CloseHandle(DThread);
@@ -118,7 +118,7 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 			mixervoid();		// Send dB values to the mixer
 			RevbNChor();		// Check if custom reverb/chorus values are enabled
 
-			_RTWAIT;
+			_VLWAIT;
 		}
 	}
 	catch (...) {
@@ -143,7 +143,7 @@ DWORD WINAPI RTSettingsHP(LPVOID lpV) {
 			keybindings();		// Check for keystrokes (ALT+1, INS, etc..)
 			WatchdogCheck();	// Check current active voices, rendering time, etc..
 
-            _RTWAIT;
+			_VLWAIT;
 		}
 	}
 	catch (...) {
