@@ -103,8 +103,8 @@ static FLOAT sound_out_volume_float = 1.0;
 // Threads
 static volatile BOOL stop_thread = FALSE;
 static volatile BOOL stop_rtthread = FALSE;
-static ULONGLONG start1, start2, start3, start4;
-static FLOAT Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
+static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
+static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
 static HANDLE MainThread = NULL, ATThread = NULL, RTSThread = NULL, EPThread = NULL, DThread = NULL;
 static ULONG MainThreadAddress = NULL, ATThreadAddress = NULL, RTSThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;

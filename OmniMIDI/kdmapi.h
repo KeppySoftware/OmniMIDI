@@ -36,7 +36,7 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 			}
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
 			while (stop_rtthread == FALSE) {
-				start1 = TimeNow();
+				if (!HyperMode) start1 = TimeNow();
 				keepstreamsalive(opend);
 				LoadCustomInstruments();
 				CheckVolume(FALSE);
@@ -224,7 +224,7 @@ VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	if (Struct == nullptr) {
 		SettingsManagedByClient = FALSE;
 		if (RTSThread == NULL) {
-			RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)RTSThreadAddress);
+			RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
 			SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
 		}
 		return;

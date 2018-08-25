@@ -77,6 +77,28 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 	return 0;
 }
 
+DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
+	try {
+		while (!stop_thread) {
+			// If the notes catcher thread is supposed to run together with the audio thread,
+			// break from the EventProcesser's loop, and close the thread, and move the processing to AudioThread
+			if (ManagedSettings.NotesCatcherWithAudio) break;
+
+			// Parse the notes until the audio thread is done
+			if (_PlayBufData()) NTSleep(-1000);
+		}
+	}
+	catch (...) {
+		CrashMessage(L"NotesCatcherThreadHP");
+		throw;
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
+	CloseHandle(EPThread);
+	EPThread = NULL;
+	return 0;
+}
+
 DWORD WINAPI RTSettings(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
 	try {
@@ -109,10 +131,35 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 	return 0;
 }
 
+DWORD WINAPI RTSettingsHP(LPVOID lpV) {
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
+	try {
+		while (!stop_thread) {
+			// If the app is using KDMAPI to manage all the functions,
+			// then terminate the thread.
+			if (SettingsManagedByClient) break;
+
+			LoadSettingsRT();	// Load real-time settings
+			keybindings();		// Check for keystrokes (ALT+1, INS, etc..)
+			WatchdogCheck();	// Check current active voices, rendering time, etc..
+
+			_VLWAIT;
+		}
+	}
+	catch (...) {
+		CrashMessage(L"RTSettingsThreadHP");
+		throw;
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
+	CloseHandle(RTSThread);
+	RTSThread = NULL;
+	return 0;
+}
+
 void InitializeNotesCatcherThread() {
 	// If the EventProcesser thread is not valid, then open a new one
 	if (EPThread == NULL) {
-		EPThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)EventsProcesser, NULL, 0, (LPDWORD)EPThreadAddress);
+		EPThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? EventsProcesserHP : EventsProcesser), NULL, 0, (LPDWORD)EPThreadAddress);
 		SetThreadPriority(EPThread, prioval[ManagedSettings.DriverPriority]);
 	}
 }
@@ -163,6 +210,43 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 	return 0;
 }
 
+DWORD WINAPI AudioThreadHP(LPVOID lpParam) {
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
+	try {
+		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+			while (!stop_thread) {
+				// If the app sent a SysEx Reset message, or if the user pressed INS,
+				// then reset the channels
+				if (reset_synth) {
+					reset_synth = 0;
+					BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+				}
+
+				// If the current engine is ".WAV mode", then use AudioRender()
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
+				else BASS_ChannelUpdate(OMStream, 0);
+
+				// If the EventProcesser is disabled, then process the events from the audio thread instead
+				if (ManagedSettings.NotesCatcherWithAudio) {
+					_PlayBufDataChk();
+				}
+				// Else, open the EventProcesser thread
+				else if (!EPThread) InitializeNotesCatcherThread();
+
+				_FWAIT;
+			}
+		}
+	}
+	catch (...) {
+		CrashMessage(L"AudioEngineThreadHP");
+		throw;
+	}
+	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
+	CloseHandle(ATThread);
+	ATThread = NULL;
+	return 0;
+}
+
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
 	AudioThreadDone = FALSE;	// The audio thread is now busy rendering		
@@ -190,6 +274,28 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	else if (!EPThread) InitializeNotesCatcherThread();
 
 	AudioThreadDone = TRUE;		// The audio thread is done rendering
+
+	// If no data is available, then return NULL
+	if (data == -1) return NULL;
+	return data;
+}
+
+DWORD CALLBACK ASIOProcHP(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
+{
+	// If the app sent a SysEx Reset message, or if the user pressed INS,
+	// then reset the channels
+	if (reset_synth) {
+		reset_synth = 0;
+		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+	}
+
+	// Get the processed audio data, and send it to the ASIO device
+	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
+
+	// If the EventProcesser is disabled, then process the events from the audio thread instead
+	if (ManagedSettings.NotesCatcherWithAudio) _PlayBufDataChk();
+	// Else, open the EventProcesser thread
+	else if (!EPThread) InitializeNotesCatcherThread();
 
 	// If no data is available, then return NULL
 	if (data == -1) return NULL;
@@ -474,7 +580,7 @@ void InitializeASIO() {
 		CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO", TRUE);
 
 		// Enable the channels
-		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, 0);
+		BASS_ASIO_ChannelEnable(FALSE, 0, (HyperMode ? ASIOProcHP : ASIOProc), 0);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 		CheckUpASIO(ERRORCODE, L"KSChanEnableASIO", TRUE);
 
@@ -621,9 +727,9 @@ int CreateThreads(bool startup) {
 
 	reset_synth = 0;
 	// Open the default threads
-	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AudioThread, NULL, 0, (LPDWORD)ATThreadAddress);
+	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
 	SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
-	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)RTSettings, NULL, 0, (LPDWORD)RTSThreadAddress);
+	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
 	SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
 	if (!DThread)
 	{
