@@ -292,7 +292,8 @@ void CrashMessage(LPCWSTR part) {
 	stop_thread = TRUE;
 	stop_rtthread = TRUE;
 
-	ExitThread(0);
+	throw ErrorID;
+	exit(ErrorID);
 }
 
 BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {

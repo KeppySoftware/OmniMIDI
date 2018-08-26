@@ -1,5 +1,6 @@
 /*
 OmniMIDI soundfont lists loading system
+Don't bother understanding this stuff, as long as it works
 */
 
 static void FreeFonts()
@@ -18,7 +19,6 @@ static void FreeFonts()
 	}
 	catch (...) {
 		CrashMessage(L"FreeFonts");
-		throw;
 	}
 }
 
@@ -234,7 +234,6 @@ static BOOL load_font_item(const TCHAR * in_path)
 	}
 	catch (...) {
 		CrashMessage(L"LoadFontItem");
-		throw;
 	}
 }
 
@@ -266,6 +265,5 @@ void LoadFonts(const TCHAR * name)
 	}
 	catch (...) {
 		CrashMessage(L"LoadFontToMemory");
-		throw;
 	}
 }

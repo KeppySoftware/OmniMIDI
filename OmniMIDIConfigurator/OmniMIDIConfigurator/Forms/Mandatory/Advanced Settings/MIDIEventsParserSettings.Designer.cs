@@ -47,9 +47,11 @@
             this.CAE = new System.Windows.Forms.Label();
             this.OKBtn = new System.Windows.Forms.Button();
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
+            this.midiOutCloseDisabled = new System.Windows.Forms.PictureBox();
             this.ABS.SuspendLayout();
             this.AOS.SuspendLayout();
             this.OS.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.midiOutCloseDisabled)).BeginInit();
             this.SuspendLayout();
             // 
             // ABS
@@ -57,6 +59,7 @@
             this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ABS.Controls.Add(this.midiOutCloseDisabled);
             this.ABS.Controls.Add(this.CloseStreamMidiOutClose);
             this.ABS.Controls.Add(this.MT32Mode);
             this.ABS.Controls.Add(this.IgnoreNotes);
@@ -249,6 +252,18 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Information";
             // 
+            // midiOutCloseDisabled
+            // 
+            this.midiOutCloseDisabled.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.midiOutCloseDisabled.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
+            this.midiOutCloseDisabled.Location = new System.Drawing.Point(261, 115);
+            this.midiOutCloseDisabled.Name = "midiOutCloseDisabled";
+            this.midiOutCloseDisabled.Size = new System.Drawing.Size(14, 14);
+            this.midiOutCloseDisabled.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.midiOutCloseDisabled.TabIndex = 11;
+            this.midiOutCloseDisabled.TabStop = false;
+            this.midiOutCloseDisabled.Click += new System.EventHandler(this.midiOutCloseDisabled_Click);
+            // 
             // MIDIEventsParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -273,6 +288,7 @@
             this.AOS.ResumeLayout(false);
             this.AOS.PerformLayout();
             this.OS.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.midiOutCloseDisabled)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -297,5 +313,6 @@
         private System.Windows.Forms.Button EVBufDialog;
         private System.Windows.Forms.CheckBox MT32Mode;
         private System.Windows.Forms.CheckBox CloseStreamMidiOutClose;
+        private System.Windows.Forms.PictureBox midiOutCloseDisabled;
     }
 }

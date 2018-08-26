@@ -14,7 +14,7 @@ static BOOL AlreadyStartedOnce = FALSE;
 
 typedef struct Settings
 {
-	BOOL AlternativeCPU = FALSE;			// Autopanic switch
+	BOOL AlternativeCPU = FALSE;			// Autopanic switch (DEPRECATED)
 	BOOL CapFramerate = FALSE;				// Cap input framerate
 	BOOL DebugMode = FALSE;					// Debug console
 	BOOL DisableNotesFadeOut = 0;			// Disable fade-out
@@ -89,9 +89,9 @@ static DWORD OMFlags = NULL;
 static HDRVR OMDevice = NULL;
 
 // Important stuff
+static BOOL AudioThreadDone = FALSE;
 static volatile BOOL modm_closed = TRUE;
 static volatile BOOL reset_synth = FALSE;
-static DWORD processPriority = NORMAL_PRIORITY_CLASS;
 static HANDLE load_sfevent = NULL;
 
 // Stream
@@ -102,8 +102,8 @@ static FLOAT sound_out_volume_float = 1.0;
 // Threads
 static volatile BOOL stop_thread = FALSE;
 static volatile BOOL stop_rtthread = FALSE;
-static ULONGLONG start1, start2, start3, start4;
-static FLOAT Thread1Usage, Thread2Usage, Thread3Usage, Thread4Usage;
+static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
+static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
 static HANDLE MainThread = NULL, ATThread = NULL, RTSThread = NULL, EPThread = NULL, DThread = NULL;
 static ULONG MainThreadAddress = NULL, ATThreadAddress = NULL, RTSThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
@@ -113,6 +113,8 @@ static HINSTANCE hinst = NULL;							// main DLL handle
 static HINSTANCE ntdll = NULL;							// ?
 
 static CHAR modulename[MAX_PATH];		// debug info
+static TCHAR modulenameW[MAX_PATH];		// debug info
+static TCHAR * modulenameWp;			// debug info
 static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 

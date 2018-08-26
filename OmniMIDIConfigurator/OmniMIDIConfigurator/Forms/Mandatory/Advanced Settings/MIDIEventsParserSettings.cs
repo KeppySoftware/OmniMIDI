@@ -30,7 +30,12 @@ namespace OmniMIDIConfigurator
             SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0));
             FullVelocityMode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0));
             MT32Mode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0));
-            CloseStreamMidiOutClose.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CloseStreamMidiOutClose", 1));
+            if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
+            {
+                CloseStreamMidiOutClose.Enabled = false;
+                CloseStreamMidiOutClose.Checked = true;
+            }
+            else CloseStreamMidiOutClose.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CloseStreamMidiOutClose", 1));
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
         }
@@ -77,6 +82,13 @@ namespace OmniMIDIConfigurator
         private void CloseStreamMidiOutClose_CheckedChanged(object sender, EventArgs e)
         {
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("CloseStreamMidiOutClose", Convert.ToInt32(CloseStreamMidiOutClose.Checked), RegistryValueKind.DWord);
+        }
+
+        private void midiOutCloseDisabled_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To follow the Steinberg ASIO standard, this option is always enabled when using the ASIO engine, " +
+                "to prevent the ASIO drivers from crashing during playback, or freezing during the app shutdown process.",
+                "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void IgnoreNotesInterval_Click(object sender, EventArgs e)

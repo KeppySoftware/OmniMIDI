@@ -39,7 +39,6 @@
     <None Include="OmniMIDI.def" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\KaleidonKep99\Desktop\doggo.ico" />
     <Image Include="ksicon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -5,6 +5,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
 #pragma once
+#pragma comment(lib,"shlwapi.lib")
 
 #if !_WIN32
 #error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
@@ -58,7 +59,6 @@ static NDE NtDelayExecution = 0;
 
 // Hyper switch
 static DWORD HyperMode = 0;
-static DWORD HyperCheckedAlready = FALSE;
 static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) = 0;
 static DWORD(*_PlayBufData)(void) = 0;
 static DWORD(*_PlayBufDataChk)(void) = 0;
@@ -84,7 +84,8 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
-#define _WAIT NTSleep(-100)													// Normal wait
+// Predefined sleep values, useful for redundancy
+#define _DBGWAIT NTSleep(-1000)												// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)											// Very slow wait
@@ -100,8 +101,8 @@ void NTSleep(__int64 usec) {
 
 // OmniMIDI vital parts
 #include "sfsystem.h"
-#include "settings.h"
 #include "bufsystem.h"
+#include "settings.h"
 #include "bansystem.h"
 #include "drvinit.h"
 #include "kdmapi.h"
@@ -115,7 +116,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH)
 	{
-		DoStopClient();
+		
 	}
 	return TRUE;
 }
@@ -158,8 +159,10 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 
 DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 	try {
+		// Create temp caps
 		static MIDIOUTCAPS2 MIDICaps = { 0 };
 		
+		// Initialize values
 		WORD maximumvoices = 0xFFFF;
 		WORD maximumnotes = 0xFFFF;
 		DWORD CapsSupport = MIDICAPS_VOLUME;
@@ -168,6 +171,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		WORD VID = 0x0000;
 		WORD PID = 0x0000;
 
+		// Load settings
 		HKEY hKey;
 		long lResult;
 		DWORD dwType = REG_DWORD;
@@ -184,29 +188,37 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		RegQueryValueEx(hKey, L"SynthName", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
 		RegCloseKey(hKey);
 
+		// If the synth type ID is bigger than the size of the synth types array,
+		// set it automatically to MOD_MIDIPORT
 		if (SynthType >= (SizeOfArray(SynthNamesTypes)))
 			Technology = MOD_MIDIPORT;
+		// Else, load the requested value
 		else Technology = SynthNamesTypes[SynthType];
 
-		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem())) CreateConsole();
+		// If the debug mode is enabled, and the process isn't banned, create the debug log
+		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem())) 
+			CreateConsole();
 
-		if (wcslen(SynthNameW) < 1 || iswspace(SynthNameW[0])) {
+		// If the synthname length is less than 1, or if it's just a space, use the default name
+		if (wcslen(SynthNameW) < 1 || (wcslen(SynthNameW) == 1 && iswspace(SynthNameW[0]))) {
 			ZeroMemory(SynthNameW, MAXPNAMELEN);
 			wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 		}
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI device caps with application...");
 
-		const GUID CLSIDKEPSYNTH = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
+		// Dummy GUID associated with OM
+		const GUID OMCLSID = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
 
 		// Not yet
 		// CapsSupport |= MIDICAPS_STREAM;
 
+		// Prepare the caps item
 		if (!MIDICaps.wMid) {
 			memcpy(MIDICaps.szPname, SynthNameW, sizeof(SynthNameW));
-			MIDICaps.ManufacturerGuid = CLSIDKEPSYNTH;
-			MIDICaps.NameGuid = CLSIDKEPSYNTH;
-			MIDICaps.ProductGuid = CLSIDKEPSYNTH;
+			MIDICaps.ManufacturerGuid = OMCLSID;
+			MIDICaps.NameGuid = OMCLSID;
+			MIDICaps.ProductGuid = OMCLSID;
 			MIDICaps.dwSupport = CapsSupport;
 			MIDICaps.wChannelMask = 0xffff;
 			MIDICaps.wMid = VID;
@@ -218,20 +230,19 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing MIDI device caps.");
 		}
 
+		// Copy the item to the app's caps
 		memcpy(capsPtr, &MIDICaps, min(sizeof(MIDICaps), capsSize));
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) {
 		CrashMessage(L"MIDICapsException");
-		ExitThread(0);
-		throw;
 	}
 }
 
 LONG DoOpenClient() {
+	// Start the driver
 	DoStartClient();
 	DoResetClient();
-	SetPriorityClass(GetCurrentProcess(), processPriority);
 	return MMSYSERR_NOERROR;
 }
 
@@ -307,20 +318,26 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		// The app isn't allowed to set the volume, everything's fine anyway
 		return MMSYSERR_NOERROR;
 	case MODM_RESET:
+		// Stop all the current active voices
 		DoResetClient();
 		return MMSYSERR_NOERROR;
 	case MODM_STOP:
+		// Stop all the current active voices and send the callback to the app
 		DoResetClient();
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
+		// The app wants us to close the driver
+		// Only close the stream if the user has chosen to
 		if (CloseStreamMidiOutClose) DoStopClient();
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
+		// Maximum longmsg size, 64kB
 		*(LONG*)dwParam1 = 65535;
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACE:
+		// The app is asking for the driver's name, let's give it to them
 		memcpy((VOID*)dwParam1, SynthNameW, sizeof(SynthNameW));
 		*(LONG*)dwParam2 = 65535;
 		return MMSYSERR_NOERROR;

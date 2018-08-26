@@ -70,7 +70,7 @@
             this.label2.Size = new System.Drawing.Size(423, 39);
             this.label2.TabIndex = 1;
             this.label2.Text = "Tampering with this setting may lead to\r\nunexpected data loss and system crashes," +
-    " \r\nand you\'re responsible for anything that might happen.\r\n";
+    " \r\nand you\'re responsible for anything that might happen.";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // BytesVal
@@ -233,8 +233,8 @@
             // 
             this.ExemptRealTime.Enabled = false;
             this.ExemptRealTime.Name = "ExemptRealTime";
-            this.ExemptRealTime.Size = new System.Drawing.Size(226, 17);
-            this.ExemptRealTime.Text = "You can\'t change this setting in real-time.";
+            this.ExemptRealTime.Size = new System.Drawing.Size(219, 17);
+            this.ExemptRealTime.Text = "You can change this setting in real-time.";
             // 
             // EVBufferManager
             // 

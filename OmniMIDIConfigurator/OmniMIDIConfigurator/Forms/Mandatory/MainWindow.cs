@@ -1626,20 +1626,6 @@ namespace OmniMIDIConfigurator
             Functions.AudioEngBoxTrigger(false);
         }
 
-        private void autopanicmode_Click(object sender, EventArgs e)
-        {
-            if (autopanicmode.Checked == false)
-            {
-                SynthSettings.SetValue("AlternativeCPU", "1", RegistryValueKind.DWord);
-                autopanicmode.Checked = true;
-            }
-            else
-            {
-                SynthSettings.SetValue("AlternativeCPU", "0", RegistryValueKind.DWord);
-                autopanicmode.Checked = false;
-            }
-        }
-
         private void hotkeys_Click(object sender, EventArgs e)
         {
             if (hotkeys.Checked == false)

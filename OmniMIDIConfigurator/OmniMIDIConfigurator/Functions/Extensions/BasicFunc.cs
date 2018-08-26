@@ -532,7 +532,6 @@ namespace OmniMIDIConfigurator
                 OmniMIDIConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MaxVoices", 512));
                 OmniMIDIConfiguratorMain.Delegate.MaxCPU.Value = Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MaxRenderingTime", 75));
                 OmniMIDIConfiguratorMain.Delegate.hotkeys.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FastHotkeys", 0));
-                OmniMIDIConfiguratorMain.Delegate.autopanicmode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("AlternativeCPU", 0));
 
                 if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DriverPriority", 0)) == 0)
                 {
