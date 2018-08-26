@@ -17,7 +17,6 @@ void AppName() {
 	}
 	catch (...) {
 		CrashMessage(L"AppAnalysis");
-		throw;
 	}
 }
 
@@ -254,7 +253,6 @@ Retry:
 		else {
 			std::wstring Error = GetLastErrorAsWString();
 			CrashMessage(Error.c_str());
-			throw;
 		}
 	}
 }

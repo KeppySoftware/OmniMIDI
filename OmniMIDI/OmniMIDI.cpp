@@ -116,7 +116,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH)
 	{
-		DoStopClient();
+		
 	}
 	return TRUE;
 }
@@ -236,8 +236,6 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 	}
 	catch (...) {
 		CrashMessage(L"MIDICapsException");
-		ExitThread(0);
-		throw;
 	}
 }
 

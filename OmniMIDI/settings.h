@@ -79,7 +79,6 @@ void LoadSoundfont(int whichsf){
 	}
 	catch (...) {
 		CrashMessage(L"ListLoad");
-		throw;
 	}
 }
 
@@ -121,7 +120,6 @@ bool LoadSoundfontStartup() {
 	}
 	catch (...) {
 		CrashMessage(L"ListLoadStartUp");
-		throw;
 	}
 }
 
@@ -253,13 +251,14 @@ BOOL load_bassfuncs()
 	}
 	catch (...) {
 		CrashMessage(L"BASSLibLoad");
-		throw;
 	}
 }
 
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
+	memset(evbuf, 0, sizeof(evbuf_t));
 	free(evbuf);
+	memset(sndbf, 0, sizeof(float));
 	free(sndbf);
 }
 
@@ -331,7 +330,6 @@ void AllocateMemory() {
 	}
 	catch (...) {
 		CrashMessage(L"EVBufAlloc");
-		throw;
 	}
 }
 
@@ -421,7 +419,6 @@ void LoadSettings()
 	}
 	catch (...) {
 		CrashMessage(L"LoadSettings");
-		throw;
 	}
 }
 
@@ -470,7 +467,8 @@ void LoadSettingsRT()
 		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&TempDMN, &dwSize);
 		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&TempOV, &dwSize);
 		RegQueryValueEx(hKey, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
-		RegQueryValueEx(hKey, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
+		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(hKey, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
+		else CloseStreamMidiOutClose = TRUE;
 		RegCloseKey(hKey);
 
 		// Stuff that works so don't bother
@@ -561,7 +559,6 @@ void LoadSettingsRT()
 	}
 	catch (...) {
 		CrashMessage(L"LoadSettingsRT");
-		throw;
 	}
 }
 
@@ -620,7 +617,6 @@ void WatchdogCheck() {
 	}
 	catch (...) {
 		CrashMessage(L"WatchdogCheck");
-		throw;
 	}
 }
 
@@ -666,7 +662,6 @@ void CheckVolume(BOOL Closing) {
 	}
 	catch (...) {
 		CrashMessage(L"VolumeMonitor");
-		throw;
 	}
 }
 
@@ -757,7 +752,6 @@ void SendDebugDataToPipe() {
 	}
 	catch (...) {
 		CrashMessage(L"DebugPipePush");
-		throw;
 	}
 }
 
@@ -768,7 +762,6 @@ void SendDummyDataToPipe() {
 	}
 	catch (...) {
 		CrashMessage(L"DebugPipeDummyPush");
-		throw;
 	}
 }
 
@@ -790,7 +783,6 @@ void mixervoid() {
 	}
 	catch (...) {
 		CrashMessage(L"MixerCheck");
-		throw;
 	}
 }
 
@@ -818,7 +810,6 @@ void RevbNChor() {
 	}
 	catch (...) {
 		CrashMessage(L"ReverbAndChorusCheck");
-		throw;
 	}
 }
 
@@ -830,7 +821,6 @@ void ReloadSFList(DWORD whichsflist){
 	}
 	catch (...) {
 		CrashMessage(L"ReloadListCheck");
-		throw;
 	}
 }
 
@@ -938,6 +928,5 @@ void keybindings()
 	}
 	catch (...) {
 		CrashMessage(L"HotKeysCheck");
-		throw;
 	}
 }

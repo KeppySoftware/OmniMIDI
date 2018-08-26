@@ -69,7 +69,6 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 	}
 	catch (...) {
 		CrashMessage(L"NotesCatcherThread");
-		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 	CloseHandle(EPThread);
@@ -91,7 +90,6 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 	}
 	catch (...) {
 		CrashMessage(L"NotesCatcherThreadHP");
-		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
 	CloseHandle(EPThread);
@@ -122,7 +120,6 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 	}
 	catch (...) {
 		CrashMessage(L"RTSettingsThread");
-		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
 	CloseHandle(RTSThread);
@@ -147,7 +144,6 @@ DWORD WINAPI RTSettingsHP(LPVOID lpV) {
 	}
 	catch (...) {
 		CrashMessage(L"RTSettingsThreadHP");
-		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
 	CloseHandle(RTSThread);
@@ -201,7 +197,6 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 	}
 	catch (...) {
 		CrashMessage(L"AudioEngineThread");
-		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
 	CloseHandle(ATThread);
@@ -238,7 +233,6 @@ DWORD WINAPI AudioThreadHP(LPVOID lpParam) {
 	}
 	catch (...) {
 		CrashMessage(L"AudioEngineThreadHP");
-		throw;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
 	CloseHandle(ATThread);
@@ -261,9 +255,6 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 	}
 
-	// Get the processed audio data, and send it to the ASIO device
-	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
-
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
 		MT32SetInstruments();
@@ -271,6 +262,9 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	}
 	// Else, open the EventProcesser thread
 	else if (!EPThread) InitializeNotesCatcherThread();
+
+	// Get the processed audio data, and send it to the ASIO device
+	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
 
 	AudioThreadDone = TRUE;		// The audio thread is done rendering
 
@@ -288,13 +282,13 @@ DWORD CALLBACK ASIOProcHP(BOOL input, DWORD channel, void *buffer, DWORD length,
 		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 	}
 
-	// Get the processed audio data, and send it to the ASIO device
-	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
-
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) _PlayBufDataChk();
 	// Else, open the EventProcesser thread
 	else if (!EPThread) InitializeNotesCatcherThread();
+
+	// Get the processed audio data, and send it to the ASIO device
+	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
 
 	// If no data is available, then return NULL
 	if (data == -1) return NULL;
@@ -429,7 +423,6 @@ LONG WASAPIDetectID() {
 	}
 	catch (...) {
 		CrashMessage(L"WASAPIDetectID");
-		throw;
 	}
 }
 */
@@ -472,7 +465,6 @@ LONG ASIODetectID() {
 	}
 	catch (...) {
 		CrashMessage(L"ASIODetectID");
-		throw;
 	}
 }
 
@@ -487,7 +479,7 @@ void InitializeBASSFinal() {
 	{
 		// And finally, open the stream
 		BASS_ChannelPlay(OMStream, false);
-		CheckUp(ERRORCODE, L"KSChannelPlay", TRUE);
+		CheckUp(ERRORCODE, L"OMChannelPlay", TRUE);
 	}
 }
 
@@ -503,13 +495,13 @@ void InitializeWASAPI() {
 	LONG DeviceID = WASAPIDetectID();
 
 	BASS_WASAPI_Init(DeviceID, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-	CheckUp(ERRORCODE, L"KSWASAPIInitInfo");
+	CheckUp(ERRORCODE, L"OMWASAPIInitInfo");
 	BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
-	CheckUp(ERRORCODE, L"KSWASAPIGetDeviceInfo");
+	CheckUp(ERRORCODE, L"OMWASAPIGetDeviceInfo");
 	BASS_WASAPI_GetInfo(&infoW);
-	CheckUp(ERRORCODE, L"KSWASAPIGetBufInfo");
+	CheckUp(ERRORCODE, L"OMWASAPIGetBufInfo");
 	BASS_WASAPI_Free();
-	CheckUp(ERRORCODE, L"KSWASAPIFreeInfo");
+	CheckUp(ERRORCODE, L"OMWASAPIFreeInfo");
 
 	InitializeStream(infoDW.mixfreq);
 
@@ -517,16 +509,16 @@ void InitializeWASAPI() {
 		BASS_WASAPI_BUFFER | BASS_WASAPI_EVENT,
 		(wasapiex ? ((float)frames / 1000.0f) : infoW.buflen + 5),
 		0, WASAPIProc, NULL)) {
-		CheckUp(ERRORCODE, L"KSInitWASAPI");
+		CheckUp(ERRORCODE, L"OMInitWASAPI");
 		BASS_WASAPI_Start();
-		CheckUp(ERRORCODE, L"KSStartStreamWASAPI");
+		CheckUp(ERRORCODE, L"OMStartStreamWASAPI");
 	}
 	else {
 		MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to BASSEnc...\nPress OK to continue.", L"OmniMIDI - Can not open WASAPI device", MB_OK | MB_ICONERROR);
 		ManagedSettings.CurrentEngine = AUDTOWAV;
 		InitializeStream(ManagedSettings.AudioFrequency);
 		InitializeBASSEnc();
-		CheckUp(ERRORCODE, L"KSInitEnc");
+		CheckUp(ERRORCODE, L"OMInitEnc");
 	}
 }
 */
@@ -535,7 +527,7 @@ void InitializeWAVEnc() {
 	// Initialize the ".WAV mode"
 	InitializeStream(ManagedSettings.AudioFrequency);
 	InitializeBASSEnc();
-	CheckUp(ERRORCODE, L"KSInitEnc", TRUE);
+	CheckUp(ERRORCODE, L"OMInitEnc", TRUE);
 }
 
 void InitializeASIO() {
@@ -559,36 +551,36 @@ void InitializeASIO() {
 	if (BASS_ASIO_Init(ASIODetectID(), BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 		// Set the audio frequency
 		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
-		CheckUpASIO(ERRORCODE, L"KSFormatASIO", FALSE);
+		CheckUpASIO(ERRORCODE, L"OMFormatASIO", FALSE);
 
 		// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
 
 		// If mono rendering is enabled, mirror the left channel to the right one as well
 		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
-		CheckUpASIO(ERRORCODE, L"KSChanSetMono", TRUE);
+		CheckUpASIO(ERRORCODE, L"OMChanSetMono", TRUE);
 
 		// Set the bit depth for the right channel as well
 		BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
-		CheckUpASIO(ERRORCODE, L"KSChanSetFormatASIO", TRUE);
+		CheckUpASIO(ERRORCODE, L"OMChanSetFormatASIO", TRUE);
 
 		// If mono rendering is enabled, set the audio frequency of the channels to half the value of the frequency selected
 		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
 		// Else, set it to the default frequency
 		else BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency);
-		CheckUpASIO(ERRORCODE, L"KSChanSetFreqASIO", TRUE);
+		CheckUpASIO(ERRORCODE, L"OMChanSetFreqASIO", TRUE);
 
 		// Enable the channels
 		BASS_ASIO_ChannelEnable(FALSE, 0, (HyperMode ? ASIOProcHP : ASIOProc), 0);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-		CheckUpASIO(ERRORCODE, L"KSChanEnableASIO", TRUE);
+		CheckUpASIO(ERRORCODE, L"OMChanEnableASIO", TRUE);
 
 		// And start the ASIO output
 		BASS_ASIO_Start(0, 2);
-		CheckUpASIO(ERRORCODE, L"KSStartASIO", TRUE);
+		CheckUpASIO(ERRORCODE, L"OMStartASIO", TRUE);
 	}
 	// Else, something is wrong
-	else CheckUpASIO(ERRORCODE, L"KSInitASIO", TRUE);
+	else CheckUpASIO(ERRORCODE, L"OMInitASIO", TRUE);
 }
 
 bool InitializeBASS(BOOL restart) {
@@ -668,21 +660,21 @@ Retry:
 	else {
 		// Load the settings to BASS
 		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		CheckUp(ERRORCODE, L"KSAttributes1", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes1", TRUE);
 		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		CheckUp(ERRORCODE, L"KSAttributes2", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes2", TRUE);
 		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		CheckUp(ERRORCODE, L"KSAttributes3", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes3", TRUE);
 		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
-		CheckUp(ERRORCODE, L"KSAttributes4", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes4", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-		CheckUp(ERRORCODE, L"KSAttributes5", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes5", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-		CheckUp(ERRORCODE, L"KSAttributes6", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes6", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-		CheckUp(ERRORCODE, L"KSAttributes7", TRUE);
+		CheckUp(ERRORCODE, L"OMAttributes7", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		CheckUp(ERRORCODE, L"KSAttributes8", FALSE);
+		CheckUp(ERRORCODE, L"OMAttributes8", FALSE);
 	}
 
 	// Enable the volume knob in the configurator
@@ -692,7 +684,7 @@ Retry:
 	ChVolumeStruct.fTime = 0.0f;
 	ChVolumeStruct.lCurve = 0;
 	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(ERRORCODE, L"KSVolFX", FALSE);
+	CheckUp(ERRORCODE, L"OMVolFX", FALSE);
 
 	return init;
 }
@@ -729,8 +721,6 @@ void CloseThreads(BOOL MainClose) {
 
 		stop_rtthread = FALSE;
 	}
-
-	stop_thread = FALSE;
 }
 
 BOOL CreateThreads(BOOL startup) {
@@ -739,9 +729,11 @@ BOOL CreateThreads(BOOL startup) {
 	else CloseThreads(FALSE);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
-
 	reset_synth = 0;
+
 	// Open the default threads
+	AudioThreadDone = FALSE;
+	stop_thread = FALSE;
 	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
 	SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
 	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
@@ -789,7 +781,7 @@ void FreeUpStream() {
 
 		// Free BASSASIO
 		BASS_ASIO_Stop();
-		BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
+		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
 		BASS_ASIO_Free();
 		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
 
@@ -798,9 +790,6 @@ void FreeUpStream() {
 		PrintToConsole(FOREGROUND_RED, 1, "BASS stream stopped.");
 		BASS_StreamFree(OMStream);
 		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
-
-		// Stop BASSEnc as well
-		BASS_Encode_Stop(OMStream);
 
 		// Deinitialize the BASS output and free it, since we need to restart it
 		BASS_Stop();

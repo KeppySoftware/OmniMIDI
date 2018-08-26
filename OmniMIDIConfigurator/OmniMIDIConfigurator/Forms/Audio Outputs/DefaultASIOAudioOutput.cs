@@ -168,6 +168,7 @@ namespace OmniMIDIConfigurator
     {
         public static string[] Supported =
         {
+            "ASIO4ALL",
             "ASUS Xonar D2 ASIO",
             "BEHRINGER USB AUDIO",
             "FL Studio ASIO",
@@ -185,7 +186,6 @@ namespace OmniMIDIConfigurator
         public static string[] Unstable =
         {
             "AKIYAMA ASIO",
-            "ASIO4ALL",
             "FlexASIO"
         };
 

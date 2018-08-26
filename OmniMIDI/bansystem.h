@@ -72,7 +72,6 @@ BOOL BlackListSystem(){
 	}
 	catch (...) {
 		CrashMessage(L"BlacklistCheckUp");
-		throw;
 	}
 }
 
@@ -128,7 +127,6 @@ BOOL BlackListInit(){
 	}
 	catch (...) {
 		CrashMessage(L"BlacklistInit");
-		throw;
 	}
 }
 

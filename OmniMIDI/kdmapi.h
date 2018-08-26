@@ -16,7 +16,7 @@ void KeepStreamAlive(BOOL& Initialized) {
 		AllocateMemory();
 
 		// Initialize the BASS output device, and set up the streams
-		if (InitializeBASS(FALSE)) {
+		if (InitializeBASS(TRUE)) {
 			SetUpStream();
 			LoadSoundFontsToStream();
 
@@ -93,7 +93,6 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 	}
 	catch (...) {
 		CrashMessage(L"DriverHeartThread");
-		throw;
 	}
 }
 
@@ -142,6 +141,7 @@ void DoStopClient() {
 	if (modm_closed == FALSE) {
 		// Close the threads and free up the allocated memory
 		CloseThreads(TRUE);
+		FreeUpStream();
 		FreeUpMemory();
 		modm_closed = TRUE;
 
