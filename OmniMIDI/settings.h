@@ -538,12 +538,12 @@ void LoadSettingsRT()
 
 		if (TempNOFF1 != ManagedSettings.NoteOff1) {
 			ManagedSettings.NoteOff1 = TempNOFF1;
-			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? 0 : BASS_MIDI_NOTEOFF1, BASS_MIDI_NOTEOFF1);
+			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
 		}
 
 		if (TempISR != ManagedSettings.IgnoreSysReset) {
 			ManagedSettings.IgnoreSysReset = TempNOFF1;
-			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? 0 : BASS_MIDI_NOSYSRESET, BASS_MIDI_NOSYSRESET);
+			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
 		}
 
 		if (TempSI != ManagedSettings.SincInter || TempSC != ManagedSettings.SincConv) {

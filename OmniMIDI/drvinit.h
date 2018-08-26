@@ -668,12 +668,22 @@ Retry:
 	}
 	else {
 		// Load the settings to BASS
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
 		CheckUp(ERRORCODE, L"KSAttributes1", TRUE);
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
 		CheckUp(ERRORCODE, L"KSAttributes2", TRUE);
+		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+		CheckUp(ERRORCODE, L"KSAttributes3", TRUE);
+		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+		CheckUp(ERRORCODE, L"KSAttributes4", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+		CheckUp(ERRORCODE, L"KSAttributes5", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+		CheckUp(ERRORCODE, L"KSAttributes6", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+		CheckUp(ERRORCODE, L"KSAttributes7", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		CheckUp(ERRORCODE, L"KSAttributes3", FALSE);
+		CheckUp(ERRORCODE, L"KSAttributes8", FALSE);
 	}
 
 	// Enable the volume knob in the configurator
