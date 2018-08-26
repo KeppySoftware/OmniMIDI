@@ -113,7 +113,8 @@ But anyway, here is the version without the KSDirect API. [Click me for the dire
 - JACK ASIO Driver *(No issues.)*
 - Native Instruments Komplete Audio 6 *(No issues.)*
 - USB Audio ASIO Driver *(No issues.)*
-- Voicemeeter Virtual ASIO *(Will throw a BASS_ERROR_NOTAVAIL exception but still work)*
+- Voicemeeter Virtual ASIO *(Will throw a BASS_ERROR_NOTAVAIL exception but still works)*
+- ASIO4ALL *(No issues.)
 ## Unsupported ASIO devices
 - ASIO2WASAPI *(Throws a BASS_ERROR_UNKNOWN exception)*
 - Realtek ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
