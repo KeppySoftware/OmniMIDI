@@ -107,6 +107,7 @@ But anyway, here is the version without the KSDirect API. [Click me for the dire
 
 # ASIO support details
 ## Supported ASIO devices
+- ASIO4ALL *(No issues.)*
 - FL Studio ASIO *(No issues, but you can NOT change the buffer size without restarting the stream.)*
 - FlexASIO *(Only one issue, the pitch of the output isn't right.)*
 - JACK ASIO Driver *(No issues.)*
@@ -115,7 +116,6 @@ But anyway, here is the version without the KSDirect API. [Click me for the dire
 - Voicemeeter Virtual ASIO *(Will throw a BASS_ERROR_NOTAVAIL exception but still work)*
 ## Unsupported ASIO devices
 - ASIO2WASAPI *(Throws a BASS_ERROR_UNKNOWN exception)*
-- ASIO4ALL *(It does work, but closing the MIDI app makes it get stuck into an exiting loop. Task Manager is required to terminate it.)*
 - Realtek ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
 ## Untested ASIO devices
 - ASIO Digidesign Driver
