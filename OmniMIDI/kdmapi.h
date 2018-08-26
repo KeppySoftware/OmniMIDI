@@ -308,7 +308,7 @@ VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	CheckUp(ERRORCODE, L"KSVolFXSet", FALSE);
 
 	// Set the rendering time threshold, if the driver's own panic system is disabled
-	if (ManagedSettings.AlternativeCPU != TRUE) BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 
 	// Set the stream's settings
 	BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);

@@ -112,7 +112,6 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 			start3 = TimeNow();
 
 			LoadSettingsRT();	// Load real-time settings
-			Panic();			// Check if the panic system is enabled
 			keybindings();		// Check for keystrokes (ALT+1, INS, etc..)
 			WatchdogCheck();	// Check current active voices, rendering time, etc..
 			mixervoid();		// Send dB values to the mixer

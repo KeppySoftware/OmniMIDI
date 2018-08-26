@@ -358,7 +358,6 @@ void LoadSettings()
 		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
-		RegQueryValueEx(hKey, L"AlternativeCPU", NULL, &dwType, (LPBYTE)&ManagedSettings.AlternativeCPU, &dwSize);
 		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&ManagedSettings.EnableSFX, &dwSize);
 		RegQueryValueEx(hKey, L"NoteOff1", NULL, &dwType, (LPBYTE)&ManagedSettings.NoteOff1, &dwSize);
 		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
@@ -430,7 +429,7 @@ void LoadSettingsRT()
 {
 	try {
 		// Initialize the temp values
-		DWORD TempSC, TempOV, TempHP;
+		DWORD TempSC, TempOV, TempHP, TempMV;
 		BOOL TempESFX, TempNOFF1, TempISR, TempSI, TempDNFO, TempDMN;
 
 		// Load the settings
@@ -445,7 +444,6 @@ void LoadSettingsRT()
 		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
 		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
-		RegQueryValueEx(hKey, L"AlternativeCPU", NULL, &dwType, (LPBYTE)&ManagedSettings.AlternativeCPU, &dwSize);
 		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&TempESFX, &dwSize);
 		RegQueryValueEx(hKey, L"NoteOff1", NULL, &dwType, (LPBYTE)&TempNOFF1, &dwSize);
 		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
@@ -462,7 +460,7 @@ void LoadSettingsRT()
 		if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
 		else ManagedSettings.NotesCatcherWithAudio = FALSE;
 		RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVoices, &dwSize);
+		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&TempMV, &dwSize);
 		RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&ManagedSettings.PreloadSoundFonts, &dwSize);
 		RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&ManagedSettings.SleepStates, &dwSize);
 		RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&TempSI, &dwSize);
@@ -528,9 +526,6 @@ void LoadSettingsRT()
 		}
 
 		// Load the settings by comparing the temporary values to the driver's ones, to prevent overhead
-		if (ManagedSettings.AlternativeCPU != 1 || HyperMode == TRUE)
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-
 		if (TempESFX != ManagedSettings.EnableSFX) {
 			ManagedSettings.EnableSFX = TempESFX;
 			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
@@ -557,6 +552,12 @@ void LoadSettingsRT()
 			ManagedSettings.DisableNotesFadeOut = TempDNFO;
 			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
 		}
+
+		if (TempMV != ManagedSettings.MaxVoices) {
+			ManagedSettings.MaxVoices = TempMV;
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+
+		}
 	}
 	catch (...) {
 		CrashMessage(L"LoadSettingsRT");
@@ -577,26 +578,6 @@ void LoadCustomInstruments() {
 		RegQueryValueEx(hKey, cpresetname[i], NULL, &dwType, (LPBYTE)&cpreset[i], &dwSize);
 	}
 	RegCloseKey(hKey);
-}
-
-void Panic() {
-	// Custom panic system
-	if (ManagedSettings.AlternativeCPU == 1) {
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, 100.0f);
-		float MaxRenderingTimeF = (float)ManagedSettings.MaxRenderingTime;
-
-		if (RenderingTime >= (MaxRenderingTimeF - 3.0f)) {
-			int NewMaxVoices = ManagedSettings.MaxVoices - ((ManagedSettings.MaxVoices / 8) * (int)(RenderingTime - MaxRenderingTimeF));
-
-			if (NewMaxVoices < 1) {
-				NewMaxVoices = 1;
-			}
-
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, NewMaxVoices);
-		}
-		else BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-	}
-	else BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
 }
 
 int AudioRenderingType(int value) {

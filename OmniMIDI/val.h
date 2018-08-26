@@ -14,7 +14,7 @@ static BOOL AlreadyStartedOnce = FALSE;
 
 typedef struct Settings
 {
-	BOOL AlternativeCPU = FALSE;			// Autopanic switch
+	BOOL AlternativeCPU = FALSE;			// Autopanic switch (DEPRECATED)
 	BOOL CapFramerate = FALSE;				// Cap input framerate
 	BOOL DebugMode = FALSE;					// Debug console
 	BOOL DisableNotesFadeOut = 0;			// Disable fade-out
