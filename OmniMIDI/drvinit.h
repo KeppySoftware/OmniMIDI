@@ -38,6 +38,7 @@ DWORD WINAPI DebugThread(LPVOID lpV) {
 	while (true) {
 		// Send the debug info to the pipes, that's it lol
 		if (MainThread) SendDebugDataToPipe();
+
 		_DBGWAIT;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");

@@ -100,7 +100,7 @@ The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of June 5th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
+As of August 27th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 ### **InitializeKDMAPIStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.
@@ -172,7 +172,7 @@ KDMChangeSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ChangeDr
 	KDMChangeSettings(&MySettings, sizeof(MySettings));
 	
 	// Now make the driver fallback to the settings from the registry
-	KDMChangeSettings(0, 0);
+	KDMChangeSettings(nullptr, 0);
 ...
 ```
 You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/val.h)

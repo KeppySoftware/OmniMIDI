@@ -123,7 +123,7 @@
             this.ChangeMask = new System.Windows.Forms.Button();
             this.AASButton = new System.Windows.Forms.Button();
             this.MEPSButton = new System.Windows.Forms.Button();
-            this.SettingsPresetsBtn = new System.Windows.Forms.Button();
+            this.SettingsPresetsBtn = new OmniMIDIConfigurator.MenuButton();
             this.resetToDefaultToolStripMenuItem = new System.Windows.Forms.Button();
             this.applySettingsToolStripMenuItem = new System.Windows.Forms.Button();
             this.OutputSettingsBox = new System.Windows.Forms.GroupBox();
@@ -270,6 +270,7 @@
             this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.menuItem45 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.BugReport = new System.Windows.Forms.MenuItem();
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.SynthMenu = new System.Windows.Forms.MainMenu(this.components);
             this.VolumeTip = new System.Windows.Forms.ToolTip(this.components);
@@ -365,7 +366,6 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
-            this.BugReport = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -551,8 +551,8 @@
             // 
             // ExportPres
             // 
-            this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExportPres.Location = new System.Drawing.Point(186, 363);
+            this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ExportPres.Location = new System.Drawing.Point(187, 363);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(45, 23);
             this.ExportPres.TabIndex = 50;
@@ -565,7 +565,7 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(126, 363);
+            this.SeparatorPres.Location = new System.Drawing.Point(127, 363);
             this.SeparatorPres.Name = "SeparatorPres";
             this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
             this.SeparatorPres.TabIndex = 49;
@@ -573,8 +573,8 @@
             // 
             // ImportPres
             // 
-            this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ImportPres.Location = new System.Drawing.Point(139, 363);
+            this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ImportPres.Location = new System.Drawing.Point(140, 363);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(45, 23);
             this.ImportPres.TabIndex = 48;
@@ -1479,12 +1479,13 @@
             // 
             // SettingsPresetsBtn
             // 
-            this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SettingsPresetsBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SettingsPresetsBtn.Location = new System.Drawing.Point(55, 363);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(72, 23);
             this.SettingsPresetsBtn.TabIndex = 21;
-            this.SettingsPresetsBtn.Text = "Pre-made ▼";
+            this.SettingsPresetsBtn.Text = "Pre-made";
+            this.SettingsPresetsBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsPresetsBtn.UseVisualStyleBackColor = true;
             this.SettingsPresetsBtn.Click += new System.EventHandler(this.SettingsPresetsBtn_Click);
             // 
@@ -2802,36 +2803,36 @@
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 12;
+            this.donateToSupportUsToolStripMenuItem.Index = 11;
             this.donateToSupportUsToolStripMenuItem.Text = "Support me with a PayPal donation";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // menuItem29
             // 
-            this.menuItem29.Index = 7;
+            this.menuItem29.Index = 6;
             this.menuItem29.Text = "-";
             // 
             // SeeChangelog
             // 
-            this.SeeChangelog.Index = 5;
+            this.SeeChangelog.Index = 4;
             this.SeeChangelog.Text = "Changelog of this driver release";
             this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
             // 
             // SeeLatestChangelog
             // 
-            this.SeeLatestChangelog.Index = 6;
+            this.SeeLatestChangelog.Index = 5;
             this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
             this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 9;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 8;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 10;
+            this.menuItem33.Index = 9;
             this.menuItem33.Text = "-";
             // 
             // HAPLink
@@ -2860,7 +2861,7 @@
             // 
             // menuItem45
             // 
-            this.menuItem45.Index = 11;
+            this.menuItem45.Index = 10;
             this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HAPLink,
             this.BASSLink,
@@ -2886,9 +2887,15 @@
             this.donateToSupportUsToolStripMenuItem});
             this.menuItem3.Text = "?";
             // 
+            // BugReport
+            // 
+            this.BugReport.Index = 1;
+            this.BugReport.Text = "Report a bug on GitHub";
+            this.BugReport.Click += new System.EventHandler(this.BugReport_Click);
+            // 
             // KDMAPIDoc
             // 
-            this.KDMAPIDoc.Index = 8;
+            this.KDMAPIDoc.Index = 7;
             this.KDMAPIDoc.Text = "Keppy\'s Direct MIDI API documentation";
             this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
             // 
@@ -3961,12 +3968,6 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
-            // BugReport
-            // 
-            this.BugReport.Index = 1;
-            this.BugReport.Text = "Report a bug on GitHub";
-            this.BugReport.Click += new System.EventHandler(this.BugReport_Click);
-            // 
             // OmniMIDIConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4081,7 +4082,7 @@
         private System.Windows.Forms.MenuItem menuItem30;
         private System.Windows.Forms.Button MEPSButton;
         private System.Windows.Forms.Button AASButton;
-        private System.Windows.Forms.Button SettingsPresetsBtn;
+        public MenuButton SettingsPresetsBtn;
         private System.Windows.Forms.Button resetToDefaultToolStripMenuItem;
         private System.Windows.Forms.Button applySettingsToolStripMenuItem;
         private System.Windows.Forms.ContextMenu SettingsPresets;

@@ -179,6 +179,7 @@ namespace OmniMIDIConfigurator
                 VolLabel.MouseWheel += VolumeMouseWheel;
                 VolSimView.MouseWheel += VolumeMouseWheel;
                 VolTrackBar.MouseWheel += VolumeMouseWheel;
+                SettingsPresetsBtn.ContextMenu = SettingsPresets;
                 TabsForTheControls.TabPages.Remove(DebugLog);
 
                 Menu = SynthMenu;

@@ -730,11 +730,13 @@ void ParseDebugData() {
 
 	if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 		rate = BASS_ASIO_GetRate();
-		CheckUpASIO(ERRORCODE, L"KSGetRateASIO", TRUE);
-		inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
-		CheckUpASIO(ERRORCODE, L"KSGetInputLatencyASIO", TRUE);
-		outlatency = (double)BASS_ASIO_GetLatency(FALSE) * 1000.0 / rate;
-		CheckUpASIO(ERRORCODE, L"KSGetOutputLatencyASIO", TRUE);
+		// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
+		if (rate != -1) {
+			inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
+			CheckUpASIO(ERRORCODE, L"OMGetInputLatencyASIO", TRUE);
+			outlatency = (double)BASS_ASIO_GetLatency(FALSE) * 1000.0 / rate;
+			CheckUpASIO(ERRORCODE, L"OMGetOutputLatencyASIO", TRUE);
+		}
 	}
 
 	for (int i = 0; i <= 15; ++i) cvvalues[i] = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);

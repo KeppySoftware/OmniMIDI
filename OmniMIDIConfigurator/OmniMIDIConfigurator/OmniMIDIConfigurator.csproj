@@ -218,6 +218,9 @@
     <Compile Include="Forms\Add-ons\MIDIInPlay.Designer.cs">
       <DependentUpon>MIDIInPlay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Functions\MenuButton\MenuButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
