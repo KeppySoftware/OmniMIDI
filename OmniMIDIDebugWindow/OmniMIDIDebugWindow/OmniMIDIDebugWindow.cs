@@ -123,12 +123,13 @@ namespace OmniMIDIDebugWindow
             try
             {
                 Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll"); // Gets OmniMIDI version
-                VersionLabel.Text = String.Format("OmniMIDI {0}\n{1}", Driver.FileVersion, ParseEgg());
-                GetWindowsInfoData(); // Get info about your Windows installation
-                SynthDbg.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-                ChannelVoices.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-                ThreadTime.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
-                PCSpecs.ContextMenu = MainCont; // Assign ContextMenu (Not the strip one) to the tab
+                Text += String.Format(" (v{0})", Driver.FileVersion);
+                VersionLabel.Text = String.Format("{0}", ParseEgg());
+                GetWindowsInfoData();                   // Get info about your Windows installation
+                SynthDbg.ContextMenu = MainCont;        // Assign ContextMenu (Not the strip one) to the tab
+                ChannelVoices.ContextMenu = MainCont;   // Assign ContextMenu (Not the strip one) to the tab
+                ThreadTime.ContextMenu = MainCont;      // Assign ContextMenu (Not the strip one) to the tab
+                PCSpecs.ContextMenu = MainCont;         // Assign ContextMenu (Not the strip one) to the tab
                 Tabs.SelectedIndex = 1;
                 Tabs.SelectedIndex = 0;
 

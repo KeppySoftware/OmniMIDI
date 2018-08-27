@@ -1,56 +1,52 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="KeppySynthDebugWindow.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OmniMIDIDebugWindow.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="LeMessages" Type="System.Collections.Specialized.StringCollection" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;Now 20% cooler!&lt;/string&gt;
-  &lt;string&gt;AMOLED screens are not supported.&lt;/string&gt;
-  &lt;string&gt;Now with Google AdSense support!&lt;/string&gt;
-  &lt;string&gt;I don't like Windows 95.&lt;/string&gt;
-  &lt;string&gt;A Hideo Kojima Game.&lt;/string&gt;
-  &lt;string&gt;World War III ready.&lt;/string&gt;
-  &lt;string&gt;Powered by NVIDIA GameWorks.&lt;/string&gt;
-  &lt;string&gt;No gods or kings. Only man.&lt;/string&gt;
-  &lt;string&gt;This is a line.&lt;/string&gt;
-  &lt;string&gt;Now available for Android Oreo!&lt;/string&gt;
-  &lt;string&gt;Featuring Dante from the DmC series.&lt;/string&gt;
-  &lt;string&gt;Now with overclocking capabilities!&lt;/string&gt;
-  &lt;string&gt;自業自得。&lt;/string&gt;
-  &lt;string&gt;Haha same.&lt;/string&gt;
-  &lt;string&gt;Easter eggs not included.&lt;/string&gt;
-  &lt;string&gt;With full support for Windows 11!&lt;/string&gt;
-  &lt;string&gt;I hear something.&lt;/string&gt;
-  &lt;string&gt;I love beautiful wood. Don't you?&lt;/string&gt;
-  &lt;string&gt;Approved by Donald Trump.&lt;/string&gt;
-  &lt;string&gt;You are dead. Not big surprise!&lt;/string&gt;
-  &lt;string&gt;This is a test. Congratulations!&lt;/string&gt;
-  &lt;string&gt;My Hero Academia is the best anime.&lt;/string&gt;
-  &lt;string&gt;In-App purchases included!&lt;/string&gt;
-  &lt;string&gt;Only for $49.99!&lt;/string&gt;
-  &lt;string&gt;|     | |     | |     |__&lt;/string&gt;
-  &lt;string&gt;YAHOO YAYAYAYAYAYAHOOOOO!&lt;/string&gt;
-  &lt;string&gt;&amp;amp;&amp;amp; Knuckles!&lt;/string&gt;
-  &lt;string&gt;Blinx is my waifu.&lt;/string&gt;
-  &lt;string&gt;Made with love by a furfag.&lt;/string&gt;
-  &lt;string&gt;It sure is boring around here...&lt;/string&gt;
-  &lt;string&gt;With 400% more potatoes.&lt;/string&gt;
-  &lt;string&gt;I am the mustard of your doom!&lt;/string&gt;
-  &lt;string&gt;Running on Java 1.7.0.&lt;/string&gt;
-  &lt;string&gt;This is not a drill!&lt;/string&gt;
-  &lt;string&gt;Put that down, it's a prototype.&lt;/string&gt;
-  &lt;string&gt;Wahoo!&lt;/string&gt;
-  &lt;string&gt;Perhaps.&lt;/string&gt;
-  &lt;string&gt;The best soft-synth in the world.&lt;/string&gt;
-  &lt;string&gt;Apple Dash and Pinkie Sparkle.&lt;/string&gt;
-  &lt;string&gt;The real deal! Sort of.&lt;/string&gt;
-  &lt;string&gt;Hey Scotty! Jesus man.&lt;/string&gt;
-  &lt;string&gt;I can't believe you've done this.&lt;/string&gt;
-  &lt;string&gt;You know I had to do it to them.&lt;/string&gt;
-  &lt;string&gt;* not supported by Apple.&lt;/string&gt;
-  &lt;string&gt;Ching chong!&lt;/string&gt;
-  &lt;string&gt;Better than VirtualMIDISynth.&lt;/string&gt;
+  &lt;string&gt;One’s act, one’s profit.&lt;/string&gt;
+  &lt;string&gt;Wake from death and return to life.&lt;/string&gt;
+  &lt;string&gt;The weak are meat; the strong eat.&lt;/string&gt;
+  &lt;string&gt;Evil cause, evil effect&lt;/string&gt;
+  &lt;string&gt;Drunken life, dreamy death.&lt;/string&gt;
+  &lt;string&gt;Different body, same mind.&lt;/string&gt;
+  &lt;string&gt;Spilt water will not return to the tray.&lt;/string&gt;
+  &lt;string&gt;Fall down seven times, stand up eight.&lt;/string&gt;
+  &lt;string&gt;A splendid child born from common parents.&lt;/string&gt;
+  &lt;string&gt;The fallen blossom returns not to the bough.&lt;/string&gt;
+  &lt;string&gt;Perfect is the enemy of good.&lt;/string&gt;
+  &lt;string&gt;Who chases two rabbits catches neither.&lt;/string&gt;
+  &lt;string&gt;Everyone makes mistakes.&lt;/string&gt;
+  &lt;string&gt;There's no accounting for taste.&lt;/string&gt;
+  &lt;string&gt;Ignorance is bliss.&lt;/string&gt;
+  &lt;string&gt;Perseverance is better than defeat.&lt;/string&gt;
+  &lt;string&gt;Giving up at the first sign of difficulty.&lt;/string&gt;
+  &lt;string&gt;Fear is greater than the danger.&lt;/string&gt;
+  &lt;string&gt;Only death will cure a fool.&lt;/string&gt;
+  &lt;string&gt;Don't let yourself be taken advantage of.&lt;/string&gt;
+  &lt;string&gt;Arbitration in a quarrel is a godsend.&lt;/string&gt;
+  &lt;string&gt;Forgive and forget.&lt;/string&gt;
+  &lt;string&gt;Farm when it's sunny, read when it rains.&lt;/string&gt;
+  &lt;string&gt;Different strokes for different folks.&lt;/string&gt;
+  &lt;string&gt;Disappear without a trace.&lt;/string&gt;
+  &lt;string&gt;Good things, many devils.&lt;/string&gt;
+  &lt;string&gt;Time flies like an arrow.&lt;/string&gt;
+  &lt;string&gt;The eyes are the mirror of the soul.&lt;/string&gt;
+  &lt;string&gt;Cover the ears and steal the bell.&lt;/string&gt;
+  &lt;string&gt;To gamble as the dice fall.&lt;/string&gt;
+  &lt;string&gt;The more stupid the child the dearer it is.&lt;/string&gt;
+  &lt;string&gt;It is foolish to deal with a fool.&lt;/string&gt;
+  &lt;string&gt;Heart rather than appearance.&lt;/string&gt;
+  &lt;string&gt;If unreason comes, reason goes.&lt;/string&gt;
+  &lt;string&gt;Poke a bush, a snake comes out.&lt;/string&gt;
+  &lt;string&gt;Even a fool has one talent.&lt;/string&gt;
+  &lt;string&gt;A coin to a cat.&lt;/string&gt;
+  &lt;string&gt;Repentance never comes first.&lt;/string&gt;
+  &lt;string&gt;The environment makes our characters.&lt;/string&gt;
+  &lt;string&gt;It's no use crying over spilt milk.&lt;/string&gt;
+  &lt;string&gt;There is luck in the last helping.&lt;/string&gt;
+  &lt;string&gt;A bad wife is a ruin of her husband.&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
   </Settings>

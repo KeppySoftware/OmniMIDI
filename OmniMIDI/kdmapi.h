@@ -83,17 +83,17 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 			// Release the SoundFonts and the stream
 			FreeFonts();
 			FreeUpStream();
-
-			// Close the thread
-			PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-			CloseHandle(MainThread);
-			MainThread = NULL;
-			return 0;
 		}
 	}
 	catch (...) {
 		CrashMessage(L"DriverHeartThread");
 	}
+
+	// Close the thread
+	PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
+	CloseHandle(MainThread);
+	MainThread = NULL;
+	return 0;
 }
 
 void DoStartClient() {

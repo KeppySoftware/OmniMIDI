@@ -83,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="debugicon.ico" />
-    <None Include="Resources\LeMessages.txt" />
     <None Include="Resources\ReloadIcon.png" />
     <None Include="Resources\w9x.png" />
     <None Include="Resources\other.png" />

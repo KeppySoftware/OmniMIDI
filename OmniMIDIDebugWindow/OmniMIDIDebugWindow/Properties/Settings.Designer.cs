@@ -12,7 +12,7 @@ namespace OmniMIDIDebugWindow.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -27,33 +27,34 @@ namespace OmniMIDIDebugWindow.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>Now 20% cooler!</string>\r\n  <string>AMOLED screens are not supported.</str" +
-            "ing>\r\n  <string>Now with Google AdSense support!</string>\r\n  <string>I don\'t lik" +
-            "e Windows 95.</string>\r\n  <string>A Hideo Kojima Game.</string>\r\n  <string>World" +
-            " War III ready.</string>\r\n  <string>Powered by NVIDIA GameWorks.</string>\r\n  <st" +
-            "ring>No gods or kings. Only man.</string>\r\n  <string>This is a line.</string>\r\n " +
-            " <string>Now available for Android Oreo!</string>\r\n  <string>Featuring Dante fro" +
-            "m the DmC series.</string>\r\n  <string>Now with overclocking capabilities!</strin" +
-            "g>\r\n  <string>自業自得。</string>\r\n  <string>Haha same.</string>\r\n  <string>Easter eg" +
-            "gs not included.</string>\r\n  <string>With full support for Windows 11!</string>\r" +
-            "\n  <string>I hear something.</string>\r\n  <string>I love beautiful wood. Don\'t yo" +
-            "u?</string>\r\n  <string>Approved by Donald Trump.</string>\r\n  <string>You are dea" +
-            "d. Not big surprise!</string>\r\n  <string>This is a test. Congratulations!</strin" +
-            "g>\r\n  <string>My Hero Academia is the best anime.</string>\r\n  <string>In-App pur" +
-            "chases included!</string>\r\n  <string>Only for $49.99!</string>\r\n  <string>|     " +
-            "| |     | |     |__</string>\r\n  <string>YAHOO YAYAYAYAYAYAHOOOOO!</string>\r\n  <s" +
-            "tring>&amp;&amp; Knuckles!</string>\r\n  <string>Blinx is my waifu.</string>\r\n  <s" +
-            "tring>Made with love by a furfag.</string>\r\n  <string>It sure is boring around h" +
-            "ere...</string>\r\n  <string>With 400% more potatoes.</string>\r\n  <string>I am the" +
-            " mustard of your doom!</string>\r\n  <string>Running on Java 1.7.0.</string>\r\n  <s" +
-            "tring>This is not a drill!</string>\r\n  <string>Put that down, it\'s a prototype.<" +
-            "/string>\r\n  <string>Wahoo!</string>\r\n  <string>Perhaps.</string>\r\n  <string>The " +
-            "best soft-synth in the world.</string>\r\n  <string>Apple Dash and Pinkie Sparkle." +
-            "</string>\r\n  <string>The real deal! Sort of.</string>\r\n  <string>Hey Scotty! Jes" +
-            "us man.</string>\r\n  <string>I can\'t believe you\'ve done this.</string>\r\n  <strin" +
-            "g>You know I had to do it to them.</string>\r\n  <string>* not supported by Apple." +
-            "</string>\r\n  <string>Ching chong!</string>\r\n  <string>Better than VirtualMIDISyn" +
-            "th.</string>\r\n</ArrayOfString>")]
+            "tring>One’s act, one’s profit.</string>\r\n  <string>Wake from death and return to" +
+            " life.</string>\r\n  <string>The weak are meat; the strong eat.</string>\r\n  <strin" +
+            "g>Evil cause, evil effect</string>\r\n  <string>Drunken life, dreamy death.</strin" +
+            "g>\r\n  <string>Different body, same mind.</string>\r\n  <string>Spilt water will no" +
+            "t return to the tray.</string>\r\n  <string>Fall down seven times, stand up eight." +
+            "</string>\r\n  <string>A splendid child born from common parents.</string>\r\n  <str" +
+            "ing>The fallen blossom returns not to the bough.</string>\r\n  <string>Perfect is " +
+            "the enemy of good.</string>\r\n  <string>Who chases two rabbits catches neither.</" +
+            "string>\r\n  <string>Everyone makes mistakes.</string>\r\n  <string>There\'s no accou" +
+            "nting for taste.</string>\r\n  <string>Ignorance is bliss.</string>\r\n  <string>Per" +
+            "severance is better than defeat.</string>\r\n  <string>Giving up at the first sign" +
+            " of difficulty.</string>\r\n  <string>Fear is greater than the danger.</string>\r\n " +
+            " <string>Only death will cure a fool.</string>\r\n  <string>Don\'t let yourself be " +
+            "taken advantage of.</string>\r\n  <string>Arbitration in a quarrel is a godsend.</" +
+            "string>\r\n  <string>Forgive and forget.</string>\r\n  <string>Farm when it\'s sunny," +
+            " read when it rains.</string>\r\n  <string>Different strokes for different folks.<" +
+            "/string>\r\n  <string>Disappear without a trace.</string>\r\n  <string>Good things, " +
+            "many devils.</string>\r\n  <string>Time flies like an arrow.</string>\r\n  <string>T" +
+            "he eyes are the mirror of the soul.</string>\r\n  <string>Cover the ears and steal" +
+            " the bell.</string>\r\n  <string>To gamble as the dice fall.</string>\r\n  <string>T" +
+            "he more stupid the child the dearer it is.</string>\r\n  <string>It is foolish to " +
+            "deal with a fool.</string>\r\n  <string>Heart rather than appearance.</string>\r\n  " +
+            "<string>If unreason comes, reason goes.</string>\r\n  <string>Poke a bush, a snake" +
+            " comes out.</string>\r\n  <string>Even a fool has one talent.</string>\r\n  <string>" +
+            "A coin to a cat.</string>\r\n  <string>Repentance never comes first.</string>\r\n  <" +
+            "string>The environment makes our characters.</string>\r\n  <string>It\'s no use cry" +
+            "ing over spilt milk.</string>\r\n  <string>There is luck in the last helping.</str" +
+            "ing>\r\n  <string>A bad wife is a ruin of her husband.</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection LeMessages {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["LeMessages"]));
