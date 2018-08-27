@@ -1862,7 +1862,7 @@ namespace OmniMIDIConfigurator
                 UpdateStatus.Enabled = false;
                 VersionLabel.Enabled = false;
                 IsInternetAvailable = false;
-                CheckForUpdatesMenu.Enabled = false;
+                openUpdaterToolStripMenuItem.Enabled = false;
             });
 
             String IsUpdateAvailable = UpdateSystem.CheckForUpdatesMini();
@@ -1877,7 +1877,7 @@ namespace OmniMIDIConfigurator
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
                 IsInternetAvailable = true;
-                CheckForUpdatesMenu.Enabled = true;
+                openUpdaterToolStripMenuItem.Enabled = true;
             });
             else if (IsUpdateAvailable == "no") this.Invoke((MethodInvoker)delegate
             {
@@ -1889,7 +1889,7 @@ namespace OmniMIDIConfigurator
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
                 IsInternetAvailable = true;
-                CheckForUpdatesMenu.Enabled = true;
+                openUpdaterToolStripMenuItem.Enabled = true;
             });
             else this.Invoke((MethodInvoker)delegate {
                 UpdateStatus.Click += CheckUpdatesStartUp;
@@ -1900,7 +1900,7 @@ namespace OmniMIDIConfigurator
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
                 IsInternetAvailable = false;
-                CheckForUpdatesMenu.Enabled = true;
+                openUpdaterToolStripMenuItem.Enabled = true;
             });
         }
 
@@ -2002,14 +2002,6 @@ namespace OmniMIDIConfigurator
                 p.Start();
                 Application.ExitThread();
             }
-        }
-
-        private void ChangeUpdateBranch_Click(object sender, EventArgs e)
-        {
-            Program.DebugToConsole(false, String.Format("The user wants to change the update branch."), null);
-            SelectBranch frm = new SelectBranch();
-            frm.ShowDialog(this);
-            frm.Dispose();
         }
 
         // Credits
@@ -2163,6 +2155,11 @@ namespace OmniMIDIConfigurator
         private void DifferencePatches_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/KeppySoftware/OmniMIDI/wiki/What's-the-difference-between-the-WinMM-patches%3F");
+        }
+
+        private void BugReport_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/KeppySoftware/OmniMIDI/issues/");
         }
 
         // Mixer functions

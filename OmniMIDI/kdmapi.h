@@ -98,9 +98,6 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 
 void DoStartClient() {
 	if (modm_closed == TRUE) {
-		// Set the timer refresh rate to 1ms (Minimum possible is 500ms)
-		timeBeginPeriod(1);
-
 		// Load the selected driver priority value from the registry
 		HKEY hKey;
 		long lResult;
@@ -140,13 +137,10 @@ void DoStartClient() {
 void DoStopClient() {
 	if (modm_closed == FALSE) {
 		// Close the threads and free up the allocated memory
-		CloseThreads(TRUE);
 		FreeUpStream();
+		CloseThreads(TRUE);
 		FreeUpMemory();
 		modm_closed = TRUE;
-
-		// The timer does not need to run at 1ms (500ms min) anymore
-		timeEndPeriod(1);
 	}
 }
 

@@ -258,8 +258,10 @@ void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
 	memset(evbuf, 0, sizeof(evbuf_t));
 	free(evbuf);
+	evbuf = NULL;
 	memset(sndbf, 0, sizeof(float));
 	free(sndbf);
+	sndbf = NULL;
 }
 
 void AllocateMemory() {
@@ -314,19 +316,25 @@ void AllocateMemory() {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
 
 		// Begin allocating the EVBuffer
-		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
-		evbuf = (evbuf_t *)malloc((unsigned long long)EvBufferSize * sizeof(evbuf_t));
-		PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing EV buffer...");
-		memset(evbuf, 0, sizeof(evbuf_t)); 
-		PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
-		EVBuffReady = TRUE;
+		if (evbuf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer already allocated.");
+		else {
+			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
+			evbuf = (evbuf_t *)malloc((unsigned long long)EvBufferSize * sizeof(evbuf_t));
+			PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing EV buffer...");
+			memset(evbuf, 0, sizeof(evbuf_t));
+			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
+			EVBuffReady = TRUE;
+		}
 
 		// Done, now allocate the buffer for the ".WAV mode"
-		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
-		sndbf = (float *)malloc(256.0f * sizeof(float));
-		PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing audio buffer...");
-		memset(sndbf, 0, sizeof(float));
-		PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
+		if (sndbf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer already allocated.");
+		else {
+			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
+			sndbf = (float *)malloc(256.0f * sizeof(float));
+			PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing audio buffer...");
+			memset(sndbf, 0, sizeof(float));
+			PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
+		}
 	}
 	catch (...) {
 		CrashMessage(L"EVBufAlloc");
