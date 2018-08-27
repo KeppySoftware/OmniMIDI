@@ -512,11 +512,16 @@ void LoadSettingsRT()
 
 			// Check if "Hyper-playback" mode has been enabled
 			if (HyperMode) {
+
+				/* Not required in the real-time settings, but you can remove the comment if you want
+
 				// It's enabled, do some beeps to notify the user
 				Beep(510, 100);
 				Beep(640, 100);
 				Beep(760, 100);
 				Beep(1000, 100);
+
+				*/
 
 				// Assign the pointers to the specific hyper-playback functions
 				_PrsData = ParseDataHyper;

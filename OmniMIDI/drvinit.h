@@ -62,7 +62,7 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 			MT32SetInstruments();
 
 			// Parse the notes until the audio thread is done
-			while (AudioThreadDone != TRUE) {
+			while (AudioThreadDone != TRUE && !stop_thread) {
 				if (_PlayBufData()) _LWAIT;
 				if (ManagedSettings.CapFramerate) _CFRWAIT;
 			}
