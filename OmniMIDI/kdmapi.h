@@ -1,6 +1,6 @@
 // KDMAPI calls
 
-void KeepStreamAlive(BOOL& Initialized) {
+BOOL StreamHealthCheck(BOOL& Initialized) {
 	// Dummy call
 	BASS_ChannelIsActive(OMStream);
 
@@ -23,7 +23,13 @@ void KeepStreamAlive(BOOL& Initialized) {
 			// Done, now initialize the threads
 			Initialized = CreateThreads(TRUE);
 		}
+		return FALSE;
 	}
+	else {
+		if (stop_thread && !stop_rtthread) CreateThreads(FALSE);			
+	}
+	
+	return TRUE;
 }
 
 DWORD WINAPI DriverHeart(LPVOID lpV) {
@@ -35,13 +41,13 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 		}
 		else {
 			BOOL Initialized = FALSE;
-			while (Initialized == FALSE) {
+			while (!Initialized) {
 				// Load the settings, and allocate the memory for the EVBuffer
 				LoadSettings();
 				AllocateMemory();
 
 				// Load the BASS functions
-				load_bassfuncs();
+				if (!BASSLoadedToMemory) BASSLoadedToMemory = load_bassfuncs();
 
 				// Initialize the BASS output device, and set up the streams
 				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
@@ -56,26 +62,19 @@ DWORD WINAPI DriverHeart(LPVOID lpV) {
 
 			// Check system
 			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
-			while (stop_rtthread == FALSE) {
+			while (!stop_rtthread) {
 				// Start the timer, which calculates 
 				// how much time it takes to do its stuff
 				if (!HyperMode) start1 = TimeNow();
 
-				// If the other threads are offline or crashed, restart them
-				if (stop_thread == TRUE) 
-					CreateThreads(FALSE);
-
-				// Check if the audio stream is still working
-				KeepStreamAlive(Initialized);
+				// Check if the threads and streams are still alive
+				StreamHealthCheck(Initialized);
 
 				// Load custom instrument values from the registry
 				LoadCustomInstruments();
 
 				// Check the current output volume
 				CheckVolume(FALSE);
-
-				// Parse the debug info (Active voices, rendering time etc..)
-				ParseDebugData();
 
 				// I SLEEP
 				Sleep(10);
@@ -121,6 +120,7 @@ void DoStartClient() {
 		);
 
 		// Create the main thread
+		CheckIfThreadClosed(MainThread);
 		MainThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)MainThreadAddress);
 		SetThreadPriority(MainThread, prioval[ManagedSettings.DriverPriority]);
 
@@ -137,6 +137,7 @@ void DoStartClient() {
 void DoStopClient() {
 	if (modm_closed == FALSE) {
 		// Close the threads and free up the allocated memory
+		FreeFonts();
 		FreeUpStream();
 		CloseThreads(TRUE);
 		FreeUpMemory();

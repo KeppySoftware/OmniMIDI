@@ -89,6 +89,10 @@ inline bool DebugFileExists(const std::string& name) {
 	}
 }
 
+void Pointer(LPCSTR Msg) {
+	MessageBoxA(NULL, Msg, "Debug pointer", MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
+}
+
 void PrintToConsole(int color, long stage, const char* text) {
 	if (ManagedSettings.DebugMode) {
 		// Set color

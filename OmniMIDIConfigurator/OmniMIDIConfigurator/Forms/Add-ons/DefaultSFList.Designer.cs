@@ -42,7 +42,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(461, 42);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Change the default soundfont list that Keppy\'s Synthesizer will load at startup.";
+            this.label1.Text = "Change the default soundfont list that OmniMIDI will load at startup.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label2
@@ -114,7 +114,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "OmniMIDIDefaultSFList";
+            this.Name = "DefaultSFList";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

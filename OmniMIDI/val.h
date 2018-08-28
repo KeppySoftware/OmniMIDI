@@ -89,7 +89,7 @@ static DWORD OMFlags = NULL;
 static HDRVR OMDevice = NULL;
 
 // Important stuff
-static BOOL AudioThreadDone = FALSE;
+static BOOL BASSLoadedToMemory = FALSE;
 static volatile BOOL modm_closed = TRUE;
 static volatile BOOL reset_synth = FALSE;
 static HANDLE load_sfevent = NULL;
@@ -119,6 +119,7 @@ static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
 // Potato
+static BOOL ASIOReady = FALSE;
 static BOOL EVBuffReady = FALSE;
 static BOOL KDMAPIEnabled = FALSE;
 static FLOAT RenderingTime = 0.0f;

@@ -36,9 +36,16 @@ void MT32SetInstruments() {
 DWORD WINAPI DebugThread(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
 	while (true) {
-		// Send the debug info to the pipes, that's it lol
-		if (MainThread) SendDebugDataToPipe();
+		if (MainThread) {
+			// Parse the debug info (Active voices, rendering time etc..)
+			ParseDebugData();
 
+			// Send the debug info to the pipes
+			SendDebugDataToPipe();
+
+			// Wait
+		}
+		else SendDummyDataToPipe();
 		_DBGWAIT;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
@@ -62,10 +69,8 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 			MT32SetInstruments();
 
 			// Parse the notes until the audio thread is done
-			while (AudioThreadDone != TRUE && !stop_thread) {
-				if (_PlayBufData()) _LWAIT;
-				if (ManagedSettings.CapFramerate) _CFRWAIT;
-			}
+			if (_PlayBufData() && !stop_thread) _LWAIT;
+			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
 	catch (...) {
@@ -110,11 +115,11 @@ DWORD WINAPI RTSettings(LPVOID lpV) {
 			// how much time it takes to do its stuff
 			start3 = TimeNow();
 
-			LoadSettingsRT();	// Load real-time settings
-			keybindings();		// Check for keystrokes (ALT+1, INS, etc..)
-			WatchdogCheck();	// Check current active voices, rendering time, etc..
-			mixervoid();		// Send dB values to the mixer
-			RevbNChor();		// Check if custom reverb/chorus values are enabled
+			LoadSettingsRT();			// Load real-time settings
+			keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
+			WatchdogCheck();			// Check current active voices, rendering time, etc..
+			mixervoid();				// Send dB values to the mixer
+			RevbNChor();				// Check if custom reverb/chorus values are enabled
 
 			_VLWAIT;
 		}
@@ -175,14 +180,10 @@ DWORD WINAPI AudioThread(LPVOID lpParam) {
 					reset_synth = 0;
 					BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 				}
-		
-				AudioThreadDone = FALSE;	// The audio thread is now busy rendering
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
 				else BASS_ChannelUpdate(OMStream, 0);
-
-				AudioThreadDone = TRUE;		// The audio thread is done rendering
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
@@ -243,8 +244,6 @@ DWORD WINAPI AudioThreadHP(LPVOID lpParam) {
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
-	AudioThreadDone = FALSE;	// The audio thread is now busy rendering		
-
 	// Start the timer, which calculates 
 	// how much time it takes to do its stuff
 	start2 = TimeNow();
@@ -266,8 +265,6 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 
 	// Get the processed audio data, and send it to the ASIO device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
-
-	AudioThreadDone = TRUE;		// The audio thread is done rendering
 
 	// If no data is available, then return NULL
 	if (data == -1) return NULL;
@@ -545,16 +542,20 @@ void InitializeASIO() {
 		return;
 	}
 
+	LONG ADID = ASIODetectID();
+
 	// Else, initialize the stream and proceed to initialize ASIO as well
 	InitializeStream(ManagedSettings.AudioFrequency);
 
 	// If ASIO is successfully initialized, go on with the initialization process
-	if (BASS_ASIO_Init(ASIODetectID(), BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+	if (BASS_ASIO_Init(ADID, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+		CheckUpASIO(ERRORCODE, L"OMASIOInit", TRUE);
+
 		// Set the audio frequency
 		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
 		CheckUpASIO(ERRORCODE, L"OMFormatASIO", FALSE);
 
-		// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+
+		// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
 
 		// If mono rendering is enabled, mirror the left channel to the right one as well
@@ -572,9 +573,10 @@ void InitializeASIO() {
 		CheckUpASIO(ERRORCODE, L"OMChanSetFreqASIO", TRUE);
 
 		// Enable the channels
-		BASS_ASIO_ChannelEnable(FALSE, 0, (HyperMode ? ASIOProcHP : ASIOProc), 0);
-		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+		BASS_ASIO_ChannelEnable(FALSE, 0, (HyperMode ? ASIOProcHP : ASIOProc), NULL);
 		CheckUpASIO(ERRORCODE, L"OMChanEnableASIO", TRUE);
+		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+		CheckUpASIO(ERRORCODE, L"OMChanJoinStereo", TRUE);
 
 		// And start the ASIO output
 		BASS_ASIO_Start(0, 2);
@@ -582,6 +584,8 @@ void InitializeASIO() {
 	}
 	// Else, something is wrong
 	else CheckUpASIO(ERRORCODE, L"OMInitASIO", TRUE);
+
+	ASIOReady = TRUE;
 }
 
 bool InitializeBASS(BOOL restart) {
@@ -609,6 +613,7 @@ bool InitializeBASS(BOOL restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
 	BASS_ASIO_Free();
 	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
+	ASIOReady = FALSE;
 
 	// Stop the stream and free it as well
 	BASS_ChannelStop(OMStream);
@@ -710,9 +715,8 @@ void CheckIfThreadClosed(HANDLE thread) {
 	PrintToConsole(FOREGROUND_RED, 1, "It's not. Starting thread...");
 }
 
-void CloseThread(HANDLE thread, BOOL isaudio) {
+void CloseThread(HANDLE thread) {
 	WaitForSingleObject(thread, INFINITE);
-	if (isaudio) AudioThreadDone = FALSE;
 	CloseHandle(thread);
 	thread = NULL;
 }
@@ -722,50 +726,54 @@ void CloseThreads(BOOL MainClose) {
 
 	// Wait for each thread to close, and free their handles
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
-	CloseThread(ATThread, TRUE);
+	CloseThread(ATThread);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Closing RT settings thread...");
-	CloseThread(RTSThread, FALSE);
+	CloseThread(RTSThread);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
-	CloseThread(EPThread, FALSE);
+	CloseThread(EPThread);
 
 	// If required, close the main thread as well
 	if (MainClose) {
 		stop_rtthread = TRUE;
 
 		PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-		CloseThread(MainThread, FALSE);
-
-		stop_rtthread = FALSE;
+		CloseThread(MainThread);
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
+	stop_rtthread = FALSE;
 	stop_thread = FALSE;
 }
 
 BOOL CreateThreads(BOOL startup) {
 	// Load the SoundFont on startup
 	if (startup == TRUE) SetEvent(load_sfevent);
-	else CloseThreads(FALSE);
 
-	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
-	reset_synth = 0;
+	if (!stop_rtthread) {
+		PrintToConsole(FOREGROUND_RED, 1, "Closing existing threads, if they're open...");
+		CloseThreads(FALSE);
 
-	// Open the default threads
-	PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
-	CheckIfThreadClosed(RTSThread);
-	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
-	SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
-	PrintToConsole(FOREGROUND_RED, 1, "Done...");
+		PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
+		reset_synth = 0;
 
-	PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
-	CheckIfThreadClosed(ATThread);
-	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
-	SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
-	PrintToConsole(FOREGROUND_RED, 1, "Done...");
+		// Open the default threads
+		PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
+		CheckIfThreadClosed(RTSThread);
+		RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
+		SetThreadPriority(&RTSThread, prioval[ManagedSettings.DriverPriority]);
+		PrintToConsole(FOREGROUND_RED, 1, "Done...");
 
-	if (DThread == NULL)
+		PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
+		CheckIfThreadClosed(ATThread);
+		ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
+		SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
+		PrintToConsole(FOREGROUND_RED, 1, "Done...");
+	}
+	else PrintToConsole(FOREGROUND_RED, 1, "Threads are supposed to be closed! Continuing...");
+
+	if (!DThread)
 	{
 		DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
 		SetThreadPriority(DThread, prioval[ManagedSettings.DriverPriority]);
@@ -801,27 +809,24 @@ void FreeUpStream() {
 	// Send dummy values to the mixer
 	CheckVolume(TRUE);
 
-	if (OMStream)
-	{
-		// Reset synth
-		ResetSynth(0);
+	// Reset synth
+	ResetSynth(0);
 
-		// Free BASSASIO
-		BASS_ASIO_Stop();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
-		BASS_ASIO_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
+	// Free BASSASIO
+	BASS_ASIO_Stop();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+	BASS_ASIO_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
 
-		// Stop the stream and free it as well
-		BASS_ChannelStop(OMStream);
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stream stopped.");
-		BASS_StreamFree(OMStream);
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+	// Stop the stream and free it as well
+	BASS_ChannelStop(OMStream);
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stream stopped.");
+	BASS_StreamFree(OMStream);
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
 
-		// Deinitialize the BASS output and free it, since we need to restart it
-		BASS_Stop();
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
-		BASS_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
-	}
+	// Deinitialize the BASS output and free it, since we need to restart it
+	BASS_Stop();
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
+	BASS_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
 }

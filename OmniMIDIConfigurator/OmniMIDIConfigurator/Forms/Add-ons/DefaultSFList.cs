@@ -27,7 +27,7 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
+                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", true);
                 Settings.SetValue("defaultsflist", numericUpDown1.Value, RegistryValueKind.DWord);
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 numericUpDown1.Value = 1;
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
+                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", true);
                 Settings.SetValue("defaultsflist", 1, RegistryValueKind.DWord);
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
+                RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", true);
                 int potato = Convert.ToInt32(Settings.GetValue("DefaultSFList", 1));
                 numericUpDown1.Value = potato;
             }

@@ -643,7 +643,7 @@ void CheckVolume(BOOL Closing) {
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI", 0, KEY_ALL_ACCESS, &hKey);
 
-		if (!Closing) {
+		if (!Closing && !stop_thread && !stop_rtthread) {
 			if (ManagedSettings.VolumeMonitor == 1 && ManagedSettings.CurrentEngine > AUDTOWAV) {
 				float levels[2];
 				DWORD left, right;
@@ -726,25 +726,42 @@ void FillContentDebug(
 	if (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING) StartDebugPipe(TRUE);
 }
 
-clock_t end;
-double rate = 0;
-double inlatency = 0.0;
-double outlatency = 0.0;
+DOUBLE ASIORate = 0;
+DWORD ASIODbgErr;
+DWORD ASIOInLatency;
+DWORD ASIOOutLatency;
+DOUBLE inlatency = 0.0;
+DOUBLE outlatency = 0.0;
+
 void ParseDebugData() {
+
 	BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &RenderingTime);
 
-	if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
-		rate = BASS_ASIO_GetRate();
+	if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
+		ASIOInLatency = BASS_ASIO_GetLatency(TRUE);
+		if (BASS_ASIO_ErrorGetCode() != 0) ASIOInLatency = 0;
+
+		ASIOOutLatency = BASS_ASIO_GetLatency(FALSE);
+		if (BASS_ASIO_ErrorGetCode() != 0) ASIOOutLatency = 0;
+
+		ASIORate = BASS_ASIO_GetRate();
+		if (BASS_ASIO_ErrorGetCode() != 0) ASIORate = 0.0;
+
 		// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
-		if (rate != -1) {
-			inlatency = (double)BASS_ASIO_GetLatency(TRUE) * 1000.0 / rate;
-			CheckUpASIO(ERRORCODE, L"OMGetInputLatencyASIO", TRUE);
-			outlatency = (double)BASS_ASIO_GetLatency(FALSE) * 1000.0 / rate;
-			CheckUpASIO(ERRORCODE, L"OMGetOutputLatencyASIO", TRUE);
+		if (ASIORate != 0.0) {
+			inlatency = (ASIOInLatency != 0) ? ((DOUBLE)ASIOInLatency * 1000.0 / ASIORate) : 0.0;
+			outlatency = (ASIOOutLatency != 0) ? ((DOUBLE)ASIOOutLatency * 1000.0 / ASIORate) : 0.0;
 		}
 	}
+	else {
+		inlatency = 0.0;
+		outlatency = 0.0;
+	}
 
-	for (int i = 0; i <= 15; ++i) cvvalues[i] = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
+	for (int i = 0; i <= 15; ++i) {
+		int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
+		if (temp != -1) cvvalues[i] = temp;
+	}
 }
 
 void SendDebugDataToPipe() {
