@@ -100,8 +100,9 @@ static BASS_INFO info;
 static FLOAT sound_out_volume_float = 1.0;
 
 // Threads
-static volatile BOOL stop_thread = FALSE;
-static volatile BOOL stop_rtthread = FALSE;
+static BOOL block_bassinit = FALSE;
+static BOOL stop_thread = FALSE;
+static BOOL stop_rtthread = FALSE;
 static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
 static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 

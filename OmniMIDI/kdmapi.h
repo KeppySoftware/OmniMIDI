@@ -1,11 +1,14 @@
 // KDMAPI calls
 
 BOOL StreamHealthCheck(BOOL& Initialized) {
+	// If BASS is forbidden from initializing itself, then abort immediately
+	if (block_bassinit) return FALSE;
+
 	// Dummy call
 	BASS_ChannelIsActive(OMStream);
 
 	// Check if the call failed
-	if (BASS_ErrorGetCode() == 5 || ManagedSettings.LiveChanges) {
+	if ((BASS_ErrorGetCode() == 5 || ManagedSettings.LiveChanges)) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		PrintToConsole(FOREGROUND_RED, 1, "Restarting audio stream...");
 
@@ -136,12 +139,18 @@ void DoStartClient() {
 
 void DoStopClient() {
 	if (modm_closed == FALSE) {
+		// Prevent BASS from reinitializing itself
+		block_bassinit = TRUE;
+
 		// Close the threads and free up the allocated memory
 		FreeFonts();
 		FreeUpStream();
 		CloseThreads(TRUE);
 		FreeUpMemory();
 		modm_closed = TRUE;
+
+		// OK now it's fine
+		block_bassinit = FALSE;
 	}
 }
 

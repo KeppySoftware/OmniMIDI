@@ -36,16 +36,13 @@ void MT32SetInstruments() {
 DWORD WINAPI DebugThread(LPVOID lpV) {
 	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
 	while (true) {
-		if (MainThread) {
-			// Parse the debug info (Active voices, rendering time etc..)
-			ParseDebugData();
+		// Parse the debug info (Active voices, rendering time etc..)
+		ParseDebugData();
 
-			// Send the debug info to the pipes
-			SendDebugDataToPipe();
+		// Send the debug info to the pipes
+		SendDebugDataToPipe();
 
-			// Wait
-		}
-		else SendDummyDataToPipe();
+		// Wait
 		_DBGWAIT;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
@@ -271,26 +268,92 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	return data;
 }
 
-DWORD CALLBACK ASIOProcHP(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
-{
-	// If the app sent a SysEx Reset message, or if the user pressed INS,
-	// then reset the channels
-	if (reset_synth) {
-		reset_synth = 0;
-		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+// Extremely useful in case the thread is still not dead
+void CheckIfThreadClosed(HANDLE thread) {
+	// Check if the thread is still alive
+	PrintToConsole(FOREGROUND_RED, 1, "Checking if previous thread is still alive...");
+	DWORD result = WaitForSingleObject(thread, 0);
+
+	// Oh no it is!
+	if (thread != WAIT_OBJECT_0) {
+		// KILL IT. DO IT.
+		PrintToConsole(FOREGROUND_RED, 1, "It is! Killing...");
+		WaitForSingleObject(thread, INFINITE);
+		CloseHandle(thread);
+		thread = NULL;
+		PrintToConsole(FOREGROUND_RED, 1, "Killed! Starting thread...");
+		return;
 	}
 
-	// If the EventProcesser is disabled, then process the events from the audio thread instead
-	if (ManagedSettings.NotesCatcherWithAudio) _PlayBufDataChk();
-	// Else, open the EventProcesser thread
-	else if (!EPThread) InitializeNotesCatcherThread();
+	PrintToConsole(FOREGROUND_RED, 1, "It's not. Starting thread...");
+}
 
-	// Get the processed audio data, and send it to the ASIO device
-	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
+void CloseThread(HANDLE thread) {
+	WaitForSingleObject(thread, INFINITE);
+	CloseHandle(thread);
+	thread = NULL;
+}
 
-	// If no data is available, then return NULL
-	if (data == -1) return NULL;
-	return data;
+void CloseThreads(BOOL MainClose) {
+	stop_thread = TRUE;
+
+	// Wait for each thread to close, and free their handles
+	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
+	CloseThread(ATThread);
+
+	PrintToConsole(FOREGROUND_RED, 1, "Closing RT settings thread...");
+	CloseThread(RTSThread);
+
+	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
+	CloseThread(EPThread);
+
+	// If required, close the main thread as well
+	if (MainClose) {
+		stop_rtthread = TRUE;
+
+		PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
+		CloseThread(MainThread);
+	}
+
+	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
+	stop_rtthread = FALSE;
+	stop_thread = FALSE;
+}
+
+BOOL CreateThreads(BOOL startup) {
+	// Load the SoundFont on startup
+	if (startup == TRUE) SetEvent(load_sfevent);
+
+	if (!stop_rtthread) {
+		PrintToConsole(FOREGROUND_RED, 1, "Closing existing threads, if they're open...");
+		CloseThreads(FALSE);
+
+		PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
+		reset_synth = 0;
+
+		// Open the default threads
+		PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
+		CheckIfThreadClosed(RTSThread);
+		RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
+		SetThreadPriority(&RTSThread, prioval[ManagedSettings.DriverPriority]);
+		PrintToConsole(FOREGROUND_RED, 1, "Done...");
+
+		PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
+		CheckIfThreadClosed(ATThread);
+		ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
+		SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
+		PrintToConsole(FOREGROUND_RED, 1, "Done...");
+	}
+	else PrintToConsole(FOREGROUND_RED, 1, "Threads are supposed to be closed! Continuing...");
+
+	if (!DThread)
+	{
+		DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
+		SetThreadPriority(DThread, prioval[ManagedSettings.DriverPriority]);
+	}
+
+	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
+	return TRUE;
 }
 
 void InitializeStream(INT32 mixfreq) {
@@ -573,7 +636,7 @@ void InitializeASIO() {
 		CheckUpASIO(ERRORCODE, L"OMChanSetFreqASIO", TRUE);
 
 		// Enable the channels
-		BASS_ASIO_ChannelEnable(FALSE, 0, (HyperMode ? ASIOProcHP : ASIOProc), NULL);
+		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
 		CheckUpASIO(ERRORCODE, L"OMChanEnableASIO", TRUE);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
 		CheckUpASIO(ERRORCODE, L"OMChanJoinStereo", TRUE);
@@ -693,94 +756,6 @@ Retry:
 	CheckUp(ERRORCODE, L"OMVolFX", FALSE);
 
 	return init;
-}
-
-// Extremely useful in case the thread is still not dead
-void CheckIfThreadClosed(HANDLE thread) {
-	// Check if the thread is still alive
-	PrintToConsole(FOREGROUND_RED, 1, "Checking if previous thread is still alive...");
-	DWORD result = WaitForSingleObject(thread, 0);
-
-	// Oh no it is!
-	if (thread != WAIT_OBJECT_0) {
-		// KILL IT. DO IT.
-		PrintToConsole(FOREGROUND_RED, 1, "It is! Killing...");
-		WaitForSingleObject(thread, INFINITE);
-		CloseHandle(thread);
-		thread = NULL;
-		PrintToConsole(FOREGROUND_RED, 1, "Killed! Starting thread...");
-		return;
-	}
-
-	PrintToConsole(FOREGROUND_RED, 1, "It's not. Starting thread...");
-}
-
-void CloseThread(HANDLE thread) {
-	WaitForSingleObject(thread, INFINITE);
-	CloseHandle(thread);
-	thread = NULL;
-}
-
-void CloseThreads(BOOL MainClose) {
-	stop_thread = TRUE;
-
-	// Wait for each thread to close, and free their handles
-	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
-	CloseThread(ATThread);
-
-	PrintToConsole(FOREGROUND_RED, 1, "Closing RT settings thread...");
-	CloseThread(RTSThread);
-
-	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
-	CloseThread(EPThread);
-
-	// If required, close the main thread as well
-	if (MainClose) {
-		stop_rtthread = TRUE;
-
-		PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-		CloseThread(MainThread);
-	}
-
-	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
-	stop_rtthread = FALSE;
-	stop_thread = FALSE;
-}
-
-BOOL CreateThreads(BOOL startup) {
-	// Load the SoundFont on startup
-	if (startup == TRUE) SetEvent(load_sfevent);
-
-	if (!stop_rtthread) {
-		PrintToConsole(FOREGROUND_RED, 1, "Closing existing threads, if they're open...");
-		CloseThreads(FALSE);
-
-		PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
-		reset_synth = 0;
-
-		// Open the default threads
-		PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
-		CheckIfThreadClosed(RTSThread);
-		RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
-		SetThreadPriority(&RTSThread, prioval[ManagedSettings.DriverPriority]);
-		PrintToConsole(FOREGROUND_RED, 1, "Done...");
-
-		PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
-		CheckIfThreadClosed(ATThread);
-		ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
-		SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
-		PrintToConsole(FOREGROUND_RED, 1, "Done...");
-	}
-	else PrintToConsole(FOREGROUND_RED, 1, "Threads are supposed to be closed! Continuing...");
-
-	if (!DThread)
-	{
-		DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
-		SetThreadPriority(DThread, prioval[ManagedSettings.DriverPriority]);
-	}
-
-	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
-	return TRUE;
 }
 
 void LoadSoundFontsToStream() {
