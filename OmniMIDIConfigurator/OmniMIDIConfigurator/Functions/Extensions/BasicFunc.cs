@@ -1354,7 +1354,7 @@ namespace OmniMIDIConfigurator
             return ((MachineType)machineUint).ToString();
         }
 
-        public static Boolean ApplyWinMMWRPPatch(Boolean Is64Bit, Boolean DAWMode)
+        public static Boolean ApplyWinMMWRPPatch(Boolean DAWMode)
         {
             if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1) && Properties.Settings.Default.PatchInfoShow == true)
             {
@@ -1363,7 +1363,7 @@ namespace OmniMIDIConfigurator
                 MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "OmniMIDI - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            TryAgain:
+        TryAgain:
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             try
             {
@@ -1371,35 +1371,35 @@ namespace OmniMIDIConfigurator
                 WinMMDialog.Title = "Select an application to patch";
                 WinMMDialog.Multiselect = false;
                 WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
                 if (WinMMDialog.ShowDialog() == DialogResult.OK)
                 {
+                    String BitApp = GetAppCompiledMachineType(WinMMDialog.FileName);
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
-                    if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x86" && Is64Bit)
-                    {
-                        MessageBox.Show("You can't patch a 32-bit application with the 64-bit patch!", "OmniMIDI - Patch error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    }
-                    else if (GetAppCompiledMachineType(WinMMDialog.FileName) == "x64" && !Is64Bit)
-                    {
-                        MessageBox.Show("You can't patch a 64-bit application with the 32-bit patch!", "OmniMIDI - Patch error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    }
+
+                    RemovePatchFiles(WinMMDialog.FileName, true);
+                    if (BitApp == "x86")
+                        File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm32DAW : Properties.Resources.winmm32wrp);
+                    else if (BitApp == "x64")
+                        File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm64wrp);
                     else
                     {
-                        RemovePatchFiles(WinMMDialog.FileName, true);
-
-                        if (Is64Bit) File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm64wrp);
-                        else File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm32DAW : Properties.Resources.winmm32wrp);
-
-                        return true;
+                        ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nThe selected file is not a valid executable.\n\nPress OK to continue", false, null);
+                        WinMMDialog.Dispose();
+                        return false;
                     }
+
+                    WinMMDialog.Dispose();
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                WinMMDialog.Dispose();
                 ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
                 goto TryAgain;
             }
 
+            WinMMDialog.Dispose();
             return false;
         }
 

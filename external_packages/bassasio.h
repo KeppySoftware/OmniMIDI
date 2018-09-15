@@ -135,6 +135,7 @@ BOOL BASSASIODEF(BASS_ASIO_ChannelGetInfo)(BOOL input, DWORD channel, BASS_ASIO_
 BOOL BASSASIODEF(BASS_ASIO_ChannelReset)(BOOL input, int channel, DWORD flags);
 BOOL BASSASIODEF(BASS_ASIO_ChannelEnable)(BOOL input, DWORD channel, ASIOPROC *proc, void *user);
 BOOL BASSASIODEF(BASS_ASIO_ChannelEnableMirror)(DWORD channel, BOOL input2, DWORD channel2);
+BOOL BASSASIODEF(BASS_ASIO_ChannelEnableBASS)(BOOL input, DWORD channel, DWORD handle, BOOL join);
 BOOL BASSASIODEF(BASS_ASIO_ChannelJoin)(BOOL input, DWORD channel, int channel2);
 BOOL BASSASIODEF(BASS_ASIO_ChannelPause)(BOOL input, DWORD channel);
 DWORD BASSASIODEF(BASS_ASIO_ChannelIsActive)(BOOL input, DWORD channel);

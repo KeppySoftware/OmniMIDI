@@ -15,17 +15,14 @@ namespace OmniMIDIConfigurator
         public WinMMPatches()
         {
             InitializeComponent();
-
-            WMMW32.Enabled = true;
-            if (Environment.Is64BitOperatingSystem) WMMW64.Enabled = true;
         }
 
-        private void WMMW32_Click(object sender, EventArgs e)
+        private void WMMW_Click(object sender, EventArgs e)
         {
-            if (Functions.ApplyWinMMWRPPatch(false, false))
+            if (Functions.ApplyWinMMWRPPatch(false))
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "x86 stock patch installed!";
+                PatchStatusLabel.Text = "Stock patch installed!";
             }
             else
             {
@@ -34,40 +31,12 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private void WMMW64_Click(object sender, EventArgs e)
+        private void WMMD_Click(object sender, EventArgs e)
         {
-            if (Functions.ApplyWinMMWRPPatch(true, false))
+            if (Functions.ApplyWinMMWRPPatch(true))
             {
                 PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "x64 stock patch installed!";
-            }
-            else
-            {
-                PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error!";
-            }
-        }
-
-        private void WMMD32_Click(object sender, EventArgs e)
-        {
-            if (Functions.ApplyWinMMWRPPatch(false, true))
-            {
-                PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "x86 DAW patch installed!";
-            }
-            else
-            {
-                PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error!";
-            }
-        }
-
-        private void WMMD64_Click(object sender, EventArgs e)
-        {
-            if (Functions.ApplyWinMMWRPPatch(true, true))
-            {
-                PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "x64 DAW patch installed!";
+                PatchStatusLabel.Text = "DAW patch installed!";
             }
             else
             {
