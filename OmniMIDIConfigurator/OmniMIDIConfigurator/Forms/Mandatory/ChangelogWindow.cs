@@ -58,12 +58,10 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                WebClient client = new WebClient();
-                Stream stream = client.OpenRead(UpdateSystem.UpdateTextFile);
-                StreamReader reader = new StreamReader(stream);
-                String newestversion = reader.ReadToEnd();
+                Octokit.Release Release = UpdateSystem.UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
+
                 Version x = null;
-                Version.TryParse(newestversion.ToString(), out x);
+                Version.TryParse(Release.TagName, out x);
                 Version y = null;
                 Version.TryParse(version, out y);
 

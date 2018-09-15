@@ -54,7 +54,7 @@ It's free, easy-to-use for beginners, and it usually doesn't get as many updates
 # Requirements for the driver
 ## Required software
 You need this software installed before attempting to run the setup:
-- [Microsoft .NET Framework 4.0](https://www.microsoft.com/en-US/download/details.aspx?id=17718)
+- [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
 
 ## Minimum system requirements for standard MIDIs playback
 The minimum requirements for this synthesizer to work are the following:
@@ -167,4 +167,4 @@ BASS.NET wrapper by radio42: http://bass.radio42.com/
 <br />
 Costura.Fody by Simon Cropp: https://github.com/Fody
 <br />
-Discord RPC wrapper by nostrenz: https://github.com/nostrenz
+Octokit by GitHub Inc.: https://developer.github.com/v3/libraries/

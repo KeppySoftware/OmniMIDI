@@ -1282,15 +1282,12 @@ namespace OmniMIDIConfigurator
 
         private void SeeLatestChangelog_Click(object sender, EventArgs e)
         {
-            WebClient client = new WebClient();
-            Stream stream = client.OpenRead(UpdateSystem.UpdateTextFile);
-            StreamReader reader = new StreamReader(stream);
-            String newestversion = reader.ReadToEnd();
+            Octokit.Release Release = UpdateSystem.UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
             Version x = null;
-            Version.TryParse(newestversion.ToString(), out x);
+            Version.TryParse(Release.TagName, out x);
             try
             {
-                Program.DebugToConsole(false, String.Format("Showing changelog of release {0} of the driver.", newestversion.ToString()), null);
+                Program.DebugToConsole(false, String.Format("Showing changelog of release {0} of the driver.", Release.TagName), null);
                 ChangelogWindow frm = new ChangelogWindow(x.ToString(), false);
                 frm.ShowDialog(this);
                 frm.Dispose();
@@ -2029,6 +2026,12 @@ namespace OmniMIDIConfigurator
         {
             Program.DebugToConsole(false, "Showing Fody's main GitHub page.", null);
             Process.Start("https://github.com/Fody");
+        }
+
+        private void OctokitDev_Click(object sender, EventArgs e)
+        {
+            Program.DebugToConsole(false, "Showing Octokit's official page.", null);
+            Process.Start("https://developer.github.com/v3/libraries/");
         }
 
         private void KSUSJoinNow_Click(object sender, EventArgs e)

@@ -1,3 +1,5 @@
+#include <idp.iss>
+
 #define use_ie6
 #define use_dotnetfx40
 #define use_wic
@@ -16,7 +18,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '6.0.13.0'
+#define Version '6.0.14.0'
 
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -282,79 +284,61 @@ ExitSetupMessage=The MIDI driver hasn't been installed yet.%n%nAre you sure you 
 SetupWindowTitle=Setup - %1 {#Version}
 
 [Code]
-// shared code for installing the products
-#include "scripts\products.iss"
-// helper functions
-#include "scripts\products\stringversion.iss"
-#include "scripts\products\winversion.iss"
-#include "scripts\products\fileversion.iss"
-#include "scripts\products\dotnetfxversion.iss"
+// Code by David Rickard
+// Link: https://blogs.msdn.microsoft.com/davidrickard/2015/07/17/installing-net-framework-4-5-automatically-with-inno-setup/
 
-
-#ifdef use_dotnetfx40
-#include "scripts\products\dotnetfx40client.iss"
-#include "scripts\products\dotnetfx40full.iss"
-#endif
-
-#ifdef use_wic
-#include "scripts\products\wic.iss"
-#endif
-
-#ifdef use_msiproduct
-#include "scripts\products\msiproduct.iss"
-#endif
-
-procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+function Framework45IsNotInstalled(): boolean;
+var
+  bSuccess: Boolean;
+  regVersion: Cardinal;
 begin
-  if CurUninstallStep = usUninstall then
-  begin
-    if MsgBox('Do you want to delete your SoundFont lists too?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then 
-    begin
-        DelTree(ExpandConstant('{%USERPROFILE}\OmniMIDI'), True, True, True);
-        MsgBox('Your data has been deleted.', mbInformation, MB_OK);    
-    end;
+  Result := True;
+
+  bSuccess := RegQueryDWordValue(HKLM, 'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release', regVersion);
+  if (True = bSuccess) and (regVersion >= 378389) then begin
+    Result := False;
   end;
 end;
 
-function InitializeSetup(): boolean;
-
-  var ErrorCode: Integer;
-
+procedure InitializeWizard;
 begin
-
-  // Kill the watchdog before installing
-  ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
-  ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
-
-	// initialize windows version
-	initwinversion();
-
-#ifdef use_msi40
-	msi45('4.0'); // min allowed version is 4.0
-#endif
-
-#ifdef use_wic
-	wic();
-#endif
-
-	// if no .netfx 4.0 is found, install the client (smallest)
-#ifdef use_dotnetfx40
-	if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '')) then
-		dotnetfx40client();
-#endif
-
-	Result := true;
+  if Framework45IsNotInstalled() then
+  begin
+    idpAddFile('http://go.microsoft.com/fwlink/?LinkId=397707', ExpandConstant('{tmp}\NetFrameworkInstaller.exe'));
+    idpDownloadAfter(wpReady);
+  end;
 end;
 
-
-function InitializeUninstall(): Boolean;
-
-  var ErrorCode: Integer;
-
+procedure InstallFramework;
+var
+  StatusText: string;
+  ResultCode: Integer;
 begin
-  // Kill the watchdog before uninstalling
-  ShellExec('open','taskkill.exe','/f /im KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
-  ShellExec('open','tskill.exe',' KeppySynthWatchdog.exe','',SW_HIDE,ewNoWait,ErrorCode);
- 	Result := true;
+  StatusText := WizardForm.StatusLabel.Caption;
+  WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.5.2 for you...';
+  WizardForm.ProgressGauge.Style := npbstMarquee;
+  try
+    if not Exec(ExpandConstant('{tmp}\NetFrameworkInstaller.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+    begin
+      MsgBox('OmniIMDI failed to install .NET Framework 4.5.2!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
+    end;
+  finally
+    WizardForm.StatusLabel.Caption := StatusText;
+    WizardForm.ProgressGauge.Style := npbstNormal;
 
+    DeleteFile(ExpandConstant('{tmp}\NetFrameworkInstaller.exe'));
+  end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  case CurStep of
+    ssPostInstall:
+      begin
+        if Framework45IsNotInstalled() then
+        begin
+          InstallFramework();
+        end;
+      end;
+  end;
 end;

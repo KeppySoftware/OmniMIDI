@@ -17,7 +17,8 @@ namespace OmniMIDIConfigurator
         public extern static bool InternetGetConnectedState(out int connDescription, int ReservedValue);
 
         public static string ProductName = "OmniMIDI";
-        public static string UpdateTextFile = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/output/OmniMIDICurVer.txt";
+        public static Octokit.GitHubClient UpdateClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(ProductName));
+     
         public static string UpdateFile = "https://github.com/KeppySoftware/OmniMIDI/releases/download/{0}/OmniMIDIUpdate.exe";
         public static string UpdatePage = "https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}";
         public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
@@ -85,11 +86,8 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
-                    WebClient client = new WebClient();
-                    Stream stream = client.OpenRead(UpdateTextFile);
-                    StreamReader reader = new StreamReader(stream);
-                    String newestversion = reader.ReadToEnd();
-                    Process.Start(String.Format(UpdatePage, newestversion));
+                    Octokit.Release Release = UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
+                    Process.Start(String.Format(UpdatePage, Release.TagName));
                 }
                 catch (Exception ex)
                 {
@@ -154,14 +152,11 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
-                    WebClient client = new WebClient();
-                    client.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
-                    Stream stream = client.OpenRead(UpdateTextFile);
-                    StreamReader reader = new StreamReader(stream);
-                    String newestversion = reader.ReadToEnd();
+                    Octokit.Release Release = UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
                     FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateFileVersion);
+
                     Version DriverOnline = null;
-                    Version.TryParse(newestversion.ToString(), out DriverOnline);
+                    Version.TryParse(Release.TagName, out DriverOnline);
                     Version DriverCurrent = null;
                     Version.TryParse(Driver.FileVersion.ToString(), out DriverCurrent);
 
@@ -169,12 +164,12 @@ namespace OmniMIDIConfigurator
                     {
                         if (DriverCurrent < DriverOnline)
                         {
-                            Program.DebugToConsole(false, String.Format("New version found. ({0})", newestversion), null);
+                            Program.DebugToConsole(false, String.Format("New version found. ({0})", Release.TagName), null);
                             return "yes";
                         }
                         else
                         {
-                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                             return "no";
                         }
                     }
@@ -184,12 +179,12 @@ namespace OmniMIDIConfigurator
                         {
                             if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
                             {
-                                Program.DebugToConsole(false, String.Format("New version found. ({0})", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("New version found. ({0})", Release.TagName), null);
                                 return "yes";
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                 return "no";
                             }
                         }
@@ -201,24 +196,24 @@ namespace OmniMIDIConfigurator
                         {
                             if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
                             {
-                                Program.DebugToConsole(false, String.Format("New version found. ({0})", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("New version found. ({0})", Release.TagName), null);
                                 return "yes";
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                 return "no";
                             }
                         }
                         else
                         {
-                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                             return "no";
                         }
                     }
                     else
                     {
-                        Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                        Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                         return "no";
                     }
                 }
@@ -241,14 +236,11 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
-                    WebClient client = new WebClient();
-                    client.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
-                    Stream stream = client.OpenRead(UpdateTextFile);
-                    StreamReader reader = new StreamReader(stream);
-                    String newestversion = reader.ReadToEnd();
+                    Octokit.Release Release = UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
                     FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateFileVersion);
+
                     Version DriverOnline = null;
-                    Version.TryParse(newestversion.ToString(), out DriverOnline);
+                    Version.TryParse(Release.TagName, out DriverOnline);
                     Version DriverCurrent = null;
                     Version.TryParse(Driver.FileVersion.ToString(), out DriverCurrent);
 
@@ -258,12 +250,12 @@ namespace OmniMIDIConfigurator
                         {
                             if (DriverCurrent < DriverOnline)
                             {
-                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", Release.TagName), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", Release.TagName), null);
                                 TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                             }
                         }
@@ -273,18 +265,18 @@ namespace OmniMIDIConfigurator
                             {
                                 if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
                                 {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
+                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", Release.TagName), null);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
-                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", Release.TagName), null);
                                     TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                                 }
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", Release.TagName), null);
                                 TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                             }
                         }
@@ -294,18 +286,18 @@ namespace OmniMIDIConfigurator
                             {
                                 if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
                                 {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
+                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", Release.TagName), null);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
-                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                    Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", Release.TagName), null);
                                     TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                                 }
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("The user forced a reinstall/downgrade of the program. ({0})", Release.TagName), null);
                                 TriggerUpdateWindow(DriverCurrent, DriverOnline, Driver.FileVersion, forced, startup, isitfromthechangelogwindow);
                             }
                         }
@@ -316,12 +308,12 @@ namespace OmniMIDIConfigurator
                         {
                             if (DriverCurrent < DriverOnline)
                             {
-                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
+                                Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", Release.TagName), null);
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                 NoUpdates(startup, internetok);
                             }
                         }
@@ -331,18 +323,18 @@ namespace OmniMIDIConfigurator
                             {
                                 if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
                                 {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
+                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", Release.TagName), null);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
-                                    Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                    Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                     NoUpdates(startup, internetok);
                                 }
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                 NoUpdates(startup, internetok);
                             }
                         }
@@ -352,18 +344,18 @@ namespace OmniMIDIConfigurator
                             {
                                 if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
                                 {
-                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", newestversion), null);
-                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, newestversion, forced, startup, isitfromthechangelogwindow);
+                                    Program.DebugToConsole(false, String.Format("New version found. Requesting user to download it. ({0})", Release.TagName), null);
+                                    TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
                                 }
                                 else
                                 {
-                                    Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                    Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                     NoUpdates(startup, internetok);
                                 }
                             }
                             else
                             {
-                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", newestversion), null);
+                                Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
                                 NoUpdates(startup, internetok);
                             }
                         }

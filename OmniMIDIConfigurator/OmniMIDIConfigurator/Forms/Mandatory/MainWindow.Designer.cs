@@ -366,6 +366,7 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
+            this.OctokitDev = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -2866,7 +2867,8 @@
             this.HAPLink,
             this.BASSLink,
             this.BASSNetLink,
-            this.FodyCredit});
+            this.FodyCredit,
+            this.OctokitDev});
             this.menuItem45.Text = "Credits";
             // 
             // menuItem3
@@ -3968,6 +3970,12 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
+            // OctokitDev
+            // 
+            this.OctokitDev.Index = 4;
+            this.OctokitDev.Text = "Octokit.net by GitHub Inc.";
+            this.OctokitDev.Click += new System.EventHandler(this.OctokitDev_Click);
+            // 
             // OmniMIDIConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4374,6 +4382,7 @@
         public System.Windows.Forms.Panel LV2;
         public System.Windows.Forms.Panel LV1;
         private System.Windows.Forms.MenuItem BugReport;
+        private System.Windows.Forms.MenuItem OctokitDev;
     }
 }
 
