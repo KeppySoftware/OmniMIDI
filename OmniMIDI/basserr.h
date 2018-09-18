@@ -276,21 +276,42 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 	}
 }
 
+std::wstring GetErrorAsString(DWORD ErrorID)
+{
+	//Get the error message, if any.
+	if (ErrorID == 0)
+		return std::wstring(); //No error message has been recorded
+
+	LPWSTR messageBuffer = nullptr;
+	size_t size = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, ErrorID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&messageBuffer, 0, NULL);
+
+	std::wstring message(messageBuffer, size);
+
+	//Free the buffer.
+	LocalFree(messageBuffer);
+
+	return message;
+}
+
 void CrashMessage(LPCWSTR part) {
 	DWORD ErrorID = GetLastError();
 
-	std::wstringstream ErrorMessage;
-	ErrorMessage << L"An error has been detected while trying to execute the following action: " << part;
-	ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID;
-	ErrorMessage << L"\n\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
+	stop_rtthread = TRUE;
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Error at \"" << part << "\) - Fatal error during the execution of the driver." << std::endl;
 
-	MessageBox(NULL, ErrorMessage.str().c_str() , L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	if (ErrorID != 0) {
+		std::wstringstream ErrorMessage;
+		ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
+		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
+		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
+
+		MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	}
 
 	stop_thread = TRUE;
-	stop_rtthread = TRUE;
 
 	throw ErrorID;
 	exit(ErrorID);
