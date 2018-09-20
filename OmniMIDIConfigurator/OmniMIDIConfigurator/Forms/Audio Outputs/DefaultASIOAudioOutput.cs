@@ -168,6 +168,7 @@ namespace OmniMIDIConfigurator
     {
         public static string[] Supported =
         {
+            "ASIO2WASAPI",
             "ASIO4ALL",
             "ASUS Xonar D2 ASIO",
             "BEHRINGER USB AUDIO",
@@ -178,6 +179,7 @@ namespace OmniMIDIConfigurator
             "Magix Low Latency 2016",
             "Native Instruments Komplete Audio 6",
             "ReaRoute ASIO",
+            "Realtek ASIO",
             "USB Audio ASIO Driver",
             "USBPre 2.0 ASIO",
             "ZOOM R8 ASIO Driver"
@@ -192,8 +194,6 @@ namespace OmniMIDIConfigurator
         public static string[] Unsupported = 
         {
             "ASIO ADSP24(WDM)",
-            "ASIO2WASAPI",
-            "Realtek ASIO",
             "Voicemeeter"
         };
     }

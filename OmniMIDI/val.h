@@ -100,14 +100,14 @@ static BASS_INFO info;
 static FLOAT sound_out_volume_float = 1.0;
 
 // Threads
+static BOOL bass_initialized = FALSE;
 static BOOL block_bassinit = FALSE;
 static BOOL stop_thread = FALSE;
-static BOOL stop_rtthread = FALSE;
 static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
 static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
-static HANDLE MainThread = NULL, ATThread = NULL, RTSThread = NULL, EPThread = NULL, DThread = NULL;
-static ULONG MainThreadAddress = NULL, ATThreadAddress = NULL, RTSThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
+static HANDLE HealthThread = NULL, ATThread = NULL, RTSThread = NULL, EPThread = NULL, DThread = NULL;
+static ULONG HealthThreadAddress = NULL, ATThreadAddress = NULL, RTSThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
 
 // Mandatory values
 static HINSTANCE hinst = NULL;							// main DLL handle

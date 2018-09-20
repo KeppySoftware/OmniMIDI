@@ -307,16 +307,14 @@ void CloseThreads(BOOL MainClose) {
 	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
 	CloseThread(EPThread);
 
-	// If required, close the main thread as well
-	if (MainClose) {
-		stop_rtthread = TRUE;
-
+	if (MainClose)
+	{
+		// Close main as well
 		PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-		CloseThread(MainThread);
+		CloseThread(HealthThread);
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
-	stop_rtthread = FALSE;
 	stop_thread = FALSE;
 }
 
@@ -324,27 +322,24 @@ BOOL CreateThreads(BOOL startup) {
 	// Load the SoundFont on startup
 	if (startup == TRUE) SetEvent(load_sfevent);
 
-	if (!stop_rtthread) {
-		PrintToConsole(FOREGROUND_RED, 1, "Closing existing threads, if they're open...");
-		CloseThreads(FALSE);
+	PrintToConsole(FOREGROUND_RED, 1, "Closing existing threads, if they're open...");
+	CloseThreads(FALSE);
 
-		PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
-		reset_synth = 0;
+	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
+	reset_synth = 0;
 
-		// Open the default threads
-		PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
-		CheckIfThreadClosed(RTSThread);
-		RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
-		SetThreadPriority(&RTSThread, prioval[ManagedSettings.DriverPriority]);
-		PrintToConsole(FOREGROUND_RED, 1, "Done...");
+	// Open the default threads
+	PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
+	CheckIfThreadClosed(RTSThread);
+	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
+	SetThreadPriority(&RTSThread, prioval[ManagedSettings.DriverPriority]);
+	PrintToConsole(FOREGROUND_RED, 1, "Done...");
 
-		PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
-		CheckIfThreadClosed(ATThread);
-		ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
-		SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
-		PrintToConsole(FOREGROUND_RED, 1, "Done...");
-	}
-	else PrintToConsole(FOREGROUND_RED, 1, "Threads are supposed to be closed! Continuing...");
+	PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
+	CheckIfThreadClosed(ATThread);
+	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioThreadHP : AudioThread), NULL, 0, (LPDWORD)ATThreadAddress);
+	SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
+	PrintToConsole(FOREGROUND_RED, 1, "Done...");
 
 	if (!DThread)
 	{

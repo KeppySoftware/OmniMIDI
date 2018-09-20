@@ -29,77 +29,52 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 		return FALSE;
 	}
 	else {
-		if (stop_thread && !stop_rtthread) CreateThreads(FALSE);			
+		if (stop_thread) CreateThreads(FALSE);			
 	}
 	
 	return TRUE;
 }
 
-DWORD WINAPI DriverHeart(LPVOID lpV) {
+DWORD WINAPI StreamHealth(LPVOID lpV) {
 	try {
-		// The current process is banned, exit
-		if (BannedSystemProcess() == TRUE) {
-			ExitThread(0);
-			return 0;
+		// Check system
+		PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
+
+		while (!stop_thread) {
+			// Start the timer, which calculates 
+			// how much time it takes to do its stuff
+			if (!HyperMode) start1 = TimeNow();
+
+			// Check if the threads and streams are still alive
+			StreamHealthCheck(bass_initialized);
+
+			// Load custom instrument values from the registry
+			LoadCustomInstruments();
+
+			// Check the current output volume
+			CheckVolume(FALSE);
+
+			// I SLEEP
+			Sleep(10);
 		}
-		else {
-			BOOL Initialized = FALSE;
-			while (!Initialized) {
-				// Load the settings, and allocate the memory for the EVBuffer
-				LoadSettings();
-				AllocateMemory();
 
-				// Load the BASS functions
-				if (!BASSLoadedToMemory) BASSLoadedToMemory = load_bassfuncs();
-
-				// Initialize the BASS output device, and set up the streams
-				SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-				if (InitializeBASS(FALSE)) {
-					SetUpStream();
-					LoadSoundFontsToStream();
-
-					// Done, now initialize the threads
-					Initialized = CreateThreads(TRUE);
-				}
-			}
-
-			// Check system
-			PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
-			while (!stop_rtthread) {
-				// Start the timer, which calculates 
-				// how much time it takes to do its stuff
-				if (!HyperMode) start1 = TimeNow();
-
-				// Check if the threads and streams are still alive
-				StreamHealthCheck(Initialized);
-
-				// Load custom instrument values from the registry
-				LoadCustomInstruments();
-
-				// Check the current output volume
-				CheckVolume(FALSE);
-
-				// I SLEEP
-				Sleep(10);
-			}
-			// Release the SoundFonts and the stream
-			FreeFonts();
-			FreeUpStream();
-		}
+		// Release the SoundFonts and the stream
+		FreeFonts();
+		FreeUpStream();
 	}
 	catch (...) {
-		CrashMessage(L"DriverHeartThread");
+		CrashMessage(L"HealthThread");
 	}
 
 	// Close the thread
-	PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-	CloseHandle(MainThread);
-	MainThread = NULL;
+	PrintToConsole(FOREGROUND_RED, 1, "Closing health thread...");
+	CloseHandle(HealthThread);
+	HealthThread = NULL;
 	return 0;
 }
 
 void DoStartClient() {
-	if (modm_closed == TRUE) {
+	if (modm_closed == TRUE && BannedSystemProcess() != TRUE) {
 		// Load the selected driver priority value from the registry
 		HKEY hKey;
 		long lResult;
@@ -122,10 +97,31 @@ void DoStartClient() {
 			TEXT("SoundFontEvent")  // object name
 		);
 
+		// Initialize the stream
+		bass_initialized = FALSE;
+		while (!bass_initialized) {
+			// Load the settings, and allocate the memory for the EVBuffer
+			LoadSettings();
+			AllocateMemory();
+
+			// Load the BASS functions
+			if (!BASSLoadedToMemory) BASSLoadedToMemory = load_bassfuncs();
+
+			// Initialize the BASS output device, and set up the streams
+			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+			if (InitializeBASS(FALSE)) {
+				SetUpStream();
+				LoadSoundFontsToStream();
+
+				// Done, now initialize the threads
+				bass_initialized = CreateThreads(TRUE);
+			}
+		}
+
 		// Create the main thread
-		CheckIfThreadClosed(MainThread);
-		MainThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DriverHeart, NULL, 0, (LPDWORD)MainThreadAddress);
-		SetThreadPriority(MainThread, prioval[ManagedSettings.DriverPriority]);
+		CheckIfThreadClosed(HealthThread);
+		HealthThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)StreamHealth, NULL, 0, (LPDWORD)HealthThreadAddress);
+		SetThreadPriority(HealthThread, prioval[ManagedSettings.DriverPriority]);
 
 		// Wait for the SoundFonts to load, then close the event's handle
 		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)

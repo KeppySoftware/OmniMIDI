@@ -297,8 +297,6 @@ std::wstring GetErrorAsString(DWORD ErrorID)
 void CrashMessage(LPCWSTR part) {
 	DWORD ErrorID = GetLastError();
 
-	stop_rtthread = TRUE;
-
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 	std::cout << "(Error at \"" << part << "\) - Fatal error during the execution of the driver." << std::endl;
 

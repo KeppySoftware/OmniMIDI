@@ -643,7 +643,7 @@ void CheckVolume(BOOL Closing) {
 		DWORD dwSize = sizeof(DWORD);
 		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI", 0, KEY_ALL_ACCESS, &hKey);
 
-		if (!Closing && !stop_thread && !stop_rtthread) {
+		if (!Closing && !stop_thread) {
 			if (ManagedSettings.VolumeMonitor == 1 && ManagedSettings.CurrentEngine > AUDTOWAV) {
 				float levels[2];
 				DWORD left, right;
