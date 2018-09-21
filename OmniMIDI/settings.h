@@ -2,6 +2,26 @@
 OmniMIDI settings loading system
 */
 
+void CloseThread(HANDLE thread) {
+	WaitForSingleObject(thread, INFINITE);
+	CloseHandle(thread);
+	thread = NULL;
+}
+
+void ReloadThreadsForLiveSettings() {
+	stop_thread = TRUE;
+
+	// Wait for each thread to close, and free their handles
+	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
+	CloseThread(ATThread);
+
+	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
+	CloseThread(EPThread);
+
+	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
+	stop_thread = FALSE;
+}
+
 void DLLLoadError(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
@@ -264,7 +284,7 @@ void FreeUpMemory() {
 	sndbf = NULL;
 }
 
-void AllocateMemory() {
+void AllocateMemory(BOOL restart) {
 	try {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
 
@@ -318,10 +338,16 @@ void AllocateMemory() {
 		// Begin allocating the EVBuffer
 		if (evbuf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer already allocated.");
 		else {
+			if (restart) {
+				PrintToConsole(FOREGROUND_BLUE, 1, "Freeing EV buffer...");
+				memset(evbuf, 0, sizeof(evbuf));
+				free(evbuf);
+				evbuf = NULL;
+				PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
+			}
+
 			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
-			evbuf = (evbuf_t *)malloc((unsigned long long)EvBufferSize * sizeof(evbuf_t));
-			PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing EV buffer...");
-			memset(evbuf, 0, sizeof(evbuf_t));
+			evbuf = (evbuf_t *)calloc((unsigned long long)EvBufferSize, sizeof(evbuf_t));
 			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
 			EVBuffReady = TRUE;
 		}
@@ -329,10 +355,16 @@ void AllocateMemory() {
 		// Done, now allocate the buffer for the ".WAV mode"
 		if (sndbf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer already allocated.");
 		else {
+			if (restart) {
+				PrintToConsole(FOREGROUND_BLUE, 1, "Freeing audio buffer...");
+				memset(sndbf, 0, sizeof(sndbf));
+				free(sndbf);
+				sndbf = NULL;
+				PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
+			}
+
 			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
-			sndbf = (float *)malloc(256.0f * sizeof(float));
-			PrintToConsole(FOREGROUND_BLUE, 1, "Zeroing audio buffer...");
-			memset(sndbf, 0, sizeof(float));
+			sndbf = (float *)calloc(256.0f, sizeof(float));
 			PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
 		}
 	}
@@ -492,7 +524,7 @@ void LoadSettingsRT()
 			ChVolumeStruct.fTime = 0.0f;
 			ChVolumeStruct.lCurve = 0;
 			BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-			CheckUp(ERRORCODE, L"VolFXSet", FALSE);
+			CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
 		}
 
 		// Check if the value is different from the temporary one
@@ -508,7 +540,7 @@ void LoadSettingsRT()
 			HyperMode = TempHP;
 
 			// Close the threads for safety reasons
-			stop_thread = TRUE;
+			ReloadThreadsForLiveSettings();
 
 			// Check if "Hyper-playback" mode has been enabled
 			if (HyperMode) {

@@ -54,12 +54,6 @@ static TCHAR * BASSErrorCode[48] =
 	L"BASS_ERROR_BUSY",																							// Error 46
 };
 
-static TCHAR * BASSWASAPIErrorCode[2] =
-{
-	L"BASS_ERROR_WASAPI",																						// Error 5200
-	L"BASS_ERROR_WASAPI_BUFFER",																				// Error 5201
-};
-
 static TCHAR * BASSErrorDesc[48] =
 {
 	L"Unknown error.",																							// Description of error -1
@@ -209,13 +203,12 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 
 	lstrcat(main, engine);
 	lstrcat(main, L" encountered the following error: ");
-	if (e >= 0 && e <= 48) {
+
+	int SizeOfBASSErrorsArray = (sizeof(BASSErrorCode) / sizeof(*BASSErrorCode));
+
+	if (e >= 0 && e <= SizeOfBASSErrorsArray) {
 		lstrcat(main, BASSErrorCode[e]);
 		basserrconsole(FOREGROUND_RED, BASSErrorCode[e], BASSErrorCode[e]);
-	}
-	else if (e >= 5000 && e <= 5001) {
-		lstrcat(main, BASSWASAPIErrorCode[e - 5000]);
-		basserrconsole(FOREGROUND_RED, BASSWASAPIErrorCode[e - 5000], BASSErrorDesc[e - 5000]);
 	}
 
 	if (showerror) {
@@ -238,11 +231,8 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 		}
 
 		lstrcat(main, L"\n\nExplanation: ");
-		if (e >= 0 && e <= 48) {
+		if (e >= 0 && e <= SizeOfBASSErrorsArray) {
 			lstrcat(main, BASSErrorDesc[e]);
-		}
-		else if (e >= 5000 && e <= 5001) {
-			lstrcat(main, BASSWASAPIErrorDesc[e - 5000]);
 		}
 
 		if (mode == 1) {
@@ -251,10 +241,8 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 		}
 		else {
 			lstrcat(main, L"\n\nPossible fixes:\n");
-			if (e >= 0 && e <= 48)
+			if (e >= 0 && e <= SizeOfBASSErrorsArray)
 				lstrcat(main, BASSErrorFix[e]);
-			else if (e >= 5000 && e <= 5001)
-				lstrcat(main, BASSWASAPIErrorFix[e - 5000]);
 		}
 
 		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");

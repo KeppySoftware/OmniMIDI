@@ -85,7 +85,7 @@ void NTSleep(__int64 usec) {
 }
 
 // Predefined sleep values, useful for redundancy
-#define _DBGWAIT NTSleep(-1000)												// Normal wait
+#define _DBGWAIT NTSleep(-10000)											// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)											// Very slow wait

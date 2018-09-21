@@ -15,8 +15,7 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 		// It did, reload the settings and reallocate the memory for the buffer
 		CloseThreads(FALSE);
 		LoadSettings();
-		FreeUpMemory();
-		AllocateMemory();
+		AllocateMemory(TRUE);
 
 		// Initialize the BASS output device, and set up the streams
 		if (InitializeBASS(TRUE)) {
@@ -102,7 +101,7 @@ void DoStartClient() {
 		while (!bass_initialized) {
 			// Load the settings, and allocate the memory for the EVBuffer
 			LoadSettings();
-			AllocateMemory();
+			AllocateMemory(FALSE);
 
 			// Load the BASS functions
 			if (!BASSLoadedToMemory) BASSLoadedToMemory = load_bassfuncs();
@@ -275,7 +274,7 @@ VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 		// Fallback to the registry
 		SettingsManagedByClient = FALSE;
 		if (RTSThread == NULL) {
-			RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? RTSettingsHP : RTSettings), NULL, 0, (LPDWORD)RTSThreadAddress);
+			RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SettingsLiveCheck, NULL, 0, (LPDWORD)RTSThreadAddress);
 			SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
 		}
 		return;
@@ -305,7 +304,7 @@ VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	ChVolumeStruct.fTime = 0.0f;
 	ChVolumeStruct.lCurve = 0;
 	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(ERRORCODE, L"KSVolFXSet", FALSE);
+	CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
 
 	// Set the rendering time threshold, if the driver's own panic system is disabled
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
