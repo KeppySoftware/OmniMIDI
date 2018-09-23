@@ -106,8 +106,8 @@ static BOOL stop_thread = FALSE;
 static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
 static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
-static HANDLE HealthThread = NULL, ATThread = NULL, RTSThread = NULL, EPThread = NULL, DThread = NULL;
-static ULONG HealthThreadAddress = NULL, ATThreadAddress = NULL, RTSThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
+static HANDLE HealthThread = NULL, ATThread = NULL, EPThread = NULL, DThread = NULL;
+static ULONG HealthThreadAddress = NULL, ATThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
 
 // Mandatory values
 static HINSTANCE hinst = NULL;							// main DLL handle

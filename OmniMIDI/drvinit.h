@@ -100,36 +100,6 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 	return 0;
 }
 
-DWORD WINAPI SettingsLiveCheck(LPVOID lpV) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing settings thread...");
-	try {
-		while (!stop_thread) {
-			// If the app is using KDMAPI to manage all the functions,
-			// then terminate the thread.
-			if (SettingsManagedByClient) break;
-
-			// Start the timer, which calculates 
-			// how much time it takes to do its stuff
-			start3 = TimeNow();
-
-			LoadSettingsRT();			// Load real-time settings
-			keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
-			WatchdogCheck();			// Check current active voices, rendering time, etc..
-			mixervoid();				// Send dB values to the mixer
-			RevbNChor();				// Check if custom reverb/chorus values are enabled
-
-			_VLWAIT;
-		}
-	}
-	catch (...) {
-		CrashMessage(L"RTSettingsThread");
-	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing settings thread...");
-	CloseHandle(RTSThread);
-	RTSThread = NULL;
-	return 0;
-}
-
 void InitializeNotesCatcherThread() {
 	// If the EventProcesser thread is not valid, then open a new one
 	if (EPThread == NULL) {
@@ -143,6 +113,9 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
+				// Check if HyperMode has been disabled
+				if (HyperMode) break;
+
 				// Start the timer, which calculates 
 				// how much time it takes to do its stuff
 				start2 = TimeNow();
@@ -173,9 +146,11 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 	catch (...) {
 		CrashMessage(L"AudioEngineThread");
 	}
+
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
 	CloseHandle(ATThread);
 	ATThread = NULL;
+
 	return 0;
 }
 
@@ -184,6 +159,9 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
+				// Check if HyperMode has been disabled
+				if (!HyperMode) break;
+
 				// If the app sent a SysEx Reset message, or if the user pressed INS,
 				// then reset the channels
 				if (reset_synth) {
@@ -209,9 +187,11 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 	catch (...) {
 		CrashMessage(L"AudioEngineThreadHP");
 	}
+
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
 	CloseHandle(ATThread);
 	ATThread = NULL;
+
 	return 0;
 }
 
@@ -271,9 +251,6 @@ void CloseThreads(BOOL MainClose) {
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
 	CloseThread(ATThread);
 
-	PrintToConsole(FOREGROUND_RED, 1, "Closing RT settings thread...");
-	CloseThread(RTSThread);
-
 	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
 	CloseThread(EPThread);
 
@@ -297,13 +274,6 @@ BOOL CreateThreads(BOOL startup) {
 
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	reset_synth = 0;
-
-	// Open the default threads
-	PrintToConsole(FOREGROUND_RED, 1, "Opening RT settings thread...");
-	CheckIfThreadClosed(RTSThread);
-	RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SettingsLiveCheck, NULL, 0, (LPDWORD)RTSThreadAddress);
-	SetThreadPriority(&RTSThread, prioval[ManagedSettings.DriverPriority]);
-	PrintToConsole(FOREGROUND_RED, 1, "Done...");
 
 	PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
 	CheckIfThreadClosed(ATThread);
@@ -417,6 +387,25 @@ void InitializeBASSEnc() {
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
+}
+
+void FreeUpBASS() {
+	// Deinitialize the BASS stream, then the output and free the library, since we need to restart it
+	BASS_StreamFree(OMStream);
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+	BASS_Stop();
+	PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
+	BASS_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+}
+
+void FreeUpBASSASIO() {
+	// Free up ASIO before doing anything
+	BASS_ASIO_Stop();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+	BASS_ASIO_Free();
+	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
+	ASIOReady = FALSE;
 }
 
 /*
@@ -563,13 +552,6 @@ void InitializeWAVEnc() {
 }
 
 void InitializeASIO() {
-	// Free up ASIO before doing anything
-	BASS_ASIO_Stop();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
-	BASS_ASIO_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
-	ASIOReady = FALSE;
-
 	// Chec how many ASIO devices are available
 	if (ASIODevicesCount() < 1) {
 		// If no devices are available, return an error, and switch to WASAPI
@@ -649,11 +631,8 @@ bool InitializeBASS(BOOL restart) {
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 	}
 
-	// Deinitialize the BASS output and free it, since we need to restart it
-	BASS_Stop();
-	PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
-	BASS_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+	FreeUpBASSASIO();
+	FreeUpBASS();
 
 Retry:
 	// Initialize BASS
@@ -672,19 +651,9 @@ Retry:
 		InitializeASIO();
 
 	if (!OMStream) {
-		// Free BASSASIO
-		BASS_ASIO_Stop();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
-		BASS_ASIO_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
-
-		// Free the stream
-		BASS_StreamFree(OMStream);
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
-
-		// Release the BASS output
-		BASS_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+		// Free BASS and BASSASIO
+		FreeUpBASSASIO();
+		FreeUpBASS();
 
 		// The synth failed to open the output
 		OMStream = 0;

@@ -8,20 +8,6 @@ void CloseThread(HANDLE thread) {
 	thread = NULL;
 }
 
-void ReloadThreadsForLiveSettings() {
-	stop_thread = TRUE;
-
-	// Wait for each thread to close, and free their handles
-	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
-	CloseThread(ATThread);
-
-	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
-	CloseThread(EPThread);
-
-	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
-	stop_thread = FALSE;
-}
-
 void DLLLoadError(LPCWSTR dll) {
 	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
@@ -462,148 +448,155 @@ void LoadSettings()
 	}
 }
 
-void LoadSettingsRT()
-{
-	try {
-		// Initialize the temp values
-		DWORD TempSC, TempOV, TempHP, TempMV;
-		BOOL TempESFX, TempNOFF1, TempISR, TempSI, TempDNFO, TempDMN;
+void LoadSettingsRT() {
+	if (!SettingsManagedByClient) {
+		try {
+			// Initialize the temp values
+			DWORD TempSC, TempOV, TempHP, TempMV;
+			BOOL TempESFX, TempNOFF1, TempISR, TempSI, TempDNFO, TempDMN;
 
-		// Load the settings
-		int zero = 0;
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
+			// Load the settings
+			int zero = 0;
+			HKEY hKey;
+			long lResult;
+			DWORD dwType = REG_DWORD;
+			DWORD dwSize = sizeof(DWORD);
 
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&TempHP, &dwSize);
-		RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
-		RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&TempESFX, &dwSize);
-		RegQueryValueEx(hKey, L"NoteOff1", NULL, &dwType, (LPBYTE)&TempNOFF1, &dwSize);
-		RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
-		RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
-		RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxRenderingTime, &dwSize);
-		RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&ManagedSettings.DefaultSFList, &dwSize);
-		RegQueryValueEx(hKey, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&TempDNFO, &dwSize);
-		RegQueryValueEx(hKey, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&ManagedSettings.FullVelocityMode, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVelIgnore, &dwSize);
-		RegQueryValueEx(hKey, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&ManagedSettings.LimitTo88Keys, &dwSize);
-		RegQueryValueEx(hKey, L"LiveChanges", NULL, &dwType, (LPBYTE)&ManagedSettings.LiveChanges, &dwSize);
-		RegQueryValueEx(hKey, L"MinVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MinVelIgnore, &dwSize);
-		RegQueryValueEx(hKey, L"MT32Mode", NULL, &dwType, (LPBYTE)&ManagedSettings.MT32Mode, &dwSize);
-		if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
-		else ManagedSettings.NotesCatcherWithAudio = FALSE;
-		RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
-		RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&TempMV, &dwSize);
-		RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&ManagedSettings.PreloadSoundFonts, &dwSize);
-		RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&ManagedSettings.SleepStates, &dwSize);
-		RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&TempSI, &dwSize);
-		RegQueryValueEx(hKey, L"SincConv", NULL, &dwType, (LPBYTE)&TempSC, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreSysEx", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreSysEx, &dwSize);
-		RegQueryValueEx(hKey, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&TempISR, &dwSize);
-		RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&TempDMN, &dwSize);
-		RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&TempOV, &dwSize);
-		RegQueryValueEx(hKey, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
-		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(hKey, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
-		else CloseStreamMidiOutClose = TRUE;
-		RegCloseKey(hKey);
+			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
+			RegQueryValueEx(hKey, L"HyperPlayback", NULL, &dwType, (LPBYTE)&TempHP, &dwSize);
+			RegQueryValueEx(hKey, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
+			RegQueryValueEx(hKey, L"IgnoreAllEvents", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreAllEvents, &dwSize);
+			RegQueryValueEx(hKey, L"IgnoreNotesBetweenVel", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreNotesBetweenVel, &dwSize);
+			RegQueryValueEx(hKey, L"EnableSFX", NULL, &dwType, (LPBYTE)&TempESFX, &dwSize);
+			RegQueryValueEx(hKey, L"NoteOff1", NULL, &dwType, (LPBYTE)&TempNOFF1, &dwSize);
+			RegQueryValueEx(hKey, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
+			RegQueryValueEx(hKey, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
+			RegQueryValueEx(hKey, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxRenderingTime, &dwSize);
+			RegQueryValueEx(hKey, L"DefaultSFList", NULL, &dwType, (LPBYTE)&ManagedSettings.DefaultSFList, &dwSize);
+			RegQueryValueEx(hKey, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&TempDNFO, &dwSize);
+			RegQueryValueEx(hKey, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&ManagedSettings.FullVelocityMode, &dwSize);
+			RegQueryValueEx(hKey, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVelIgnore, &dwSize);
+			RegQueryValueEx(hKey, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&ManagedSettings.LimitTo88Keys, &dwSize);
+			RegQueryValueEx(hKey, L"LiveChanges", NULL, &dwType, (LPBYTE)&ManagedSettings.LiveChanges, &dwSize);
+			RegQueryValueEx(hKey, L"MinVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MinVelIgnore, &dwSize);
+			RegQueryValueEx(hKey, L"MT32Mode", NULL, &dwType, (LPBYTE)&ManagedSettings.MT32Mode, &dwSize);
+			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(hKey, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
+			else ManagedSettings.NotesCatcherWithAudio = FALSE;
+			RegQueryValueEx(hKey, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
+			RegQueryValueEx(hKey, L"MaxVoices", NULL, &dwType, (LPBYTE)&TempMV, &dwSize);
+			RegQueryValueEx(hKey, L"PreloadSoundFonts", NULL, &dwType, (LPBYTE)&ManagedSettings.PreloadSoundFonts, &dwSize);
+			RegQueryValueEx(hKey, L"SleepStates", NULL, &dwType, (LPBYTE)&ManagedSettings.SleepStates, &dwSize);
+			RegQueryValueEx(hKey, L"SincInter", NULL, &dwType, (LPBYTE)&TempSI, &dwSize);
+			RegQueryValueEx(hKey, L"SincConv", NULL, &dwType, (LPBYTE)&TempSC, &dwSize);
+			RegQueryValueEx(hKey, L"IgnoreSysEx", NULL, &dwType, (LPBYTE)&ManagedSettings.IgnoreSysEx, &dwSize);
+			RegQueryValueEx(hKey, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&TempISR, &dwSize);
+			RegQueryValueEx(hKey, L"DontMissNotes", NULL, &dwType, (LPBYTE)&TempDMN, &dwSize);
+			RegQueryValueEx(hKey, L"OutputVolume", NULL, &dwType, (LPBYTE)&TempOV, &dwSize);
+			RegQueryValueEx(hKey, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
+			if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(hKey, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
+			else CloseStreamMidiOutClose = TRUE;
+			RegCloseKey(hKey);
 
-		// Stuff that works so don't bother
-		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
-		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
+			// Stuff that works so don't bother
+			if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
+			if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
-		// Volume
-		if (TempOV != ManagedSettings.OutputVolume) {
-			ManagedSettings.OutputVolume = TempOV;
-			sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
-			ChVolumeStruct.fCurrent = 1.0f;
-			ChVolumeStruct.fTarget = sound_out_volume_float;
-			ChVolumeStruct.fTime = 0.0f;
-			ChVolumeStruct.lCurve = 0;
-			BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-			CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
-		}
-
-		// Check if the value is different from the temporary one
-		if (TempDMN != ManagedSettings.DontMissNotes) {
-			// It is different, reset the synth
-			// to avoid stuck notes or crashes
-			ManagedSettings.DontMissNotes = TempDMN;
-			ResetSynth(1);
-		}
-
-		// Check if the value is different from the temporary one
-		if (TempHP != HyperMode) {
-			HyperMode = TempHP;
-
-			// Close the threads for safety reasons
-			ReloadThreadsForLiveSettings();
-
-			// Check if "Hyper-playback" mode has been enabled
-			if (HyperMode) {
-
-				/* Not required in the real-time settings, but you can remove the comment if you want
-
-				// It's enabled, do some beeps to notify the user
-				Beep(510, 100);
-				Beep(640, 100);
-				Beep(760, 100);
-				Beep(1000, 100);
-
-				*/
-
-				// Assign the pointers to the specific hyper-playback functions
-				_PrsData = ParseDataHyper;
-				_PlayBufData = PlayBufferedDataHyper;
-				_PlayBufDataChk = PlayBufferedDataChunkHyper;
+			// Volume
+			if (TempOV != ManagedSettings.OutputVolume) {
+				ManagedSettings.OutputVolume = TempOV;
+				sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
+				ChVolumeStruct.fCurrent = 1.0f;
+				ChVolumeStruct.fTarget = sound_out_volume_float;
+				ChVolumeStruct.fTime = 0.0f;
+				ChVolumeStruct.lCurve = 0;
+				BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+				CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
 			}
-			else {
-				// It's disabled, assign the pointers to the normal functions
-				_PrsData = ParseData;
-				_PlayBufData = PlayBufferedData;
-				_PlayBufDataChk = PlayBufferedDataChunk;
+
+			// Check if the value is different from the temporary one
+			if (TempDMN != ManagedSettings.DontMissNotes) {
+				// It is different, reset the synth
+				// to avoid stuck notes or crashes
+				ManagedSettings.DontMissNotes = TempDMN;
+				ResetSynth(1);
+			}
+
+			// Check if the value is different from the temporary one
+			if (TempHP != HyperMode) {
+				HyperMode = TempHP;
+
+				// Close the threads for safety reasons
+				stop_thread = TRUE;
+
+				// Check if "Hyper-playback" mode has been enabled
+				if (HyperMode) {
+
+					/* Not required in the real-time settings, but you can remove the comment if you want
+
+					// It's enabled, do some beeps to notify the user
+					Beep(510, 100);
+					Beep(640, 100);
+					Beep(760, 100);
+					Beep(1000, 100);
+
+					*/
+
+					// Assign the pointers to the specific hyper-playback functions
+					_PrsData = ParseDataHyper;
+					_PlayBufData = PlayBufferedDataHyper;
+					_PlayBufDataChk = PlayBufferedDataChunkHyper;
+
+					PrintToConsole(FOREGROUND_RED, 1, "Hyper-playback mode enabled.");
+				}
+				else {
+					// It's disabled, assign the pointers to the normal functions
+					_PrsData = ParseData;
+					_PlayBufData = PlayBufferedData;
+					_PlayBufDataChk = PlayBufferedDataChunk;
+					PrintToConsole(FOREGROUND_RED, 1, "Hyper-playback mode disabled.");
+				}
+
+				// Restart threads
+				stop_thread = FALSE;
+			}
+
+			// Load the settings by comparing the temporary values to the driver's ones, to prevent overhead
+			if (TempESFX != ManagedSettings.EnableSFX) {
+				ManagedSettings.EnableSFX = TempESFX;
+				BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+			}
+
+			if (TempNOFF1 != ManagedSettings.NoteOff1) {
+				ManagedSettings.NoteOff1 = TempNOFF1;
+				BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+			}
+
+			if (TempISR != ManagedSettings.IgnoreSysReset) {
+				ManagedSettings.IgnoreSysReset = TempNOFF1;
+				BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+			}
+
+			if (TempSI != ManagedSettings.SincInter || TempSC != ManagedSettings.SincConv) {
+				ManagedSettings.SincInter = TempSI;
+				ManagedSettings.SincConv = TempSC;
+				BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+			}
+
+			if (TempDNFO != ManagedSettings.DisableNotesFadeOut) {
+				ManagedSettings.DisableNotesFadeOut = TempDNFO;
+				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+			}
+
+			if (TempMV != ManagedSettings.MaxVoices) {
+				ManagedSettings.MaxVoices = TempMV;
+				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+
 			}
 		}
-
-		// Load the settings by comparing the temporary values to the driver's ones, to prevent overhead
-		if (TempESFX != ManagedSettings.EnableSFX) {
-			ManagedSettings.EnableSFX = TempESFX;
-			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+		catch (...) {
+			CrashMessage(L"LoadSettingsRT");
 		}
-
-		if (TempNOFF1 != ManagedSettings.NoteOff1) {
-			ManagedSettings.NoteOff1 = TempNOFF1;
-			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		}
-
-		if (TempISR != ManagedSettings.IgnoreSysReset) {
-			ManagedSettings.IgnoreSysReset = TempNOFF1;
-			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		}
-
-		if (TempSI != ManagedSettings.SincInter || TempSC != ManagedSettings.SincConv) {
-			ManagedSettings.SincInter = TempSI;
-			ManagedSettings.SincConv = TempSC;
-			BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-		}
-
-		if (TempDNFO != ManagedSettings.DisableNotesFadeOut) {
-			ManagedSettings.DisableNotesFadeOut = TempDNFO;
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		}
-
-		if (TempMV != ManagedSettings.MaxVoices) {
-			ManagedSettings.MaxVoices = TempMV;
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-
-		}
-	}
-	catch (...) {
-		CrashMessage(L"LoadSettingsRT");
 	}
 }
 

@@ -28,13 +28,13 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 		return FALSE;
 	}
 	else {
-		if (stop_thread) CreateThreads(FALSE);			
+		if (stop_thread || ATThread == NULL) CreateThreads(FALSE);
 	}
-	
+
 	return TRUE;
 }
 
-DWORD WINAPI StreamHealth(LPVOID lpV) {
+DWORD WINAPI StreamHealthAndSettings(LPVOID lpV) {
 	try {
 		// Check system
 		PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
@@ -44,11 +44,16 @@ DWORD WINAPI StreamHealth(LPVOID lpV) {
 			// how much time it takes to do its stuff
 			if (!HyperMode) start1 = TimeNow();
 
+			// Do registry stuff
+			LoadSettingsRT();			// Load real-time settings
+			LoadCustomInstruments();	// Load custom instrument values from the registry
+			keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
+			WatchdogCheck();			// Check current active voices, rendering time, etc..
+			mixervoid();				// Send dB values to the mixer
+			RevbNChor();				// Check if custom reverb/chorus values are enabled
+
 			// Check if the threads and streams are still alive
 			StreamHealthCheck(bass_initialized);
-
-			// Load custom instrument values from the registry
-			LoadCustomInstruments();
 
 			// Check the current output volume
 			CheckVolume(FALSE);
@@ -62,7 +67,7 @@ DWORD WINAPI StreamHealth(LPVOID lpV) {
 		FreeUpStream();
 	}
 	catch (...) {
-		CrashMessage(L"HealthThread");
+		CrashMessage(L"SettingsAndHealthThread");
 	}
 
 	// Close the thread
@@ -119,7 +124,7 @@ void DoStartClient() {
 
 		// Create the main thread
 		CheckIfThreadClosed(HealthThread);
-		HealthThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)StreamHealth, NULL, 0, (LPDWORD)HealthThreadAddress);
+		HealthThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)StreamHealthAndSettings, NULL, 0, (LPDWORD)HealthThreadAddress);
 		SetThreadPriority(HealthThread, prioval[ManagedSettings.DriverPriority]);
 
 		// Wait for the SoundFonts to load, then close the event's handle
@@ -273,10 +278,6 @@ VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 		// The app returned an invalid pointer, or "nullptr" on purpose
 		// Fallback to the registry
 		SettingsManagedByClient = FALSE;
-		if (RTSThread == NULL) {
-			RTSThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SettingsLiveCheck, NULL, 0, (LPDWORD)RTSThreadAddress);
-			SetThreadPriority(RTSThread, prioval[ManagedSettings.DriverPriority]);
-		}
 		return;
 	}
 
