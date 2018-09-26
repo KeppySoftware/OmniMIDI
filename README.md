@@ -107,16 +107,41 @@ But anyway, here is the version without the KSDirect API. [Click me for the dire
 
 # ASIO support details
 ## Supported ASIO devices
-- ASIO4ALL *(No issues.)*
+- ADJ ASIO *(No issues.)*
+- ASIO Lynx *(The output gets unstable sometimes, but works.)*
+- ASIO POD HD *(No issues.)*
+- ASIO PreSonus FireStudio *(No issues.)*
+- ASIO2WASAPI *(No issues, but useless.)*
+- ASIO4ALL *(No issues, good for Black MIDIs.)*
+- Alpha ASIO *(No issues.)*
+- AudioBox ASIO Driver *(No issues.)*
+- Creative ASIO *(No issues.)*
+- DENON DJ ASIO Driver *(No issues.)*
+- E-MU ASIO *(No issues.)*
 - FL Studio ASIO *(No issues, but you can NOT change the buffer size without restarting the stream.)*
 - FlexASIO *(Only one issue, the pitch of the output isn't right.)*
-- JACK ASIO Driver *(No issues.)*
-- Native Instruments Komplete Audio 6 *(No issues.)*
+- Focusrite USB 2.0 Audio Driver *(No issues.)*
+- JACK ASIO Driver *(No issues, good for Black MIDIs.)*
+- M Audio Delta ASIO *(No issues.)*
+- M-Audio FireWire ASIO *(No issues.)*
+- M-Track Quad ASIO Driver *(No issues.)*
+- Native Instruments Komplete Audio 6 *(No issues, good for Black MIDIs.)*
+- Pioneer CDJ/DDJ ASIO *(No issues.)*
+- Realtek ASIO *(No issues, good for Black MIDIs.)*
+- SB Audigy 2 ZS ASIO *(No issues.)*
+- Scarlet 6i6 USB *(No issues.)*
+- Steinberg UR44 *(No issues.)*
+- Traktor Audio 10 *(No issues.)*
 - USB Audio ASIO Driver *(No issues.)*
-- Voicemeeter Virtual ASIO *(Will throw a BASS_ERROR_NOTAVAIL exception but still work)*
+- Voicemeeter Virtual ASIO *(No issues.)*
+- Xonar Essence One ASIO *(No issues.)*
+- Xonar Essence ST ASIO *(No issues.)*
+- Yamaha Steinberg UBS ASIO *(No issues.)*
+- ZOOM H Series ASIO *(No issues.)*
 ## Unsupported ASIO devices
-- ASIO2WASAPI *(Throws a BASS_ERROR_UNKNOWN exception)*
-- Realtek ASIO *(Throws a BASS_ERROR_UNKNOWN exception)*
+- ASIO ADSP24(WDM) *(The computer hangs.)*
+- ASIO for PHASE 22/28 *(BSoD.)*
+- JRiver Media Center *(OmniMIDI is not allowed to use this interface.)*
 ## Untested ASIO devices
 - ASIO Digidesign Driver
 - ASIO Digidesign Driver Mbox2
