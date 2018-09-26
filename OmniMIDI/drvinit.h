@@ -489,7 +489,7 @@ LONG ASIODetectID() {
 	}
 }
 
-void InitializeBASSFinal() {
+void InitializeBASSOutput() {
 	// Final BASS initialization, set some settings
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
@@ -501,6 +501,12 @@ void InitializeBASSFinal() {
 		// And finally, open the stream
 		BASS_ChannelPlay(OMStream, false);
 		CheckUp(ERRORCODE, L"Channel Play", TRUE);
+		
+		// If using WASAPI, disable playback buffering
+		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
+			CheckUp(ERRORCODE, L"Disable Stream Buffering", TRUE);
+		}
 	}
 }
 
@@ -561,7 +567,7 @@ void InitializeASIO() {
 		PrintToConsole(FOREGROUND_RED, 1, "ASIO devices not available, using WASAPI...");
 		BASS_Init(AudioOutput, ManagedSettings.AudioFrequency, BASS_DEVICE_STEREO, 0, NULL);
 		CheckUp(ERRORCODE, L"BASS Lib Initialization", TRUE);
-		InitializeBASSFinal();
+		InitializeBASSOutput();
 		return;
 	}
 
@@ -645,7 +651,7 @@ Retry:
 		InitializeWAVEnc();
 	// Else, initialize the default stream
 	else if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
-		InitializeBASSFinal();
+		InitializeBASSOutput();
 	// Or else, initialize ASIO
 	else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
 		InitializeASIO();

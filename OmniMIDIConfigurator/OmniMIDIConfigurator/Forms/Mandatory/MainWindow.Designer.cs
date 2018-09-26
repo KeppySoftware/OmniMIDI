@@ -269,6 +269,7 @@
             this.BASSNetLink = new System.Windows.Forms.MenuItem();
             this.FodyCredit = new System.Windows.Forms.MenuItem();
             this.menuItem45 = new System.Windows.Forms.MenuItem();
+            this.OctokitDev = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.BugReport = new System.Windows.Forms.MenuItem();
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
@@ -366,7 +367,6 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
-            this.OctokitDev = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1423,7 +1423,7 @@
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
             ".WAV mode",
-            "DirectSound",
+            "DirectX Audio",
             "ASIO",
             "WASAPI"});
             this.AudioEngBox.Location = new System.Drawing.Point(81, 20);
@@ -2871,6 +2871,12 @@
             this.OctokitDev});
             this.menuItem45.Text = "Credits";
             // 
+            // OctokitDev
+            // 
+            this.OctokitDev.Index = 4;
+            this.OctokitDev.Text = "Octokit.net by GitHub Inc.";
+            this.OctokitDev.Click += new System.EventHandler(this.OctokitDev_Click);
+            // 
             // menuItem3
             // 
             this.menuItem3.Index = 3;
@@ -3969,12 +3975,6 @@
             this.VolumeBoost.Index = 2;
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
-            // 
-            // OctokitDev
-            // 
-            this.OctokitDev.Index = 4;
-            this.OctokitDev.Text = "Octokit.net by GitHub Inc.";
-            this.OctokitDev.Click += new System.EventHandler(this.OctokitDev_Click);
             // 
             // OmniMIDIConfiguratorMain
             // 

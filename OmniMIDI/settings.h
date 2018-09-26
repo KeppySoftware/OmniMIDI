@@ -591,7 +591,6 @@ void LoadSettingsRT() {
 			if (TempMV != ManagedSettings.MaxVoices) {
 				ManagedSettings.MaxVoices = TempMV;
 				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-
 			}
 		}
 		catch (...) {

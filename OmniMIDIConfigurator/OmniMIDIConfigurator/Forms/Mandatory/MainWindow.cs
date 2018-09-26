@@ -1601,7 +1601,11 @@ namespace OmniMIDIConfigurator
 
         private void WhatIsXAudio_Click(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\n.WAV mode allows you to export the audio to WAV files. More info by clicking \"What's .WAV mode?\".\n\nDirectSound is deprecated, and I will not give support for it.\nIf you're encountering issues while using it, switch to WASAPI or ASIO.\n\nIf you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\nLastly, there is also WASAPI, which is capable of achieving low latencies with little CPU usage, thanks to its integration with the Windows kernel.",
+            MessageBox.Show("Engines are used by the driver to interface with your computer's sound card and output the audio stream to your speakers or headphones.\n\n" +
+                ".WAV mode allows you to export the audio to WAV files. More info by clicking \"What's .WAV mode?\".\n\n" +
+                "DirectX Audio is deprecated, and I will not give support for it.\nIf you're encountering issues while using it, switch to WASAPI or ASIO.\n\n" +
+                "If you are planning on doing high-end professional audio editing, you should choose ASIO, which achieves really low latencies at the cost of a bit more CPU usage.\n\n" +
+                "Lastly, there is also WASAPI, which is capable of achieving low latencies with little CPU usage, thanks to its integration with the Windows kernel.",
                 "What are engines?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
