@@ -532,28 +532,23 @@ void LoadSettingsRT() {
 				if (HyperMode) {
 
 					/* Not required in the real-time settings, but you can remove the comment if you want
-
 					// It's enabled, do some beeps to notify the user
 					Beep(510, 100);
 					Beep(640, 100);
 					Beep(760, 100);
 					Beep(1000, 100);
-
 					*/
 
 					// Assign the pointers to the specific hyper-playback functions
 					_PrsData = ParseDataHyper;
 					_PlayBufData = PlayBufferedDataHyper;
 					_PlayBufDataChk = PlayBufferedDataChunkHyper;
-
-					PrintToConsole(FOREGROUND_RED, 1, "Hyper-playback mode enabled.");
 				}
 				else {
 					// It's disabled, assign the pointers to the normal functions
 					_PrsData = ParseData;
 					_PlayBufData = PlayBufferedData;
 					_PlayBufDataChk = PlayBufferedDataChunk;
-					PrintToConsole(FOREGROUND_RED, 1, "Hyper-playback mode disabled.");
 				}
 
 				// Restart threads
@@ -591,6 +586,7 @@ void LoadSettingsRT() {
 			if (TempMV != ManagedSettings.MaxVoices) {
 				ManagedSettings.MaxVoices = TempMV;
 				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+
 			}
 		}
 		catch (...) {

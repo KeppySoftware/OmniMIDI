@@ -45,12 +45,14 @@ DWORD WINAPI StreamHealthAndSettings(LPVOID lpV) {
 			if (!HyperMode) start1 = TimeNow();
 
 			// Do registry stuff
+
 			LoadSettingsRT();			// Load real-time settings
 			LoadCustomInstruments();	// Load custom instrument values from the registry
 			keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
 			WatchdogCheck();			// Check current active voices, rendering time, etc..
 			mixervoid();				// Send dB values to the mixer
 			RevbNChor();				// Check if custom reverb/chorus values are enabled
+
 
 			// Check if the threads and streams are still alive
 			StreamHealthCheck(bass_initialized);
