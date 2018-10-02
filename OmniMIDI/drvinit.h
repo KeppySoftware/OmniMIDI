@@ -46,8 +46,8 @@ DWORD WINAPI DebugThread(LPVOID lpV) {
 		_DBGWAIT;
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
-	CloseHandle(DThread);
-	DThread = NULL;
+	CloseHandle(DThread.ThreadHandle);
+	DThread.ThreadHandle = NULL;
 	return 0;
 }
 
@@ -74,8 +74,8 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 		CrashMessage(L"NotesCatcherThread");
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
-	CloseHandle(EPThread);
-	EPThread = NULL;
+	CloseHandle(EPThread.ThreadHandle);
+	EPThread.ThreadHandle = NULL;
 	return 0;
 }
 
@@ -95,16 +95,16 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 		CrashMessage(L"NotesCatcherThreadHP");
 	}
 	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
-	CloseHandle(EPThread);
-	EPThread = NULL;
+	CloseHandle(EPThread.ThreadHandle);
+	EPThread.ThreadHandle = NULL;
 	return 0;
 }
 
 void InitializeNotesCatcherThread() {
 	// If the EventProcesser thread is not valid, then open a new one
-	if (EPThread == NULL) {
-		EPThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? EventsProcesserHP : EventsProcesser), NULL, 0, (LPDWORD)EPThreadAddress);
-		SetThreadPriority(EPThread, prioval[ManagedSettings.DriverPriority]);
+	if (EPThread.ThreadHandle == NULL) {
+		EPThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? EventsProcesserHP : EventsProcesser), NULL, 0, (LPDWORD)EPThread.ThreadAddress);
+		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
 }
 
@@ -137,7 +137,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
-				else if (!EPThread) InitializeNotesCatcherThread();
+				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
 				_FWAIT;
 			}
@@ -148,8 +148,8 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
-	CloseHandle(ATThread);
-	ATThread = NULL;
+	CloseHandle(ATThread.ThreadHandle);
+	ATThread.ThreadHandle = NULL;
 
 	return 0;
 }
@@ -178,7 +178,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
-				else if (!EPThread) InitializeNotesCatcherThread();
+				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
 				_FWAIT;
 			}
@@ -189,8 +189,8 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
-	CloseHandle(ATThread);
-	ATThread = NULL;
+	CloseHandle(ATThread.ThreadHandle);
+	ATThread.ThreadHandle = NULL;
 
 	return 0;
 }
@@ -214,7 +214,7 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 		_PlayBufDataChk();
 	}
 	// Else, open the EventProcesser thread
-	else if (!EPThread) InitializeNotesCatcherThread();
+	else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
 	// Get the processed audio data, and send it to the ASIO device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
@@ -249,16 +249,16 @@ void CloseThreads(BOOL MainClose) {
 
 	// Wait for each thread to close, and free their handles
 	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
-	CloseThread(ATThread);
+	CloseThread(ATThread.ThreadHandle);
 
 	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
-	CloseThread(EPThread);
+	CloseThread(EPThread.ThreadHandle);
 
 	if (MainClose)
 	{
 		// Close main as well
 		PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
-		CloseThread(HealthThread);
+		CloseThread(HealthThread.ThreadHandle);
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
@@ -276,15 +276,15 @@ BOOL CreateThreads(BOOL startup) {
 	reset_synth = 0;
 
 	PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
-	CheckIfThreadClosed(ATThread);
-	ATThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioEngineHP : AudioEngine), NULL, 0, (LPDWORD)ATThreadAddress);
-	SetThreadPriority(ATThread, prioval[ManagedSettings.DriverPriority]);
+	CheckIfThreadClosed(ATThread.ThreadHandle);
+	ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioEngineHP : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
+	SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	PrintToConsole(FOREGROUND_RED, 1, "Done...");
 
-	if (!DThread)
+	if (!DThread.ThreadHandle)
 	{
-		DThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThreadAddress);
-		SetThreadPriority(DThread, prioval[ManagedSettings.DriverPriority]);
+		DThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThread.ThreadAddress);
+		SetThreadPriority(DThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
 
 	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
@@ -348,11 +348,11 @@ void InitializeBASSEnc() {
 	LPCWSTR result2 = stemp.c_str();
 
 	// Open the registry key, and check the current output path set in the configurator
-	HKEY hKey = 0;
 	DWORD cbValueLength = sizeof(confpath);
 	DWORD dwType = REG_SZ;
-	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-	if (RegQueryValueEx(hKey, L"AudToWAVFolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+
+	if (RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
 		// If the folder exists, then set the path to that
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
 	}
@@ -361,7 +361,6 @@ void InitializeBASSEnc() {
 		PathAppend(encpath, confpath);
 		PathAppend(encpath, result2);
 	}
-	RegCloseKey(hKey);
 
 	// Convert some values for the following MsgBox
 	_bstr_t b(encpath);
@@ -462,16 +461,12 @@ LONG ASIODetectID() {
 		char OutputName[MAX_PATH] = "None";
 
 		// Initialize registry values
-		HKEY hKey;
-		LSTATUS lResultA, lResultB;
-		DWORD dwType = REG_SZ;
-		DWORD dwSize = sizeof(OutputName);
+		DWORD ASType = REG_SZ;
+		DWORD ASSize = sizeof(OutputName);
 
 		// Open the registry, and get the name of the selected ASIO device
-		lResultA = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_READ, &hKey);
-		lResultB = RegQueryValueExA(hKey, "ASIOOutput", NULL, &dwType, (LPBYTE)&OutputName, &dwSize);
-
-		RegCloseKey(hKey);
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+		RegQueryValueExA(Configuration.Address, "ASIOOutput", NULL, &ASType, (LPBYTE)&OutputName, &ASSize);
 
 		// Iterate through the available audio devices
 		for (DWORD CurrentDevice = 0; BASS_ASIO_GetDeviceInfo(CurrentDevice, &info); CurrentDevice++)

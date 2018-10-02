@@ -28,7 +28,7 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 		return FALSE;
 	}
 	else {
-		if (stop_thread || ATThread == NULL) CreateThreads(FALSE);
+		if (stop_thread || ATThread.ThreadHandle == NULL) CreateThreads(FALSE);
 	}
 
 	return TRUE;
@@ -74,22 +74,16 @@ DWORD WINAPI StreamHealthAndSettings(LPVOID lpV) {
 
 	// Close the thread
 	PrintToConsole(FOREGROUND_RED, 1, "Closing health thread...");
-	CloseHandle(HealthThread);
-	HealthThread = NULL;
+	CloseHandle(HealthThread.ThreadHandle);
+	HealthThread.ThreadHandle = NULL;
 	return 0;
 }
 
 void DoStartClient() {
 	if (modm_closed == TRUE && BannedSystemProcess() != TRUE) {
 		// Load the selected driver priority value from the registry
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
-		int One = 0;
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
-		RegCloseKey(hKey);
+		OpenRegistryKey(MainKey, L"Software\\OmniMIDI");
+		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
 		// Parse the app name, and start the debug pipe to the debug window
 		AppName();
@@ -125,9 +119,9 @@ void DoStartClient() {
 		}
 
 		// Create the main thread
-		CheckIfThreadClosed(HealthThread);
-		HealthThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)StreamHealthAndSettings, NULL, 0, (LPDWORD)HealthThreadAddress);
-		SetThreadPriority(HealthThread, prioval[ManagedSettings.DriverPriority]);
+		CheckIfThreadClosed(HealthThread.ThreadHandle);
+		HealthThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)StreamHealthAndSettings, NULL, 0, (LPDWORD)HealthThread.ThreadAddress);
+		SetThreadPriority(HealthThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 
 		// Wait for the SoundFonts to load, then close the event's handle
 		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)
@@ -151,6 +145,13 @@ void DoStopClient() {
 		FreeUpMemory();
 		modm_closed = TRUE;
 
+		// Close registry keys
+		CloseRegistryKey(MainKey);
+		CloseRegistryKey(Configuration);
+		CloseRegistryKey(Channels);
+		CloseRegistryKey(ChanOverride);
+		CloseRegistryKey(Watchdog);
+
 		// OK now it's fine
 		block_bassinit = FALSE;
 	}
@@ -168,12 +169,9 @@ char const* WINAPI ReturnKDMAPIVer() {
 
 BOOL WINAPI IsKDMAPIAvailable()  {
 	// Parse the current state of the KDMAPI
-	HKEY hKey;
-	DWORD dwType = REG_DWORD;
-	DWORD dwSize = sizeof(DWORD);
-	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_READ, &hKey);
-	long lResult = RegQueryValueEx(hKey, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KDMAPIEnabled, &dwSize);
-	RegCloseKey(hKey);
+	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+
+	long lResult = RegQueryValueEx(Configuration.Address, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KDMAPIEnabled, &dwSize);
 
 	// If the state is not available or it hasn't been set, keep it enabled by default
 	if (lResult != ERROR_SUCCESS) 

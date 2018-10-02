@@ -171,22 +171,12 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		WORD VID = 0x0000;
 		WORD PID = 0x0000;
 
-		// Load settings
-		HKEY hKey;
-		long lResult;
-		DWORD dwType = REG_DWORD;
-		DWORD dwSize = sizeof(DWORD);
-		DWORD dwSizeW = sizeof(SynthNameW);
-
-		lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-		RegQueryValueEx(hKey, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
-		RegQueryValueEx(hKey, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-		RegQueryValueEx(hKey, L"VID", NULL, &dwType, (LPBYTE)&VID, &dwSize);
-		RegQueryValueEx(hKey, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
-
-		dwType = REG_SZ;
-		RegQueryValueEx(hKey, L"SynthName", NULL, &dwType, (LPBYTE)&SynthNameW, &dwSizeW);
-		RegCloseKey(hKey);
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+		RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&VID, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)&SynthNameW, &SNSize);
 
 		// If the synth type ID is bigger than the size of the synth types array,
 		// set it automatically to MOD_MIDIPORT

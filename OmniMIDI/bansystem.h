@@ -44,17 +44,13 @@ BOOL BlackListSystem(){
 			exit(0);
 		}
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
-			HKEY hKey;
-			long lResult;
-			DWORD dwType = REG_DWORD;
-			DWORD dwSize = sizeof(DWORD);
-			lResult = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_ALL_ACCESS, &hKey);
-			RegQueryValueEx(hKey, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&ManagedSettings.NoBlacklistMessage, &dwSize);
-			RegCloseKey(hKey);
+			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+			RegQueryValueEx(Configuration.Address, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&ManagedSettings.NoBlacklistMessage, &dwSize);
 
 			PathAppend(userblacklistdirectory, _T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist"));
 			std::wifstream file(userblacklistdirectory);
 			OutputDebugString(userblacklistdirectory);
+
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
 				if (_tcsicmp(modulename, userstring) == 0 || _tcsicmp(fullmodulename, userstring) == 0) {

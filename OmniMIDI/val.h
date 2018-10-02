@@ -81,6 +81,10 @@ static evbuf_t * evbuf;						// The buffer
 static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
 static volatile LONGLONG eventcount = 0;	// Total events present in the buffer
+static ULONGLONG EvBufferSize = 4096;
+static ULONGLONG TempEvBufferSize = EvBufferSize;
+static DWORD EvBufferMultRatio = 1;
+static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
 static DWORD_PTR OMCallback = NULL;
@@ -93,21 +97,47 @@ static BOOL BASSLoadedToMemory = FALSE;
 static volatile BOOL modm_closed = TRUE;
 static volatile BOOL reset_synth = FALSE;
 static HANDLE load_sfevent = NULL;
+static BOOL ASIOReady = FALSE;
+static BOOL EVBuffReady = FALSE;
+static BOOL KDMAPIEnabled = FALSE;
+static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 
 // Stream
 static HSTREAM OMStream = NULL;
 static BASS_INFO info;
 static FLOAT sound_out_volume_float = 1.0;
 
+// Registry system
+static LSTATUS KEY_READY = ERROR_SUCCESS;
+static LSTATUS KEY_CLOSED = ERROR_INVALID_HANDLE;
+
+typedef struct RegKey
+{
+	HKEY Address = NULL;
+	LSTATUS Status = KEY_CLOSED;
+};
+
+static RegKey MainKey, Configuration, Channels, ChanOverride, Watchdog;
+
+static DWORD Blank = 0;
+static DWORD dwType = REG_DWORD, dwSize = sizeof(DWORD);
+static DWORD qwType = REG_QWORD, qwSize = sizeof(QWORD);
+static DWORD SNType = REG_SZ, SNSize = sizeof(SynthNameW);
+
 // Threads
+typedef struct Thread
+{
+	HANDLE ThreadHandle = NULL;
+	ULONG ThreadAddress = NULL;
+};
+
 static BOOL bass_initialized = FALSE;
 static BOOL block_bassinit = FALSE;
 static BOOL stop_thread = FALSE;
 static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
 static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
-static HANDLE HealthThread = NULL, ATThread = NULL, EPThread = NULL, DThread = NULL;
-static ULONG HealthThreadAddress = NULL, ATThreadAddress = NULL, EPThreadAddress = NULL, DThreadAddress = NULL;
+static Thread HealthThread, ATThread, EPThread, DThread;
 
 // Mandatory values
 static HINSTANCE hinst = NULL;							// main DLL handle
@@ -118,17 +148,6 @@ static TCHAR modulenameW[MAX_PATH];		// debug info
 static TCHAR * modulenameWp;			// debug info
 static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
-
-// Potato
-static BOOL ASIOReady = FALSE;
-static BOOL EVBuffReady = FALSE;
-static BOOL KDMAPIEnabled = FALSE;
-static FLOAT RenderingTime = 0.0f;
-static ULONGLONG EvBufferSize = 4096;
-static ULONGLONG TempEvBufferSize = EvBufferSize;
-static DWORD EvBufferMultRatio = 1;
-static DWORD GetEvBuffSizeFromRAM = 0;
-static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 
 // Main values
 static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
@@ -144,6 +163,7 @@ static FLOAT *sndbf;						// AudToWAV
 static BOOL SettingsManagedByClient = FALSE;
 static Settings ManagedSettings;
 static DebugInfo ManagedDebugInfo;
+static FLOAT RenderingTime = 0.0f;
 
 // Priority values
 static DWORD prioval[7] =
