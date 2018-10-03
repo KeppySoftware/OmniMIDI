@@ -128,12 +128,23 @@ namespace OmniMIDIMixerWindow
         {
             try
             {
-                int left = Convert.ToInt32(Debug.GetValue("leftvol", 0));
-                int right = Convert.ToInt32(Debug.GetValue("rightvol", 0));
+                // Something is messed up, fix it
+                if (Debug.GetValueKind("leftvol") != RegistryValueKind.DWord || 
+                    Debug.GetValueKind("rightvol") != RegistryValueKind.DWord)
+                {
+                    Debug.SetValue("leftvol", 0, RegistryValueKind.DWord);
+                    Debug.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                }
+
+                // Parse the volume, and make a percentage out of it
+                int left = Convert.ToInt32(Debug.GetValue("leftvol", 1));
+                int right = Convert.ToInt32(Debug.GetValue("rightvol", 1));
                 var perc = ((double)((left + right) / 2) / 32768) * 100;
 
-                VolLevel.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
+                // Print the percentage
+                VolLevel.Text = String.Format("{0}%", Math.Round(perc, 0));
 
+                // Check if mono rendering is enabled, and change the view accordingly
                 if (Convert.ToInt32(Settings.GetValue("MonoRendering", 0)) == 1) {
                     Size UseSize = new Size(39, 5);
                     LLab.Size = new Size(39, 16);
@@ -154,6 +165,7 @@ namespace OmniMIDIMixerWindow
                     MeterFunc.AverageMeter(left, right);
                 }
 
+                // I SLEEP x3x
                 System.Threading.Thread.Sleep(1);
             }
             catch (Exception ex)
@@ -325,7 +337,7 @@ namespace OmniMIDIMixerWindow
 
         private void showTheConfiguratorWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\keppysynth\\KeppySynthConfigurator.exe");
+            System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIConfigurator.exe");
         }
 
         private void VolumeToolTip(string channel, TrackBar trackbar)

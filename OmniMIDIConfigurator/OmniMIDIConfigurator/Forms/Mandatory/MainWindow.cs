@@ -2088,6 +2088,13 @@ namespace OmniMIDIConfigurator
                         alreadydone = false;
                     }
 
+                    if (Mixer.GetValueKind("leftvol") != RegistryValueKind.DWord ||
+                        Mixer.GetValueKind("rightvol") != RegistryValueKind.DWord)
+                    {
+                        Mixer.SetValue("leftvol", 0, RegistryValueKind.DWord);
+                        Mixer.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                    }
+
                     int left = Convert.ToInt32(Mixer.GetValue("leftvol"));
                     int right = Convert.ToInt32(Mixer.GetValue("rightvol"));
                     var perc = ((double)((left + right) / 2) / 32768) * 100;
