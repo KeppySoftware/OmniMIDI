@@ -431,7 +431,7 @@ void LoadSettings()
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(Configuration.Address, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
 		else CloseStreamMidiOutClose = TRUE;
 
-		RegSetValueEx(Configuration.Address, L"LiveChanges", 0, dwType, (LPBYTE)0, sizeof(0));
+		RegSetValueEx(Configuration.Address, L"LiveChanges", 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
 
 		// Stuff that works, don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
@@ -659,7 +659,7 @@ void CheckVolume(BOOL Closing) {
 		OpenRegistryKey(MainKey, L"Software\\OmniMIDI");
 
 		if (!Closing && !stop_thread) {
-			if (ManagedSettings.VolumeMonitor == 1 && ManagedSettings.CurrentEngine > AUDTOWAV) {
+			if (ManagedSettings.VolumeMonitor == TRUE && ManagedSettings.CurrentEngine > AUDTOWAV) {
 				float levels[2];
 				DWORD left, right;
 
@@ -673,17 +673,16 @@ void CheckVolume(BOOL Closing) {
 				}
 
 				DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
-				left = LOWORD(level); // the left level
-				right = HIWORD(level); // the right level
+				left = LOWORD(level);	// the left level
+				right = HIWORD(level);	// the right level
 
 				RegSetValueEx(MainKey.Address, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
 				RegSetValueEx(MainKey.Address, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
 			}
 		}
 		else {
-			int zero = 0;
-			RegSetValueEx(MainKey.Address, L"leftvol", 0, dwType, (LPBYTE)&zero, sizeof(zero));
-			RegSetValueEx(MainKey.Address, L"rightvol", 0, dwType, (LPBYTE)&zero, sizeof(zero));
+			RegSetValueEx(MainKey.Address, L"leftvol", 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
+			RegSetValueEx(MainKey.Address, L"rightvol", 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
 		}
 	}
 	catch (...) {

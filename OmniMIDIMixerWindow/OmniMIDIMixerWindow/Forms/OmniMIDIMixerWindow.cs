@@ -129,8 +129,16 @@ namespace OmniMIDIMixerWindow
             try
             {
                 // Something is messed up, fix it
-                if (Debug.GetValueKind("leftvol") != RegistryValueKind.DWord || 
-                    Debug.GetValueKind("rightvol") != RegistryValueKind.DWord)
+                try
+                {
+                    if (Debug.GetValueKind("leftvol") != RegistryValueKind.DWord ||
+                        Debug.GetValueKind("rightvol") != RegistryValueKind.DWord)
+                    {
+                        Debug.SetValue("leftvol", 0, RegistryValueKind.DWord);
+                        Debug.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                    }
+                }
+                catch
                 {
                     Debug.SetValue("leftvol", 0, RegistryValueKind.DWord);
                     Debug.SetValue("rightvol", 0, RegistryValueKind.DWord);

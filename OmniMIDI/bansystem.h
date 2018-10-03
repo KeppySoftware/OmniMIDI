@@ -2,6 +2,19 @@
 OmniMIDI blacklist system
 */
 
+BOOL BannedSystemProcess() {
+	// These processes are PERMANENTLY banned because of some internal bugs inside them.
+	TCHAR modulename[MAX_PATH];
+	GetModuleFileName(NULL, modulename, MAX_PATH);
+	PathStripPath(modulename);
+
+	for (int i = 0; i < SizeOfArray(builtinblacklist); i++) {
+		if (_tcsicmp(modulename, builtinblacklist[i])) return TRUE;
+	}
+
+	return FALSE;
+}
+
 BOOL BlackListSystem(){
 	// Blacklist system init
 	TCHAR defaultstring[MAX_PATH];
@@ -74,38 +87,37 @@ BOOL BlackListSystem(){
 BOOL BlackListInit(){
 	// First, the VMS blacklist system, then the main one
 	TCHAR modulename[MAX_PATH];
-	TCHAR sndvol[MAX_PATH];
 	TCHAR bassmididrv[MAX_PATH];
 	TCHAR vmidisynthdll[MAX_PATH];
 	TCHAR vmidisynth2exe[MAX_PATH];
 	// Clears all the tchars
 	ZeroMemory(modulename, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(sndvol, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(bassmididrv, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(vmidisynthdll, sizeof(TCHAR) * MAX_PATH);
 	ZeroMemory(vmidisynth2exe, sizeof(TCHAR) * MAX_PATH);
+
 	// Here we go
 #if defined(_WIN64)
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, bassmididrv);
 	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
 #elif defined(_WIN32)
 	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, bassmididrv);
 	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynthdll);
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
 #endif
+	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+
 	PathAppend(bassmididrv, _T("\\bassmididrv\\bassmididrv.dll"));
 	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
 	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
+
 	GetModuleFileName(NULL, modulename, MAX_PATH);
 	PathStripPath(modulename);
-	// Lel stuff
-	_tcscpy_s(sndvol, _countof(sndvol), _T("sndvol.exe"));
+
 	try {
 		if (PathFileExists(vmidisynthdll)) {
 			if (PathFileExists(vmidisynth2exe)) return BlackListSystem();
 			else {
-				if (!_tcsicmp(modulename, sndvol))
+				if (!_tcsicmp(modulename, _T("sndvol.exe")))
 					return 0x0;
 				else {
 					if (MessageBox(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use OmniMIDI anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using OmniMIDI)", L"OmniMIDI", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
@@ -119,21 +131,11 @@ BOOL BlackListInit(){
 			MessageBox(0, L"OmniMIDI will refuse to start until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"OmniMIDI", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 			return 0x0;
 		}
-		return BlackListSystem();
+
+		if (BannedSystemProcess()) return 0x0;
+		else return BlackListSystem();
 	}
 	catch (...) {
 		CrashMessage(L"BlacklistInit");
 	}
-}
-
-BOOL BannedSystemProcess() {
-	// These processes are PERMANENTLY banned because of some internal bugs inside them.
-	TCHAR modulename[MAX_PATH];
-	GetModuleFileName(NULL, modulename, MAX_PATH);
-
-	for (int i = 0; i < SizeOfArray(builtinblacklist); i++) {
-		if (!_tcsicmp(modulename, builtinblacklist[i])) return TRUE;
-	}
-
-	return FALSE;
 }

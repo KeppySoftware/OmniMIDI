@@ -2088,8 +2088,16 @@ namespace OmniMIDIConfigurator
                         alreadydone = false;
                     }
 
-                    if (Mixer.GetValueKind("leftvol") != RegistryValueKind.DWord ||
-                        Mixer.GetValueKind("rightvol") != RegistryValueKind.DWord)
+                    try
+                    {
+                        if (Mixer.GetValueKind("leftvol") != RegistryValueKind.DWord ||
+                            Mixer.GetValueKind("rightvol") != RegistryValueKind.DWord)
+                        {
+                            Mixer.SetValue("leftvol", 0, RegistryValueKind.DWord);
+                            Mixer.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                        }
+                    }
+                    catch
                     {
                         Mixer.SetValue("leftvol", 0, RegistryValueKind.DWord);
                         Mixer.SetValue("rightvol", 0, RegistryValueKind.DWord);
@@ -2099,8 +2107,8 @@ namespace OmniMIDIConfigurator
                     int right = Convert.ToInt32(Mixer.GetValue("rightvol"));
                     var perc = ((double)((left + right) / 2) / 32768) * 100;
 
-                    if (Properties.Settings.Default.ShowMixerUnder == true) VolLevel.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
-                    else VolLevelS.Text = String.Format("{0}%", Convert.ToInt32(Math.Round(perc, 0)).ToString());
+                    if (Properties.Settings.Default.ShowMixerUnder == true) VolLevel.Text = String.Format("{0}%", Math.Round(perc, 0));
+                    else VolLevelS.Text = String.Format("{0}%", Math.Round(perc, 0));
 
                     if (Convert.ToInt32(SynthSettings.GetValue("MonoRendering", 0)) == 1)
                     {
