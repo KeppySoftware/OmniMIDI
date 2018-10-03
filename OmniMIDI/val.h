@@ -189,17 +189,33 @@ static DWORD callprioval[7] =
 };
 
 // Built-in blacklist
-static LPCWSTR builtinblacklist[10] =
+static LPCWSTR BuiltInBlacklist[26] =
 {
 	_T("Battle.net Launcher.exe"),
-	_T("consent.exe"),
-	_T("csrss.exe"),
-	_T("explorer.exe"),
-	_T("mstsc.exe"),
-	_T("RustClient.exe"),
+	_T("LogonUI.exe"),
+	_T("NVDisplay.Container.exe"),
 	_T("NVIDIA Share.exe"),
+	_T("NVIDIA Web Helper.exe"),
+	_T("RustClient.exe"),
+	_T("SearchUI.exe"),
+	_T("SecurityHealthService.exe"),
+	_T("SecurityHealthSystray.exe"),
 	_T("ShellExperienceHost.exe"),
 	_T("SndVol.exe"),
+	_T("WUDFHost.exe"),
+	_T("conhost.exe"),
+	_T("consent.exe"),
+	_T("csrss.exe"),
+	_T("ctfmon.exe"),
+	_T("dwm.exe"),
+	_T("explorer.exe"),
+	_T("lsass.exe"),
+	_T("mstsc.exe"),
+	_T("nvcontainer.exe"),
+	_T("nvsphelper64.exe"),
+	_T("smss.exe"),
+	_T("spoolsv.exe"),
+	_T("vcpkgsrv.exe"),
 	_T("vmware-hostd.exe")
 };
 

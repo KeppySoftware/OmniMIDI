@@ -4,65 +4,73 @@ OmniMIDI blacklist system
 
 BOOL BannedSystemProcess() {
 	// These processes are PERMANENTLY banned because of some internal bugs inside them.
-	TCHAR modulename[MAX_PATH];
-	GetModuleFileName(NULL, modulename, MAX_PATH);
-	PathStripPath(modulename);
+	wchar_t modulename[MAX_PATH];
+	memset(modulename, 0, MAX_PATH);
+	GetModuleFileNameW(NULL, modulename, MAX_PATH);
+	PathStripPathW(modulename);
 
-	for (int i = 0; i < SizeOfArray(builtinblacklist); i++) {
-		if (!_wcsicmp(modulename, builtinblacklist[i])) return TRUE;
+	// Check if the current process is banned
+	for (int i = 0; i < SizeOfArray(BuiltInBlacklist); i++) {
+		// It's a match, the process is banned
+		if (!_wcsicmp(modulename, BuiltInBlacklist[i])) return TRUE;
 	}
 
+	// All good, go on
 	return FALSE;
 }
 
 BOOL BlackListSystem(){
 	// Blacklist system init
-	TCHAR defaultstring[MAX_PATH];
-	TCHAR userstring[MAX_PATH];
-	TCHAR defaultblacklistdirectory[MAX_PATH];
-	TCHAR userblacklistdirectory[MAX_PATH];
-	TCHAR modulename[MAX_PATH];
-	TCHAR fullmodulename[MAX_PATH];
+	wchar_t defaultstring[MAX_PATH];
+	wchar_t userstring[MAX_PATH];
+	wchar_t defaultblacklistdirectory[MAX_PATH];
+	wchar_t userblacklistdirectory[MAX_PATH];
+	wchar_t modulename[MAX_PATH];
+	wchar_t fullmodulename[MAX_PATH];
+
 	// Clears all the tchars
-	ZeroMemory(defaultstring, MAX_PATH);
-	ZeroMemory(userstring, MAX_PATH);
-	ZeroMemory(defaultblacklistdirectory, MAX_PATH);
-	ZeroMemory(userblacklistdirectory, MAX_PATH);
-	ZeroMemory(modulename, MAX_PATH);
-	ZeroMemory(fullmodulename,MAX_PATH);
+	memset(defaultstring, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(userstring, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(defaultblacklistdirectory, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(userblacklistdirectory, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(modulename, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(fullmodulename, 0, sizeof(wchar_t) * MAX_PATH);
+
 	// Start the system
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, defaultblacklistdirectory);
-	_tcscat(defaultblacklistdirectory, L"\\OmniMIDI\\OmniMIDI.dbl");
-	GetModuleFileName(NULL, modulename, MAX_PATH);
-	GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-	PathStripPath(modulename);
+	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, defaultblacklistdirectory);
+	wcscat(defaultblacklistdirectory, L"\\OmniMIDI\\OmniMIDI.dbl");
+	GetModuleFileNameW(NULL, modulename, MAX_PATH);
+	GetModuleFileNameW(NULL, fullmodulename, MAX_PATH);
+	PathStripPathW(modulename);
+
 	try {
-		if (PathFileExists(defaultblacklistdirectory)) {
+		if (PathFileExistsW(defaultblacklistdirectory)) {
 			std::wifstream file(defaultblacklistdirectory);
+
 			if (file) {
 				// The default blacklist exists, continue
-				OutputDebugString(defaultblacklistdirectory);
+				OutputDebugStringW(defaultblacklistdirectory);
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
 					if (_wcsicmp(modulename, defaultstring) == 0) return 0x0;
 				}
 			}
 			else {
-				MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+				MessageBoxW(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				exit(0);
 			}
 		}
 		else {
-			MessageBox(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to qu'it.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			MessageBoxW(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to qu'it.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 			exit(0);
 		}
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
+		if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
-			RegQueryValueEx(Configuration.Address, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&ManagedSettings.NoBlacklistMessage, &dwSize);
+			RegQueryValueExW(Configuration.Address, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&ManagedSettings.NoBlacklistMessage, &dwSize);
 
-			PathAppend(userblacklistdirectory, _T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist"));
+			PathAppendW(userblacklistdirectory, _T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist"));
 			std::wifstream file(userblacklistdirectory);
-			OutputDebugString(userblacklistdirectory);
+			OutputDebugStringW(userblacklistdirectory);
 
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
@@ -71,7 +79,7 @@ BOOL BlackListSystem(){
 						std::wstring modulenamelpcwstr(modulename);
 						std::wstring concatted_stdstr = L"OmniMIDI - " + modulenamelpcwstr + L" is blacklisted";
 						LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-						MessageBox(NULL, L"This program has been manually blacklisted.\nThe driver will be automatically unloaded.\n\nPress OK to continue.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+						MessageBoxW(NULL, L"This program has been manually blacklisted.\nThe driver will be automatically unloaded.\n\nPress OK to continue.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 					}
 					return 0x0;
 				}
@@ -86,54 +94,57 @@ BOOL BlackListSystem(){
 
 BOOL BlackListInit(){
 	// First, the VMS blacklist system, then the main one
-	TCHAR modulename[MAX_PATH];
-	TCHAR bassmididrv[MAX_PATH];
-	TCHAR vmidisynthdll[MAX_PATH];
-	TCHAR vmidisynth2exe[MAX_PATH];
+	wchar_t modulename[MAX_PATH];
+	wchar_t bassmididrv[MAX_PATH];
+	wchar_t vmidisynthdll[MAX_PATH];
+	wchar_t vmidisynth2exe[MAX_PATH];
+
 	// Clears all the tchars
-	ZeroMemory(modulename, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(bassmididrv, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(vmidisynthdll, sizeof(TCHAR) * MAX_PATH);
-	ZeroMemory(vmidisynth2exe, sizeof(TCHAR) * MAX_PATH);
+	memset(modulename, 0, sizeof(wchar_t) * MAX_PATH);
+	ZeroMemory(bassmididrv, 0, sizeof(wchar_t) * MAX_PATH);
+	ZeroMemory(vmidisynthdll, 0, sizeof(wchar_t) * MAX_PATH);
+	ZeroMemory(vmidisynth2exe, 0, sizeof(wchar_t) * MAX_PATH);
 
 	// Here we go
 #if defined(_WIN64)
-	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, bassmididrv);
-	SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
+	SHGetFolderPathW(NULL, CSIDL_SYSTEM, NULL, 0, bassmididrv);
+	SHGetFolderPathW(NULL, CSIDL_SYSTEM, NULL, 0, vmidisynthdll);
 #elif defined(_WIN32)
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, bassmididrv);
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynthdll);
+	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, bassmididrv);
+	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynthdll);
 #endif
-	SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
+	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, vmidisynth2exe);
 
-	PathAppend(bassmididrv, _T("\\bassmididrv\\bassmididrv.dll"));
-	PathAppend(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
-	PathAppend(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
+	PathAppendW(bassmididrv, _T("\\bassmididrv\\bassmididrv.dll"));
+	PathAppendW(vmidisynthdll, _T("\\VirtualMIDISynth\\VirtualMIDISynth.dll"));
+	PathAppendW(vmidisynth2exe, _T("\\VirtualMIDISynth\\VirtualMIDISynth.exe"));
 
-	GetModuleFileName(NULL, modulename, MAX_PATH);
-	PathStripPath(modulename);
+	GetModuleFileNameW(NULL, modulename, MAX_PATH);
+	PathStripPathW(modulename);
 
 	try {
-		if (PathFileExists(vmidisynthdll)) {
-			if (PathFileExists(vmidisynth2exe)) return BlackListSystem();
-			else {
-				if (!_wcsicmp(modulename, _T("sndvol.exe")))
-					return 0x0;
+		if (BannedSystemProcess()) return 0x0;
+		else {
+			if (PathFileExistsW(vmidisynthdll)) {
+				if (PathFileExistsW(vmidisynth2exe)) return BlackListSystem();
 				else {
-					if (MessageBox(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use OmniMIDI anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using OmniMIDI)", L"OmniMIDI", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
+					if (!_wcsicmp(modulename, _T("sndvol.exe")))
 						return 0x0;
-					else 
-						return BlackListSystem();
+					else {
+						if (MessageBoxW(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use OmniMIDI anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using OmniMIDI)", L"OmniMIDI", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
+							return 0x0;
+						else
+							return BlackListSystem();
+					}
 				}
 			}
-		}
-		else if (PathFileExists(bassmididrv)) {
-			MessageBox(0, L"OmniMIDI will refuse to start until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"OmniMIDI", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			return 0x0;
-		}
+			else if (PathFileExistsW(bassmididrv)) {
+				MessageBoxW(0, L"OmniMIDI will refuse to start until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"OmniMIDI", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+				return 0x0;
+			}
 
-		if (BannedSystemProcess()) return 0x0;
-		else return BlackListSystem();
+			return BlackListSystem();
+		}
 	}
 	catch (...) {
 		CrashMessage(L"BlacklistInit");

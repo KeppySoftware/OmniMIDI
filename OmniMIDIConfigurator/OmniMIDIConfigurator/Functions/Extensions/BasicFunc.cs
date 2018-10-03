@@ -1493,6 +1493,22 @@ namespace OmniMIDIConfigurator
                 Thread.Sleep(10);
             }
         }
+
+        public static bool CheckDarkTheme()
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", false))
+            {
+                if (key != null)
+                {
+                    // Windows is using the dark theme
+                    if (Convert.ToBoolean(key.GetValue("AppsUseLightTheme", 1)) != false)
+                        return true;
+                }
+            }
+
+            // Windows is not using the dark theme
+            return false;
+        }
     }
 
     public static class InputExtensions
