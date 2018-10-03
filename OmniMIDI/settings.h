@@ -128,7 +128,7 @@ bool LoadSoundfontStartup() {
 				TCHAR defaultstring[MAX_PATH];
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
-					if (_tcsicmp(modulename, defaultstring) && _tcsicmp(fullmodulename, defaultstring) == 0) {
+					if (_wcsicmp(modulename, defaultstring) && _wcsicmp(fullmodulename, defaultstring) == 0) {
 						LoadSoundfont(i + 1);
 						done = 1;
 						PrintToConsole(FOREGROUND_RED, i, "Found it");

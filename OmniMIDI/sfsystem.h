@@ -38,9 +38,9 @@ static BOOL load_font_item(const TCHAR * in_path)
 		const TCHAR * ext = _T("");
 		const TCHAR * dot = _tcsrchr(in_path, _T('.'));
 		if (dot != 0) ext = dot + 1;
-		if (!_tcsicmp(ext, _T("sf2"))
-			|| !_tcsicmp(ext, _T("sf2pack"))
-			|| !_tcsicmp(ext, _T("sfz"))
+		if (!_wcsicmp(ext, _T("sf2"))
+			|| !_wcsicmp(ext, _T("sf2pack"))
+			|| !_wcsicmp(ext, _T("sfz"))
 			)
 		{
 			HSOUNDFONT font = BASS_MIDI_FontInit(in_path, BASS_UNICODE);
@@ -53,7 +53,7 @@ static BOOL load_font_item(const TCHAR * in_path)
 			presetList.push_back(fex);
 			return true;
 		}
-		else if (!_tcsicmp(ext, _T("sflist")))
+		else if (!_wcsicmp(ext, _T("sflist")))
 		{
 			FILE * fl = _tfopen(in_path, _T("r, ccs=UTF-8"));
 			if (fl)

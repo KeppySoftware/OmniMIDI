@@ -81,8 +81,9 @@ For the best experience, it's recommended to run the synthesizer on a PC with th
 To compile (and test) the synthesizer, you need:
 - Microsoft Visual Studio 2017 (or newer)
 - Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
-- Microsoft DirectX SDK
-- Microsoft Windows 10 SDK (17133.1)
+- Inno Downloader Plugin
+- Microsoft Windows 10 October 2018 SDK (17763.1)
+
 ## How can I get rid of the annoying SmartScreen block screen and stop Chrome from warning me not to download your driver?
 You can install my self-signed certificate by using the two files here: https://github.com/KaleidonKep99/OmniMIDI/tree/master/InstallCert<br />
 I made the sign myself, no one has it except me. So you can trust add it to your trusted certificates by using the small installcert.exe utility.<br />

@@ -9,7 +9,7 @@ BOOL BannedSystemProcess() {
 	PathStripPath(modulename);
 
 	for (int i = 0; i < SizeOfArray(builtinblacklist); i++) {
-		if (_tcsicmp(modulename, builtinblacklist[i])) return TRUE;
+		if (!_wcsicmp(modulename, builtinblacklist[i])) return TRUE;
 	}
 
 	return FALSE;
@@ -44,7 +44,7 @@ BOOL BlackListSystem(){
 				OutputDebugString(defaultblacklistdirectory);
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
-					if (_tcsicmp(modulename, defaultstring) == 0) return 0x0;
+					if (_wcsicmp(modulename, defaultstring) == 0) return 0x0;
 				}
 			}
 			else {
@@ -66,7 +66,7 @@ BOOL BlackListSystem(){
 
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
-				if (_tcsicmp(modulename, userstring) == 0 || _tcsicmp(fullmodulename, userstring) == 0) {
+				if (_wcsicmp(modulename, userstring) == 0 || _wcsicmp(fullmodulename, userstring) == 0) {
 					if (ManagedSettings.NoBlacklistMessage != 1) {
 						std::wstring modulenamelpcwstr(modulename);
 						std::wstring concatted_stdstr = L"OmniMIDI - " + modulenamelpcwstr + L" is blacklisted";
@@ -117,7 +117,7 @@ BOOL BlackListInit(){
 		if (PathFileExists(vmidisynthdll)) {
 			if (PathFileExists(vmidisynth2exe)) return BlackListSystem();
 			else {
-				if (!_tcsicmp(modulename, _T("sndvol.exe")))
+				if (!_wcsicmp(modulename, _T("sndvol.exe")))
 					return 0x0;
 				else {
 					if (MessageBox(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use OmniMIDI anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using OmniMIDI)", L"OmniMIDI", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
