@@ -97,7 +97,7 @@ void LoadSoundfont(int whichsf){
 		BASS_MIDI_FONT * mf;
 
 		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog");
-		RegSetValueEx(Watchdog.Address, L"currentsflist", 0, dwType, (LPBYTE)&whichsf, sizeof(whichsf));
+		RegSetValueEx(Watchdog.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
 
 		LoadFonts(sflistloadme[whichsf - 1]);
 		BASS_MIDI_StreamLoadSamples(OMStream);
@@ -431,7 +431,7 @@ void LoadSettings()
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(Configuration.Address, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
 		else CloseStreamMidiOutClose = TRUE;
 
-		RegSetValueEx(Configuration.Address, L"LiveChanges", 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
+		RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 
 		// Stuff that works, don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
@@ -644,7 +644,7 @@ void WatchdogCheck() {
 			// Value "i" is true, reload the specific SoundFont list
 			if (rvalues[i] == 1) {
 				LoadSoundfont(i + 1);
-				RegSetValueEx(Watchdog.Address, rnames[i], 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
+				RegSetValueEx(Watchdog.Address, rnames[i], 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 			}
 		}
 	}
@@ -676,13 +676,13 @@ void CheckVolume(BOOL Closing) {
 				left = LOWORD(level);	// the left level
 				right = HIWORD(level);	// the right level
 
-				RegSetValueEx(MainKey.Address, L"leftvol", 0, dwType, (LPBYTE)&left, sizeof(left));
-				RegSetValueEx(MainKey.Address, L"rightvol", 0, dwType, (LPBYTE)&right, sizeof(right));
+				RegSetValueEx(MainKey.Address, L"leftvol", 0, REG_DWORD, (LPBYTE)&left, sizeof(left));
+				RegSetValueEx(MainKey.Address, L"rightvol", 0, REG_DWORD, (LPBYTE)&right, sizeof(right));
 			}
 		}
 		else {
-			RegSetValueEx(MainKey.Address, L"leftvol", 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
-			RegSetValueEx(MainKey.Address, L"rightvol", 0, dwType, (LPBYTE)&Blank, sizeof(Blank));
+			RegSetValueEx(MainKey.Address, L"leftvol", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
+			RegSetValueEx(MainKey.Address, L"rightvol", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 		}
 	}
 	catch (...) {
