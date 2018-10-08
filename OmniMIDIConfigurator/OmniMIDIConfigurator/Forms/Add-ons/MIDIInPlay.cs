@@ -40,11 +40,11 @@ namespace OmniMIDIConfigurator
             switch (wMsg)
             {
                 case MIDIInEvent.MIM_DATA:
-                    OmniMIDI.SendDirectData(dwParam1.ToUInt32());
+                    KDMAPI.SendDirectData(dwParam1.ToUInt32());
                     SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
                     break;
                 case MIDIInEvent.MIM_LONGDATA:
-                    OmniMIDI.SendDirectLongData(dwParam1);
+                    KDMAPI.SendDirectLongData(dwParam1);
                     SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
                     break;
                 case MIDIInEvent.MIM_ERROR:
@@ -78,8 +78,8 @@ namespace OmniMIDIConfigurator
             }
 
             // Initialize KDMAPI
-            if (OmniMIDI.IsKDMAPIAvailable())
-                OmniMIDI.InitializeKDMAPIStream();
+            if (KDMAPI.IsKDMAPIAvailable())
+                KDMAPI.InitializeKDMAPIStream();
             else
             {
                 MessageBox.Show("Unable to initialize KDMAPI.", "OmniMIDI - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -87,7 +87,7 @@ namespace OmniMIDIConfigurator
                 return;
             }
 
-            OmniMIDI.ResetKDMAPIStream();
+            KDMAPI.ResetKDMAPIStream();
 
             // Initialize MIDI inputs list
             MIDIINCAPS InCaps = new MIDIINCAPS();
@@ -121,7 +121,7 @@ namespace OmniMIDIConfigurator
                 WinMM.midiInClose(handle);
             }
 
-            OmniMIDI.TerminateKDMAPIStream();
+            KDMAPI.TerminateKDMAPIStream();
 
             if (e.CloseReason == CloseReason.WindowsShutDown) return;
         }
@@ -151,29 +151,7 @@ namespace OmniMIDIConfigurator
 
     public static class OmniMIDI
     {
-        [DllImport("OmniMIDI.dll")]
-        internal static extern void InitializeKDMAPIStream();
 
-        [DllImport("OmniMIDI.dll")]
-        internal static extern void TerminateKDMAPIStream();
-
-        [DllImport("OmniMIDI.dll")]
-        internal static extern void ResetKDMAPIStream();
-
-        [DllImport("OmniMIDI.dll")]
-        internal static extern bool IsKDMAPIAvailable();
-
-        [DllImport("OmniMIDI.dll")]
-        internal static extern int SendDirectData(uint dwMsg);
-
-        [DllImport("OmniMIDI.dll")]
-        internal static extern int SendDirectDataNoBuf(uint dwMsg);
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int SendDirectLongData(UIntPtr IIMidiHdr);
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int SendDirectLongDataNoBuf(UIntPtr IIMidiHdr);
     }
 
     internal static class WinMM

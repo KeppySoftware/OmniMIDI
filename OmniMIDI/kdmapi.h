@@ -82,7 +82,7 @@ DWORD WINAPI StreamHealthAndSettings(LPVOID lpV) {
 void DoStartClient() {
 	if (modm_closed == TRUE && BannedSystemProcess() != TRUE) {
 		// Load the selected driver priority value from the registry
-		OpenRegistryKey(MainKey, L"Software\\OmniMIDI");
+		OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
 		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
 		// Parse the app name, and start the debug pipe to the debug window
@@ -162,14 +162,14 @@ void DoResetClient() {
 	ResetSynth(0);
 }
 
-char const* WINAPI ReturnKDMAPIVer() {
-	// Dummy value, set by Kep himself
-	return "v1.30 (Release)";
+BOOL WINAPI ReturnKDMAPIVer(DWORD &Major, DWORD &Minor, DWORD &Build, DWORD &Revision) {
+	Major = 1; Minor = 30; Build = 0; Revision = 51;
+	return TRUE;
 }
 
 BOOL WINAPI IsKDMAPIAvailable()  {
 	// Parse the current state of the KDMAPI
-	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 	long lResult = RegQueryValueEx(Configuration.Address, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KDMAPIEnabled, &dwSize);
 

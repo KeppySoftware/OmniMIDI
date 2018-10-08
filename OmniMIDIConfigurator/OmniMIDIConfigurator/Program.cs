@@ -31,11 +31,35 @@ namespace OmniMIDIConfigurator
         public const short SW_RESTORE = 9;
     }
 
-    static class KSDAPI
+    static class KDMAPI
     {
         // KSDAPI info
-        [DllImport("omnimidi.dll", CharSet = CharSet.Ansi)]
-        public static extern String ReturnKDMAPIVer();
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern Boolean ReturnKDMAPIVer(out Int32 Major, out Int32 Minor, out Int32 Build, out Int32 Revision);
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void InitializeKDMAPIStream();
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void TerminateKDMAPIStream();
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ResetKDMAPIStream();
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool IsKDMAPIAvailable();
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SendDirectData(uint dwMsg);
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SendDirectDataNoBuf(uint dwMsg);
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SendDirectLongData(UIntPtr IIMidiHdr);
+
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SendDirectLongDataNoBuf(UIntPtr IIMidiHdr);
 
         public static String KDMAPIVer = "Null";
     }
@@ -153,7 +177,17 @@ namespace OmniMIDIConfigurator
             try
             {
                 DebugToConsole(false, "Started configurator.", null);
-                KSDAPI.KDMAPIVer = KSDAPI.ReturnKDMAPIVer();
+
+                // Parse KDMAPI version
+                Int32 Major, Minor, Build, Revision;
+                if (KDMAPI.ReturnKDMAPIVer(out Major, out Minor, out Build, out Revision))
+                    KDMAPI.KDMAPIVer = String.Format("{0}.{1}.{2} (Revision {3})", Major, Minor, Build, Revision);
+                else
+                {
+                    MessageBox.Show("Failed to initialize KDMAPI!\n\nPress OK to quit.", "OmniMIDI ~ Configurator | FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.ExitThread();
+                }
+                    
                 Application.SetCompatibleTextRenderingDefault(false);
                 if (!Functions.IsWindowsVistaOrNewer()) Application.ExitThread();
 

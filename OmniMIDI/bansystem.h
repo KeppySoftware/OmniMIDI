@@ -52,7 +52,7 @@ BOOL BlackListSystem(){
 				OutputDebugStringW(defaultblacklistdirectory);
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
-					if (_wcsicmp(modulename, defaultstring) == 0) return 0x0;
+					if (_wcsicmp(modulename, defaultstring) == 0) return DEVICE_UNAVAILABLE;
 				}
 			}
 			else {
@@ -65,27 +65,18 @@ BOOL BlackListSystem(){
 			exit(0);
 		}
 		if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, userblacklistdirectory))) {
-			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
-			RegQueryValueExW(Configuration.Address, L"NoBlacklistMessage", NULL, &dwType, (LPBYTE)&ManagedSettings.NoBlacklistMessage, &dwSize);
-
 			PathAppendW(userblacklistdirectory, _T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist"));
 			std::wifstream file(userblacklistdirectory);
 			OutputDebugStringW(userblacklistdirectory);
 
 			while (file.getline(userstring, sizeof(userstring) / sizeof(*userstring)))
 			{
-				if (_wcsicmp(modulename, userstring) == 0 || _wcsicmp(fullmodulename, userstring) == 0) {
-					if (ManagedSettings.NoBlacklistMessage != 1) {
-						std::wstring modulenamelpcwstr(modulename);
-						std::wstring concatted_stdstr = L"OmniMIDI - " + modulenamelpcwstr + L" is blacklisted";
-						LPCWSTR messageboxtitle = concatted_stdstr.c_str();
-						MessageBoxW(NULL, L"This program has been manually blacklisted.\nThe driver will be automatically unloaded.\n\nPress OK to continue.", messageboxtitle, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
-					}
-					return 0x0;
-				}
+				if (_wcsicmp(modulename, userstring) == 0 ||
+					_wcsicmp(fullmodulename, userstring) == 0)
+					return DEVICE_UNAVAILABLE;
 			}
 		}
-		return 0x1;
+		return DEVICE_AVAILABLE;
 	}
 	catch (...) {
 		CrashMessage(L"BlacklistCheckUp");
@@ -123,16 +114,16 @@ BOOL BlackListInit(){
 	PathStripPathW(modulename);
 
 	try {
-		if (BannedSystemProcess()) return 0x0;
+		if (BannedSystemProcess()) return DEVICE_UNAVAILABLE;
 		else {
 			if (PathFileExistsW(vmidisynthdll)) {
 				if (PathFileExistsW(vmidisynth2exe)) return BlackListSystem();
 				else {
 					if (!_wcsicmp(modulename, _T("sndvol.exe")))
-						return 0x0;
+						return DEVICE_UNAVAILABLE;
 					else {
 						if (MessageBoxW(0, L"Please uninstall VirtualMIDISynth 1.x before using this driver.\n\nPress No if you want to use OmniMIDI anyway, or Yes to unload it from the application.\n\n(VirtualMIDISynth's outdated DLLs could cause performance degradation while using OmniMIDI)", L"OmniMIDI", MB_YESNO | MB_ICONWARNING | MB_SYSTEMMODAL) == IDYES)
-							return 0x0;
+							return DEVICE_UNAVAILABLE;
 						else
 							return BlackListSystem();
 					}
@@ -140,7 +131,7 @@ BOOL BlackListInit(){
 			}
 			else if (PathFileExistsW(bassmididrv)) {
 				MessageBoxW(0, L"OmniMIDI will refuse to start until you uninstall BASSMIDI Driver.\n\nClick OK to continue.", L"OmniMIDI", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-				return 0x0;
+				return DEVICE_UNAVAILABLE;
 			}
 
 			return BlackListSystem();

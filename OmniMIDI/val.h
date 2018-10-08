@@ -6,6 +6,10 @@
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
+// Device status
+#define DEVICE_UNAVAILABLE 0
+#define DEVICE_AVAILABLE 1
+
 // Things
 #define SizeOfArray(type) sizeof(type)/sizeof(type[0])
 
@@ -31,7 +35,6 @@ typedef struct Settings
 	BOOL LiveChanges = FALSE;				// Live changes
 	BOOL MT32Mode = FALSE;					// Roland MT-32 mode
 	BOOL MonoRendering = TRUE;				// Mono rendering (Instead of stereo by default)
-	BOOL NoBlacklistMessage = TRUE;			// Disable blacklist message
 	BOOL NoteOff1 = 0;						// Note cut INT
 	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
 	BOOL OverrideInstruments = TRUE;		// Override channel instruments

@@ -67,7 +67,7 @@ namespace OmniMIDIConfigurator
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);
-            KDMAPIVer.Text = KSDAPI.KDMAPIVer;
+            KDMAPIVer.Text = KDMAPI.KDMAPIVer;
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());

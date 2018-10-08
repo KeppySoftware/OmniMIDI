@@ -2,14 +2,14 @@
 OmniMIDI settings loading system
 */
 
-void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir) {
+void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 	// If the key isn't ready, open it again
 	if (hKey.Status != KEY_READY) {
 		// Open the key
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
-		// If the key failed to open, throw a crash
-		if (hKey.Status != KEY_READY) CrashMessage(L"hKeyOpen");
+		// If the key failed to open, throw a crash (If needed)
+		if (hKey.Status != KEY_READY && Mandatory) CrashMessage(L"hKeyOpen");
 	}
 }
 
@@ -96,7 +96,7 @@ void LoadSoundfont(int whichsf){
 		TCHAR config[MAX_PATH];
 		BASS_MIDI_FONT * mf;
 
-		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog");
+		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog", TRUE);
 		RegSetValueEx(Watchdog.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
 
 		LoadFonts(sflistloadme[whichsf - 1]);
@@ -386,7 +386,7 @@ void LoadSettings()
 		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
 
 		// Load the settings from the registry
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 		RegQueryValueEx(Configuration.Address, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"SleepStates", NULL, &dwType, (LPBYTE)&ManagedSettings.SleepStates, &dwSize);
@@ -473,7 +473,7 @@ void LoadSettingsRT() {
 			BOOL TempESFX, TempNOFF1, TempISR, TempSI, TempDNFO, TempDMN;
 
 			// Load the settings
-			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 			RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
@@ -608,7 +608,7 @@ void LoadSettingsRT() {
 }
 
 void LoadCustomInstruments() {
-	OpenRegistryKey(ChanOverride, L"Software\\OmniMIDI\\ChanOverride");
+	OpenRegistryKey(ChanOverride, L"Software\\OmniMIDI\\ChanOverride", TRUE);
 
 	RegQueryValueEx(ChanOverride.Address, L"overrideinstruments", NULL, &dwType, (LPBYTE)&ManagedSettings.OverrideInstruments, &dwSize);
 	for (int i = 0; i <= 15; ++i) {
@@ -635,7 +635,7 @@ int AudioRenderingType(int value) {
 void WatchdogCheck() {
 	try {
 		// Used to check which SoundFont list has been loaded through the configurator
-		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog");
+		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog", TRUE);
 
 		// Check each value, to see if they're true or not
 		for (int i = 0; i <= 15; ++i) {
@@ -656,7 +656,7 @@ void WatchdogCheck() {
 void CheckVolume(BOOL Closing) {
 	try {
 		// Self explanatory
-		OpenRegistryKey(MainKey, L"Software\\OmniMIDI");
+		OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
 
 		if (!Closing && !stop_thread) {
 			if (ManagedSettings.VolumeMonitor == TRUE && ManagedSettings.CurrentEngine > AUDTOWAV) {
@@ -811,7 +811,7 @@ void SendDummyDataToPipe() {
 
 void mixervoid() {
 	try {
-		OpenRegistryKey(Channels, L"Software\\OmniMIDI\\Channels");
+		OpenRegistryKey(Channels, L"Software\\OmniMIDI\\Channels", TRUE);
 
 		for (int i = 0; i <= SizeOfArray(cnames); ++i) {
 			RegQueryValueEx(Channels.Address, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
@@ -827,7 +827,7 @@ void mixervoid() {
 void RevbNChor() {
 	try {
 		BOOL RCOverride = FALSE;
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 		RegQueryValueEx(Configuration.Address, L"RCOverride", NULL, &dwType, (LPBYTE)&RCOverride, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"Reverb", NULL, &dwType, (LPBYTE)&reverb, &dwSize);

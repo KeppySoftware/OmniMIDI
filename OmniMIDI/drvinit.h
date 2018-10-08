@@ -350,7 +350,7 @@ void InitializeBASSEnc() {
 	// Open the registry key, and check the current output path set in the configurator
 	DWORD cbValueLength = sizeof(confpath);
 	DWORD dwType = REG_SZ;
-	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 	if (RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
 		// If the folder exists, then set the path to that
@@ -465,7 +465,7 @@ LONG ASIODetectID() {
 		DWORD ASSize = sizeof(OutputName);
 
 		// Open the registry, and get the name of the selected ASIO device
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration");
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 		RegQueryValueExA(Configuration.Address, "ASIOOutput", NULL, &ASType, (LPBYTE)&OutputName, &ASSize);
 
 		// Iterate through the available audio devices
