@@ -12,7 +12,8 @@ I also post my updates on Discord, to keep everyone up-to-date 24/7!
 Join now here: https://discord.gg/jUaHPrP
 
 ## Keppy's Direct MIDI API for developers
-You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](KDMAPI.md)
+You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](KDMAPI.md)<br/>
+You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
 
 ## Reviews
 ### [Gingeas](https://www.youtube.com/user/gingeas), famous YouTuber who uploads Black MIDI videos:
