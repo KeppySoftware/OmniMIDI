@@ -42,13 +42,12 @@ namespace OmniMIDIConfigurator
             this.CBLi = new System.Windows.Forms.MenuItem();
             this.EDBLi = new System.Windows.Forms.Button();
             this.UDBLi = new System.Windows.Forms.Button();
-            this.NoBlockMessage = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // BlackListDef
             // 
             this.BlackListDef.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.BlackListDef.Location = new System.Drawing.Point(12, 12);
+            this.BlackListDef.Location = new System.Drawing.Point(12, 9);
             this.BlackListDef.Name = "BlackListDef";
             this.BlackListDef.Size = new System.Drawing.Size(401, 67);
             this.BlackListDef.TabIndex = 26;
@@ -61,15 +60,15 @@ namespace OmniMIDIConfigurator
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ProgramsBlackList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ProgramsBlackList.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.ProgramsBlackList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ProgramsBlackList.FormattingEnabled = true;
             this.ProgramsBlackList.HorizontalScrollbar = true;
-            this.ProgramsBlackList.ItemHeight = 15;
-            this.ProgramsBlackList.Location = new System.Drawing.Point(5, 91);
+            this.ProgramsBlackList.IntegralHeight = false;
+            this.ProgramsBlackList.Location = new System.Drawing.Point(9, 86);
             this.ProgramsBlackList.Margin = new System.Windows.Forms.Padding(0);
             this.ProgramsBlackList.Name = "ProgramsBlackList";
             this.ProgramsBlackList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ProgramsBlackList.Size = new System.Drawing.Size(685, 287);
+            this.ProgramsBlackList.Size = new System.Drawing.Size(677, 290);
             this.ProgramsBlackList.TabIndex = 21;
             this.ProgramsBlackList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProgramsBlackList_KeyDown);
             // 
@@ -123,7 +122,7 @@ namespace OmniMIDIConfigurator
             // 
             this.EDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EDBLi.BackColor = System.Drawing.Color.Transparent;
-            this.EDBLi.Location = new System.Drawing.Point(556, 34);
+            this.EDBLi.Location = new System.Drawing.Point(549, 12);
             this.EDBLi.Name = "EDBLi";
             this.EDBLi.Size = new System.Drawing.Size(134, 23);
             this.EDBLi.TabIndex = 32;
@@ -135,7 +134,7 @@ namespace OmniMIDIConfigurator
             // 
             this.UDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.UDBLi.BackColor = System.Drawing.Color.Transparent;
-            this.UDBLi.Location = new System.Drawing.Point(556, 56);
+            this.UDBLi.Location = new System.Drawing.Point(549, 34);
             this.UDBLi.Name = "UDBLi";
             this.UDBLi.Size = new System.Drawing.Size(134, 23);
             this.UDBLi.TabIndex = 33;
@@ -143,38 +142,24 @@ namespace OmniMIDIConfigurator
             this.UDBLi.UseVisualStyleBackColor = false;
             this.UDBLi.Click += new System.EventHandler(this.UDBLi_Click);
             // 
-            // NoBlockMessage
-            // 
-            this.NoBlockMessage.AutoSize = true;
-            this.NoBlockMessage.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.NoBlockMessage.Location = new System.Drawing.Point(464, 12);
-            this.NoBlockMessage.Name = "NoBlockMessage";
-            this.NoBlockMessage.Size = new System.Drawing.Size(226, 17);
-            this.NoBlockMessage.TabIndex = 34;
-            this.NoBlockMessage.Text = "Don\'t show message on blocked programs";
-            this.NoBlockMessage.UseVisualStyleBackColor = true;
-            this.NoBlockMessage.CheckedChanged += new System.EventHandler(this.NoBlockMessage_CheckedChanged);
-            // 
             // BlacklistSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(695, 385);
-            this.Controls.Add(this.NoBlockMessage);
             this.Controls.Add(this.UDBLi);
             this.Controls.Add(this.EDBLi);
             this.Controls.Add(this.BlackListDef);
             this.Controls.Add(this.ProgramsBlackList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "OmniMIDIBlacklistSystem";
+            this.Name = "BlacklistSystem";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Blacklist manager";
             this.Load += new System.EventHandler(this.KeppyDriverBlacklistSystem_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -189,7 +174,6 @@ namespace OmniMIDIConfigurator
         private MenuItem CBLi;
         private Button EDBLi;
         private Button UDBLi;
-        private CheckBox NoBlockMessage;
         private MenuItem AEr;
     }
 }
