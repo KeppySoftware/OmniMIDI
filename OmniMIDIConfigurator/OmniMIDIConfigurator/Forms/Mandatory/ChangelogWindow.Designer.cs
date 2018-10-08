@@ -31,6 +31,8 @@
             this.VersionLabel = new System.Windows.Forms.Label();
             this.OkBtn = new System.Windows.Forms.Button();
             this.UpdateBtn = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ReleasesList = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // ChangelogBrowser
@@ -51,7 +53,7 @@
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(18, 17);
+            this.VersionLabel.Location = new System.Drawing.Point(357, 17);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(146, 13);
             this.VersionLabel.TabIndex = 1;
@@ -79,6 +81,26 @@
             this.UpdateBtn.UseVisualStyleBackColor = true;
             this.UpdateBtn.Click += new System.EventHandler(this.UpdateBtn_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(132, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Get changelog for version:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ReleasesList
+            // 
+            this.ReleasesList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ReleasesList.FormattingEnabled = true;
+            this.ReleasesList.Location = new System.Drawing.Point(150, 14);
+            this.ReleasesList.Name = "ReleasesList";
+            this.ReleasesList.Size = new System.Drawing.Size(82, 21);
+            this.ReleasesList.TabIndex = 5;
+            this.ReleasesList.SelectedIndexChanged += new System.EventHandler(this.ReleasesList_SelectedIndexChanged);
+            // 
             // ChangelogWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -86,6 +108,8 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.CancelButton = this.OkBtn;
             this.ClientSize = new System.Drawing.Size(708, 438);
+            this.Controls.Add(this.ReleasesList);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.UpdateBtn);
             this.Controls.Add(this.OkBtn);
             this.Controls.Add(this.VersionLabel);
@@ -110,5 +134,7 @@
         private System.Windows.Forms.Label VersionLabel;
         private System.Windows.Forms.Button OkBtn;
         private System.Windows.Forms.Button UpdateBtn;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox ReleasesList;
     }
 }

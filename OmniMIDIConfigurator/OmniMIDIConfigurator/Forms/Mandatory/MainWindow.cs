@@ -1282,17 +1282,24 @@ namespace OmniMIDIConfigurator
 
         private void SeeLatestChangelog_Click(object sender, EventArgs e)
         {
-            Octokit.Release Release = UpdateSystem.UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
-            Version x = null;
-            Version.TryParse(Release.TagName, out x);
             try
             {
+                Octokit.Release Release = UpdateSystem.UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
+                Version x = null;
+                Version.TryParse(Release.TagName, out x);
                 Program.DebugToConsole(false, String.Format("Showing changelog of release {0} of the driver.", Release.TagName), null);
                 ChangelogWindow frm = new ChangelogWindow(x.ToString(), false);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Functions.ShowErrorDialog(ErrorType.Information, System.Media.SystemSounds.Exclamation,
+                    "Error", 
+                    "An error has occured while interrogating GitHub for the latest release.\n" +
+                    "This is not a serious error, it might mean that your IP has reached the maximum requests allowed to the GitHub servers.", 
+                    true, ex);
+            }
         }
 
         private void WMMPatches_Click(object sender, EventArgs e)

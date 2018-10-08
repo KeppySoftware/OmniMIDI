@@ -34,31 +34,31 @@ namespace OmniMIDIConfigurator
     static class KDMAPI
     {
         // KSDAPI info
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern Boolean ReturnKDMAPIVer(out Int32 Major, out Int32 Minor, out Int32 Build, out Int32 Revision);
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void InitializeKDMAPIStream();
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void TerminateKDMAPIStream();
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void ResetKDMAPIStream();
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern bool IsKDMAPIAvailable();
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int SendDirectData(uint dwMsg);
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int SendDirectDataNoBuf(uint dwMsg);
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int SendDirectLongData(UIntPtr IIMidiHdr);
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int SendDirectLongDataNoBuf(UIntPtr IIMidiHdr);
 
         public static String KDMAPIVer = "Null";

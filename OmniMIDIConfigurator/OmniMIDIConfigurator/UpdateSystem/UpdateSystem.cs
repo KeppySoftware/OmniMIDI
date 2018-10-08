@@ -220,7 +220,7 @@ namespace OmniMIDIConfigurator
                 catch
                 {
                     Program.DebugToConsole(false, "Error while checking for updates.", null);
-                    return "no";
+                    return "fail";
                 }
             }
         }

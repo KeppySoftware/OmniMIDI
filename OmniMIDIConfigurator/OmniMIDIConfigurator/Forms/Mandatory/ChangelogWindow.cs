@@ -19,12 +19,38 @@ namespace OmniMIDIConfigurator
         {
             InitializeComponent();
             UpdateBtn.Visible = !IsItFromTheUpdateWindow;
-            GetChangelog(version);
+
+            var OnlyFirstTenReleases = new Octokit.ApiOptions
+            {
+                PageSize = 10,
+                PageCount = 1
+            };
+
+            try
+            {
+                IReadOnlyList<Octokit.Release> Releases = UpdateSystem.UpdateClient.Repository.Release.GetAll("KeppySoftware", "OmniMIDI", OnlyFirstTenReleases).Result;
+                foreach (Octokit.Release OneRel in Releases)
+                {
+                    Version x = null;
+                    Version.TryParse(OneRel.TagName, out x);
+                    ReleasesList.Items.Add(x.ToString());
+                }
+
+
+                ReleasesList.SelectedIndex = 0;
+                GetChangelog(ReleasesList.Items[ReleasesList.SelectedIndex].ToString());
+            }
+            catch
+            {
+                label1.Visible = false;
+                ReleasesList.Visible = false;
+                GetChangelog(version);
+            }
         }
 
         private void ChangelogWindow_Load(object sender, EventArgs e)
         {
-            // Null
+            // NULL
         }
 
         public bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
@@ -56,6 +82,8 @@ namespace OmniMIDIConfigurator
 
         private void GetChangelog(String version)
         {
+            String htmltext = "";
+
             try
             {
                 Octokit.Release Release = UpdateSystem.UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
@@ -66,7 +94,6 @@ namespace OmniMIDIConfigurator
                 Version.TryParse(version, out y);
 
                 Text = String.Format("OmniMIDI - Changelog for {0}", version);
-                String htmltext = "";
 
                 if (x < y)
                 {
@@ -92,15 +119,28 @@ namespace OmniMIDIConfigurator
                         htmltext += String.Format("<br/><br/>Latest version available: <a href=\"https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}\">{0}</a href>", x.ToString());
 
                     htmltext += "</font></body></html>";
-
                 }
 
                 ChangelogBrowser.DocumentText = htmltext;
             }
             catch
             {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", false, null);
-                Close();
+                try
+                {
+                    VersionLabel.Text = String.Format("Changelog for version {0}", version);
+                    HtmlNode rateNode = ReturnSelectedNode(version);
+
+                    htmltext = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml;
+                    htmltext += "<br/><b>WARNING</b>: An error has occured while interrogating GitHub for new releases.";
+                    htmltext += "</font></body></html>";
+
+                    ChangelogBrowser.DocumentText = htmltext;
+                }
+                catch
+                {
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", false, null);
+                    Close();
+                }
             }
         }
 
@@ -113,6 +153,11 @@ namespace OmniMIDIConfigurator
         private void UpdateBtn_Click(object sender, EventArgs e)
         {
             UpdateSystem.CheckForUpdates((ModifierKeys == Keys.Shift), false, true);
+        }
+
+        private void ReleasesList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetChangelog(ReleasesList.Items[ReleasesList.SelectedIndex].ToString());
         }
     }
 }
