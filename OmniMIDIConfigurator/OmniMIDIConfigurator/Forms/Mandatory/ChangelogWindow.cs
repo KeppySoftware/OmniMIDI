@@ -15,6 +15,8 @@ namespace OmniMIDIConfigurator
 {
     public partial class ChangelogWindow : Form
     {
+        Boolean SwitchingChangelog = false;
+
         public ChangelogWindow(String version, Boolean IsItFromTheUpdateWindow)
         {
             InitializeComponent();
@@ -65,8 +67,6 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
-
                 HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
                 web.PreRequest += request =>
                 {
@@ -86,6 +86,8 @@ namespace OmniMIDIConfigurator
 
         private void GetChangelog(String version)
         {
+            SwitchingChangelog = true;
+
             try
             {
                 Version y = null;
@@ -105,10 +107,9 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private void DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void ChangelogBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            var linkElements = ChangelogBrowser.Document.GetElementsByTagName("a");
-            foreach (HtmlElement link in linkElements) link.Click += (s, args) => { Process.Start(link.GetAttribute("href")); };
+            SwitchingChangelog = false;
         }
 
         private void UpdateBtn_Click(object sender, EventArgs e)

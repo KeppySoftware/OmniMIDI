@@ -48,6 +48,7 @@
             this.ChangelogBrowser.ScriptErrorsSuppressed = true;
             this.ChangelogBrowser.Size = new System.Drawing.Size(708, 391);
             this.ChangelogBrowser.TabIndex = 0;
+            this.ChangelogBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.ChangelogBrowser_DocumentCompleted);
             // 
             // VersionLabel
             // 
