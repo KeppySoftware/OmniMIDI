@@ -37,7 +37,6 @@
             // 
             // ChangelogBrowser
             // 
-            this.ChangelogBrowser.AllowNavigation = false;
             this.ChangelogBrowser.AllowWebBrowserDrop = false;
             this.ChangelogBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 

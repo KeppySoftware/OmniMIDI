@@ -22,12 +22,14 @@ namespace OmniMIDIConfigurator
 
             var OnlyFirstTenReleases = new Octokit.ApiOptions
             {
-                PageSize = 10,
+                PageSize = 11,
                 PageCount = 1
             };
 
             try
             {
+                ReleasesList.SelectedIndexChanged -= ReleasesList_SelectedIndexChanged;
+
                 IReadOnlyList<Octokit.Release> Releases = UpdateSystem.UpdateClient.Repository.Release.GetAll("KeppySoftware", "OmniMIDI", OnlyFirstTenReleases).Result;
                 foreach (Octokit.Release OneRel in Releases)
                 {
@@ -36,9 +38,10 @@ namespace OmniMIDIConfigurator
                     ReleasesList.Items.Add(x.ToString());
                 }
 
-
                 ReleasesList.SelectedIndex = 0;
-                GetChangelog(ReleasesList.Items[ReleasesList.SelectedIndex].ToString());
+                ReleasesList.SelectedIndexChanged += ReleasesList_SelectedIndexChanged;
+
+                ReleasesList_SelectedIndexChanged(null, null);
             }
             catch
             {
@@ -63,6 +66,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 ChangelogBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(DocumentCompleted);
+
                 HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
                 web.PreRequest += request =>
                 {
@@ -82,65 +86,22 @@ namespace OmniMIDIConfigurator
 
         private void GetChangelog(String version)
         {
-            String htmltext = "";
-
             try
             {
-                Octokit.Release Release = UpdateSystem.UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
-
-                Version x = null;
-                Version.TryParse(Release.TagName, out x);
                 Version y = null;
                 Version.TryParse(version, out y);
 
                 Text = String.Format("OmniMIDI - Changelog for {0}", version);
 
-                if (x < y)
-                {
-                    VersionLabel.Text = String.Format("Changelog for version {0} (Unreleased)", version);
-                    HtmlNode rateNode = ReturnSelectedNode(x.ToString());
+                VersionLabel.Text = String.Format("Changelog for version {0}", version);
+                HtmlNode rateNode = ReturnSelectedNode(version);
 
-                    htmltext = String.Format(
-                        "<html><body><font face=\"Tahoma\">You're using an unreleased version of the driver. Here's the changelog from version {0}:<br/><hr/><br/>",
-                        x.ToString());
-
-                    htmltext += rateNode.InnerHtml;
-
-                    htmltext += "</font></html>";
-                }
-                else
-                {
-                    VersionLabel.Text = String.Format("Changelog for version {0}", version);
-                    HtmlNode rateNode = ReturnSelectedNode(version);
-
-                    htmltext = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml;
-
-                    if (x > y)
-                        htmltext += String.Format("<br/><br/>Latest version available: <a href=\"https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}\">{0}</a href>", x.ToString());
-
-                    htmltext += "</font></body></html>";
-                }
-
-                ChangelogBrowser.DocumentText = htmltext;
+                ChangelogBrowser.DocumentText = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml + "</font></body></html>";
             }
             catch
             {
-                try
-                {
-                    VersionLabel.Text = String.Format("Changelog for version {0}", version);
-                    HtmlNode rateNode = ReturnSelectedNode(version);
-
-                    htmltext = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml;
-                    htmltext += "<br/><b>WARNING</b>: An error has occured while interrogating GitHub for new releases.";
-                    htmltext += "</font></body></html>";
-
-                    ChangelogBrowser.DocumentText = htmltext;
-                }
-                catch
-                {
-                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", false, null);
-                    Close();
-                }
+                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", false, null);
+                Close();
             }
         }
 
@@ -157,7 +118,7 @@ namespace OmniMIDIConfigurator
 
         private void ReleasesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GetChangelog(ReleasesList.Items[ReleasesList.SelectedIndex].ToString());
+            GetChangelog(ReleasesList.SelectedItem.ToString());
         }
     }
 }
