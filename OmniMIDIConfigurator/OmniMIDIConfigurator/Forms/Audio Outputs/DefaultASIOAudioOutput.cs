@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
 // For device info
@@ -98,16 +99,42 @@ namespace OmniMIDIConfigurator
             Process.Start("https://github.com/KeppySoftware/OmniMIDI#asio-support-details");
         }
 
+        private String[] DownloadDatabase(String Link)
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    var result = client.DownloadData(Link);
+                    string str = Encoding.UTF8.GetString(result);
+                    return str.Split(new[] { '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+            }
+            catch
+            {
+                return new[] { "NULL123" };
+            }
+        }
+
         private int CompareToDatabase(String DeviceToCompare)
         {
-            foreach (String Device in TestedASIODevices.Supported)
-                if (DeviceToCompare.Contains(Device)) return SupportedDevice();
+            foreach (String Device in DownloadDatabase(TestedASIODevices.Supported))
+            {
+                String[] Content = Device.Split('|');
+                if (DeviceToCompare.Contains(Content[0])) return SupportedDevice(Content[1]);
+            }
 
-            foreach (String Device in TestedASIODevices.Unstable)
-                if (DeviceToCompare.Contains(Device)) return UnstableDevice();
+            foreach (String Device in DownloadDatabase(TestedASIODevices.Unstable))
+            {
+                String[] Content = Device.Split('|');
+                if (DeviceToCompare.Contains(Content[0])) return UnstableDevice(Content[1]);
+            }
 
-            foreach (String Device in TestedASIODevices.Unsupported)
-                if (DeviceToCompare.Contains(Device)) return UnsupportedDevice();
+            foreach (String Device in DownloadDatabase(TestedASIODevices.Unsupported))
+            {
+                String[] Content = Device.Split('|');
+                if (DeviceToCompare.Contains(Content[0])) return UnsupportedDevice(Content[1]);
+            }
 
             return UnknownDevice();
         }
@@ -123,27 +150,27 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private int SupportedDevice()
+        private int SupportedDevice(String Info)
         {
             Status.Font = new Font(Status.Font, FontStyle.Regular);
             Status.ForeColor = Color.DarkOliveGreen;
-            Status.Text = "Supported device";
+            Status.Text = String.Format("Supported device. {0}", Info);
             return DeviceStatus.DEVICE_SUPPORTED;
         }
 
-        private int UnstableDevice()
+        private int UnstableDevice(String Info)
         {
             Status.Font = new Font(Status.Font, FontStyle.Bold);
             Status.ForeColor = Color.DarkOrange;
-            Status.Text = "Supported device, might be unstable";
+            Status.Text = String.Format("Supported device, might be unstable. {0}", Info);
             return DeviceStatus.DEVICE_UNSTABLE;
         }
 
-        private int UnsupportedDevice()
+        private int UnsupportedDevice(String Info)
         {
             Status.Font = new Font(Status.Font, FontStyle.Bold);
             Status.ForeColor = Color.Red;
-            Status.Text = "Unsupported device";
+            Status.Text = String.Format("Unsupported device. {0}", Info);
             return DeviceStatus.DEVICE_UNSUPPORTED;
         }
 
@@ -151,7 +178,7 @@ namespace OmniMIDIConfigurator
         {
             Status.Font = new Font(Status.Font, FontStyle.Bold);
             Status.ForeColor = Color.DarkGray;
-            Status.Text = "Unknown device";
+            Status.Text = "Unknown device. Either it's missing from the database, or there's no Internet.";
             return DeviceStatus.DEVICE_UNKNOWN;
         }
     }
@@ -166,35 +193,8 @@ namespace OmniMIDIConfigurator
 
     static class TestedASIODevices
     {
-        public static string[] Supported =
-        {
-            "ASIO2WASAPI",
-            "ASIO4ALL",
-            "ASUS Xonar D2 ASIO",
-            "BEHRINGER USB AUDIO",
-            "FL Studio ASIO",
-            "Focusrite USB ASIO",
-            "Jack",
-            "JackRouter",
-            "Magix Low Latency 2016",
-            "Native Instruments Komplete Audio 6",
-            "ReaRoute ASIO",
-            "Realtek ASIO",
-            "USB Audio ASIO Driver",
-            "USBPre 2.0 ASIO",
-            "ZOOM R8 ASIO Driver"
-        };
-
-        public static string[] Unstable =
-        {
-            "AKIYAMA ASIO",
-            "FlexASIO"
-        };
-
-        public static string[] Unsupported = 
-        {
-            "ASIO ADSP24(WDM)",
-            "Voicemeeter"
-        };
+        public static string Supported = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/OmniMIDIASIOSupportList/Supported.txt";
+        public static string Unstable = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/OmniMIDIASIOSupportList/Unstable.txt";
+        public static string Unsupported = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/OmniMIDIASIOSupportList/Unsupported.txt";
     }
 }

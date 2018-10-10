@@ -1,5 +1,4 @@
 ADJ ASIO|No issues.
-ASIO Lynx|The output gets unstable sometimes, but works.
 ASIO POD HD|No issues.
 ASIO PreSonus FireStudio|No issues.
 ASIO2WASAPI|No issues, but useless.

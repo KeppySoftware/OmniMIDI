@@ -125,7 +125,7 @@
             // 
             this.Status.Location = new System.Drawing.Point(48, 36);
             this.Status.Name = "Status";
-            this.Status.Size = new System.Drawing.Size(461, 13);
+            this.Status.Size = new System.Drawing.Size(461, 34);
             this.Status.TabIndex = 12;
             this.Status.Text = "NaN";
             // 
