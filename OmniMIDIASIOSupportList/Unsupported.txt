@@ -1,0 +1,3 @@
+ASIO ADSP24(WDM)|The computer hangs.
+ASIO for PHASE 22/28|BSoD.
+JRiver Media Center|OmniMIDI is not allowed to use this interface.

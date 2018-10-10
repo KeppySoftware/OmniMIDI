@@ -88,7 +88,7 @@ To compile (and test) the synthesizer, you need:
 ## How can I get rid of the annoying SmartScreen block screen and stop Chrome from warning me not to download your driver?
 You can install my self-signed certificate by using the two files here: https://github.com/KaleidonKep99/OmniMIDI/tree/master/InstallCert<br />
 I made the sign myself, no one has it except me. So you can trust add it to your trusted certificates by using the small installcert.exe utility.<br />
-*(Be sure that KeppyCert.cer is in the same folder as InstallCert.exe)*
+Be sure that KeppyCert.cer is in the same folder as InstallCert.exe
 
 ## Can I use your program's source code for my program?
 Sure you can, but there are a few "rules" you need to follow.
@@ -109,41 +109,41 @@ But anyway, here is the version without the KSDirect API. [Click me for the dire
 
 # ASIO support details
 ## Supported ASIO devices
-- ADJ ASIO *(No issues.)*
-- ASIO Lynx *(The output gets unstable sometimes, but works.)*
-- ASIO POD HD *(No issues.)*
-- ASIO PreSonus FireStudio *(No issues.)*
-- ASIO2WASAPI *(No issues, but useless.)*
-- ASIO4ALL *(No issues, good for Black MIDIs.)*
-- Alpha ASIO *(No issues.)*
-- AudioBox ASIO Driver *(No issues.)*
-- Creative ASIO *(No issues.)*
-- DENON DJ ASIO Driver *(No issues.)*
-- E-MU ASIO *(No issues.)*
-- FL Studio ASIO *(No issues, but you can NOT change the buffer size without restarting the stream.)*
-- FlexASIO *(Only one issue, the pitch of the output isn't right.)*
-- Focusrite USB 2.0 Audio Driver *(No issues.)*
-- JACK ASIO Driver *(No issues, good for Black MIDIs.)*
-- M Audio Delta ASIO *(No issues.)*
-- M-Audio FireWire ASIO *(No issues.)*
-- M-Track Quad ASIO Driver *(No issues.)*
-- Native Instruments Komplete Audio 6 *(No issues, good for Black MIDIs.)*
-- Pioneer CDJ/DDJ ASIO *(No issues.)*
-- Realtek ASIO *(No issues, good for Black MIDIs.)*
-- SB Audigy 2 ZS ASIO *(No issues.)*
-- Scarlet 6i6 USB *(No issues.)*
-- Steinberg UR44 *(No issues.)*
-- Traktor Audio 10 *(No issues.)*
-- USB Audio ASIO Driver *(No issues.)*
-- Voicemeeter Virtual ASIO *(No issues.)*
-- Xonar Essence One ASIO *(No issues.)*
-- Xonar Essence ST ASIO *(No issues.)*
-- Yamaha Steinberg UBS ASIO *(No issues.)*
-- ZOOM H Series ASIO *(No issues.)*
+- ADJ ASIO No issues.
+- ASIO Lynx The output gets unstable sometimes, but works.
+- ASIO POD HD No issues.
+- ASIO PreSonus FireStudio No issues.
+- ASIO2WASAPI No issues, but useless.
+- ASIO4ALL No issues, good for Black MIDIs.
+- Alpha ASIO No issues.
+- AudioBox ASIO Driver No issues.
+- Creative ASIO No issues.
+- DENON DJ ASIO Driver No issues.
+- E-MU ASIO No issues.
+- FL Studio ASIO No issues, but you can NOT change the buffer size without restarting the stream.
+- FlexASIO Only one issue, the pitch of the output isn't right.
+- Focusrite USB 2.0 Audio Driver No issues.
+- JACK ASIO Driver No issues, good for Black MIDIs.
+- M Audio Delta ASIO No issues.
+- M-Audio FireWire ASIO No issues.
+- M-Track Quad ASIO Driver No issues.
+- Native Instruments Komplete Audio 6 No issues, good for Black MIDIs.
+- Pioneer CDJ/DDJ ASIO No issues.
+- Realtek ASIO No issues, good for Black MIDIs.
+- SB Audigy 2 ZS ASIO No issues.
+- Scarlet 6i6 USB No issues.
+- Steinberg UR44 No issues.
+- Traktor Audio 10 No issues.
+- USB Audio ASIO Driver No issues.
+- Voicemeeter Virtual ASIO No issues.
+- Xonar Essence One ASIO No issues.
+- Xonar Essence ST ASIO No issues.
+- Yamaha Steinberg UBS ASIO No issues.
+- ZOOM H Series ASIO No issues.
 ## Unsupported ASIO devices
-- ASIO ADSP24(WDM) *(The computer hangs.)*
-- ASIO for PHASE 22/28 *(BSoD.)*
-- JRiver Media Center *(OmniMIDI is not allowed to use this interface.)*
+- ASIO ADSP24(WDM) The computer hangs.
+- ASIO for PHASE 22/28 BSoD.
+- JRiver Media Center OmniMIDI is not allowed to use this interface.
 ## Untested ASIO devices
 - ASIO Digidesign Driver
 - ASIO Digidesign Driver Mbox2
@@ -155,22 +155,22 @@ But anyway, here is the version without the KSDirect API. [Click me for the dire
 **WARNING**: Since I can not test all the ASIO devices available on the market (Mainly because they're not cheap), if you have one, please... Test it with OmniMIDI, then send me an e-mail about it to [kaleidonkep99@outlook.com](mailto:kaleidonkep99@outlook.com).
 
 # Features compared to other software synthesizers
-:pencil: | OmniMIDI | VirtualMIDISynth 1.x | VirtualMIDISynth 2.x | BASSMIDI Driver
------------- | ------------- | ------------- | ------------- | -------------
-Easy-to-use configurator | ✔️ | ✔️ | ✔️ | ❌
-Smaller memory footprint | ✔️ | ❌ | ❌ | ❌
-Support for Windows XP | ❌ | ✔️ | ✔️ | ✔️
-Suitable for day-to-day<br />music playback | ✔️<span>*</span> | ✔️ | ✔️ | ✔️
-Suitable for professional<br />music production | ✔️ | ❌ | ❌ | ❌
-Mixer for easy volume<br />changes per MIDI channel | ✔️ | ✔️ | ✔️ | ❌
-Ability to change <br />channel instruments | ✔️ | ❌ | ❌ | ❌
-Real-time debug information<br />about the audio stream | ✔️ | ❌ | ✔️ | ❌
-Only one MIDI out port<br />with multiple SoundFont lists | ✔️ | ❌ | ❌ | ❌
-User has full<br />control over the audio<br />stream | ✔️ | ❌ | ❌ | ❌
-Updatable without<br />admin permissions | ✔️ | ❌ | ❌ | ❌
-Uses a separate process<br />for audio rendering | ❌ | ❌ | ✔️ | ❌
-Able to achieve extremely<br />low latencies | ✔️ | ❌ | ❌ | ⚠️
-Wide choice of audio engines,<br />from DirectSound to WASAPI | ✔️ | ❌ | ❌ | ⚠️
+:pencil:|OmniMIDI|VirtualMIDISynth 1.x|VirtualMIDISynth 2.x|BASSMIDI Driver
+------------|-------------|-------------|-------------|-------------
+Easy-to-use configurator|✔️|✔️|✔️|❌
+Smaller memory footprint|✔️|❌|❌|❌
+Support for Windows XP|❌|✔️|✔️|✔️
+Suitable for day-to-day<br />music playback|✔️<span>*</span>|✔️|✔️|✔️
+Suitable for professional<br />music production|✔️|❌|❌|❌
+Mixer for easy volume<br />changes per MIDI channel|✔️|✔️|✔️|❌
+Ability to change <br />channel instruments|✔️|❌|❌|❌
+Real-time debug information<br />about the audio stream|✔️|❌|✔️|❌
+Only one MIDI out port<br />with multiple SoundFont lists|✔️|❌|❌|❌
+User has full<br />control over the audio<br />stream|✔️|❌|❌|❌
+Updatable without<br />admin permissions|✔️|❌|❌|❌
+Uses a separate process<br />for audio rendering|❌|❌|✔️|❌
+Able to achieve extremely<br />low latencies|✔️|❌|❌|⚠️
+Wide choice of audio engines,<br />from DirectSound to WASAPI|✔️|❌|❌|⚠️
 
 <p align="center">
   ✔️: Supported<br />
