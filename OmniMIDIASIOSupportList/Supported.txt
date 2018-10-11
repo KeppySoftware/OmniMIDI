@@ -1,4 +1,5 @@
 ADJ ASIO|No issues.
+ASIO DirectX Full Duplex Driver|No issues, but OmniMIDI already supports DirectX Audio.
 ASIO POD HD|No issues.
 ASIO PreSonus FireStudio|No issues.
 ASIO2WASAPI|No issues, but useless.
@@ -11,11 +12,12 @@ E-MU ASIO|No issues.
 FL Studio ASIO|No issues, but you can NOT change the buffer size without restarting the stream.
 FlexASIO|Only one issue, the pitch of the output isn't right.
 Focusrite USB 2.0 Audio Driver|No issues.
+Generic Low Latency ASIO Driver|No issues, but the control panel takes a long time to load.
 JACK ASIO Driver|No issues, good for Black MIDIs.
+Komplete ASIO 6|No issues.
 M Audio Delta ASIO|No issues.
 M-Audio FireWire ASIO|No issues.
 M-Track Quad ASIO Driver|No issues.
-Native Instruments Komplete Audio 6|No issues, good for Black MIDIs.
 Pioneer CDJ/DDJ ASIO|No issues.
 Realtek ASIO|No issues, good for Black MIDIs.
 SB Audigy 2 ZS ASIO|No issues.

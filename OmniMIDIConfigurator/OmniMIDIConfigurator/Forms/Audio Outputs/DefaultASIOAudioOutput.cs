@@ -20,6 +20,50 @@ namespace OmniMIDIConfigurator
         public DefaultASIOAudioOutput()
         {
             InitializeComponent();
+
+            try
+            {
+                if (GetASIODevicesCount() < 1)
+                {
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to close this window.", false, null);
+                    Close();
+                    Dispose();
+                }
+
+                BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
+
+                // Populate devices list
+                for (int n = 0; BassAsio.BASS_ASIO_GetDeviceInfo(n, info); n++)
+                    DevicesList.Items.Add(info.ToString());
+
+                // Load previous device from registry
+                String PreviousDevice = (String)OmniMIDIConfiguratorMain.SynthSettings.GetValue("ASIOOutput", "None");
+                DefOut.Text = String.Format("Def. ASIO output: {0}", PreviousDevice);
+
+                DevicesList.SelectedIndex = 0;
+                for (int n = 0; n < DevicesList.Items.Count; n++)
+                {
+                    if (DevicesList.Items[n].Equals(PreviousDevice))
+                    {
+                        DevicesList.SelectedIndex = n;
+                        break;
+                    }
+                }
+
+                MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
+
+                BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, BASSASIOInit.BASS_ASIO_THREAD | BASSASIOInit.BASS_ASIO_JOINORDER);
+                GetASIODeviceInfo();
+
+                DeviceTrigger(true);
+                DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.Message.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                Dispose();
+            }
         }
 
         public static int GetASIODevicesCount()
@@ -47,76 +91,48 @@ namespace OmniMIDIConfigurator
 
         private void GetASIODeviceInfo()
         {
-            BASS_ASIO_INFO dInfo = BassAsio.BASS_ASIO_GetInfo();
-            BASS_ASIO_DEVICEINFO fInfo = new BASS_ASIO_DEVICEINFO();
+            try
+            {
+                BASS_ASIO_INFO dInfo = BassAsio.BASS_ASIO_GetInfo();
+                BASS_ASIO_DEVICEINFO fInfo = new BASS_ASIO_DEVICEINFO();
 
-            BassAsio.BASS_ASIO_GetDeviceInfo(DevicesList.SelectedIndex, fInfo);
+                BassAsio.BASS_ASIO_GetDeviceInfo(DevicesList.SelectedIndex, fInfo);
 
-            DeviceName.Text = 
-                String.Format("{0} (Driver library: {1})", dInfo.name, Path.GetFileName(fInfo.driver).ToUpperInvariant());
-            Inputs.Text = 
-                String.Format("{0} input channels available.", dInfo.inputs);
-            Outputs.Text = 
-                String.Format("{0} output channels available.", dInfo.outputs);
-            BufferInfo.Text = 
-                String.Format("Min/Max size {0}/{1} samples, set to {2} samples (Granularity value: {3})",
-                              dInfo.bufmin, dInfo.bufmax, dInfo.bufpref, GetASIOGranularity(dInfo.bufgran)
-                              );
+                DeviceName.Text =
+                    String.Format("{0} (Driver library: {1})", dInfo.name, Path.GetFileName(fInfo.driver).ToUpperInvariant());
+                Inputs.Text =
+                    String.Format("{0} input channels available.", dInfo.inputs);
+                Outputs.Text =
+                    String.Format("{0} output channels available.", dInfo.outputs);
+                BufferInfo.Text =
+                    String.Format("Min/Max size {0}/{1} samples, set to {2} samples (Granularity value: {3})",
+                                  dInfo.bufmin, dInfo.bufmax, dInfo.bufpref, GetASIOGranularity(dInfo.bufgran));
+            }
+            catch { SetDummyASIOInfo(); }
+        }
+
+        private void SetDummyASIOInfo()
+        {
+            DeviceName.Text = String.Format("The device refused to be interrogated by BASSASIO. ({0})", BassAsio.BASS_ASIO_ErrorGetCode().ToString());
+            Inputs.Text = "N/A";
+            Outputs.Text = "N/A";
+            BufferInfo.Text = "N/A";
         }
 
         private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
         {
-            try
-            {
-                if (GetASIODevicesCount() < 1)
-                {
-                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "No ASIO devices installed!\n\nClick OK to close this window.", false, null);
-                    Close();
-                    Dispose();
-                }
 
-                BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
-
-                // Populate devices list
-                for (int n = 0; BassAsio.BASS_ASIO_GetDeviceInfo(n, info); n++)
-                    DevicesList.Items.Add(info.ToString());
-                
-                // Load previous device from registry
-                String PreviousDevice = (String)OmniMIDIConfiguratorMain.SynthSettings.GetValue("ASIOOutput", "None");
-                DefOut.Text = String.Format("Def. ASIO output: {0}", PreviousDevice);
-
-                DevicesList.SelectedIndex = 0;
-                for (int n = 0; n < DevicesList.Items.Count; n++)
-                {
-                    if (DevicesList.Items[n].Equals(PreviousDevice))
-                    {
-                        DevicesList.SelectedIndex = n;
-                        break;
-                    }
-                }
-
-                MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
-                BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
-                GetASIODeviceInfo();
-
-                DeviceTrigger(true);
-                DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.Message.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-                Dispose();
-            }
         }
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
             Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
             DeviceCP.Enabled = true;
+
             BassAsio.BASS_ASIO_Free();
-            BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
+            BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, BASSASIOInit.BASS_ASIO_THREAD | BASSASIOInit.BASS_ASIO_JOINORDER);
             GetASIODeviceInfo();
+
             DeviceTrigger(false);
         }
 
