@@ -188,7 +188,11 @@ namespace OmniMIDIConfigurator
                                 return "no";
                             }
                         }
-                        else return "no";
+                        else
+                        {
+                            Program.DebugToConsole(false, String.Format("No updates have been found. Latest canary release is {0}.", Release.TagName), null);
+                            return "no";
+                        }
                     }
                     else if (Properties.Settings.Default.UpdateBranch == "delay")
                     {
