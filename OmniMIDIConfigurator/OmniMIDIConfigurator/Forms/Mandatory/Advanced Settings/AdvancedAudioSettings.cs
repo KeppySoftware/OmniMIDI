@@ -131,7 +131,7 @@ namespace OmniMIDIConfigurator
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
-            if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "DirectSound")
+            if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "DirectX Audio")
             {
                 DefaultOutput frm = new DefaultOutput(false);
                 frm.ShowDialog(this);

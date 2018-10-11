@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -27,6 +28,40 @@ namespace OmniMIDIConfigurator
             BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
             for (numbdev = 0; BassAsio.BASS_ASIO_GetDeviceInfo(numbdev, info); numbdev++);
             return numbdev;
+        }
+
+        private string GetASIOGranularity(Int32 Value)
+        {
+            switch (Value)
+            {
+                case -1:
+                    return "Power of 2";
+                case 0:
+                    return "None";
+                case 1:
+                    return "1 sample";
+                default:
+                    return String.Format("{0} samples", Value);
+            }
+        }
+
+        private void GetASIODeviceInfo()
+        {
+            BASS_ASIO_INFO dInfo = BassAsio.BASS_ASIO_GetInfo();
+            BASS_ASIO_DEVICEINFO fInfo = new BASS_ASIO_DEVICEINFO();
+
+            BassAsio.BASS_ASIO_GetDeviceInfo(DevicesList.SelectedIndex, fInfo);
+
+            DeviceName.Text = 
+                String.Format("{0} (Driver library: {1})", dInfo.name, Path.GetFileName(fInfo.driver).ToUpperInvariant());
+            Inputs.Text = 
+                String.Format("{0} input channels available.", dInfo.inputs);
+            Outputs.Text = 
+                String.Format("{0} output channels available.", dInfo.outputs);
+            BufferInfo.Text = 
+                String.Format("Min/Max size {0}/{1} samples, set to {2} samples (Granularity value: {3})",
+                              dInfo.bufmin, dInfo.bufmax, dInfo.bufpref, GetASIOGranularity(dInfo.bufgran)
+                              );
         }
 
         private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
@@ -62,6 +97,7 @@ namespace OmniMIDIConfigurator
 
                 MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
                 BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
+                GetASIODeviceInfo();
 
                 DeviceTrigger(true);
                 DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
@@ -77,8 +113,10 @@ namespace OmniMIDIConfigurator
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
             Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
+            DeviceCP.Enabled = true;
             BassAsio.BASS_ASIO_Free();
             BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, 0);
+            GetASIODeviceInfo();
             DeviceTrigger(false);
         }
 
@@ -91,7 +129,18 @@ namespace OmniMIDIConfigurator
 
         private void DeviceCP_Click(object sender, EventArgs e)
         {
-            BassAsio.BASS_ASIO_ControlPanel();
+            Boolean StatusCP = BassAsio.BASS_ASIO_ControlPanel();
+            if (!StatusCP && BassAsio.BASS_ASIO_ErrorGetCode() != BASSError.BASS_OK)
+            {
+                MessageBox.Show(
+                    String.Format(
+                        "An error has occured while showing the control panel for this device.\nThe button will be disabled.\n\nError: {0}",
+                        BassAsio.BASS_ASIO_ErrorGetCode()),
+                    "ASIO control panel - ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DeviceCP.Enabled = false;
+                return;
+            }
+            GetASIODeviceInfo();
         }
 
         private void ASIODevicesSupport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
