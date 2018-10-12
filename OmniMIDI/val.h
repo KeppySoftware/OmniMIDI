@@ -11,6 +11,8 @@
 #define DEVICE_AVAILABLE 1
 
 // Things
+#define MIDI_IO_PACKED 0x00000000L			// Legacy mode, used by all MIDI apps
+#define MIDI_IO_COOKED 0x00000002L			// Stream mode, used by some apps (Such as Pinball 3D), NOT SUPPORTED
 #define SizeOfArray(type) sizeof(type)/sizeof(type[0])
 
 // Settings managed by client
@@ -35,6 +37,7 @@ typedef struct Settings
 	BOOL LiveChanges = FALSE;				// Live changes
 	BOOL MT32Mode = FALSE;					// Roland MT-32 mode
 	BOOL MonoRendering = TRUE;				// Mono rendering (Instead of stereo by default)
+	BOOL NoBlacklistMessage = TRUE;			// Disable blacklist message (DEPRECATED)
 	BOOL NoteOff1 = 0;						// Note cut INT
 	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
 	BOOL OverrideInstruments = TRUE;		// Override channel instruments
@@ -95,6 +98,7 @@ static DWORD OMFlags = NULL;
 static HDRVR OMDevice = NULL;
 
 // Important stuff
+static BOOL AlreadyInitializedViaKDMAPI = FALSE;
 static BOOL BASSLoadedToMemory = FALSE;
 static volatile BOOL modm_closed = TRUE;
 static volatile BOOL reset_synth = FALSE;

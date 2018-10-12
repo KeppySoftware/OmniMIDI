@@ -15,7 +15,6 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 		// It did, reload the settings and reallocate the memory for the buffer
 		CloseThreads(FALSE);
 		LoadSettings(TRUE);
-		AllocateMemory(TRUE);
 
 		// Initialize the BASS output device, and set up the streams
 		if (InitializeBASS(TRUE)) {
@@ -102,7 +101,6 @@ void DoStartClient() {
 		while (!bass_initialized) {
 			// Load the settings, and allocate the memory for the EVBuffer
 			LoadSettings(FALSE);
-			AllocateMemory(FALSE);
 
 			// Load the BASS functions
 			if (!BASSLoadedToMemory) BASSLoadedToMemory = load_bassfuncs();
@@ -182,18 +180,24 @@ BOOL WINAPI IsKDMAPIAvailable()  {
 }
 
 void InitializeKDMAPIStream() {
-	// The client manually called a KDMAPI init call, KDMAPI is available no matter what
-	KDMAPIEnabled = TRUE;
+	if (!AlreadyInitializedViaKDMAPI) {
+		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
+		KDMAPIEnabled = TRUE;
 
-	// Start the driver's engine
-	DoStartClient();
-	DoResetClient();
+		// Start the driver's engine
+		DoStartClient();
+		DoResetClient();
+	
+		AlreadyInitializedViaKDMAPI = TRUE;
+	}
 }
 
 void TerminateKDMAPIStream() {
 	// If the driver is supposed to terminate the stream, then do so
-	if (CloseStreamMidiOutClose) 
+	if (CloseStreamMidiOutClose && AlreadyInitializedViaKDMAPI) {
 		DoStopClient();
+		AlreadyInitializedViaKDMAPI = FALSE;
+	}
 }
 
 void ResetKDMAPIStream() {

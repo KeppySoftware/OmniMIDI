@@ -277,17 +277,24 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_OPEN:
-		// Parse callback and instance
-		OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
-		OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
-		OMFlags = HIWORD((DWORD)dwParam2);
+		// The driver doesn't support stream mode
+		if ((DWORD)dwParam2 & MIDI_IO_COOKED) return MMSYSERR_NOTENABLED;
 
-		// Open the driver
-		RetVal = DoOpenClient();
+		if (!AlreadyInitializedViaKDMAPI || !bass_initialized) {
+			// Parse callback and instance
+			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
+			OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
+			OMFlags = HIWORD((DWORD)dwParam2);
 
-		// Tell the app that the driver is ready
-		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
-		return RetVal;
+			// Open the driver
+			RetVal = DoOpenClient();
+
+			// Tell the app that the driver is ready
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
+			return RetVal;
+		}
+		// The driver is already being used through KDMAPI
+		return MMSYSERR_ALLOCATED;
 	case MODM_PREPARE:
 		// Pass it to a KDMAPI function
 		return PrepareLongData((MIDIHDR*)dwParam1);
@@ -317,10 +324,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		// The app wants us to close the driver
-		// Only close the stream if the user has chosen to
-		if (CloseStreamMidiOutClose) DoStopClient();
-		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
+		if (!AlreadyInitializedViaKDMAPI && bass_initialized) {
+			// The app wants us to close the driver
+			// Only close the stream if the user has chosen to
+			if (CloseStreamMidiOutClose) DoStopClient();
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);		
+		}
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Maximum longmsg size, 64kB
