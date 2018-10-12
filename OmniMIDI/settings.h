@@ -296,6 +296,7 @@ void AllocateMemory(BOOL restart) {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
 
 		// Check how much RAM is available
+		DWORD TempEvBufferSize;
 		MEMORYSTATUSEX status;
 		status.dwLength = sizeof(status);
 		GlobalMemoryStatusEx(&status);
@@ -380,9 +381,11 @@ void AllocateMemory(BOOL restart) {
 	}
 }
 
-void LoadSettings()
+void LoadSettings(BOOL restart)
 {
 	try {
+		DWORD TEvBufferSize, TEvBufferMultRatio;
+
 		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
 
 		// Load the settings from the registry
@@ -411,8 +414,8 @@ void LoadSettings()
 		RegQueryValueEx(Configuration.Address, L"FullVelocityMode", NULL, &dwType, (LPBYTE)&ManagedSettings.FullVelocityMode, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"FastHotkeys", NULL, &dwType, (LPBYTE)&ManagedSettings.FastHotkeys, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"Extra8Lists", NULL, &dwType, (LPBYTE)&ManagedSettings.Extra8Lists, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"EvBufferSize", NULL, &qwType, (LPBYTE)&TempEvBufferSize, &qwSize);
-		RegQueryValueEx(Configuration.Address, L"EvBufferMultRatio", NULL, &dwType, (LPBYTE)&EvBufferMultRatio, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"EvBufferSize", NULL, &qwType, (LPBYTE)&TEvBufferSize, &qwSize);
+		RegQueryValueEx(Configuration.Address, L"EvBufferMultRatio", NULL, &dwType, (LPBYTE)&TEvBufferMultRatio, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"EnableSFX", NULL, &dwType, (LPBYTE)&ManagedSettings.EnableSFX, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"DontMissNotes", NULL, &dwType, (LPBYTE)&ManagedSettings.DontMissNotes, &dwSize);
@@ -456,6 +459,12 @@ void LoadSettings()
 			_PrsData = ParseData;
 			_PlayBufData = PlayBufferedData;
 			_PlayBufDataChk = PlayBufferedDataChunk;
+		}
+
+		if (!restart || TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio) {
+			EvBufferSize = TEvBufferSize;
+			EvBufferMultRatio = TEvBufferMultRatio;
+			AllocateMemory(restart);
 		}
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");

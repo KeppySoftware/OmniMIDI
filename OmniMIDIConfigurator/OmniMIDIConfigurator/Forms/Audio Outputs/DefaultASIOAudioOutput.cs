@@ -119,14 +119,8 @@ namespace OmniMIDIConfigurator
             BufferInfo.Text = "N/A";
         }
 
-        private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
             DeviceCP.Enabled = true;
 
             BassAsio.BASS_ASIO_Free();
@@ -139,6 +133,7 @@ namespace OmniMIDIConfigurator
         private void Quit_Click(object sender, EventArgs e)
         {
             BassAsio.BASS_ASIO_Free();
+            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
             Close();
             Dispose();
         }

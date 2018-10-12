@@ -56,7 +56,7 @@
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 7;
-            this.Quit.Text = "OK";
+            this.Quit.Text = "Apply";
             this.Quit.UseVisualStyleBackColor = true;
             this.Quit.Click += new System.EventHandler(this.Quit_Click);
             // 

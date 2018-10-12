@@ -14,7 +14,7 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 
 		// It did, reload the settings and reallocate the memory for the buffer
 		CloseThreads(FALSE);
-		LoadSettings();
+		LoadSettings(TRUE);
 		AllocateMemory(TRUE);
 
 		// Initialize the BASS output device, and set up the streams
@@ -101,7 +101,7 @@ void DoStartClient() {
 		bass_initialized = FALSE;
 		while (!bass_initialized) {
 			// Load the settings, and allocate the memory for the EVBuffer
-			LoadSettings();
+			LoadSettings(FALSE);
 			AllocateMemory(FALSE);
 
 			// Load the BASS functions
