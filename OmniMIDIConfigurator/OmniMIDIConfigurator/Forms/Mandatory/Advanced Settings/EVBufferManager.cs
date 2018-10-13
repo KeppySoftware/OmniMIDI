@@ -13,7 +13,7 @@ namespace OmniMIDIConfigurator
     public partial class EVBufferManager : Form
     {
         ulong installedMemory;
-        string basetextwarning = "WARNING:\nLeave at least {0} of RAM available for the operating system.";
+        string basetextwarning = "WARNING:\nYou should leave at least {0} of RAM available to Windows.";
 
         public EVBufferManager()
         {
@@ -62,7 +62,7 @@ namespace OmniMIDIConfigurator
                 ulong evbuffsizetemp = Convert.ToUInt64(OmniMIDIConfiguratorMain.SynthSettings.GetValue("EvBufferSize", "4096"));
                 BytesVal.Enabled = true;
                 RatioVal.Enabled = false;
-                if (evbuffsizetemp >= installedMemory) BytesVal.Value = 16384;
+                if (evbuffsizetemp >= installedMemory) BytesVal.Value = 4096;
                 else BytesVal.Value = evbuffsizetemp;
                 RatioVal.Value = 1;
             }
@@ -76,23 +76,39 @@ namespace OmniMIDIConfigurator
             {
                 if ((check >= installedMemory) || ((RatioVal.Value == 1) && (GetRAMSize.Checked == true)))
                 {
-                    WarningPanel.Visible = true;
                     WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wir;
-                    WarningLabel.Text = String.Format("ERROR:\nSorry, but no.");
+                    WarningLabel.Text = String.Format("ERROR:\nYou cannot use all the available memory!");
                     ApplySettings.Enabled = false;
                 }
                 else
                 {
-                    WarningPanel.Visible = true;
                     WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                    WarningLabel.Text = String.Format("WARNING:\nLeave at least {0} of RAM available for Windows.",
-                                                      SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
+                    WarningLabel.Text = String.Format(basetextwarning, SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
                     ApplySettings.Enabled = true;
                 }
             }
+            else if (check > 1 && check < 128)
+            {
+                WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
+                WarningLabel.Text = "WARNING: You might experience lag when going below 128 bytes.";
+                ApplySettings.Enabled = true;
+            }
+            else if (check == 1)
+            {
+                WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
+                WarningLabel.Text = "WARNING: Good luck.";
+                ApplySettings.Enabled = true;
+            }
+            else if (check < 1)
+            {
+                WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.infoicon;
+                WarningLabel.Text = "ERROR:\nHooray, you found the easter egg! Now set a valid value.";
+                ApplySettings.Enabled = false;
+            }
             else
             {
-                WarningPanel.Visible = false;
+                WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
+                WarningLabel.Text = "Looks perfect!";
                 ApplySettings.Enabled = true;
             }
         }
@@ -118,7 +134,7 @@ namespace OmniMIDIConfigurator
         private void ResetSettings_Click(object sender, EventArgs e)
         {
             GetRAMSize.Checked = false;
-            BytesVal.Value = 16384;
+            BytesVal.Value = 4096;
             RatioVal.Value = 1;
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "0", Microsoft.Win32.RegistryValueKind.DWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferSize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);

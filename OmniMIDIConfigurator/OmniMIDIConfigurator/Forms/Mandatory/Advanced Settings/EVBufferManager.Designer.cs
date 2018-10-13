@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EVBufferManager));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.BytesVal = new System.Windows.Forms.NumericUpDown();
@@ -55,7 +56,7 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(423, 34);
+            this.label1.Size = new System.Drawing.Size(423, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Set a custom size/ratio for the EV Buffer here.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -65,12 +66,11 @@
             this.label2.Dock = System.Windows.Forms.DockStyle.Top;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label2.Location = new System.Drawing.Point(0, 34);
+            this.label2.Location = new System.Drawing.Point(0, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(423, 39);
+            this.label2.Size = new System.Drawing.Size(423, 53);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Tampering with this setting may lead to\r\nunexpected data loss and system crashes," +
-    " \r\nand you\'re responsible for anything that might happen.";
+            this.label2.Text = resources.GetString("label2.Text");
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // BytesVal
@@ -79,11 +79,6 @@
             this.BytesVal.Maximum = new decimal(new int[] {
             0,
             128,
-            0,
-            0});
-            this.BytesVal.Minimum = new decimal(new int[] {
-            1,
-            0,
             0,
             0});
             this.BytesVal.Name = "BytesVal";
@@ -146,11 +141,11 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(261, 82);
+            this.label5.Location = new System.Drawing.Point(244, 82);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(23, 12);
+            this.label5.Size = new System.Drawing.Size(57, 12);
             this.label5.TabIndex = 6;
-            this.label5.Text = "ratio";
+            this.label5.Text = "division ratio";
             // 
             // ApplySettings
             // 
@@ -181,7 +176,6 @@
             this.WarningPanel.Name = "WarningPanel";
             this.WarningPanel.Size = new System.Drawing.Size(399, 32);
             this.WarningPanel.TabIndex = 9;
-            this.WarningPanel.Visible = false;
             // 
             // WarningLabel
             // 
@@ -231,10 +225,11 @@
             // 
             // ExemptRealTime
             // 
-            this.ExemptRealTime.Enabled = false;
+            this.ExemptRealTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExemptRealTime.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ExemptRealTime.Name = "ExemptRealTime";
-            this.ExemptRealTime.Size = new System.Drawing.Size(219, 17);
-            this.ExemptRealTime.Text = "You can change this setting in real-time.";
+            this.ExemptRealTime.Size = new System.Drawing.Size(266, 17);
+            this.ExemptRealTime.Text = "You can change this setting in real-time, but be careful.";
             // 
             // EVBufferManager
             // 
