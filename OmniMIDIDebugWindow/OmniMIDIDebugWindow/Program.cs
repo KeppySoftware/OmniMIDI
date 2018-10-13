@@ -29,18 +29,6 @@ namespace OmniMIDIDebugWindow
         [STAThread]
         static void Main()
         {
-            if (Environment.OSVersion.Version.Major < 6)
-            {
-                try
-                {
-                    System.Media.SystemSounds.Hand.Play();
-                    Environment.Exit(-1);
-                }
-                catch
-                {
-                    Environment.Exit(-1);
-                }
-            }
             bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIDebugWindowToFront");
             m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIDebugWindow", out ok);

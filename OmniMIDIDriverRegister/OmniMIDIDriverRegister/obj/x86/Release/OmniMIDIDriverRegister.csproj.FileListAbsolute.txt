@@ -13,3 +13,10 @@ E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniDriverRegi
 E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.csproj.CoreCompileInputs.cache
 E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.exe
 E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.pdb
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.csprojAssemblyReference.cache
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.OmniMIDIDefaultDialog.resources
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.Properties.Resources.resources
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.csproj.GenerateResource.cache
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.csproj.CoreCompileInputs.cache
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.exe
+E:\GitHub Repositories\Keppy-s-Synthesizer\OmniMIDIDriverRegister\OmniMIDIDriverRegister\obj\x86\Release\OmniMIDIDriverRegister.pdb

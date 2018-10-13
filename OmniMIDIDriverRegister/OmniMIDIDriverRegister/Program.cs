@@ -21,11 +21,6 @@ namespace OmniMIDIDriverRegister
         static void Main(string[] args)
         {
             List<string> copyme = new List<string>();
-            if (Environment.OSVersion.Version.Major < 6)
-            {
-                MessageBox.Show("Keppy's Synthesizer is not compatible with Windows NT 5.x operating systems.\n\nPress OK to quit.", "Keppy's Synthesizer R/U Tool ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Environment.Exit(0xA);
-            }
             if (args.Length != 0)
             {
                 foreach (String s in args)

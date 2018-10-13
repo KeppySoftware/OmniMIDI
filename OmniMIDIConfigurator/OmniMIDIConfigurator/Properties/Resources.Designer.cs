@@ -287,26 +287,6 @@ namespace OmniMIDIConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] loudmax32 {
-            get {
-                object obj = ResourceManager.GetObject("loudmax32", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] loudmax64 {
-            get {
-                object obj = ResourceManager.GetObject("loudmax64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap MvDwIcon {

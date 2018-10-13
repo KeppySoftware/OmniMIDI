@@ -107,17 +107,19 @@ void NTSleep(__int64 usec) {
 #include "drvinit.h"
 #include "kdmapi.h"
 
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
-	if (fdwReason == DLL_PROCESS_ATTACH){
-		hinst = hinstDLL;
+	switch (fdwReason) {
+	case DLL_PROCESS_ATTACH:
+		hinst = (HINSTANCE)hinstDLL;
 		NtDelayExecution = (NDE)GetProcAddress(LoadLibrary(L"ntdll"), "NtDelayExecution");
-		DisableThreadLibraryCalls(hinstDLL);
+		DisableThreadLibraryCalls((HMODULE)hinstDLL);
+		break;
+	case DLL_PROCESS_DETACH: break;
+	case DLL_THREAD_ATTACH: break;
+	case DLL_THREAD_DETACH: break;
 	}
-	else if (fdwReason == DLL_PROCESS_DETACH)
-	{
-		
-	}
+
 	return TRUE;
 }
 

@@ -51,7 +51,7 @@ FlatComponentsList=False
 InternalCompressLevel=ultra64
 LanguageDetectionMethod=none
 LicenseFile=license.txt
-MinVersion=0,6.0.6001sp2
+MinVersion=0,5.01.2600sp3
 OutputBaseFilename={#OutputName}
 SetupIconFile={#Icon}
 ShowLanguageDialog=no
@@ -75,7 +75,8 @@ WizardSmallImageFile=scripts\smallimage.bmp
 [Files]
 ; 64-bit OS
 Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Is64BitInstallMode
-Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
+Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,6.0sp2; Check: Is64BitInstallMode
+Source: "{#outputdir32}\{#Configurator}XP.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; OnlyBelowVersion: 0,6.0; Check: Is64BitInstallMode
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Is64BitInstallMode
@@ -85,7 +86,8 @@ Source: "{#outputdir32}\midioutsetter64.exe"; DestDir: "{syswow64}\{#InstallDir}
 Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: Is64BitInstallMode
 
 ; 32-bit OS
-Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
+Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,6.0sp2; Check: not Is64BitInstallMode
+Source: "{#outputdir32}\{#Configurator}XP.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; OnlyBelowVersion: 0,6.0; Check: Is64BitInstallMode
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not Is64BitInstallMode
 Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not Is64BitInstallMode
@@ -287,6 +289,21 @@ SetupWindowTitle=Setup - %1 {#Version}
 // Code by David Rickard
 // Link: https://blogs.msdn.microsoft.com/davidrickard/2015/07/17/installing-net-framework-4-5-automatically-with-inno-setup/
 
+function IsWindowsVersionOrNewer(Major, Minor: Integer): boolean;
+var
+  Version: TWindowsVersion;
+begin
+  GetWindowsVersionEx(Version);
+  Result :=
+    (Version.Major > Major) or
+    ((Version.Major = Major) and (Version.Minor >= Minor));
+end;
+
+function IsWindowsVistaOrNewer(): boolean;
+begin
+  Result := IsWindowsVersionOrNewer(6, 0);
+end;
+
 function Framework45IsNotInstalled(): boolean;
 var
   bSuccess: Boolean;
@@ -302,10 +319,10 @@ end;
 
 procedure InitializeWizard;
 begin
-  if Framework45IsNotInstalled() then
+  if Framework45IsNotInstalled() and IsWindowsVistaOrNewer() then
   begin
     idpAddFile('http://go.microsoft.com/fwlink/?LinkId=397707', ExpandConstant('{tmp}\NetFrameworkInstaller.exe'));
-    idpDownloadAfter(wpReady);
+    idpDownloadAfter(wpPreparing);
   end;
 end;
 
