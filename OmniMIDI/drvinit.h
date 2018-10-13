@@ -275,11 +275,13 @@ BOOL CreateThreads(BOOL startup) {
 	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	reset_synth = 0;
 
-	PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
-	CheckIfThreadClosed(ATThread.ThreadHandle);
-	ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioEngineHP : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
-	SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
-	PrintToConsole(FOREGROUND_RED, 1, "Done...");
+	if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+		PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
+		CheckIfThreadClosed(ATThread.ThreadHandle);
+		ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioEngineHP : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
+		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
+		PrintToConsole(FOREGROUND_RED, 1, "Done...");
+	}
 
 	if (!DThread.ThreadHandle)
 	{

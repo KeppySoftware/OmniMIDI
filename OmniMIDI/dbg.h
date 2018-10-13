@@ -2,6 +2,10 @@
 OmniMIDI debug functions
 */
 
+void Pointer(LPCWSTR Msg) {
+	MessageBoxW(NULL, Msg, L"Debug pointer", MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
+}
+
 void AppName() {
 	try {
 		ZeroMemory(modulename, MAX_PATH * sizeof(char));
@@ -70,7 +74,7 @@ void CreateConsole() {
 		std::cout << "Be the change that you wish to see in the world.";
 		std::cout << std::endl;
 		std::cout << "OmniMIDI Version " << major << "." << minor << "." << build << "." << revision;
-		std::cout << std::endl << "Copyright 2014 - KaleidonKep99";
+		std::cout << std::endl << "Copyright(C) 2013 - KaleidonKep99";
 		std::cout << std::endl;
 		IntroAlreadyShown = TRUE;
 	}
@@ -89,11 +93,7 @@ inline bool DebugFileExists(const std::string& name) {
 	}
 }
 
-void Pointer(LPCSTR Msg) {
-	MessageBoxA(NULL, Msg, "Debug pointer", MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
-}
-
-void PrintToConsole(int color, long stage, const char* text) {
+void PrintToConsole(int color, long long stage, const char* text) {
 	if (ManagedSettings.DebugMode) {
 		// Set color
 		SetConsoleTextAttribute(hConsole, color);

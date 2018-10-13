@@ -87,8 +87,8 @@ static evbuf_t * evbuf;						// The buffer
 static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
 static volatile LONGLONG eventcount = 0;	// Total events present in the buffer
-static ULONGLONG EvBufferSize = 4096;
-static DWORD EvBufferMultRatio = 1;
+static ULONGLONG EvBufferSize;
+static DWORD EvBufferMultRatio;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff

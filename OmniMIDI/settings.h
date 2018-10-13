@@ -283,12 +283,17 @@ BOOL load_bassfuncs()
 
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
-	memset(evbuf, 0, sizeof(evbuf_t));
+	PrintToConsole(FOREGROUND_BLUE, 1, "Freeing EV buffer...");
+	memset(evbuf, 0, sizeof(evbuf));
 	free(evbuf);
 	evbuf = NULL;
-	memset(sndbf, 0, sizeof(float));
+	PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
+
+	PrintToConsole(FOREGROUND_BLUE, 1, "Freeing audio buffer...");
+	memset(sndbf, 0, sizeof(sndbf));
 	free(sndbf);
 	sndbf = NULL;
+	PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
 }
 
 void AllocateMemory(BOOL restart) {
@@ -296,7 +301,7 @@ void AllocateMemory(BOOL restart) {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
 
 		// Check how much RAM is available
-		DWORD TempEvBufferSize;
+		ULONGLONG TempEvBufferSize = EvBufferSize;
 		MEMORYSTATUSEX status;
 		status.dwLength = sizeof(status);
 		GlobalMemoryStatusEx(&status);
@@ -332,9 +337,9 @@ void AllocateMemory(BOOL restart) {
 		std::ostringstream st;
 		std::ostringstream nd;
 		std::ostringstream rd;
-		st << "EV buffer size: " << TempEvBufferSize;
+		st << "EV buffer size: " << TempEvBufferSize << "bytes";
 		nd << "EV buffer ratio: " << EvBufferMultRatio;
-		rd << "EV buffer final size: " << EvBufferSize;
+		rd << "EV buffer final size: " << EvBufferSize << "bytes";
 
 		PrintToConsole(FOREGROUND_BLUE, 1, st.str().c_str());
 		PrintToConsole(FOREGROUND_BLUE, 1, nd.str().c_str());
@@ -343,19 +348,13 @@ void AllocateMemory(BOOL restart) {
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
 		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
 
+		if (restart) FreeUpMemory();
+
 		// Begin allocating the EVBuffer
 		if (evbuf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer already allocated.");
 		else {
-			if (restart) {
-				PrintToConsole(FOREGROUND_BLUE, 1, "Freeing EV buffer...");
-				memset(evbuf, 0, sizeof(evbuf));
-				free(evbuf);
-				evbuf = NULL;
-				PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
-			}
-
 			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
-			evbuf = (evbuf_t *)calloc((unsigned long long)EvBufferSize, sizeof(evbuf_t));
+			evbuf = (evbuf_t *)calloc(EvBufferSize, sizeof(evbuf_t));
 			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
 			EVBuffReady = TRUE;
 		}
@@ -363,14 +362,6 @@ void AllocateMemory(BOOL restart) {
 		// Done, now allocate the buffer for the ".WAV mode"
 		if (sndbf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer already allocated.");
 		else {
-			if (restart) {
-				PrintToConsole(FOREGROUND_BLUE, 1, "Freeing audio buffer...");
-				memset(sndbf, 0, sizeof(sndbf));
-				free(sndbf);
-				sndbf = NULL;
-				PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
-			}
-
 			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
 			sndbf = (float *)calloc(256.0f, sizeof(float));
 			PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
@@ -381,10 +372,14 @@ void AllocateMemory(BOOL restart) {
 	}
 }
 
+LPCWSTR BoolToString(BOOL A) {
+	return A ? L"TRUE" : L"FALSE";
+}
+
 void LoadSettings(BOOL restart)
 {
 	try {
-		DWORD TEvBufferSize, TEvBufferMultRatio;
+		ULONGLONG TEvBufferSize, TEvBufferMultRatio;
 
 		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
 
@@ -461,7 +456,7 @@ void LoadSettings(BOOL restart)
 			_PlayBufDataChk = PlayBufferedDataChunk;
 		}
 
-		if (!restart || TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio) {
+		if (!restart || (TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
 			EvBufferSize = TEvBufferSize;
 			EvBufferMultRatio = TEvBufferMultRatio;
 			AllocateMemory(restart);

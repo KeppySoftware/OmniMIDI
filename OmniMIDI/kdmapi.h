@@ -27,7 +27,7 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 		return FALSE;
 	}
 	else {
-		if (stop_thread || ATThread.ThreadHandle == NULL) CreateThreads(FALSE);
+		if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != ASIO_ENGINE)) CreateThreads(FALSE);
 	}
 
 	return TRUE;
@@ -183,6 +183,12 @@ void InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI) {
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
 		KDMAPIEnabled = TRUE;
+
+		// Enable the debug log, if the process isn't banned
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem()))
+			CreateConsole();
 
 		// Start the driver's engine
 		DoStartClient();

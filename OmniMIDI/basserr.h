@@ -2,7 +2,7 @@
 OmniMIDI errors list
 */
 
-LPCWSTR ReturnBASSError(DWORD ErrorCode) {
+LPCWSTR ReturnBASSError(INT ErrorCode) {
 	switch (ErrorCode) {
 	case -1: return L"BASS_ERROR_UNKNOWN";
 	case 0: return L"BASS_OK";
@@ -46,7 +46,7 @@ LPCWSTR ReturnBASSError(DWORD ErrorCode) {
 	}
 }
 
-LPCWSTR ReturnBASSErrorDesc(DWORD ErrorCode) {
+LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	switch (ErrorCode) {
 	case -1: return L"Unknown error.";
 	case 0: return L"No error detected.";
@@ -90,7 +90,7 @@ LPCWSTR ReturnBASSErrorDesc(DWORD ErrorCode) {
 	}
 }
 
-LPCWSTR ReturnBASSErrorFix(DWORD ErrorCode) {
+LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 	switch (ErrorCode) {
 	case -1:
 		return L"The cause of the error is unknown, no description is available.";
@@ -248,6 +248,7 @@ void CrashMessage(LPCWSTR part) {
 		MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 	}
 
+	block_bassinit = TRUE;
 	stop_thread = TRUE;
 
 	throw ErrorID;
