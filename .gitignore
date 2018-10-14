@@ -85,3 +85,4 @@ output/Test OmniMIDI Configurator.bat
 Sign and compile setup.bat
 Sign runtime.bat
 Sign WinMM patches and BASS.bat
+output/OmniMIDIDev.zip
