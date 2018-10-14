@@ -121,4 +121,4 @@ KDMAPI VOID ChangeDriverSettings(const Settings* Struct, DWORD StructSize);
 KDMAPI VOID LoadCustomSoundFontsList(const TCHAR* Directory);
 
 // Get a pointer to the debug info of the driver.
-KDMAPI DebugInfo* WINAPI GetDriverDebugInfo();
+KDMAPI DebugInfo* GetDriverDebugInfo();

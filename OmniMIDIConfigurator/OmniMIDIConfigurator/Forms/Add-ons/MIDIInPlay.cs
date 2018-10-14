@@ -149,11 +149,6 @@ namespace OmniMIDIConfigurator
         }
     }
 
-    public static class OmniMIDI
-    {
-
-    }
-
     internal static class WinMM
     {
         internal const int MMSYSERR_NOERROR = 0;
