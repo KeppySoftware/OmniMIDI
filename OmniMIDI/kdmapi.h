@@ -160,12 +160,12 @@ void DoResetClient() {
 	ResetSynth(0);
 }
 
-BOOL WINAPI ReturnKDMAPIVer(DWORD &Major, DWORD &Minor, DWORD &Build, DWORD &Revision) {
+BOOL ReturnKDMAPIVer(DWORD &Major, DWORD &Minor, DWORD &Build, DWORD &Revision) {
 	Major = 1; Minor = 30; Build = 0; Revision = 51;
 	return TRUE;
 }
 
-BOOL WINAPI IsKDMAPIAvailable()  {
+BOOL IsKDMAPIAvailable()  {
 	// Parse the current state of the KDMAPI
 	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
@@ -179,7 +179,7 @@ BOOL WINAPI IsKDMAPIAvailable()  {
 	return KDMAPIEnabled;
 }
 
-void InitializeKDMAPIStream() {
+VOID InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI) {
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
 		KDMAPIEnabled = TRUE;
@@ -198,7 +198,7 @@ void InitializeKDMAPIStream() {
 	}
 }
 
-void TerminateKDMAPIStream() {
+VOID TerminateKDMAPIStream() {
 	// If the driver is supposed to terminate the stream, then do so
 	if (CloseStreamMidiOutClose && AlreadyInitializedViaKDMAPI) {
 		DoStopClient();
@@ -206,17 +206,17 @@ void TerminateKDMAPIStream() {
 	}
 }
 
-void ResetKDMAPIStream() {
+VOID ResetKDMAPIStream() {
 	// Redundant
 	DoResetClient();
 }
 
-MMRESULT WINAPI SendDirectData(DWORD dwMsg) {
+MMRESULT SendDirectData(DWORD dwMsg) {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
 	return _PrsData(MODM_DATA, dwMsg, 0);
 }
 
-MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
+MMRESULT SendDirectDataNoBuf(DWORD dwMsg) {
 	try {
 		// Send the data directly to BASSMIDI, bypassing the buffer altogether
 		if (EVBuffReady) SendToBASSMIDI(dwMsg);
@@ -228,7 +228,7 @@ MMRESULT WINAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	}
 }
 
-MMRESULT WINAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
+MMRESULT PrepareLongData(MIDIHDR* IIMidiHdr) {
 	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;			// The buffer doesn't exist or is too big, invalid parameter
 
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
@@ -240,7 +240,7 @@ MMRESULT WINAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT WINAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
+MMRESULT UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
 	if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
@@ -253,7 +253,7 @@ MMRESULT WINAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
+MMRESULT SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	try {
 		if (EVBuffReady) {
 			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
@@ -279,11 +279,11 @@ MMRESULT WINAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	catch (...) { return MMSYSERR_INVALPARAM; }
 }
 
-MMRESULT WINAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
+MMRESULT SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 	return SendDirectLongData(IIMidiHdr);
 }
 
-VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
+VOID ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	if (Struct == nullptr) {
 		// The app returned an invalid pointer, or "nullptr" on purpose
 		// Fallback to the registry
@@ -331,12 +331,12 @@ VOID WINAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
 }
 
-VOID WINAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
+VOID LoadCustomSoundFontsList(const TCHAR* Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	LoadFonts(Directory);
 }
 
-DebugInfo* WINAPI GetDriverDebugInfo() {
+DebugInfo* GetDriverDebugInfo() {
 	// Parse the debug info, and return them to the app
 	return &ManagedDebugInfo;
 }

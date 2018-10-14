@@ -12,7 +12,7 @@ I also post my updates on Discord, to keep everyone up-to-date 24/7!
 Join now here: https://discord.gg/jUaHPrP
 
 ## Keppy's Direct MIDI API for developers
-You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](KDMAPI.md)<br/>
+You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
 You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
 
 ## Reviews

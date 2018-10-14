@@ -1,11 +1,5 @@
 // OmniMIDI Values
 
-// Audio engines
-#define AUDTOWAV 0
-#define DSOUND_ENGINE 1
-#define ASIO_ENGINE 2
-#define WASAPI_ENGINE 3
-
 // Device status
 #define DEVICE_UNAVAILABLE 0
 #define DEVICE_AVAILABLE 1
@@ -17,63 +11,6 @@
 
 // Settings managed by client
 static BOOL AlreadyStartedOnce = FALSE;
-
-typedef struct Settings
-{
-	BOOL AlternativeCPU = FALSE;			// Autopanic switch (DEPRECATED)
-	BOOL CapFramerate = FALSE;				// Cap input framerate
-	BOOL DebugMode = FALSE;					// Debug console
-	BOOL DisableNotesFadeOut = 0;			// Disable fade-out
-	BOOL DontMissNotes = FALSE;				// Slow down instead of missing notes
-
-	BOOL EnableSFX = TRUE;					// Enable or disable FXs
-	BOOL FastHotkeys = FALSE;				// Enable/Disable fast hotkeys
-	BOOL FullVelocityMode = FALSE;			// Enable full velocity mode
-	BOOL IgnoreNotesBetweenVel = FALSE;		// Ignore notes in between two velocity values
-	BOOL IgnoreAllEvents = FALSE;			// Ignore all MIDI events
-	BOOL IgnoreSysEx = FALSE;				// Ignore SysEx events
-	BOOL IgnoreSysReset = FALSE;			// Ignore sysex messages
-	BOOL LimitTo88Keys = FALSE;				// Limit to 88 keys
-	BOOL LiveChanges = FALSE;				// Live changes
-	BOOL MT32Mode = FALSE;					// Roland MT-32 mode
-	BOOL MonoRendering = TRUE;				// Mono rendering (Instead of stereo by default)
-	BOOL NoBlacklistMessage = TRUE;			// Disable blacklist message (DEPRECATED)
-	BOOL NoteOff1 = 0;						// Note cut INT
-	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
-	BOOL OverrideInstruments = TRUE;		// Override channel instruments
-	BOOL PreloadSoundFonts = TRUE;			// Soundfont preloading
-	BOOL SincInter = FALSE;					// Sinc
-	BOOL SleepStates = TRUE;				// Reduce CPU overhead
-	BOOL VolumeMonitor = TRUE;				// Volume monitoring
-
-	DWORD AudioBitDepth = 1;				// Floating poDWORD audio
-	DWORD AudioFrequency = 48000;			// Audio frequency
-	DWORD AudioOutputReg = 0;				// Audio output (All devices except AudToWAV and ASIO)
-	DWORD BufferLength = 0;					// Default
-	DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
-	DWORD DefaultSFList = 1;				// Default soundfont list
-	DWORD DriverPriority = 0;				// Process priority
-	DWORD Extra8Lists = 0;					// Enable extra 8 SoundFont lists
-	DWORD MaxRenderingTime = 75;			// CPU usage INT
-	DWORD MaxVelIgnore = 1;					// Ignore notes in between two velocity values
-	DWORD MinVelIgnore = 1;					// Ignore notes in between two velocity values
-	DWORD OutputVolume = 10000;				// Volume
-	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
-	DWORD MaxVoices = 500;					// Voices limit
-	DWORD SincConv = 2;						// Sinc
-
-	// Add more down here
-	// ------------------
-};
-
-typedef struct DebugInfo
-{
-	FLOAT RenderingTime = 0.0f;
-	DWORD ActiveVoices[16];
-
-	// Add more down here
-	// ------------------
-};
 
 // EVBuffer
 struct evbuf_t {

@@ -725,7 +725,7 @@ void FillContentDebug(
 	float CCUI0,				// Rendering time
 	int HC,						// App's handles
 	unsigned long long RUI,		// App's working size/RAM usage
-	bool KDMAPI,				// KDMAPI status
+	bool KDMAPIStatus,			// KDMAPI status
 	double TD1,					// Thread 1's latency
 	double TD2,					// Thread 2's latency
 	double TD3,					// Thread 3's latency
@@ -754,7 +754,7 @@ void FillContentDebug(
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
-	PipeContent += "\nOMDirect = " + std::to_string(KDMAPI);
+	PipeContent += "\nOMDirect = " + std::to_string(KDMAPIStatus);
 	PipeContent += "\nTd1 = " + std::to_string(TD1);
 	PipeContent += "\nTd2 = " + std::to_string(TD2);
 	PipeContent += "\nTd3 = " + std::to_string(TD3);

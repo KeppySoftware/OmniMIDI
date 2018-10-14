@@ -11,7 +11,10 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
 #endif
 
+typedef unsigned __int64 QWORD;
+
 #define STRICT
+#define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
 #define __STDC_LIMIT_MACROS
 #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
@@ -45,6 +48,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #include <vector>
 #include <windows.h>
 #include "Resource.h"
+#include "OmniMIDI.h"
 
 // BASS headers
 #include <bass.h>

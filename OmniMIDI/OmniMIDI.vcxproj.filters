@@ -52,6 +52,9 @@
     <ClInclude Include="kdmapi.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="OmniMIDI.h">
+      <Filter>Runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

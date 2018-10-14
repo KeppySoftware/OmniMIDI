@@ -220,7 +220,7 @@ namespace OmniMIDIConfigurator
 
         private void KDMAPIVer_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI/blob/master/KDMAPI.md");
+            Process.Start("https://github.com/KeppySoftware/OmniMIDI/blob/master/DeveloperContent/KDMAPI.md");
         }
 
         private void CFU_Click(object sender, EventArgs e)
