@@ -160,8 +160,8 @@ void DoResetClient() {
 	ResetSynth(0);
 }
 
-BOOL ReturnKDMAPIVer(DWORD &Major, DWORD &Minor, DWORD &Build, DWORD &Revision) {
-	Major = 1; Minor = 30; Build = 0; Revision = 51;
+BOOL ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
+	*Major = 1; *Minor = 30; *Build = 0; *Revision = 51;
 	return TRUE;
 }
 

@@ -104,9 +104,9 @@ static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug
 static BOOL SettingsManagedByClient = FALSE;
-static Settings ManagedSettings;
-static DebugInfo ManagedDebugInfo;
 static FLOAT RenderingTime = 0.0f;
+static Settings ManagedSettings = DEFAULT_SETTINGS;
+static DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
 
 // Priority values
 static DWORD prioval[7] =
