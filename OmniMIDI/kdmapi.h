@@ -231,8 +231,11 @@ MMRESULT SendDirectDataNoBuf(DWORD dwMsg) {
 MMRESULT PrepareLongData(MIDIHDR* IIMidiHdr) {
 	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;			// The buffer doesn't exist or is too big, invalid parameter
 
+	void* Mem = IIMidiHdr->lpData;
+	unsigned long Size = sizeof(IIMidiHdr->lpData);
+
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	if (!VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
+	if (!NtLockVirtualMemory(GetCurrentProcess(), &Mem, &Size, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
 		return MMSYSERR_NOMEM;
 
 	// Mark the buffer as prepared, and say that everything is oki-doki
@@ -248,8 +251,12 @@ MMRESULT UnprepareLongData(MIDIHDR* IIMidiHdr) {
 
 	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
 
+	void* Mem = IIMidiHdr->lpData;
+	unsigned long Size = sizeof(IIMidiHdr->lpData);
+
 	// Unlock the buffer, and say that everything is oki-doki
-	VirtualUnlock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
+	NtUnlockVirtualMemory(GetCurrentProcess(), &Mem, &Size, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM);
+	RtlSecureZeroMemory(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
 	return MMSYSERR_NOERROR;
 }
 

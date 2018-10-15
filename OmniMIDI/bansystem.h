@@ -29,12 +29,12 @@ BOOL BlackListSystem(){
 	wchar_t fullmodulename[MAX_PATH];
 
 	// Clears all the tchars
-	memset(defaultstring, 0, sizeof(wchar_t) * MAX_PATH);
-	memset(userstring, 0, sizeof(wchar_t) * MAX_PATH);
-	memset(defaultblacklistdirectory, 0, sizeof(wchar_t) * MAX_PATH);
-	memset(userblacklistdirectory, 0, sizeof(wchar_t) * MAX_PATH);
-	memset(modulename, 0, sizeof(wchar_t) * MAX_PATH);
-	memset(fullmodulename, 0, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(defaultstring, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(userstring, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(defaultblacklistdirectory, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(userblacklistdirectory, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(modulename, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(fullmodulename, sizeof(wchar_t) * MAX_PATH);
 
 	// Start the system
 	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, defaultblacklistdirectory);
@@ -91,10 +91,10 @@ BOOL BlackListInit(){
 	wchar_t vmidisynth2exe[MAX_PATH];
 
 	// Clears all the tchars
-	memset(modulename, 0, sizeof(wchar_t) * MAX_PATH);
-	ZeroMemory(bassmididrv, 0, sizeof(wchar_t) * MAX_PATH);
-	ZeroMemory(vmidisynthdll, 0, sizeof(wchar_t) * MAX_PATH);
-	ZeroMemory(vmidisynth2exe, 0, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(modulename, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(bassmididrv, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(vmidisynthdll, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(vmidisynth2exe, sizeof(wchar_t) * MAX_PATH);
 
 	// Here we go
 #if defined(_WIN64)

@@ -293,13 +293,13 @@ void ResetEVBufferSettings() {
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
 	PrintToConsole(FOREGROUND_BLUE, 1, "Freeing EV buffer...");
-	memset(evbuf, 0, sizeof(evbuf));
+	RtlSecureZeroMemory(evbuf, sizeof(evbuf));
 	free(evbuf);
 	evbuf = NULL;
 	PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
 
 	PrintToConsole(FOREGROUND_BLUE, 1, "Freeing audio buffer...");
-	memset(sndbf, 0, sizeof(sndbf));
+	RtlSecureZeroMemory(sndbf, sizeof(sndbf));
 	free(sndbf);
 	sndbf = NULL;
 	PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");

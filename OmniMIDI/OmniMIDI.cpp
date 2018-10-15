@@ -58,8 +58,19 @@ typedef unsigned __int64 QWORD;
 // #include <basswasapi.h>
 
 // Sleep
-typedef LONG(NTAPI*NDE)(BOOLEAN dwAlertable, PLARGE_INTEGER dwDelayInterval);
+typedef LONG NTSTATUS;
+#define NTAPI __stdcall
+// these functions have identical prototypes
+typedef NTSTATUS(NTAPI* NLVM)(IN HANDLE process, IN OUT void** baseAddress, IN OUT ULONG* size, IN ULONG flags);
+typedef NTSTATUS(NTAPI* NULVM)(IN HANDLE process, IN OUT void** baseAddress, IN OUT ULONG* size, IN ULONG flags);
+typedef NTSTATUS(NTAPI* NDE)(BOOLEAN dwAlertable, PLARGE_INTEGER dwDelayInterval);
+
+#define LOCK_VM_IN_WORKING_SET 1
+#define LOCK_VM_IN_RAM 2
+
 static NDE NtDelayExecution = 0;
+static NLVM NtLockVirtualMemory = 0;
+static NULVM NtUnlockVirtualMemory = 0;
 
 // Hyper switch
 static DWORD HyperMode = 0;
@@ -116,7 +127,13 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
 		hinst = (HINSTANCE)hinstDLL;
-		NtDelayExecution = (NDE)GetProcAddress(LoadLibrary(L"ntdll"), "NtDelayExecution");
+		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
+		NtLockVirtualMemory = (NLVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtLockVirtualMemory");
+		NtUnlockVirtualMemory = (NULVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtUnlockVirtualMemory");
+		if (!NtDelayExecution || !NtLockVirtualMemory || !NtUnlockVirtualMemory) {
+			MessageBoxW(NULL, L"Failed to parse functions from NTDLL!\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+			exit(-1);
+		}
 		DisableThreadLibraryCalls((HMODULE)hinstDLL);
 		break;
 	case DLL_PROCESS_DETACH: break;
@@ -127,24 +144,20 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 	return TRUE;
 }
 
-LONG_PTR DoDriverConfiguration() {
-	TCHAR configuratorapp[MAX_PATH];
-	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
-	{
-		PathAppend(configuratorapp, _T("\\OmniMIDI\\OmniMIDIConfigurator.exe"));
-		ShellExecute(NULL, L"open", configuratorapp, L"/AST", NULL, SW_SHOWNORMAL);
-		return DRVCNF_OK;
-	}
-	return DRVCNF_CANCEL;
-}
-
 STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
 	switch (uMsg) {
 	case DRV_QUERYCONFIGURE:
 		return DRV_OK;
 	case DRV_CONFIGURE:
-		return DoDriverConfiguration();
+		TCHAR configuratorapp[MAX_PATH];
+		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+		{
+			PathAppend(configuratorapp, _T("\\OmniMIDI\\OmniMIDIConfigurator.exe"));
+			ShellExecute(NULL, L"open", configuratorapp, L"/AST", NULL, SW_SHOWNORMAL);
+			return DRVCNF_OK;
+		}
+		return DRVCNF_CANCEL;
 	case DRV_LOAD:
 		return DRV_OK;
 	case DRV_ENABLE:
@@ -157,9 +170,10 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 		OMDevice = hdrvr;
 		return DRV_OK;
 	case DRV_CLOSE:
+		OMDevice = NULL;
 		return DRV_OK;
 	default:
-		return DRV_OK;
+		return DefDriverProc(dwDriverId, hdrvr, uMsg, lParam1, lParam2);
 	}
 }
 
@@ -197,7 +211,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 
 		// If the synthname length is less than 1, or if it's just a space, use the default name
 		if (wcslen(SynthNameW) < 1 || (wcslen(SynthNameW) == 1 && iswspace(SynthNameW[0]))) {
-			ZeroMemory(SynthNameW, MAXPNAMELEN);
+			RtlSecureZeroMemory(SynthNameW, MAXPNAMELEN);
 			wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 		}
 
@@ -233,13 +247,6 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 	catch (...) {
 		CrashMessage(L"MIDICapsException");
 	}
-}
-
-LONG DoOpenClient() {
-	// Start the driver
-	DoStartClient();
-	DoResetClient();
-	return MMSYSERR_NOERROR;
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
@@ -293,11 +300,11 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			OMFlags = HIWORD((DWORD)dwParam2);
 
 			// Open the driver
-			RetVal = DoOpenClient();
+			DoStartClient();
 
 			// Tell the app that the driver is ready
 			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
-			return RetVal;
+			return MMSYSERR_NOERROR;
 		}
 		// The driver is already being used through KDMAPI
 		return MMSYSERR_ALLOCATED;
@@ -338,13 +345,10 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
-		// Maximum longmsg size, 64kB
-		*(LONG*)dwParam1 = 65535;
-		return MMSYSERR_NOERROR;
+		// Not needed for OmniMIDI
+		return MMSYSERR_NOTSUPPORTED;
 	case DRV_QUERYDEVICEINTERFACE:
-		// The app is asking for the driver's name, let's give it to them
-		memcpy((VOID*)dwParam1, SynthNameW, sizeof(SynthNameW));
-		*(LONG*)dwParam2 = 65535;
-		return MMSYSERR_NOERROR;
+		// Not needed for OmniMIDI
+		return MMSYSERR_NOTSUPPORTED;
 	}
 }

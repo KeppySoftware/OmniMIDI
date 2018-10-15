@@ -167,7 +167,7 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 
 	if (showerror) {
 		TCHAR title[MAX_PATH];
-		ZeroMemory(title, MAX_PATH);
+		RtlSecureZeroMemory(title, MAX_PATH);
 
 		std::wstring ernumb = std::to_wstring(error);
 
