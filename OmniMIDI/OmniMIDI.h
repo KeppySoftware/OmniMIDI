@@ -7,10 +7,10 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 #include <wtypes.h>
 
-#ifdef OMNIMIDI_EXPORTS
-#define KDMAPI __declspec(dllexport)
+#ifndef KDMAPI_ONLYSTRUCTS
+#define KDMAPI(f) WINAPI f
 #else
-#define KDMAPI __declspec(dllimport)
+#define KDMAPI WINAPI
 #endif
 
 // Audio engines
@@ -81,44 +81,46 @@ typedef struct
 	// ------------------
 } DebugInfo;
 
+#ifndef KDMAPI_ONLYSTRUCTS
 // Return the KDMAPI version from OmniMIDI as the following output: Major.Minor.Build.Revision (eg. 1.30.0 Rev. 51).
-KDMAPI BOOL ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision);
+BOOL KDMAPI(ReturnKDMAPIVer)(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision);
 
 // Checks if KDMAPI is available. You can ignore the output if you want, but you should give the user the choice between WinMM and KDMAPI.
-KDMAPI BOOL IsKDMAPIAvailable();
+BOOL KDMAPI(IsKDMAPIAvailable)();
 
 // Initializes OmniMIDI through KDMAPI. (Like midiOutOpen)
-KDMAPI VOID InitializeKDMAPIStream();
+VOID KDMAPI(InitializeKDMAPIStream)();
 
 // Closes OmniMIDI through KDMAPI. (Like midiOutClose)
-KDMAPI VOID TerminateKDMAPIStream();
+VOID KDMAPI(TerminateKDMAPIStream)();
 
 // Resets OmniMIDI and all its MIDI channels through KDMAPI. (Like midiOutReset)
-KDMAPI VOID ResetKDMAPIStream();
+VOID KDMAPI(ResetKDMAPIStream)();
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
-KDMAPI UINT SendDirectData(DWORD dwMsg);
+UINT KDMAPI(SendDirectData)(DWORD dwMsg);
 
 // Send short messages through KDMAPI like SendDirectData, but bypasses the buffer. (Like midiOutShortMsg)
-KDMAPI UINT SendDirectDataNoBuf(DWORD dwMsg);
+UINT KDMAPI(SendDirectDataNoBuf)(DWORD dwMsg);
 
 // Send long messages through KDMAPI. (Like midiOutLongMsg)
-KDMAPI UINT SendDirectLongData(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(SendDirectLongData)(MIDIHDR* IIMidiHdr);
 
 // Send long messages through KDMAPI like SendDirectLongData, but bypasses the buffer. (Like midiOutLongMsg)
-KDMAPI UINT SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(SendDirectLongDataNoBuf)(MIDIHDR* IIMidiHdr);
 
 // Prepares the long data, and locks its memory to prevent apps from writing to it.
-KDMAPI UINT PrepareLongData(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(PrepareLongData)(MIDIHDR* IIMidiHdr);
 
 // Unlocks the memory, and unprepares the long data.
-KDMAPI UINT UnprepareLongData(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(UnprepareLongData)(MIDIHDR* IIMidiHdr);
 
 // Push your own settings to the driver through the Settings struct.
-KDMAPI VOID ChangeDriverSettings(const Settings* Struct, DWORD StructSize);
+VOID KDMAPI(ChangeDriverSettings)(const Settings* Struct, DWORD StructSize);
 
 // Load a custom sflist. (You can also load SF2 and SFZ files)
-KDMAPI VOID LoadCustomSoundFontsList(const TCHAR* Directory);
+VOID KDMAPI(LoadCustomSoundFontsList)(const TCHAR* Directory);
 
 // Get a pointer to the debug info of the driver.
-KDMAPI DebugInfo* GetDriverDebugInfo();
+DebugInfo* KDMAPI(GetDriverDebugInfo)();
+#endif

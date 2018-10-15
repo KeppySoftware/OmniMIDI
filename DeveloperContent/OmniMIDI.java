@@ -96,9 +96,9 @@ public class YourProgram
 	{
 		KDMAPI.MainLibrary = (OmniMIDILib)Native.loadLibrary("OmniMIDI", OmniMIDILib.class);
 
-		KDMAPI.InitializeKDMAPIStream();
-		KDMAPI.SendDirectData(0);
-		KDMAPI.TerminateKDMAPIStream();
+		KDMAPI.MainLibrary.InitializeKDMAPIStream();
+		KDMAPI.MainLibrary.SendDirectData(0);
+		KDMAPI.MainLibrary.TerminateKDMAPIStream();
 		
 		return;
 	}
