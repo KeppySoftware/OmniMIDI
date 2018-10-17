@@ -1,19 +1,55 @@
-﻿<p align="center">
+<p align="center">
   <img src="https://i.imgur.com/noVfUG6.png">
   <br />
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with more features.
 </p>
 
-## Features compared to other software synthesizers
-Click here: [Features compared to other software synthesizers](#features-compared-to-other-software-synthesizers)
+## F.A.Q.
 
-## Keppy's Software Updates Server on Discord
-I also post my updates on Discord, to keep everyone up-to-date 24/7!
-Join now here: https://discord.gg/jUaHPrP
+### Was it really necessary to create a complete separate fork of BASSMIDI Driver?
+I feel like it was necessary, yes.
 
-## Keppy's Direct MIDI API for developers
-You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
-You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
+### Couldn't you just edit the driver on the existing repository?
+True that, I could've just done that. But I honestly didn't want to ruin the original driver.<br />
+The driver was born back in 2015, when a friend of mine wanted a version of BASSMIDI Driver with higher polyphony, but then I started working on it more and more, to the point where most of the original source code got replaced by mine.<br />
+I really didn't want to ruin kode54's original source code, so I decided to create my own repository. (While still giving credits to kode54, of course.)<br />
+Oh, and of course, the driver wouldn't be where it is now, without kode54's help from behind the scenes. He helped me a lot with some issues I was having with some parts of his code. (Which I eventually replaced, but still.)<br />
+
+### Do you feel like your driver is complete now?
+Tough question... I honestly have no idea. I mean, there's always room for improvement.<br />
+But I feel like I have nothing else to add to it at this point, I'm literally out of ideas.<br/>
+If you're a programmer, and you have some ideas on how to improve or expand the driver's functionalities, please hit me up or send a pull requests with the edits.
+
+### Ok ok, enough of your story... What's so special about your driver that makes it different from the others out there?
+Good question. The driver has unique features, such as:
+- Automatic rendering recovery. The driver will **always** try to give you the best audio quality, no matter what MIDI you're trying to play.
+- Spartan user interface, no *"fancy graphics"* which can distract the user from the original purpose of the driver, and designed for people who aims for *features* more than for *style*.
+- The ability to use up to **4 cores/threads**, to ensure each function is executed at its best. Each core hosts a vital part of the driver: The first thread hosts the settings loader, the debug info writer etcetera, the second hosts the MIDI event parser, the third hosts the audio render and the fourth hosts the ASIO driver (When using the ASIO angine).
+- Constant updates, to keep the driver fresh and always up-to-date to users requests.
+
+It's meant for [professional people](#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
+
+### What do you mean by "for professional use"?
+I'll be honest, when I programmed the interface of the driver, I made it to make it familiar for DAW experts or people who know how to use advanced programs.<br />
+I've seen newbies getting angry at me after changing one settings, complaining that the driver kept crashing their apps while they were playing MIDIs/working on projects.<br /><br />
+If you want something easy to use, I strongly recommend [VirtualMIDISynth 2.x](http://coolsoft.altervista.org/en/virtualmidisynth) by Claudio Nicora.<br />
+His driver is definitely more stable than mine, and it's easier to use too. Go check it out.
+
+### How can I get rid of the annoying SmartScreen block screen and stop Chrome from warning me not to download your driver?
+You can install my self-signed certificate by using the two files here: https://github.com/KaleidonKep99/OmniMIDI/tree/master/InstallCert<br />
+I made the sign myself, no one has the original key except me. So you can trust add it to your trusted certificates by using the small installcert.exe utility.<br />
+Make sure that KeppyCert.cer is in the same folder as InstallCert.exe.
+
+### Can I use your program's source code for my program?
+Sure, as long as you follow the [LICENSE](LICENSE.txt).
+
+### I'm here just for the WinMM patch. How can I get it without downloading your driver?
+Aw, do you have something against it?
+<br />
+Aight, here is the version without the KDMAPI. [Click me for the direct download](https://github.com/KeppySoftware/OmniMIDI/raw/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/VanillaWinMM.zip)
+
+## Can you make a WinMM patch for other drivers too?
+I am definitely planning a patch for VirtualMIDISynth, but I don't know about other drivers.
 
 ## Reviews
 ### [Gingeas](https://www.youtube.com/user/gingeas), famous YouTuber who uploads Black MIDI videos:
@@ -34,85 +70,46 @@ The aforementioned alone, I'd pay gold for. But to top it all off, there's some 
 <br />
 Take all of that, and you get a synthesizer that's a powerhouse for creative freedom allowing me to get my work out to my clients without the hustle of feeling burdened. It's the fastest performing and most feature packed of them all. In fact, I can't get it out of my current workflow at this point anymore, it's a must have for any creator who requires a tool that can aid in compositions, while also packing a bucket load of extra stuff.  Whenever it's simple MIDI playback or full-fledged composing, this synth pulls it off."_
 
-## What's so special about your driver that makes it different from the others out there?
-This driver has unique features, such as:
-- Automatic rendering recovery. The driver will **always** try to give you the best audio quality, no matter what MIDI you're trying to play.
-- Spartan user interface, no *"fancy graphics"* which can distract the user from the original purpose of the driver, and designed for people who aims for *features* more than for *style*.
-- The ability to use up to **4 cores/threads**, to ensure each function is executed at its best. Each core hosts a vital part of the driver: The first thread hosts the settings loader, the debug info writer etcetera, the second hosts the MIDI event parser, the third hosts the audio render and the fourth hosts the ASIO driver (When using the ASIO angine).
-- Constant updates, to keep the driver fresh and always up-to-date to users requests.
+## Info about the driver
+### Features compared to other software synthesizers
+Click here: [Features compared to other software synthesizers](#features-compared-to-other-software-synthesizers)
 
-It's meant for [professional people](#what-do-you-mean-by-for-professional-use) who wants a lot of settings to change almost every behaviour of the program.
+### Keppy's Direct MIDI API for developers
+You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
+You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
 
-## What do you mean by "for professional use"?
-This driver is not meant to be used by beginners. You mess up a setting, and the entire driver might go nuts at you.
-<br />
-If you're not an advanced user, you could have troubles on getting it working again.
-<br />
-My advice for such people is to download CoolSoft VirtualMIDISynth driver from here: [Click me](http://coolsoft.altervista.org/en/virtualmidisynth)
-<br />
-It's free, easy-to-use for beginners, and it usually doesn't get as many updates as this synthesizer.
-
-# Requirements for the driver
-## Required software
+### Required software for it to work
 You need this software installed before attempting to run the setup:
 - [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
 
-## Minimum system requirements for standard MIDIs playback
+### Minimum system requirements for MIDI playback
 The minimum requirements for this synthesizer to work are the following:
 - A CPU running at 2.0GHz (With SSE instruction set support)
-- 512MB of RAM
-- Windows Vista SP2 or greater (Server versions are supported too)
+- 256MB of RAM
+- Realtek High Definition Audio or better<br/ >*(AC97 might work too, but it's really laggy.)*
+- Windows Vista SP2 or greater (Server versions are supported too)<br />*(Windows XP SP3 is supported too, but I won't give technical support for it.)*
 
-## Recommended system requirements for studio environments
+### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
-- A octa-core CPU running at 3GHz (Ryzen is recommended)
-- 32GB of RAM
-- Creative SoundBlaster ZxR, Realtek ALC889A (or better), or a dedicated ASIO hardware interface
+- A octa-core CPU running at 3GHz (Ryzen 7 1700 or better recommended)
+- 16GB of RAM
+- Native Instruments Komplete Audio 6 or another dedicated ASIO-capable hardware interface
 - Windows 10 Pro for Workstations
-- Alternative MIDI Mapper _(Included in the driver's configurator, for easy installation)_
+- Alternative MIDI Mapper and Windows Multimedia Wrapper for DAWs _(Both included in the driver's configurator, for easy installation)_
 
-## Recommended system requirements for smooth Black MIDIs playback
-For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
-- A quad-core CPU running at 2.4GHz (x86_64 compliant)
-- 4GB of RAM
-- Windows 10 Home/Pro
-- MIDI player with WinMM patch _(The patch is included in the driver's configurator, for easy installation)_
-
-## Requirements for compiling the source code
+### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
 - Microsoft Visual Studio 2017 (or newer)
 - Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
 - Microsoft Windows SDK 7.1A (Windows XP C++ support for VS2013+)
 
-## How can I get rid of the annoying SmartScreen block screen and stop Chrome from warning me not to download your driver?
-You can install my self-signed certificate by using the two files here: https://github.com/KaleidonKep99/OmniMIDI/tree/master/InstallCert<br />
-I made the sign myself, no one has it except me. So you can trust add it to your trusted certificates by using the small installcert.exe utility.<br />
-Be sure that KeppyCert.cer is in the same folder as InstallCert.exe
-
-## Can I use your program's source code for my program?
-Sure you can, but there are a few "rules" you need to follow.
-
-What you can do:
-- Take parts of the code, and use it on your apps. (As long as you credit me, BASS.NET and Un4seen.)
-- Share the code on websites outside of the GitHub world. (Again, same as before.)
-- Create ports of the driver for other operating systems, such as Linux, Mac OS X, Amiga etc... Any other O.S. other than Windows. (See down below for further explanations.)
-
-What you can't do:
-- Clone the source code of the driver, and change its name to "(Your name)'s Synthesizer", without actually doing any change to its source code. I mean, why would you do that?
-- Create ports of the driver in different programming languages, but with Windows support. There's already a Windows version, which is this one.
-
-## I'm here just for the WinMM patch. How can I get it without downloading your driver?
-I'm sad that you don't want to download my driver...
-<br />
-But anyway, here is the version without the KSDirect API. [Click me for the direct download](https://github.com/KeppySoftware/OmniMIDI/raw/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/VanillaWinMM.zip)
-
-# ASIO support details
+## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)
 <br />
 **WARNING**: Since I can not test all the ASIO devices available on the market (Mainly because they're not cheap), if you have one, please... Test it with OmniMIDI, then send me an e-mail about it to [kaleidonkep99@outlook.com](mailto:kaleidonkep99@outlook.com).
 
-# Features compared to other software synthesizers
+### Features compared to other software synthesizers
 :pencil:|OmniMIDI|VirtualMIDISynth 1.x|VirtualMIDISynth 2.x|BASSMIDI Driver
 ------------|-------------|-------------|-------------|-------------
 Easy-to-use configurator|✔️|✔️|✔️|❌
@@ -138,7 +135,8 @@ Wide choice of audio engines,<br />from DirectSound to WASAPI|✔️|❌|❌|⚠
 </p>
 
 <p align="center">
-  <a href="http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml#status"><img src="http://s1.softpedia-static.com/_img/sp100free.png?1" /></a>
+  <a href="http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml#status"><img src="http://s1.softpedia-static.com/_img/sp100free.png?1" /></a><br />
+  
 </p>
 
 # Credits
