@@ -48,7 +48,7 @@ Aw, do you have something against it?
 <br />
 Aight, here is the version without the KDMAPI. [Click me for the direct download](https://github.com/KeppySoftware/OmniMIDI/raw/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/VanillaWinMM.zip)
 
-## Can you make a WinMM patch for other drivers too?
+### Can you make a WinMM patch for other drivers too?
 I am definitely planning a patch for VirtualMIDISynth, but I don't know about other drivers.
 
 ## Reviews
@@ -131,7 +131,7 @@ Wide choice of audio engines,<br />from DirectSound to WASAPI|✔️|❌|❌|⚠
   ✔️: Supported<br />
   ⚠️: Partially supported, or implemented in a different way<br />
   ❌: Unsupported<br />
-  <sub>* Might require some advanced computer knowledge</sub>
+  <sub>* Might require some advanced computer expertise</sub>
 </p>
 
 <p align="center">
