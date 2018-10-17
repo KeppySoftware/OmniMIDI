@@ -86,7 +86,7 @@ You need this software installed before attempting to run the setup:
 The minimum requirements for this synthesizer to work are the following:
 - A CPU running at 2.0GHz (With SSE instruction set support)
 - 256MB of RAM
-- Realtek High Definition Audio or better<br/ >*(AC97 might work too, but it's really laggy.)*
+- Realtek High Definition Audio or better<br />*(AC97 might work too, but it's really laggy.)*
 - Windows Vista SP2 or greater (Server versions are supported too)<br />*(Windows XP SP3 is supported too, but I won't give technical support for it.)*
 
 ### Recommended system requirements for studio environments
