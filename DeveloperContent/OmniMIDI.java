@@ -73,8 +73,8 @@ class KDMAPI
 	{
 		public bool ReturnKDMAPIVer(int Major, int Minor, int Build, int Revision);
 		public bool IsKDMAPIAvailable();
-		public void InitializeKDMAPIStream();
-		public void TerminateKDMAPIStream();
+		public int InitializeKDMAPIStream();
+		public int TerminateKDMAPIStream();
 		public void ResetKDMAPIStream();
 		public int SendDirectData(int dwMsg);
 		public int SendDirectLongData(MIDIHDR dwMsg);

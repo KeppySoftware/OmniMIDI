@@ -30,6 +30,9 @@ typedef unsigned __int64 QWORD;
 #define CAUSE			1
 #define LONGMSG_MAXSIZE	65535
 
+#define LOCK_VM_IN_WORKING_SET 1
+#define LOCK_VM_IN_RAM 2
+
 #include "stdafx.h"
 #include <Psapi.h>
 #include <atlbase.h>
@@ -59,26 +62,17 @@ typedef unsigned __int64 QWORD;
 
 // Sleep
 typedef LONG NTSTATUS;
+
+// NTSTATUS
 #define NTAPI __stdcall
 // these functions have identical prototypes
 typedef NTSTATUS(NTAPI* NLVM)(IN HANDLE process, IN OUT void** baseAddress, IN OUT ULONG* size, IN ULONG flags);
 typedef NTSTATUS(NTAPI* NULVM)(IN HANDLE process, IN OUT void** baseAddress, IN OUT ULONG* size, IN ULONG flags);
 typedef NTSTATUS(NTAPI* NDE)(BOOLEAN dwAlertable, PLARGE_INTEGER dwDelayInterval);
 
-#define LOCK_VM_IN_WORKING_SET 1
-#define LOCK_VM_IN_RAM 2
-
 static NDE NtDelayExecution = 0;
 static NLVM NtLockVirtualMemory = 0;
 static NULVM NtUnlockVirtualMemory = 0;
-
-// Hyper switch
-static DWORD HyperMode = 0;
-static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) = 0;
-static DWORD(*_PlayBufData)(void) = 0;
-static DWORD(*_PlayBufDataChk)(void) = 0;
-// What does it do? It gets rid of the useless functions,
-// and passes the events without checking for anything
 
 // Blinx best game
 static HMODULE bass = 0;			// bass handle
@@ -98,6 +92,18 @@ void NTSleep(__int64 usec) {
 	ft.QuadPart = usec;
 	NtDelayExecution(FALSE, &ft);
 }
+
+MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	return MIDIERR_NOTREADY;
+}
+
+// Hyper switch
+static DWORD HyperMode = 0;
+static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = DummyParseData;
+static DWORD(*_PlayBufData)(void) = 0;
+static DWORD(*_PlayBufDataChk)(void) = 0;
+// What does it do? It gets rid of the useless functions,
+// and passes the events without checking for anything
 
 // Predefined sleep values, useful for redundancy
 #define _DBGWAIT NTSleep(-10000)											// Normal wait

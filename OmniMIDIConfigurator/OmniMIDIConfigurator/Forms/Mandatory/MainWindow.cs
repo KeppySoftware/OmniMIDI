@@ -82,10 +82,10 @@ namespace OmniMIDIConfigurator
         public static string StatusTemplate = "{0}";
         public static List<string> tempList = new List<string> { };
         public static int applyfade = 0;
-        public static int openadvanced { get; set; }
         public static int whichone { get; set; }
         public static string CurrentList { get; set; }
         public static bool AvoidSave = false;
+        public static string[] Arguments = { } ;
 
         public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "cha" };
         public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -103,32 +103,7 @@ namespace OmniMIDIConfigurator
             Delegate = this;
             VolTrackBar.BackColor = Color.Empty;
             this.FormClosing += new FormClosingEventHandler(CloseConfigurator);
-            try
-            {
-                foreach (String s in args)
-                {
-                    switch (s.Substring(0, 4).ToUpper())
-                    {
-                        case "/AST":
-                            openadvanced = 1;
-                            break;
-                        case "/MIX":
-                            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIMixerWindow.exe");
-                            return;
-                        default:
-                            // do other stuff...
-                            break;
-                    }
-                    if (Path.GetExtension(s).ToLowerInvariant() == ".sf2" || Path.GetExtension(s).ToLowerInvariant() == ".sfz" || Path.GetExtension(s).ToLowerInvariant() == ".sfpack")
-                    {
-                        tempList.Add(s);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "Something went wrong during the starting process of the configurator.\n\nClick OK to continue.", true, ex);
-            }
+            Arguments = args;
         }
 
         protected override void WndProc(ref Message m)
@@ -182,6 +157,7 @@ namespace OmniMIDIConfigurator
                 SettingsPresetsBtn.ContextMenu = SettingsPresets;
                 TabsForTheControls.TabPages.Remove(DebugLog);
 
+                // Initialize main menu
                 Menu = SynthMenu;
 
                 // SAS THEME HANDLER   
@@ -245,8 +221,31 @@ namespace OmniMIDIConfigurator
                     Application.ExitThread();
                 }
 
-                // If /AS is specified, switch to the Settings tab automatically
-                if (openadvanced == 1) TabsForTheControls.SelectedIndex = 1;
+                try
+                {
+                    foreach (String s in Arguments)
+                    {
+                        switch (s.ToUpper())
+                        {
+                            case "/AST":
+                                TabsForTheControls.SelectedIndex = 1;
+                                break;
+                            case "/MIX":
+                                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIMixerWindow.exe");
+                                return;
+                            default:
+                                // do other stuff...
+                                break;
+                        }
+
+                        if (Path.GetExtension(s).ToLowerInvariant() == ".sf2" || Path.GetExtension(s).ToLowerInvariant() == ".sfz" || Path.GetExtension(s).ToLowerInvariant() == ".sfpack")
+                            tempList.Add(s);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "Something went wrong during the starting process of the configurator.\n\nClick OK to continue.", true, ex);
+                }
             }
             catch (Exception ex)
             {

@@ -1354,6 +1354,19 @@ namespace OmniMIDIConfigurator
             return ((MachineType)machineUint).ToString();
         }
 
+        public static void RestartAsAdmin()
+        {
+            DialogResult Message = MessageBox.Show("You don't have the rights to edit the target folder!\n\nDo you want to restart the configurator with admin permissions?", "OmniMIDI - Permissions error", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            if (Message == DialogResult.Yes)
+            {
+                ProcessStartInfo elevated = new ProcessStartInfo(System.Reflection.Assembly.GetEntryAssembly().Location, "/WINMMWRP");
+                elevated.UseShellExecute = true;
+                elevated.Verb = "runas";
+                Process.Start(elevated);
+                Application.ExitThread();
+            }
+        }
+
         public static Boolean ApplyWinMMWRPPatch(Boolean DAWMode)
         {
             if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1) && Properties.Settings.Default.PatchInfoShow == true)
@@ -1363,7 +1376,6 @@ namespace OmniMIDIConfigurator
                 MessageBox.Show("The patch is not needed on Windows 7 and older, but you can install it anyway.", "OmniMIDI - Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-        TryAgain:
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             try
             {
@@ -1395,8 +1407,7 @@ namespace OmniMIDIConfigurator
             }
             catch (Exception ex)
             {
-                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, ex);
-                goto TryAgain;
+                RestartAsAdmin();
             }
 
             WinMMDialog.Dispose();
@@ -1405,7 +1416,6 @@ namespace OmniMIDIConfigurator
 
         public static Boolean RemoveWinMMPatch()
         {
-            TryAgain:
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             try
             {
@@ -1420,9 +1430,7 @@ namespace OmniMIDIConfigurator
             }
             catch
             {
-                WinMMDialog.Dispose();
-                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
-                goto TryAgain;
+                RestartAsAdmin();
             }
 
             return false;
@@ -1431,16 +1439,10 @@ namespace OmniMIDIConfigurator
         private static void RemovePatchFiles(String DirectoryPath, Boolean Silent)
         {
             String[] DeleteTheseFiles = { "midimap.dll", "msacm32.drv", "msacm32.dll", "msapd32.drv", "msapd32.dll", "wdmaud.drv", "wdmaud.sys", "winmm.dll", "owinmm.dll" };
-            TryAgain:
-            try
-            {
-                foreach (String DeleteMe in DeleteTheseFiles) File.Delete(String.Format("{0}\\{1}", Path.GetDirectoryName(DirectoryPath), DeleteMe));
-            }
-            catch
-            {
-                ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to unpatch the following executable!\nAre you sure you have write permissions to its folder?\n\nPress OK to try again.", false, null);
-                goto TryAgain;
-            }
+
+            foreach (String DeleteMe in DeleteTheseFiles)
+                File.Delete(String.Format("{0}\\{1}", Path.GetDirectoryName(DirectoryPath), DeleteMe));
+
             if (!Silent) MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "OmniMIDI - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

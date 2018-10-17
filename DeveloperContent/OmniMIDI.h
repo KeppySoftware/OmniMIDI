@@ -89,10 +89,10 @@ BOOL KDMAPI(ReturnKDMAPIVer)(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWOR
 BOOL KDMAPI(IsKDMAPIAvailable)();
 
 // Initializes OmniMIDI through KDMAPI. (Like midiOutOpen)
-VOID KDMAPI(InitializeKDMAPIStream)();
+BOOL KDMAPI(InitializeKDMAPIStream)();
 
 // Closes OmniMIDI through KDMAPI. (Like midiOutClose)
-VOID KDMAPI(TerminateKDMAPIStream)();
+BOOL KDMAPI(TerminateKDMAPIStream)();
 
 // Resets OmniMIDI and all its MIDI channels through KDMAPI. (Like midiOutReset)
 VOID KDMAPI(ResetKDMAPIStream)();

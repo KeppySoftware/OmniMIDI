@@ -179,7 +179,7 @@ BOOL KDMAPI IsKDMAPIAvailable()  {
 	return KDMAPIEnabled;
 }
 
-VOID KDMAPI InitializeKDMAPIStream() {
+BOOL KDMAPI InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI) {
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
 		KDMAPIEnabled = TRUE;
@@ -192,23 +192,28 @@ VOID KDMAPI InitializeKDMAPIStream() {
 
 		// Start the driver's engine
 		DoStartClient();
-		DoResetClient();
 	
 		AlreadyInitializedViaKDMAPI = TRUE;
+
+		return TRUE;
 	}
+	else return FALSE;
 }
 
-VOID KDMAPI TerminateKDMAPIStream() {
+BOOL KDMAPI TerminateKDMAPIStream() {
 	// If the driver is supposed to terminate the stream, then do so
 	if (CloseStreamMidiOutClose && AlreadyInitializedViaKDMAPI) {
 		DoStopClient();
 		AlreadyInitializedViaKDMAPI = FALSE;
+		return TRUE;
 	}
+	else return FALSE;
 }
 
 VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
-	DoResetClient();
+	if (AlreadyInitializedViaKDMAPI)
+		DoResetClient();
 }
 
 MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
@@ -229,6 +234,7 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
+	if (!AlreadyInitializedViaKDMAPI) return MIDIERR_NOTREADY;											// The driver isn't ready
 	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;			// The buffer doesn't exist or is too big, invalid parameter
 
 	void* Mem = IIMidiHdr->lpData;
@@ -245,6 +251,7 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
+	if (!AlreadyInitializedViaKDMAPI) return MIDIERR_NOTREADY;				// The driver isn't ready
 	if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
 	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
@@ -262,7 +269,7 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 
 MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	try {
-		if (EVBuffReady) {
+		if (AlreadyInitializedViaKDMAPI) {
 			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
 
 			// Mark the buffer as in queue
@@ -321,26 +328,30 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	ChVolumeStruct.fTarget = sound_out_volume_float;
 	ChVolumeStruct.fTime = 0.0f;
 	ChVolumeStruct.lCurve = 0;
-	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
 
-	// Set the rendering time threshold, if the driver's own panic system is disabled
-	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+	if (AlreadyInitializedViaKDMAPI) {
+		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+		CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
 
-	// Set the stream's settings
-	BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-	BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-	BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-	BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+		// Set the rendering time threshold, if the driver's own panic system is disabled
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 
-	// Set the stream's attributes
-	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+		// Set the stream's settings
+		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+
+		// Set the stream's attributes
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+	}
 }
 
 VOID KDMAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
-	LoadFonts(Directory);
+	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI - Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	else LoadFonts(Directory);
 }
 
 DebugInfo* KDMAPI GetDriverDebugInfo() {

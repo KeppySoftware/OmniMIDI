@@ -205,7 +205,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
+MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (!EVBuffReady || (uMsg != MODM_LONGDATA && CheckIfEventIsToIgnore(dwParam1)))
 		return MMSYSERR_NOERROR;
 
@@ -233,7 +233,7 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD dwParam2) {
+MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 	long long tempevent = writehead;

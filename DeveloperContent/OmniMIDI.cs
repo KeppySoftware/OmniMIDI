@@ -82,10 +82,10 @@ namespace KDMAPI
 	public static extern bool IsKDMAPIAvailable();
 			
 	[DllImport("OmniMIDI.dll")]
-	public static extern void InitializeKDMAPIStream();
+	public static extern int InitializeKDMAPIStream();
 			
 	[DllImport("OmniMIDI.dll")]
-	public static extern void TerminateKDMAPIStream();
+	public static extern int TerminateKDMAPIStream();
 			
 	[DllImport("OmniMIDI.dll")]
 	public static extern void ResetKDMAPIStream();
