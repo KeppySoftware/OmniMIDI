@@ -157,13 +157,11 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 	TCHAR main[33354];
 	ZeroMemory(main, 33354);
 
-	int e = error + 1;
-
 	lstrcat(main, engine);
 	lstrcat(main, L" encountered the following error: ");
 
-	lstrcat(main, ReturnBASSError(e));
-	basserrconsole(FOREGROUND_RED, ReturnBASSError(e), ReturnBASSError(e));
+	lstrcat(main, ReturnBASSError(error));
+	basserrconsole(FOREGROUND_RED, ReturnBASSError(error), ReturnBASSError(error));
 
 	if (showerror) {
 		TCHAR title[MAX_PATH];
@@ -185,7 +183,7 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 		}
 
 		lstrcat(main, L"\n\nExplanation: ");
-		lstrcat(main, ReturnBASSErrorDesc(e));
+		lstrcat(main, ReturnBASSErrorDesc(error));
 
 		if (mode == 1) {
 			lstrcat(main, L"\n\nWhat might have caused this error:\n");
@@ -193,7 +191,7 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 		}
 		else {
 			lstrcat(main, L"\n\nPossible fixes:\n");
-			lstrcat(main, ReturnBASSErrorFix(e));
+			lstrcat(main, ReturnBASSErrorFix(error));
 		}
 
 		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
@@ -266,7 +264,7 @@ BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
 }
 
 BOOL CheckUpASIO(int mode, TCHAR * codeline, bool showerror) {
-	int error = BASS_ASIO_ErrorGetCode();
+	DWORD error = BASS_ASIO_ErrorGetCode();
 	if (error != 0) {
 		ShowError(error, mode, L"BASSASIO", codeline, showerror);
 		return FALSE;

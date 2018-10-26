@@ -19,6 +19,7 @@ using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
 using System.Threading;
 using Un4seen.BassAsio;
+using System.Security.Principal;
 
 namespace OmniMIDIConfigurator
 {
@@ -1354,9 +1355,27 @@ namespace OmniMIDIConfigurator
             return ((MachineType)machineUint).ToString();
         }
 
+        public static bool IsProcessElevated()
+        {
+            bool isElevated = false;
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                identity.Dispose();
+            }
+            return isElevated;
+        }
+
         public static void RestartAsAdmin()
         {
-            DialogResult Message = MessageBox.Show("You don't have the rights to edit the target folder!\n\nDo you want to restart the configurator with admin permissions?", "OmniMIDI - Permissions error", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            Boolean isElevated = IsProcessElevated();
+
+            String MessageString = String.Format("You don't have the rights to edit the target folder!", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
+            MessageBoxButtons MessageButtons = isElevated ? MessageBoxButtons.OK : MessageBoxButtons.YesNo;
+            MessageBoxIcon MessageIcon = isElevated ? MessageBoxIcon.Hand : MessageBoxIcon.Exclamation;
+
+            DialogResult Message = MessageBox.Show(MessageString, "OmniMIDI - Permissions error", MessageButtons, MessageIcon);
             if (Message == DialogResult.Yes)
             {
                 ProcessStartInfo elevated = new ProcessStartInfo(System.Reflection.Assembly.GetEntryAssembly().Location, "/WINMMWRP");

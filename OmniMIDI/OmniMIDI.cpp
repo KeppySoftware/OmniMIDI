@@ -116,35 +116,40 @@ static DWORD(*_PlayBufDataChk)(void) = 0;
 #include "LwL.h"
 
 // Variables
-#include "val.h"
-#include "basserr.h"
-#include "dbg.h"
+#include "Values.h"
+#include "BASSErrors.h"
+#include "Debug.h"
 
 // OmniMIDI vital parts
-#include "sfsystem.h"
-#include "bufsystem.h"
-#include "settings.h"
-#include "bansystem.h"
-#include "drvinit.h"
-#include "kdmapi.h"
+#include "SoundFontLoader.h"
+#include "BufferSystem.h"
+#include "Settings.h"
+#include "BlacklistSystem.h"
+#include "DriverInit.h"
+#include "KDMAPI.h"
 
 extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
+		if (lpvReserved != NULL) OutputDebugString(L"The driver has been dynamically loaded");
+
 		hinst = (HINSTANCE)hinstDLL;
 		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
 		NtLockVirtualMemory = (NLVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtLockVirtualMemory");
 		NtUnlockVirtualMemory = (NULVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtUnlockVirtualMemory");
 		if (!NtDelayExecution || !NtLockVirtualMemory || !NtUnlockVirtualMemory) {
-			MessageBoxW(NULL, L"Failed to parse functions from NTDLL!\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			exit(-1);
+			OutputDebugString(L"Failed to parse functions from NTDLL!\nThe driver will not be loaded.");
+			return FALSE;
 		}
+
 		DisableThreadLibraryCalls((HMODULE)hinstDLL);
 		break;
-	case DLL_PROCESS_DETACH: break;
-	case DLL_THREAD_ATTACH: break;
-	case DLL_THREAD_DETACH: break;
+
+	case DLL_PROCESS_DETACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH: 
+		break;
 	}
 
 	return TRUE;

@@ -20,18 +20,18 @@
     <ClInclude Include="..\external_packages\bassmidi.h" />
     <ClInclude Include="..\external_packages\comdecl.h" />
     <ClInclude Include="..\external_packages\mmddk.h" />
-    <ClInclude Include="bansystem.h" />
-    <ClInclude Include="basserr.h" />
-    <ClInclude Include="bufsystem.h" />
-    <ClInclude Include="dbg.h" />
-    <ClInclude Include="drvinit.h" />
-    <ClInclude Include="kdmapi.h" />
+    <ClInclude Include="BlacklistSystem.h" />
+    <ClInclude Include="BASSErrors.h" />
+    <ClInclude Include="BufferSystem.h" />
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="DriverInit.h" />
+    <ClInclude Include="KDMAPI.h" />
     <ClInclude Include="LwL.h" />
     <ClInclude Include="OmniMIDI.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="settings.h" />
-    <ClInclude Include="sfsystem.h" />
-    <ClInclude Include="val.h" />
+    <ClInclude Include="Settings.h" />
+    <ClInclude Include="SoundFontLoader.h" />
+    <ClInclude Include="Values.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

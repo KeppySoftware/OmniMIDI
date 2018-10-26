@@ -1,16 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="bansystem.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\bass.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\external_packages\bassenc.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="basserr.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\external_packages\bassmidi.h">
@@ -22,38 +16,44 @@
     <ClInclude Include="resource.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="settings.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="sfsystem.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="val.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="drvinit.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\bassasio.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\external_packages\mmddk.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="dbg.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="bufsystem.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="LwL.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="kdmapi.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="OmniMIDI.h">
       <Filter>Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="BlacklistSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DriverInit.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="KDMAPI.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundFontLoader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Values.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="BASSErrors.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -176,7 +176,7 @@ KDMChangeSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ChangeDr
 	KDMChangeSettings(nullptr, 0);
 ...
 ```
-You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/val.h)
+You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/Values.h)
 <hr />
 
 ### **GetDriverDebugInfo**
@@ -193,7 +193,7 @@ KDMGetDebugInfo = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "GetDriverD
 	printf("Current rendering time: %d\n", DebugInfoFromDriver->RenderingTime); 
 ...
 ```
-You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/val.h)
+You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/Values.h)
 <hr />
 
 ### **LoadCustomSoundFontsList**
