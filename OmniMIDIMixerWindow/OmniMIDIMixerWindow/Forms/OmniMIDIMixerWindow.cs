@@ -140,8 +140,14 @@ namespace OmniMIDIMixerWindow
                 }
                 catch
                 {
-                    Debug.SetValue("leftvol", 0, RegistryValueKind.DWord);
-                    Debug.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                    try
+                    {
+                        Debug.DeleteValue("leftvol");
+                        Debug.DeleteValue("rightvol");
+                        Debug.SetValue("leftvol", 0, RegistryValueKind.DWord);
+                        Debug.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                    }
+                    catch { /* Can't do much about it */ }
                 }
 
                 // Parse the volume, and make a percentage out of it

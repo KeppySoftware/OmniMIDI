@@ -643,7 +643,8 @@ namespace OmniMIDIConfigurator
                     OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = AudioEngine.ASIO_ENGINE;
                 else if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE)) == AudioEngine.WASAPI_ENGINE)
                     OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = AudioEngine.WASAPI_ENGINE;
-                else OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = AudioEngine.WASAPI_ENGINE;
+                else
+                    OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex = AudioEngine.WASAPI_ENGINE;
 
                 AudioEngBoxTrigger(false);
 

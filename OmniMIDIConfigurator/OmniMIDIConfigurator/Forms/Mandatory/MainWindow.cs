@@ -2105,12 +2105,18 @@ namespace OmniMIDIConfigurator
                     }
                     catch
                     {
-                        Mixer.SetValue("leftvol", 0, RegistryValueKind.DWord);
-                        Mixer.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                        try
+                        {
+                            Mixer.DeleteValue("leftvol");
+                            Mixer.DeleteValue("rightvol");
+                            Mixer.SetValue("leftvol", 0, RegistryValueKind.DWord);
+                            Mixer.SetValue("rightvol", 0, RegistryValueKind.DWord);
+                        }
+                        catch { /* Can't do much about it */ }
                     }
 
-                    int left = Convert.ToInt32(Mixer.GetValue("leftvol"));
-                    int right = Convert.ToInt32(Mixer.GetValue("rightvol"));
+                    int left = Convert.ToInt32(Mixer.GetValue("leftvol", 0));
+                    int right = Convert.ToInt32(Mixer.GetValue("rightvol", 0));
                     var perc = ((double)((left + right) / 2) / 32768) * 100;
 
                     if (Properties.Settings.Default.ShowMixerUnder == true) VolLevel.Text = String.Format("{0}%", Math.Round(perc, 0));

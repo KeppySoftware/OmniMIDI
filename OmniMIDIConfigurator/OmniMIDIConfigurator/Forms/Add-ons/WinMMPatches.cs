@@ -75,5 +75,10 @@ namespace OmniMIDIConfigurator
         {
             Close();
         }
+
+        private void WinMMPatches_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

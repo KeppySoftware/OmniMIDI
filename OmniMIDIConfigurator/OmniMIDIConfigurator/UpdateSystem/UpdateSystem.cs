@@ -18,10 +18,15 @@ namespace OmniMIDIConfigurator
 
         public static string ProductName = "OmniMIDI";
         public static Octokit.GitHubClient UpdateClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(ProductName));
-     
+
         public static string UpdateFile = "https://github.com/KeppySoftware/OmniMIDI/releases/download/{0}/OmniMIDIUpdate.exe";
+        public static string SetupFile = "https://github.com/KeppySoftware/OmniMIDI/releases/download/{0}/OmniMIDISetup.exe";
         public static string UpdatePage = "https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}";
         public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
+
+        public const int NORMAL = 0x0;
+        public const int USERFOLDER_PATH = 0x1;
+        public const int WIPE_SETTINGS = 0xF;
 
         public static bool IsInternetAvailable()
         {
@@ -29,13 +34,13 @@ namespace OmniMIDIConfigurator
             return InternetGetConnectedState(out Desc, 0);
         }
 
-        public static void CheckForTLS12ThenUpdate(String ReturnVal)
+        public static void CheckForTLS12ThenUpdate(String ReturnVal, Int32 InstallMode)
         {
             if (!ReturnVal.Equals("0.0.0.0"))
             {
                 if (!Properties.Settings.Default.TLS12Missing)
                 {
-                    Forms.DLEngine frm = new Forms.DLEngine(ReturnVal, String.Format("Downloading update {0}...", ReturnVal, @"{0}"), null, null, 0, true);
+                    Forms.DLEngine frm = new Forms.DLEngine(ReturnVal, String.Format("Downloading update {0}...", ReturnVal, @"{0}"), null, null, InstallMode, true);
                     frm.StartPosition = FormStartPosition.CenterScreen;
                     frm.ShowDialog();
                 }
@@ -46,7 +51,7 @@ namespace OmniMIDIConfigurator
         public static void TriggerUpdateWindow(Version y, Version x, String newestversion, bool forced, bool startup, bool isitfromthechangelogwindow)
         {
             String ReturnVal = "0.0.0.0";
-            if (forced && startup) CheckForTLS12ThenUpdate(newestversion);
+            if (forced && startup) CheckForTLS12ThenUpdate(newestversion, UpdateSystem.NORMAL);
             else
             {
                 UpdateYesNo upd = new UpdateYesNo(x, y, true, startup, isitfromthechangelogwindow);
@@ -60,7 +65,7 @@ namespace OmniMIDIConfigurator
                 ReturnVal = upd.ReturnVal;
                 upd.Dispose();
 
-                if (dialogResult == DialogResult.Yes) CheckForTLS12ThenUpdate(ReturnVal);
+                if (dialogResult == DialogResult.Yes) CheckForTLS12ThenUpdate(ReturnVal, UpdateSystem.NORMAL);
             }
         }
 

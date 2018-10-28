@@ -213,16 +213,15 @@ namespace OmniMIDIConfigurator
                         {
                             TLS12Enable(true);
 
+                            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);        
+
                             var current = Process.GetCurrentProcess();
                             Process.GetProcessesByName(current.ProcessName)
                                 .Where(t => t.Id != current.Id)
                                 .ToList()
                                 .ForEach(t => t.Kill());
 
-                            RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                            sourceKey.DeleteSubKeyTree("OmniMIDI", true);
-                            sourceKey.Close();
-                            UpdateSystem.CheckForUpdates(true, true, false);
+                            UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
                             return;
                         }
                         else if (s.ToLowerInvariant() == "/toomni")

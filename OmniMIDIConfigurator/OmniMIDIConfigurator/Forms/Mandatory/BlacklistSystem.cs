@@ -260,7 +260,7 @@ namespace OmniMIDIConfigurator
             {
                 Program.DebugToConsole(false, "Downloading the default blacklist", null);
                 string dbl = "https://raw.githubusercontent.com/KaleidonKep99/OmniMIDI/master/output/OmniMIDI.dbl";
-                Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist", dbl, Path.GetDirectoryName(DefBlacklistPath), 2, false);
+                Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist...", dbl, Path.GetDirectoryName(DefBlacklistPath), UpdateSystem.USERFOLDER_PATH, false);
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 frm.ShowDialog();
             }

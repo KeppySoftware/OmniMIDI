@@ -159,6 +159,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WinMM Wrapper patch";
+            this.Load += new System.EventHandler(this.WinMMPatches_Load);
             this.BMPatch.ResumeLayout(false);
             this.DAWPatch.ResumeLayout(false);
             this.ResumeLayout(false);

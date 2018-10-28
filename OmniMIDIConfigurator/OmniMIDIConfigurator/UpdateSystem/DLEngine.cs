@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using Microsoft.Win32;
 
 namespace OmniMIDIConfigurator.Forms
 {
@@ -18,25 +19,25 @@ namespace OmniMIDIConfigurator.Forms
         System.Timers.Timer DLSystemTimeout = new System.Timers.Timer(5000);
         String VersionToDownload;
         String FullURL;
-        String thestring;
-        String PutWhereHere;
+        String MessageToDisplay;
+        String DestinationPath;
         String DeleteThisIfFailed;
         Uri URL;
-        int test;
-        bool reinstallbool;
+        int InstallMode;
+        bool DriverReinstall;
 
-        string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI";
+        string UserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI";
 
-        public DLEngine(String text, String MessageText, String toDL, String PutWhere, int what, bool reinstall)
+        public DLEngine(String Version, String MessageText, String toDL, String PutWhere, int IM, bool reinstall)
         {
             InitializeComponent();
-            thestring = MessageText;
-            Status.Text = String.Format(thestring, 0);
-            VersionToDownload = text;
-            PutWhereHere = PutWhere;
+            MessageToDisplay = MessageText;
+            Status.Text = String.Format(Version, 0);
+            VersionToDownload = Version;
+            DestinationPath = PutWhere;
             FullURL = toDL;
-            test = what;
-            reinstallbool = reinstall;
+            InstallMode = IM;
+            DriverReinstall = reinstall;
         }
 
         private void OmniMIDIUpdateDL_Load(object sender, EventArgs e)
@@ -47,25 +48,22 @@ namespace OmniMIDIConfigurator.Forms
                 DLSystem.DownloadDataCompleted += (senderd, ed) => Completed(senderd, ed);
                 DLSystem.Proxy = null;
 
-                if (test == 0)
+                if (InstallMode == UpdateSystem.NORMAL || InstallMode == UpdateSystem.WIPE_SETTINGS)
                 {
-                    if (reinstallbool)
+                    if (DriverReinstall)
                     {
                         CancelBtn.Visible = false;
                         progressBar1.Size = new Size(271, 23);
                     }
-                    URL = new Uri(String.Format(UpdateSystem.UpdateFile, VersionToDownload));
+                    URL = new Uri(String.Format(DriverReinstall ? UpdateSystem.SetupFile : UpdateSystem.UpdateFile, VersionToDownload));
                 }
-                else
-                {
-                    URL = new Uri(FullURL);
-                }
+                else URL = new Uri(FullURL);
 
                 try {
                     DLSystemTimeout.Elapsed += TimeOutCheck;
                     DLSystem.DownloadDataAsync(URL);
                     DLSystemTimeout.Start();
-                    Program.DebugToConsole(false, String.Format(thestring, 0), null); }
+                    Program.DebugToConsole(false, String.Format(MessageToDisplay, 0), null); }
                 catch { }
             }
         }
@@ -91,7 +89,7 @@ namespace OmniMIDIConfigurator.Forms
         {
             ResetTimeout();
             progressBar1.Value = e.ProgressPercentage;
-            Status.Text = String.Format(thestring, 0);
+            Status.Text = String.Format(MessageToDisplay, 0);
             DLPercent.Text = String.Format("{0}%", e.ProgressPercentage);
         }
 
@@ -111,24 +109,43 @@ namespace OmniMIDIConfigurator.Forms
                 Program.DebugToConsole(false, "An error has occurred while downloading the update.", null);
                 MessageBox.Show("The configurator is unable to download the latest version.\nIt might not be available yet, or you might not be connected to the Internet.\n\nIf your connection is working, wait a few minutes for the update to appear online.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.No;
+
+                if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
+                {
+                    var p = new System.Diagnostics.Process();
+                    p.StartInfo.FileName = System.Reflection.Assembly.GetEntryAssembly().Location;
+                    p.StartInfo.RedirectStandardOutput = true;
+                    p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.CreateNoWindow = true;
+                    p.Start();
+                    Application.ExitThread();
+                }
+
                 Close();
             }
             else
             {
-                if (test == 0)
+                if (InstallMode == UpdateSystem.NORMAL || InstallMode == UpdateSystem.WIPE_SETTINGS)
                 {
                     try
                     {
                         byte[] fileData = e.Result;
 
-                        using (FileStream fileStream = new FileStream(String.Format("{0}OmniMIDIUpdate.exe", Path.GetTempPath()), FileMode.Create))
+                        using (FileStream fileStream = new FileStream(String.Format(DriverReinstall ? "{0}OmniMIDISetup.exe" : "{0}OmniMIDIUpdate.exe", Path.GetTempPath()), FileMode.Create))
                             fileStream.Write(fileData, 0, fileData.Length);
 
                         DLSystem.Dispose();
 
                         Program.DebugToConsole(false, "The update is ready to be installed.", null);
                         MessageBox.Show("Be sure to save all your data in the apps using OmniMIDI, before updating.\n\nClick OK when you're ready.", "OmniMIDI - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        Process.Start(Path.GetTempPath() + "OmniMIDIUpdate.exe", "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /SP-");
+                        Process.Start(String.Format("{0}{1}", DriverReinstall ? "{0}OmniMIDISetup.exe" : "{0}OmniMIDIUpdate.exe", Path.GetTempPath() + "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /SP-");
+
+                        if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
+                        {
+                            RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
+                            sourceKey.DeleteSubKeyTree("OmniMIDI", true);
+                            sourceKey.Close();
+                        }
 
                         DialogResult = DialogResult.OK;
                         Application.ExitThread();
@@ -148,11 +165,11 @@ namespace OmniMIDIConfigurator.Forms
                         Close();
                     }
                 }
-                else if (test == 1)
+                else if (InstallMode == UpdateSystem.USERFOLDER_PATH)
                 {
                     byte[] fileData = e.Result;
 
-                    using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}", userfolder, FullURL.Split('/').Last()), FileMode.Create))
+                    using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}", UserFolder, FullURL.Split('/').Last()), FileMode.Create))
                         fileStream.Write(fileData, 0, fileData.Length);
 
                     DLSystem.Dispose();
@@ -164,7 +181,7 @@ namespace OmniMIDIConfigurator.Forms
                 {
                     byte[] fileData = e.Result;
 
-                    using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}", PutWhereHere, FullURL.Split('/').Last()), FileMode.Create))
+                    using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}", DestinationPath, FullURL.Split('/').Last()), FileMode.Create))
                         fileStream.Write(fileData, 0, fileData.Length);
 
                     DLSystem.Dispose();
