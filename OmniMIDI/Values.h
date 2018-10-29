@@ -60,7 +60,7 @@ typedef struct RegKey
 	LSTATUS Status = KEY_CLOSED;
 };
 
-static RegKey MainKey, Configuration, Channels, ChanOverride, Watchdog;
+static RegKey MainKey, Configuration, Channels, ChanOverride, SFDynamicLoader;
 
 static DWORD Blank = 0;
 static DWORD dwType = REG_DWORD, dwSize = sizeof(DWORD);

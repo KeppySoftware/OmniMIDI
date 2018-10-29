@@ -40,110 +40,80 @@ namespace OmniMIDIConfigurator
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("SleepStates", 1)) == 0)
                 NoSleep.Checked = true;
 
-            int floatingpointaudioval = Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioBitDepth", 1));
-            if (floatingpointaudioval == 1)
+            int FPVal = Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioBitDepth", 1));
+
+            if (FPVal == 1)
                 AudioBitDepth.SelectedIndex = 0;
-            else if (floatingpointaudioval == 2 || floatingpointaudioval == 0)
+            else if (FPVal == 2 || FPVal == 0)
                 AudioBitDepth.SelectedIndex = 1;
-            else if (floatingpointaudioval == 3)
+            else if (FPVal == 3)
                 AudioBitDepth.SelectedIndex = 2;
-            else
-                AudioBitDepth.SelectedIndex = 0;
 
             OldBuff.Enabled = !(OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0);
             NoSleep.Enabled = !(OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0);
-            ChangeDefaultOutput.Enabled = (
-                OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 1 ||
-                OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 2 ||
-                OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 3
-                );
+            ChangeDefaultOutput.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
         }
 
         private void AudioBitDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (AudioBitDepth.SelectedIndex == 0)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 1);
-            else if (AudioBitDepth.SelectedIndex == 1)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 2);
-            else if (AudioBitDepth.SelectedIndex == 2)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 3);
+            if (AudioBitDepth.SelectedIndex <= 2)
+                OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", AudioBitDepth.SelectedIndex + 1);
             else
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", 1);
         }
 
         private void MonophonicFunc_CheckedChanged(object sender, EventArgs e)
         {
-            if (MonophonicFunc.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("MonoRendering", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("MonoRendering", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("MonoRendering", Convert.ToInt32(MonophonicFunc.Checked), RegistryValueKind.DWord);
         }
 
         private void FadeoutDisable_CheckedChanged(object sender, EventArgs e)
         {
-            if (FadeoutDisable.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", Convert.ToInt32(FadeoutDisable.Checked), RegistryValueKind.DWord);
         }
 
         private void SlowDownPlayback_CheckedChanged(object sender, EventArgs e)
         {
-            if (SlowDownPlayback.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("DontMissNotes", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("DontMissNotes", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("DontMissNotes", Convert.ToInt32(SlowDownPlayback.Checked), RegistryValueKind.DWord);
         }
 
         private void KSDAPIBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (KSDAPIBox.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("KSDAPIEnabled", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("KSDAPIEnabled", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("KDMAPIEnabled", Convert.ToInt32(KSDAPIBox.Checked), RegistryValueKind.DWord);
         }
 
         private void HMode_CheckedChanged(object sender, EventArgs e)
         {
-            if (HMode.Checked)
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("HyperPlayback", "1", RegistryValueKind.DWord);
-            else
-                OmniMIDIConfiguratorMain.SynthSettings.SetValue("HyperPlayback", "0", RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
         }
 
         private void OldBuff_CheckedChanged(object sender, EventArgs e)
         {
-            if (OldBuff.Checked)
-                Functions.OldBufferMode(1);
-            else
-                Functions.OldBufferMode(0);
+            Functions.OldBufferMode(Convert.ToInt32(OldBuff.Checked));
         }
 
         private void NoSleep_CheckedChanged(object sender, EventArgs e)
         {
-            if (NoSleep.Checked)
-                Functions.SleepStates(0);
-            else
-                Functions.SleepStates(1);
+            Functions.SleepStates(Convert.ToInt32(NoSleep.Checked));
         }
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
-            if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "DirectX Audio")
+            if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == AudioEngine.DSOUND_ENGINE)
             {
                 DefaultOutput frm = new DefaultOutput(false);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
-            else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "WASAPI")
+            else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == AudioEngine.WASAPI_ENGINE)
             {
                 DefaultOutput frm = new DefaultOutput(true);
                 frm.ShowDialog(this);
                 frm.Dispose();
             }
-            else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
+            else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == AudioEngine.ASIO_ENGINE)
             {
                 DefaultASIOAudioOutput frm = new DefaultASIOAudioOutput();
                 frm.ShowDialog(this);

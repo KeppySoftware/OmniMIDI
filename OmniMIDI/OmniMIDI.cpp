@@ -348,12 +348,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		if (!AlreadyInitializedViaKDMAPI && bass_initialized) {
+		if (CloseStreamMidiOutClose && !AlreadyInitializedViaKDMAPI) {
 			// The app wants us to close the driver
 			// Only close the stream if the user has chosen to
-			if (CloseStreamMidiOutClose) DoStopClient();
-			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);		
+			if (bass_initialized) DoStopClient();			
 		}
+		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Not needed for OmniMIDI

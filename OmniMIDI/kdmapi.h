@@ -33,7 +33,7 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 	return TRUE;
 }
 
-DWORD WINAPI StreamHealthAndSettings(LPVOID lpV) {
+DWORD WINAPI Watchdog(LPVOID lpV) {
 	try {
 		// Check system
 		PrintToConsole(FOREGROUND_RED, 1, "Checking for settings changes or hotkeys...");
@@ -48,7 +48,7 @@ DWORD WINAPI StreamHealthAndSettings(LPVOID lpV) {
 			LoadSettingsRT();			// Load real-time settings
 			LoadCustomInstruments();	// Load custom instrument values from the registry
 			keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
-			WatchdogCheck();			// Check current active voices, rendering time, etc..
+			SFDynamicLoaderCheck();		// Check current active voices, rendering time, etc..
 			mixervoid();				// Send dB values to the mixer
 			RevbNChor();				// Check if custom reverb/chorus values are enabled
 
@@ -118,7 +118,7 @@ void DoStartClient() {
 
 		// Create the main thread
 		CheckIfThreadClosed(HealthThread.ThreadHandle);
-		HealthThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)StreamHealthAndSettings, NULL, 0, (LPDWORD)HealthThread.ThreadAddress);
+		HealthThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Watchdog, NULL, 0, (LPDWORD)HealthThread.ThreadAddress);
 		SetThreadPriority(HealthThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 
 		// Wait for the SoundFonts to load, then close the event's handle
@@ -148,7 +148,7 @@ void DoStopClient() {
 		CloseRegistryKey(Configuration);
 		CloseRegistryKey(Channels);
 		CloseRegistryKey(ChanOverride);
-		CloseRegistryKey(Watchdog);
+		CloseRegistryKey(SFDynamicLoader);
 
 		// OK now it's fine
 		block_bassinit = FALSE;
@@ -161,7 +161,7 @@ void DoResetClient() {
 }
 
 BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
-	*Major = 1; *Minor = 30; *Build = 0; *Revision = 51;
+	*Major = 1; *Minor = 47; *Build = 2; *Revision = 1;
 	return TRUE;
 }
 
@@ -180,7 +180,7 @@ BOOL KDMAPI IsKDMAPIAvailable()  {
 }
 
 BOOL KDMAPI InitializeKDMAPIStream() {
-	if (!AlreadyInitializedViaKDMAPI) {
+	if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
 		KDMAPIEnabled = TRUE;
 
@@ -197,17 +197,25 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 
 		return TRUE;
 	}
-	else return FALSE;
+
+	MessageBox(
+		NULL,
+		L"The driver has already been initialized by Windows Multimedia!\n\nKDMAPI is unable to work until the driver output is closed again through midiOutClose().",
+		L"KDMAPI ERROR",
+		MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+
+	return FALSE;
 }
 
 BOOL KDMAPI TerminateKDMAPIStream() {
 	// If the driver is supposed to terminate the stream, then do so
-	if (CloseStreamMidiOutClose && AlreadyInitializedViaKDMAPI) {
-		DoStopClient();
+	if (CloseStreamMidiOutClose && !AlreadyInitializedViaKDMAPI) {
+		if (bass_initialized) DoStopClient();
 		AlreadyInitializedViaKDMAPI = FALSE;
 		return TRUE;
 	}
-	else return FALSE;
+
+	return FALSE;
 }
 
 VOID KDMAPI ResetKDMAPIStream() {
@@ -224,8 +232,11 @@ MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	try {
 		// Send the data directly to BASSMIDI, bypassing the buffer altogether
-		if (EVBuffReady) SendToBASSMIDI(dwMsg);
-		return MMSYSERR_NOERROR;
+		if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
+			SendToBASSMIDI(dwMsg);
+			return MMSYSERR_NOERROR;
+		}
+		return MIDIERR_NOTREADY;
 	}
 	catch (...) {
 		// Something died, invalid parameter!
@@ -350,7 +361,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 
 VOID KDMAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
-	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI - Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	else LoadFonts(Directory);
 }
 

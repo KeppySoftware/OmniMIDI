@@ -96,8 +96,8 @@ void LoadSoundfont(int whichsf){
 		TCHAR config[MAX_PATH];
 		BASS_MIDI_FONT * mf;
 
-		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog", TRUE);
-		RegSetValueEx(Watchdog.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
+		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
+		RegSetValueEx(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
 
 		LoadFonts(sflistloadme[whichsf - 1]);
 		BASS_MIDI_StreamLoadSamples(OMStream);
@@ -663,19 +663,19 @@ int AudioRenderingType(int value) {
 	}
 }
 
-void WatchdogCheck() {
+void SFDynamicLoaderCheck() {
 	try {
 		// Used to check which SoundFont list has been loaded through the configurator
-		OpenRegistryKey(Watchdog, L"Software\\OmniMIDI\\Watchdog", TRUE);
+		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
 
 		// Check each value, to see if they're true or not
 		for (int i = 0; i <= 15; ++i) {
-			RegQueryValueEx(Watchdog.Address, rnames[i], NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
+			RegQueryValueEx(SFDynamicLoader.Address, rnames[i], NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
 
 			// Value "i" is true, reload the specific SoundFont list
 			if (rvalues[i] == 1) {
 				LoadSoundfont(i + 1);
-				RegSetValueEx(Watchdog.Address, rnames[i], 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
+				RegSetValueEx(SFDynamicLoader.Address, rnames[i], 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 			}
 		}
 	}

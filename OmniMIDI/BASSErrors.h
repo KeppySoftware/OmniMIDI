@@ -196,18 +196,18 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 
 		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
 
-		if (engine == L"ASIO") {
+		if (!_tcsicmp(engine, L"BASSASIO") && error != -1) {
 			lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
 		}
 
 		MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
 	}
 
-	if (error == -1 ||
+	if ((error == -1 ||
 		error >= 2 && error <= 10 ||
 		error == 19 ||
 		error >= 24 && error <= 26 ||
-		error == 44)
+		error == 44) && showerror)
 	{
 		exit(error);
 	}

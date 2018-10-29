@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -57,6 +58,14 @@ namespace OmniMIDIConfigurator
 
                 DeviceTrigger(true);
                 DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
+
+                /* 
+                 * Unavailable at the moment
+                 * 
+                 * if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("ASIOSeparateThread", 0)) == 1)
+                 * ASIOSeparateThread.Checked = true;
+                 *
+                 */
             }
             catch (Exception ex)
             {
@@ -128,6 +137,12 @@ namespace OmniMIDIConfigurator
             GetASIODeviceInfo();
 
             DeviceTrigger(false);
+        }
+
+        private void ASIOSeparateThread_CheckedChanged(object sender, EventArgs e)
+        {
+            // Unavailable at the moment
+            // OmniMIDIConfiguratorMain.SynthSettings.SetValue("ASIOSeparateThread", ASIOSeparateThread.Checked ? "1" : "0", RegistryValueKind.DWord);
         }
 
         private void Quit_Click(object sender, EventArgs e)

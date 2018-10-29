@@ -456,7 +456,7 @@ ULONG ASIODevicesCount() {
 	return count;
 }
 
-LONG ASIODetectID() {
+ULONG ASIODetectID() {
 	try {
 		// Initialize BASSASIO info
 		BASS_ASIO_DEVICEINFO info;
@@ -507,6 +507,75 @@ void InitializeBASSOutput() {
 	}
 }
 
+BOOL InitializeBASSLibrary() {
+	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
+	BOOL isds = (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
+	// Stream flags
+	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DSOUND_ENGINE) ? BASS_DEVICE_DSOUND : 0);
+	// DWORDs on the registry are unsigned, so parse the value and subtract 1 to get the selected audio device
+	AudioOutput = ManagedSettings.AudioOutputReg - 1;
+
+	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
+	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, flags, 0, NULL);
+	CheckUp(ERRORCODE, L"BASS Lib Initialization", TRUE);
+
+	return init;
+}
+
+BOOL ApplyStreamSettings() {
+	if (!OMStream) {
+		// Free BASS and BASSASIO
+		FreeUpBASSASIO();
+		FreeUpBASS();
+
+		// The synth failed to open the output
+		OMStream = 0;
+		PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
+		return FALSE;
+	}
+	else {
+		// Load the settings to BASS
+		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+		CheckUp(ERRORCODE, L"Stream Attributes 1", TRUE);
+		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+		CheckUp(ERRORCODE, L"Stream Attributes 2", TRUE);
+		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+		CheckUp(ERRORCODE, L"Stream Attributes 3", TRUE);
+		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+		CheckUp(ERRORCODE, L"Stream Attributes 4", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+		CheckUp(ERRORCODE, L"Stream Attributes 5", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+		CheckUp(ERRORCODE, L"Stream Attributes 6", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+		CheckUp(ERRORCODE, L"Stream Attributes 7", TRUE);
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+		CheckUp(ERRORCODE, L"Stream Attributes 8", FALSE);
+	}
+	return TRUE;
+}
+
+void PrepareVolumeKnob() {
+	// Enable the volume knob in the configurator
+	ChVolume = BASS_ChannelSetFX(OMStream, BASS_FX_VOLUME, 1);
+	ChVolumeStruct.fCurrent = 1.0f;
+	ChVolumeStruct.fTarget = sound_out_volume_float;
+	ChVolumeStruct.fTime = 0.0f;
+	ChVolumeStruct.lCurve = 0;
+	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+	CheckUp(ERRORCODE, L"Stream Volume FX Preparation", FALSE);
+}
+
+void FallbackToWASAPIEngine() {
+	// Something failed, fallback to WASAPI
+	ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+
+	FreeUpBASSASIO();
+	FreeUpBASS();
+
+	InitializeBASSOutput();
+}
+
 /*
 
 // Legacy stuff, used for BASSWASAPI
@@ -555,26 +624,27 @@ void InitializeWAVEnc() {
 }
 
 void InitializeASIO() {
+	// Free BASSASIO again, just to be sure
+	FreeUpBASSASIO();
+
 	// Chec how many ASIO devices are available
 	if (ASIODevicesCount() < 1) {
 		// If no devices are available, return an error, and switch to WASAPI
 		MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-		ManagedSettings.CurrentEngine = WASAPI_ENGINE;
-		BASS_Free();
-		PrintToConsole(FOREGROUND_RED, 1, "ASIO devices not available, using WASAPI...");
-		BASS_Init(AudioOutput, ManagedSettings.AudioFrequency, BASS_DEVICE_STEREO, 0, NULL);
-		CheckUp(ERRORCODE, L"BASS Lib Initialization", TRUE);
-		InitializeBASSOutput();
+		FallbackToWASAPIEngine();
 		return;
 	}
 
-	LONG ADID = ASIODetectID();
+	// Check if driver is supposed to run in a separate thread
+	BOOL ASIOSeparateThread;
+	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+	RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
 
 	// Else, initialize the stream and proceed to initialize ASIO as well
 	InitializeStream(ManagedSettings.AudioFrequency);
 
 	// If ASIO is successfully initialized, go on with the initialization process
-	if (BASS_ASIO_Init(ADID, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+	if (BASS_ASIO_Init(ASIODetectID(), (ASIOSeparateThread ? BASS_ASIO_THREAD : NULL) | BASS_ASIO_JOINORDER)) {
 		// Set the audio frequency
 		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
 		CheckUpASIO(ERRORCODE, L"ASIO Device Frequency Set", TRUE);
@@ -617,17 +687,6 @@ void InitializeASIO() {
 bool InitializeBASS(BOOL restart) {
 	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
 
-	// Initialize values
-	BOOL init;
-	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
-	BOOL isds = (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
-	// Parse the flags, and check if DS is selected
-	DWORD flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DSOUND_ENGINE) ? BASS_DEVICE_DSOUND : 0);
-	// DWORDs on the registry are unsigned, so parse the value and subtract 1 to get the selected audio device
-	AudioOutput = ManagedSettings.AudioOutputReg - 1;
-
-	PrintToConsole(FOREGROUND_RED, 1, "Settings are valid, continue...");
-
 	// The user restarted the synth, add 1 to RestartValue, for the ".WAV mode"
 	if (restart == TRUE) {
 		PrintToConsole(FOREGROUND_RED, 1, "The driver requested to restart the stream.");
@@ -637,11 +696,8 @@ bool InitializeBASS(BOOL restart) {
 	FreeUpBASSASIO();
 	FreeUpBASS();
 
-Retry:
 	// Initialize BASS
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
-	init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, flags, 0, NULL);
-	CheckUp(ERRORCODE, L"BASS Lib Initialization", TRUE);
+	BOOL init = InitializeBASSLibrary();
 
 	// If ".WAV mode" is selected, initialize the decoding channel
 	if (ManagedSettings.CurrentEngine == AUDTOWAV)
@@ -653,44 +709,10 @@ Retry:
 	else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
 		InitializeASIO();
 
-	if (!OMStream) {
-		// Free BASS and BASSASIO
-		FreeUpBASSASIO();
-		FreeUpBASS();
-
-		// The synth failed to open the output
-		OMStream = 0;
-		PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
-		return false;
-	}
-	else {
-		// Load the settings to BASS
-		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		CheckUp(ERRORCODE, L"Stream Attributes 1", TRUE);
-		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		CheckUp(ERRORCODE, L"Stream Attributes 2", TRUE);
-		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		CheckUp(ERRORCODE, L"Stream Attributes 3", TRUE);
-		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
-		CheckUp(ERRORCODE, L"Stream Attributes 4", TRUE);
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-		CheckUp(ERRORCODE, L"Stream Attributes 5", TRUE);
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-		CheckUp(ERRORCODE, L"Stream Attributes 6", TRUE);
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-		CheckUp(ERRORCODE, L"Stream Attributes 7", TRUE);
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		CheckUp(ERRORCODE, L"Stream Attributes 8", FALSE);
-	}
+	if (!ApplyStreamSettings()) return FALSE;
 
 	// Enable the volume knob in the configurator
-	ChVolume = BASS_ChannelSetFX(OMStream, BASS_FX_VOLUME, 1);
-	ChVolumeStruct.fCurrent = 1.0f;
-	ChVolumeStruct.fTarget = sound_out_volume_float;
-	ChVolumeStruct.fTime = 0.0f;
-	ChVolumeStruct.lCurve = 0;
-	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(ERRORCODE, L"Stream Volume FX Preparation", FALSE);
+	PrepareVolumeKnob();
 
 	return init;
 }
