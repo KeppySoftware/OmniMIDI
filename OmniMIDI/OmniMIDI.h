@@ -77,6 +77,10 @@ typedef struct
 	FLOAT RenderingTime;			// Current BASS rendering time
 	DWORD ActiveVoices[16];			// Active voices for each channel
 
+	// ASIO debug info
+	DOUBLE ASIOInputLatency;
+	DOUBLE ASIOOutputLatency;
+
 	// Add more down here
 	// ------------------
 } DebugInfo;

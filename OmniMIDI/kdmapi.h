@@ -1,3 +1,15 @@
+/*
+OmniMIDI, a fork of BASSMIDI Driver
+
+Thank you Kode54 for allowing me to fork your awesome driver.
+*/
+
+// KDMAPI version
+#define CUR_MAJOR	1
+#define CUR_MINOR	47
+#define CUR_BUILD	2
+#define CUR_REV		8
+
 // KDMAPI calls
 
 BOOL StreamHealthCheck(BOOL& Initialized) {
@@ -51,7 +63,6 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 			SFDynamicLoaderCheck();		// Check current active voices, rendering time, etc..
 			mixervoid();				// Send dB values to the mixer
 			RevbNChor();				// Check if custom reverb/chorus values are enabled
-
 
 			// Check if the threads and streams are still alive
 			StreamHealthCheck(bass_initialized);
@@ -152,6 +163,7 @@ void DoStopClient() {
 
 		// OK now it's fine
 		block_bassinit = FALSE;
+		bass_initialized = FALSE;
 	}
 }
 
@@ -161,7 +173,12 @@ void DoResetClient() {
 }
 
 BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
-	*Major = 1; *Minor = 47; *Build = 2; *Revision = 1;
+	if (Major == NULL || Minor == NULL || Build == NULL || Revision == NULL) {
+		MessageBox(NULL, L"One of the pointers passed to the ReturnKDMAPIVer function is invalid!", L"KDMAPI ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		return FALSE;
+	}
+
+	*Major = CUR_MAJOR; *Minor = CUR_MINOR; *Build = CUR_BUILD; *Revision = CUR_REV;
 	return TRUE;
 }
 
@@ -182,6 +199,7 @@ BOOL KDMAPI IsKDMAPIAvailable()  {
 BOOL KDMAPI InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
+		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
 
 		// Enable the debug log, if the process isn't banned
@@ -192,12 +210,11 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 
 		// Start the driver's engine
 		DoStartClient();
-	
-		AlreadyInitializedViaKDMAPI = TRUE;
 
 		return TRUE;
 	}
 
+	// You can't initialize the driver if it's already been initialized by WinMM!
 	MessageBox(
 		NULL,
 		L"The driver has already been initialized by Windows Multimedia!\n\nKDMAPI is unable to work until the driver output is closed again through midiOutClose().",
@@ -208,20 +225,30 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 }
 
 BOOL KDMAPI TerminateKDMAPIStream() {
-	// If the driver is supposed to terminate the stream, then do so
-	if (CloseStreamMidiOutClose && !AlreadyInitializedViaKDMAPI) {
-		if (bass_initialized) DoStopClient();
-		AlreadyInitializedViaKDMAPI = FALSE;
+	try {
+		// If the driver is already initialized, close it
+		if (AlreadyInitializedViaKDMAPI && bass_initialized) {
+			DoStopClient();
+			AlreadyInitializedViaKDMAPI = FALSE;
+		}
+
 		return TRUE;
 	}
+	catch (...) {
+		// Uh oh, the driver did a bad!
+		MessageBox(
+			NULL,
+			L"An error has occured in the TerminateKDMAPIStream() function.",
+			L"KDMAPI ERROR",
+			MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 
-	return FALSE;
+		return FALSE;
+	}
 }
 
 VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
-	if (AlreadyInitializedViaKDMAPI)
-		DoResetClient();
+	if (bass_initialized) DoResetClient();
 }
 
 MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
@@ -367,5 +394,6 @@ VOID KDMAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
 
 DebugInfo* KDMAPI GetDriverDebugInfo() {
 	// Parse the debug info, and return them to the app
+	PrintToConsole(FOREGROUND_GREEN, 0, "Passed pointer to DebugInfo to the KDMAPI-ready application.");
 	return &ManagedDebugInfo;
 }

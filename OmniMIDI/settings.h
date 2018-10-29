@@ -680,7 +680,7 @@ void SFDynamicLoaderCheck() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"WatchdogCheck");
+		CrashMessage(L"SFDynamicLoaderCheck");
 	}
 }
 
@@ -722,17 +722,17 @@ void CheckVolume(BOOL Closing) {
 }
 
 void FillContentDebug(
-	float CCUI0,				// Rendering time
-	int HC,						// App's handles
-	unsigned long long RUI,		// App's working size/RAM usage
-	bool KDMAPIStatus,			// KDMAPI status
-	double TD1,					// Thread 1's latency
-	double TD2,					// Thread 2's latency
-	double TD3,					// Thread 3's latency
-	double TD4,					// Thread 4's latency
-	double IL,					// ASIO's input latency
-	double OL,					// ASIO's output latency
-	bool BUFOVD					// EVBuffer overload
+	FLOAT CCUI0,				// Rendering time
+	INT HC,						// App's handles
+	ULONGLONG RUI,				// App's working size/RAM usage
+	BOOL KDMAPIStatus,			// KDMAPI status
+	DOUBLE TD1,					// Thread 1's latency
+	DOUBLE TD2,					// Thread 2's latency
+	DOUBLE TD3,					// Thread 3's latency
+	DOUBLE TD4,					// Thread 4's latency
+	DOUBLE IL,					// ASIO's input latency
+	DOUBLE OL,					// ASIO's output latency
+	BOOL BUFOVD					// EVBuffer overload
 ) {
 	std::locale::global(std::locale::classic());	// DO NOT REMOVE
 
@@ -769,36 +769,32 @@ void FillContentDebug(
 	if (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING) StartDebugPipe(TRUE);
 }
 
-DOUBLE ASIORate = 0;
-DWORD ASIODbgErr;
-DWORD ASIOInLatency;
-DWORD ASIOOutLatency;
-DOUBLE inlatency = 0.0;
-DOUBLE outlatency = 0.0;
-
 void ParseDebugData() {
+	DWORD ASIOTempInLatency;
+	DWORD ASIOTempOutLatency;
+	DOUBLE ASIORate;
 
 	BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &RenderingTime);
 
 	if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
-		ASIOInLatency = BASS_ASIO_GetLatency(TRUE);
-		if (BASS_ASIO_ErrorGetCode() != 0) ASIOInLatency = 0;
+		ASIOTempInLatency = BASS_ASIO_GetLatency(TRUE);
+		if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempInLatency = 0;
 
-		ASIOOutLatency = BASS_ASIO_GetLatency(FALSE);
-		if (BASS_ASIO_ErrorGetCode() != 0) ASIOOutLatency = 0;
+		ASIOTempOutLatency = BASS_ASIO_GetLatency(FALSE);
+		if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempOutLatency = 0;
 
 		ASIORate = BASS_ASIO_GetRate();
 		if (BASS_ASIO_ErrorGetCode() != 0) ASIORate = 0.0;
 
 		// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
 		if (ASIORate != 0.0) {
-			inlatency = (ASIOInLatency != 0) ? ((DOUBLE)ASIOInLatency * 1000.0 / ASIORate) : 0.0;
-			outlatency = (ASIOOutLatency != 0) ? ((DOUBLE)ASIOOutLatency * 1000.0 / ASIORate) : 0.0;
+			ManagedDebugInfo.ASIOInputLatency = (ASIOTempInLatency != 0) ? ((DOUBLE)ASIOTempInLatency * 1000.0 / ASIORate) : 0.0;
+			ManagedDebugInfo.ASIOOutputLatency = (ASIOTempOutLatency != 0) ? ((DOUBLE)ASIOTempOutLatency * 1000.0 / ASIORate) : 0.0;
 		}
 	}
 	else {
-		inlatency = 0.0;
-		outlatency = 0.0;
+		ManagedDebugInfo.ASIOInputLatency = 0.0;
+		ManagedDebugInfo.ASIOOutputLatency = 0.0;
 	}
 
 	for (int i = 0; i <= 15; ++i) {
@@ -817,11 +813,11 @@ void SendDebugDataToPipe() {
 		SIZE_T ramusage = pmc.WorkingSetSize;
 		QWORD ramusageint = static_cast<QWORD>(ramusage);
 
-		long long TimeDuringDebug = TimeNow();
+		long long TimeDuringDebug = HyperMode ? 0 : TimeNow();
 
 		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KDMAPIEnabled,
 			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, ManagedSettings.NotesCatcherWithAudio ? 0.0f : TimeDuringDebug - start4,
-			inlatency, outlatency, FALSE /* It's supposed to be a buffer overload check */);
+			ManagedDebugInfo.ASIOInputLatency, ManagedDebugInfo.ASIOOutputLatency, FALSE /* It's supposed to be a buffer overload check */);
 
 		FlushFileBuffers(hPipe);
 	}

@@ -98,7 +98,7 @@ MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 }
 
 // Hyper switch
-static DWORD HyperMode = 0;
+static BOOL HyperMode = 0;
 static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = DummyParseData;
 static DWORD(*_PlayBufData)(void) = 0;
 static DWORD(*_PlayBufDataChk)(void) = 0;
