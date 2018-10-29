@@ -101,7 +101,7 @@ The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of August 27th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
+As of October 29th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 ### **InitializeKDMAPIStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.
@@ -141,7 +141,7 @@ KDMAPIVer = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ReturnKDMAPIVer"
 <hr />
 
 ### **IsKDMAPIAvailable**
-A generic check, useful for people who want to see if KSDAPI v1.2+ is available.<br />
+A generic check, useful for people who want to see if KDMAPI v1.2+ is available.<br />
 You NEED to call this function at least once, in order to switch the KSDAPI status value in the debug window to active.<br />
 There are no arguments available, and you have to manually catch the exception, if the function isn't available.
 
