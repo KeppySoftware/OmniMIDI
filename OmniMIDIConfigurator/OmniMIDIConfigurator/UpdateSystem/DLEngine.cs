@@ -60,6 +60,7 @@ namespace OmniMIDIConfigurator.Forms
                 else URL = new Uri(FullURL);
 
                 try {
+                    Status.Text = String.Format(MessageToDisplay, 0);
                     DLSystemTimeout.Elapsed += TimeOutCheck;
                     DLSystem.DownloadDataAsync(URL);
                     DLSystemTimeout.Start();
@@ -80,7 +81,7 @@ namespace OmniMIDIConfigurator.Forms
             DLSystem.CancelAsync();
             DLSystem.Dispose();
             Program.DebugToConsole(false, "An error has occurred while downloading the update.", null);
-            MessageBox.Show("The download process has timed out.\nYour Internet may be slow, or GitHub may be experiencing high server load.\n\nIf your connection is working, wait a few minutes before updating.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Timed out", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("The download process has timed out.\nYour Internet may be slow, or GitHub may be experiencing high server load.\n\nIf your connection is working, wait a few minutes before updating.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Timed out", MessageBoxButtons.OK, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
             DialogResult = DialogResult.No;
             Close();
         }
@@ -99,7 +100,7 @@ namespace OmniMIDIConfigurator.Forms
             {
                 DLSystem.Dispose();
                 Program.DebugToConsole(false, "Update process aborted by the user.", null);
-                MessageBox.Show("Download aborted.\n\nPress OK to close the download window.", "OmniMIDI - Download aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Download aborted.\n\nPress OK to close the download window.", "OmniMIDI - Download aborted", MessageBoxButtons.OK, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
                 DialogResult = DialogResult.No;
                 Close();
             }
@@ -107,7 +108,7 @@ namespace OmniMIDIConfigurator.Forms
             {
                 DLSystem.Dispose();
                 Program.DebugToConsole(false, "An error has occurred while downloading the update.", null);
-                MessageBox.Show("The configurator is unable to download the latest version.\nIt might not be available yet, or you might not be connected to the Internet.\n\nIf your connection is working, wait a few minutes for the update to appear online.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("The configurator is unable to download the latest version.\nIt might not be available yet, or you might not be connected to the Internet.\n\nIf your connection is working, wait a few minutes for the update to appear online.\nIf your connection is malfunctioning or is not working at all, check your network connection, or contact your system administrator or network service provider.", "OmniMIDI - Connection error", MessageBoxButtons.OK, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
                 DialogResult = DialogResult.No;
 
                 if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
@@ -137,8 +138,8 @@ namespace OmniMIDIConfigurator.Forms
                         DLSystem.Dispose();
 
                         Program.DebugToConsole(false, "The update is ready to be installed.", null);
-                        MessageBox.Show("Be sure to save all your data in the apps using OmniMIDI, before updating.\n\nClick OK when you're ready.", "OmniMIDI - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        Process.Start(String.Format("{0}{1}", DriverReinstall ? "{0}OmniMIDISetup.exe" : "{0}OmniMIDIUpdate.exe", Path.GetTempPath() + "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /SP-");
+                        MessageBox.Show("Be sure to save all your data in the apps using OmniMIDI, before updating.\n\nClick OK when you're ready.", "OmniMIDI - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
+                        Process.Start(String.Format("{0}{1}", Path.GetTempPath() , DriverReinstall ? "OmniMIDISetup.exe" : "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /SP-");
 
                         if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
                         {
@@ -153,13 +154,13 @@ namespace OmniMIDIConfigurator.Forms
                     catch (Exception ex)
                     {
                         if (ex.GetBaseException() is InvalidOperationException)
-                            MessageBox.Show("Unable to locate the setup!\n\nThe file is missing from your storage or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Unable to locate the setup!\n\nThe file is missing from your storage or it's not even present in GitHub's servers.\n\nThis usually indicates an issue with your connection, or a problem at GitHub.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
                         else if (ex.GetBaseException() is Win32Exception)
-                            MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, or its missing the Win32PE header.\n\nThis usually indicates an issue with your connection.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Can not open the setup!\n\nThe file is probably damaged, or its missing the Win32PE header.\n\nThis usually indicates an issue with your connection.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
                         else if (ex.GetBaseException() is ObjectDisposedException)
-                            MessageBox.Show("The process object has already been disposed.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("The process object has already been disposed.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
                         else
-                            MessageBox.Show("Unknown error.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Unknown error.", "OmniMIDI - Update error", MessageBoxButtons.OK, MessageBoxIcon.Error, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
 
                         DialogResult = DialogResult.No;
                         Close();

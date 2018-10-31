@@ -635,10 +635,10 @@ void InitializeASIO() {
 		return;
 	}
 
-	// Check if driver is supposed to run in a separate thread
-	BOOL ASIOSeparateThread;
-	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
-	RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
+	// Check if driver is supposed to run in a separate thread (TURNED ON PERMANENTLY ATM)
+	BOOL ASIOSeparateThread = 1;
+	// OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+	// RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
 
 	// Else, initialize the stream and proceed to initialize ASIO as well
 	InitializeStream(ManagedSettings.AudioFrequency);

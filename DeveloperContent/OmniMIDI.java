@@ -65,6 +65,9 @@ class DebugInfo
 {
 	public float RenderingTime;
 	public int ActiveVoices[] = new int[16];
+	
+	public double ASIOInputLatency;
+	public double ASIOOutputLatency;
 }
 
 class KDMAPI 

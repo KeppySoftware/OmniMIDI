@@ -35,19 +35,19 @@ namespace OmniMIDIConfigurator
     {
         // KSDAPI info
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern Boolean ReturnKDMAPIVer(out Int32 Major, out Int32 Minor, out Int32 Build, out Int32 Revision);
+        public static extern int ReturnKDMAPIVer(out Int32 Major, out Int32 Minor, out Int32 Build, out Int32 Revision);
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void InitializeKDMAPIStream();
+        public static extern int InitializeKDMAPIStream();
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void TerminateKDMAPIStream();
+        public static extern int TerminateKDMAPIStream();
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void ResetKDMAPIStream();
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern bool IsKDMAPIAvailable();
+        public static extern int IsKDMAPIAvailable();
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int SendDirectData(uint dwMsg);
@@ -180,7 +180,7 @@ namespace OmniMIDIConfigurator
 
                 // Parse KDMAPI version
                 Int32 Major, Minor, Build, Revision;
-                if (KDMAPI.ReturnKDMAPIVer(out Major, out Minor, out Build, out Revision))
+                if (Convert.ToBoolean(KDMAPI.ReturnKDMAPIVer(out Major, out Minor, out Build, out Revision)))
                     KDMAPI.KDMAPIVer = String.Format("{0}.{1}.{2} (Revision {3})", Major, Minor, Build, Revision);
                 else
                 {

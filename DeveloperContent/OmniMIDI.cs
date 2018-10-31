@@ -72,6 +72,9 @@ namespace KDMAPI
 	{
 		float RenderingTime;
 		int ActiveVoices[] = new int[16];
+		
+		double ASIOInputLatency;
+		double ASIOOutputLatency;
 	}
 	
     // KDMAPI funcs

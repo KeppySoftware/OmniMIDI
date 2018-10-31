@@ -78,8 +78,7 @@ namespace OmniMIDIConfigurator
             }
 
             // Initialize KDMAPI
-            if (KDMAPI.IsKDMAPIAvailable())
-                KDMAPI.InitializeKDMAPIStream();
+            if (Convert.ToBoolean(KDMAPI.IsKDMAPIAvailable())) KDMAPI.InitializeKDMAPIStream();
             else
             {
                 MessageBox.Show("Unable to initialize KDMAPI.", "OmniMIDI - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
