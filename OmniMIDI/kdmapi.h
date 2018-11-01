@@ -334,29 +334,25 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 }
 
 MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	try {
-		if (AlreadyInitializedViaKDMAPI) {
-			if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;
+	if (!bass_initialized) return MIDIERR_NOTREADY;							// The driver isn't ready
+	if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;	// The buffer is not prepared
 
-			// Mark the buffer as in queue
-			IIMidiHdr->dwFlags &= ~MHDR_DONE;
-			IIMidiHdr->dwFlags |= MHDR_INQUEUE;
+	// Mark the buffer as in queue
+	IIMidiHdr->dwFlags &= ~MHDR_DONE;
+	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
-			// Do the stuff with it, if it's not to be ignored
-			if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
-			// It has to be ignored, send info to console
-			else PrintMessageToDebugLog("KDMAPI_SDLD", "Ignored SysEx MIDI event...");
+	// Do the stuff with it, if it's not to be ignored
+	if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+	// It has to be ignored, send info to console
+	else PrintMessageToDebugLog("KDMAPI_SDLD", "Ignored SysEx MIDI event...");
 
-			// Mark the buffer as done
-			IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-			IIMidiHdr->dwFlags |= MHDR_DONE;
+	// Mark the buffer as done
+	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
+	IIMidiHdr->dwFlags |= MHDR_DONE;
 
-			// Tell the app that the buffer has been played
-			return MMSYSERR_NOERROR;
-		}
-		else return MIDIERR_NOTREADY;
-	}
-	catch (...) { return MMSYSERR_INVALPARAM; }
+	// Tell the app that the buffer has been played
+	return MMSYSERR_NOERROR;
 }
 
 MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
