@@ -28,7 +28,7 @@ typedef unsigned __int64 QWORD;
 
 #define ERRORCODE		0
 #define CAUSE			1
-#define LONGMSG_MAXSIZE	65535
+#define LONGMSG_MAXSIZE	65536
 
 #define LOCK_VM_IN_WORKING_SET 1
 #define LOCK_VM_IN_RAM 2
@@ -75,11 +75,8 @@ static NLVM NtLockVirtualMemory = 0;
 static NULVM NtUnlockVirtualMemory = 0;
 
 // Blinx best game
-static HMODULE bass = 0;			// bass handle
-static HMODULE bassasio = 0;		// bassasio handle
-static HMODULE bassenc = 0;			// bassenc handle
-static HMODULE bassmidi = 0;		// bassmidi handle
-// static HMODULE basswasapi = 0;	// basswasapi handle
+static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL;	// BASS libs handles
+static HPLUGIN bassflac = NULL, bassopus = NULL, basswv = NULL;					// BASS codecs handles
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
@@ -226,7 +223,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 			wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 		}
 
-		PrintToConsole(FOREGROUND_BLUE, 1, "Sharing MIDI device caps with application...");
+		PrintMessageToDebugLog("MODM_GETDEVCAPS", "Sharing MIDI device caps with application...");
 
 		// Dummy GUID associated with OM
 		const GUID OMCLSID = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
@@ -248,7 +245,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps.wTechnology = Technology;
 			MIDICaps.wVoices = maximumvoices;
 			MIDICaps.vDriverVersion = 0x0501;
-			PrintToConsole(FOREGROUND_BLUE, 1, "Done sharing MIDI device caps.");
+			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Done sharing MIDI device caps.");
 		}
 
 		// Copy the item to the app's caps
@@ -256,7 +253,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) {
-		CrashMessage(L"MIDICapsException");
+		CrashMessage("MIDICapsException");
 	}
 }
 

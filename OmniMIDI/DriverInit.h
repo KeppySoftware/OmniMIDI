@@ -34,7 +34,7 @@ void MT32SetInstruments() {
 }
 
 DWORD WINAPI DebugThread(LPVOID lpV) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing debug pipe thread...");
+	PrintMessageToDebugLog("DebugThread", "Initializing debug pipe thread...");
 	while (true) {
 		// Parse the debug info (Active voices, rendering time etc..)
 		ParseDebugData();
@@ -45,14 +45,14 @@ DWORD WINAPI DebugThread(LPVOID lpV) {
 		// Wait
 		_DBGWAIT;
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing debug pipe thread...");
+	PrintMessageToDebugLog("DebugThread", "Closing debug pipe thread...");
 	CloseHandle(DThread.ThreadHandle);
 	DThread.ThreadHandle = NULL;
 	return 0;
 }
 
 DWORD WINAPI EventsProcesser(LPVOID lpV) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
+	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
 			// Start the timer, which calculates 
@@ -71,16 +71,17 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"NotesCatcherThread");
+		CrashMessage("NotesCatcherThread");
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
+
+	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
 	CloseHandle(EPThread.ThreadHandle);
 	EPThread.ThreadHandle = NULL;
 	return 0;
 }
 
 DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing notes catcher thread...");
+	PrintMessageToDebugLog("EventsProcesserHP", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
 			// If the notes catcher thread is supposed to run together with the audio thread,
@@ -92,9 +93,10 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"NotesCatcherThreadHP");
+		CrashMessage("NotesCatcherThreadHP");
 	}
-	PrintToConsole(FOREGROUND_RED, 1, "Closing notes catcher thread...");
+
+	PrintMessageToDebugLog("EventsProcesserHP", "Closing notes catcher thread...");
 	CloseHandle(EPThread.ThreadHandle);
 	EPThread.ThreadHandle = NULL;
 	return 0;
@@ -109,7 +111,7 @@ void InitializeNotesCatcherThread() {
 }
 
 DWORD WINAPI AudioEngine(LPVOID lpParam) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
+	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
@@ -144,18 +146,17 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"AudioEngineThread");
+		CrashMessage("AudioEngineThread");
 	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
+	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	CloseHandle(ATThread.ThreadHandle);
 	ATThread.ThreadHandle = NULL;
-
 	return 0;
 }
 
 DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing audio rendering thread for DS/Enc...");
+	PrintMessageToDebugLog("AudioEngineHP", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
@@ -185,13 +186,12 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"AudioEngineThreadHP");
+		CrashMessage("AudioEngineThreadHP");
 	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "Closing audio rendering thread for DS/Enc...");
+	PrintMessageToDebugLog("AudioEngineHP", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	CloseHandle(ATThread.ThreadHandle);
 	ATThread.ThreadHandle = NULL;
-
 	return 0;
 }
 
@@ -227,41 +227,42 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 // Extremely useful in case the thread is still not dead
 void CheckIfThreadClosed(HANDLE thread) {
 	// Check if the thread is still alive
-	PrintToConsole(FOREGROUND_RED, 1, "Checking if previous thread is still alive...");
+	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "Checking if previous thread passed to this function is still alive...");
 	DWORD result = WaitForSingleObject(thread, 0);
 
 	// Oh no it is!
 	if (thread != WAIT_OBJECT_0) {
 		// KILL IT. DO IT.
-		PrintToConsole(FOREGROUND_RED, 1, "It is! Killing...");
+		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It is! I'm now waiting for it to stop...");
 		WaitForSingleObject(thread, INFINITE);
 		CloseHandle(thread);
 		thread = NULL;
-		PrintToConsole(FOREGROUND_RED, 1, "Killed! Starting thread...");
+
+		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It stopped! Starting thread again...");
 		return;
 	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "It's not. Starting thread...");
+	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It's not! Starting thread again...");
 }
 
 void CloseThreads(BOOL MainClose) {
 	stop_thread = TRUE;
 
 	// Wait for each thread to close, and free their handles
-	PrintToConsole(FOREGROUND_RED, 1, "Closing audio thread...");
+	PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
 	CloseThread(ATThread.ThreadHandle);
 
-	PrintToConsole(FOREGROUND_RED, 1, "Closing events processer thread...");
+	PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
 	CloseThread(EPThread.ThreadHandle);
 
 	if (MainClose)
 	{
 		// Close main as well
-		PrintToConsole(FOREGROUND_RED, 1, "Closing main thread...");
+		PrintMessageToDebugLog("CloseThreadsFunc", "Closing main thread...");
 		CloseThread(HealthThread.ThreadHandle);
 	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "Threads closed.");
+	PrintMessageToDebugLog("CloseThreadsFunc", "Threads closed.");
 	stop_thread = FALSE;
 }
 
@@ -269,33 +270,35 @@ BOOL CreateThreads(BOOL startup) {
 	// Load the SoundFont on startup
 	if (startup == TRUE) SetEvent(load_sfevent);
 
-	PrintToConsole(FOREGROUND_RED, 1, "Closing existing threads, if they're open...");
+	PrintMessageToDebugLog("CreateThreadsFunc", "Closing existing threads, if they're open...");
 	CloseThreads(FALSE);
-
-	PrintToConsole(FOREGROUND_RED, 1, "Creating threads...");
 	reset_synth = 0;
 
+	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
+
 	if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
-		PrintToConsole(FOREGROUND_RED, 1, "Opening audio thread...");
+		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
 		CheckIfThreadClosed(ATThread.ThreadHandle);
 		ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioEngineHP : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
 		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
-		PrintToConsole(FOREGROUND_RED, 1, "Done...");
+		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
 	if (!DThread.ThreadHandle)
 	{
+		PrintMessageToDebugLog("CreateThreadsFunc", "Opening debug thread...");
 		DThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThread.ThreadAddress);
 		SetThreadPriority(DThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
+		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "Threads are now active.");
+	PrintMessageToDebugLog("CreateThreadsFunc", "Threads are now active!");
 	return TRUE;
 }
 
 void InitializeStream(INT32 mixfreq) {
 	bool isdecode = FALSE;
-	PrintToConsole(FOREGROUND_RED, 1, "Creating stream...");
+	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
 
 	// If the current audio engine is DS or WASAPI, then it's not a decoding channel
 	if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || 
@@ -309,9 +312,9 @@ void InitializeStream(INT32 mixfreq) {
 	if (OMStream) {
 		// Stop the stream and free it as well
 		BASS_ChannelStop(OMStream);
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stream stopped.");
+		PrintMessageToDebugLog("InitializeStreamFunc", "Existing BASS stream stopped...");
 		BASS_StreamFree(OMStream);
-		PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+		PrintMessageToDebugLog("InitializeStreamFunc", "Existing BASS stream freed...");
 	}
 
 	// Create the stream with 16 MIDI channels, and the various settings
@@ -322,11 +325,11 @@ void InitializeStream(INT32 mixfreq) {
 
 	CheckUp(ERRORCODE, L"MIDI Stream Initialization", TRUE);
 	
-	PrintToConsole(FOREGROUND_RED, 1, "Stream enabled.");
+	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
 }
 
 void InitializeBASSEnc() {
-	PrintToConsole(FOREGROUND_RED, 1, "Opening BASSenc output...");
+	PrintMessageToDebugLog("InitializeBASSEncFunc", "Initializing BASSenc output...");
 
 	// Cast restart values
 	std::wostringstream rv;
@@ -387,25 +390,27 @@ void InitializeBASSEnc() {
 		}
 	}
 
-	PrintToConsole(FOREGROUND_RED, 1, "BASSenc ready.");
+	PrintMessageToDebugLog("InitializeBASSEncFunc", "BASSenc is now ready!");
 }
 
 void FreeUpBASS() {
 	// Deinitialize the BASS stream, then the output and free the library, since we need to restart it
 	BASS_StreamFree(OMStream);
-	PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS stream freed.");
+	//BASS_PluginFree(0);
+	//PrintMessageToDebugLog("FreeUpBASSFunc", "Plug-ins freed.");
 	BASS_Stop();
-	PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
+	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS stopped.");
 	BASS_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS freed.");
 }
 
 void FreeUpBASSASIO() {
 	// Free up ASIO before doing anything
 	BASS_ASIO_Stop();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO stopped.");
 	BASS_ASIO_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
+	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
 	ASIOReady = FALSE;
 }
 
@@ -444,7 +449,7 @@ LONG WASAPIDetectID() {
 		return 0;
 	}
 	catch (...) {
-		CrashMessage(L"WASAPIDetectID");
+		CrashMessage("WASAPIDetectID");
 	}
 }
 */
@@ -467,6 +472,7 @@ ULONG ASIODetectID() {
 		DWORD ASSize = sizeof(OutputName);
 
 		// Open the registry, and get the name of the selected ASIO device
+		PrintMessageToDebugLog("ASIODetectIDFunc", "Importing default ASIO device from registry...");
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 		RegQueryValueExA(Configuration.Address, "ASIOOutput", NULL, &ASType, (LPBYTE)&OutputName, &ASSize);
 
@@ -475,14 +481,18 @@ ULONG ASIODetectID() {
 		{
 			// Return the correct ID when found
 			if (strcmp(OutputName, info.name) == 0)
+			{
+				PrintMessageToDebugLog("ASIODetectIDFunc", "It's a match! Initializing matched ASIO device...");
 				return CurrentDevice;
+			}
 		}
 
 		// Otherwise, return the first ASIO device
+		PrintMessageToDebugLog("ASIODetectIDFunc", "No matches found, initializing first ASIO device available...");
 		return 0;
 	}
 	catch (...) {
-		CrashMessage(L"ASIODetectID");
+		CrashMessage("ASIODetectID");
 	}
 }
 
@@ -515,9 +525,11 @@ BOOL InitializeBASSLibrary() {
 	// DWORDs on the registry are unsigned, so parse the value and subtract 1 to get the selected audio device
 	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
-	PrintToConsole(FOREGROUND_RED, 1, "Initializing BASS...");
+	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
 	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, flags, 0, NULL);
 	CheckUp(ERRORCODE, L"BASS Lib Initialization", TRUE);
+
+	//load_bassaddons();
 
 	return init;
 }
@@ -530,7 +542,7 @@ BOOL ApplyStreamSettings() {
 
 		// The synth failed to open the output
 		OMStream = 0;
-		PrintToConsole(FOREGROUND_RED, 1, "Failed to open BASS stream.");
+		PrintMessageToDebugLog("InitializeBASSFunc", "Failed to open BASS stream.");
 		return FALSE;
 	}
 	else {
@@ -630,6 +642,7 @@ void InitializeASIO() {
 	// Chec how many ASIO devices are available
 	if (ASIODevicesCount() < 1) {
 		// If no devices are available, return an error, and switch to WASAPI
+		PrintMessageToDebugLog("InitializeASIOFunc", "No ASIO devices available.");
 		MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 		FallbackToWASAPIEngine();
 		return;
@@ -644,6 +657,7 @@ void InitializeASIO() {
 	InitializeStream(ManagedSettings.AudioFrequency);
 
 	// If ASIO is successfully initialized, go on with the initialization process
+	PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
 	if (BASS_ASIO_Init(ASIODetectID(), (ASIOSeparateThread ? BASS_ASIO_THREAD : NULL) | BASS_ASIO_JOINORDER)) {
 		// Set the audio frequency
 		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
@@ -653,7 +667,7 @@ void InitializeASIO() {
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
 
 		// If mono rendering is enabled, mirror the left channel to the right one as well
-		if (ManagedSettings.MonoRendering == 1) {
+		if (ManagedSettings.MonoRendering) {
 			BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
 			CheckUpASIO(ERRORCODE, L"ASIO Device Mono Mode", TRUE);
 		}
@@ -677,6 +691,8 @@ void InitializeASIO() {
 		// And start the ASIO output
 		BASS_ASIO_Start(0, 2);
 		CheckUpASIO(ERRORCODE, L"ASIO Start Output", TRUE);
+
+		PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
 	}
 	// Else, something is wrong
 	else CheckUpASIO(ERRORCODE, L"ASIO Initialization", TRUE);
@@ -685,11 +701,11 @@ void InitializeASIO() {
 }
 
 bool InitializeBASS(BOOL restart) {
-	PrintToConsole(FOREGROUND_RED, 1, "The driver is now initializing BASS. Please wait...");
+	PrintMessageToDebugLog("InitializeBASSFunc", "The driver is now initializing BASS. Please wait...");
 
 	// The user restarted the synth, add 1 to RestartValue, for the ".WAV mode"
 	if (restart == TRUE) {
-		PrintToConsole(FOREGROUND_RED, 1, "The driver requested to restart the stream.");
+		PrintMessageToDebugLog("InitializeBASSFunc", "The driver had to restart the stream.");
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 	}
 
@@ -699,44 +715,48 @@ bool InitializeBASS(BOOL restart) {
 	// Initialize BASS
 	BOOL init = InitializeBASSLibrary();
 
-	// If ".WAV mode" is selected, initialize the decoding channel
-	if (ManagedSettings.CurrentEngine == AUDTOWAV)
-		InitializeWAVEnc();
-	// Else, initialize the default stream
-	else if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
-		InitializeBASSOutput();
-	// Or else, initialize ASIO
-	else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
-		InitializeASIO();
+	if (init)
+	{
+		// If ".WAV mode" is selected, initialize the decoding channel
+		if (ManagedSettings.CurrentEngine == AUDTOWAV)
+			InitializeWAVEnc();
+		// Else, initialize the default stream
+		else if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
+			InitializeBASSOutput();
+		// Or else, initialize ASIO
+		else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
+			InitializeASIO();
 
-	if (!ApplyStreamSettings()) return FALSE;
+		if (!ApplyStreamSettings()) return FALSE;
 
-	// Enable the volume knob in the configurator
-	PrepareVolumeKnob();
+		// Enable the volume knob in the configurator
+		PrepareVolumeKnob();
+	}
 
 	return init;
 }
 
 void LoadSoundFontsToStream() {
-	PrintToConsole(FOREGROUND_RED, 1, "Loading soundfonts...");
+	PrintMessageToDebugLog("LoadSoundFontsToStreamFunc", "Loading soundfonts...");
 
 	// If app has a personal SoundFont list, then load it
 	if (LoadSoundfontStartup() == TRUE) {
-		PrintToConsole(FOREGROUND_RED, 1, "Default list for app loaded.");
+		PrintMessageToDebugLog("LoadSoundFontsToStreamFunc", "Default list for app loaded.");
 	}
 	// Else, load list 1
 	else {
 		LoadSoundfont(ManagedSettings.DefaultSFList);
-		PrintToConsole(FOREGROUND_RED, 1, "Default global list loaded.");
+		PrintMessageToDebugLog("LoadSoundFontsToStreamFunc", "Default global list loaded.");
 	}
 }
 
 void SetUpStream() {
 	// Initialize the MIDI channels
-	PrintToConsole(FOREGROUND_RED, 1, "Preparing stream...");
+	PrintMessageToDebugLog("SetUpStreamFunc", "Preparing MIDI channels...");
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
 	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 	BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+	PrintMessageToDebugLog("SetUpStreamFunc", "MIDI channels are now ready to receive events.");
 }
 
 void FreeUpStream() {
@@ -748,19 +768,19 @@ void FreeUpStream() {
 
 	// Free BASSASIO
 	BASS_ASIO_Stop();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO stopped.");
+	PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
 	BASS_ASIO_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASSASIO freed.");
+	PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
 
 	// Stop the stream and free it as well
 	BASS_ChannelStop(OMStream);
-	PrintToConsole(FOREGROUND_RED, 1, "BASS stream stopped.");
+	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream stopped.");
 	BASS_StreamFree(OMStream);
-	PrintToConsole(FOREGROUND_RED, 1, "BASS stream freed.");
+	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
 
 	// Deinitialize the BASS output and free it, since we need to restart it
 	BASS_Stop();
-	PrintToConsole(FOREGROUND_RED, 1, "BASS stopped.");
+	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
 	BASS_Free();
-	PrintToConsole(FOREGROUND_RED, 1, "BASS freed.");
+	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
 }

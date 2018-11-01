@@ -18,7 +18,7 @@ static void FreeFonts()
 		}
 	}
 	catch (...) {
-		CrashMessage(L"FreeFonts");
+		CrashMessage("FreeFonts");
 	}
 }
 
@@ -181,11 +181,6 @@ static BOOL load_font_item(const TCHAR * in_path)
 					}
 					if (name[0] != '@') {
 						if (PathFileExists(nameptr)) {
-							// Easter egg :^)
-							if (_wcsicmp(nameptr, L"zdoc") == 0 || _wcsicmp(nameptr, L"z-doc") == 0 || _wcsicmp(nameptr, L"sdet") == 0) {
-								PrintToConsole(FOREGROUND_BLUE, 1, "Why are you using that SoundFont... Gosh.");
-							}
-
 							int sbank;
 							int spreset;
 							HSOUNDFONT font = BASS_MIDI_FontInit(temp, BASS_UNICODE);
@@ -233,7 +228,7 @@ static BOOL load_font_item(const TCHAR * in_path)
 		return FALSE;
 	}
 	catch (...) {
-		CrashMessage(L"LoadFontItem");
+		CrashMessage("LoadFontItem");
 	}
 }
 
@@ -264,6 +259,6 @@ void LoadFonts(const TCHAR * name)
 		}
 	}
 	catch (...) {
-		CrashMessage(L"LoadFontToMemory");
+		CrashMessage("LoadFontToMemory");
 	}
 }

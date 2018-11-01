@@ -231,27 +231,28 @@ std::wstring GetErrorAsString(DWORD ErrorID)
 	return message;
 }
 
-void CrashMessage(LPCWSTR part) {
+void CrashMessage(LPCSTR part) {
 	DWORD ErrorID = GetLastError();
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Error at \"" << part << "\) - Fatal error during the execution of the driver." << std::endl;
+	std::cout << std::endl << "(Error at \"" << part << "\") - Fatal error during the execution of the driver.";
 
+	std::wstringstream ErrorMessage;
+	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
 	if (ErrorID != 0) {
-		std::wstringstream ErrorMessage;
-		ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
 		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
-		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n\nClick OK to close the program.";
-
-		MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n";
 	}
+	ErrorMessage << L"\nClick OK to close the program.";
+
+	MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 
 	block_bassinit = TRUE;
 	stop_thread = TRUE;
 
 	throw ErrorID;
 	exit(ErrorID);
-	ExitThread(0);
+	ExitThread(ErrorID);
 }
 
 BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {

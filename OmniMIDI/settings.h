@@ -9,7 +9,7 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
 		// If the key failed to open, throw a crash (If needed)
-		if (hKey.Status != KEY_READY && Mandatory) CrashMessage(L"hKeyOpen");
+		if (hKey.Status != KEY_READY && Mandatory) CrashMessage("hKeyOpen");
 	}
 }
 
@@ -18,7 +18,7 @@ void CloseRegistryKey(RegKey &hKey) {
 	LSTATUS Action = RegCloseKey(hKey.Address);
 
 	// If the key can't be closed, throw a crash
-	if (Action != ERROR_SUCCESS) CrashMessage(L"hKeyClose");
+	if (Action != ERROR_SUCCESS) CrashMessage("hKeyClose");
 
 	// Everything is fine, mark the key as closed
 	hKey.Status = KEY_CLOSED;
@@ -89,10 +89,10 @@ void ResetSynth(int ischangingbuffermode){
 
 void LoadSoundfont(int whichsf){
 	try {
-		PrintToConsole(FOREGROUND_RED, whichsf, "Freeing previous soundfont list...");
+		PrintMessageToDebugLog("LoadSoundFontFunc", "Freeing previous soundfont list...");
 		FreeFonts();
 
-		PrintToConsole(FOREGROUND_RED, whichsf, "Loading soundfont list...");
+		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 		TCHAR config[MAX_PATH];
 		BASS_MIDI_FONT * mf;
 
@@ -102,10 +102,10 @@ void LoadSoundfont(int whichsf){
 		LoadFonts(sflistloadme[whichsf - 1]);
 		BASS_MIDI_StreamLoadSamples(OMStream);
 
-		PrintToConsole(FOREGROUND_RED, whichsf, "Done.");
+		PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
 	}
 	catch (...) {
-		CrashMessage(L"ListLoad");
+		CrashMessage("ListLoad");
 	}
 }
 
@@ -129,9 +129,9 @@ bool LoadSoundfontStartup() {
 				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
 				{
 					if (_wcsicmp(modulename, defaultstring) && _wcsicmp(fullmodulename, defaultstring) == 0) {
+						PrintMessageToDebugLog("LoadSoundfontStartup", "Found list.");
 						LoadSoundfont(i + 1);
-						done = 1;
-						PrintToConsole(FOREGROUND_RED, i, "Found it");
+						done = 1;			
 					}
 				}
 			}
@@ -146,7 +146,55 @@ bool LoadSoundfontStartup() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"ListLoadStartUp");
+		CrashMessage("ListLoadStartUp");
+	}
+}
+
+BOOL load_bassaddons() {
+	try {
+		TCHAR installpath[MAX_PATH] = { 0 };
+
+		// Codecs
+		TCHAR bassflacpath[MAX_PATH] = { 0 };
+		TCHAR bassopuspath[MAX_PATH] = { 0 };
+		TCHAR basswvpath[MAX_PATH] = { 0 };
+
+		GetModuleFileName(hinst, installpath, MAX_PATH);
+		PathRemoveFileSpec(installpath);
+
+		PrintMessageToDebugLog("ImportBASS", "Importing additional codecs...");
+
+		// BASSFLAC
+		lstrcat(bassflacpath, installpath);
+		lstrcat(bassflacpath, L"\\bassflac.dll");
+		bassflac = BASS_PluginLoad((const char*)*bassflacpath, BASS_UNICODE);
+		if (!(bassflac = BASS_PluginLoad((const char*)*bassflacpath, BASS_UNICODE))) {
+			CheckUp(ERRORCODE, L"BASSFLAC Load", TRUE);
+		}
+		else PrintMessageToDebugLog("ImportBASS", "BASSFLAC imported...");
+
+		// BASSOPUS
+		lstrcat(bassopuspath, installpath);
+		lstrcat(bassopuspath, L"\\bassopus.dll");
+		bassopus = BASS_PluginLoad((char*)bassopuspath, BASS_UNICODE);
+		if (!(bassopus = BASS_PluginLoad((char*)bassopuspath, BASS_UNICODE))) {
+			CheckUp(ERRORCODE, L"BASSOPUS Load", TRUE);
+		}
+		else PrintMessageToDebugLog("ImportBASS", "BASSOPUS imported...");
+
+		// BASSWV
+		lstrcat(basswvpath, installpath);
+		lstrcat(basswvpath, L"\\basswv.dll");
+		basswv = BASS_PluginLoad((char*)basswvpath, BASS_UNICODE);
+		if (!(basswv = BASS_PluginLoad((char*)basswvpath, BASS_UNICODE))) {
+			CheckUp(ERRORCODE, L"BASSWV Load", TRUE);
+		}
+		else PrintMessageToDebugLog("ImportBASS", "BASSWV imported...");
+
+		PrintMessageToDebugLog("ImportBASS", "Addons imported!");
+	}
+	catch (...) {
+		CrashMessage("BASSAddonLibLoad");
 	}
 }
 
@@ -154,20 +202,17 @@ BOOL load_bassfuncs()
 {
 	try {
 		TCHAR installpath[MAX_PATH] = { 0 };
+
+		// Main DLLs
 		TCHAR bassencpath[MAX_PATH] = { 0 };
 		TCHAR bassasiopath[MAX_PATH] = { 0 };
 		TCHAR bassmidipath[MAX_PATH] = { 0 };
-		TCHAR bassmixpath[MAX_PATH] = { 0 };
 		TCHAR basspath[MAX_PATH] = { 0 };
-		TCHAR bassfxpath[MAX_PATH] = { 0 };
-
-		int installpathlength;
 
 		GetModuleFileName(hinst, installpath, MAX_PATH);
 		PathRemoveFileSpec(installpath);
 
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-		PrintToConsole(FOREGROUND_RED, 1, "Allocating memory for BASS DLLs...");
+		PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
 		// BASS
 		lstrcat(basspath, installpath);
@@ -201,10 +246,9 @@ BOOL load_bassfuncs()
 			exit(0);
 		}
 
-		PrintToConsole(FOREGROUND_RED, 1, "Done loading BASS DLLs.");
+		PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
 		// Load all the functions into memory
-		PrintToConsole(FOREGROUND_RED, 1, "Loading BASS functions...");
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
 		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
@@ -266,18 +310,11 @@ BOOL load_bassfuncs()
 		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 		// LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFilter);		// Not needed
 
-		PrintToConsole(FOREGROUND_RED, 1, "BASS functions succesfully loaded.");
-
-		// Load audio extensions
-		BASS_PluginLoad("bassflac.dll", BASS_UNICODE);
-		BASS_PluginLoad("bassopus.dll", BASS_UNICODE);
-		BASS_PluginLoad("bass_mpc.dll", BASS_UNICODE);
-		BASS_PluginLoad("basswv.dll", BASS_UNICODE);
-
+		PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
 		return TRUE;
 	}
 	catch (...) {
-		CrashMessage(L"BASSLibLoad");
+		CrashMessage("BASSLibLoad");
 	}
 }
 
@@ -292,22 +329,22 @@ void ResetEVBufferSettings() {
 
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
-	PrintToConsole(FOREGROUND_BLUE, 1, "Freeing EV buffer...");
+	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
 	RtlSecureZeroMemory(evbuf, sizeof(evbuf));
 	free(evbuf);
 	evbuf = NULL;
-	PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
+	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 
-	PrintToConsole(FOREGROUND_BLUE, 1, "Freeing audio buffer...");
+	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing audio buffer...");
 	RtlSecureZeroMemory(sndbf, sizeof(sndbf));
 	free(sndbf);
 	sndbf = NULL;
-	PrintToConsole(FOREGROUND_BLUE, 1, "Freed.");
+	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 }
 
 void AllocateMemory(BOOL restart) {
 	try {
-		PrintToConsole(FOREGROUND_BLUE, 1, "Allocating memory for EV buffer and audio buffer...");
+		PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating memory for EV buffer and audio buffer");
 
 		// Check how much RAM is available
 		ULONGLONG TempEvBufferSize = EvBufferSize;
@@ -336,14 +373,13 @@ void AllocateMemory(BOOL restart) {
 		// Check if the EVBuffer size goes above 1GB of RAM
 		// Each 32-bit app is limited to a 2GB working set size
 		if (TempEvBufferSize > 536870912) {
-			// It is, limit the EVBuffer to 512GB
-			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer is too big, limiting to 512MB...");
+			// It is, limit the EVBuffer to 512MB
+			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer is too big, limiting to 512MB...");
 			TempEvBufferSize = 536870912;
 		}
 #endif
 
 		// Calculate the ratio
-		PrintToConsole(FOREGROUND_BLUE, 1, "Calculating ratio...");
 		EvBufferSize = TempEvBufferSize / (unsigned long long)EvBufferMultRatio;
 
 		if (EvBufferSize < 1) {
@@ -353,21 +389,17 @@ void AllocateMemory(BOOL restart) {
 		}
 
 		// Print the values to the log
-		std::ostringstream ConsoleOutput;
-		ConsoleOutput << "Final EV buffer settings" << std::endl << std::endl;
-		ConsoleOutput << "EV buffer size: " << TempEvBufferSize << " bytes" << std::endl;
-		ConsoleOutput << "EV buffer division ratio: " << EvBufferMultRatio << std::endl;
-		ConsoleOutput << "EV buffer final size: " << EvBufferSize << " bytes (" << TempEvBufferSize << " bytes / " << EvBufferMultRatio << ")" << std::endl;
-
-		PrintToConsole(FOREGROUND_BLUE, 1, ConsoleOutput.str().c_str());
-		PrintToConsole(FOREGROUND_BLUE, 1, "Ratio calculated...");
+		PrintMessageToDebugLog("AllocateMemoryFunc", "Final EV buffer settings: ");
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size", FALSE, TempEvBufferSize);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size", FALSE, EvBufferSize);
 
 		if (restart) FreeUpMemory();
 
 		// Begin allocating the EVBuffer
-		if (evbuf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer already allocated.");
+		if (evbuf != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
 		else {
-			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating EV buffer...");
+			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
 			evbuf = (evbuf_t *)calloc(EvBufferSize, sizeof(evbuf_t));
 			if (!evbuf) {
 				MessageBox(NULL, L"An error has occured while allocating the events buffer!\nIt will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Error allocating memory", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
@@ -378,24 +410,25 @@ void AllocateMemory(BOOL restart) {
 					exit(0x8);
 				}
 			}
-			PrintToConsole(FOREGROUND_BLUE, 1, "EV buffer allocated.");
+			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 			EVBuffReady = TRUE;
 		}
 
 		// Done, now allocate the buffer for the ".WAV mode"
-		if (sndbf != NULL) PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer already allocated.");
+		if (sndbf != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer already allocated.");
 		else {
-			PrintToConsole(FOREGROUND_BLUE, 1, "Allocating audio buffer...");
+			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating audio buffer...");
 			sndbf = (float *)calloc(256.0f, sizeof(float));
 			if (!sndbf) {
+				PrintMessageToDebugLog("AllocateMemoryFunc", "An error has occurred while allocating the audio buffer.");
 				MessageBox(NULL, L"Fatal error while allocating the sound buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				exit(0x8);
 			}
-			PrintToConsole(FOREGROUND_BLUE, 1, "Audio buffer allocated.");
+			PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer allocated.");
 		}
 	}
 	catch (...) {
-		CrashMessage(L"EVBufAlloc");
+		CrashMessage("EVBufAlloc");
 	}
 }
 
@@ -408,7 +441,7 @@ void LoadSettings(BOOL restart)
 	try {
 		ULONGLONG TEvBufferSize, TEvBufferMultRatio;
 
-		PrintToConsole(FOREGROUND_BLUE, 1, "Loading settings from registry...");
+		PrintMessageToDebugLog("LoadSettingsFuncs", "Loading settings from registry...");
 
 		// Load the settings from the registry
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
@@ -489,10 +522,10 @@ void LoadSettings(BOOL restart)
 			AllocateMemory(restart);
 		}
 
-		PrintToConsole(FOREGROUND_BLUE, 1, "Done loading settings from registry.");
+		PrintMessageToDebugLog("LoadSettingsFuncs", "Settings loaded.");
 	}
 	catch (...) {
-		CrashMessage(L"LoadSettings");
+		CrashMessage("LoadSettings");
 	}
 }
 
@@ -633,7 +666,7 @@ void LoadSettingsRT() {
 			}
 		}
 		catch (...) {
-			CrashMessage(L"LoadSettingsRT");
+			CrashMessage("LoadSettingsRT");
 		}
 	}
 }
@@ -680,7 +713,7 @@ void SFDynamicLoaderCheck() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"SFDynamicLoaderCheck");
+		CrashMessage("SFDynamicLoaderCheck");
 	}
 }
 
@@ -717,7 +750,7 @@ void CheckVolume(BOOL Closing) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"VolumeMonitor");
+		CrashMessage("VolumeMonitor");
 	}
 }
 
@@ -822,7 +855,7 @@ void SendDebugDataToPipe() {
 		FlushFileBuffers(hPipe);
 	}
 	catch (...) {
-		CrashMessage(L"DebugPipePush");
+		CrashMessage("DebugPipePush");
 	}
 }
 
@@ -832,7 +865,7 @@ void SendDummyDataToPipe() {
 		FlushFileBuffers(hPipe);
 	}
 	catch (...) {
-		CrashMessage(L"DebugPipeDummyPush");
+		CrashMessage("DebugPipeDummyPush");
 	}
 }
 
@@ -847,7 +880,7 @@ void mixervoid() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"MixerCheck");
+		CrashMessage("MixerCheck");
 	}
 }
 
@@ -868,7 +901,7 @@ void RevbNChor() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"ReverbAndChorusCheck");
+		CrashMessage("ReverbAndChorusCheck");
 	}
 }
 
@@ -879,7 +912,7 @@ void ReloadSFList(DWORD whichsflist){
 		LoadSoundfont(whichsflist);
 	}
 	catch (...) {
-		CrashMessage(L"ReloadListCheck");
+		CrashMessage("ReloadListCheck");
 	}
 }
 
@@ -986,6 +1019,6 @@ void keybindings()
 		}
 	}
 	catch (...) {
-		CrashMessage(L"HotKeysCheck");
+		CrashMessage("HotKeysCheck");
 	}
 }

@@ -148,7 +148,7 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 		if (!((dwParam1 - 0x80) & 0xE0)
 			&& ((HIWORD(dwParam1) & 0xFF) >= ManagedSettings.MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= ManagedSettings.MaxVelIgnore))
 		{
-			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+			PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
 			return TRUE;
 		}
 	}
@@ -158,7 +158,7 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 		{
 			if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
 			{
-				PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+				PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
 				return TRUE;
 			}
 		}

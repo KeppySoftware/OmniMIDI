@@ -2,6 +2,9 @@
 OmniMIDI debug functions
 */
 
+static BOOL IntroAlreadyShown = FALSE;
+static LightweightLock DebugLogLockSystem;	// LockSystem
+
 void Pointer(LPCWSTR Msg) {
 	MessageBoxW(NULL, Msg, L"Debug pointer", MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
 }
@@ -20,11 +23,10 @@ void AppName() {
 #endif
 	}
 	catch (...) {
-		CrashMessage(L"AppAnalysis");
+		CrashMessage("AppAnalysis");
 	}
 }
 
-BOOL IntroAlreadyShown = FALSE;
 void CreateConsole() {
 	if (!IntroAlreadyShown) {
 		Beep(1000, 100);
@@ -93,20 +95,63 @@ inline bool DebugFileExists(const std::string& name) {
 	}
 }
 
-void PrintToConsole(int color, long long stage, const char* text) {
+void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
-		// Set color
-		SetConsoleTextAttribute(hConsole, color);
+		// Wait while debug log is busy
+		while (DebugLogLockSystem.GetWriterConut() > 0) {}
+
+		// Debug log is busy now
+		DebugLogLockSystem.LockForWriting();
 
 		// Get time
-		char buff[20];
-		struct tm *sTm;
-		time_t now = time(0);
-		sTm = gmtime(&now);
-		strftime(buff, sizeof(buff), "%d-%m-%y %H:%M:%S", sTm);
+		SYSTEMTIME stime;
+		FILETIME ltime;
+		FILETIME ftTimeStamp;
+		char TimeStamp[MAX_PATH];
+
+		GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
+		FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
+		FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
+
+		sprintf(TimeStamp, "%02d-%02d-%04d %02d:%02d:%02d.%03d", stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond,
+			stime.wMilliseconds);
 
 		// Print to log
-		std::cout << std::endl << buff << " - (" << stage << ") - " << text;
+		std::cout << std::endl << TimeStamp << " - Stage <<" << Stage  << ">> | " << Status;
+
+		// Debug log is free now
+		DebugLogLockSystem.UnlockForWriting();
+	}
+}
+
+void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULONGLONG Memory) {
+	if (ManagedSettings.DebugMode) {
+		// Wait while debug log is busy
+		while (DebugLogLockSystem.GetWriterConut() > 0) { }
+
+		// Debug log is busy now
+		DebugLogLockSystem.LockForWriting();
+
+		// Get time
+		SYSTEMTIME stime;
+		FILETIME ltime;
+		FILETIME ftTimeStamp;
+		char TimeStamp[MAX_PATH];
+
+		GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
+		FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
+		FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
+
+		sprintf(TimeStamp, "%02d-%02d-%04d %02d:%02d:%02d.%03d", stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond,
+			stime.wMilliseconds);
+
+		// Print to log
+		std::cout << std::endl << TimeStamp << 
+			" - Stage <<" << Stage << ">> | " << 
+			Status << (IsRatio ? " | Ratio: " : " | Memory: ") << Memory << (IsRatio ? "" : " bytes");
+
+		// Debug log is free now
+		DebugLogLockSystem.UnlockForWriting();
 	}
 }
 
@@ -201,18 +246,18 @@ void PrintEventToConsole(int color, int stage, bool issysex, const char* text) {
 
 */
 
-std::wstring GetLastErrorAsWString()
+std::string GetLastErrorAsString()
 {
 	//Get the error message, if any.
 	DWORD errorMessageID = ::GetLastError();
 	if (errorMessageID == 0)
-		return std::wstring(); //No error message has been recorded
+		return std::string(); //No error message has been recorded
 
-	LPWSTR messageBuffer = nullptr;
+	LPSTR messageBuffer = nullptr;
 	size_t size = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_ENGLISH_US), (LPWSTR)&messageBuffer, 0, NULL);
 
-	std::wstring message(messageBuffer, size);
+	std::string message(messageBuffer, size);
 
 	//Free the buffer.
 	LocalFree(messageBuffer);
@@ -255,7 +300,7 @@ Retry:
 		if (PipeVal <= PIPE_UNLIMITED_INSTANCES) goto Retry;
 		// Else fail, something happened
 		else {
-			std::wstring Error = GetLastErrorAsWString();
+			std::string Error = GetLastErrorAsString();
 			CrashMessage(Error.c_str());
 		}
 	}

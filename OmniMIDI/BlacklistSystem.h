@@ -79,7 +79,7 @@ BOOL BlackListSystem(){
 		return DEVICE_AVAILABLE;
 	}
 	catch (...) {
-		CrashMessage(L"BlacklistCheckUp");
+		CrashMessage("BlacklistCheckUp");
 	}
 }
 
@@ -138,6 +138,6 @@ BOOL BlackListInit(){
 		}
 	}
 	catch (...) {
-		CrashMessage(L"BlacklistInit");
+		CrashMessage("BlacklistInit");
 	}
 }
