@@ -125,6 +125,10 @@ static DWORD(*_PlayBufDataChk)(void) = 0;
 #include "DriverInit.h"
 #include "KDMAPI.h"
 
+// OmniMIDI GUID
+// {62F3192B-A961-456D-ABCA-A5C95A14B9AA}
+static const GUID OMCLSID = { 0x62f3192b, 0xa961, 0x456d, { 0xab, 0xca, 0xa5, 0xc9, 0x5a, 0x14, 0xb9, 0xaa } };
+
 extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	switch (fdwReason) {
@@ -208,7 +212,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 
 		// If the synth type ID is bigger than the size of the synth types array,
 		// set it automatically to MOD_MIDIPORT
-		if (SynthType >= (SizeOfArray(SynthNamesTypes)))
+		if (SynthType >= ((sizeof(SynthNamesTypes) / sizeof(SynthNamesTypes[0]))))
 			Technology = MOD_MIDIPORT;
 		// Else, load the requested value
 		else Technology = SynthNamesTypes[SynthType];
@@ -224,9 +228,6 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		}
 
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "Sharing MIDI device caps with application...");
-
-		// Dummy GUID associated with OM
-		const GUID OMCLSID = { 0x210CE0E8, 0x6837, 0x448E, { 0xB1, 0x3F, 0x09, 0xFE, 0x71, 0xE7, 0x44, 0xEC } };
 
 		// Not yet
 		// CapsSupport |= MIDICAPS_STREAM;

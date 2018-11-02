@@ -868,14 +868,14 @@ void SendDummyDataToPipe() {
 	}
 }
 
-void mixervoid() {
+void MixerCheck() {
 	try {
 		OpenRegistryKey(Channels, L"Software\\OmniMIDI\\Channels", TRUE);
 
-		for (int i = 0; i <= SizeOfArray(cnames); ++i) {
+		for (int i = 0; i <= (sizeof(cnames) / sizeof(cnames[0])); ++i) {
 			RegQueryValueEx(Channels.Address, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
-			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 			RegQueryValueEx(Channels.Address, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
+			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 		}
 	}
 	catch (...) {

@@ -7,7 +7,6 @@
 // Things
 #define MIDI_IO_PACKED 0x00000000L			// Legacy mode, used by all MIDI apps
 #define MIDI_IO_COOKED 0x00000002L			// Stream mode, used by some apps (Such as Pinball 3D), NOT SUPPORTED
-#define SizeOfArray(type) sizeof(type)/sizeof(type[0])
 
 // Settings managed by client
 static BOOL AlreadyStartedOnce = FALSE;
@@ -108,26 +107,15 @@ static Settings ManagedSettings = DEFAULT_SETTINGS;
 static DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
 
 // Priority values
-static DWORD prioval[7] =
+static const DWORD prioval[7] =
 {
-	15,
-	15,
-	2,
-	1,
-	0,
-	-1,
-	-2
-};
-
-static DWORD callprioval[7] =
-{
-	0x00000100,
-	0x00000100,
-	0x00000080,
-	0x00008000,
-	0x0000020,
-	0x00004000,
-	0x0000040
+	THREAD_PRIORITY_TIME_CRITICAL,
+	THREAD_PRIORITY_TIME_CRITICAL,
+	THREAD_PRIORITY_HIGHEST,
+	THREAD_PRIORITY_ABOVE_NORMAL,
+	THREAD_PRIORITY_NORMAL,
+	THREAD_PRIORITY_BELOW_NORMAL,
+	THREAD_PRIORITY_HIGHEST
 };
 
 // Built-in blacklist
@@ -168,10 +156,7 @@ static LPCWSTR cnames[16] =
 	L"ch9", L"ch10", L"ch11", L"ch12", L"ch13", L"ch14", L"ch15", L"ch16"
 };
 
-static DWORD cvvalues[16] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+static DWORD cvvalues[16];
 
 // Channels instruments/banks
 static LPCWSTR cbankname[16] =
@@ -186,17 +171,8 @@ static LPCWSTR cpresetname[16] =
 	L"pc9", L"pcd", L"pc11", L"pc12", L"pc13", L"pc14", L"pc15", L"pc16"
 };
 
-static DWORD cbank[16] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
-};
-
-static DWORD cpreset[16] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
-};
+static DWORD cbank[16];
+static DWORD cpreset[16];
 
 static DWORD SynthType = 2;
 static DWORD SynthNamesTypes[7] =
@@ -211,11 +187,7 @@ static DWORD SynthNamesTypes[7] =
 };
 
 // Channels
-static DWORD cvalues[16] =
-{
-	100, 100, 100, 100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100, 100, 100, 100
-};
+static DWORD cvalues[16];
 
 // Reverb and chorus
 static DWORD reverb = 64;					// Reverb
@@ -228,11 +200,7 @@ static LPCWSTR rnames[16] =
 	L"rel9", L"rel10", L"rel11", L"rel2", L"rel13", L"rel14", L"rel15", L"rel16"
 };
 
-static DWORD rvalues[16] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
-};
+static DWORD rvalues[16];
 
 // Other
 static DWORD buffull = 0;
@@ -337,7 +305,7 @@ static std::vector<BASS_MIDI_FONTEX> presetList;
 
 // -----------------------------------------------------------------------
 
-static DWORD pitchshiftchan[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static DWORD pitchshiftchan[16];
 static LPCWSTR pitchshiftname[16] =
 {
 	L"ch1pshift", L"ch2pshift", L"ch3pshift", L"ch4pshift", L"ch5pshift",
@@ -345,25 +313,3 @@ static LPCWSTR pitchshiftname[16] =
 	L"ch11pshift", L"ch12pshift", L"ch13pshift", L"ch14pshift", L"ch15pshift", 
 	L"ch16pshift"
 };
-
-//
-
-BOOL CheckNullChar(CHAR* scanme) {
-	for (int i = 0; i != sizeof(scanme); i++) {
-		if (scanme[i] == '\0') {
-			return TRUE;
-			break;
-		}
-	}
-	return FALSE;
-}
-
-BOOL CheckNullWChar(WCHAR* scanme) {
-	for (int i = 0; i != sizeof(scanme); i++) {
-		if (scanme[i] == L'\0') {
-			return TRUE;
-			break;
-		}
-	}
-	return FALSE;
-}

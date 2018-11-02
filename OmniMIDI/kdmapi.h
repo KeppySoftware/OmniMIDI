@@ -63,7 +63,7 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 				LoadCustomInstruments();	// Load custom instrument values from the registry
 				keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
 				SFDynamicLoaderCheck();		// Check current active voices, rendering time, etc..
-				mixervoid();				// Send dB values to the mixer
+				MixerCheck();				// Send dB values to the mixer
 				RevbNChor();				// Check if custom reverb/chorus values are enabled
 
 				// Check the current output volume

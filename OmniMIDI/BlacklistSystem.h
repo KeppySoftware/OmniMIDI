@@ -10,7 +10,7 @@ BOOL BannedSystemProcess() {
 	PathStripPathW(modulename);
 
 	// Check if the current process is banned
-	for (int i = 0; i < SizeOfArray(BuiltInBlacklist); i++) {
+	for (int i = 0; i < (sizeof(BuiltInBlacklist) / sizeof(BuiltInBlacklist[0])); i++) {
 		// It's a match, the process is banned
 		if (!_wcsicmp(modulename, BuiltInBlacklist[i])) return TRUE;
 	}
