@@ -42,8 +42,8 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
-void SendLongToBASSMIDI(const void* sysexbuffer, DWORD exlen) {
-	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, sysexbuffer, exlen);
+void SendLongToBASSMIDI(LPSTR lpData, DWORD dwBytesRecorded) {
+	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, (const void*)lpData, dwBytesRecorded);
 	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 

@@ -90,7 +90,7 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 }
 
 void DoStartClient() {
-	if (modm_closed == TRUE && BannedSystemProcess() != TRUE) {
+	if (!DriverInitStatus && BannedSystemProcess() != TRUE) {
 		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
 
 		// Load the selected driver priority value from the registry
@@ -142,7 +142,7 @@ void DoStartClient() {
 			CloseHandle(load_sfevent);
 
 		// Ok, everything's ready, do not open more debug pipes from now on
-		modm_closed = FALSE;
+		DriverInitStatus = TRUE;
 		AlreadyStartedOnce = TRUE;
 
 		PrintMessageToDebugLog("StartDriver", "Driver initialized.");
@@ -150,7 +150,7 @@ void DoStartClient() {
 }
 
 void DoStopClient() {
-	if (modm_closed == FALSE) {
+	if (DriverInitStatus) {
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
 		// Prevent BASS from reinitializing itself
@@ -162,7 +162,6 @@ void DoStopClient() {
 		FreeUpStream();
 		CloseThreads(TRUE);
 		FreeUpMemory();
-		modm_closed = TRUE;
 
 		// Close registry keys
 		PrintMessageToDebugLog("StopDriver", "Closing registry keys...");
@@ -178,14 +177,10 @@ void DoStopClient() {
 		bass_initialized = FALSE;
 
 		// Boopers
+		DriverInitStatus = FALSE;
 		PrintMessageToDebugLog("StopDriver", "Driver terminated.");
 	}
 	else PrintMessageToDebugLog("StopDriver", "The driver is not initialized.");
-}
-
-void DoResetClient() {
-	// The app requested a complete reset of the synth
-	ResetSynth(0);
 }
 
 BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
@@ -276,7 +271,7 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 
 VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
-	if (bass_initialized) DoResetClient();
+	if (bass_initialized) ResetSynth(FALSE);
 }
 
 MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
@@ -300,8 +295,8 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return MIDIERR_NOTREADY;													// The driver isn't ready
-	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return MMSYSERR_INVALPARAM;		// The buffer doesn't exist or is too big, invalid parameter
+	if (!bass_initialized) return DebugMIDIERR_NOTREADY();													// The driver isn't ready
+	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return DebugMMSYSERR_INVALPARAM();		// The buffer doesn't exist or is too big, invalid parameter
 
 	void* Mem = IIMidiHdr->lpData;
 	unsigned long Size = sizeof(IIMidiHdr->lpData);
@@ -317,12 +312,12 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!bass_initialized) return MIDIERR_NOTREADY;							// The driver isn't ready
-	if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
-	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
+	if (!bass_initialized) return DebugMIDIERR_NOTREADY();							// The driver isn't ready
+	if (!IIMidiHdr) return DebugMMSYSERR_INVALPARAM();								// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;				// Already unprepared, everything is fine
+	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return DebugMIDIERR_STILLPLAYING();		// The buffer is currently being played from the driver, cannot unprepare
 
-	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;									// Mark the buffer as unprepared
+	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;											// Mark the buffer as unprepared
 
 	void* Mem = IIMidiHdr->lpData;
 	unsigned long Size = sizeof(IIMidiHdr->lpData);
@@ -334,16 +329,16 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 }
 
 MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return MIDIERR_NOTREADY;							// The driver isn't ready
-	if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;	// The buffer is not prepared
+	if (!bass_initialized) return DebugMIDIERR_NOTREADY();							// The driver isn't ready
+	if (!IIMidiHdr) return DebugMMSYSERR_INVALPARAM();								// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugMIDIERR_UNPREPARED();	// The buffer is not prepared
 
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 	// Do the stuff with it, if it's not to be ignored
-	if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded);
+	if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
 	// It has to be ignored, send info to console
 	else PrintMessageToDebugLog("KDMAPI_SDLD", "Ignored SysEx MIDI event...");
 
@@ -382,7 +377,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	// The new value is different from the temporary one, reset the synth
 	// to avoid stuck notes or crashes
 	if (DontMissNotesTemp != ManagedSettings.DontMissNotes) {
-		ResetSynth(1);
+		ResetSynth(TRUE);
 	}
 
 	// Stuff lol

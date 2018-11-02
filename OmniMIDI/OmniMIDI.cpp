@@ -337,11 +337,11 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return MMSYSERR_NOERROR;
 	case MODM_RESET:
 		// Stop all the current active voices
-		DoResetClient();
+		ResetSynth(FALSE);
 		return MMSYSERR_NOERROR;
 	case MODM_STOP:
 		// Stop all the current active voices and send the callback to the app
-		DoResetClient();
+		ResetSynth(FALSE);
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, 0, 0);
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:

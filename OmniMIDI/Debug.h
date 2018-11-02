@@ -305,3 +305,35 @@ Retry:
 		}
 	}
 }
+
+MMRESULT DebugMIDIERR_NOTREADY() {
+	if (ManagedSettings.DebugMode) {
+		MessageBox(NULL, L"OmniMIDI is not ready to accept the MIDIHDR!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		PrintMessageToDebugLog("MIDIERR_NOTREADY", "OmniMIDI is not ready to accept the MIDIHDR!");
+	}
+	return MIDIERR_NOTREADY;
+}
+
+MMRESULT DebugMIDIERR_UNPREPARED() {
+	if (ManagedSettings.DebugMode) {
+		MessageBox(NULL, L"The MIDIHDR buffer hasn't been prepared yet!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		PrintMessageToDebugLog("MIDIERR_UNPREPARED", "The MIDIHDR buffer hasn't been prepared yet!");
+	}
+	return MIDIERR_UNPREPARED;
+}
+
+MMRESULT DebugMIDIERR_STILLPLAYING() {
+	if (ManagedSettings.DebugMode) {
+		MessageBox(NULL, L"The MIDIHDR buffer is still being played!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		PrintMessageToDebugLog("MIDIERR_STILLPLAYING", "The MIDIHDR buffer is still being played!");
+	}
+	return MIDIERR_STILLPLAYING;
+}
+
+MMRESULT DebugMMSYSERR_INVALPARAM() {
+	if (ManagedSettings.DebugMode) {
+		MessageBox(NULL, L"The pointer to the MIDIHDR is invalid!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		PrintMessageToDebugLog("MMSYSERR_INVALPARAM", "The pointer to the MIDIHDR is invalid!");
+	}
+	return MMSYSERR_INVALPARAM;
+}

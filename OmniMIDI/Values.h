@@ -35,10 +35,9 @@ static DWORD OMFlags = NULL;
 static HDRVR OMDevice = NULL;
 
 // Important stuff
+static BOOL DriverInitStatus = FALSE;
 static BOOL AlreadyInitializedViaKDMAPI = FALSE;
 static BOOL BASSLoadedToMemory = FALSE;
-static volatile BOOL modm_closed = TRUE;
-static volatile BOOL reset_synth = FALSE;
 static HANDLE load_sfevent = NULL;
 static BOOL ASIOReady = FALSE;
 static BOOL EVBuffReady = FALSE;

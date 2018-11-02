@@ -2,6 +2,17 @@
 OmniMIDI settings loading system
 */
 
+void ResetSynth(BOOL SwitchingBufferMode) {
+	if (SwitchingBufferMode) {
+		writehead = 0;
+		readhead = 0;
+		eventcount = 0;
+	}
+	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
+	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+	BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+}
+
 void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 	// If the key isn't ready, open it again
 	if (hKey.Status != KEY_READY) {
@@ -73,18 +84,6 @@ void CopyToClipboard(const std::string &s) {
 	SetClipboardData(CF_TEXT, hg);
 	CloseClipboard();
 	GlobalFree(hg);
-}
-
-void ResetSynth(int ischangingbuffermode){
-	reset_synth = 1;
-	if (ischangingbuffermode == 1) {
-		writehead = 0;
-		readhead = 0;
-		eventcount = 0;
-	}
-	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
-	reset_synth = 0;
 }
 
 void LoadSoundfont(int whichsf){
@@ -595,7 +594,7 @@ void LoadSettingsRT() {
 				// It is different, reset the synth
 				// to avoid stuck notes or crashes
 				ManagedSettings.DontMissNotes = TempDMN;
-				ResetSynth(1);
+				ResetSynth(TRUE);
 			}
 
 			// Check if the value is different from the temporary one
@@ -907,7 +906,7 @@ void RevbNChor() {
 
 void ReloadSFList(DWORD whichsflist){
 	try {
-		ResetSynth(0);
+		ResetSynth(FALSE);
 		Sleep(100);
 		LoadSoundfont(whichsflist);
 	}
@@ -1014,7 +1013,7 @@ void keybindings()
 				return;
 			}
 			if (GetAsyncKeyState(VK_INSERT) & 1) {
-				ResetSynth(0);
+				ResetSynth(FALSE);
 			}
 		}
 	}

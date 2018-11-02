@@ -121,13 +121,6 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				// Start the timer, which calculates 
 				// how much time it takes to do its stuff
 				start2 = TimeNow();
-				
-				// If the app sent a SysEx Reset message, or if the user pressed INS,
-				// then reset the channels
-				if (reset_synth) {
-					reset_synth = 0;
-					BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				}
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
@@ -163,13 +156,6 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
 
-				// If the app sent a SysEx Reset message, or if the user pressed INS,
-				// then reset the channels
-				if (reset_synth) {
-					reset_synth = 0;
-					BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-				}
-
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
 				else BASS_ChannelUpdate(OMStream, 0);
@@ -200,13 +186,6 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	// Start the timer, which calculates 
 	// how much time it takes to do its stuff
 	start2 = TimeNow();
-
-	// If the app sent a SysEx Reset message, or if the user pressed INS,
-	// then reset the channels
-	if (reset_synth) {
-		reset_synth = 0;
-		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-	}
 
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
@@ -272,7 +251,6 @@ BOOL CreateThreads(BOOL startup) {
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Closing existing threads, if they're open...");
 	CloseThreads(FALSE);
-	reset_synth = 0;
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
 
