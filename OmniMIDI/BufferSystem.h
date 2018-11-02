@@ -7,6 +7,18 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
+void ResetDrumChannels()
+{
+	unsigned i;
+
+	memset(drum_channels, 0, sizeof(drum_channels));
+	drum_channels[9] = 1;
+
+	memcpy(gs_part_to_ch, part_to_ch, sizeof(gs_part_to_ch));
+
+	for (i = 0; i < 16; ++i) BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_DRUMS, drum_channels[i]);
+}
+
 int BufferCheck(void) {
 	return ManagedSettings.DontMissNotes ? eventcount : (readhead != writehead) ? ~0 : 0;
 }
@@ -42,8 +54,10 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
-void SendLongToBASSMIDI(LPSTR lpData, DWORD dwBytesRecorded) {
-	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, (const void*)lpData, dwBytesRecorded);
+void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+	PrintSysExMessageToDebugLog(
+		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, (int)IIMidiHdr->dwBufferLength),
+		IIMidiHdr);
 	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 

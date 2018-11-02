@@ -155,6 +155,41 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 	}
 }
 
+void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
+	if (ManagedSettings.DebugMode) {
+		// Wait while debug log is busy
+		while (DebugLogLockSystem.GetWriterConut() > 0) {}
+
+		// Debug log is busy now
+		DebugLogLockSystem.LockForWriting();
+
+		// Get time
+		SYSTEMTIME stime;
+		FILETIME ltime;
+		FILETIME ftTimeStamp;
+		char TimeStamp[MAX_PATH];
+
+		GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
+		FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
+		FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
+
+		sprintf(TimeStamp, "%02d-%02d-%04d %02d:%02d:%02d.%03d", stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond,
+			stime.wMilliseconds);
+
+		// Print to log
+		std::cout << std::endl << TimeStamp << 
+			(IsRecognized ? " - Stage <<UnrecognizedSysEx>> | Unrecognized SysEx event: " : " - Stage <<ParsedSysEx>> | Parsed SysEx event: ");
+
+		for (const char* p = IIMidiHdr->lpData; *p; ++p)
+			std::cout << std::hex << (int)*p;
+
+		std::cout << std::dec << " (" << IIMidiHdr->dwBufferLength << " bytes)";
+
+		// Debug log is free now
+		DebugLogLockSystem.UnlockForWriting();
+	}
+}
+
 /*
 / Unused, but still here for people who wants to mess around with it
 
@@ -306,34 +341,21 @@ Retry:
 	}
 }
 
-MMRESULT DebugMIDIERR_NOTREADY() {
-	if (ManagedSettings.DebugMode) {
+MMRESULT DebugResult(MMRESULT ErrorToDisplay) {
+	switch (ErrorToDisplay) {
+	case MIDIERR_NOTREADY:
 		MessageBox(NULL, L"OmniMIDI is not ready to accept the MIDIHDR!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MIDIERR_NOTREADY", "OmniMIDI is not ready to accept the MIDIHDR!");
-	}
-	return MIDIERR_NOTREADY;
-}
-
-MMRESULT DebugMIDIERR_UNPREPARED() {
-	if (ManagedSettings.DebugMode) {
+	case MIDIERR_UNPREPARED:	
 		MessageBox(NULL, L"The MIDIHDR buffer hasn't been prepared yet!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MIDIERR_UNPREPARED", "The MIDIHDR buffer hasn't been prepared yet!");
-	}
-	return MIDIERR_UNPREPARED;
-}
-
-MMRESULT DebugMIDIERR_STILLPLAYING() {
-	if (ManagedSettings.DebugMode) {
+	case MIDIERR_STILLPLAYING:	
 		MessageBox(NULL, L"The MIDIHDR buffer is still being played!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MIDIERR_STILLPLAYING", "The MIDIHDR buffer is still being played!");
-	}
-	return MIDIERR_STILLPLAYING;
-}
-
-MMRESULT DebugMMSYSERR_INVALPARAM() {
-	if (ManagedSettings.DebugMode) {
+	case MMSYSERR_INVALPARAM:
 		MessageBox(NULL, L"The pointer to the MIDIHDR is invalid!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MMSYSERR_INVALPARAM", "The pointer to the MIDIHDR is invalid!");
 	}
-	return MMSYSERR_INVALPARAM;
+
+	return ErrorToDisplay;
 }

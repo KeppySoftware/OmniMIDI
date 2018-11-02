@@ -295,8 +295,11 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugMIDIERR_NOTREADY();													// The driver isn't ready
-	if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return DebugMMSYSERR_INVALPARAM();		// The buffer doesn't exist or is too big, invalid parameter
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);								// The driver isn't ready
+	if (!IIMidiHdr || 
+		IIMidiHdr->dwBufferLength > IIMidiHdr->dwBytesRecorded ||								// The buffer either doesn't exist, it's too big or
+		sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return DebugResult(MMSYSERR_INVALPARAM);	// the given size is invalid, invalid parameter
+	if (IIMidiHdr->dwFlags & MHDR_PREPARED) return MMSYSERR_NOERROR;							// Already prepared, everything is fine
 
 	void* Mem = IIMidiHdr->lpData;
 	unsigned long Size = sizeof(IIMidiHdr->lpData);
@@ -312,33 +315,35 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!bass_initialized) return DebugMIDIERR_NOTREADY();							// The driver isn't ready
-	if (!IIMidiHdr) return DebugMMSYSERR_INVALPARAM();								// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;				// Already unprepared, everything is fine
-	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return DebugMIDIERR_STILLPLAYING();		// The buffer is currently being played from the driver, cannot unprepare
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);															// The driver isn't ready
+	if (!IIMidiHdr || IIMidiHdr->dwBufferLength > IIMidiHdr->dwBytesRecorded) return DebugResult(MMSYSERR_INVALPARAM);		// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;														// Already unprepared, everything is fine
+	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return DebugResult(MIDIERR_STILLPLAYING);										// The buffer is currently being played from the driver, cannot unprepare
 
-	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;											// Mark the buffer as unprepared
+	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																					// Mark the buffer as unprepared
 
 	void* Mem = IIMidiHdr->lpData;
 	unsigned long Size = sizeof(IIMidiHdr->lpData);
 
 	// Unlock the buffer, and say that everything is oki-doki
-	NtUnlockVirtualMemory(GetCurrentProcess(), &Mem, &Size, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM);
+	if (!NtUnlockVirtualMemory(GetCurrentProcess(), &Mem, &Size, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+		CrashMessage("UnlockMIDIHDR");
+
 	RtlSecureZeroMemory(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
 	return MMSYSERR_NOERROR;
 }
 
 MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugMIDIERR_NOTREADY();							// The driver isn't ready
-	if (!IIMidiHdr) return DebugMMSYSERR_INVALPARAM();								// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugMIDIERR_UNPREPARED();	// The buffer is not prepared
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);							// The driver isn't ready
+	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM);								// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED);		// The buffer is not prepared
 
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 	// Do the stuff with it, if it's not to be ignored
-	if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
+	if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr);
 	// It has to be ignored, send info to console
 	else PrintMessageToDebugLog("KDMAPI_SDLD", "Ignored SysEx MIDI event...");
 

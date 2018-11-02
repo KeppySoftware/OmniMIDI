@@ -298,25 +298,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		*/
 
 		return MMSYSERR_NOTSUPPORTED;
-	case MODM_OPEN:
-		// The driver doesn't support stream mode
-		if ((DWORD)dwParam2 & MIDI_IO_COOKED) return MMSYSERR_NOTENABLED;
-
-		if (!AlreadyInitializedViaKDMAPI || !bass_initialized) {
-			// Parse callback and instance
-			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
-			OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
-			OMFlags = HIWORD((DWORD)dwParam2);
-
-			// Open the driver
-			DoStartClient();
-
-			// Tell the app that the driver is ready
-			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
-			return MMSYSERR_NOERROR;
-		}
-		// The driver is already being used through KDMAPI
-		return MMSYSERR_ALLOCATED;
 	case MODM_PREPARE:
 		// Pass it to a KDMAPI function
 		return PrepareLongData((MIDIHDR*)dwParam1);
@@ -341,11 +322,33 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		ResetSynth(FALSE);
 		return MMSYSERR_NOERROR;
 	case MODM_STOP:
-		// Stop all the current active voices and send the callback to the app
-		ResetSynth(FALSE);
-		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, 0, 0);
+		// Not needed for OmniMIDI
 		return MMSYSERR_NOERROR;
+	case MODM_OPEN:
+		// The driver doesn't support stream mode
+		if ((DWORD)dwParam2 & MIDI_IO_COOKED) return MMSYSERR_NOTENABLED;
+
+		if (!AlreadyInitializedViaKDMAPI || !bass_initialized) {
+			// Parse callback and instance
+			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
+			OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
+			OMFlags = HIWORD((DWORD)dwParam2);
+
+			// Open the driver
+			DoStartClient();
+
+			// Tell the app that the driver is ready
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
+			return MMSYSERR_NOERROR;
+		}
+
+		// Reset synth
+		ResetSynth(TRUE);
+
+		// The driver is already being used through KDMAPI
+		return MMSYSERR_ALLOCATED;
 	case MODM_CLOSE:
+		ResetSynth(TRUE);
 		if (CloseStreamMidiOutClose && !AlreadyInitializedViaKDMAPI) {
 			// The app wants us to close the driver
 			// Only close the stream if the user has chosen to
