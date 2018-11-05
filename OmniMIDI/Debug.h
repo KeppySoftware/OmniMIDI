@@ -29,8 +29,8 @@ void AppName() {
 
 void CreateConsole() {
 	if (!IntroAlreadyShown) {
-		Beep(1000, 100);
-		Beep(1000, 100);
+		Beep(440, 100);
+		Beep(440, 100);
 
 		// Create file and start console output
 		AppName();
@@ -73,11 +73,9 @@ void CreateConsole() {
 		// Begin writing to it
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTitle(L"OmniMIDI Debug Console");
-		std::cout << "Be the change that you wish to see in the world.";
-		std::cout << std::endl;
-		std::cout << "OmniMIDI Version " << major << "." << minor << "." << build << "." << revision;
-		std::cout << std::endl << "Copyright(C) 2013 - KaleidonKep99";
-		std::cout << std::endl;
+		printf("Those who cannot change their minds cannot change anything.\n\n");
+		printf("OmniMIDI %d.%d.%d CR%d (KDMAPI %d.%d.%d, Revision %d)\n", major, minor, build, revision, CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
+		printf("Copyright(C) 2013 - KaleidonKep99\n\n");
 		IntroAlreadyShown = TRUE;
 	}
 }
@@ -95,98 +93,87 @@ inline bool DebugFileExists(const std::string& name) {
 	}
 }
 
+void PrintCurrentTime() {
+	// Get time
+	SYSTEMTIME stime;
+	FILETIME ltime;
+	FILETIME ftTimeStamp;
+
+	GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
+	FileTimeToLocalFileTime(&ftTimeStamp, &ltime); //convert in local time and store in ltime
+	FileTimeToSystemTime(&ltime, &stime); //convert in system time and store in stime
+
+	// Print to log
+	printf("%02d-%02d-%04d %02d:%02d:%02d.%03d - ", 
+		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
+}
+
 void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
 		// Wait while debug log is busy
-		while (DebugLogLockSystem.GetWriterConut() > 0) {}
+		while (DebugLogLockSystem.GetWriterCount() > 0) {}
 
 		// Debug log is busy now
 		DebugLogLockSystem.LockForWriting();
 
-		// Get time
-		SYSTEMTIME stime;
-		FILETIME ltime;
-		FILETIME ftTimeStamp;
-		char TimeStamp[MAX_PATH];
-
-		GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
-		FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
-		FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
-
-		sprintf(TimeStamp, "%02d-%02d-%04d %02d:%02d:%02d.%03d", stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond,
-			stime.wMilliseconds);
-
 		// Print to log
-		std::cout << std::endl << TimeStamp << " - Stage <<" << Stage  << ">> | " << Status;
+		PrintCurrentTime();
+		printf("Stage <<%s>> | %s\n", Stage, Status);
 
 		// Debug log is free now
 		DebugLogLockSystem.UnlockForWriting();
+
+		// Flush buffer
+		fflush(stdout);
 	}
 }
 
 void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULONGLONG Memory) {
 	if (ManagedSettings.DebugMode) {
 		// Wait while debug log is busy
-		while (DebugLogLockSystem.GetWriterConut() > 0) { }
+		while (DebugLogLockSystem.GetWriterCount() > 0) { }
 
 		// Debug log is busy now
 		DebugLogLockSystem.LockForWriting();
 
-		// Get time
-		SYSTEMTIME stime;
-		FILETIME ltime;
-		FILETIME ftTimeStamp;
-		char TimeStamp[MAX_PATH];
-
-		GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
-		FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
-		FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
-
-		sprintf(TimeStamp, "%02d-%02d-%04d %02d:%02d:%02d.%03d", stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond,
-			stime.wMilliseconds);
-
 		// Print to log
-		std::cout << std::endl << TimeStamp << 
-			" - Stage <<" << Stage << ">> | " << 
-			Status << (IsRatio ? " | Ratio: " : " | Memory: ") << Memory << (IsRatio ? "" : " bytes");
+		PrintCurrentTime();
+		printf("Stage <<%s>> | %s: %u\n", Stage, Status, Memory);
 
 		// Debug log is free now
 		DebugLogLockSystem.UnlockForWriting();
+
+		// Flush buffer
+		fflush(stdout);
 	}
 }
 
 void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
 		// Wait while debug log is busy
-		while (DebugLogLockSystem.GetWriterConut() > 0) {}
+		while (DebugLogLockSystem.GetWriterCount() > 0) {}
 
 		// Debug log is busy now
 		DebugLogLockSystem.LockForWriting();
 
-		// Get time
-		SYSTEMTIME stime;
-		FILETIME ltime;
-		FILETIME ftTimeStamp;
-		char TimeStamp[MAX_PATH];
-
-		GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
-		FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
-		FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
-
-		sprintf(TimeStamp, "%02d-%02d-%04d %02d:%02d:%02d.%03d", stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond,
-			stime.wMilliseconds);
-
 		// Print to log
-		std::cout << std::endl << TimeStamp << 
-			(IsRecognized ? " - Stage <<UnrecognizedSysEx>> | Unrecognized SysEx event: " : " - Stage <<ParsedSysEx>> | Parsed SysEx event: ");
+		PrintCurrentTime();
+		printf("Stage %s ", (IsRecognized ? "<<UnrecognizedSysEx>> | Unrecognized SysEx event:" : "<<ParsedSysEx>> | Parsed SysEx event:"));
 
-		for (const char* p = IIMidiHdr->lpData; *p; ++p)
-			std::cout << std::hex << (int)*p;
+		for (DWORD i = 0; i < IIMidiHdr->dwBufferLength; ++i) {
+			printf("%X", IIMidiHdr->lpData[i]);
+		}
 
-		std::cout << std::dec << " (" << IIMidiHdr->dwBufferLength << " bytes)";
+		printf(" (%u bytes)", IIMidiHdr->dwBytesRecorded);
+
+		// New line
+		printf("\n");
 
 		// Debug log is free now
 		DebugLogLockSystem.UnlockForWriting();
+
+		// Flush buffer
+		fflush(stdout);
 	}
 }
 

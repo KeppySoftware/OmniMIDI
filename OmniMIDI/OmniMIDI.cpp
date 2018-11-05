@@ -13,6 +13,12 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 typedef unsigned __int64 QWORD;
 
+// KDMAPI version
+#define CUR_MAJOR	1
+#define CUR_MINOR	47
+#define CUR_BUILD	2
+#define CUR_REV		8
+
 #define STRICT
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN

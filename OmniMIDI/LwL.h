@@ -155,7 +155,7 @@ public:
 	}
 
 	long GetReaderCount() { return m_ReaderCount; };
-	long GetWriterConut() { return m_WriterCount; };
+	long GetWriterCount() { return m_WriterCount; };
 
 	//  Implementation
 

@@ -4,14 +4,7 @@ OmniMIDI, a fork of BASSMIDI Driver
 Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
-// KDMAPI version
-#define CUR_MAJOR	1
-#define CUR_MINOR	47
-#define CUR_BUILD	2
-#define CUR_REV		8
-
 // KDMAPI calls
-
 BOOL StreamHealthCheck(BOOL& Initialized) {
 	// If BASS is forbidden from initializing itself, then abort immediately
 	if (block_bassinit) return FALSE;

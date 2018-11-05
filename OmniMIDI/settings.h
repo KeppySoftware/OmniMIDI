@@ -47,20 +47,20 @@ void CloseThread(HANDLE thread) {
 }
 
 void DLLLoadError(LPCWSTR dll) {
-	TCHAR errormessage[MAX_PATH] = L"There was an error while trying to load the DLL for the driver!\nFaulty/missing DLL: ";
+	TCHAR errormessage[MAX_PATH] = L"An error has occurred while loading the following library: ";
 	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
 	lstrcat(errormessage, dll);
 	lstrcat(errormessage, clickokmsg);
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << "(Invalid DLL: " << dll << ") " << " - Fatal error during the loading process of the following DLL." << std::endl;
 
-	const int result = MessageBoxW(NULL, errormessage, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
-	switch (result)
-	{
-	default:
-		exit(0);
-		return;
-	}
+	// Print to log
+	PrintCurrentTime();
+	printf("ERROR | Unable to load the following DLL: %s", dll);
+	printf("\n");
+
+	MessageBoxW(NULL, errormessage, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
+	exit(0);
+	return;
 }
 
 long long TimeNow() {
@@ -389,9 +389,9 @@ void AllocateMemory(BOOL restart) {
 
 		// Print the values to the log
 		PrintMessageToDebugLog("AllocateMemoryFunc", "Final EV buffer settings: ");
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size", FALSE, TempEvBufferSize);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in bytes)", FALSE, TempEvBufferSize);
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size", FALSE, EvBufferSize);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes)", FALSE, EvBufferSize);
 
 		if (restart) FreeUpMemory();
 
@@ -498,10 +498,8 @@ void LoadSettings(BOOL restart)
 		// Check if "Hyper-playback" mode has been enabled
 		if (HyperMode) {
 			// It's enabled, do some beeps to notify the user
-			Beep(510, 100);
-			Beep(640, 100);
-			Beep(760, 100);
-			Beep(1000, 100);
+			Beep(440, 100);
+			Beep(687, 100);
 
 			// Assign the pointers to the specific hyper-playback functions
 			_PrsData = ParseDataHyper;
