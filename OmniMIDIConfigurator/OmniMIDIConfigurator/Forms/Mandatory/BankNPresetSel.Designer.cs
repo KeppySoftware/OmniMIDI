@@ -225,9 +225,9 @@
             this.XGMode.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.XGMode.Location = new System.Drawing.Point(136, 122);
             this.XGMode.Name = "XGMode";
-            this.XGMode.Size = new System.Drawing.Size(211, 17);
+            this.XGMode.Size = new System.Drawing.Size(208, 17);
             this.XGMode.TabIndex = 24;
-            this.XGMode.Text = "Use bank 127 for drumkits in XG mode.";
+            this.XGMode.Text = "Use bank 127 for drumkits in XG mode\r\n";
             this.XGMode.UseVisualStyleBackColor = true;
             // 
             // BankNPresetSel
