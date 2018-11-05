@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Un4seen.Bass;
@@ -77,6 +78,22 @@ namespace OmniMIDIConfigurator
                 return SFEnabled;
         }
 
+        public static string GetName(string value)
+        {
+            int A = value.IndexOf(" = ");
+            if (A == -1) return "";
+            return value.Substring(0, A);
+        }
+
+        public static string GetValue(string value)
+        {
+            int A = value.LastIndexOf(" = ");
+            if (A == -1) return "";
+            int A2 = A + (" = ").Length;
+            if (A2 >= value.Length) return "";
+            return value.Substring(A2);
+        }
+
         public static void ChangeList(int SelectedList) // When you select a list from the combobox, it'll load the items from the selected list to the listbox
         {
             OmniMIDIConfiguratorMain.CurrentList = OmniMIDIConfiguratorMain.ListsPath[SelectedList];
@@ -109,34 +126,120 @@ namespace OmniMIDIConfigurator
                 {
                     using (StreamReader r = new StreamReader(WhichList))
                     {
-                        string line;
+                        Boolean AlreadyInitialized = false;
+
+                        Boolean EnableState = false;
+                        String SFPath = null;
+                        Int32 SourcePreset = -1;
+                        Int32 SourceBank = -1;
+                        Int32 DestinationPreset = -1;
+                        Int32 DestinationBank = 0;
+                        Boolean XGDrumsetMode = false;
+
+                        ListViewItem SF = new ListViewItem(new[] {
+                                    "Unrecognizable SoundFont",
+                                    "0", "0", "0", "0", "No",
+                                    "Missing",
+                                    "N/A"
+                                    });
                         OmniMIDIConfiguratorMain.Delegate.Lis.Items.Clear();
                         OmniMIDIConfiguratorMain.Delegate.Lis.Refresh();
+
+                        string line;
                         while ((line = r.ReadLine()) != null)
                         {
                             try
                             {
-                                string result = line.Substring(0, 1);
-                                string newvalue;
+                                if (line.Equals("sf.start"))
+                                {
+                                    if (AlreadyInitialized) continue;
 
-                                if (result == "@")
-                                    line = line.Remove(0, 1);
+                                    // It begins, again...
+                                    AlreadyInitialized = true;
+                                }
+                                else if (line.Equals("sf.end"))
+                                {
+                                    if (!AlreadyInitialized) continue;
 
-                                FileInfo file = new FileInfo(StripSFZValues(line));
+                                    // Add it to the list.
+                                    FileInfo file = new FileInfo(SFPath);
+                                    SF = new ListViewItem(new[] {
+                                        SFPath,
+                                        SourcePreset.ToString(), SourceBank.ToString(), DestinationPreset.ToString(), DestinationBank.ToString(),
+                                        (XGDrumsetMode ? "Yes" : "No"),
+                                        ReturnSoundFontFormat(Path.GetExtension(SFPath)),
+                                        ReturnSoundFontSize(SFPath, Path.GetExtension(SFPath), file.Length)
+                                    });
+                                    SF.ForeColor = EnableState ? SFEnabled : SFDisabled;
+                                    OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
 
-                                ListViewItem SF = new ListViewItem(new[] {
-                                    line,
-                                    ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
-                                    ReturnSoundFontSize(StripSFZValues(line), Path.GetExtension(StripSFZValues(line)), file.Length)
-                                });
+                                    // Reset values
+                                    EnableState = false;
+                                    SFPath = null;
+                                    SourcePreset = -1;
+                                    SourceBank = -1;
+                                    DestinationPreset = -1;
+                                    DestinationBank = 0;
+                                    XGDrumsetMode = false;
 
-                                SF.ForeColor = ReturnColor(result);
-                                OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
+                                    AlreadyInitialized = false;
+                                }
+                                else if (GetName(line).Equals("sf.path") && SFPath == null)
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the path! Parse it.
+                                    SFPath = GetValue(line);
+                                }
+                                else if (GetName(line).Equals("sf.enabled"))
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the enable state! Crush it!
+                                    EnableState = Convert.ToBoolean(Convert.ToInt32(GetValue(line)));
+                                }
+                                else if (GetName(line).Equals("sf.srcp"))
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the source preset! Take it!
+                                    SourcePreset = Convert.ToInt32(GetValue(line));
+                                }
+                                else if (GetName(line).Equals("sf.srcb"))
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the source bank! Read it!
+                                    SourceBank = Convert.ToInt32(GetValue(line));
+                                }
+                                else if (GetName(line).Equals("sf.desp"))
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the destination preset! Munch it!
+                                    DestinationPreset = Convert.ToInt32(GetValue(line));
+                                }
+                                else if (GetName(line).Equals("sf.desb"))
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the destination preset! Munch it!
+                                    DestinationBank = Convert.ToInt32(GetValue(line));
+                                }
+                                else if (GetName(line).Equals("sf.xgdrums"))
+                                {
+                                    if (!AlreadyInitialized) continue;
+
+                                    // We've found the enable state! Crush it!
+                                    XGDrumsetMode = Convert.ToBoolean(Convert.ToInt32(GetValue(line)));
+                                }
+                                else continue;
                             }
                             catch
                             {
-                                ListViewItem SF = new ListViewItem(new[] {
-                                    line,
+                                SF = new ListViewItem(new[] {
+                                    "Unrecognizable SoundFont",
+                                    "0", "0", "0", "0", "No",
                                     "Missing",
                                     "N/A"
                                 });
@@ -182,21 +285,19 @@ namespace OmniMIDIConfigurator
                     {
                         if (OmniMIDIConfiguratorMain.Delegate.BankPresetOverride.Checked == true)
                         {
-                            using (var form = new BankNPresetSel(Path.GetFileName(Soundfonts[i]), 0, 1))
+                            using (var form = new BankNPresetSel(Path.GetFileName(Soundfonts[i]), false, true, null))
                             {
                                 var result = form.ShowDialog();
                                 if (result == DialogResult.OK)
                                 {
-                                    string sbank = form.BankValueReturn;
-                                    string spreset = form.PresetValueReturn;
-                                    string dbank = form.DesBankValueReturn;
-                                    string dpreset = form.DesPresetValueReturn;
                                     FileInfo file = new FileInfo(Soundfonts[i]);
                                     ListViewItem SF = new ListViewItem(new[] {
-                                        "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
+                                        Soundfonts[i],
+                                        form.BankValueReturn, form.PresetValueReturn, form.DesBankValueReturn, form.DesPresetValueReturn, form.XGModeC ? "Yes" : "No",
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
                                         ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
+                                    SF.ForeColor = SFEnabled;
                                     OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
                                 }
                             }
@@ -206,9 +307,11 @@ namespace OmniMIDIConfigurator
                             FileInfo file = new FileInfo(Soundfonts[i]);
                             ListViewItem SF = new ListViewItem(new[] {
                                         Soundfonts[i],
+                                        "-1", "-1", "-1", "0", "No",
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
                                         ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
+                            SF.ForeColor = SFEnabled;
                             OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
                         }
                         SaveList(CurrentList);
@@ -225,21 +328,19 @@ namespace OmniMIDIConfigurator
                     }
                     else
                     {
-                        using (var form = new BankNPresetSel(Path.GetFileName(Soundfonts[i]), 1, 0))
+                        using (var form = new BankNPresetSel(Path.GetFileName(Soundfonts[i]), false, false, null))
                         {
                             var result = form.ShowDialog();
                             if (result == DialogResult.OK)
                             {
-                                string sbank = form.BankValueReturn;
-                                string spreset = form.PresetValueReturn;
-                                string dbank = form.DesBankValueReturn;
-                                string dpreset = form.DesPresetValueReturn;
                                 FileInfo file = new FileInfo(Soundfonts[i]);
                                 ListViewItem SF = new ListViewItem(new[] {
-                                        "p" + sbank + "," + spreset + "=" + dbank + "," + dpreset + "|" + Soundfonts[i],
+                                        Soundfonts[i],
+                                        form.BankValueReturn, form.PresetValueReturn, form.DesBankValueReturn, form.DesPresetValueReturn, form.XGModeC ? "Yes" : "No",
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
                                         ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
+                                SF.ForeColor = SFEnabled;
                                 OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
                             }
                         }
@@ -272,26 +373,129 @@ namespace OmniMIDIConfigurator
                 OmniMIDIConfiguratorMain.Delegate.Lis.Items.Clear();
                 using (StreamReader r = new StreamReader(selectedlistpath))
                 {
-                    string line;
+                    Boolean AlreadyInitialized = false;
+
+                    Boolean EnableState = false;
+                    String SFPath = null;
+                    Int32 SourcePreset = -1;
+                    Int32 SourceBank = -1;
+                    Int32 DestinationPreset = -1;
+                    Int32 DestinationBank = 0;
+                    Boolean XGDrumsetMode = false;
+
+                    ListViewItem SF = new ListViewItem(new[] {
+                                    "Unrecognizable SoundFont",
+                                    "0", "0", "0", "0", "No",
+                                    "Missing",
+                                    "N/A"
+                                    });
                     OmniMIDIConfiguratorMain.Delegate.Lis.Items.Clear();
                     OmniMIDIConfiguratorMain.Delegate.Lis.Refresh();
+
+                    string line;
                     while ((line = r.ReadLine()) != null)
                     {
-                        string result = line.Substring(0, 1);
-                        string newvalue;
+                        try
+                        {
+                            if (line.Equals("sf.start"))
+                            {
+                                if (AlreadyInitialized) continue;
 
-                        if (result == "@")
-                            line = line.Remove(0, 1);
+                                // It begins, again...
+                                AlreadyInitialized = true;
+                            }
+                            else if (line.Equals("sf.end"))
+                            {
+                                if (!AlreadyInitialized) continue;
 
-                        FileInfo file = new FileInfo(StripSFZValues(line));
-                        ListViewItem SF = new ListViewItem(new[] {
-                                line,
-                                ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(line))),
-                                ReturnSoundFontSize(StripSFZValues(line), Path.GetExtension(StripSFZValues(line)), file.Length)
-                            });
+                                // Add it to the list.
+                                FileInfo file = new FileInfo(SFPath);
+                                SF = new ListViewItem(new[] {
+                                        SFPath,
+                                        SourcePreset.ToString(), SourceBank.ToString(), DestinationPreset.ToString(), DestinationBank.ToString(),
+                                        (XGDrumsetMode ? "Yes" : "No"),
+                                        ReturnSoundFontFormat(Path.GetExtension(SFPath)),
+                                        ReturnSoundFontSize(SFPath, Path.GetExtension(SFPath), file.Length)
+                                    });
+                                SF.ForeColor = EnableState ? SFEnabled : SFDisabled;
+                                OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
 
-                        SF.ForeColor = ReturnColor(result);
-                        OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
+                                // Reset values
+                                EnableState = false;
+                                SFPath = null;
+                                SourcePreset = -1;
+                                SourceBank = -1;
+                                DestinationPreset = -1;
+                                DestinationBank = 0;
+                                XGDrumsetMode = false;
+
+                                AlreadyInitialized = false;
+                            }
+                            else if (GetName(line).Equals("sf.path") && SFPath == null)
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the path! Parse it.
+                                SFPath = GetValue(line);
+                            }
+                            else if (GetName(line).Equals("sf.enabled"))
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the enable state! Crush it!
+                                EnableState = Convert.ToBoolean(Convert.ToInt32(GetValue(line)));
+                            }
+                            else if (GetName(line).Equals("sf.srcp"))
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the source preset! Take it!
+                                SourcePreset = Convert.ToInt32(GetValue(line));
+                            }
+                            else if (GetName(line).Equals("sf.srcb"))
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the source bank! Read it!
+                                SourceBank = Convert.ToInt32(GetValue(line));
+                            }
+                            else if (GetName(line).Equals("sf.desp"))
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the destination preset! Munch it!
+                                DestinationPreset = Convert.ToInt32(GetValue(line));
+                            }
+                            else if (GetName(line).Equals("sf.desb"))
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the destination preset! Munch it!
+                                DestinationBank = Convert.ToInt32(GetValue(line));
+                            }
+                            else if (GetName(line).Equals("sf.xgdrums"))
+                            {
+                                if (!AlreadyInitialized) continue;
+
+                                // We've found the enable state! Crush it!
+                                XGDrumsetMode = Convert.ToBoolean(Convert.ToInt32(GetValue(line)));
+                            }
+                            else continue;
+                        }
+                        catch
+                        {
+                            SF = new ListViewItem(new[] {
+                                    "Unrecognizable SoundFont",
+                                    "0", "0", "0", "0", "No",
+                                    "Missing",
+                                    "N/A"
+                                });
+
+                            SF.ForeColor = Color.Red;
+                            OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
+
+                            Program.DebugToConsole(false, String.Format("{0} is missing.", line), null);
+                        }
                     }
                 }
             }
@@ -321,8 +525,10 @@ namespace OmniMIDIConfigurator
 
         public static string StripDisabledState(string SFToStrip)
         {
-            if (SFToStrip.Substring(0, 1) == "@")
-                return SFToStrip.Remove(0, 1);
+            int charLocation = SFToStrip.IndexOf('|');
+
+            if (SFToStrip.Substring(0, charLocation).Contains('@'))
+                return Regex.Replace(SFToStrip, "@", "");
             else
                 return SFToStrip;
         }
@@ -333,19 +539,23 @@ namespace OmniMIDIConfigurator
             {
                 using (StreamWriter sw = new StreamWriter(SelectedList))
                 {
+                    UInt32 SFCount = 1;
+                    sw.WriteLine("// Generated by OmniMIDI\n");
                     foreach (ListViewItem item in OmniMIDIConfiguratorMain.Delegate.Lis.Items)
                     {
-                        String FirstChar;
-
-                        if (item.ForeColor == SFEnabled)
-                            FirstChar = "";
-                        else if (item.ForeColor == SFDisabled)
-                            FirstChar = "@";
-                        else
-                            FirstChar = "";
-
-                        sw.WriteLine(String.Format("{0}{1}", FirstChar, item.Text.ToString()));
+                        sw.WriteLine(String.Format("// SoundFont n°{0}", SFCount));
+                        sw.WriteLine("sf.start");
+                        sw.WriteLine(String.Format("sf.path = {0}", item.Text));
+                        sw.WriteLine(String.Format("sf.enabled = {0}", (item.ForeColor == SFEnabled) ? "1" : "0"));
+                        sw.WriteLine(String.Format("sf.srcp = {0}", item.SubItems[1].Text));
+                        sw.WriteLine(String.Format("sf.srcb = {0}", item.SubItems[2].Text));
+                        sw.WriteLine(String.Format("sf.desp = {0}", item.SubItems[3].Text));
+                        sw.WriteLine(String.Format("sf.desb = {0}", item.SubItems[4].Text));
+                        sw.WriteLine(String.Format("sf.xgdrums = {0}", (item.SubItems[5].Text.Equals("Yes")) ? "1" : "0"));
+                        sw.WriteLine("sf.end\n");
+                        SFCount++;
                     }
+                    sw.WriteLine("// Generated by OmniMIDI");
                 }
                 Program.DebugToConsole(false, String.Format("Soundfont list saved: {0}", SelectedList), null);
             }

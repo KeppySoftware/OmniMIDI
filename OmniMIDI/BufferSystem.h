@@ -232,9 +232,9 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (++writehead >= EvBufferSize) writehead = 0;
 
 	evbuf_t evtobuf{
-		uMsg = uMsg,
-		dwParam1 = dwParam1,
-		dwParam2 = dwParam2,
+		uMsg,
+		dwParam1,
+		dwParam2
 	};
 
 	evbuf[tempevent] = evtobuf;
@@ -254,9 +254,9 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (++writehead >= EvBufferSize) writehead = 0;
 
 	evbuf_t evtobuf{
-		uMsg = uMsg,
-		dwParam1 = dwParam1,
-		dwParam2 = dwParam2,
+		uMsg,
+		dwParam1,
+		dwParam2
 	};
 
 	evbuf[tempevent] = evtobuf;

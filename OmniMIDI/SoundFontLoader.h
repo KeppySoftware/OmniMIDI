@@ -32,28 +32,14 @@ static void checksferror(LPCWSTR name) {
 	}
 }
 
-static BOOL load_font_item(const TCHAR * in_path)
+static BOOL LegacyFontLoader(const TCHAR * in_path)
 {
 	try {
+		BOOL XGDrumsMode = FALSE;
 		const TCHAR * ext = _T("");
 		const TCHAR * dot = _tcsrchr(in_path, _T('.'));
 		if (dot != 0) ext = dot + 1;
-		if (!_wcsicmp(ext, _T("sf2"))
-			|| !_wcsicmp(ext, _T("sf2pack"))
-			|| !_wcsicmp(ext, _T("sfz"))
-			)
-		{
-			HSOUNDFONT font = BASS_MIDI_FontInit(in_path, BASS_UNICODE);
-			if (!font)
-			{
-				return false;
-			}
-			_soundFonts.push_back(font);
-			BASS_MIDI_FONTEX fex = { font, -1, -1, -1, 0, 0 };
-			presetList.push_back(fex);
-			return true;
-		}
-		else if (!_wcsicmp(ext, _T("sflist")))
+		if (!_wcsicmp(ext, _T("sflist")))
 		{
 			FILE * fl = _tfopen(in_path, _T("r, ccs=UTF-8"));
 			if (fl)
@@ -142,11 +128,6 @@ static BOOL load_font_item(const TCHAR * in_path)
 							}
 							break;
 
-							case '&':
-							{
-							}
-							break;
-
 							case ';':
 								// separates preset items
 								break;
@@ -232,30 +213,222 @@ static BOOL load_font_item(const TCHAR * in_path)
 	}
 }
 
+static BOOL FontLoader(const TCHAR * in_path) {
+	try {
+		LPCWSTR Extension = PathFindExtension(in_path);
+		if (!_wcsicmp(Extension, _T(".sf2")) ||
+			!_wcsicmp(Extension, _T(".sf2pack")) ||
+			!_wcsicmp(Extension, _T(".sfz")))
+		{
+			SoundFontList TempItem;
+			memcpy(TempItem.Path, in_path, sizeof(in_path));
+			TempItem.SourcePreset = -1;
+			TempItem.SourceBank = -1;
+			TempItem.DestinationPreset = -1;
+			TempItem.DestinationBank = 0;
+			TempItem.XGBankMode = FALSE;
+
+			HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, (TempItem.XGBankMode ? BASS_MIDI_FONT_XGDRUMS : 0) | BASS_UNICODE);
+			if (!SF) return FALSE;
+
+			BASS_MIDI_FONTEX SFConf = { SF, TempItem.SourcePreset, TempItem.SourceBank, TempItem.DestinationPreset, TempItem.DestinationBank, 0 };
+
+			_soundFonts.push_back(SF);
+			presetList.push_back(SFConf);
+			BASS_MIDI_StreamSetFonts(OMStream, &presetList[0], (unsigned int)presetList.size() | BASS_MIDI_FONT_EX);
+			return TRUE;
+		}
+		else if (!_wcsicmp(Extension, _T(".omlist")))
+		{
+			// Open file
+			wchar_t *end;
+			std::vector<SoundFontList> TempSoundFonts;
+			std::wifstream SFList(in_path);
+
+			if (SFList) {
+				BOOL AlreadyInitialized = FALSE;
+				SoundFontList TempSF {
+					TRUE,		// Enable state
+					NULL,		// SF path
+					-1,			// Source preset
+					-1,			// Source bank
+					-1,			// Destination preset
+					0,			// Destination bank
+					FALSE		// XG drumset mode
+				};
+
+				for (std::wstring TempLine; std::getline(SFList, TempLine);)
+				{
+					if (TempLine.find(L"sf.start") == 0) 
+					{
+						if (AlreadyInitialized) continue;
+
+						// It begins...
+						AlreadyInitialized = TRUE;
+						PrintMessageToDebugLog("NewSFLoader", "Begin loading SoundFont item...");
+						continue;
+					}
+					else if (TempLine.find(L"sf.end") == 0) 
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the enable state! Crush it!
+						AlreadyInitialized = FALSE;
+						TempSoundFonts.push_back(TempSF);
+						TempSF = SoundFontList();
+						PrintMessageToDebugLog("NewSFLoader", "Ended loading SF. Searching for a new one...");
+						continue;
+					}
+					else if (TempLine.find(L"sf.path") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the path! Parse it.
+						ZeroMemory(TempSF.Path, MAX_PATH);
+						memcpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), MAX_PATH);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF path to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"sf.enabled") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the enable state! Crush it!
+						TempSF.EnableState = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's enabled state to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"sf.srcp") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the source preset! Take it!
+						TempSF.SourcePreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's source preset to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"sf.srcb") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the source bank! Read it!
+						TempSF.SourceBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's source bank to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"sf.desp") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the destination preset! Munch it!
+						TempSF.DestinationPreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's destination preset to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"sf.desb") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the destination bank! Look at it!
+						TempSF.DestinationBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's destination bank to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"sf.xgdrums") == 0)
+					{
+						if (!AlreadyInitialized) continue;
+
+						// We've found the destination bank! Look at it!
+						TempSF.XGBankMode = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's XG drum setting to SoundFontList struct.");
+						continue;
+					}
+					else if (TempLine.find(L"//") == 0 || TempLine.find(L"#") || TempLine.empty()) {
+						// Comment or emptiness, go on...
+						continue;
+					}
+					else {
+						// SoundFont is invalid, let's try parsing it with the old font loader
+						SFList.close();
+						return LegacyFontLoader(in_path);
+					}
+				}
+				SFList.close();
+			}
+
+			for (int i = 0; i < TempSoundFonts.size(); i++)
+			{
+				if (!TempSoundFonts[i].EnableState) {
+					PrintMessageToDebugLog("NewSFLoader", "SoundFont disabled, skipping to next one...");
+					continue;
+				}
+
+				if (PathFileExists(TempSoundFonts[i].Path))
+				{
+					PrintMessageToDebugLog("NewSFLoader", "Initializing SoundFont...");
+					HSOUNDFONT font = BASS_MIDI_FontInit(TempSoundFonts[i].Path, (TempSoundFonts[i].XGBankMode ? BASS_MIDI_FONT_XGDRUMS : 0) | BASS_UNICODE);
+					if (!font) {
+						PrintMessageToDebugLog("NewSFLoader", "An error has occurred while initializing the SoundFont.");
+						CheckUp(ERRORCODE, L"BASSMIDI Font Initialization", TRUE);
+					}
+
+					PrintMessageToDebugLog("NewSFLoader", "Preparing BASS_MIDI_FONTEX...");
+					BASS_MIDI_FONTEX FEX = { font, TempSoundFonts[i].SourcePreset, TempSoundFonts[i].SourceBank, TempSoundFonts[i].DestinationPreset, TempSoundFonts[i].DestinationBank, 0 };
+
+					PrintMessageToDebugLog("NewSFLoader", "Pushing it back inside the vector array...");
+					_soundFonts.push_back(font);
+					presetList.push_back(FEX);
+
+					if (ManagedSettings.PreloadSoundFonts) {
+						PrintMessageToDebugLog("NewSFLoader", "Preloading SoundFont...");
+						BASS_MIDI_FontLoad(font, TempSoundFonts[i].SourcePreset, TempSoundFonts[i].SourceBank);
+					}
+				}
+				else {
+					TCHAR Message[MAX_PATH];
+					ZeroMemory(Message, MAX_PATH);
+					wsprintf(Message, L"The following SoundFont does not exist.\n\nAffected SoundFont: %s\n\nSolution:\nCheck if the SoundFont actually exists in its folder, and if it hasn't accidentally been renamed, moved or deleted.\n\nThe SoundFont will be skipped from the loading process.", TempSoundFonts[i].Path);
+					MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
+				}
+			}
+			return TRUE;
+		}
+		else if (!_wcsicmp(Extension, _T(".sflist"))) return LegacyFontLoader(in_path);
+
+		return FALSE;
+	}
+	catch (...) {
+		CrashMessage("LoadFontItem");
+	}
+}
+
 void LoadFonts(const TCHAR * name)
 {
 	try {
-		FreeFonts();
-
 		if (name != NULL && *name != NULL)
 		{
-			const TCHAR* ext = wcsrchr(name, _T('.'));
-			if (ext) ext++;
-			if (!_wcsicmp(ext, _T("sf2")) || !_wcsicmp(ext, _T("sf2pack")) || !_wcsicmp(ext, _T("sfz")) || !_wcsicmp(ext, _T("sflist")))
+			LPCWSTR Extension = PathFindExtension(name);
+			if (!_wcsicmp(Extension, _T(".sf2")) || 
+				!_wcsicmp(Extension, _T(".sf2pack")) || 
+				!_wcsicmp(Extension, _T(".sfz")) || 
+				!_wcsicmp(Extension, _T(".sflist")) || 
+				!_wcsicmp(Extension, _T(".omlist")))
 			{
-				if (!load_font_item(name))
+				FreeFonts();
+
+				if (!FontLoader(name))
 				{
 					FreeFonts();
 					return;
 				}
-			}
 
-			std::vector< BASS_MIDI_FONTEX > fonts;
-			for (unsigned long i = 0, j = presetList.size(); i < j; ++i)
-			{
-				fonts.push_back(presetList[j - i - 1]);
+				std::vector< BASS_MIDI_FONTEX > fonts;
+				for (unsigned long i = 0, j = presetList.size(); i < j; ++i)
+				{
+					fonts.push_back(presetList[j - i - 1]);
+				}
+				BASS_MIDI_StreamSetFonts(OMStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 			}
-			BASS_MIDI_StreamSetFonts(OMStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 		}
 	}
 	catch (...) {

@@ -20,6 +20,7 @@ using System.Drawing.Text;
 using Un4seen.BassAsio;
 using Un4seen.BassWasapi;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace OmniMIDIConfigurator
 {
@@ -60,22 +61,22 @@ namespace OmniMIDIConfigurator
         public static string DebugTextFiles = soundfontnewlocation + "\\OmniMIDI\\debug";
         public static string[] ListsPath = new string[]
         {
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_A.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_B.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_C.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_D.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_E.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_F.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_G.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_H.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_I.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_L.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_M.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_N.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_O.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_P.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_Q.sflist",
-            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_R.sflist"
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_A.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_B.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_C.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_D.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_E.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_F.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_G.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_H.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_I.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_L.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_M.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_N.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_O.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_P.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_Q.omlist",
+            soundfontnewlocation + "\\OmniMIDI\\lists\\OmniMIDI_R.omlist"
         };
 
         // Work
@@ -162,10 +163,6 @@ namespace OmniMIDIConfigurator
 
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
-                Lis.Columns[0].Tag = 7;
-                Lis.Columns[1].Tag = 1;
-                Lis.Columns[2].Tag = 1;
-                Lis_SizeChanged(Lis, new EventArgs());
                 ThemeCheck.RunWorkerAsync();
                 // MIDI out selector disabler
                 Functions.CheckMIDIMapper();
@@ -759,6 +756,32 @@ namespace OmniMIDIConfigurator
             MoveListViewItems(Lis, MoveDirection.Down);
         }
 
+        private void EditSFSettings_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in Lis.SelectedItems)
+            {
+                Boolean IsSFZ = (Path.GetExtension(item.Text) == ".sfz") ? false : true;
+                Int32[] OldVals = new Int32[] {
+                    Convert.ToInt32(item.SubItems[1].Text), Convert.ToInt32(item.SubItems[2].Text),
+                    Convert.ToInt32(item.SubItems[3].Text), Convert.ToInt32(item.SubItems[4].Text),
+                    (item.SubItems[5].Text == "Yes") ? 1 : 0
+                };
+
+                using (var form = new BankNPresetSel(Path.GetFileName(item.Text), true, IsSFZ, OldVals))
+                {
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        item.SubItems[1].Text = form.PresetValueReturn.ToString();
+                        item.SubItems[2].Text = form.BankValueReturn.ToString();
+                        item.SubItems[3].Text = form.DesPresetValueReturn.ToString();
+                        item.SubItems[4].Text = form.DesBankValueReturn.ToString();
+                        item.SubItems[5].Text = form.XGModeC ? "Yes" : "No";
+                    }
+                }
+            }
+        }
+
         private enum MoveDirection { Up = -1, Down = 1 };
         private static void MoveListViewItems(ListView sender, MoveDirection direction)
         {
@@ -897,41 +920,148 @@ namespace OmniMIDIConfigurator
                     {
                         using (StreamReader r = new StreamReader(listw))
                         {
-                            List<string> SFList = new List<string>();
-                            string line;
+                            Boolean AlreadyInitialized = false;
 
-                            // Read the external list and add the items to the selected list
+                            Boolean EnableState = false;
+                            String SFPath = null;
+                            Int32 SourcePreset = -1;
+                            Int32 SourceBank = -1;
+                            Int32 DestinationPreset = -1;
+                            Int32 DestinationBank = 0;
+                            Boolean XGDrumsetMode = false;
+
+                            ListViewItem SF = new ListViewItem(new[] {
+                                    "Unrecognizable SoundFont",
+                                    "0", "0", "0", "0", "No",
+                                    "Missing",
+                                    "N/A"
+                                    });
+                            OmniMIDIConfiguratorMain.Delegate.Lis.Items.Clear();
+                            OmniMIDIConfiguratorMain.Delegate.Lis.Refresh();
+
+                            string line;
                             while ((line = r.ReadLine()) != null)
                             {
                                 try
                                 {
-                                    string result = line.Substring(0, 1);
-                                    string newvalue;
+                                    if (line.Equals("sf.start"))
+                                    {
+                                        if (AlreadyInitialized) continue;
 
-                                    if (result == "@")
-                                        line = line.Remove(0, 1);
+                                        // It begins, again...
+                                        AlreadyInitialized = true;
+                                    }
+                                    else if (line.Equals("sf.end"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
 
-                                    if (!Path.IsPathRooted(SFListFunc.StripSFZValues(line)))
-                                        line = new Uri(String.Format("{0}{1}{2}",
-                                            SFListFunc.GetSFZValues(line), 
-                                            Path.GetDirectoryName(listw),
-                                            String.Format("\\{0}", SFListFunc.StripSFZValues(line))))
-                                            .LocalPath;
+                                        // Add it to the list.
+                                        FileInfo file = new FileInfo(SFPath);
+                                        SF = new ListViewItem(new[] {
+                                        SFPath,
+                                        SourcePreset.ToString(), SourceBank.ToString(), DestinationPreset.ToString(), DestinationBank.ToString(),
+                                        (XGDrumsetMode ? "Yes" : "No"),
+                                        SFListFunc.ReturnSoundFontFormat(Path.GetExtension(SFPath)),
+                                        SFListFunc.ReturnSoundFontSize(SFPath, Path.GetExtension(SFPath), file.Length)
+                                    });
+                                        SF.ForeColor = EnableState ? SFListFunc.SFEnabled : SFListFunc.SFDisabled;
+                                        Lis.Items.Add(SF);
 
-                                    FileInfo file = new FileInfo(SFListFunc.StripSFZValues(line));
+                                        // Reset values
+                                        EnableState = false;
+                                        SFPath = null;
+                                        SourcePreset = -1;
+                                        SourceBank = -1;
+                                        DestinationPreset = -1;
+                                        DestinationBank = 0;
+                                        XGDrumsetMode = false;
 
-                                    ListViewItem SF = new ListViewItem(new[] {
-                                        line,
-                                        SFListFunc.ReturnSoundFontFormat(Path.GetExtension(SFListFunc.StripSFZValues(line))),
-                                        SFListFunc.ReturnSoundFontSize(SFListFunc.StripSFZValues(line), Path.GetExtension(SFListFunc.StripSFZValues(line)), file.Length)
+                                        AlreadyInitialized = false;
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.path") && SFPath == null)
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the path! Parse it.
+                                        SFPath = SFListFunc.GetValue(line);
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.enabled"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the enable state! Crush it!
+                                        EnableState = Convert.ToBoolean(Convert.ToInt32(SFListFunc.GetValue(line)));
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.srcp"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the source preset! Take it!
+                                        SourcePreset = Convert.ToInt32(SFListFunc.GetValue(line));
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.srcb"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the source bank! Read it!
+                                        SourceBank = Convert.ToInt32(SFListFunc.GetValue(line));
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.desp"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the destination preset! Munch it!
+                                        DestinationPreset = Convert.ToInt32(SFListFunc.GetValue(line));
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.desb"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the destination preset! Munch it!
+                                        DestinationBank = Convert.ToInt32(SFListFunc.GetValue(line));
+                                    }
+                                    else if (SFListFunc.GetName(line).Equals("sf.xgdrums"))
+                                    {
+                                        if (!AlreadyInitialized) continue;
+
+                                        // We've found the enable state! Crush it!
+                                        XGDrumsetMode = Convert.ToBoolean(Convert.ToInt32(SFListFunc.GetValue(line)));
+                                    }
+                                    else if (line.Contains("//") || line.Contains('#') || String.IsNullOrWhiteSpace(line)) continue;
+                                    else
+                                    {
+                                        try
+                                        {
+                                            FileInfo file = new FileInfo(SFListFunc.StripSFZValues(line));
+                                            String IsSFZ = (Path.GetExtension(SFListFunc.StripSFZValues(line)) == ".sfz") ? "0" : "-1";
+
+                                            SF = new ListViewItem(new[] {
+                                                SFListFunc.StripSFZValues(line),
+                                                IsSFZ, IsSFZ, IsSFZ, "0", "No",
+                                                SFListFunc.ReturnSoundFontFormat(Path.GetExtension(SFListFunc.StripSFZValues(line))),
+                                                SFListFunc.ReturnSoundFontSize(SFListFunc.StripSFZValues(line), Path.GetExtension(SFListFunc.StripSFZValues(line)), file.Length)
+                                            });
+                                            SF.ForeColor = SFListFunc.SFEnabled;
+                                            Lis.Items.Add(SF);
+                                        }
+                                        catch { }
+                                    }
+                                }
+                                catch
+                                {
+                                    SF = new ListViewItem(new[] {
+                                        "Unrecognizable SoundFont",
+                                        "0", "0", "0", "0", "No",
+                                        "Missing",
+                                        "N/A"
                                     });
 
-                                    SF.ForeColor = SFListFunc.ReturnColor(result);
+                                    SF.ForeColor = Color.Red;
                                     OmniMIDIConfiguratorMain.Delegate.Lis.Items.Add(SF);
+
+                                    Program.DebugToConsole(false, String.Format("{0} is missing.", line), null);
                                 }
-                                catch { }
                             }
-                            SFListFunc.AddSoundfontsToSelectedList(CurrentList, SFList.ToArray());
                         }
                         SFListFunc.SaveList(CurrentList);
                         SFListFunc.TriggerReload(false);
@@ -950,13 +1080,27 @@ namespace OmniMIDIConfigurator
             ExternalListExport.InitialDirectory = LastImportExportPath;
             if (ExternalListExport.ShowDialog(this) == DialogResult.OK)
             {
+                UInt32 SFCount = 1;
                 SFListFunc.SetLastImportExportPath(Path.GetDirectoryName(ExternalListExport.FileNames[0]));
                 System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(ExternalListExport.FileName);
                 SFListFunc.SetLastPath(LastBrowserPath);
+
+                SaveFile.WriteLine("// Generated by OmniMIDI\n");
                 foreach (ListViewItem item in Lis.Items)
                 {
-                    SaveFile.WriteLine(item.Text.ToString());
+                    SaveFile.WriteLine(String.Format("// SoundFont n°{0}", SFCount));
+                    SaveFile.WriteLine("sf.start");
+                    SaveFile.WriteLine(String.Format("sf.path = {0}", item.Text));
+                    SaveFile.WriteLine(String.Format("sf.enabled = {0}", (item.ForeColor == SFListFunc.SFEnabled) ? "1" : "0"));
+                    SaveFile.WriteLine(String.Format("sf.srcp = {0}", item.SubItems[1].Text));
+                    SaveFile.WriteLine(String.Format("sf.srcb = {0}", item.SubItems[2].Text));
+                    SaveFile.WriteLine(String.Format("sf.desp = {0}", item.SubItems[3].Text));
+                    SaveFile.WriteLine(String.Format("sf.desb = {0}", item.SubItems[4].Text));
+                    SaveFile.WriteLine(String.Format("sf.xgdrums = {0}", (item.SubItems[5].Text.Equals("Yes")) ? "1" : "0"));
+                    SaveFile.WriteLine("sf.end\n");
+                    SFCount++;
                 }
+                SaveFile.WriteLine("// Generated by OmniMIDI");
                 SaveFile.Close();
                 Program.DebugToConsole(false, String.Format("Exported list {0} to {1}.", CurrentList, ExternalListExport.FileName), null);
                 Functions.ShowErrorDialog(ErrorType.Information, System.Media.SystemSounds.Question, "Soundfont list exported!", String.Format("Soundfont list exported succesfully to \"{0}\\\"", Path.GetDirectoryName(ExternalListExport.FileName)), false, null);               
@@ -1925,39 +2069,6 @@ namespace OmniMIDIConfigurator
         }
 
         // Tools
-
-        private bool Resizing = false;
-        private void Lis_SizeChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!Resizing)
-                {
-                    Resizing = true;
-                    ListView listView = sender as ListView;
-                    if (listView != null)
-                    {
-                        float totalColumnWidth = 0;
-
-                        for (int i = 0; i < listView.Columns.Count; i++)
-                            totalColumnWidth += Convert.ToInt32(listView.Columns[i].Tag);
-
-                        for (int i = 0; i < listView.Columns.Count; i++)
-                        {
-                            float colPercentage;
-                            colPercentage = (Convert.ToInt32(listView.Columns[i].Tag) / totalColumnWidth);
-                            if (i == 0)
-                                listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width)) - 10;
-                            else
-                                listView.Columns[i].Width = ((int)(colPercentage * listView.ClientRectangle.Width));
-                        }
-                    }
-                }
-
-            }
-            catch { }
-            finally { Resizing = false; }
-        }
 
         private void CheckIfUserPressesEnter(object sender, KeyEventArgs e)
         {

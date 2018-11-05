@@ -86,3 +86,4 @@ Sign and compile setup.bat
 Sign runtime.bat
 Sign WinMM patches and BASS.bat
 output/OmniMIDIDev.zip
+Sign, compile setup and create portable DLLs for devs.bat

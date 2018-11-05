@@ -12,47 +12,52 @@ namespace OmniMIDIConfigurator
 {
     public partial class BankNPresetSel : Form
     {
-        public string BankValueReturn { get; set; }
-        public string PresetValueReturn { get; set; }
-        public string DesBankValueReturn { get; set; }
-        public string DesPresetValueReturn { get; set; }
-        public string SelectedSF { get; set; }
-        public int typeofsfhehe { get; set; }
-        public int WindowView { get; set; }
+        public bool XGModeC = false;
+        public string BankValueReturn = "0";
+        public string PresetValueReturn = "0";
+        public string DesBankValueReturn = "0";
+        public string DesPresetValueReturn = "0";
+        public string SelectedSF = "";
 
-        public BankNPresetSel(String Target, int WindowMode, int typeofsf)
+        public BankNPresetSel(String Target, Boolean IsEditingSoundfont, Boolean IsEditingSF2, Int32[] SettingsArray)
         {
             InitializeComponent();
             SelectedSF = Target;
             SelectedSFLabel.Text = "Selected soundfont:\n" + Path.GetFileNameWithoutExtension(SelectedSF);
-            BankVal.Value = 0;
-            PresetVal.Value = 0;
-            if (typeofsf == 1)
+            DesBankVal.Value = 0;
+            DesPresetVal.Value = 0;
+
+            MessageBox.Show(String.Format("{0} {1} {2} {3}", PresetValueReturn, BankValueReturn, DesPresetValueReturn, DesPresetValueReturn));
+
+            if (IsEditingSF2)
             {
-                BankVal.Minimum = -1;
-                PresetVal.Minimum = -1;
+                SrcBankVal.Minimum = -1;
+                SrcPresetVal.Minimum = -1;
+                DesPresetVal.Minimum = -1;
             }
             else
             {
-                DesBankVal.Enabled = false;
-                DesPresetVal.Enabled = false;
-                DesBankVal.Value = 0;
-                DesPresetVal.Value = 0;
+                SrcBankVal.Enabled = false;
+                SrcPresetVal.Enabled = false;
+                SrcBankVal.Value = 0;
+                SrcPresetVal.Value = 0;
             }
-            if (WindowMode == 1)
+
+            if (IsEditingSoundfont) 
             {
-                this.StartPosition = FormStartPosition.CenterScreen;
-            }
-            else
-            {
-                this.StartPosition = FormStartPosition.CenterParent;
+                SrcPresetVal.Value = SettingsArray[0];
+                SrcBankVal.Value = SettingsArray[1];
+                DesPresetVal.Value = SettingsArray[2];
+                DesBankVal.Value = SettingsArray[3];
+                XGMode.Checked = Convert.ToBoolean(SettingsArray[4]);
             }
         }
 
         private void ConfirmBut_Click(object sender, EventArgs e)
         {
-            BankValueReturn = BankVal.Value.ToString();
-            PresetValueReturn = PresetVal.Value.ToString();
+            XGModeC = XGMode.Checked;
+            BankValueReturn = SrcBankVal.Value.ToString();
+            PresetValueReturn = SrcPresetVal.Value.ToString();
             DesBankValueReturn = DesBankVal.Value.ToString();
             DesPresetValueReturn = DesPresetVal.Value.ToString();
             DialogResult = DialogResult.OK;

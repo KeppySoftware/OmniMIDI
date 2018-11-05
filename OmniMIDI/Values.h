@@ -109,6 +109,17 @@ static HANDLE hConsole;						// Debug console
 static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug
+struct SoundFontList
+{
+	BOOL EnableState;
+	TCHAR Path[MAX_PATH];
+	INT SourcePreset;
+	INT SourceBank;
+	INT DestinationPreset;
+	INT DestinationBank;
+	BOOL XGBankMode;
+} SFLIST, *PSFLIST;
+
 static BOOL SettingsManagedByClient = FALSE;
 static FLOAT RenderingTime = 0.0f;
 static Settings ManagedSettings = DEFAULT_SETTINGS;
@@ -243,22 +254,22 @@ static TCHAR * sflistloadme[16] =
 
 static TCHAR * sfdirs[16] =
 {
-	L"\\OmniMIDI\\lists\\OmniMIDI_A.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_B.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_C.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_D.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_E.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_F.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_G.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_H.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_I.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_L.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_M.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_N.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_O.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_P.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_Q.sflist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_R.sflist"
+	L"\\OmniMIDI\\lists\\OmniMIDI_A.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_B.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_C.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_D.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_E.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_F.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_G.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_H.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_I.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_L.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_M.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_N.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_O.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_P.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_Q.omlist",
+	L"\\OmniMIDI\\lists\\OmniMIDI_R.omlist"
 };
 
 // -----------------------------------------------------------------------
