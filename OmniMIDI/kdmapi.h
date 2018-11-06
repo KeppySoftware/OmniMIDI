@@ -226,14 +226,7 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		return TRUE;
 	}
 
-	// You can't initialize the driver if it's already been initialized by WinMM!
-	PrintMessageToDebugLog("KDMAPI_IKS", "KDMAPI cannot be initialized.");
-	MessageBox(
-		NULL,
-		L"The driver has already been initialized by Windows Multimedia!\n\nKDMAPI is unable to work until the driver output is closed again through midiOutClose().",
-		L"KDMAPI ERROR",
-		MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
-
+	PrintMessageToDebugLog("KDMAPI_TKS", "InitializeKDMAPIStream called, even though the driver is already active.");
 	return FALSE;
 }
 
@@ -244,9 +237,10 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 			PrintMessageToDebugLog("KDMAPI_TKS", "The app requested the driver to terminate its audio stream.");
 			DoStopClient();
 			AlreadyInitializedViaKDMAPI = FALSE;
+			PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 		}
+		else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
 
-		PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 		return TRUE;
 	}
 	catch (...) {
@@ -273,24 +267,18 @@ MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
-	try {
-		// Send the data directly to BASSMIDI, bypassing the buffer altogether
-		if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
-			SendToBASSMIDI(dwMsg);
-			return MMSYSERR_NOERROR;
-		}
-		return MIDIERR_NOTREADY;
+	// Send the data directly to BASSMIDI, bypassing the buffer altogether
+	if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
+		SendToBASSMIDI(dwMsg);
+		return MMSYSERR_NOERROR;
 	}
-	catch (...) {
-		// Something died, invalid parameter!
-		return MMSYSERR_INVALPARAM;
-	}
+	return MIDIERR_NOTREADY;
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);								// The driver isn't ready
 	if (!IIMidiHdr || 
-		IIMidiHdr->dwBufferLength > IIMidiHdr->dwBytesRecorded ||								// The buffer either doesn't exist, it's too big or
+		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||							// The buffer either doesn't exist, it's too big or
 		sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return DebugResult(MMSYSERR_INVALPARAM);	// the given size is invalid, invalid parameter
 	if (IIMidiHdr->dwFlags & MHDR_PREPARED) return MMSYSERR_NOERROR;							// Already prepared, everything is fine
 
@@ -309,7 +297,7 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
 	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);															// The driver isn't ready
-	if (!IIMidiHdr || IIMidiHdr->dwBufferLength > IIMidiHdr->dwBytesRecorded) return DebugResult(MMSYSERR_INVALPARAM);		// The buffer doesn't exist, invalid parameter
+	if (!IIMidiHdr || !(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength)) return DebugResult(MMSYSERR_INVALPARAM);	// The buffer doesn't exist, invalid parameter
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;														// Already unprepared, everything is fine
 	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return DebugResult(MIDIERR_STILLPLAYING);										// The buffer is currently being played from the driver, cannot unprepare
 
@@ -327,9 +315,9 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 }
 
 MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);							// The driver isn't ready
-	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM);								// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED);		// The buffer is not prepared
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);															// The driver isn't ready
+	if (!IIMidiHdr || !(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength)) return DebugResult(MMSYSERR_INVALPARAM);	// The buffer doesn't exist or invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED);										// The buffer is not prepared
 
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;

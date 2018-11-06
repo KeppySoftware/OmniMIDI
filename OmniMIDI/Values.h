@@ -114,13 +114,13 @@ static FLOAT *sndbf;						// AudToWAV
 // Settings and debug
 struct SoundFontList
 {
-	BOOL EnableState;
-	TCHAR Path[NTFS_MAX_PATH];
-	INT SourcePreset;
-	INT SourceBank;
-	INT DestinationPreset;
-	INT DestinationBank;
-	BOOL XGBankMode;
+	int EnableState;
+	wchar_t Path[NTFS_MAX_PATH];
+	int SourcePreset;
+	int SourceBank;
+	int DestinationPreset;
+	int DestinationBank;
+	int XGBankMode;
 } SFLIST, *PSFLIST;
 
 static BOOL SettingsManagedByClient = FALSE;

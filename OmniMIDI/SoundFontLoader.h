@@ -80,7 +80,6 @@ static BOOL FontLoader(const TCHAR * in_path) {
 
 						// Initialize TempSF struct
 						TempSF = SoundFontList();
-						ZeroMemory(TempSF.Path, NTFS_MAX_PATH);
 						TempSF.EnableState = FALSE;
 						TempSF.SourcePreset = -1;
 						TempSF.SourceBank = -1;
@@ -106,8 +105,8 @@ static BOOL FontLoader(const TCHAR * in_path) {
 						if (!AlreadyInitialized) continue;
 
 						// We've found the path! Parse it.
-						const wchar_t* ThePath = TempLine.substr(TempLine.find(L"= ") + 2).c_str();
-						wcsncpy(TempSF.Path, ThePath, NTFS_MAX_PATH);
+						ZeroMemory(TempSF.Path, NTFS_MAX_PATH * sizeof(wchar_t));
+						wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF path to SoundFontList struct.");
 						continue;
 					}
@@ -210,7 +209,7 @@ static BOOL FontLoader(const TCHAR * in_path) {
 				}
 				else {
 					TCHAR Message[MAX_PATH];
-					ZeroMemory(Message, MAX_PATH);
+					ZeroMemory(Message, MAX_PATH * sizeof(TCHAR));
 					wsprintf(Message, L"The following SoundFont does not exist.\n\nAffected SoundFont: %s\n\nSolution:\nCheck if the SoundFont actually exists in its folder, and if it hasn't accidentally been renamed, moved or deleted.\n\nThe SoundFont will be skipped from the loading process.", obj->Path);
 					MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
 				}

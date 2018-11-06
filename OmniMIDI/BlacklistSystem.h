@@ -21,26 +21,26 @@ BOOL BannedSystemProcess() {
 
 BOOL BlackListSystem(){
 	// Blacklist system init
-	wchar_t defaultstring[MAX_PATH];
-	wchar_t userstring[MAX_PATH];
-	wchar_t defaultblacklistdirectory[MAX_PATH];
-	wchar_t userblacklistdirectory[MAX_PATH];
-	wchar_t modulename[MAX_PATH];
-	wchar_t fullmodulename[MAX_PATH];
+	wchar_t defaultstring[NTFS_MAX_PATH];
+	wchar_t userstring[NTFS_MAX_PATH];
+	wchar_t defaultblacklistdirectory[NTFS_MAX_PATH];
+	wchar_t userblacklistdirectory[NTFS_MAX_PATH];
+	wchar_t modulename[NTFS_MAX_PATH];
+	wchar_t fullmodulename[NTFS_MAX_PATH];
 
 	// Clears all the tchars
-	RtlSecureZeroMemory(defaultstring, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(userstring, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(defaultblacklistdirectory, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(userblacklistdirectory, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(modulename, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(fullmodulename, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(defaultstring, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(userstring, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(defaultblacklistdirectory, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(userblacklistdirectory, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(modulename, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(fullmodulename, sizeof(wchar_t) * NTFS_MAX_PATH);
 
 	// Start the system
 	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, defaultblacklistdirectory);
 	wcscat(defaultblacklistdirectory, L"\\OmniMIDI\\OmniMIDI.dbl");
-	GetModuleFileNameW(NULL, modulename, MAX_PATH);
-	GetModuleFileNameW(NULL, fullmodulename, MAX_PATH);
+	GetModuleFileNameW(NULL, modulename, NTFS_MAX_PATH);
+	GetModuleFileNameW(NULL, fullmodulename, NTFS_MAX_PATH);
 	PathStripPathW(modulename);
 
 	try {
@@ -85,16 +85,16 @@ BOOL BlackListSystem(){
 
 BOOL BlackListInit(){
 	// First, the VMS blacklist system, then the main one
-	wchar_t modulename[MAX_PATH];
-	wchar_t bassmididrv[MAX_PATH];
-	wchar_t vmidisynthdll[MAX_PATH];
-	wchar_t vmidisynth2exe[MAX_PATH];
+	wchar_t modulename[NTFS_MAX_PATH];
+	wchar_t bassmididrv[NTFS_MAX_PATH];
+	wchar_t vmidisynthdll[NTFS_MAX_PATH];
+	wchar_t vmidisynth2exe[NTFS_MAX_PATH];
 
 	// Clears all the tchars
-	RtlSecureZeroMemory(modulename, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(bassmididrv, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(vmidisynthdll, sizeof(wchar_t) * MAX_PATH);
-	RtlSecureZeroMemory(vmidisynth2exe, sizeof(wchar_t) * MAX_PATH);
+	RtlSecureZeroMemory(modulename, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(bassmididrv, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(vmidisynthdll, sizeof(wchar_t) * NTFS_MAX_PATH);
+	RtlSecureZeroMemory(vmidisynth2exe, sizeof(wchar_t) * NTFS_MAX_PATH);
 
 	// Here we go
 #if defined(_WIN64)

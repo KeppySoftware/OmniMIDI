@@ -302,7 +302,7 @@ Retry:
 	// Clear the WCHAR, since it might contain garbage, 
 	// and print the template with PipeVal in it
 	// (Ex. "\\\\.\\pipe\\OmniMIDIDbg1")
-	ZeroMemory(PipeDes, MAX_PATH);
+	ZeroMemory(PipeDes, MAX_PATH * sizeof(WCHAR));
 	swprintf_s(PipeDes, MAX_PATH, PipeName, PipeVal);
 
 	// Now create the pipe
@@ -331,16 +331,16 @@ Retry:
 MMRESULT DebugResult(MMRESULT ErrorToDisplay) {
 	switch (ErrorToDisplay) {
 	case MIDIERR_NOTREADY:
-		MessageBox(NULL, L"OmniMIDI is not ready to accept the MIDIHDR!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		if (ManagedSettings.DebugMode) MessageBox(NULL, L"OmniMIDI is not ready to accept the MIDIHDR!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MIDIERR_NOTREADY", "OmniMIDI is not ready to accept the MIDIHDR!");
 	case MIDIERR_UNPREPARED:	
-		MessageBox(NULL, L"The MIDIHDR buffer hasn't been prepared yet!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		if (ManagedSettings.DebugMode) MessageBox(NULL, L"The MIDIHDR buffer hasn't been prepared yet!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MIDIERR_UNPREPARED", "The MIDIHDR buffer hasn't been prepared yet!");
 	case MIDIERR_STILLPLAYING:	
-		MessageBox(NULL, L"The MIDIHDR buffer is still being played!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		if (ManagedSettings.DebugMode) MessageBox(NULL, L"The MIDIHDR buffer is still being played!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MIDIERR_STILLPLAYING", "The MIDIHDR buffer is still being played!");
 	case MMSYSERR_INVALPARAM:
-		MessageBox(NULL, L"The pointer to the MIDIHDR is invalid!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		if (ManagedSettings.DebugMode) MessageBox(NULL, L"The pointer to the MIDIHDR is invalid!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 		PrintMessageToDebugLog("MMSYSERR_INVALPARAM", "The pointer to the MIDIHDR is invalid!");
 	}
 

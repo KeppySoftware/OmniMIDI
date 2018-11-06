@@ -229,7 +229,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 
 		// If the synthname length is less than 1, or if it's just a space, use the default name
 		if (wcslen(SynthNameW) < 1 || (wcslen(SynthNameW) == 1 && iswspace(SynthNameW[0]))) {
-			RtlSecureZeroMemory(SynthNameW, MAXPNAMELEN);
+			RtlSecureZeroMemory(SynthNameW, MAXPNAMELEN * sizeof(WCHAR));
 			wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 		}
 

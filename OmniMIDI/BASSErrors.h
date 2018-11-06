@@ -154,8 +154,8 @@ void basserrconsole(int color, LPCWSTR error, LPCWSTR desc) {
 }
 
 void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerror) {
-	TCHAR main[33354];
-	ZeroMemory(main, 33354);
+	TCHAR main[NTFS_MAX_PATH];
+	ZeroMemory(main, NTFS_MAX_PATH * sizeof(TCHAR));
 
 	lstrcat(main, engine);
 	lstrcat(main, L" encountered the following error: ");
@@ -164,8 +164,8 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 	basserrconsole(FOREGROUND_RED, ReturnBASSError(error), ReturnBASSError(error));
 
 	if (showerror) {
-		TCHAR title[MAX_PATH];
-		RtlSecureZeroMemory(title, MAX_PATH);
+		TCHAR title[NTFS_MAX_PATH];
+		ZeroMemory(title, MAX_PATH * sizeof(TCHAR));
 
 		std::wstring ernumb = std::to_wstring(error);
 
