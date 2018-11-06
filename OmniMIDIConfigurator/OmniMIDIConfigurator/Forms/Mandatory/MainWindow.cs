@@ -780,6 +780,8 @@ namespace OmniMIDIConfigurator
                     }
                 }
             }
+            SFListFunc.SaveList(CurrentList);
+            SFListFunc.TriggerReload(false);
         }
 
         private enum MoveDirection { Up = -1, Down = 1 };

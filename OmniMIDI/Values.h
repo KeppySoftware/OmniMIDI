@@ -8,6 +8,9 @@
 #define MIDI_IO_PACKED 0x00000000L			// Legacy mode, used by all MIDI apps
 #define MIDI_IO_COOKED 0x00000002L			// Stream mode, used by some apps (Such as Pinball 3D), NOT SUPPORTED
 
+// path
+#define NTFS_MAX_PATH 32767
+
 // Settings managed by client
 static BOOL AlreadyStartedOnce = FALSE;
 
@@ -112,7 +115,7 @@ static FLOAT *sndbf;						// AudToWAV
 struct SoundFontList
 {
 	BOOL EnableState;
-	TCHAR Path[MAX_PATH];
+	TCHAR Path[NTFS_MAX_PATH];
 	INT SourcePreset;
 	INT SourceBank;
 	INT DestinationPreset;

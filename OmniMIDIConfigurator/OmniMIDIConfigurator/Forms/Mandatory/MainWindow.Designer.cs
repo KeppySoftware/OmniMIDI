@@ -417,11 +417,11 @@
             // 
             // ExternalListImport
             // 
-            this.ExternalListImport.Filter = "Soundfont lists|*.txt;*.sflist;";
+            this.ExternalListImport.Filter = "Soundfont lists|*.sflist;*.omlist;*.txt;";
             // 
             // ExternalListExport
             // 
-            this.ExternalListExport.Filter = "Soundfont lists|*.txt;*.sflist;";
+            this.ExternalListExport.Filter = "Soundfont list|*.omlist;";
             // 
             // RightClickMenu
             // 
@@ -1873,32 +1873,37 @@
             // SoundFont
             // 
             this.SoundFont.Text = "SoundFont";
-            this.SoundFont.Width = 336;
+            this.SoundFont.Width = 419;
             // 
             // SrcPres
             // 
             this.SrcPres.Text = "SP";
+            this.SrcPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SrcPres.Width = 27;
             // 
             // SrcBank
             // 
             this.SrcBank.Text = "SB";
+            this.SrcBank.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SrcBank.Width = 27;
             // 
             // DesPres
             // 
             this.DesPres.Text = "DP";
+            this.DesPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.DesPres.Width = 30;
             // 
             // DesBank
             // 
             this.DesBank.Text = "DB";
+            this.DesBank.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.DesBank.Width = 28;
             // 
             // XGDrums
             // 
             this.XGDrums.Text = "XG";
-            this.XGDrums.Width = 29;
+            this.XGDrums.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.XGDrums.Width = 31;
             // 
             // SFFormat
             // 

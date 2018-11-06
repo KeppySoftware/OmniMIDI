@@ -96,7 +96,7 @@ namespace OmniMIDIConfigurator
 
         private void NoSleep_CheckedChanged(object sender, EventArgs e)
         {
-            Functions.SleepStates(Convert.ToInt32(NoSleep.Checked));
+            Functions.SleepStates(Convert.ToInt32(!NoSleep.Checked));
         }
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)

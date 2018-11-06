@@ -27,8 +27,6 @@ namespace OmniMIDIConfigurator
             DesBankVal.Value = 0;
             DesPresetVal.Value = 0;
 
-            MessageBox.Show(String.Format("{0} {1} {2} {3}", PresetValueReturn, BankValueReturn, DesPresetValueReturn, DesPresetValueReturn));
-
             if (IsEditingSF2)
             {
                 SrcBankVal.Minimum = -1;
