@@ -100,7 +100,7 @@
             this.DesBankVal.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.DesBankVal.Location = new System.Drawing.Point(79, 95);
             this.DesBankVal.Maximum = new decimal(new int[] {
-            127,
+            128,
             0,
             0,
             0});
@@ -160,9 +160,9 @@
             // SrcBankVal
             // 
             this.SrcBankVal.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.SrcBankVal.Location = new System.Drawing.Point(79, 69);
+            this.SrcBankVal.Location = new System.Drawing.Point(79, 70);
             this.SrcBankVal.Maximum = new decimal(new int[] {
-            127,
+            128,
             0,
             0,
             0});

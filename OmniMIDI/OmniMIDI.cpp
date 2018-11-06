@@ -55,6 +55,7 @@ typedef unsigned __int64 QWORD;
 #include <stdlib.h>
 #include <time.h>
 #include <vector>
+#include <algorithm>
 #include <windows.h>
 #include "Resource.h"
 #include "OmniMIDI.h"

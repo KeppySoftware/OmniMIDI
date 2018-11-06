@@ -41,14 +41,14 @@ static BOOL FontLoader(const TCHAR * in_path) {
 			!_wcsicmp(Extension, _T(".sfz")))
 		{
 			SoundFontList TempItem;
-			memcpy(TempItem.Path, in_path, sizeof(in_path));
+			ZeroMemory(TempItem.Path, sizeof(TempItem.Path));
+			wcsncpy(TempItem.Path, in_path, NTFS_MAX_PATH);
 			TempItem.SourcePreset = -1;
 			TempItem.SourceBank = -1;
 			TempItem.DestinationPreset = -1;
 			TempItem.DestinationBank = 0;
-			TempItem.XGBankMode = FALSE;
 
-			HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, (TempItem.XGBankMode ? BASS_MIDI_FONT_XGDRUMS : 0) | BASS_UNICODE);
+			HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, BASS_UNICODE);
 			if (!SF) return FALSE;
 
 			BASS_MIDI_FONTEX SFConf = { SF, TempItem.SourcePreset, TempItem.SourceBank, TempItem.DestinationPreset, TempItem.DestinationBank, 0 };
@@ -66,9 +66,9 @@ static BOOL FontLoader(const TCHAR * in_path) {
 			std::wifstream SFList(in_path);
 
 			if (SFList) {
+				SoundFontList TempSF;
 				BOOL AlreadyInitialized = FALSE;
 
-				SoundFontList TempSF;
 				for (std::wstring TempLine; std::getline(SFList, TempLine);)
 				{
 					if (TempLine.find(L"sf.start") == 0)
@@ -170,14 +170,16 @@ static BOOL FontLoader(const TCHAR * in_path) {
 					}
 					else continue;
 				}
+				SFList.close();
+
 				if (AlreadyInitialized) {
 					MessageBox(NULL, 
 						L"An error has occurred while loading the SoundFont list. It might be invalid or corrupted.\nThe SoundFonts will not be loaded to memory\nPress OK to continue.", 
 						L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 					return FALSE;
 				}
-				SFList.close();
 			}
+			else return FALSE;
 
 			for (auto obj = TempSoundFonts.begin(); obj != TempSoundFonts.end(); ++obj)
 			{
@@ -214,6 +216,10 @@ static BOOL FontLoader(const TCHAR * in_path) {
 					MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
 				}
 			}
+
+			std::reverse(presetList.begin(), presetList.end());
+			BASS_MIDI_StreamSetFonts(OMStream, &presetList[0], (unsigned int)presetList.size() | BASS_MIDI_FONT_EX);
+
 			return TRUE;
 		}
 		else if (!_wcsicmp(Extension, _T(".sflist"))) {
@@ -245,13 +251,6 @@ void LoadFonts(const TCHAR * name)
 					FreeFonts();
 					return;
 				}
-
-				std::vector< BASS_MIDI_FONTEX > fonts;
-				for (unsigned long i = 0, j = presetList.size(); i < j; ++i)
-				{
-					fonts.push_back(presetList[j - i - 1]);
-				}
-				BASS_MIDI_StreamSetFonts(OMStream, &fonts[0], (unsigned int)fonts.size() | BASS_MIDI_FONT_EX);
 			}
 		}
 	}
