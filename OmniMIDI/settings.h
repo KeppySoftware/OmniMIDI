@@ -771,7 +771,7 @@ void FillContentDebug(
 
 	PipeContent += "OMDebugInfo";
 	PipeContent += "\nCurrentApp = ";
-	PipeContent += modulename;
+	PipeContent += AppPath;
 	PipeContent += "\nBitApp = ";
 	PipeContent += bitapp;
 

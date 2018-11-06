@@ -165,7 +165,7 @@ namespace OmniMIDIConfigurator
                                     FileInfo file = new FileInfo(SFPath);
                                     SF = new ListViewItem(new[] {
                                         SFPath,
-                                        SourcePreset.ToString(), SourceBank.ToString(), DestinationPreset.ToString(), DestinationBank.ToString(),
+                                        SourceBank.ToString(), SourcePreset.ToString(), DestinationBank.ToString(), DestinationPreset.ToString(),
                                         (XGDrumsetMode ? "Yes" : "No"),
                                         ReturnSoundFontFormat(Path.GetExtension(SFPath)),
                                         ReturnSoundFontSize(SFPath, Path.GetExtension(SFPath), file.Length)
@@ -307,7 +307,7 @@ namespace OmniMIDIConfigurator
                             FileInfo file = new FileInfo(Soundfonts[i]);
                             ListViewItem SF = new ListViewItem(new[] {
                                         Soundfonts[i],
-                                        "-1", "-1", "-1", "0", "No",
+                                        "-1", "-1", "0", "-1", "No",
                                         ReturnSoundFontFormat(Path.GetExtension(Soundfonts[i])),
                                         ReturnSoundFontSize(Soundfonts[i], Path.GetExtension(Soundfonts[i]), file.Length)
                                     });
@@ -412,7 +412,7 @@ namespace OmniMIDIConfigurator
                                 FileInfo file = new FileInfo(SFPath);
                                 SF = new ListViewItem(new[] {
                                         SFPath,
-                                        SourcePreset.ToString(), SourceBank.ToString(), DestinationPreset.ToString(), DestinationBank.ToString(),
+                                        SourceBank.ToString(), SourcePreset.ToString(), DestinationBank.ToString(), DestinationPreset.ToString(),
                                         (XGDrumsetMode ? "Yes" : "No"),
                                         ReturnSoundFontFormat(Path.GetExtension(SFPath)),
                                         ReturnSoundFontSize(SFPath, Path.GetExtension(SFPath), file.Length)

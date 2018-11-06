@@ -736,10 +736,10 @@ namespace OmniMIDIConfigurator
                     var result = form.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        item.SubItems[1].Text = form.PresetValueReturn.ToString();
-                        item.SubItems[2].Text = form.BankValueReturn.ToString();
-                        item.SubItems[3].Text = form.DesPresetValueReturn.ToString();
-                        item.SubItems[4].Text = form.DesBankValueReturn.ToString();
+                        item.SubItems[1].Text = form.BankValueReturn.ToString();
+                        item.SubItems[2].Text = form.PresetValueReturn.ToString();
+                        item.SubItems[3].Text = form.DesBankValueReturn.ToString();
+                        item.SubItems[4].Text = form.DesPresetValueReturn.ToString();
                         item.SubItems[5].Text = form.XGModeC ? "Yes" : "No";
                         EditedOne = true;
                     }
@@ -930,7 +930,7 @@ namespace OmniMIDIConfigurator
                                         FileInfo file = new FileInfo(SFPath);
                                         SF = new ListViewItem(new[] {
                                         SFPath,
-                                        SourcePreset.ToString(), SourceBank.ToString(), DestinationPreset.ToString(), DestinationBank.ToString(),
+                                        SourceBank.ToString(), SourcePreset.ToString(), DestinationBank.ToString(), DestinationPreset.ToString(),
                                         (XGDrumsetMode ? "Yes" : "No"),
                                         SFListFunc.ReturnSoundFontFormat(Path.GetExtension(SFPath)),
                                         SFListFunc.ReturnSoundFontSize(SFPath, Path.GetExtension(SFPath), file.Length)
@@ -1008,7 +1008,7 @@ namespace OmniMIDIConfigurator
 
                                             SF = new ListViewItem(new[] {
                                                 SFListFunc.StripSFZValues(line),
-                                                IsSFZ, IsSFZ, IsSFZ, "0", "No",
+                                                IsSFZ, IsSFZ, "0", IsSFZ, "No",
                                                 SFListFunc.ReturnSoundFontFormat(Path.GetExtension(SFListFunc.StripSFZValues(line))),
                                                 SFListFunc.ReturnSoundFontSize(SFListFunc.StripSFZValues(line), Path.GetExtension(SFListFunc.StripSFZValues(line)), file.Length)
                                             });
@@ -2151,7 +2151,6 @@ namespace OmniMIDIConfigurator
             Functions.SetAssociation();
         }
 
-
         bool alreadydone = false;
         private void VolumeCheck_Tick(object sender, EventArgs e)
         {
@@ -2217,7 +2216,6 @@ namespace OmniMIDIConfigurator
                 }
             }
             catch { }
-            System.Threading.Thread.Sleep(1);
         }
 
         int paintReps = 0;
@@ -2300,7 +2298,6 @@ namespace OmniMIDIConfigurator
 
             using (var fs = new FileStream(DebugListToAnalyze, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var sr = new StreamReader(fs, Encoding.Default)) DebugLogShow.Text = sr.ReadToEnd();
-            Thread.Sleep(10);
 
             DebugLogAnalyze.RunWorkerAsync();
         }

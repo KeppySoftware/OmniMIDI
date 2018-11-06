@@ -9,18 +9,28 @@ void Pointer(LPCWSTR Msg) {
 	MessageBoxW(NULL, Msg, L"Debug pointer", MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
 }
 
-void AppName() {
+BOOL InfoAlreadyGot = FALSE;
+void GetAppName() {
 	try {
-		ZeroMemory(modulename, MAX_PATH * sizeof(char));
-		ZeroMemory(bitapp, MAX_PATH * sizeof(char));
-		GetModuleFileNameExA(GetCurrentProcess(), NULL, modulename, MAX_PATH);
-		GetModuleFileNameExW(GetCurrentProcess(), NULL, modulenameW, MAX_PATH);
-		modulenameWp = PathFindFileName(modulenameW);
+		if (!InfoAlreadyGot)
+		{
+			ZeroMemory(AppPath, sizeof(AppPath));
+			ZeroMemory(AppPathW, sizeof(AppPathW));
+			GetModuleFileNameW(NULL, AppPathW, NTFS_MAX_PATH);
+			wcstombs(AppPath, AppPathW, wcslen(AppPathW) + 1);
+
+			TCHAR * TempPoint = PathFindFileName(AppNameW);
+			wcsncpy(AppNameW, TempPoint, MAX_PATH);
+			wcstombs(AppName, AppNameW, wcslen(AppNameW) + 1);
+
 #if defined(_WIN64)
-		strcpy(bitapp, "64-bit");
+			strcpy(bitapp, "64-bit");
 #elif defined(_WIN32)
-		strcpy(bitapp, "32-bit");
+			strcpy(bitapp, "32-bit");
 #endif
+
+			InfoAlreadyGot = TRUE;
+		}
 	}
 	catch (...) {
 		CrashMessage("AppAnalysis");
@@ -33,7 +43,7 @@ void CreateConsole() {
 		Beep(440, 100);
 
 		// Create file and start console output
-		AppName();
+		GetAppName();
 		TCHAR installpath[MAX_PATH];
 		TCHAR pathfortext[MAX_PATH];
 		TCHAR CurrentTime[MAX_PATH];
@@ -48,7 +58,7 @@ void CreateConsole() {
 		CreateDirectory(pathfortext, NULL);
 
 		// Append the app's filename to the output file's path
-		lstrcat(pathfortext, modulenameWp);
+		lstrcat(pathfortext, AppNameW);
 
 		// Parse current time, and append it
 		struct tm *sTm;
@@ -302,7 +312,7 @@ Retry:
 	// Clear the WCHAR, since it might contain garbage, 
 	// and print the template with PipeVal in it
 	// (Ex. "\\\\.\\pipe\\OmniMIDIDbg1")
-	ZeroMemory(PipeDes, MAX_PATH * sizeof(WCHAR));
+	ZeroMemory(PipeDes, sizeof(PipeDes));
 	swprintf_s(PipeDes, MAX_PATH, PipeName, PipeVal);
 
 	// Now create the pipe

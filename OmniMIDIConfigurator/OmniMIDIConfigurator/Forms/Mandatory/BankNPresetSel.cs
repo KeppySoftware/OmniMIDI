@@ -43,10 +43,10 @@ namespace OmniMIDIConfigurator
 
             if (IsEditingSoundfont) 
             {
-                SrcPresetVal.Value = SettingsArray[0];
-                SrcBankVal.Value = SettingsArray[1];
-                DesPresetVal.Value = SettingsArray[2];
-                DesBankVal.Value = SettingsArray[3];
+                SrcBankVal.Value = SettingsArray[0];
+                SrcPresetVal.Value = SettingsArray[1];
+                DesBankVal.Value = SettingsArray[2];
+                DesPresetVal.Value = SettingsArray[3];
                 XGMode.Checked = Convert.ToBoolean(SettingsArray[4]);
             }
         }

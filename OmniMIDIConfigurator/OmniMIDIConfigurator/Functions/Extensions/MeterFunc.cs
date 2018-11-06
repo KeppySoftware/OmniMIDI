@@ -11,107 +11,16 @@ namespace OmniMIDIConfigurator
     {
         public static void ChangeMeter(int channel, int volume)
         {
-            // For normal meter
-            if (volume == 0)
-            {
-                TurnOnLEDs(channel, 0);
-            }
-            else if (volume > 0 && volume <= 1489)
-            {
-                TurnOnLEDs(channel, 1);
-            }
-            else if (volume >= 1490 && volume <= 2979)
-            {
-                TurnOnLEDs(channel, 2);
-            }
-            else if (volume >= 2980 && volume <= 4469)
-            {
-                TurnOnLEDs(channel, 3);
-            }
-            else if (volume >= 4470 && volume <= 5959)
-            {
-                TurnOnLEDs(channel, 4);
-            }
-            else if (volume >= 5960 && volume <= 7449)
-            {
-                TurnOnLEDs(channel, 5);
-            }
-            else if (volume >= 7450 && volume <= 8939)
-            {
-                TurnOnLEDs(channel, 6);
-            }
-            else if (volume >= 8940 && volume <= 10429)
-            {
-                TurnOnLEDs(channel, 7);
-            }
-            else if (volume >= 10430 && volume <= 11919)
-            {
-                TurnOnLEDs(channel, 8);
-            }
-            else if (volume >= 11920 && volume <= 13409)
-            {
-                TurnOnLEDs(channel, 9);
-            }
-            else if (volume >= 13410 && volume <= 14899)
-            {
-                TurnOnLEDs(channel, 10);
-            }
-            else if (volume >= 14900 && volume <= 16389)
-            {
-                TurnOnLEDs(channel, 11);
-            }
-            else if (volume >= 16390 && volume <= 17879)
-            {
-                TurnOnLEDs(channel, 12);
-            }
-            else if (volume >= 17880 && volume <= 19369)
-            {
-                TurnOnLEDs(channel, 13);
-            }
-            else if (volume >= 19370 && volume <= 20859)
-            {
-                TurnOnLEDs(channel, 14);
-            }
-            else if (volume >= 20860 && volume <= 22349)
-            {
-                TurnOnLEDs(channel, 15);
-            }
-            else if (volume >= 22350 && volume <= 23839)
-            {
-                TurnOnLEDs(channel, 16);
-            }
-            else if (volume >= 23840 && volume <= 25329)
-            {
-                TurnOnLEDs(channel, 17);
-            }
-            else if (volume >= 25530 && volume <= 26819)
-            {
-                TurnOnLEDs(channel, 18);
-            }
-            else if (volume >= 26820 && volume <= 28309)
-            {
-                TurnOnLEDs(channel, 19);
-            }
-            else if (volume >= 28310 && volume <= 29799)
-            {
-                TurnOnLEDs(channel, 20);
-            }
-            else if (volume >= 29800 && volume <= 31289)
-            {
-                TurnOnLEDs(channel, 21);
-            }
-            else if (volume >= 31290)
-            {
-                TurnOnLEDs(channel, 22);
-            }
+            TurnOnLEDs(channel, (int)(22 + ((volume - 32768) * (double)(0 - 22) / (0 - 32768))));
         }
 
         public static void TurnOnLEDs(int channel, int number)
         {
             bool[] values = new bool[22];
 
-            for (int i = 0; i <= number; i++)
-                values[i] = true;
+            for (int i = 1; i <= 22; i++)
+                if (i < number || i == number)
+                    values[i - 1] = true;
 
             switch (channel)
             {

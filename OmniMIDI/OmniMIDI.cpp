@@ -224,12 +224,12 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		else Technology = SynthNamesTypes[SynthType];
 
 		// If the debug mode is enabled, and the process isn't banned, create the debug log
-		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem())) 
+		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | BlackListInit()))
 			CreateConsole();
 
 		// If the synthname length is less than 1, or if it's just a space, use the default name
 		if (wcslen(SynthNameW) < 1 || (wcslen(SynthNameW) == 1 && iswspace(SynthNameW[0]))) {
-			RtlSecureZeroMemory(SynthNameW, MAXPNAMELEN * sizeof(WCHAR));
+			RtlSecureZeroMemory(SynthNameW, sizeof(SynthNameW));
 			wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 		}
 
@@ -240,7 +240,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 
 		// Prepare the caps item
 		if (!MIDICaps.wMid) {
-			memcpy(MIDICaps.szPname, SynthNameW, sizeof(SynthNameW));
+			wcsncpy(MIDICaps.szPname, SynthNameW, sizeof(SynthNameW));
 			MIDICaps.ManufacturerGuid = OMCLSID;
 			MIDICaps.NameGuid = OMCLSID;
 			MIDICaps.ProductGuid = OMCLSID;
@@ -265,7 +265,6 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 }
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
-	MIDIHDR* IIMidiHdr;
 	MMRESULT RetVal = MMSYSERR_NOERROR;
 
 	switch (uMsg) {
@@ -312,7 +311,9 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return UnprepareLongData((MIDIHDR*)dwParam1);
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO
-		return BlackListInit();
+		RetVal = BlackListInit();
+
+		return RetVal;
 	case MODM_GETDEVCAPS:
 		// Return OM's caps to the app
 		return modGetCaps((PVOID)dwParam1, (DWORD)dwParam2);

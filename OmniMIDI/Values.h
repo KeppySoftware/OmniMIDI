@@ -95,9 +95,10 @@ static Thread HealthThread, ATThread, EPThread, DThread;
 static HINSTANCE hinst = NULL;							// main DLL handle
 static HINSTANCE ntdll = NULL;							// ?
 
-static CHAR modulename[MAX_PATH];		// debug info
-static TCHAR modulenameW[MAX_PATH];		// debug info
-static TCHAR * modulenameWp;			// debug info
+static CHAR AppPath[NTFS_MAX_PATH];		// debug info
+static TCHAR AppPathW[NTFS_MAX_PATH];	// debug info
+static CHAR AppName[MAX_PATH];		// debug info
+static TCHAR AppNameW[MAX_PATH];		// debug info
 static CHAR bitapp[MAX_PATH];			// debug info
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
