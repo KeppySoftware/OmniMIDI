@@ -16,10 +16,13 @@ void GetAppName() {
 		{
 			ZeroMemory(AppPath, sizeof(AppPath));
 			ZeroMemory(AppPathW, sizeof(AppPathW));
+			ZeroMemory(AppName, sizeof(AppName));
+			ZeroMemory(AppNameW, sizeof(AppNameW));
+
 			GetModuleFileNameW(NULL, AppPathW, NTFS_MAX_PATH);
 			wcstombs(AppPath, AppPathW, wcslen(AppPathW) + 1);
 
-			TCHAR * TempPoint = PathFindFileName(AppNameW);
+			TCHAR * TempPoint = PathFindFileName(AppPathW);
 			wcsncpy(AppNameW, TempPoint, MAX_PATH);
 			wcstombs(AppName, AppNameW, wcslen(AppNameW) + 1);
 

@@ -201,6 +201,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		static MIDIOUTCAPS2 MIDICaps = { 0 };
 		
 		// Initialize values
+		wchar_t SysDir32[MAX_PATH];
 		WORD maximumvoices = 0xFFFF;
 		WORD maximumnotes = 0xFFFF;
 		DWORD CapsSupport = MIDICAPS_VOLUME;
@@ -224,7 +225,10 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		else Technology = SynthNamesTypes[SynthType];
 
 		// If the debug mode is enabled, and the process isn't banned, create the debug log
-		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | BlackListInit()))
+		RtlZeroMemory(SysDir32, sizeof(SysDir32));
+		SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, SysDir32);
+
+		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem(SysDir32)))
 			CreateConsole();
 
 		// If the synthname length is less than 1, or if it's just a space, use the default name
@@ -311,9 +315,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return UnprepareLongData((MIDIHDR*)dwParam1);
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO
-		RetVal = BlackListInit();
-
-		return RetVal;
+		return BlackListInit();
 	case MODM_GETDEVCAPS:
 		// Return OM's caps to the app
 		return modGetCaps((PVOID)dwParam1, (DWORD)dwParam2);

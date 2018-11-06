@@ -266,18 +266,12 @@ MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
-	try {
-		// Send the data directly to BASSMIDI, bypassing the buffer altogether
-		if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
-			SendToBASSMIDI(dwMsg);
-			return MMSYSERR_NOERROR;
-		}
-		return DebugResult(MIDIERR_NOTREADY);
+	// Send the data directly to BASSMIDI, bypassing the buffer altogether
+	if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
+		SendToBASSMIDI(dwMsg);
+		return MMSYSERR_NOERROR;
 	}
-	catch (...) {
-		// Something died, invalid parameter!
-		return DebugResult(MMSYSERR_INVALPARAM);
-	}
+	return DebugResult(MIDIERR_NOTREADY);
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {

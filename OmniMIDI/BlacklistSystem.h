@@ -75,7 +75,7 @@ BOOL BlackListSystem(TCHAR * SysDir32){
 	}
 }
 
-BOOL BlackListInit(){
+BOOL BlackListInit() {
 	// First, the VMS blacklist system, then the main one
 	std::wstring BASSMIDIDrv;
 	std::wstring VMSDLL;

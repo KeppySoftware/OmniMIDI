@@ -547,10 +547,10 @@ namespace OmniMIDIConfigurator
                         sw.WriteLine("sf.start");
                         sw.WriteLine(String.Format("sf.path = {0}", item.Text));
                         sw.WriteLine(String.Format("sf.enabled = {0}", (item.ForeColor == SFEnabled) ? "1" : "0"));
-                        sw.WriteLine(String.Format("sf.srcp = {0}", item.SubItems[1].Text));
-                        sw.WriteLine(String.Format("sf.srcb = {0}", item.SubItems[2].Text));
-                        sw.WriteLine(String.Format("sf.desp = {0}", item.SubItems[3].Text));
-                        sw.WriteLine(String.Format("sf.desb = {0}", item.SubItems[4].Text));
+                        sw.WriteLine(String.Format("sf.srcb = {0}", item.SubItems[1].Text));
+                        sw.WriteLine(String.Format("sf.srcp = {0}", item.SubItems[2].Text));
+                        sw.WriteLine(String.Format("sf.desb = {0}", item.SubItems[3].Text));
+                        sw.WriteLine(String.Format("sf.desp = {0}", item.SubItems[4].Text));
                         sw.WriteLine(String.Format("sf.xgdrums = {0}", (item.SubItems[5].Text.Equals("Yes")) ? "1" : "0"));
                         sw.WriteLine("sf.end\n");
                         SFCount++;
