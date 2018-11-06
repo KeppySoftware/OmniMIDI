@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Management;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace OmniMIDIMixerWindow
 {
@@ -21,8 +22,8 @@ namespace OmniMIDIMixerWindow
         public extern static Int32 SetWindowTheme(IntPtr hWnd,
               String textSubAppName, String textSubIdList);
 
-        public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "cha" };
-        public static int[] RegValInt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public static string[] RegValName = { "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16" };
+        public static int[] RegValInt = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
 
         public OmniMIDIMixerWindow(string[] args)
         {
@@ -46,46 +47,30 @@ namespace OmniMIDIMixerWindow
             }
         }
 
+        public int FindPeakElement(int[] elements)
+        {
+            int mid = 0 + (15 - 0) / 2;
+
+            // Compare middle element with its neighbours (if neighbours exist)
+            if ((mid == 0 || elements[mid - 1] <= elements[mid]) && (mid == elements.Length - 1 || elements[mid + 1] <= elements[mid]))
+                return mid;
+
+            if (mid > 0 && elements[mid - 1] > elements[mid])
+                return FindPeakElement(elements);
+
+            return FindPeakElement(elements);
+        }
+
         private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CH1VOL.Value = 100;
-            CH2VOL.Value = 100;
-            CH3VOL.Value = 100;
-            CH4VOL.Value = 100;
-            CH5VOL.Value = 100;
-            CH6VOL.Value = 100;
-            CH7VOL.Value = 100;
-            CH8VOL.Value = 100;
-            CH9VOL.Value = 100;
-            CH10VOL.Value = 100;
-            CH11VOL.Value = 100;
-            CH12VOL.Value = 100;
-            CH13VOL.Value = 100;
-            CH14VOL.Value = 100;
-            CH15VOL.Value = 100;
-            CH16VOL.Value = 100;
             MainVol.Value = 100;
+            MainVol_Scroll(sender, e);
         }
 
         private void muteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CH1VOL.Value = 0;
-            CH2VOL.Value = 0;
-            CH3VOL.Value = 0;
-            CH4VOL.Value = 0;
-            CH5VOL.Value = 0;
-            CH6VOL.Value = 0;
-            CH7VOL.Value = 0;
-            CH8VOL.Value = 0;
-            CH9VOL.Value = 0;
-            CH10VOL.Value = 0;
-            CH11VOL.Value = 0;
-            CH12VOL.Value = 0;
-            CH13VOL.Value = 0;
-            CH14VOL.Value = 0;
-            CH15VOL.Value = 0;
-            CH16VOL.Value = 0;
             MainVol.Value = 0;
+            MainVol_Scroll(sender, e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -93,7 +78,7 @@ namespace OmniMIDIMixerWindow
             Close();
         }
 
-        void CloseMixer(object sender, CancelEventArgs e)
+        private void CloseMixer(object sender, CancelEventArgs e)
         {
             Close();
         }
@@ -207,7 +192,7 @@ namespace OmniMIDIMixerWindow
                     return;
                 }
 
-                for (int i = 0; i <= 16; ++i)
+                for (int i = 0; i <= 15; ++i)
                 {
                     RegValInt[i] = Convert.ToInt32(Channels.GetValue(RegValName[i], 100));
                     if (RegValInt[i] > 100)
@@ -230,7 +215,7 @@ namespace OmniMIDIMixerWindow
                 CH14VOL.Value = RegValInt[13];
                 CH15VOL.Value = RegValInt[14];
                 CH16VOL.Value = RegValInt[15];
-                MainVol.Value = RegValInt[16];
+                MainVol.Value = RegValInt.Max();
 
                 if (Convert.ToInt32(Settings.GetValue("VolumeMonitor")) == 1)
                 {

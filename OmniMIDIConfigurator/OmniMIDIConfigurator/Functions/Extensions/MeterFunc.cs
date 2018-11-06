@@ -1,83 +1,14 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace OmniMIDIConfigurator
 {
     class MeterFunc
     {
-        public static bool CheckIfDedicatedMixerIsRunning(bool isitstartup)
-        {
-            bool ok;
-            EventWaitHandle m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIMixerWindow", out ok);
-            if (!ok)
-            {
-                if (!isitstartup) MessageBox.Show("The dedicated mixer applet is already running!", "OmniMIDI - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            return !ok;
-        }
-
-        public static void LoadChannelValues()
-        {
-            try
-            {
-                if (OmniMIDIConfiguratorMain.Channels == null)
-                {
-                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI\\Channels");
-                    return;
-                }
-
-                if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("VolumeBoost")) == 1)
-                {
-                    MeterFunc.SetMaximum(200);
-                    for (int i = 0; i <= 16; ++i)
-                    {
-                        OmniMIDIConfiguratorMain.RegValInt[i] = Convert.ToInt32(OmniMIDIConfiguratorMain.Channels.GetValue(OmniMIDIConfiguratorMain.RegValName[i], 100));
-                        if (OmniMIDIConfiguratorMain.RegValInt[i] > 200)
-                            OmniMIDIConfiguratorMain.RegValInt[i] = 200;
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i <= 16; ++i)
-                    {
-                        OmniMIDIConfiguratorMain.RegValInt[i] = Convert.ToInt32(OmniMIDIConfiguratorMain.Channels.GetValue(OmniMIDIConfiguratorMain.RegValName[i], 100));
-                        if (OmniMIDIConfiguratorMain.RegValInt[i] > 100)
-                            OmniMIDIConfiguratorMain.RegValInt[i] = 100;
-                    }
-                }
-
-                OmniMIDIConfiguratorMain.Delegate.CH1VOL.Value = OmniMIDIConfiguratorMain.RegValInt[0];
-                OmniMIDIConfiguratorMain.Delegate.CH2VOL.Value = OmniMIDIConfiguratorMain.RegValInt[1];
-                OmniMIDIConfiguratorMain.Delegate.CH3VOL.Value = OmniMIDIConfiguratorMain.RegValInt[2];
-                OmniMIDIConfiguratorMain.Delegate.CH4VOL.Value = OmniMIDIConfiguratorMain.RegValInt[3];
-                OmniMIDIConfiguratorMain.Delegate.CH5VOL.Value = OmniMIDIConfiguratorMain.RegValInt[4];
-                OmniMIDIConfiguratorMain.Delegate.CH6VOL.Value = OmniMIDIConfiguratorMain.RegValInt[5];
-                OmniMIDIConfiguratorMain.Delegate.CH7VOL.Value = OmniMIDIConfiguratorMain.RegValInt[6];
-                OmniMIDIConfiguratorMain.Delegate.CH8VOL.Value = OmniMIDIConfiguratorMain.RegValInt[7];
-                OmniMIDIConfiguratorMain.Delegate.CH9VOL.Value = OmniMIDIConfiguratorMain.RegValInt[8];
-                OmniMIDIConfiguratorMain.Delegate.CH10VOL.Value = OmniMIDIConfiguratorMain.RegValInt[9];
-                OmniMIDIConfiguratorMain.Delegate.CH11VOL.Value = OmniMIDIConfiguratorMain.RegValInt[10];
-                OmniMIDIConfiguratorMain.Delegate.CH12VOL.Value = OmniMIDIConfiguratorMain.RegValInt[11];
-                OmniMIDIConfiguratorMain.Delegate.CH13VOL.Value = OmniMIDIConfiguratorMain.RegValInt[12];
-                OmniMIDIConfiguratorMain.Delegate.CH14VOL.Value = OmniMIDIConfiguratorMain.RegValInt[13];
-                OmniMIDIConfiguratorMain.Delegate.CH15VOL.Value = OmniMIDIConfiguratorMain.RegValInt[14];
-                OmniMIDIConfiguratorMain.Delegate.CH16VOL.Value = OmniMIDIConfiguratorMain.RegValInt[15];
-                OmniMIDIConfiguratorMain.Delegate.MainVol.Value = OmniMIDIConfiguratorMain.RegValInt[16];
-
-                OmniMIDIConfiguratorMain.Delegate.ChannelVolume.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Can not read settings from the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-        }
-
         public static void ChangeMeter(int channel, int volume)
         {
             // For normal meter
@@ -178,42 +109,13 @@ namespace OmniMIDIConfigurator
         public static void TurnOnLEDs(int channel, int number)
         {
             bool[] values = new bool[22];
-            for (int i = 1; i <= 22; i++)
+
+            for (int i = 0; i <= number; i++)
+                values[i] = true;
+
+            switch (channel)
             {
-                if (i < number || i == number)
-                {
-                    values[i - 1] = true;
-                }
-            }
-            if (channel == 0)
-            {
-                if (Properties.Settings.Default.ShowMixerUnder == true)
-                {
-                    OmniMIDIConfiguratorMain.Delegate.LV1.Visible = values[0];
-                    OmniMIDIConfiguratorMain.Delegate.LV2.Visible = values[1];
-                    OmniMIDIConfiguratorMain.Delegate.LV3.Visible = values[2];
-                    OmniMIDIConfiguratorMain.Delegate.LV4.Visible = values[3];
-                    OmniMIDIConfiguratorMain.Delegate.LV5.Visible = values[4];
-                    OmniMIDIConfiguratorMain.Delegate.LV6.Visible = values[5];
-                    OmniMIDIConfiguratorMain.Delegate.LV7.Visible = values[6];
-                    OmniMIDIConfiguratorMain.Delegate.LV8.Visible = values[7];
-                    OmniMIDIConfiguratorMain.Delegate.LV9.Visible = values[8];
-                    OmniMIDIConfiguratorMain.Delegate.LV10.Visible = values[9];
-                    OmniMIDIConfiguratorMain.Delegate.LV11.Visible = values[10];
-                    OmniMIDIConfiguratorMain.Delegate.LV12.Visible = values[11];
-                    OmniMIDIConfiguratorMain.Delegate.LV13.Visible = values[12];
-                    OmniMIDIConfiguratorMain.Delegate.LV14.Visible = values[13];
-                    OmniMIDIConfiguratorMain.Delegate.LV15.Visible = values[14];
-                    OmniMIDIConfiguratorMain.Delegate.LV16.Visible = values[15];
-                    OmniMIDIConfiguratorMain.Delegate.LV17.Visible = values[16];
-                    OmniMIDIConfiguratorMain.Delegate.LV18.Visible = values[17];
-                    OmniMIDIConfiguratorMain.Delegate.LV19.Visible = values[18];
-                    OmniMIDIConfiguratorMain.Delegate.LV20.Visible = values[19];
-                    OmniMIDIConfiguratorMain.Delegate.LV21.Visible = values[20];
-                    OmniMIDIConfiguratorMain.Delegate.LV22.Visible = values[21];
-                }
-                else
-                {
+                case 0:
                     OmniMIDIConfiguratorMain.Delegate.LV1S.Visible = values[0];
                     OmniMIDIConfiguratorMain.Delegate.LV2S.Visible = values[1];
                     OmniMIDIConfiguratorMain.Delegate.LV3S.Visible = values[2];
@@ -236,37 +138,8 @@ namespace OmniMIDIConfigurator
                     OmniMIDIConfiguratorMain.Delegate.LV20S.Visible = values[19];
                     OmniMIDIConfiguratorMain.Delegate.LV21S.Visible = values[20];
                     OmniMIDIConfiguratorMain.Delegate.LV22S.Visible = values[21];
-                }
-            }
-            else if (channel == 1)
-            {
-                if (Properties.Settings.Default.ShowMixerUnder == true)
-                {
-                    OmniMIDIConfiguratorMain.Delegate.RV1.Visible = values[0];
-                    OmniMIDIConfiguratorMain.Delegate.RV2.Visible = values[1];
-                    OmniMIDIConfiguratorMain.Delegate.RV3.Visible = values[2];
-                    OmniMIDIConfiguratorMain.Delegate.RV4.Visible = values[3];
-                    OmniMIDIConfiguratorMain.Delegate.RV5.Visible = values[4];
-                    OmniMIDIConfiguratorMain.Delegate.RV6.Visible = values[5];
-                    OmniMIDIConfiguratorMain.Delegate.RV7.Visible = values[6];
-                    OmniMIDIConfiguratorMain.Delegate.RV8.Visible = values[7];
-                    OmniMIDIConfiguratorMain.Delegate.RV9.Visible = values[8];
-                    OmniMIDIConfiguratorMain.Delegate.RV10.Visible = values[9];
-                    OmniMIDIConfiguratorMain.Delegate.RV11.Visible = values[10];
-                    OmniMIDIConfiguratorMain.Delegate.RV12.Visible = values[11];
-                    OmniMIDIConfiguratorMain.Delegate.RV13.Visible = values[12];
-                    OmniMIDIConfiguratorMain.Delegate.RV14.Visible = values[13];
-                    OmniMIDIConfiguratorMain.Delegate.RV15.Visible = values[14];
-                    OmniMIDIConfiguratorMain.Delegate.RV16.Visible = values[15];
-                    OmniMIDIConfiguratorMain.Delegate.RV17.Visible = values[16];
-                    OmniMIDIConfiguratorMain.Delegate.RV18.Visible = values[17];
-                    OmniMIDIConfiguratorMain.Delegate.RV19.Visible = values[18];
-                    OmniMIDIConfiguratorMain.Delegate.RV20.Visible = values[19];
-                    OmniMIDIConfiguratorMain.Delegate.RV21.Visible = values[20];
-                    OmniMIDIConfiguratorMain.Delegate.RV22.Visible = values[21];
-                }
-                else
-                {
+                    break;
+                case 1:
                     OmniMIDIConfiguratorMain.Delegate.RV1S.Visible = values[0];
                     OmniMIDIConfiguratorMain.Delegate.RV2S.Visible = values[1];
                     OmniMIDIConfiguratorMain.Delegate.RV3S.Visible = values[2];
@@ -289,7 +162,7 @@ namespace OmniMIDIConfigurator
                     OmniMIDIConfiguratorMain.Delegate.RV20S.Visible = values[19];
                     OmniMIDIConfiguratorMain.Delegate.RV21S.Visible = values[20];
                     OmniMIDIConfiguratorMain.Delegate.RV22S.Visible = values[21];
-                }
+                    break;
             }
         }
 
@@ -299,41 +172,11 @@ namespace OmniMIDIConfigurator
 
             // For peak indicator
             if (average == 0)
-            {
-                if (Properties.Settings.Default.ShowMixerUnder == true) OmniMIDIConfiguratorMain.Delegate.LED.BackColor = Color.Black;
-                else OmniMIDIConfiguratorMain.Delegate.LEDS.BackColor = Color.Black;
-            }
+                OmniMIDIConfiguratorMain.Delegate.LEDS.BackColor = Color.Black;
             else if (average > 0 && average <= 32767)
-            {
-                if (Properties.Settings.Default.ShowMixerUnder == true) OmniMIDIConfiguratorMain.Delegate.LED.BackColor = Color.Lime;
-                else OmniMIDIConfiguratorMain.Delegate.LEDS.BackColor = Color.Lime;
-            }
+                OmniMIDIConfiguratorMain.Delegate.LEDS.BackColor = Color.Lime;
             else if (average > 32767)
-            {
-                if (Properties.Settings.Default.ShowMixerUnder == true) OmniMIDIConfiguratorMain.Delegate.LED.BackColor = Color.Red;
-                else OmniMIDIConfiguratorMain.Delegate.LEDS.BackColor = Color.Red;
-            }
-        }
-
-        public static void SetMaximum(int maximum)
-        {
-            OmniMIDIConfiguratorMain.Delegate.CH1VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH2VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH3VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH4VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH5VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH6VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH7VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH8VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH9VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH10VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH11VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH12VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH13VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH14VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH15VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.CH16VOL.Maximum = maximum;
-            OmniMIDIConfiguratorMain.Delegate.MainVol.Maximum = maximum;
+                OmniMIDIConfiguratorMain.Delegate.LEDS.BackColor = Color.Red;
         }
     }
 }

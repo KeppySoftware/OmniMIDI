@@ -569,7 +569,6 @@ namespace OmniMIDIConfigurator
                 }
 
                 OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Checked = Properties.Settings.Default.ShowOutputLevel;
-                OmniMIDIConfiguratorMain.Delegate.ShowMixerTools.Checked = Properties.Settings.Default.ShowMixerUnder;
                 OmniMIDIConfiguratorMain.Delegate.MixerBox.Visible = Properties.Settings.Default.ShowOutputLevel;
                 OmniMIDIConfiguratorMain.Delegate.VolumeCheck.Enabled = Properties.Settings.Default.ShowOutputLevel;
                 OmniMIDIConfiguratorMain.Delegate.LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
@@ -577,51 +576,6 @@ namespace OmniMIDIConfigurator
 
                 OmniMIDIConfiguratorMain.Delegate.VolumeBoost.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("VolumeBoost", 0));
                 OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Maximum = OmniMIDIConfiguratorMain.Delegate.VolumeBoost.Checked ? 50000 : 10000;
-
-                if (Properties.Settings.Default.ShowMixerUnder)
-                {
-                    if (MeterFunc.CheckIfDedicatedMixerIsRunning(true))
-                    {
-                        OmniMIDIConfiguratorMain.Delegate.ClientSize = new Size(649, 442);
-                        OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Checked = true;
-                        OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Enabled = true;
-                        OmniMIDIConfiguratorMain.Delegate.ShowMixerTools.Checked = false;
-                        Properties.Settings.Default.ShowOutputLevel = true;
-                        Properties.Settings.Default.ShowMixerUnder = false;
-                        OmniMIDIConfiguratorMain.Delegate.MixerBox.Visible = true;
-                        OmniMIDIConfiguratorMain.Delegate.MixerPanel.Visible = false;
-                        OmniMIDIConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
-                        Properties.Settings.Default.Save();
-                    }
-                    else
-                    {
-                        MeterFunc.LoadChannelValues();
-                        OmniMIDIConfiguratorMain.Delegate.ClientSize = new Size(649, 630);
-                        OmniMIDIConfiguratorMain.SynthSettings.SetValue("VolumeMonitor", "1", RegistryValueKind.DWord);
-                        OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Checked = true;
-                        OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Enabled = false;
-                        OmniMIDIConfiguratorMain.Delegate.ShowMixerTools.Checked = true;
-                        OmniMIDIConfiguratorMain.Delegate.MixerBox.Visible = false;
-                        OmniMIDIConfiguratorMain.Delegate.MixerPanel.Visible = true;
-                        OmniMIDIConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
-                    }
-                }
-                else
-                {
-                    {
-                        OmniMIDIConfiguratorMain.Delegate.ClientSize = new Size(649, 442);
-                        OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Checked = true;
-                        OmniMIDIConfiguratorMain.Delegate.ShowOutLevel.Enabled = true;
-                        OmniMIDIConfiguratorMain.Delegate.ShowMixerTools.Checked = false;
-                        OmniMIDIConfiguratorMain.Delegate.MixerBox.Visible = true;
-                        OmniMIDIConfiguratorMain.Delegate.MixerPanel.Visible = false;
-                        OmniMIDIConfiguratorMain.Delegate.VolumeCheck.Enabled = true;
-                        Properties.Settings.Default.Save();
-
-                        thisform.Top = (Screen.PrimaryScreen.Bounds.Height - thisform.Height) / 2;
-                        thisform.Left = (Screen.PrimaryScreen.Bounds.Width - thisform.Width) / 2;
-                    }
-                }
 
                 OmniMIDIConfiguratorMain.Delegate.AutoLoad.Checked = Properties.Settings.Default.AutoLoadList;
                 OmniMIDIConfiguratorMain.Delegate.Frequency.Text = OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioFrequency", 44100).ToString();

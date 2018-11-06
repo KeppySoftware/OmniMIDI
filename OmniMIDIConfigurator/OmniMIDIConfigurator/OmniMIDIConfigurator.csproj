@@ -208,7 +208,6 @@
     <Compile Include="Forms\Mandatory\Advanced Settings\PreciseControlVol.designer.cs">
       <DependentUpon>PreciseControlVol.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\Extensions\MeterFunc.cs" />
     <Compile Include="Functions\Extensions\SFZInfo.cs" />
     <Compile Include="Functions\Telemetry\Telemetry.cs">
       <SubType>Form</SubType>
@@ -226,6 +225,7 @@
     <Compile Include="Functions\MenuButton\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Functions\Extensions\MeterFunc.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
