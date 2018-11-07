@@ -88,18 +88,11 @@ void CopyToClipboard(const std::string &s) {
 
 void LoadSoundfont(int whichsf){
 	try {
-		PrintMessageToDebugLog("LoadSoundFontFunc", "Freeing previous soundfont list...");
-		FreeFonts();
-
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
-		TCHAR config[MAX_PATH];
-		BASS_MIDI_FONT * mf;
-
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
 		RegSetValueEx(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
 
-		LoadFonts(sflistloadme[whichsf - 1]);
-		BASS_MIDI_StreamLoadSamples(OMStream);
+		FontLoader(sflistloadme[whichsf - 1]);
 
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
 	}

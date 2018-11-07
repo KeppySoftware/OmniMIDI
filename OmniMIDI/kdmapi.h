@@ -402,7 +402,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 VOID KDMAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-	else LoadFonts(Directory);
+	else FontLoader(Directory);
 }
 
 DebugInfo* KDMAPI GetDriverDebugInfo() {
