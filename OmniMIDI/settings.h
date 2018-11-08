@@ -25,16 +25,15 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 }
 
 void CloseRegistryKey(RegKey &hKey) {
-	LSTATUS Action = ERROR_SUCCESS;
-
-	// Close the key if it exists
-	if (hKey.Address != NULL) 
-		Action = RegFlushKey(hKey.Address);
+	// Try to flush the key
+	LSTATUS Action = RegFlushKey(hKey.Address);
+	// If the key can't be flushed, throw a crash
+	if (Action != ERROR_SUCCESS) CrashMessage("hKeyFlush");
 
 	// Try to close the key
-	if (hKey.Address != NULL) 
-		Action = RegCloseKey(hKey.Address);
-	else PrintMessageToDebugLog("CloseRegistryKey", "Registry key already closed.");
+	Action = RegCloseKey(hKey.Address);
+	// If the key can't be closed, throw a crash
+	if (Action != ERROR_SUCCESS) CrashMessage("hKeyClose");
 
 	// Everything is fine, mark the key as closed
 	hKey.Status = KEY_CLOSED;
@@ -77,16 +76,14 @@ long long TimeNow() {
 }
 
 void LoadSoundfont(int whichsf) {
-	wchar_t UserProfile[MAX_PATH];
-	wchar_t ListToLoad[MAX_PATH];
-
-	ZeroMemory(UserProfile, MAX_PATH);
-	ZeroMemory(ListToLoad, MAX_PATH);
+	DWORD CurrentList = (whichsf + 1);
+	wchar_t UserProfile[MAX_PATH] = { 0 };
+	wchar_t ListToLoad[MAX_PATH] = { 0 };
 
 	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, UserProfile)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
-		RegSetValueEx(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
+		RegSetValueEx(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&CurrentList, sizeof(CurrentList));
 
 		swprintf_s(ListToLoad, MAX_PATH, OMFileTemplate, UserProfile, L"lists", OMLetters[whichsf], L"omlist");
 		FontLoader(ListToLoad);
@@ -96,13 +93,9 @@ void LoadSoundfont(int whichsf) {
 }
 
 bool LoadSoundfontStartup() {
-	wchar_t UserProfile[MAX_PATH];
-	wchar_t CurrentAppList[MAX_PATH];
-	wchar_t CurrentString[MAX_PATH];
-
-	ZeroMemory(UserProfile, MAX_PATH);
-	ZeroMemory(CurrentAppList, MAX_PATH);
-	ZeroMemory(CurrentString, MAX_PATH);
+	wchar_t UserProfile[MAX_PATH] = { 0 };
+	wchar_t CurrentAppList[MAX_PATH] = { 0 };
+	wchar_t CurrentString[MAX_PATH] = { 0 };
 
 	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, UserProfile)) {
 		for (int i = 0; i <= 15; ++i) {
@@ -126,120 +119,103 @@ bool LoadSoundfontStartup() {
 	}
 }
 
-BOOL load_bassfuncs()
+void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * RequestedLib) 
 {
+	wchar_t DLLPath[MAX_PATH] = { 0 };
+
+	wcscat(DLLPath, InstallPath);
+	wcscat(DLLPath, RequestedLib);
+	if (!(*Target = LoadLibrary(DLLPath))) {
+		DLLLoadError(DLLPath);
+		exit(0);
+	}
+}
+
+BOOL LoadBASSFunctions()
+{
+	wchar_t InstallPath[MAX_PATH] = { 0 };
+
 	try {
-		TCHAR installpath[MAX_PATH] = { 0 };
+		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
+		{
+			PathRemoveFileSpec(InstallPath);
 
-		// Main DLLs
-		TCHAR bassencpath[MAX_PATH] = { 0 };
-		TCHAR bassasiopath[MAX_PATH] = { 0 };
-		TCHAR bassmidipath[MAX_PATH] = { 0 };
-		TCHAR basspath[MAX_PATH] = { 0 };
+			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
-		GetModuleFileName(hinst, installpath, MAX_PATH);
-		PathRemoveFileSpec(installpath);
+			LoadDriverModule(&bass, InstallPath, L"\\bass.dll");
+			LoadDriverModule(&bassmidi, InstallPath, L"\\bassmidi.dll");
+			LoadDriverModule(&bassenc, InstallPath, L"\\bassenc.dll");
+			LoadDriverModule(&bassasio, InstallPath, L"\\bassasio.dll");
 
-		PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
+			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
-		// BASS
-		lstrcat(basspath, installpath);
-		lstrcat(basspath, L"\\bass.dll");
-		if (!(bass = LoadLibrary(basspath))) {
-			DLLLoadError(basspath);
-			exit(0);
+			// Load all the functions into memory
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetFormat);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
+			LOADBASSASIOFUNCTION(BASS_ASIO_Free);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
+			LOADBASSASIOFUNCTION(BASS_ASIO_Init);
+			LOADBASSASIOFUNCTION(BASS_ASIO_SetDSD);
+			LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
+			LOADBASSASIOFUNCTION(BASS_ASIO_Start);
+			LOADBASSASIOFUNCTION(BASS_ASIO_Stop);
+			LOADBASSENCFUNCTION(BASS_Encode_Start);
+			LOADBASSENCFUNCTION(BASS_Encode_Stop);
+			LOADBASSFUNCTION(BASS_ChannelFlags);
+			LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+			LOADBASSFUNCTION(BASS_ChannelGetData);
+			LOADBASSFUNCTION(BASS_ChannelGetLevelEx);
+			LOADBASSFUNCTION(BASS_ChannelIsActive);
+			LOADBASSFUNCTION(BASS_ChannelPlay);
+			LOADBASSFUNCTION(BASS_ChannelRemoveFX);
+			LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
+			LOADBASSFUNCTION(BASS_ChannelSetAttribute);
+			LOADBASSFUNCTION(BASS_ChannelSetDevice);
+			LOADBASSFUNCTION(BASS_ChannelSetFX);
+			LOADBASSFUNCTION(BASS_ChannelSetSync);
+			LOADBASSFUNCTION(BASS_ChannelStop);
+			LOADBASSFUNCTION(BASS_ChannelUpdate);
+			LOADBASSFUNCTION(BASS_Update);
+			LOADBASSFUNCTION(BASS_ErrorGetCode);
+			LOADBASSFUNCTION(BASS_Free);
+			LOADBASSFUNCTION(BASS_Stop);
+			LOADBASSFUNCTION(BASS_GetDevice);
+			LOADBASSFUNCTION(BASS_GetDeviceInfo);
+			LOADBASSFUNCTION(BASS_GetInfo);
+			LOADBASSFUNCTION(BASS_Init);
+			LOADBASSFUNCTION(BASS_PluginLoad);
+			LOADBASSFUNCTION(BASS_SetConfig);
+			LOADBASSFUNCTION(BASS_SetDevice);
+			LOADBASSFUNCTION(BASS_SetVolume);
+			LOADBASSFUNCTION(BASS_StreamFree);
+			LOADBASSFUNCTION(BASS_FXSetParameters);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
+			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+			// LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFilter);		// Not needed
+
+			PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
+			return TRUE;
 		}
-
-		// BASSMIDI
-		lstrcat(bassmidipath, installpath);
-		lstrcat(bassmidipath, L"\\bassmidi.dll");
-		if (!(bassmidi = LoadLibrary(bassmidipath))) {
-			DLLLoadError(bassmidipath);
-			exit(0);
-		}
-
-		// BASSenc
-		lstrcat(bassencpath, installpath);
-		lstrcat(bassencpath, L"\\bassenc.dll");
-		if (!(bassenc = LoadLibrary(bassencpath))) {
-			DLLLoadError(bassencpath);
-			exit(0);
-		}
-
-		// BASSASIO
-		lstrcat(bassasiopath, installpath);
-		lstrcat(bassasiopath, L"\\bassasio.dll");
-		if (!(bassasio = LoadLibrary(bassasiopath))) {
-			DLLLoadError(bassasiopath);
-			exit(0);
-		}
-
-		PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
-
-		// Load all the functions into memory
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetFormat);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
-		LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
-		LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
-		LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
-		LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
-		LOADBASSASIOFUNCTION(BASS_ASIO_Free);
-		LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
-		LOADBASSASIOFUNCTION(BASS_ASIO_Init);
-		LOADBASSASIOFUNCTION(BASS_ASIO_SetDSD);
-		LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
-		LOADBASSASIOFUNCTION(BASS_ASIO_Start);
-		LOADBASSASIOFUNCTION(BASS_ASIO_Stop);
-		LOADBASSENCFUNCTION(BASS_Encode_Start);
-		LOADBASSENCFUNCTION(BASS_Encode_Stop);
-		LOADBASSFUNCTION(BASS_ChannelFlags);
-		LOADBASSFUNCTION(BASS_ChannelGetAttribute);
-		LOADBASSFUNCTION(BASS_ChannelGetData);
-		LOADBASSFUNCTION(BASS_ChannelGetLevelEx);
-		LOADBASSFUNCTION(BASS_ChannelIsActive);
-		LOADBASSFUNCTION(BASS_ChannelPlay);
-		LOADBASSFUNCTION(BASS_ChannelRemoveFX);
-		LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
-		LOADBASSFUNCTION(BASS_ChannelSetAttribute);
-		LOADBASSFUNCTION(BASS_ChannelSetDevice);
-		LOADBASSFUNCTION(BASS_ChannelSetFX);
-		LOADBASSFUNCTION(BASS_ChannelSetSync);
-		LOADBASSFUNCTION(BASS_ChannelStop);
-		LOADBASSFUNCTION(BASS_ChannelUpdate);
-		LOADBASSFUNCTION(BASS_Update);
-		LOADBASSFUNCTION(BASS_ErrorGetCode);
-		LOADBASSFUNCTION(BASS_Free);
-		LOADBASSFUNCTION(BASS_Stop);
-		LOADBASSFUNCTION(BASS_GetDevice);
-		LOADBASSFUNCTION(BASS_GetDeviceInfo);
-		LOADBASSFUNCTION(BASS_GetInfo);
-		LOADBASSFUNCTION(BASS_Init);
-		LOADBASSFUNCTION(BASS_PluginLoad);
-		LOADBASSFUNCTION(BASS_SetConfig);
-		LOADBASSFUNCTION(BASS_SetDevice);
-		LOADBASSFUNCTION(BASS_SetVolume);
-		LOADBASSFUNCTION(BASS_StreamFree);
-		LOADBASSFUNCTION(BASS_FXSetParameters);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
-		LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-		// LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFilter);		// Not needed
-
-		PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
-		return TRUE;
+		
+		return FALSE;
 	}
 	catch (...) {
 		CrashMessage("BASSLibLoad");
@@ -525,27 +501,9 @@ void LoadSettingsRT() {
 				stop_thread = TRUE;
 
 				// Check if "Hyper-playback" mode has been enabled
-				if (HyperMode) {
-
-					/* Not required in the real-time settings, but you can remove the comment if you want
-					// It's enabled, do some beeps to notify the user
-					Beep(510, 100);
-					Beep(640, 100);
-					Beep(760, 100);
-					Beep(1000, 100);
-					*/
-
-					// Assign the pointers to the specific hyper-playback functions
-					_PrsData = ParseDataHyper;
-					_PlayBufData = PlayBufferedDataHyper;
-					_PlayBufDataChk = PlayBufferedDataChunkHyper;
-				}
-				else {
-					// It's disabled, assign the pointers to the normal functions
-					_PrsData = ParseData;
-					_PlayBufData = PlayBufferedData;
-					_PlayBufDataChk = PlayBufferedDataChunk;
-				}
+				_PrsData = HyperMode ? ParseDataHyper : ParseData;
+				_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
+				_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
 
 				// Restart threads
 				stop_thread = FALSE;
@@ -591,8 +549,6 @@ void LoadSettingsRT() {
 }
 
 void LoadCustomInstruments() {
-	const wchar_t Pc[] = _T("pc%d");
-	const wchar_t Bc[] = _T("bc%d");
 	wchar_t TempPc[MAXPNAMELEN] = { 0 };
 	wchar_t TempBc[MAXPNAMELEN] = { 0 };
 
@@ -601,10 +557,8 @@ void LoadCustomInstruments() {
 
 		RegQueryValueEx(ChanOverride.Address, L"overrideinstruments", NULL, &dwType, (LPBYTE)&ManagedSettings.OverrideInstruments, &dwSize);
 		for (int i = 0; i <= 15; ++i) {
-			ZeroMemory(TempPc, MAXPNAMELEN);
-			ZeroMemory(TempBc, MAXPNAMELEN);
-			swprintf_s(TempPc, MAXPNAMELEN, Pc, i);
-			swprintf_s(TempBc, MAXPNAMELEN, Bc, i);
+			swprintf_s(TempPc, MAXPNAMELEN, L"pc%d", i + 1);
+			swprintf_s(TempBc, MAXPNAMELEN, L"bc%d", i + 1);
 
 			// Load the custom bank/instrument for each channel
 			RegQueryValueEx(ChanOverride.Address, TempPc, NULL, &dwType, (LPBYTE)&cpreset[i], &dwSize);
@@ -631,7 +585,6 @@ int AudioRenderingType(int value) {
 }
 
 void SFDynamicLoaderCheck() {
-	const wchar_t Re[] = _T("rel%d");
 	wchar_t TempRe[MAXPNAMELEN] = { 0 };
 
 	try {
@@ -640,15 +593,14 @@ void SFDynamicLoaderCheck() {
 
 		// Check each value, to see if they're true or not
 		for (int i = 0; i <= 15; ++i) {
-			ZeroMemory(TempRe, MAXPNAMELEN);
-			swprintf_s(TempRe, MAXPNAMELEN, Re, i);
+			swprintf_s(TempRe, MAXPNAMELEN, L"rel%d", i + 1);
 
 			RegQueryValueEx(SFDynamicLoader.Address, TempRe, NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
 
 			// Value "i" is true, reload the specific SoundFont list
-			if (rvalues[i] == 1) {
-				LoadSoundfont(i);
+			if (rvalues[i]) {
 				RegSetValueEx(SFDynamicLoader.Address, TempRe, 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
+				LoadSoundfont(i);
 			}
 		}
 	}
@@ -810,8 +762,6 @@ void SendDummyDataToPipe() {
 }
 
 void MixerCheck() {
-	const wchar_t Ch[] = _T("ch%d");
-	const wchar_t Ps[] = _T("ch%dpshift");
 	wchar_t TempCh[MAXPNAMELEN] = { 0 };
 	wchar_t TempPs[MAXPNAMELEN] = { 0 };
 
@@ -819,13 +769,12 @@ void MixerCheck() {
 		OpenRegistryKey(Channels, L"Software\\OmniMIDI\\Channels", TRUE);
 		for (int i = 0; i <= 15; ++i) 
 		{
-			ZeroMemory(TempCh, MAXPNAMELEN);
-			ZeroMemory(TempPs, MAXPNAMELEN);
-			swprintf_s(TempCh, MAXPNAMELEN, Ch, i);
-			swprintf_s(TempPs, MAXPNAMELEN, Ps, i);
+			swprintf_s(TempCh, MAXPNAMELEN, L"ch%d", i + 1);
+			swprintf_s(TempPs, MAXPNAMELEN, L"ch%upshift\0", i + 1);
 
 			RegQueryValueEx(Channels.Address, TempCh, NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
 			RegQueryValueEx(Channels.Address, TempPs, NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
+
 			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 		}
 	}

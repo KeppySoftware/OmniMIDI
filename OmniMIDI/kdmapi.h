@@ -64,7 +64,7 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 			}
 
 			// I SLEEP
-			NTSleep(-50000);
+			Sleep(30);
 		}
 
 		// Release the SoundFonts and the stream
@@ -109,7 +109,11 @@ void DoStartClient() {
 			LoadSettings(FALSE);
 
 			// Load the BASS functions
-			if (!BASSLoadedToMemory) BASSLoadedToMemory = load_bassfuncs();
+			if (!BASSLoadedToMemory) 
+				BASSLoadedToMemory = LoadBASSFunctions();
+
+			// If BASS is still unavailable, commit suicide
+			if (!BASSLoadedToMemory) CrashMessage("NoBASSFound");
 
 			// Initialize the BASS output device, and set up the streams
 			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
@@ -404,7 +408,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	}
 }
 
-VOID KDMAPI LoadCustomSoundFontsList(const TCHAR * Directory) {
+VOID KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	else FontLoader(Directory);

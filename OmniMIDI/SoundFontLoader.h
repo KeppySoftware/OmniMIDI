@@ -23,14 +23,14 @@ static void FreeFonts()
 	}
 }
 
-static void SoundFontError(TCHAR * Cause, TCHAR * Path) {
+static void SoundFontError(LPCWSTR Cause, LPCWSTR Path) {
 	TCHAR Message[NTFS_MAX_PATH];
 	RtlZeroMemory(Message, sizeof(Message));
 	wsprintf(Message, L"%s\n\nAffected SoundFont: %s\n\nSolution:\nThe soundfont might be of an unknown format, its functions might be unsupported by BASSMIDI, or it might not exist in memory.\nPlease check if the path to the soundfont is correct, and ultimately check if the functions (If using a SFZ soundfont) are supported by BASSMIDI.\nIf they're not, contact Ian Luck about the issue at Un4seen forums.\n\nThe soundfont will not be loaded. Press OK to continue the loading process.", Cause, Path);
 	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
 }
 
-static BOOL FontLoader(const TCHAR * in_path) {
+static BOOL FontLoader(LPCWSTR in_path) {
 	try {
 		if (in_path == NULL && *in_path == NULL) return FALSE;
 
