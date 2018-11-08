@@ -245,7 +245,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 
 		// Prepare the caps item
 		if (!MIDICaps.wMid) {
-			wcsncpy(MIDICaps.szPname, SynthNameW, sizeof(SynthNameW));
+			wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
 			MIDICaps.ManufacturerGuid = OMCLSID;
 			MIDICaps.NameGuid = OMCLSID;
 			MIDICaps.ProductGuid = OMCLSID;
@@ -307,6 +307,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return MMSYSERR_NOERROR;
 		*/
 
+		PrintMessageToDebugLog("MODM_STRMDATA", "MIDI_IO_COOKED not supported by OmniMIDI.");
 		return MMSYSERR_NOTSUPPORTED;
 	case MODM_PREPARE:
 		// Pass it to a KDMAPI function
@@ -322,55 +323,75 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return modGetCaps((PVOID)dwParam1, (DWORD)dwParam2);
 	case MODM_GETVOLUME:
 		// Tell the app the current output volume of the driver
+		PrintMessageToDebugLog("MODM_GETVOLUME", "The app wants to know the current output volume of the driver.");
 		*(LONG*)dwParam1 = (LONG)(sound_out_volume_float * 0xFFFF);
+		PrintMessageToDebugLog("MODM_GETVOLUME", "The app knows the volume now.");
 		return MMSYSERR_NOERROR;
 	case MODM_SETVOLUME: 
 		// The app isn't allowed to set the volume, everything's fine anyway
+		PrintMessageToDebugLog("MODM_SETVOLUME", "Dummy, the app has no control over the driver's audio output.");
 		return MMSYSERR_NOERROR;
 	case MODM_RESET:
 		// Stop all the current active voices
+		PrintMessageToDebugLog("MODM_RESET", "The app sent a reset command.");
 		ResetSynth(FALSE);
 		return MMSYSERR_NOERROR;
 	case MODM_STOP:
 		// Not needed for OmniMIDI
+		PrintMessageToDebugLog("MODM_STOP", "Dummy, MIDI_IO_COOKED not supported by OmniMIDI.");
 		return MMSYSERR_NOERROR;
 	case MODM_OPEN:
 		// The driver doesn't support stream mode
-		if ((DWORD)dwParam2 & MIDI_IO_COOKED) return MMSYSERR_NOTENABLED;
+		PrintMessageToDebugLog("MODM_OPEN", "The app requested the driver to initialize its audio stream.");
 
-		if (!AlreadyInitializedViaKDMAPI || !bass_initialized) {
+		if ((DWORD)dwParam2 & MIDI_IO_COOKED) {
+			PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED not supported by OmniMIDI.");
+			return MMSYSERR_NOTENABLED;
+		}
+
+		if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 			// Parse callback and instance
+			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
 			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
 			OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
 			OMFlags = HIWORD((DWORD)dwParam2);
 
 			// Open the driver
+			PrintMessageToDebugLog("MODM_OPEN", "Initializing driver...");
 			DoStartClient();
 
 			// Tell the app that the driver is ready
+			ResetSynth(TRUE);
+			PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app (If present)...");
 			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
-			return MMSYSERR_NOERROR;
+
+			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
 		}
+		else PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized. Cannot initialize it twice!");
 
-		// Reset synth
-		ResetSynth(TRUE);
-
-		// The driver is already being used through KDMAPI
-		return MMSYSERR_ALLOCATED;
+		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
+		PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
 		ResetSynth(TRUE);
 		if (CloseStreamMidiOutClose && !AlreadyInitializedViaKDMAPI) {
 			// The app wants us to close the driver
 			// Only close the stream if the user has chosen to
+			PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
 			if (bass_initialized) DoStopClient();			
 		}
+
+		PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app (If present)...");
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
+
+		PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Not needed for OmniMIDI
+		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACESIZE not supported by OmniMIDI.");
 		return MMSYSERR_NOTSUPPORTED;
 	case DRV_QUERYDEVICEINTERFACE:
 		// Not needed for OmniMIDI
+		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
 		return MMSYSERR_NOTSUPPORTED;
 	}
 }

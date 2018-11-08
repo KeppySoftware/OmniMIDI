@@ -300,43 +300,46 @@ std::string GetLastErrorAsString()
 	return message;
 }
 
-void StartDebugPipe(BOOL restart) {
+void StartDebugPipe(BOOL RestartingPipe) {
 	// Initialize the current pipe count and template
-	static unsigned int PipeVal = 0;
-	static const WCHAR PipeName[] = TEXT("\\\\.\\pipe\\OmniMIDIDbg%u");
-	WCHAR PipeDes[MAX_PATH];
+	unsigned int PipeVal = 1;
+	wchar_t PipeDes[MAX_PATH];
+
+	if (RestartingPipe) {
+		FlushFileBuffers(hPipe);
+		DisconnectNamedPipe(hPipe);
+		CloseHandle(hPipe);
+		hPipe = NULL;
+	}
 
 Retry:
-	// If this isn't a restart, add 1 to PipeVal
-	if (!restart) PipeVal++;
-	// Else, close the pipe and reopen it
-	else CloseHandle(hPipe);
+	while (!hPipe || hPipe == INVALID_HANDLE_VALUE) {
+		// Clear the WCHAR, since it might contain garbage, 
+		// and print the template with PipeVal in it
+		// (Ex. "\\\\.\\pipe\\OmniMIDIDbg1")
+		ZeroMemory(PipeDes, MAX_PATH);
+		swprintf_s(PipeDes, MAX_PATH, OMPipeTemplate, PipeVal);
 
-	// Clear the WCHAR, since it might contain garbage, 
-	// and print the template with PipeVal in it
-	// (Ex. "\\\\.\\pipe\\OmniMIDIDbg1")
-	ZeroMemory(PipeDes, sizeof(PipeDes));
-	swprintf_s(PipeDes, MAX_PATH, PipeName, PipeVal);
+		// Now create the pipe
+		hPipe = CreateNamedPipe(PipeDes,
+			PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE | FILE_FLAG_OVERLAPPED,
+			PIPE_TYPE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
+			PIPE_UNLIMITED_INSTANCES,
+			NTFS_MAX_PATH,
+			0,
+			NMPWAIT_USE_DEFAULT_WAIT,
+			NULL);
 
-	// Now create the pipe
-	hPipe = CreateNamedPipe(PipeDes,
-		PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE,
-		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
-		PIPE_UNLIMITED_INSTANCES,
-		1024,
-		1024,
-		NMPWAIT_USE_DEFAULT_WAIT,
-		NULL);
-
-	// Check if the pipe failed to be initialized
-	if (hPipe == INVALID_HANDLE_VALUE)
-	{
-		// It did. If the pipe value isn't above the maximum instances, try again
-		if (PipeVal <= PIPE_UNLIMITED_INSTANCES) goto Retry;
-		// Else fail, something happened
-		else {
-			std::string Error = GetLastErrorAsString();
-			CrashMessage(Error.c_str());
+		// Check if the pipe failed to be initialized
+		if (!hPipe || hPipe == INVALID_HANDLE_VALUE)
+		{
+			// It did. If the pipe value isn above the maximum instances, throw a crash
+			if (PipeVal > PIPE_UNLIMITED_INSTANCES)
+			{
+				std::string Error = GetLastErrorAsString();
+				CrashMessage(Error.c_str());
+			}
+			else PipeVal++;
 		}
 	}
 }

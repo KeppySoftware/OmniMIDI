@@ -66,7 +66,7 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 			MT32SetInstruments();
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData() && !stop_thread) _LWAIT;
+			if (_PlayBufData() && !stop_thread) _FWAIT;
 			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
@@ -89,7 +89,7 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 			if (ManagedSettings.NotesCatcherWithAudio) break;
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData()) NTSleep(-1000);
+			if (_PlayBufData()) _FWAIT;
 		}
 	}
 	catch (...) {
@@ -123,7 +123,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				start2 = TimeNow();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + 256.0f * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
@@ -157,7 +157,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 				if (!HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) AudioRender();
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + 256.0f * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
@@ -718,13 +718,9 @@ void LoadSoundFontsToStream() {
 	PrintMessageToDebugLog("LoadSoundFontsToStreamFunc", "Loading soundfonts...");
 
 	// If app has a personal SoundFont list, then load it
-	if (LoadSoundfontStartup() == TRUE) {
-		PrintMessageToDebugLog("LoadSoundFontsToStreamFunc", "Default list for app loaded.");
-	}
-	// Else, load list 1
-	else {
-		LoadSoundfont(ManagedSettings.DefaultSFList);
-		PrintMessageToDebugLog("LoadSoundFontsToStreamFunc", "Default global list loaded.");
+	if (!LoadSoundfontStartup() == TRUE) {
+		// Otherwise, fallback to default SoundFont
+		LoadSoundfont(0);
 	}
 }
 

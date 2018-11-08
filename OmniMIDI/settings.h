@@ -25,11 +25,16 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 }
 
 void CloseRegistryKey(RegKey &hKey) {
-	// Try to close the key
-	LSTATUS Action = RegCloseKey(hKey.Address);
+	LSTATUS Action = ERROR_SUCCESS;
 
-	// If the key can't be closed, throw a crash
-	if (Action != ERROR_SUCCESS) CrashMessage("hKeyClose");
+	// Close the key if it exists
+	if (hKey.Address != NULL) 
+		Action = RegFlushKey(hKey.Address);
+
+	// Try to close the key
+	if (hKey.Address != NULL) 
+		Action = RegCloseKey(hKey.Address);
+	else PrintMessageToDebugLog("CloseRegistryKey", "Registry key already closed.");
 
 	// Everything is fine, mark the key as closed
 	hKey.Status = KEY_CLOSED;
@@ -71,122 +76,53 @@ long long TimeNow() {
 	return (1000LL * now.QuadPart) / s_frequency.QuadPart;
 }
 
-void CopyToClipboard(const std::string &s) {
-	OpenClipboard(0);
-	EmptyClipboard();
-	HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, s.size());
-	if (!hg) {
-		CloseClipboard();
-		return;
-	}
-	memcpy(GlobalLock(hg), s.c_str(), s.size());
-	GlobalUnlock(hg);
-	SetClipboardData(CF_TEXT, hg);
-	CloseClipboard();
-	GlobalFree(hg);
-}
+void LoadSoundfont(int whichsf) {
+	wchar_t UserProfile[MAX_PATH];
+	wchar_t ListToLoad[MAX_PATH];
 
-void LoadSoundfont(int whichsf){
-	try {
+	ZeroMemory(UserProfile, MAX_PATH);
+	ZeroMemory(ListToLoad, MAX_PATH);
+
+	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, UserProfile)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
 		RegSetValueEx(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&whichsf, sizeof(whichsf));
 
-		FontLoader(sflistloadme[whichsf - 1]);
+		swprintf_s(ListToLoad, MAX_PATH, OMFileTemplate, UserProfile, L"lists", OMLetters[whichsf], L"omlist");
+		FontLoader(ListToLoad);
 
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
-	}
-	catch (...) {
-		CrashMessage("ListLoad");
 	}
 }
 
 bool LoadSoundfontStartup() {
-	try {
-		int done = 0;
-		TCHAR modulename[MAX_PATH];
-		TCHAR fullmodulename[MAX_PATH];
-		GetModuleFileName(NULL, modulename, MAX_PATH);
-		GetModuleFileName(NULL, fullmodulename, MAX_PATH);
-		PathStripPath(modulename);
+	wchar_t UserProfile[MAX_PATH];
+	wchar_t CurrentAppList[MAX_PATH];
+	wchar_t CurrentString[MAX_PATH];
 
+	ZeroMemory(UserProfile, MAX_PATH);
+	ZeroMemory(CurrentAppList, MAX_PATH);
+	ZeroMemory(CurrentString, MAX_PATH);
+
+	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, UserProfile)) {
 		for (int i = 0; i <= 15; ++i) {
-			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, listsloadme[i]);
-			SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, sflistloadme[i]);
-			_tcscat(sflistloadme[i], sfdirs[i]);
-			_tcscat(listsloadme[i], listsanalyze[i]);
-			std::wifstream file(listsloadme[i]);
-			if (file) {
-				TCHAR defaultstring[MAX_PATH];
-				while (file.getline(defaultstring, sizeof(defaultstring) / sizeof(*defaultstring)))
+			swprintf_s(CurrentAppList, MAX_PATH, UserProfile, OMFileTemplate, L"applists", OMLetters[i], L"applist");
+
+			std::wifstream AppList(CurrentAppList);
+			if (AppList) {
+				while (AppList.getline(CurrentString, sizeof(CurrentString) / sizeof(*CurrentString)))
 				{
-					if (_wcsicmp(modulename, defaultstring) && _wcsicmp(fullmodulename, defaultstring) == 0) {
-						PrintMessageToDebugLog("LoadSoundfontStartup", "Found list.");
-						LoadSoundfont(i + 1);
-						done = 1;			
+					if (!_wcsicmp(AppNameW, CurrentString) && !_wcsicmp(AppPathW, CurrentString)) {
+						PrintMessageToDebugLog("LoadSoundfontStartup", "Found list. Loading...");
+						LoadSoundfont(i);
+						return TRUE;
 					}
 				}
 			}
-			file.close();
 		}
 
-		if (done == 1) {
-			return TRUE;
-		}
-		else {
-			return FALSE;
-		}
-	}
-	catch (...) {
-		CrashMessage("ListLoadStartUp");
-	}
-}
-
-BOOL load_bassaddons() {
-	try {
-		TCHAR installpath[MAX_PATH] = { 0 };
-
-		// Codecs
-		TCHAR bassflacpath[MAX_PATH] = { 0 };
-		TCHAR bassopuspath[MAX_PATH] = { 0 };
-		TCHAR basswvpath[MAX_PATH] = { 0 };
-
-		GetModuleFileName(hinst, installpath, MAX_PATH);
-		PathRemoveFileSpec(installpath);
-
-		PrintMessageToDebugLog("ImportBASS", "Importing additional codecs...");
-
-		// BASSFLAC
-		lstrcat(bassflacpath, installpath);
-		lstrcat(bassflacpath, L"\\bassflac.dll");
-		bassflac = BASS_PluginLoad((const char*)*bassflacpath, BASS_UNICODE);
-		if (!(bassflac = BASS_PluginLoad((const char*)*bassflacpath, BASS_UNICODE))) {
-			CheckUp(ERRORCODE, L"BASSFLAC Load", TRUE);
-		}
-		else PrintMessageToDebugLog("ImportBASS", "BASSFLAC imported...");
-
-		// BASSOPUS
-		lstrcat(bassopuspath, installpath);
-		lstrcat(bassopuspath, L"\\bassopus.dll");
-		bassopus = BASS_PluginLoad((char*)bassopuspath, BASS_UNICODE);
-		if (!(bassopus = BASS_PluginLoad((char*)bassopuspath, BASS_UNICODE))) {
-			CheckUp(ERRORCODE, L"BASSOPUS Load", TRUE);
-		}
-		else PrintMessageToDebugLog("ImportBASS", "BASSOPUS imported...");
-
-		// BASSWV
-		lstrcat(basswvpath, installpath);
-		lstrcat(basswvpath, L"\\basswv.dll");
-		basswv = BASS_PluginLoad((char*)basswvpath, BASS_UNICODE);
-		if (!(basswv = BASS_PluginLoad((char*)basswvpath, BASS_UNICODE))) {
-			CheckUp(ERRORCODE, L"BASSWV Load", TRUE);
-		}
-		else PrintMessageToDebugLog("ImportBASS", "BASSWV imported...");
-
-		PrintMessageToDebugLog("ImportBASS", "Addons imported!");
-	}
-	catch (...) {
-		CrashMessage("BASSAddonLibLoad");
+		PrintMessageToDebugLog("LoadSoundfontStartup", "No default startup list found. Continuing...");
+		return FALSE;
 	}
 }
 
@@ -467,7 +403,6 @@ void LoadSettings(BOOL restart)
 		RegQueryValueEx(Configuration.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"DontMissNotes", NULL, &dwType, (LPBYTE)&ManagedSettings.DontMissNotes, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableNotesFadeOut, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"DefaultSFList", NULL, &dwType, (LPBYTE)&ManagedSettings.DefaultSFList, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CurrentEngine", NULL, &dwType, (LPBYTE)&ManagedSettings.CurrentEngine, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
@@ -493,18 +428,12 @@ void LoadSettings(BOOL restart)
 			// It's enabled, do some beeps to notify the user
 			Beep(440, 100);
 			Beep(687, 100);
+		}
 
-			// Assign the pointers to the specific hyper-playback functions
-			_PrsData = ParseDataHyper;
-			_PlayBufData = PlayBufferedDataHyper;
-			_PlayBufDataChk = PlayBufferedDataChunkHyper;
-		}
-		else {
-			// It's disabled, assign the pointers to the normal functions
-			_PrsData = ParseData;
-			_PlayBufData = PlayBufferedData;
-			_PlayBufDataChk = PlayBufferedDataChunk;
-		}
+		// Assign the pointed functions
+		_PrsData = HyperMode ? ParseDataHyper : ParseData;
+		_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
+		_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
 
 		if (!restart || (TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
 			EvBufferSize = TEvBufferSize;
@@ -662,13 +591,28 @@ void LoadSettingsRT() {
 }
 
 void LoadCustomInstruments() {
-	OpenRegistryKey(ChanOverride, L"Software\\OmniMIDI\\ChanOverride", TRUE);
+	const wchar_t Pc[] = _T("pc%d");
+	const wchar_t Bc[] = _T("bc%d");
+	wchar_t TempPc[MAXPNAMELEN] = { 0 };
+	wchar_t TempBc[MAXPNAMELEN] = { 0 };
 
-	RegQueryValueEx(ChanOverride.Address, L"overrideinstruments", NULL, &dwType, (LPBYTE)&ManagedSettings.OverrideInstruments, &dwSize);
-	for (int i = 0; i <= 15; ++i) {
-		// Load the custom bank/instrument for each channel
-		RegQueryValueEx(ChanOverride.Address, cbankname[i], NULL, &dwType, (LPBYTE)&cbank[i], &dwSize);
-		RegQueryValueEx(ChanOverride.Address, cpresetname[i], NULL, &dwType, (LPBYTE)&cpreset[i], &dwSize);
+	try {
+		OpenRegistryKey(ChanOverride, L"Software\\OmniMIDI\\ChanOverride", TRUE);
+
+		RegQueryValueEx(ChanOverride.Address, L"overrideinstruments", NULL, &dwType, (LPBYTE)&ManagedSettings.OverrideInstruments, &dwSize);
+		for (int i = 0; i <= 15; ++i) {
+			ZeroMemory(TempPc, MAXPNAMELEN);
+			ZeroMemory(TempBc, MAXPNAMELEN);
+			swprintf_s(TempPc, MAXPNAMELEN, Pc, i);
+			swprintf_s(TempBc, MAXPNAMELEN, Bc, i);
+
+			// Load the custom bank/instrument for each channel
+			RegQueryValueEx(ChanOverride.Address, TempPc, NULL, &dwType, (LPBYTE)&cpreset[i], &dwSize);
+			RegQueryValueEx(ChanOverride.Address, TempBc, NULL, &dwType, (LPBYTE)&cbank[i], &dwSize);
+		}
+	}
+	catch (...) {
+		CrashMessage("LoadCustomInstruments");
 	}
 }
 
@@ -687,18 +631,24 @@ int AudioRenderingType(int value) {
 }
 
 void SFDynamicLoaderCheck() {
+	const wchar_t Re[] = _T("rel%d");
+	wchar_t TempRe[MAXPNAMELEN] = { 0 };
+
 	try {
 		// Used to check which SoundFont list has been loaded through the configurator
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
 
 		// Check each value, to see if they're true or not
 		for (int i = 0; i <= 15; ++i) {
-			RegQueryValueEx(SFDynamicLoader.Address, rnames[i], NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
+			ZeroMemory(TempRe, MAXPNAMELEN);
+			swprintf_s(TempRe, MAXPNAMELEN, Re, i);
+
+			RegQueryValueEx(SFDynamicLoader.Address, TempRe, NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
 
 			// Value "i" is true, reload the specific SoundFont list
 			if (rvalues[i] == 1) {
-				LoadSoundfont(i + 1);
-				RegSetValueEx(SFDynamicLoader.Address, rnames[i], 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
+				LoadSoundfont(i);
+				RegSetValueEx(SFDynamicLoader.Address, TempRe, 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 			}
 		}
 	}
@@ -860,12 +810,22 @@ void SendDummyDataToPipe() {
 }
 
 void MixerCheck() {
+	const wchar_t Ch[] = _T("ch%d");
+	const wchar_t Ps[] = _T("ch%dpshift");
+	wchar_t TempCh[MAXPNAMELEN] = { 0 };
+	wchar_t TempPs[MAXPNAMELEN] = { 0 };
+
 	try {
 		OpenRegistryKey(Channels, L"Software\\OmniMIDI\\Channels", TRUE);
+		for (int i = 0; i <= 15; ++i) 
+		{
+			ZeroMemory(TempCh, MAXPNAMELEN);
+			ZeroMemory(TempPs, MAXPNAMELEN);
+			swprintf_s(TempCh, MAXPNAMELEN, Ch, i);
+			swprintf_s(TempPs, MAXPNAMELEN, Ps, i);
 
-		for (int i = 0; i <= (sizeof(cnames) / sizeof(cnames[0])); ++i) {
-			RegQueryValueEx(Channels.Address, cnames[i], NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
-			RegQueryValueEx(Channels.Address, pitchshiftname[i], NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
+			RegQueryValueEx(Channels.Address, TempCh, NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
+			RegQueryValueEx(Channels.Address, TempPs, NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
 			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 		}
 	}
@@ -898,7 +858,6 @@ void RevbNChor() {
 void ReloadSFList(DWORD whichsflist){
 	try {
 		ResetSynth(FALSE);
-		Sleep(100);
 		LoadSoundfont(whichsflist);
 	}
 	catch (...) {
@@ -912,68 +871,68 @@ void keybindings()
 		if (ManagedSettings.FastHotkeys == 1) {
 			BOOL ControlPressed = (GetAsyncKeyState(VK_CONTROL) & (1 << 15));
 			if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
-				ReloadSFList(1);
+				ReloadSFList(0);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
-				ReloadSFList(2);
+				ReloadSFList(1);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
-				ReloadSFList(3);
+				ReloadSFList(2);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
-				ReloadSFList(4);
+				ReloadSFList(3);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
-				ReloadSFList(5);
+				ReloadSFList(4);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
-				ReloadSFList(6);
+				ReloadSFList(5);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
-				ReloadSFList(7);
+				ReloadSFList(6);
 				return;
 			}
 			else if (!ControlPressed && GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
-				ReloadSFList(8);
+				ReloadSFList(7);
 				return;
 			}
 			if (ManagedSettings.Extra8Lists == 1) {
 				if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x31) & 0x8000) {
-					ReloadSFList(9);
+					ReloadSFList(8);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x32) & 0x8000) {
-					ReloadSFList(10);
+					ReloadSFList(9);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x33) & 0x8000) {
-					ReloadSFList(11);
+					ReloadSFList(10);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x34) & 0x8000) {
-					ReloadSFList(12);
+					ReloadSFList(11);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x35) & 0x8000) {
-					ReloadSFList(13);
+					ReloadSFList(12);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x36) & 0x8000) {
-					ReloadSFList(14);
+					ReloadSFList(13);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x37) & 0x8000) {
-					ReloadSFList(15);
+					ReloadSFList(14);
 					return;
 				}
 				else if (ControlPressed & GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x38) & 0x8000) {
-					ReloadSFList(16);
+					ReloadSFList(15);
 					return;
 				}
 			}

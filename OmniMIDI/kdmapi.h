@@ -64,7 +64,7 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 			}
 
 			// I SLEEP
-			Sleep(10);
+			NTSleep(-50000);
 		}
 
 		// Release the SoundFonts and the stream
@@ -159,10 +159,15 @@ void DoStopClient() {
 		// Close registry keys
 		PrintMessageToDebugLog("StopDriver", "Closing registry keys...");
 		CloseRegistryKey(MainKey);
+		PrintMessageToDebugLog("StopDriver", "Closed MainKey...");
 		CloseRegistryKey(Configuration);
+		PrintMessageToDebugLog("StopDriver", "Closed Configuration...");
 		CloseRegistryKey(Channels);
+		PrintMessageToDebugLog("StopDriver", "Closed Channels...");
 		CloseRegistryKey(ChanOverride);
+		PrintMessageToDebugLog("StopDriver", "Closed ChanOverride...");
 		CloseRegistryKey(SFDynamicLoader);
+		PrintMessageToDebugLog("StopDriver", "Closed SFDynamicLoader...");
 
 		// OK now it's fine
 		PrintMessageToDebugLog("StopDriver", "Just a few more things...");
@@ -225,7 +230,7 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		return TRUE;
 	}
 
-	PrintMessageToDebugLog("KDMAPI_TKS", "InitializeKDMAPIStream called, even though the driver is already active.");
+	PrintMessageToDebugLog("KDMAPI_IKS", "InitializeKDMAPIStream called, even though the driver is already active.");
 	return FALSE;
 }
 
@@ -399,7 +404,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	}
 }
 
-VOID KDMAPI LoadCustomSoundFontsList(const TCHAR* Directory) {
+VOID KDMAPI LoadCustomSoundFontsList(const TCHAR * Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	else FontLoader(Directory);

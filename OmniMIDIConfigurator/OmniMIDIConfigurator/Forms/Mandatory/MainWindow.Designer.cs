@@ -212,7 +212,6 @@
             this.openDebugWindowToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openTheMixerToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapCpl = new System.Windows.Forms.MenuItem();
@@ -229,7 +228,6 @@
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.manageFolderFavouritesToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem = new System.Windows.Forms.MenuItem();
-            this.changeDefaultSoundfontListToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.DePrio = new System.Windows.Forms.MenuItem();
             this.menuItem34 = new System.Windows.Forms.MenuItem();
             this.RTPrio = new System.Windows.Forms.MenuItem();
@@ -2343,58 +2341,53 @@
             this.openTheBlacklistManagerToolStripMenuItem.Text = "Open the blacklist manager";
             this.openTheBlacklistManagerToolStripMenuItem.Click += new System.EventHandler(this.openTheBlacklistManagerToolStripMenuItem_Click);
             // 
-            // menuItem7
-            // 
-            this.menuItem7.Index = 3;
-            this.menuItem7.Text = "-";
-            // 
             // assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem
             // 
-            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Index = 4;
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Index = 7;
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Text = "Assign a soundfont list to a specific app";
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
             // menuItem9
             // 
-            this.menuItem9.Index = 5;
+            this.menuItem9.Index = 3;
             this.menuItem9.Text = "-";
             // 
             // AMIDIMapCpl
             // 
-            this.AMIDIMapCpl.Index = 6;
+            this.AMIDIMapCpl.Index = 4;
             this.AMIDIMapCpl.Text = "Open the Alternative MIDI Mapper applet";
             this.AMIDIMapCpl.Visible = false;
             this.AMIDIMapCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem1
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 7;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 5;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 8;
+            this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 6;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default 32-bit MIDI out device";
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // changeDefault64bitMIDIOutDeviceToolStripMenuItem
             // 
-            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 9;
+            this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Index = 7;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default 64-bit MIDI out device";
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Click += new System.EventHandler(this.changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click);
             // 
             // menuItem13
             // 
-            this.menuItem13.Index = 10;
+            this.menuItem13.Index = 8;
             this.menuItem13.Text = "-";
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Index = 11;
+            this.exitToolStripMenuItem.Index = 9;
             this.exitToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.AltF4;
             this.exitToolStripMenuItem.Text = "Close the configurator";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
@@ -2406,8 +2399,6 @@
             this.openDebugWindowToolStripMenuItem,
             this.openTheMixerToolStripMenuItem,
             this.openTheBlacklistManagerToolStripMenuItem,
-            this.menuItem7,
-            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem,
             this.menuItem9,
             this.AMIDIMapCpl,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
@@ -2458,12 +2449,6 @@
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 6;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change WAV output directory";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
-            // 
-            // changeDefaultSoundfontListToolStripMenuItem1
-            // 
-            this.changeDefaultSoundfontListToolStripMenuItem1.Index = 7;
-            this.changeDefaultSoundfontListToolStripMenuItem1.Text = "Change default soundfont list";
-            this.changeDefaultSoundfontListToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultSoundfontListToolStripMenuItem_Click);
             // 
             // DePrio
             // 
@@ -2614,7 +2599,7 @@
             this.menuItem17,
             this.manageFolderFavouritesToolStripMenuItem,
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem,
-            this.changeDefaultSoundfontListToolStripMenuItem1,
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem,
             this.menuItem31,
             this.menuItem21,
             this.SpatialSound,
@@ -3088,7 +3073,6 @@
         private System.Windows.Forms.MenuItem openDebugWindowToolStripMenuItem;
         private System.Windows.Forms.MenuItem openTheMixerToolStripMenuItem;
         private System.Windows.Forms.MenuItem openTheBlacklistManagerToolStripMenuItem;
-        private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem9;
         public System.Windows.Forms.MenuItem AMIDIMapCpl;
@@ -3105,7 +3089,6 @@
         private System.Windows.Forms.MenuItem menuItem17;
         private System.Windows.Forms.MenuItem manageFolderFavouritesToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeDirectoryOfTheOutputToWAVModeToolStripMenuItem;
-        private System.Windows.Forms.MenuItem changeDefaultSoundfontListToolStripMenuItem1;
         public System.Windows.Forms.MenuItem DePrio;
         private System.Windows.Forms.MenuItem menuItem34;
         public System.Windows.Forms.MenuItem RTPrio;

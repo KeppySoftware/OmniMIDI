@@ -56,7 +56,7 @@ typedef struct
 	DWORD AudioOutputReg;			// Audio output (All devices except AudToWAV and ASIO)
 	DWORD BufferLength;				// Default
 	DWORD CurrentEngine;			// Current engine
-	DWORD DefaultSFList;			// Default soundfont list
+	DWORD DefaultSFList;			// Default soundfont list (DEPRECATED)
 	DWORD DriverPriority;			// Process priority
 	BOOL Extra8Lists;				// Enable extra 8 SoundFont lists
 	DWORD MaxRenderingTime;			// CPU usage INT

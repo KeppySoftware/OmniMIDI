@@ -6,15 +6,15 @@ Don't bother understanding this stuff, as long as it works
 static void FreeFonts()
 {
 	try {
-		if (_soundFonts.size())
+		if (SoundFontHandles.size())
 		{
-			for (auto it = _soundFonts.begin(); it != _soundFonts.end(); ++it)
+			for (auto it = SoundFontHandles.begin(); it != SoundFontHandles.end(); ++it)
 			{
 				BASS_MIDI_FontFree(*it);
 				PrintMessageToDebugLog("NewSFLoader", "Freed SoundFont...");
 			}
-			_soundFonts.resize(0);
-			presetList.resize(0);
+			SoundFontHandles.resize(0);
+			SoundFontPresets.resize(0);
 			PrintMessageToDebugLog("NewSFLoader", "Vectors resized to zero.");
 		}
 	}
@@ -42,20 +42,43 @@ static BOOL FontLoader(const TCHAR * in_path) {
 			SoundFontList TempItem;
 			ZeroMemory(TempItem.Path, sizeof(TempItem.Path));
 			wcsncpy(TempItem.Path, in_path, NTFS_MAX_PATH);
-			TempItem.SourcePreset = -1;
-			TempItem.SourceBank = -1;
-			TempItem.DestinationPreset = -1;
-			TempItem.DestinationBank = 0;
 
-			HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, BASS_UNICODE);
-			if (!SF) return FALSE;
+			if (PathFileExists(in_path))
+			{
+				TempItem.SourcePreset = -1;
+				TempItem.SourceBank = -1;
+				TempItem.DestinationPreset = -1;
+				TempItem.DestinationBank = 0;
 
-			BASS_MIDI_FONTEX SFConf = { SF, TempItem.SourcePreset, TempItem.SourceBank, TempItem.DestinationPreset, TempItem.DestinationBank, 0 };
+				PrintMessageToDebugLog("NewSFLoader", "Initializing SoundFont...");
+				HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, BASS_UNICODE);
+				if (!SF) {
+					PrintMessageToDebugLog("NewSFLoader", "An error has occurred while initializing the SoundFont.");
+					SoundFontError(L"An error has occurred while initializing the SoundFont.", TempItem.Path);
+					return FALSE;
+				}
 
-			_soundFonts.push_back(SF);
-			presetList.push_back(SFConf);
-			BASS_MIDI_StreamSetFonts(OMStream, &presetList[0], (unsigned int)presetList.size() | BASS_MIDI_FONT_EX);
-			return TRUE;
+				PrintMessageToDebugLog("NewSFLoader", "Preparing BASS_MIDI_FONTEX...");
+				BASS_MIDI_FONTEX SFConf = { SF, TempItem.SourcePreset, TempItem.SourceBank, TempItem.DestinationPreset, TempItem.DestinationBank, 0 };
+
+				if (ManagedSettings.PreloadSoundFonts) {
+					PrintMessageToDebugLog("NewSFLoader", "Preloading SoundFont...");
+					if (!BASS_MIDI_FontLoad(SF, TempItem.SourcePreset, TempItem.SourceBank)) {
+						PrintMessageToDebugLog("NewSFLoader", "An error has occurred while preloading the SoundFont.");
+						SoundFontError(L"An error has occurred while preloading the SoundFont.", TempItem.Path);
+						return FALSE;
+					}
+				}
+
+				SoundFontHandles.push_back(SF);
+				SoundFontPresets.push_back(SFConf);
+				BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (unsigned int)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
+				PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
+				return TRUE;
+			}
+			else {
+				SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", TempItem.Path);
+			}
 		}
 		else if (!_wcsicmp(Extension, _T(".omlist")))
 		{
@@ -219,16 +242,17 @@ static BOOL FontLoader(const TCHAR * in_path) {
 					}
 
 					PrintMessageToDebugLog("NewSFLoader", "Everything seems to be OK. Pushing it back inside the vector array...");
-					_soundFonts.push_back(font);
-					presetList.push_back(FEX);
+					SoundFontHandles.push_back(font);
+					SoundFontPresets.push_back(FEX);
 				}
 				else {
 					SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", obj->Path);
 				}
 			}
 
-			std::reverse(presetList.begin(), presetList.end());
-			BASS_MIDI_StreamSetFonts(OMStream, &presetList[0], (unsigned int)presetList.size() | BASS_MIDI_FONT_EX);
+			std::reverse(SoundFontPresets.begin(), SoundFontPresets.end());
+			BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (unsigned int)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
+			PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
 
 			return TRUE;
 		}

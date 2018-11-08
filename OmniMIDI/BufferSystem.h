@@ -28,27 +28,8 @@ int BufferCheckHyper(void) {
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
-	if (!(dwParam1 - 0x80 & 0xC0))
-	{
-		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
-		return;
-	}
-
-	DWORD len = 3;
-
-	if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
-	else if ((dwParam1 & 0xF0) == 0xF0)
-	{
-		switch (dwParam1 & 0xF)
-		{
-		case 3:
-			len = 2;
-			break;
-		default:
-			len = 1;
-			break;
-		}
-	}
+	DWORD dwParam2 = dwParam1 & 0xF0;
+	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
 
 	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
@@ -264,8 +245,4 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;
-}
-
-void AudioRender() {
-	BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + 256.0f * sizeof(float));
 }

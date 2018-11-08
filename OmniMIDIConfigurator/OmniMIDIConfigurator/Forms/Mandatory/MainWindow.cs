@@ -1513,12 +1513,6 @@ namespace OmniMIDIConfigurator
             new MIDIEventsParserSettings().ShowDialog(this);
         }
 
-        private void changeDefaultSoundfontListToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Program.DebugToConsole(false, "Opening default SoundFont list dialog.", null);
-            new DefaultSFList().ShowDialog();
-        }
-
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening SoundFont list assign dialog.", null);

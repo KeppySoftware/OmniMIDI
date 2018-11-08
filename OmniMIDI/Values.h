@@ -172,30 +172,12 @@ static LPCWSTR BuiltInBlacklist[26] =
 	_T("vmware-hostd.exe")
 };
 
-// Channels volume
-static LPCWSTR cnames[16] =
-{
-	L"ch1", L"ch2", L"ch3", L"ch4", L"ch5", L"ch6", L"ch7", L"ch8",
-	L"ch9", L"ch10", L"ch11", L"ch12", L"ch13", L"ch14", L"ch15", L"ch16"
-};
+// Per channel values
+static DWORD cvvalues[16];		// Active voices count per channel.
+static DWORD cvalues[16];		// Volume setting per channel.
+static DWORD cbank[16];			// MIDI bank setting per channel.
+static DWORD cpreset[16];		// MIDI preset setting for... you guess it!
 
-static DWORD cvvalues[16];
-
-// Channels instruments/banks
-static LPCWSTR cbankname[16] =
-{
-	L"bc1", L"bc2", L"bc3", L"bc4", L"bc5", L"bc6", L"bc7", L"bc8",
-	L"bc9", L"bcd", L"bc11", L"bc12", L"bc13", L"bc14", L"bc15", L"bc16"
-};
-
-static LPCWSTR cpresetname[16] =
-{
-	L"pc1", L"pc2", L"pc3", L"pc4", L"pc5", L"pc6", L"pc7", L"pc8",
-	L"pc9", L"pcd", L"pc11", L"pc12", L"pc13", L"pc14", L"pc15", L"pc16"
-};
-
-static DWORD cbank[16];
-static DWORD cpreset[16];
 
 static DWORD SynthType = 2;
 static DWORD SynthNamesTypes[7] =
@@ -209,130 +191,24 @@ static DWORD SynthNamesTypes[7] =
 	MOD_SQSYNTH
 };
 
-// Channels
-static DWORD cvalues[16];
-
 // Reverb and chorus
 static DWORD reverb = 64;					// Reverb
 static DWORD chorus = 64;					// Chorus
 
 // Watchdog stuff
-static LPCWSTR rnames[16] =
-{
-	L"rel1", L"rel2", L"rel3", L"rel4", L"rel5", L"rel6", L"rel7", L"rel8",
-	L"rel9", L"rel10", L"rel11", L"rel2", L"rel13", L"rel14", L"rel15", L"rel16"
-};
-
 static DWORD rvalues[16];
 
-// Other
-static DWORD buffull = 0;
+// -----------------------------------------------------------------------
 
-// Soundfont lists
-static TCHAR userprofile[MAX_PATH];
+static const wchar_t * OMPipeTemplate = L"\\\\.\\pipe\\OmniMIDIDbg%u";
+static const wchar_t * OMFileTemplate = L"%s\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
+static const wchar_t * OMLetters[16] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q", L"R" };
 
 // -----------------------------------------------------------------------
 
-static TCHAR sfdir1[MAX_PATH];
-static TCHAR sfdir2[MAX_PATH];
-static TCHAR sfdir3[MAX_PATH];
-static TCHAR sfdir4[MAX_PATH];
-static TCHAR sfdir5[MAX_PATH];
-static TCHAR sfdir6[MAX_PATH];
-static TCHAR sfdir7[MAX_PATH];
-static TCHAR sfdir8[MAX_PATH];
-static TCHAR sfdir9[MAX_PATH];
-static TCHAR sfdir10[MAX_PATH];
-static TCHAR sfdir11[MAX_PATH];
-static TCHAR sfdir12[MAX_PATH];
-static TCHAR sfdir13[MAX_PATH];
-static TCHAR sfdir14[MAX_PATH];
-static TCHAR sfdir15[MAX_PATH];
-static TCHAR sfdir16[MAX_PATH];
-
-static TCHAR * sflistloadme[16] =
-{
-	sfdir1, sfdir2, sfdir3, sfdir4, sfdir5, sfdir6, sfdir7, sfdir8,
-	sfdir9, sfdir10, sfdir11, sfdir12, sfdir13, sfdir14, sfdir15, sfdir16
-};
-
-static TCHAR * sfdirs[16] =
-{
-	L"\\OmniMIDI\\lists\\OmniMIDI_A.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_B.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_C.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_D.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_E.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_F.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_G.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_H.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_I.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_L.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_M.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_N.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_O.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_P.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_Q.omlist",
-	L"\\OmniMIDI\\lists\\OmniMIDI_R.omlist"
-};
-
-// -----------------------------------------------------------------------
-
-static TCHAR listsloadme1[MAX_PATH];
-static TCHAR listsloadme2[MAX_PATH];
-static TCHAR listsloadme3[MAX_PATH];
-static TCHAR listsloadme4[MAX_PATH];
-static TCHAR listsloadme5[MAX_PATH];
-static TCHAR listsloadme6[MAX_PATH];
-static TCHAR listsloadme7[MAX_PATH];
-static TCHAR listsloadme8[MAX_PATH];
-static TCHAR listsloadme9[MAX_PATH];
-static TCHAR listsloadme10[MAX_PATH];
-static TCHAR listsloadme11[MAX_PATH];
-static TCHAR listsloadme12[MAX_PATH];
-static TCHAR listsloadme13[MAX_PATH];
-static TCHAR listsloadme14[MAX_PATH];
-static TCHAR listsloadme15[MAX_PATH];
-static TCHAR listsloadme16[MAX_PATH];
-
-static TCHAR * listsloadme[16] =
-{
-	listsloadme1, listsloadme2, listsloadme3, listsloadme4, listsloadme5, listsloadme6, listsloadme7, listsloadme8,
-	listsloadme9, listsloadme10, listsloadme11, listsloadme12, listsloadme13, listsloadme14, listsloadme15, listsloadme16
-};
-
-static TCHAR * listsanalyze[16] =
-{
-	L"\\OmniMIDI\\applists\\OmniMIDI_A.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_B.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_C.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_D.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_E.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_F.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_G.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_H.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_I.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_L.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_M.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_N.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_O.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_P.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_Q.applist",
-	L"\\OmniMIDI\\applists\\OmniMIDI_R.applist"
-};
-
-// -----------------------------------------------------------------------
-
-static std::vector<DWORD> _soundFonts;
-static std::vector<BASS_MIDI_FONTEX> presetList;
+static std::vector<HSOUNDFONT> SoundFontHandles;
+static std::vector<BASS_MIDI_FONTEX> SoundFontPresets;
 
 // -----------------------------------------------------------------------
 
 static DWORD pitchshiftchan[16];
-static LPCWSTR pitchshiftname[16] =
-{
-	L"ch1pshift", L"ch2pshift", L"ch3pshift", L"ch4pshift", L"ch5pshift",
-	L"ch6pshift", L"ch7pshift", L"ch8pshift", L"ch9pshift", L"ch10pshift",
-	L"ch11pshift", L"ch12pshift", L"ch13pshift", L"ch14pshift", L"ch15pshift", 
-	L"ch16pshift"
-};

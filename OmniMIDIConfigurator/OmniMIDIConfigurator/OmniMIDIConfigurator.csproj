@@ -169,12 +169,6 @@
     <Compile Include="Forms\Mandatory\BankNPresetSel.Designer.cs">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Add-ons\DefaultSFList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Add-ons\DefaultSFList.Designer.cs">
-      <DependentUpon>DefaultSFList.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Add-ons\OutputWAVDir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,9 +346,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\BankNPresetSel.resx">
       <DependentUpon>BankNPresetSel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Add-ons\DefaultSFList.resx">
-      <DependentUpon>DefaultSFList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\OutputWAVDir.resx">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
