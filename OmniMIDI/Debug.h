@@ -11,9 +11,9 @@ void Pointer(LPCWSTR Msg) {
 
 BOOL InfoAlreadyGot = FALSE;
 void GetAppName() {
-	try {
-		if (!InfoAlreadyGot)
-		{
+	if (!InfoAlreadyGot)
+	{
+		try {
 			ZeroMemory(AppPath, sizeof(AppPath));
 			ZeroMemory(AppPathW, sizeof(AppPathW));
 			ZeroMemory(AppName, sizeof(AppName));
@@ -26,66 +26,59 @@ void GetAppName() {
 			wcsncpy(AppNameW, TempPoint, MAX_PATH);
 			wcstombs(AppName, AppNameW, wcslen(AppNameW) + 1);
 
-#if defined(_WIN64)
-			strcpy(bitapp, "64-bit");
-#elif defined(_WIN32)
-			strcpy(bitapp, "32-bit");
-#endif
-
 			InfoAlreadyGot = TRUE;
 		}
-	}
-	catch (...) {
-		CrashMessage("AppAnalysis");
+		catch (...) {
+			CrashMessage("AppAnalysis");
+		}
 	}
 }
 
 void CreateConsole() {
 	if (!IntroAlreadyShown) {
-		Beep(440, 100);
-		Beep(440, 100);
-
-		// Create file and start console output
-		GetAppName();
-		TCHAR installpath[MAX_PATH];
-		TCHAR pathfortext[MAX_PATH];
+		TCHAR MainLibrary[MAX_PATH];
+		TCHAR DebugDir[MAX_PATH];
 		TCHAR CurrentTime[MAX_PATH];
 
+		Beep(440, 100);
+		Beep(440, 100);
+
+		// Get the debug info first
+		GetAppName();
+
 		// Get user profile's path
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, pathfortext);
+		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, DebugDir);
 
 		// Append "\OmniMIDI\debug\" to "%userprofile%"
-		PathAppend(pathfortext, _T("\\OmniMIDI\\debug\\"));
+		wcscat_s(DebugDir, MAX_PATH, L"\\OmniMIDI\\debug\\");
 
 		// Create "%userprofile%\OmniMIDI\debug\", in case it doesn't exist
-		CreateDirectory(pathfortext, NULL);
+		CreateDirectory(DebugDir, NULL);
 
 		// Append the app's filename to the output file's path
-		lstrcat(pathfortext, AppNameW);
+		wcscat_s(DebugDir, MAX_PATH, AppNameW);
 
 		// Parse current time, and append it
 		struct tm *sTm;
 		time_t now = time(0);
 		sTm = gmtime(&now);
 		wcsftime(CurrentTime, sizeof(CurrentTime), L" - %d-%m-%Y %H.%M.%S", sTm);
-		lstrcat(pathfortext, CurrentTime);
+		wcscat_s(DebugDir, MAX_PATH, CurrentTime);
 
 		// Append file extension, and that's it
-		lstrcat(pathfortext, _T(" (Debug output).txt"));
+		wcscat_s(DebugDir, MAX_PATH, _T(" (Debug output).txt"));
 
 		// Parse OmniMIDI's current version
-		GetModuleFileName(hinst, installpath, MAX_PATH);
-		PathRemoveFileSpec(installpath);
-		lstrcat(installpath, L"\\OmniMIDI.dll");
+		GetModuleFileName(hinst, MainLibrary, MAX_PATH);
+		PathRemoveFileSpec(MainLibrary);
+		wcscat_s(MainLibrary, MAX_PATH, L"\\OmniMIDI.dll");
 		int major, minor, build, revision;
-		GetVersionInfo(installpath, major, minor, build, revision);
+		GetVersionInfo(MainLibrary, major, minor, build, revision);
 
 		// Open the debug output's file
-		_wfreopen(pathfortext, L"w", stdout);
+		_wfreopen(DebugDir, L"w", stdout);
 
 		// Begin writing to it
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTitle(L"OmniMIDI Debug Console");
 		printf("Those who cannot change their minds cannot change anything.\n\n");
 		printf("OmniMIDI %d.%d.%d CR%d (KDMAPI %d.%d.%d, Revision %d)\n", major, minor, build, revision, CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
 		printf("Copyright(C) 2013 - KaleidonKep99\n\n");
@@ -163,6 +156,8 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 
 void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
+		DWORD DataLen = 0;
+
 		// Wait while debug log is busy
 		while (DebugLogLockSystem.GetWriterCount() > 0) {}
 
@@ -173,14 +168,10 @@ void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 		PrintCurrentTime();
 		printf("Stage %s ", (IsRecognized ? "<<UnrecognizedSysEx>> | Unrecognized SysEx event:" : "<<ParsedSysEx>> | Parsed SysEx event:"));
 
-		for (DWORD i = 0; i < IIMidiHdr->dwBufferLength; ++i) {
-			printf("%X", IIMidiHdr->lpData[i]);
-		}
+		for (DataLen = 0; DataLen < IIMidiHdr->dwBufferLength; ++DataLen)
+			printf("%X", IIMidiHdr->lpData[DataLen]);
 
-		printf(" (%u bytes)", IIMidiHdr->dwBytesRecorded);
-
-		// New line
-		printf("\n");
+		printf(" (%u bytes)\n", DataLen);
 
 		// Debug log is free now
 		DebugLogLockSystem.UnlockForWriting();
@@ -345,20 +336,36 @@ Retry:
 }
 
 MMRESULT DebugResult(MMRESULT ErrorToDisplay) {
+	const DWORD MaxSize = 512;
+	CHAR ErrorTitle[MaxSize] = { 0 };
+	CHAR ErrorString[MaxSize] = { 0 };
+
 	switch (ErrorToDisplay) {
-	case MIDIERR_NOTREADY:
-		if (ManagedSettings.DebugMode) MessageBox(NULL, L"OmniMIDI is not ready to accept the MIDIHDR!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
-		PrintMessageToDebugLog("MIDIERR_NOTREADY", "OmniMIDI is not ready to accept the MIDIHDR!");
-	case MIDIERR_UNPREPARED:	
-		if (ManagedSettings.DebugMode) MessageBox(NULL, L"The MIDIHDR buffer hasn't been prepared yet!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
-		PrintMessageToDebugLog("MIDIERR_UNPREPARED", "The MIDIHDR buffer hasn't been prepared yet!");
-	case MIDIERR_STILLPLAYING:	
-		if (ManagedSettings.DebugMode) MessageBox(NULL, L"The MIDIHDR buffer is still being played!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
-		PrintMessageToDebugLog("MIDIERR_STILLPLAYING", "The MIDIHDR buffer is still being played!");
+	case MMSYSERR_NOTENABLED:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTENABLED");
+		sprintf_s(ErrorString, MaxSize, "OmniMIDI has not been initialized yet, or has failed to.");
+	case MMSYSERR_NOTSUPPORTED:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTSUPPORTED");
+		sprintf_s(ErrorString, MaxSize, "OmniMIDI does not support the requested function.");
 	case MMSYSERR_INVALPARAM:
-		if (ManagedSettings.DebugMode) MessageBox(NULL, L"The pointer to the MIDIHDR is invalid!", L"OmniMIDI - Debug Info", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
-		PrintMessageToDebugLog("MMSYSERR_INVALPARAM", "The pointer to the MIDIHDR is invalid!");
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALPARAM");
+		sprintf_s(ErrorString, MaxSize, "The app passed an invalid parameter to OmniMIDI.");
+	case MIDIERR_NOTREADY:
+		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_NOTREADY");
+		sprintf_s(ErrorString, MaxSize, "OmniMIDI is not ready to accept the MIDIHDR.");
+	case MIDIERR_UNPREPARED:	
+		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_UNPREPARED");
+		sprintf_s(ErrorString, MaxSize, "The MIDIHDR buffer passed to OmniMIDI hasn't been prepared yet.");
+	case MIDIERR_STILLPLAYING:	
+		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
+		sprintf_s(ErrorString, MaxSize, "A MIDIHDR buffer is still being played by OmniMIDI.");
+	default:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ERROR");
+		sprintf_s(ErrorString, MaxSize, "Windows Multimedia encountered an unknown error.");
 	}
+
+	MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM error", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+	PrintMessageToDebugLog(ErrorTitle, ErrorString);
 
 	return ErrorToDisplay;
 }

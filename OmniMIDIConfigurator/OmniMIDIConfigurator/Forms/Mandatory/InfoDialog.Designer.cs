@@ -282,39 +282,43 @@
             // OKClose
             // 
             this.OKClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKClose.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.OKClose.Location = new System.Drawing.Point(286, 339);
             this.OKClose.Name = "OKClose";
             this.OKClose.Size = new System.Drawing.Size(87, 23);
             this.OKClose.TabIndex = 7;
             this.OKClose.Text = "OK";
-            this.OKClose.UseVisualStyleBackColor = true;
+            this.OKClose.UseVisualStyleBackColor = false;
             this.OKClose.Click += new System.EventHandler(this.OKClose_Click);
             // 
             // CTC
             // 
             this.CTC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CTC.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.CTC.Location = new System.Drawing.Point(9, 339);
             this.CTC.Name = "CTC";
             this.CTC.Size = new System.Drawing.Size(105, 23);
             this.CTC.TabIndex = 8;
             this.CTC.Text = "Copy to clipboard";
-            this.CTC.UseVisualStyleBackColor = true;
+            this.CTC.UseVisualStyleBackColor = false;
             this.CTC.Click += new System.EventHandler(this.CTC_Click);
             // 
             // CFU
             // 
             this.CFU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.CFU.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.CFU.Location = new System.Drawing.Point(120, 339);
             this.CFU.Name = "CFU";
             this.CFU.Size = new System.Drawing.Size(105, 23);
             this.CFU.TabIndex = 9;
             this.CFU.Text = "Check for updates";
-            this.CFU.UseVisualStyleBackColor = true;
+            this.CFU.UseVisualStyleBackColor = false;
             this.CFU.Click += new System.EventHandler(this.CFU_Click);
             // 
             // DonateBtn
             // 
             this.DonateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DonateBtn.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.DonateBtn.Image = global::OmniMIDIConfigurator.Properties.Resources.ppdonate;
             this.DonateBtn.Location = new System.Drawing.Point(285, 12);
             this.DonateBtn.Name = "DonateBtn";
@@ -323,7 +327,7 @@
             this.DonateBtn.Text = "Donate";
             this.DonateBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.DonateBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.DonateBtn.UseVisualStyleBackColor = true;
+            this.DonateBtn.UseVisualStyleBackColor = false;
             this.DonateBtn.Click += new System.EventHandler(this.DonateBtn_Click);
             // 
             // BranchToolTip

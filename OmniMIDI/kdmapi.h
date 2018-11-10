@@ -11,7 +11,6 @@ BOOL StreamHealthCheck(BOOL& Initialized) {
 
 	// Check if the call failed
 	if ((BASS_ChannelIsActive(OMStream) == BASS_ACTIVE_STOPPED || ManagedSettings.LiveChanges)) {
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		PrintMessageToDebugLog("StreamWatchdog", "Stream is down! Restarting audio stream...");
 
 		// It did, reload the settings and reallocate the memory for the buffer
@@ -83,6 +82,8 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 }
 
 void DoStartClient() {
+	GetAppName();
+
 	if (!DriverInitStatus && BannedSystemProcess() != TRUE) {
 		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
 
@@ -91,7 +92,6 @@ void DoStartClient() {
 		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
 		// Parse the app name, and start the debug pipe to the debug window
-		GetAppName();
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
 		// Create an event, to load the default SoundFonts synchronously
@@ -116,7 +116,6 @@ void DoStartClient() {
 			if (!BASSLoadedToMemory) CrashMessage("NoBASSFound");
 
 			// Initialize the BASS output device, and set up the streams
-			SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 			if (InitializeBASS(FALSE)) {
 				SetUpStream();
 				LoadSoundFontsToStream();
@@ -389,7 +388,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 		PrintMessageToDebugLog("KDMAPI_CDS", "Applying new settings to the driver...");
 
 		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-		CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Set", FALSE);
 
 		// Set the rendering time threshold, if the driver's own panic system is disabled
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);

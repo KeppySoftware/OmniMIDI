@@ -50,21 +50,17 @@ void CloseThread(HANDLE thread) {
 	thread = NULL;
 }
 
-void DLLLoadError(LPCWSTR dll) {
-	TCHAR errormessage[MAX_PATH] = L"An error has occurred while loading the following library: ";
-	TCHAR clickokmsg[MAX_PATH] = L"\n\nClick OK to close the program.";
-	lstrcat(errormessage, dll);
-	lstrcat(errormessage, clickokmsg);
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+void DLLLoadError(LPWSTR dll) {
+	TCHAR Error[NTFS_MAX_PATH] = { 0 };
 
 	// Print to log
 	PrintCurrentTime();
-	printf("ERROR | Unable to load the following DLL: %s", dll);
-	printf("\n");
+	printf("ERROR | Unable to load the following DLL: %s\n", dll);
 
-	MessageBoxW(NULL, errormessage, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
+	// Show error message
+	swprintf_s(Error, L"An error has occurred while loading the following library: %s\n\nClick OK to close the program.", dll);
+	MessageBoxW(NULL, Error, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
 	exit(0);
-	return;
 }
 
 long long TimeNow() {
@@ -151,20 +147,20 @@ BOOL LoadBASSFunctions()
 
 			// Load all the functions into memory
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
+			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetFormat);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
 			LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
 			LOADBASSASIOFUNCTION(BASS_ASIO_Free);
 			LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
+			LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
 			LOADBASSASIOFUNCTION(BASS_ASIO_Init);
 			LOADBASSASIOFUNCTION(BASS_ASIO_SetDSD);
 			LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
@@ -180,16 +176,16 @@ BOOL LoadBASSFunctions()
 			LOADBASSFUNCTION(BASS_ChannelPlay);
 			LOADBASSFUNCTION(BASS_ChannelRemoveFX);
 			LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
+			LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
 			LOADBASSFUNCTION(BASS_ChannelSetAttribute);
 			LOADBASSFUNCTION(BASS_ChannelSetDevice);
 			LOADBASSFUNCTION(BASS_ChannelSetFX);
 			LOADBASSFUNCTION(BASS_ChannelSetSync);
 			LOADBASSFUNCTION(BASS_ChannelStop);
 			LOADBASSFUNCTION(BASS_ChannelUpdate);
-			LOADBASSFUNCTION(BASS_Update);
 			LOADBASSFUNCTION(BASS_ErrorGetCode);
+			LOADBASSFUNCTION(BASS_FXSetParameters);
 			LOADBASSFUNCTION(BASS_Free);
-			LOADBASSFUNCTION(BASS_Stop);
 			LOADBASSFUNCTION(BASS_GetDevice);
 			LOADBASSFUNCTION(BASS_GetDeviceInfo);
 			LOADBASSFUNCTION(BASS_GetInfo);
@@ -198,8 +194,9 @@ BOOL LoadBASSFunctions()
 			LOADBASSFUNCTION(BASS_SetConfig);
 			LOADBASSFUNCTION(BASS_SetDevice);
 			LOADBASSFUNCTION(BASS_SetVolume);
+			LOADBASSFUNCTION(BASS_Stop);
 			LOADBASSFUNCTION(BASS_StreamFree);
-			LOADBASSFUNCTION(BASS_FXSetParameters);
+			LOADBASSFUNCTION(BASS_Update);
 			LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
 			LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
 			LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
@@ -209,7 +206,6 @@ BOOL LoadBASSFunctions()
 			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
 			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
 			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
-			// LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFilter);		// Not needed
 
 			PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
 			return TRUE;
@@ -274,7 +270,7 @@ void AllocateMemory(BOOL restart) {
 #if !_WIN64
 		// !! ONLY FOR x86 APPS !!
 
-		// Check if the EVBuffer size goes above 1GB of RAM
+		// Check if the EVBuffer size goes above 512MB of RAM
 		// Each 32-bit app is limited to a 2GB working set size
 		if (TempEvBufferSize > 536870912) {
 			// It is, limit the EVBuffer to 512MB
@@ -322,7 +318,7 @@ void AllocateMemory(BOOL restart) {
 		if (sndbf != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer already allocated.");
 		else {
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating audio buffer...");
-			sndbf = (float *)calloc(256.0f, sizeof(float));
+			sndbf = (float *)calloc(sndbflen, sizeof(float));
 			if (!sndbf) {
 				PrintMessageToDebugLog("AllocateMemoryFunc", "An error has occurred while allocating the audio buffer.");
 				MessageBox(NULL, L"Fatal error while allocating the sound buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
@@ -482,7 +478,7 @@ void LoadSettingsRT() {
 				ChVolumeStruct.fTime = 0.0f;
 				ChVolumeStruct.lCurve = 0;
 				BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-				CheckUp(ERRORCODE, L"Stream Volume FX Set", FALSE);
+				CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Set", FALSE);
 			}
 
 			// Check if the value is different from the temporary one
@@ -570,17 +566,17 @@ void LoadCustomInstruments() {
 	}
 }
 
-int AudioRenderingType(int value) {
+int AudioRenderingType(BOOLEAN IsItStreamCreation, INT RegistryVal) {
 	if (ManagedSettings.CurrentEngine == ASIO_ENGINE) return BASS_SAMPLE_FLOAT;
 	else {
-		if (value == 1)
-			return BASS_SAMPLE_FLOAT;
-		else if (value == 2 || value == 0)
-			return 0;
-		else if (value == 3)
-			return BASS_SAMPLE_8BITS;
+		if (RegistryVal == 1)
+			return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
+		else if (RegistryVal == 2 || RegistryVal == 0)
+			return IsItStreamCreation ? 0 : BASS_DATA_FIXED;
+		else if (RegistryVal == 3)
+			return IsItStreamCreation ? BASS_SAMPLE_8BITS : BASS_DATA_FIXED;
 		else
-			return BASS_SAMPLE_FLOAT;
+			return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
 	}
 }
 
@@ -659,6 +655,8 @@ void FillContentDebug(
 	DOUBLE OL,					// ASIO's output latency
 	BOOL BUFOVD					// EVBuffer overload
 ) {
+	GetAppName();
+
 	std::locale::global(std::locale::classic());	// DO NOT REMOVE
 
 	std::string PipeContent;
@@ -668,7 +666,11 @@ void FillContentDebug(
 	PipeContent += "\nCurrentApp = ";
 	PipeContent += AppPath;
 	PipeContent += "\nBitApp = ";
-	PipeContent += bitapp;
+#if defined(_WIN64)
+	PipeContent += "64-bit";
+#elif defined(_WIN32)
+	PipeContent += "32-bit";
+#endif
 
 	for (int i = 0; i <= 15; ++i) {
 		ManagedDebugInfo.ActiveVoices[i] = cvvalues[i];
@@ -695,8 +697,7 @@ void FillContentDebug(
 }
 
 void ParseDebugData() {
-	DWORD ASIOTempInLatency;
-	DWORD ASIOTempOutLatency;
+	DWORD ASIOTempInLatency, ASIOTempOutLatency;
 	DOUBLE ASIORate;
 
 	BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &RenderingTime);

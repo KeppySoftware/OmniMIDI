@@ -1230,12 +1230,13 @@
             // CopyToClip1
             // 
             this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CopyToClip1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.CopyToClip1.Location = new System.Drawing.Point(281, 199);
             this.CopyToClip1.Name = "CopyToClip1";
             this.CopyToClip1.Size = new System.Drawing.Size(148, 23);
             this.CopyToClip1.TabIndex = 34;
             this.CopyToClip1.Text = "Copy all tabs to clipboard";
-            this.CopyToClip1.UseVisualStyleBackColor = true;
+            this.CopyToClip1.UseVisualStyleBackColor = false;
             this.CopyToClip1.Click += new System.EventHandler(this.CopyToClip_Click);
             // 
             // KSLogo

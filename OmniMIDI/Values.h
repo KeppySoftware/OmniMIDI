@@ -97,9 +97,9 @@ static HINSTANCE ntdll = NULL;							// ?
 
 static CHAR AppPath[NTFS_MAX_PATH];		// debug info
 static TCHAR AppPathW[NTFS_MAX_PATH];	// debug info
-static CHAR AppName[MAX_PATH];		// debug info
+static CHAR AppName[MAX_PATH];			// debug info
 static TCHAR AppNameW[MAX_PATH];		// debug info
-static CHAR bitapp[MAX_PATH];			// debug info
+
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 
 // Main values
@@ -109,7 +109,7 @@ static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
 static BOOL CloseStreamMidiOutClose = TRUE;	// Close the stream when midiOutClose is called
 
-static HANDLE hConsole;						// Debug console
+static FLOAT sndbflen = 64.0f;				// AudToWAV
 static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug

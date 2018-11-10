@@ -123,7 +123,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				start2 = TimeNow();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + 256.0f * sizeof(float));
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + sndbflen * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
@@ -157,7 +157,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 				if (!HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + 256.0f * sizeof(float));
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
@@ -298,10 +298,10 @@ void InitializeStream(INT32 mixfreq) {
 	// Create the stream with 16 MIDI channels, and the various settings
 	OMStream = BASS_MIDI_StreamCreate(16,
 		(isdecode ? BASS_STREAM_DECODE : 0) | (ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) | (ManagedSettings.MonoRendering ? BASS_SAMPLE_MONO : 0) |
-		AudioRenderingType(ManagedSettings.AudioBitDepth) | (ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | (ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX) | (ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0),
+		AudioRenderingType(TRUE, ManagedSettings.AudioBitDepth) | (ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | (ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX) | (ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0),
 		mixfreq);
 
-	CheckUp(ERRORCODE, L"MIDI Stream Initialization", TRUE);
+	CheckUp(FALSE, ERRORCODE, L"MIDI Stream Initialization", TRUE);
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
 }
@@ -355,7 +355,7 @@ void InitializeBASSEnc() {
 		// If the user chose to output to WAV, then continue initializing BASSEnc
 		BASS_Encode_Start(OMStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
 		// Error handling
-		CheckUp(ERRORCODE, L"Encoder Start", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Encoder Start", TRUE);
 		break;
 	case IDNO:
 		// Otherwise, open the configurator
@@ -439,7 +439,7 @@ ULONG ASIODevicesCount() {
 	return count;
 }
 
-ULONG ASIODetectID() {
+DWORD ASIODetectID() {
 	try {
 		// Initialize BASSASIO info
 		BASS_ASIO_DEVICEINFO info;
@@ -485,12 +485,12 @@ void InitializeBASSOutput() {
 	{
 		// And finally, open the stream
 		BASS_ChannelPlay(OMStream, false);
-		CheckUp(ERRORCODE, L"Channel Play", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
 		
 		// If using WASAPI, disable playback buffering
 		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
 			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
-			CheckUp(ERRORCODE, L"Disable Stream Buffering", TRUE);
+			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering", TRUE);
 		}
 	}
 }
@@ -505,7 +505,7 @@ BOOL InitializeBASSLibrary() {
 
 	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
 	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, flags, 0, NULL);
-	CheckUp(ERRORCODE, L"BASS Lib Initialization", TRUE);
+	CheckUp(FALSE, ERRORCODE, L"BASS Lib Initialization", TRUE);
 
 	//load_bassaddons();
 
@@ -526,21 +526,21 @@ BOOL ApplyStreamSettings() {
 	else {
 		// Load the settings to BASS
 		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		CheckUp(ERRORCODE, L"Stream Attributes 1", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 1", TRUE);
 		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		CheckUp(ERRORCODE, L"Stream Attributes 2", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 2", TRUE);
 		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		CheckUp(ERRORCODE, L"Stream Attributes 3", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 3", TRUE);
 		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
-		CheckUp(ERRORCODE, L"Stream Attributes 4", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 4", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-		CheckUp(ERRORCODE, L"Stream Attributes 5", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 5", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-		CheckUp(ERRORCODE, L"Stream Attributes 6", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 6", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-		CheckUp(ERRORCODE, L"Stream Attributes 7", TRUE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 7", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		CheckUp(ERRORCODE, L"Stream Attributes 8", FALSE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", FALSE);
 	}
 	return TRUE;
 }
@@ -553,7 +553,7 @@ void PrepareVolumeKnob() {
 	ChVolumeStruct.fTime = 0.0f;
 	ChVolumeStruct.lCurve = 0;
 	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(ERRORCODE, L"Stream Volume FX Preparation", FALSE);
+	CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Preparation", FALSE);
 }
 
 void FallbackToWASAPIEngine() {
@@ -578,13 +578,13 @@ void InitializeWASAPI() {
 	LONG DeviceID = WASAPIDetectID();
 
 	BASS_WASAPI_Init(DeviceID, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-	CheckUp(ERRORCODE, L"OMWASAPIInitInfo");
+	CheckUp(FALSE, ERRORCODE, L"OMWASAPIInitInfo");
 	BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
-	CheckUp(ERRORCODE, L"OMWASAPIGetDeviceInfo");
+	CheckUp(FALSE, ERRORCODE, L"OMWASAPIGetDeviceInfo");
 	BASS_WASAPI_GetInfo(&infoW);
-	CheckUp(ERRORCODE, L"OMWASAPIGetBufInfo");
+	CheckUp(FALSE, ERRORCODE, L"OMWASAPIGetBufInfo");
 	BASS_WASAPI_Free();
-	CheckUp(ERRORCODE, L"OMWASAPIFreeInfo");
+	CheckUp(FALSE, ERRORCODE, L"OMWASAPIFreeInfo");
 
 	InitializeStream(infoDW.mixfreq);
 
@@ -592,16 +592,16 @@ void InitializeWASAPI() {
 		BASS_WASAPI_BUFFER | BASS_WASAPI_EVENT,
 		(wasapiex ? ((float)frames / 1000.0f) : infoW.buflen + 5),
 		0, WASAPIProc, NULL)) {
-		CheckUp(ERRORCODE, L"OMInitWASAPI");
+		CheckUp(FALSE, ERRORCODE, L"OMInitWASAPI");
 		BASS_WASAPI_Start();
-		CheckUp(ERRORCODE, L"OMStartStreamWASAPI");
+		CheckUp(FALSE, ERRORCODE, L"OMStartStreamWASAPI");
 	}
 	else {
 		MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to BASSEnc...\nPress OK to continue.", L"OmniMIDI - Can not open WASAPI device", MB_OK | MB_ICONERROR);
 		ManagedSettings.CurrentEngine = AUDTOWAV;
 		InitializeStream(ManagedSettings.AudioFrequency);
 		InitializeBASSEnc();
-		CheckUp(ERRORCODE, L"OMInitEnc");
+		CheckUp(FALSE, ERRORCODE, L"OMInitEnc");
 	}
 }
 */
@@ -610,7 +610,7 @@ void InitializeWAVEnc() {
 	// Initialize the ".WAV mode"
 	InitializeStream(ManagedSettings.AudioFrequency);
 	InitializeBASSEnc();
-	CheckUp(ERRORCODE, L"Encoder Initialization", TRUE);
+	CheckUp(FALSE, ERRORCODE, L"Encoder Initialization", TRUE);
 }
 
 void InitializeASIO() {
@@ -639,7 +639,7 @@ void InitializeASIO() {
 	if (BASS_ASIO_Init(ASIODetectID(), (ASIOSeparateThread ? BASS_ASIO_THREAD : NULL) | BASS_ASIO_JOINORDER)) {
 		// Set the audio frequency
 		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
-		CheckUpASIO(ERRORCODE, L"ASIO Device Frequency Set", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Device Frequency Set", TRUE);
 
 		// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
@@ -647,33 +647,33 @@ void InitializeASIO() {
 		// If mono rendering is enabled, mirror the left channel to the right one as well
 		if (ManagedSettings.MonoRendering) {
 			BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
-			CheckUpASIO(ERRORCODE, L"ASIO Device Mono Mode", TRUE);
+			CheckUp(TRUE, ERRORCODE, L"ASIO Device Mono Mode", TRUE);
 		}
 
 		// Set the bit depth for the right channel as well
 		BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
-		CheckUpASIO(ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
 
 		// If mono rendering is enabled, set the audio frequency of the channels to half the value of the frequency selected
 		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
 		// Else, set it to the default frequency
 		else BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency);
-		CheckUpASIO(ERRORCODE, L"ASIO Channel Frequency Set", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Frequency Set", TRUE);
 
 		// Enable the channels
 		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
-		CheckUpASIO(ERRORCODE, L"ASIO Channel Enable", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Enable", TRUE);
 		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-		CheckUpASIO(ERRORCODE, L"ASIO Channel Join", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Join", TRUE);
 
 		// And start the ASIO output
 		BASS_ASIO_Start(0, 2);
-		CheckUpASIO(ERRORCODE, L"ASIO Start Output", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Start Output", TRUE);
 
 		PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
 	}
 	// Else, something is wrong
-	else CheckUpASIO(ERRORCODE, L"ASIO Initialization", TRUE);
+	else CheckUp(TRUE, ERRORCODE, L"ASIO Initialization", TRUE);
 
 	ASIOReady = TRUE;
 }

@@ -131,9 +131,6 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 
 void basserrconsole(int color, LPCWSTR error, LPCWSTR desc) {
 	if (ManagedSettings.DebugMode) {
-		// Set color
-		SetConsoleTextAttribute(hConsole, color);
-
 		// Get time
 		char buff[20];
 		struct tm *sTm;
@@ -234,8 +231,7 @@ std::wstring GetErrorAsString(DWORD ErrorID)
 void CrashMessage(LPCSTR part) {
 	DWORD ErrorID = GetLastError();
 
-	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-	std::cout << std::endl << "(Error at \"" << part << "\") - Fatal error during the execution of the driver.";
+	printf("(Error at \"%s\") - Fatal error during the execution of the driver.", part);
 
 	std::wstringstream ErrorMessage;
 	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
@@ -255,19 +251,10 @@ void CrashMessage(LPCSTR part) {
 	ExitThread(ErrorID);
 }
 
-BOOL CheckUp(int mode, TCHAR * codeline, bool showerror) {
-	int error = BASS_ErrorGetCode();
+BOOL CheckUp(BOOL IsASIO, int mode, TCHAR * codeline, bool showerror) {
+	int error = IsASIO ? BASS_ASIO_ErrorGetCode() : BASS_ErrorGetCode();
 	if (error != 0) {
-		ShowError(error, mode, L"BASS", codeline, showerror);
-		return FALSE;
-	}
-	return TRUE;
-}
-
-BOOL CheckUpASIO(int mode, TCHAR * codeline, bool showerror) {
-	DWORD error = BASS_ASIO_ErrorGetCode();
-	if (error != 0) {
-		ShowError(error, mode, L"BASSASIO", codeline, showerror);
+		ShowError(error, mode, IsASIO ? L"BASS" : L"BASSASIO", codeline, showerror);
 		return FALSE;
 	}
 	return TRUE;

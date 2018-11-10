@@ -308,7 +308,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		*/
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "MIDI_IO_COOKED not supported by OmniMIDI.");
-		return MMSYSERR_NOTSUPPORTED;
+		return DebugResult(MMSYSERR_NOTSUPPORTED);
 	case MODM_PREPARE:
 		// Pass it to a KDMAPI function
 		return PrepareLongData((MIDIHDR*)dwParam1);
@@ -346,7 +346,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 		if ((DWORD)dwParam2 & MIDI_IO_COOKED) {
 			PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED not supported by OmniMIDI.");
-			return MMSYSERR_NOTENABLED;
+			return DebugResult(MMSYSERR_NOTENABLED);
 		}
 
 		if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
