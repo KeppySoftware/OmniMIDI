@@ -81,6 +81,7 @@ void CreateConsole() {
 		// Begin writing to it
 		printf("Those who cannot change their minds cannot change anything.\n\n");
 		printf("OmniMIDI %d.%d.%d CR%d (KDMAPI %d.%d.%d, Revision %d)\n", major, minor, build, revision, CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
+		printf("%d threads available to the ASIO engine\n", std::thread::hardware_concurrency());
 		printf("Copyright(C) 2013 - KaleidonKep99\n\n");
 		IntroAlreadyShown = TRUE;
 	}
@@ -93,10 +94,8 @@ inline bool DebugFileExists(const std::string& name) {
 		fclose(file);
 		return true;
 	}
-	else {
-		// It doesn't, return false
-		return false;
-	}
+
+	return false;
 }
 
 void PrintCurrentTime() {

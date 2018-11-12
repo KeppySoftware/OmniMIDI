@@ -255,14 +255,21 @@ namespace OmniMIDIConfigurator
 
         private void UDBLi_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResultR = MessageBox.Show("Do you want to update/restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dialogResultR == DialogResult.Yes)
+            try
             {
-                Program.DebugToConsole(false, "Downloading the default blacklist", null);
-                string dbl = "https://raw.githubusercontent.com/KaleidonKep99/OmniMIDI/master/output/OmniMIDI.dbl";
-                Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist...", dbl, Path.GetDirectoryName(DefBlacklistPath), UpdateSystem.USERFOLDER_PATH, false);
-                frm.StartPosition = FormStartPosition.CenterScreen;
-                frm.ShowDialog();
+                DialogResult dialogResultR = MessageBox.Show("Do you want to update/restore the default blacklist?", "Restore the default blacklist", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResultR == DialogResult.Yes)
+                {
+                    Program.DebugToConsole(false, "Downloading the default blacklist", null);
+                    string dbl = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/output/OmniMIDI.dbl";
+                    Forms.DLEngine frm = new Forms.DLEngine(null, "Downloading the default blacklist...", dbl, Path.GetDirectoryName(DefBlacklistPath), UpdateSystem.USERFOLDER_PATH, false);
+                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    frm.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error while saving the blacklist!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

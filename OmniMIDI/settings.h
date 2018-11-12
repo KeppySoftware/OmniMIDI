@@ -405,6 +405,7 @@ void LoadSettings(BOOL restart)
 
 		// Assign the pointed functions
 		_PrsData = HyperMode ? ParseDataHyper : ParseData;
+		_StoBASSMIDI = HyperMode ? SendToBASSMIDIHyper : SendToBASSMIDI;
 		_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
 		_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
 
@@ -499,6 +500,7 @@ void LoadSettingsRT() {
 
 				// Check if "Hyper-playback" mode has been enabled
 				_PrsData = HyperMode ? ParseDataHyper : ParseData;
+				_StoBASSMIDI = HyperMode ? SendToBASSMIDIHyper : SendToBASSMIDI;
 				_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
 				_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
 
@@ -673,12 +675,13 @@ void FillContentDebug(
 	PipeContent += "32-bit";
 #endif
 
+	ManagedDebugInfo.RenderingTime = CCUI0;
+
 	for (int i = 0; i <= 15; ++i) {
 		ManagedDebugInfo.ActiveVoices[i] = cvvalues[i];
 		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
 	}
 
-	ManagedDebugInfo.RenderingTime = CCUI0;
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);

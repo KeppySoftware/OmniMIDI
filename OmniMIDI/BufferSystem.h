@@ -28,38 +28,47 @@ int BufferCheckHyper(void) {
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
+	DWORD dwParam2 = dwParam1 & 0xF0;
+	DWORD len = (dwParam1 & 0xF0 >= 0xF8 && dwParam1 & 0xF0 <= 0xFF) ? 1 : ((dwParam1 & 0xF0 == 0xC0 || dwParam1 & 0xF0 == 0xD0) ? 2 : 3);
+
 	/*
 
 	THIS IS A WIP
 
-	if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
-		BASS_MIDI_EVENT e[2];
-		memset(e, 0, sizeof(e));
+	if (OverrideNoteOff) {
+		if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
+			BASS_MIDI_EVENT e[2];
+			memset(e, 0, sizeof(e));
 
-		e[0].event = MIDI_EVENT_NOTE;
-		e[0].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), LOBYTE(HIWORD(dwParam1)));
-		e[0].chan = dwParam1 & 0xF;
-		e[0].pos = 0;
-		e[0].tick = 0;
+			e[0].event = MIDI_EVENT_NOTE;
+			e[0].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), LOBYTE(HIWORD(dwParam1)));
+			e[0].chan = dwParam1 & 0xF;
+			e[0].pos = 0;
+			e[0].tick = 0;
 
-		e[1].event = MIDI_EVENT_NOTE;
-		e[1].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
-		e[1].chan = dwParam1 & 0xF;
-		e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, 0.25);
-		e[1].tick = 0;
+			e[1].event = MIDI_EVENT_NOTE;
+			e[1].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
+			e[1].chan = dwParam1 & 0xF;
+			e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, 0.25);
+			e[1].tick = 0;
 
-		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, 2);
-		return;
+			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, 2);
+			return;
+		}
+		else if (((dwParam1 & 0xFF) & 0xF0) == 0x80) return;
 	}
-	else if (((dwParam1 & 0xFF) & 0xF0) == 0x80) return;
 
 	*/
 
-	DWORD dwParam2 = dwParam1 & 0xF0;
-	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-
 	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
+}
+
+void SendToBASSMIDIHyper(DWORD dwParam1) {
+	BASS_MIDI_StreamEvents(
+		OMStream, BASS_MIDI_EVENTS_RAW, 
+		&dwParam1, (dwParam1 & 0xF0 >= 0xF8 && dwParam1 & 0xF0 <= 0xFF) ? 1 : ((dwParam1 & 0xF0 == 0xC0 || dwParam1 & 0xF0 == 0xD0) ? 2 : 3)
+	);
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
@@ -165,26 +174,22 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 	Understandable version of what the following function does
 	*/
 
-	if (ManagedSettings.IgnoreNotesBetweenVel)
+	if (ManagedSettings.IgnoreNotesBetweenVel && !((dwParam1 - 0x80) & 0xE0)
+		&& ((HIWORD(dwParam1) & 0xFF) >= ManagedSettings.MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= ManagedSettings.MaxVelIgnore))
 	{
-		if (!((dwParam1 - 0x80) & 0xE0)
-			&& ((HIWORD(dwParam1) & 0xFF) >= ManagedSettings.MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= ManagedSettings.MaxVelIgnore))
+		PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
+		return TRUE;
+	}
+
+	if (ManagedSettings.LimitTo88Keys && (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89))
+	{
+		if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
 		{
 			PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
 			return TRUE;
 		}
 	}
-	if (ManagedSettings.LimitTo88Keys)
-	{
-		if (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89)
-		{
-			if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
-			{
-				PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
-				return TRUE;
-			}
-		}
-	}
+
 	return FALSE;
 }
 

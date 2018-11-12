@@ -443,7 +443,7 @@ ULONG ASIODevicesCount() {
 	return count;
 }
 
-DWORD ASIODetectID() {
+LONG ASIODetectID() {
 	try {
 		// Initialize BASSASIO info
 		BASS_ASIO_DEVICEINFO info;
@@ -471,7 +471,7 @@ DWORD ASIODetectID() {
 
 		// Otherwise, return the first ASIO device
 		PrintMessageToDebugLog("ASIODetectIDFunc", "No matches found, initializing first ASIO device available...");
-		return 0;
+		return -1;
 	}
 	catch (...) {
 		CrashMessage("ASIODetectID");
@@ -638,7 +638,14 @@ void InitializeASIO() {
 	// RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
 
 	// Get ASIO device to use
-	DWORD DeviceToUse = ASIODetectID();
+	LONG DeviceToUse = ASIODetectID();
+	if (DeviceToUse == -1) {
+		// If no devices are available, return an error, and switch to WASAPI
+		PrintMessageToDebugLog("InitializeASIOFunc", "Failed to get a valid ASIO device.");
+		MessageBox(NULL, L"Failed to get a valid ASIO device.\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+		FallbackToWASAPIEngine();
+		return;
+	}
 
 	// If ASIO is successfully initialized, go on with the initialization process
 	PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
@@ -678,7 +685,7 @@ void InitializeASIO() {
 		}
 
 		// And start the ASIO output
-		BASS_ASIO_Start(0, 0);
+		BASS_ASIO_Start(0, std::thread::hardware_concurrency());
 		CheckUp(TRUE, ERRORCODE, L"ASIO Start Output", TRUE);
 
 		// Initialize the stream

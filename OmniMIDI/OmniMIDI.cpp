@@ -85,7 +85,7 @@ static NULVM NtUnlockVirtualMemory = 0;
 
 // Blinx best game
 static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL;	// BASS libs handles
-static HPLUGIN bassflac = NULL, bassopus = NULL, basswv = NULL;					// BASS codecs handles
+
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
@@ -99,6 +99,10 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
+void DummySendToBASSMIDI(DWORD dwParam1) {
+	return;
+}
+
 MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	return MIDIERR_NOTREADY;
 }
@@ -106,6 +110,7 @@ MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 // Hyper switch
 static BOOL HyperMode = 0;
 static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = DummyParseData;
+static void(*_StoBASSMIDI)(DWORD dwParam1) = DummySendToBASSMIDI;
 static DWORD(*_PlayBufData)(void) = 0;
 static DWORD(*_PlayBufDataChk)(void) = 0;
 // What does it do? It gets rid of the useless functions,

@@ -220,31 +220,31 @@ static BOOL FontLoader(LPCWSTR in_path) {
 			// Free fonts, to prepare the arrays
 			FreeFonts();
 
-			for (auto obj = TempSoundFonts.begin(); obj != TempSoundFonts.end(); ++obj)
+			for (auto CurrentSF = TempSoundFonts.begin(); CurrentSF != TempSoundFonts.end(); ++CurrentSF)
 			{
-				if (!obj->EnableState) {
+				if (!CurrentSF->EnableState) {
 					PrintMessageToDebugLog("NewSFLoader", "SoundFont disabled, skipping to next one...");
 					continue;
 				}
 
-				if (PathFileExists(obj->Path))
+				if (PathFileExists(CurrentSF->Path))
 				{
 					PrintMessageToDebugLog("NewSFLoader", "Initializing SoundFont...");
-					HSOUNDFONT font = BASS_MIDI_FontInit(obj->Path, (obj->XGBankMode ? BASS_MIDI_FONT_XGDRUMS : 0) | BASS_UNICODE);
+					HSOUNDFONT font = BASS_MIDI_FontInit(CurrentSF->Path, (CurrentSF->XGBankMode ? BASS_MIDI_FONT_XGDRUMS : 0) | BASS_UNICODE);
 					if (!font) {
 						PrintMessageToDebugLog("NewSFLoader", "An error has occurred while initializing the SoundFont.");
-						SoundFontError(L"An error has occurred while initializing the SoundFont.", obj->Path);
+						SoundFontError(L"An error has occurred while initializing the SoundFont.", CurrentSF->Path);
 						continue;
 					}
 
 					PrintMessageToDebugLog("NewSFLoader", "Preparing BASS_MIDI_FONTEX...");
-					BASS_MIDI_FONTEX FEX = { font, obj->SourcePreset, obj->SourceBank, obj->DestinationPreset, obj->DestinationBank, 0 };
+					BASS_MIDI_FONTEX FEX = { font, CurrentSF->SourcePreset, CurrentSF->SourceBank, CurrentSF->DestinationPreset, CurrentSF->DestinationBank, 0 };
 
 					if (ManagedSettings.PreloadSoundFonts) {
 						PrintMessageToDebugLog("NewSFLoader", "Preloading SoundFont...");
-						if (!BASS_MIDI_FontLoad(font, obj->SourcePreset, obj->SourceBank)) {
+						if (!BASS_MIDI_FontLoad(font, CurrentSF->SourcePreset, CurrentSF->SourceBank)) {
 							PrintMessageToDebugLog("NewSFLoader", "An error has occurred while preloading the SoundFont.");
-							SoundFontError(L"An error has occurred while preloading the SoundFont.", obj->Path);
+							SoundFontError(L"An error has occurred while preloading the SoundFont.", CurrentSF->Path);
 							continue;
 						}
 					}
@@ -254,7 +254,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 					SoundFontPresets.push_back(FEX);
 				}
 				else {
-					SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", obj->Path);
+					SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", CurrentSF->Path);
 				}
 			}
 
