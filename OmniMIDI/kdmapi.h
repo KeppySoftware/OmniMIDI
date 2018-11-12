@@ -276,7 +276,7 @@ MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
-		SendToBASSMIDI(dwMsg);
+		_StoBASSMIDI(dwMsg);
 		return MMSYSERR_NOERROR;
 	}
 	return DebugResult(MIDIERR_NOTREADY);

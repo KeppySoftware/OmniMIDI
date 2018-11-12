@@ -28,9 +28,6 @@ int BufferCheckHyper(void) {
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
-	DWORD dwParam2 = dwParam1 & 0xF0;
-	DWORD len = (dwParam1 & 0xF0 >= 0xF8 && dwParam1 & 0xF0 <= 0xFF) ? 1 : ((dwParam1 & 0xF0 == 0xC0 || dwParam1 & 0xF0 == 0xD0) ? 2 : 3);
-
 	/*
 
 	THIS IS A WIP
@@ -60,6 +57,9 @@ void SendToBASSMIDI(DWORD dwParam1) {
 
 	*/
 
+	DWORD dwParam2 = dwParam1 & 0xF0;
+	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
+
 	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
@@ -67,7 +67,7 @@ void SendToBASSMIDI(DWORD dwParam1) {
 void SendToBASSMIDIHyper(DWORD dwParam1) {
 	BASS_MIDI_StreamEvents(
 		OMStream, BASS_MIDI_EVENTS_RAW, 
-		&dwParam1, (dwParam1 & 0xF0 >= 0xF8 && dwParam1 & 0xF0 <= 0xFF) ? 1 : ((dwParam1 & 0xF0 == 0xC0 || dwParam1 & 0xF0 == 0xD0) ? 2 : 3)
+		&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
 	);
 }
 
@@ -88,7 +88,7 @@ DWORD __inline PlayBufferedData(void) {
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
-		SendToBASSMIDI(TempBuffer.dwParam1);
+		_StoBASSMIDI(TempBuffer.dwParam1);
 	} while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
@@ -104,7 +104,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
-		SendToBASSMIDI(TempBuffer.dwParam1);
+		_StoBASSMIDI(TempBuffer.dwParam1);
 	} while ((readhead != writehead) ? ~0 : 0);
 
 	return 0;
@@ -121,7 +121,7 @@ DWORD __inline PlayBufferedDataChunk(void) {
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
-		SendToBASSMIDI(TempBuffer.dwParam1);
+		_StoBASSMIDI(TempBuffer.dwParam1);
 	} while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
 }
 
@@ -136,7 +136,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 		evbuf_t TempBuffer = *(evbuf + tempevent);
 		LockSystem.UnlockForReading();
 
-		SendToBASSMIDI(TempBuffer.dwParam1);
+		_StoBASSMIDI(TempBuffer.dwParam1);
 	} while ((readhead != whe) ? ~0 : 0);
 }
 
