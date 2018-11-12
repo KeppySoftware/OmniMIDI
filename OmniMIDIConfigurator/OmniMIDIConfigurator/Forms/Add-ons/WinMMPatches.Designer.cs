@@ -142,7 +142,7 @@
             this.AcceptButton = this.OKClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(247, 168);
             this.Controls.Add(this.DAWPatch);
             this.Controls.Add(this.BMPatch);

@@ -385,6 +385,10 @@ void FreeUpBASS() {
 
 void FreeUpBASSASIO() {
 	// Free up ASIO before doing anything
+	BASS_ASIO_ChannelPause(FALSE, 0);
+	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO channels have been paused.");
+	BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
+	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO channels have been reset.");
 	BASS_ASIO_Stop();
 	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO stopped.");
 	BASS_ASIO_Free();
@@ -563,7 +567,9 @@ void FallbackToWASAPIEngine() {
 	FreeUpBASSASIO();
 	FreeUpBASS();
 
-	InitializeBASSOutput();
+	if (InitializeBASSLibrary()) 
+		InitializeBASSOutput();
+	else CrashMessage("WASAPIFallback");
 }
 
 /*
@@ -627,32 +633,25 @@ void InitializeASIO() {
 	}
 
 	// Check if driver is supposed to run in a separate thread (TURNED ON PERMANENTLY ATM)
-	BOOL ASIOSeparateThread = 1;
+	// BOOL ASIOSeparateThread = TRUE;
 	// OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 	// RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
 
-	// Else, initialize the stream and proceed to initialize ASIO as well
-	InitializeStream(ManagedSettings.AudioFrequency);
+	// Get ASIO device to use
+	DWORD DeviceToUse = ASIODetectID();
 
 	// If ASIO is successfully initialized, go on with the initialization process
 	PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
-	if (BASS_ASIO_Init(ASIODetectID(), (ASIOSeparateThread ? BASS_ASIO_THREAD : NULL) | BASS_ASIO_JOINORDER)) {
+	if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+		CheckUp(TRUE, ERRORCODE, L"ASIO Initialized", TRUE);
+
 		// Set the audio frequency
 		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
 		CheckUp(TRUE, ERRORCODE, L"ASIO Device Frequency Set", TRUE);
 
 		// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
 		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-
-		// If mono rendering is enabled, mirror the left channel to the right one as well
-		if (ManagedSettings.MonoRendering) {
-			BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
-			CheckUp(TRUE, ERRORCODE, L"ASIO Device Mono Mode", TRUE);
-		}
-
-		// Set the bit depth for the right channel as well
-		BASS_ASIO_ChannelSetFormat(FALSE, 1, BASS_ASIO_FORMAT_FLOAT);
-		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
+		CheckUp(TRUE, ERRORCODE, L"ASIO Device Format Set", TRUE);
 
 		// If mono rendering is enabled, set the audio frequency of the channels to half the value of the frequency selected
 		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
@@ -663,12 +662,27 @@ void InitializeASIO() {
 		// Enable the channels
 		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
 		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Enable", TRUE);
-		BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Join", TRUE);
+
+		// If mono rendering is enabled, mirror the left channel to the right one as well
+		if (ManagedSettings.MonoRendering) {
+			BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
+			CheckUp(TRUE, ERRORCODE, L"ASIO Device Mono Mode", TRUE);
+		}
+		// Else, go for stereo
+		else {
+			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+			CheckUp(TRUE, ERRORCODE, L"ASIO Channel Join", TRUE);
+			// Set the bit depth for the right channel as well
+			BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
+			CheckUp(TRUE, ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
+		}
 
 		// And start the ASIO output
-		BASS_ASIO_Start(0, 2);
+		BASS_ASIO_Start(0, 0);
 		CheckUp(TRUE, ERRORCODE, L"ASIO Start Output", TRUE);
+
+		// Initialize the stream
+		InitializeStream(ManagedSettings.AudioFrequency);
 
 		PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
 	}

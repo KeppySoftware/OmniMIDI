@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '6.0.56.3'
+#define Version '6.0.57.0'
                       
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -19,7 +19,7 @@
 #define outputdir64 'output\64'
 
 [Setup]
-AllowCancelDuringInstall=True
+AllowCancelDuringInstall=False
 AlwaysShowDirOnReadyPage=True
 AlwaysShowGroupOnReadyPage=True
 AppComments={#Description}     

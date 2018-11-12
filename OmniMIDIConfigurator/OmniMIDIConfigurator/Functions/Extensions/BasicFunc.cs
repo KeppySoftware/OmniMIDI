@@ -1326,7 +1326,7 @@ namespace OmniMIDIConfigurator
         {
             Boolean isElevated = IsProcessElevated();
 
-            String MessageString = String.Format("You don't have the rights to edit the target folder!", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
+            String MessageString = String.Format("You don't have the rights to edit the target folder!{0}", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
             MessageBoxButtons MessageButtons = isElevated ? MessageBoxButtons.OK : MessageBoxButtons.YesNo;
             MessageBoxIcon MessageIcon = isElevated ? MessageBoxIcon.Hand : MessageBoxIcon.Exclamation;
 

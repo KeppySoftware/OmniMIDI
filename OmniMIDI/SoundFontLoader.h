@@ -83,11 +83,18 @@ static BOOL FontLoader(LPCWSTR in_path) {
 		else if (!_wcsicmp(Extension, _T(".omlist")))
 		{
 			// Open file
+
+			PrintMessageToDebugLog("NewSFLoader", "Opening SoundFont list...");
 			wchar_t *end;
 			std::vector<SoundFontList> TempSoundFonts;
 			std::wifstream SFList(in_path);
 
 			if (SFList) {
+				PrintMessageToDebugLog("NewSFLoader", "SoundFont list is valid. Setting UTF-8 encoding...");
+				std::locale ulocale(std::locale(), new std::codecvt_utf8<wchar_t>);
+				SFList.imbue(ulocale);
+
+				PrintMessageToDebugLog("NewSFLoader", "Preparing values...");
 				BOOL AlreadyInitialized = FALSE;
 				SoundFontList TempSF;
 				wcsncpy(TempSF.Path, L"\0", NTFS_MAX_PATH);
@@ -98,6 +105,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 				TempSF.DestinationBank = 0;
 				TempSF.XGBankMode = FALSE;
 
+				PrintMessageToDebugLog("NewSFLoader", "Beginning per-line scan...");
 				for (std::wstring TempLine; std::getline(SFList, TempLine);)
 				{
 					if (TempLine.find(L"sf.start") == 0)

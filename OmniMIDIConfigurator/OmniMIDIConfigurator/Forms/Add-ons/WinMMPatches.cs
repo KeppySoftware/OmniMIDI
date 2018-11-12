@@ -19,44 +19,23 @@ namespace OmniMIDIConfigurator
 
         private void WMMW_Click(object sender, EventArgs e)
         {
-            if (Functions.ApplyWinMMWRPPatch(false))
-            {
-                PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "Stock patch installed!";
-            }
-            else
-            {
-                PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error!";
-            }
+            Boolean Status = Functions.ApplyWinMMWRPPatch(false);
+            PatchStatusLabel.ForeColor = Status ? Color.DarkGreen : Color.DarkRed;
+            PatchStatusLabel.Text = Status ? "Stock patch installed!" : "Error!";
         }
 
         private void WMMD_Click(object sender, EventArgs e)
         {
-            if (Functions.ApplyWinMMWRPPatch(true))
-            {
-                PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "DAW patch installed!";
-            }
-            else
-            {
-                PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error!";
-            }
+            Boolean Status = Functions.ApplyWinMMWRPPatch(true);
+            PatchStatusLabel.ForeColor = Status ? Color.DarkGreen : Color.DarkRed;
+            PatchStatusLabel.Text = Status ? "DAW patch installed!" : "Error!";
         }
 
         private void UnpatchApp_Click(object sender, EventArgs e)
         {
-            if (Functions.RemoveWinMMPatch())
-            {
-                PatchStatusLabel.ForeColor = Color.DarkGreen;
-                PatchStatusLabel.Text = "Successfully removed patch!";
-            }
-            else
-            {
-                PatchStatusLabel.ForeColor = Color.DarkRed;
-                PatchStatusLabel.Text = "Error!";
-            }
+            Boolean Status = Functions.RemoveWinMMPatch();
+            PatchStatusLabel.ForeColor = Status ? Color.DarkGreen : Color.DarkRed;
+            PatchStatusLabel.Text = Status ? "Successfully removed patch!" : "Error!";
         }
 
         private void BMPatch_HelpRequested(object sender, HelpEventArgs hlpevent)

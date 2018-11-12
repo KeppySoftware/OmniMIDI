@@ -46,6 +46,8 @@ typedef unsigned __int64 QWORD;
 #include <comdef.h>
 #include <fstream>
 #include <iostream>
+#include <codecvt>
+#include <string>
 #include <future>
 #include <mmddk.h>
 #include <process.h>
