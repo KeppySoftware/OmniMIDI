@@ -119,12 +119,18 @@ void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * Request
 {
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
-	wcscat(DLLPath, InstallPath);
-	wcscat(DLLPath, RequestedLib);
-	if (!(*Target = LoadLibrary(DLLPath))) {
-		DLLLoadError(DLLPath);
-		exit(0);
+	if (!(*Target = GetModuleHandle(RequestedLib))) {
+		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
+		wcscat(DLLPath, InstallPath);
+		wcscat(DLLPath, L"\\");
+		wcscat(DLLPath, RequestedLib);
+		if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
+			DLLLoadError(DLLPath);
+			exit(0);
+		}
+		PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 	}
+	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
 
 BOOL LoadBASSFunctions()
@@ -132,90 +138,109 @@ BOOL LoadBASSFunctions()
 	wchar_t InstallPath[MAX_PATH] = { 0 };
 
 	try {
-		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
-		{
-			PathRemoveFileSpec(InstallPath);
+		if (!BASSLoadedToMemory) {
+			if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
+			{
+				PathRemoveFileSpec(InstallPath);
 
-			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
+				PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
-			LoadDriverModule(&bass, InstallPath, L"\\bass.dll");
-			LoadDriverModule(&bassmidi, InstallPath, L"\\bassmidi.dll");
-			LoadDriverModule(&bassenc, InstallPath, L"\\bassenc.dll");
-			LoadDriverModule(&bassasio, InstallPath, L"\\bassasio.dll");
+				LoadDriverModule(&bass, InstallPath, L"bass.dll");
+				LoadDriverModule(&bassmidi, InstallPath, L"bassmidi.dll");
+				LoadDriverModule(&bassenc, InstallPath, L"bassenc.dll");
+				LoadDriverModule(&bassasio, InstallPath, L"bassasio.dll");
 
-			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
+				PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
-			// Load all the functions into memory
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetFormat);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
-			LOADBASSASIOFUNCTION(BASS_ASIO_Free);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetCPU);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
-			LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
-			LOADBASSASIOFUNCTION(BASS_ASIO_Init);
-			LOADBASSASIOFUNCTION(BASS_ASIO_SetDSD);
-			LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
-			LOADBASSASIOFUNCTION(BASS_ASIO_Start);
-			LOADBASSASIOFUNCTION(BASS_ASIO_Stop);
-			LOADBASSASIOFUNCTION(BASS_ASIO_ChannelPause);
-			LOADBASSENCFUNCTION(BASS_Encode_Start);
-			LOADBASSENCFUNCTION(BASS_Encode_Stop);
-			LOADBASSFUNCTION(BASS_ChannelFlags);
-			LOADBASSFUNCTION(BASS_ChannelGetAttribute);
-			LOADBASSFUNCTION(BASS_ChannelGetData);
-			LOADBASSFUNCTION(BASS_ChannelGetLevelEx);
-			LOADBASSFUNCTION(BASS_ChannelIsActive);
-			LOADBASSFUNCTION(BASS_ChannelPlay);
-			LOADBASSFUNCTION(BASS_ChannelRemoveFX);
-			LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
-			LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
-			LOADBASSFUNCTION(BASS_ChannelSetAttribute);
-			LOADBASSFUNCTION(BASS_ChannelSetDevice);
-			LOADBASSFUNCTION(BASS_ChannelSetFX);
-			LOADBASSFUNCTION(BASS_ChannelSetSync);
-			LOADBASSFUNCTION(BASS_ChannelStop);
-			LOADBASSFUNCTION(BASS_ChannelUpdate);
-			LOADBASSFUNCTION(BASS_ErrorGetCode);
-			LOADBASSFUNCTION(BASS_FXSetParameters);
-			LOADBASSFUNCTION(BASS_Free);
-			LOADBASSFUNCTION(BASS_GetDevice);
-			LOADBASSFUNCTION(BASS_GetDeviceInfo);
-			LOADBASSFUNCTION(BASS_GetInfo);
-			LOADBASSFUNCTION(BASS_Init);
-			LOADBASSFUNCTION(BASS_PluginLoad);
-			LOADBASSFUNCTION(BASS_SetConfig);
-			LOADBASSFUNCTION(BASS_SetDevice);
-			LOADBASSFUNCTION(BASS_SetVolume);
-			LOADBASSFUNCTION(BASS_Stop);
-			LOADBASSFUNCTION(BASS_StreamFree);
-			LOADBASSFUNCTION(BASS_Update);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
-			LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
+				// Load all the functions into memory
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnable);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelEnableMirror);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelGetLevel);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelJoin);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelReset);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetFormat);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetRate);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelSetVolume);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ControlPanel);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ErrorGetCode);
+				LOADBASSASIOFUNCTION(BASS_ASIO_Free);
+				LOADBASSASIOFUNCTION(BASS_ASIO_GetDeviceInfo);
+				LOADBASSASIOFUNCTION(BASS_ASIO_GetLatency);
+				LOADBASSASIOFUNCTION(BASS_ASIO_GetRate);
+				LOADBASSASIOFUNCTION(BASS_ASIO_Init);
+				LOADBASSASIOFUNCTION(BASS_ASIO_SetRate);
+				LOADBASSASIOFUNCTION(BASS_ASIO_Start);
+				LOADBASSASIOFUNCTION(BASS_ASIO_Stop);
+				LOADBASSASIOFUNCTION(BASS_ASIO_ChannelPause);
+				LOADBASSENCFUNCTION(BASS_Encode_Start);
+				LOADBASSENCFUNCTION(BASS_Encode_Stop);
+				LOADBASSFUNCTION(BASS_ChannelFlags);
+				LOADBASSFUNCTION(BASS_ChannelGetAttribute);
+				LOADBASSFUNCTION(BASS_ChannelGetData);
+				LOADBASSFUNCTION(BASS_ChannelGetLevelEx);
+				LOADBASSFUNCTION(BASS_ChannelIsActive);
+				LOADBASSFUNCTION(BASS_ChannelPlay);
+				LOADBASSFUNCTION(BASS_ChannelRemoveFX);
+				LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
+				LOADBASSFUNCTION(BASS_ChannelSeconds2Bytes);
+				LOADBASSFUNCTION(BASS_ChannelSetAttribute);
+				LOADBASSFUNCTION(BASS_ChannelSetDevice);
+				LOADBASSFUNCTION(BASS_ChannelSetFX);
+				LOADBASSFUNCTION(BASS_ChannelSetSync);
+				LOADBASSFUNCTION(BASS_ChannelStop);
+				LOADBASSFUNCTION(BASS_ChannelUpdate);
+				LOADBASSFUNCTION(BASS_ErrorGetCode);
+				LOADBASSFUNCTION(BASS_FXSetParameters);
+				LOADBASSFUNCTION(BASS_Free);
+				LOADBASSFUNCTION(BASS_GetDevice);
+				LOADBASSFUNCTION(BASS_GetDeviceInfo);
+				LOADBASSFUNCTION(BASS_GetInfo);
+				LOADBASSFUNCTION(BASS_Init);
+				LOADBASSFUNCTION(BASS_PluginLoad);
+				LOADBASSFUNCTION(BASS_SetConfig);
+				LOADBASSFUNCTION(BASS_SetDevice);
+				LOADBASSFUNCTION(BASS_SetVolume);
+				LOADBASSFUNCTION(BASS_Stop);
+				LOADBASSFUNCTION(BASS_StreamFree);
+				LOADBASSFUNCTION(BASS_Update);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_FontFree);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_FontInit);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_FontLoad);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_StreamCreate);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvent);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_StreamEvents);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_StreamGetEvent);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_StreamLoadSamples);
+				LOADBASSMIDIFUNCTION(BASS_MIDI_StreamSetFonts);
 
-			PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
-			return TRUE;
+				PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
+			}
 		}
-		
-		return FALSE;
+		else PrintMessageToDebugLog("ImportBASS", "BASS has been already loaded by the driver.");
+
+		return TRUE;
 	}
 	catch (...) {
 		CrashMessage("BASSLibLoad");
+	}
+}
+
+BOOL UnloadBASSFunctions() {
+	try {
+		if (BASSLoadedToMemory) {
+			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
+			FreeLibrary(bass);
+			FreeLibrary(bassmidi);
+			FreeLibrary(bassenc);
+			FreeLibrary(bassasio);
+			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
+		}
+		else PrintMessageToDebugLog("UnloadBASS", "BASS hasn't been loaded by the driver yet.");
+
+		return FALSE;
+	}
+	catch (...) {
+		CrashMessage("BASSLibUnload");
 	}
 }
 
@@ -613,7 +638,7 @@ void CheckVolume(BOOL Closing) {
 		// Self explanatory
 		OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
 
-		if (!Closing && !stop_thread) {
+		if (!Closing && !stop_thread && bass_initialized) {
 			if (ManagedSettings.VolumeMonitor == TRUE && ManagedSettings.CurrentEngine > AUDTOWAV) {
 				float levels[2];
 				DWORD left, right;
@@ -704,32 +729,41 @@ void ParseDebugData() {
 	DWORD ASIOTempInLatency, ASIOTempOutLatency;
 	DOUBLE ASIORate;
 
-	BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &RenderingTime);
+	if (bass_initialized) {
+		BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &RenderingTime);
 
-	if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
-		ASIOTempInLatency = BASS_ASIO_GetLatency(TRUE);
-		if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempInLatency = 0;
+		if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
+			ASIOTempInLatency = BASS_ASIO_GetLatency(TRUE);
+			if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempInLatency = 0;
 
-		ASIOTempOutLatency = BASS_ASIO_GetLatency(FALSE);
-		if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempOutLatency = 0;
+			ASIOTempOutLatency = BASS_ASIO_GetLatency(FALSE);
+			if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempOutLatency = 0;
 
-		ASIORate = BASS_ASIO_GetRate();
-		if (BASS_ASIO_ErrorGetCode() != 0) ASIORate = 0.0;
+			ASIORate = BASS_ASIO_GetRate();
+			if (BASS_ASIO_ErrorGetCode() != 0) ASIORate = 0.0;
 
-		// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
-		if (ASIORate != 0.0) {
-			ManagedDebugInfo.ASIOInputLatency = (ASIOTempInLatency != 0) ? ((DOUBLE)ASIOTempInLatency * 1000.0 / ASIORate) : 0.0;
-			ManagedDebugInfo.ASIOOutputLatency = (ASIOTempOutLatency != 0) ? ((DOUBLE)ASIOTempOutLatency * 1000.0 / ASIORate) : 0.0;
+			// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
+			if (ASIORate != 0.0) {
+				ManagedDebugInfo.ASIOInputLatency = (ASIOTempInLatency != 0) ? ((DOUBLE)ASIOTempInLatency * 1000.0 / ASIORate) : 0.0;
+				ManagedDebugInfo.ASIOOutputLatency = (ASIOTempOutLatency != 0) ? ((DOUBLE)ASIOTempOutLatency * 1000.0 / ASIORate) : 0.0;
+			}
+		}
+		else {
+			ManagedDebugInfo.ASIOInputLatency = 0.0;
+			ManagedDebugInfo.ASIOOutputLatency = 0.0;
+		}
+
+		for (int i = 0; i <= 15; ++i) {
+			int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
+			if (temp != -1) cvvalues[i] = temp;
 		}
 	}
 	else {
-		ManagedDebugInfo.ASIOInputLatency = 0.0;
-		ManagedDebugInfo.ASIOOutputLatency = 0.0;
-	}
-
-	for (int i = 0; i <= 15; ++i) {
-		int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
-		if (temp != -1) cvvalues[i] = temp;
+		ManagedDebugInfo.ASIOInputLatency = 0;
+		ManagedDebugInfo.ASIOOutputLatency = 0;
+		for (int i = 0; i <= 15; ++i) {
+			cvvalues[i] = 0;
+		}
 	}
 }
 
@@ -894,7 +928,7 @@ void keybindings()
 			TCHAR configuratorapp[MAX_PATH];
 			if (GetAsyncKeyState(VK_MENU) & GetAsyncKeyState(0x39) & 0x8000) {
 				if (ManagedSettings.CurrentEngine == ASIO_ENGINE) {
-					BASS_ASIO_ControlPanel();
+					if (bass_initialized) BASS_ASIO_ControlPanel();
 				}
 				else {
 

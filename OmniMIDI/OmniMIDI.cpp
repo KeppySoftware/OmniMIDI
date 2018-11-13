@@ -374,23 +374,32 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
 		}
-		else PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized. Cannot initialize it twice!");
+		else {
+			PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized. Cannot initialize it twice!");
+			return MMSYSERR_ALLOCATED;
+		}
 
 		return MMSYSERR_NOERROR;
 	case MODM_CLOSE:
-		PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
-		ResetSynth(TRUE);
-		if (CloseStreamMidiOutClose && !AlreadyInitializedViaKDMAPI) {
-			// The app wants us to close the driver
-			// Only close the stream if the user has chosen to
-			PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
-			if (bass_initialized) DoStopClient();			
+		if (!AlreadyInitializedViaKDMAPI) {
+			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
+			ResetSynth(TRUE);
+
+			if (CloseStreamMidiOutClose) {
+				// The app wants us to close the driver
+				// Only close the stream if the user has chosen to
+				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
+				if (bass_initialized) DoStopClient();
+			}
+
+			PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app (If present)...");
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
+
+			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
+
 		}
+		else PrintMessageToDebugLog("MODM_OPEN", "The driver is already in use via KDMAPI. Cannot terminate it!");
 
-		PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app (If present)...");
-		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
-
-		PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
 		return MMSYSERR_NOERROR;
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Not needed for OmniMIDI

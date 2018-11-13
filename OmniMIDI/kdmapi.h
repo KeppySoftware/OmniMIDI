@@ -109,8 +109,7 @@ void DoStartClient() {
 			LoadSettings(FALSE);
 
 			// Load the BASS functions
-			if (!BASSLoadedToMemory) 
-				BASSLoadedToMemory = LoadBASSFunctions();
+			BASSLoadedToMemory = LoadBASSFunctions();
 
 			// If BASS is still unavailable, commit suicide
 			if (!BASSLoadedToMemory) CrashMessage("NoBASSFound");
@@ -176,6 +175,9 @@ void DoStopClient() {
 		PrintMessageToDebugLog("StopDriver", "Just a few more things...");
 		block_bassinit = FALSE;
 		bass_initialized = FALSE;
+
+		// Unload BASS functions
+		BASSLoadedToMemory = UnloadBASSFunctions();
 
 		// Boopers
 		DriverInitStatus = FALSE;
@@ -244,6 +246,7 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 			PrintMessageToDebugLog("KDMAPI_TKS", "The app requested the driver to terminate its audio stream.");
 			DoStopClient();
 			AlreadyInitializedViaKDMAPI = FALSE;
+			KDMAPIEnabled = FALSE;
 			PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 		}
 		else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");

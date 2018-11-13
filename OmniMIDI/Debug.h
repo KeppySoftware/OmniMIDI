@@ -113,6 +113,29 @@ void PrintCurrentTime() {
 		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
 }
 
+void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
+	if (ManagedSettings.DebugMode) {
+		char LibraryA[MAX_PATH] = { 0 };
+		wcstombs(LibraryA, LibraryW, wcslen(LibraryW) + 1);
+
+		// Wait while debug log is busy
+		while (DebugLogLockSystem.GetWriterCount() > 0) {}
+
+		// Debug log is busy now
+		DebugLogLockSystem.LockForWriting();
+
+		// Print to log
+		PrintCurrentTime();
+		printf("Library <<%s>> | %s\n", LibraryA, Status);
+
+		// Debug log is free now
+		DebugLogLockSystem.UnlockForWriting();
+
+		// Flush buffer
+		fflush(stdout);
+	}
+}
+
 void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
 		// Wait while debug log is busy
