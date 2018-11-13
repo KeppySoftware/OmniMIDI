@@ -119,7 +119,7 @@ void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * Request
 {
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
-	if (!(*Target = GetModuleHandle(RequestedLib))) {
+	if (!(*Target = LoadLibrary(RequestedLib))) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
 		wcscat(DLLPath, InstallPath);
 		wcscat(DLLPath, L"\\");

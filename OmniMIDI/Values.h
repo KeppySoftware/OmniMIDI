@@ -178,7 +178,7 @@ static DWORD cvalues[16];		// Volume setting per channel.
 static DWORD cbank[16];			// MIDI bank setting per channel.
 static DWORD cpreset[16];		// MIDI preset setting for... you guess it!
 
-static DWORD SynthType = 2;
+static DWORD SynthType = MOD_MIDIPORT;
 static DWORD SynthNamesTypes[7] =
 {
 	MOD_FMSYNTH,
