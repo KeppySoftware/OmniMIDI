@@ -23,11 +23,29 @@ static void FreeFonts()
 	}
 }
 
+LONGLONG FileSize(const wchar_t* name)
+{
+	WIN32_FILE_ATTRIBUTE_DATA fad;
+	if (!GetFileAttributesEx(name, GetFileExInfoStandard, &fad))
+		return -1; // error condition, could call GetLastError to find out more
+	LARGE_INTEGER size;
+	size.HighPart = fad.nFileSizeHigh;
+	size.LowPart = fad.nFileSizeLow;
+	return (LONGLONG)size.QuadPart;
+}
+
 static void SoundFontError(LPCWSTR Cause, LPCWSTR Path) {
 	TCHAR Message[NTFS_MAX_PATH];
 	RtlZeroMemory(Message, sizeof(Message));
 	wsprintf(Message, L"%s\n\nAffected SoundFont: %s\n\nSolution:\nThe soundfont might be of an unknown format, its functions might be unsupported by BASSMIDI, or it might not exist in memory.\nPlease check if the path to the soundfont is correct, and ultimately check if the functions (If using a SFZ soundfont) are supported by BASSMIDI.\nIf they're not, contact Ian Luck about the issue at Un4seen forums.\n\nThe soundfont will not be loaded. Press OK to continue the loading process.", Cause, Path);
 	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
+}
+
+static void SoundFontTooBig(LPCWSTR Path) {
+	TCHAR Message[NTFS_MAX_PATH];
+	RtlZeroMemory(Message, sizeof(Message));
+	wsprintf(Message, L"The SoundFont is too big for this 32-bit app to load!\n\nAffected SoundFont: %s\n\nSolution:\nSwitch to the 64-bit version of this app (if it exists), or switch to another MIDI app that offers a 64-bit release.\n\nThe SoundFont will not be preloaded. Press OK to continue the loading process.", Path);
+	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONWARNING);
 }
 
 static BOOL FontLoader(LPCWSTR in_path) {
@@ -145,7 +163,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 						// We've found the path! Parse it.
 						ZeroMemory(TempSF.Path, sizeof(TempSF.Path));
 						wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
-						PrintMessageToDebugLog("NewSFLoader", "Loaded SF path to SoundFontList struct.");
+						PrintSoundFontToDebugLog(TempSF.Path, "Loaded SF path to SoundFontList struct.");
 						continue;
 					}
 					else if (TempLine.find(L"sf.enabled") == 0)
@@ -223,51 +241,66 @@ static BOOL FontLoader(LPCWSTR in_path) {
 			for (auto CurrentSF = TempSoundFonts.begin(); CurrentSF != TempSoundFonts.end(); ++CurrentSF)
 			{
 				if (!CurrentSF->EnableState) {
-					PrintMessageToDebugLog("NewSFLoader", "SoundFont disabled, skipping to next one...");
+					PrintSoundFontToDebugLog(CurrentSF->Path, "SoundFont disabled, skipping to next one...");
 					continue;
 				}
 
 				if (PathFileExists(CurrentSF->Path))
 				{
-					PrintMessageToDebugLog("NewSFLoader", "Initializing SoundFont...");
+					PrintSoundFontToDebugLog(CurrentSF->Path, "Initializing SoundFont...");
 					HSOUNDFONT font = BASS_MIDI_FontInit(CurrentSF->Path, (CurrentSF->XGBankMode ? BASS_MIDI_FONT_XGDRUMS : 0) | BASS_UNICODE);
 					if (!font) {
-						PrintMessageToDebugLog("NewSFLoader", "An error has occurred while initializing the SoundFont.");
+						PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while initializing the SoundFont.");
 						SoundFontError(L"An error has occurred while initializing the SoundFont.", CurrentSF->Path);
 						continue;
 					}
 
-					PrintMessageToDebugLog("NewSFLoader", "Preparing BASS_MIDI_FONTEX...");
+					PrintSoundFontToDebugLog(CurrentSF->Path, "Preparing BASS_MIDI_FONTEX...");
 					BASS_MIDI_FONTEX FEX = { font, CurrentSF->SourcePreset, CurrentSF->SourceBank, CurrentSF->DestinationPreset, CurrentSF->DestinationBank, 0 };
 
 					if (ManagedSettings.PreloadSoundFonts) {
-						PrintMessageToDebugLog("NewSFLoader", "Preloading SoundFont...");
+						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");
+#ifdef _WIN64
 						if (!BASS_MIDI_FontLoad(font, CurrentSF->SourcePreset, CurrentSF->SourceBank)) {
-							PrintMessageToDebugLog("NewSFLoader", "An error has occurred while preloading the SoundFont.");
+							PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while preloading the SoundFont.");
 							SoundFontError(L"An error has occurred while preloading the SoundFont.", CurrentSF->Path);
 							continue;
 						}
+#else
+						if (FileSize(CurrentSF->Path) <= 1073741824) {
+							if (!BASS_MIDI_FontLoad(font, CurrentSF->SourcePreset, CurrentSF->SourceBank)) {
+								PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while preloading the SoundFont.");
+								SoundFontError(L"An error has occurred while preloading the SoundFont.", CurrentSF->Path);
+								continue;
+							}
+						}
+						else {
+							MessageBeep(MB_ICONEXCLAMATION);
+							PrintSoundFontToDebugLog(CurrentSF->Path, "The SoundFont is too big, it will not be preloaded.");
+						}
+#endif
 					}
 
-					PrintMessageToDebugLog("NewSFLoader", "Everything seems to be OK. Pushing it back inside the vector array...");
+					PrintSoundFontToDebugLog(CurrentSF->Path, "Everything seems to be OK. Pushing it back inside the vector array...");
 					SoundFontHandles.push_back(font);
 					SoundFontPresets.push_back(FEX);
+					PrintSoundFontToDebugLog(CurrentSF->Path, "Done.");
 				}
 				else {
+					PrintSoundFontToDebugLog(CurrentSF->Path, "Unable to load SoundFont! The file does not exist.");
 					SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", CurrentSF->Path);
 				}
 			}
 
+			PrintMessageToDebugLog("NewSFLoader", "Preparing vector array for BASS_MIDI_StreamSetFonts...");
 			std::reverse(SoundFontPresets.begin(), SoundFontPresets.end());
-			BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (unsigned int)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
-			PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
 
+			PrintMessageToDebugLog("NewSFLoader", "Loading SoundFont(s) through BASS_MIDI_StreamSetFonts...");
+			BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (unsigned int)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
+
+			PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
 			return TRUE;
 		}
-		else if (!_wcsicmp(Extension, _T(".sflist"))) 
-			MessageBox(NULL, L"SFLISTs are not supported by OmniMIDI anymore.\nSorry about that.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-		else 
-			MessageBox(NULL, L"Unrecognized SoundFont format/list system.\n\nCannot load the file.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 
 		return FALSE;
 	}

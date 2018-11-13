@@ -92,13 +92,13 @@ static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thre
 static Thread HealthThread, ATThread, EPThread, DThread;
 
 // Mandatory values
-static HINSTANCE hinst = NULL;							// main DLL handle
-static HINSTANCE ntdll = NULL;							// ?
+static HINSTANCE hinst = NULL;				// main DLL handle
+static HINSTANCE ntdll = NULL;				// ?
 
-static CHAR AppPath[NTFS_MAX_PATH];		// debug info
-static TCHAR AppPathW[NTFS_MAX_PATH];	// debug info
-static CHAR AppName[MAX_PATH];			// debug info
-static TCHAR AppNameW[MAX_PATH];		// debug info
+static CHAR AppPath[NTFS_MAX_PATH];			// debug info
+static TCHAR AppPathW[NTFS_MAX_PATH];		// debug info
+static CHAR AppName[MAX_PATH];				// debug info
+static TCHAR AppNameW[MAX_PATH];			// debug info
 
 static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
 

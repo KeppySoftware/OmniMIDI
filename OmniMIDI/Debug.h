@@ -136,6 +136,31 @@ void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 	}
 }
 
+void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
+	if (ManagedSettings.DebugMode) {
+		char SoundFontA[MAX_PATH] = { 0 };
+		char * SoundFontNameA;
+		wcstombs(SoundFontA, SoundFontW, wcslen(SoundFontW) + 1);
+		SoundFontNameA = PathFindFileNameA(SoundFontA);
+
+		// Wait while debug log is busy
+		while (DebugLogLockSystem.GetWriterCount() > 0) {}
+
+		// Debug log is busy now
+		DebugLogLockSystem.LockForWriting();
+
+		// Print to log
+		PrintCurrentTime();
+		printf("Stage <<NewSFLoader>> | SoundFont \"%s\" -> %s\n", SoundFontNameA, Status);
+
+		// Debug log is free now
+		DebugLogLockSystem.UnlockForWriting();
+
+		// Flush buffer
+		fflush(stdout);
+	}
+}
+
 void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
 		// Wait while debug log is busy
