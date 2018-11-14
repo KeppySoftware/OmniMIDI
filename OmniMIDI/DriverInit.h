@@ -274,6 +274,38 @@ BOOL CreateThreads(BOOL startup) {
 	return TRUE;
 }
 
+void InitializeBASSVST() {
+	wchar_t InstallPath[MAX_PATH] = { 0 };
+	wchar_t LoudMax[MAX_PATH] = { 0 };
+
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, LoudMax);
+#ifdef _WIN64
+	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax64.dll"));
+#else
+	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax32.dll"));
+#endif
+
+	if (PathFileExists(LoudMax)) {
+		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
+		{
+			PathRemoveFileSpec(InstallPath);
+
+			LoadDriverModule(&bass_vst, InstallPath, L"bass_vst.dll", FALSE);
+
+			if (bass_vst)
+			{
+				LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
+				LOADBASS_VSTFUNCTION(BASS_VST_ChannelFree);
+				LOADBASS_VSTFUNCTION(BASS_VST_ChannelCreate);
+				LOADBASS_VSTFUNCTION(BASS_VST_ProcessEvent);
+				LOADBASS_VSTFUNCTION(BASS_VST_ProcessEventRaw);
+
+				BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
+			}
+		}
+	}
+}
+
 void InitializeStream(INT32 mixfreq) {
 	bool isdecode = FALSE;
 	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
@@ -730,6 +762,9 @@ bool InitializeBASS(BOOL restart) {
 
 		// Enable the volume knob in the configurator
 		PrepareVolumeKnob();
+		
+		// Apply LoudMax, if requested
+		InitializeBASSVST();
 	}
 
 	return init;

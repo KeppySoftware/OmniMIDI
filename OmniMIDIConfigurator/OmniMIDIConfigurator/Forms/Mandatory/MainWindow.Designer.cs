@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -282,6 +282,7 @@
             this.OctokitDev = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.BugReport = new System.Windows.Forms.MenuItem();
+            this.KSSD = new System.Windows.Forms.MenuItem();
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.SynthMenu = new System.Windows.Forms.MainMenu(this.components);
             this.DebugLogAnalyze = new System.ComponentModel.BackgroundWorker();
@@ -290,6 +291,10 @@
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
+            this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1759,7 +1764,7 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -2343,7 +2348,7 @@
             // 
             // assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem
             // 
-            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Index = 7;
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Index = 9;
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Text = "Assign a soundfont list to a specific app";
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
@@ -2411,42 +2416,42 @@
             // 
             // LiveChangesTrigger
             // 
-            this.LiveChangesTrigger.Index = 0;
+            this.LiveChangesTrigger.Index = 2;
             this.LiveChangesTrigger.Text = "Enable live changes for all the settings";
             this.LiveChangesTrigger.Click += new System.EventHandler(this.LiveChangesTrigger_Click);
             // 
             // hotkeys
             // 
-            this.hotkeys.Index = 1;
+            this.hotkeys.Index = 3;
             this.hotkeys.Text = "Enable fast hotkeys in MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
             // AutoLoad
             // 
-            this.AutoLoad.Index = 2;
+            this.AutoLoad.Index = 4;
             this.AutoLoad.Text = "Reload list automatically after editing it";
             this.AutoLoad.Click += new System.EventHandler(this.AutoLoad_Click);
             // 
             // ShowOutLevel
             // 
-            this.ShowOutLevel.Index = 3;
+            this.ShowOutLevel.Index = 5;
             this.ShowOutLevel.Text = "Show output level meter";
             this.ShowOutLevel.Click += new System.EventHandler(this.ShowOutLevel_Click);
             // 
             // menuItem17
             // 
-            this.menuItem17.Index = 4;
+            this.menuItem17.Index = 6;
             this.menuItem17.Text = "-";
             // 
             // manageFolderFavouritesToolStripMenuItem
             // 
-            this.manageFolderFavouritesToolStripMenuItem.Index = 5;
+            this.manageFolderFavouritesToolStripMenuItem.Index = 7;
             this.manageFolderFavouritesToolStripMenuItem.Text = "Manage folder favourites";
             this.manageFolderFavouritesToolStripMenuItem.Click += new System.EventHandler(this.manageFolderFavouritesToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 6;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 8;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change WAV output directory";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
@@ -2499,7 +2504,7 @@
             // 
             // menuItem31
             // 
-            this.menuItem31.Index = 8;
+            this.menuItem31.Index = 10;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -2513,12 +2518,12 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 9;
+            this.menuItem21.Index = 11;
             this.menuItem21.Text = "-";
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 10;
+            this.SpatialSound.Index = 12;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
@@ -2537,7 +2542,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 11;
+            this.menuItem14.Index = 13;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf});
@@ -2557,7 +2562,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 12;
+            this.menuItem12.Index = 14;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ImportSettings,
             this.ExportSettings});
@@ -2565,7 +2570,7 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 13;
+            this.menuItem15.Index = 15;
             this.menuItem15.Text = "-";
             // 
             // DebugModePls
@@ -2582,7 +2587,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 14;
+            this.menuItem28.Index = 16;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -2592,6 +2597,8 @@
             // 
             this.menuItem2.Index = 1;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem7,
+            this.menuItem18,
             this.LiveChangesTrigger,
             this.hotkeys,
             this.AutoLoad,
@@ -2719,48 +2726,48 @@
             // 
             // openUpdaterToolStripMenuItem
             // 
-            this.openUpdaterToolStripMenuItem.Index = 3;
+            this.openUpdaterToolStripMenuItem.Index = 4;
             this.openUpdaterToolStripMenuItem.Shortcut = System.Windows.Forms.Shortcut.F2;
             this.openUpdaterToolStripMenuItem.Text = "Check for updates";
             this.openUpdaterToolStripMenuItem.Click += new System.EventHandler(this.openUpdaterToolStripMenuItem_Click);
             // 
             // menuItem49
             // 
-            this.menuItem49.Index = 2;
+            this.menuItem49.Index = 3;
             this.menuItem49.Text = "-";
             // 
             // donateToSupportUsToolStripMenuItem
             // 
-            this.donateToSupportUsToolStripMenuItem.Index = 11;
+            this.donateToSupportUsToolStripMenuItem.Index = 12;
             this.donateToSupportUsToolStripMenuItem.Text = "Support me with a PayPal donation";
             this.donateToSupportUsToolStripMenuItem.Click += new System.EventHandler(this.donateToSupportUsToolStripMenuItem_Click);
             // 
             // menuItem29
             // 
-            this.menuItem29.Index = 6;
+            this.menuItem29.Index = 7;
             this.menuItem29.Text = "-";
             // 
             // SeeChangelog
             // 
-            this.SeeChangelog.Index = 4;
+            this.SeeChangelog.Index = 5;
             this.SeeChangelog.Text = "Changelog of this driver release";
             this.SeeChangelog.Click += new System.EventHandler(this.SeeChangelog_Click);
             // 
             // SeeLatestChangelog
             // 
-            this.SeeLatestChangelog.Index = 5;
+            this.SeeLatestChangelog.Index = 6;
             this.SeeLatestChangelog.Text = "Changelog of the latest driver release";
             this.SeeLatestChangelog.Click += new System.EventHandler(this.SeeLatestChangelog_Click);
             // 
             // downloadTheSourceCodeToolStripMenuItem
             // 
-            this.downloadTheSourceCodeToolStripMenuItem.Index = 8;
+            this.downloadTheSourceCodeToolStripMenuItem.Index = 9;
             this.downloadTheSourceCodeToolStripMenuItem.Text = "Download the source code";
             this.downloadTheSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.downloadTheSourceCodeToolStripMenuItem_Click);
             // 
             // menuItem33
             // 
-            this.menuItem33.Index = 9;
+            this.menuItem33.Index = 10;
             this.menuItem33.Text = "-";
             // 
             // HAPLink
@@ -2789,7 +2796,7 @@
             // 
             // menuItem45
             // 
-            this.menuItem45.Index = 10;
+            this.menuItem45.Index = 11;
             this.menuItem45.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HAPLink,
             this.BASSLink,
@@ -2810,6 +2817,7 @@
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.informationAboutTheDriverToolStripMenuItem,
             this.BugReport,
+            this.KSSD,
             this.menuItem49,
             this.openUpdaterToolStripMenuItem,
             this.SeeChangelog,
@@ -2828,9 +2836,15 @@
             this.BugReport.Text = "Report a bug on GitHub";
             this.BugReport.Click += new System.EventHandler(this.BugReport_Click);
             // 
+            // KSSD
+            // 
+            this.KSSD.Index = 2;
+            this.KSSD.Text = "Join the official Keppy\'s Software server on Discord";
+            this.KSSD.Click += new System.EventHandler(this.KSSD_Click);
+            // 
             // KDMAPIDoc
             // 
-            this.KDMAPIDoc.Index = 7;
+            this.KDMAPIDoc.Index = 8;
             this.KDMAPIDoc.Text = "Keppy\'s Direct MIDI API documentation";
             this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
             // 
@@ -2874,6 +2888,31 @@
             // VolumeCheck
             // 
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
+            // 
+            // LoudMaxInstallMenu
+            // 
+            this.LoudMaxInstallMenu.Index = 0;
+            this.LoudMaxInstallMenu.Text = "Install LoudMax, to prevent clipping with ASIO";
+            this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 0;
+            this.menuItem7.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.LoudMaxInstallMenu,
+            this.LoudMaxUninstallMenu});
+            this.menuItem7.Text = "LoudMax, anti-clipping solution";
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 1;
+            this.menuItem18.Text = "-";
+            // 
+            // LoudMaxUninstallMenu
+            // 
+            this.LoudMaxUninstallMenu.Index = 1;
+            this.LoudMaxUninstallMenu.Text = "Uninstall LoudMax, to restore the original audio";
+            this.LoudMaxUninstallMenu.Click += new System.EventHandler(this.LoudMaxUninstallMenu_Click);
             // 
             // OmniMIDIConfiguratorMain
             // 
@@ -3173,6 +3212,11 @@
         private System.Windows.Forms.MenuItem EditSFSettings;
         private System.Windows.Forms.MenuItem menuItem11;
         public System.Windows.Forms.Timer VolumeCheck;
+        private System.Windows.Forms.MenuItem KSSD;
+        private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.MenuItem LoudMaxInstallMenu;
+        private System.Windows.Forms.MenuItem LoudMaxUninstallMenu;
+        private System.Windows.Forms.MenuItem menuItem18;
     }
 }
 

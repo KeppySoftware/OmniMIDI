@@ -1453,6 +1453,21 @@ namespace OmniMIDIConfigurator
             else UpdateSystem.CheckForUpdates(false, false, false);
         }
 
+        private void LoudMaxInstallMenu_Click(object sender, EventArgs e)
+        {
+            if (Convert.ToInt32(SynthSettings.GetValue("AudioBitDepth", 1)) != 1)
+            {
+                DialogResult dialogResult = MessageBox.Show("LoudMax is useless without 32-bit float audio rendering.\nPlease enable it by going to \"Additional settings > Advanced audio settings > Audio bit depth\".\n\nDo you want to continue anyway?", "OmniMIDI - LoudMax", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dialogResult == DialogResult.Yes) Functions.LoudMaxInstall();
+            }
+            else Functions.LoudMaxInstall();
+        }
+
+        private void LoudMaxUninstallMenu_Click(object sender, EventArgs e)
+        {
+            Functions.LoudMaxUninstall();
+        }
+
         private void SetHandCursor(object sender, EventArgs e)
         {
             Cursor = System.Windows.Forms.LinkLabelEx.SystemHandCursor;
@@ -1479,8 +1494,13 @@ namespace OmniMIDIConfigurator
             DialogResult dialogResult = MessageBox.Show("Do you want to report a bug about OmniMIDI?\n\nHere are the requisites for a report:\n1) Make a video of the issue.\n2) Describe all the steps to reproduce the bug.\n3) Please give as much information as you can, to allow me (KaleidonKep99) to fix it as soon as possible.", "Report a bug...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
-                Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver/issues");
+                Process.Start("https://github.com/KeppySoftware/OmniMIDI/issues");
             }
+        }
+
+        private void KSSD_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.gg/73DVswT");
         }
 
         private void downloadTheSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)

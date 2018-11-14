@@ -414,6 +414,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\LoudMax\LoudMax32.dll" />
+    <None Include="Resources\LoudMax\LoudMax64.dll" />
     <None Include="Resources\WinMM64WRP\winmm64DAW.dll" />
     <None Include="Resources\WinMM32WRP\winmm32DAW.dll" />
     <None Include="Resources\Pictures\InfoBk.png" />

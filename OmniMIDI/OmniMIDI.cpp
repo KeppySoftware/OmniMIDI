@@ -29,6 +29,7 @@ typedef unsigned __int64 QWORD;
 #define BASSDEF(f) (WINAPI *f)
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
+#define BASS_VSTDEF(f) (WINAPI *f)
 // #define BASSWASAPIDEF(f) (WINAPI *f)
 #define Between(value, a, b) (value <= b && value >= a)
 
@@ -67,6 +68,7 @@ typedef unsigned __int64 QWORD;
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>
+#include <bass_vst.h>
 // #include <basswasapi.h>
 
 // Sleep
@@ -84,12 +86,13 @@ static NLVM NtLockVirtualMemory = 0;
 static NULVM NtUnlockVirtualMemory = 0;
 
 // Blinx best game
-static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL;	// BASS libs handles
+static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
 
 #define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
 #define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
 #define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
 #define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
+#define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
 // #define LOADBASSWASAPIFUNCTION(f) *((void**)&f) = GetProcAddress(basswasapi, #f)
 
 // F**k Sleep() tbh
@@ -232,7 +235,7 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		else Technology = SynthNamesTypes[SynthType];
 
 		// If the debug mode is enabled, and the process isn't banned, create the debug log
-		if (ManagedSettings.DebugMode && (!BannedSystemProcess() | !BlackListSystem()))
+		if (ManagedSettings.DebugMode && BlackListSystem())
 			CreateConsole();
 
 		// If the synthname length is less than 1, or if it's just a space, use the default name

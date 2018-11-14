@@ -115,7 +115,7 @@ bool LoadSoundfontStartup() {
 	}
 }
 
-void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * RequestedLib) 
+void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * RequestedLib, BOOL Mandatory) 
 {
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
@@ -125,10 +125,13 @@ void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * Request
 		wcscat(DLLPath, L"\\");
 		wcscat(DLLPath, RequestedLib);
 		if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
-			DLLLoadError(DLLPath);
-			exit(0);
+			if (Mandatory) {
+				DLLLoadError(DLLPath);
+				exit(0);
+			}
+			else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It probably requires some missing dependencies.");
 		}
-		PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
+		else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
@@ -145,10 +148,10 @@ BOOL LoadBASSFunctions()
 
 				PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
-				LoadDriverModule(&bass, InstallPath, L"bass.dll");
-				LoadDriverModule(&bassmidi, InstallPath, L"bassmidi.dll");
-				LoadDriverModule(&bassenc, InstallPath, L"bassenc.dll");
-				LoadDriverModule(&bassasio, InstallPath, L"bassasio.dll");
+				LoadDriverModule(&bass, InstallPath, L"bass.dll", TRUE);
+				LoadDriverModule(&bassmidi, InstallPath, L"bassmidi.dll", TRUE);
+				LoadDriverModule(&bassenc, InstallPath, L"bassenc.dll", TRUE);
+				LoadDriverModule(&bassasio, InstallPath, L"bassasio.dll", TRUE);
 
 				PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
@@ -233,6 +236,7 @@ BOOL UnloadBASSFunctions() {
 			FreeLibrary(bassmidi);
 			FreeLibrary(bassenc);
 			FreeLibrary(bassasio);
+			if (bass_vst) FreeLibrary(bass_vst);
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}
 		else PrintMessageToDebugLog("UnloadBASS", "BASS hasn't been loaded by the driver yet.");

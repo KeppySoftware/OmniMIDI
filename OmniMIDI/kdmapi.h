@@ -81,10 +81,10 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 	return 0;
 }
 
-void DoStartClient() {
-	GetAppName();
+BOOL DoStartClient() {
+	if (!DriverInitStatus && !BannedSystemProcess()) {
+		GetAppName();
 
-	if (!DriverInitStatus && BannedSystemProcess() != TRUE) {
 		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
 
 		// Load the selected driver priority value from the registry
@@ -141,10 +141,13 @@ void DoStartClient() {
 		AlreadyStartedOnce = TRUE;
 
 		PrintMessageToDebugLog("StartDriver", "Driver initialized.");
+		return TRUE;
 	}
+
+	return FALSE;
 }
 
-void DoStopClient() {
+BOOL DoStopClient() {
 	if (DriverInitStatus) {
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
@@ -184,6 +187,8 @@ void DoStopClient() {
 		PrintMessageToDebugLog("StopDriver", "Driver terminated.");
 	}
 	else PrintMessageToDebugLog("StopDriver", "The driver is not initialized.");
+
+	return TRUE;
 }
 
 BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
@@ -229,7 +234,10 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		if (ManagedSettings.DebugMode) CreateConsole();
 
 		// Start the driver's engine
-		DoStartClient();
+		if (!DoStartClient()) {
+			PrintMessageToDebugLog("KDMAPI_IKS", "KDMAPI failed to initialize.");
+			return FALSE;
+		}
 
 		PrintMessageToDebugLog("KDMAPI_IKS", "KDMAPI is now active.");
 		return TRUE;
