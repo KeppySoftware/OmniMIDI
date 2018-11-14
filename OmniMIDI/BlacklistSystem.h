@@ -19,7 +19,6 @@ BOOL BannedSystemProcess() {
 DWORD BlackListSystem(){
 	// If the process is in the permanent ban list, return 0
 	if (BannedSystemProcess()) return DEVICE_UNAVAILABLE;
-	MessageBoxA(NULL, "A", "A", MB_OK);
 
 	// Blacklist system init
 	std::wstring DBLDir;
