@@ -17,7 +17,7 @@ typedef unsigned __int64 QWORD;
 #define CUR_MAJOR	1
 #define CUR_MINOR	47
 #define CUR_BUILD	2
-#define CUR_REV		8
+#define CUR_REV		21
 
 #define STRICT
 #define VC_EXTRALEAN
