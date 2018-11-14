@@ -78,7 +78,6 @@ Click here: [Features compared to other software synthesizers](#features-compare
 You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
 You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
 
-#### List of KDMAPI-ready applications
 Here's a list of applications that currently have *native* support for the Keppy's Direct MIDI API:
 - mmidi by Sono, the first third-party project to feature my API at all: https://sono.9net.org/prog/mmidi/
 
