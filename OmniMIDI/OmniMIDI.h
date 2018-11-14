@@ -102,6 +102,9 @@ BOOL KDMAPI(TerminateKDMAPIStream)();
 VOID KDMAPI(ResetKDMAPIStream)();
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
+UINT KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param);
+
+// Send short messages through KDMAPI. (Like midiOutShortMsg)
 UINT KDMAPI(SendDirectData)(DWORD dwMsg);
 
 // Send short messages through KDMAPI like SendDirectData, but bypasses the buffer. (Like midiOutShortMsg)

@@ -279,6 +279,10 @@ VOID KDMAPI ResetKDMAPIStream() {
 	if (bass_initialized) ResetSynth(FALSE);
 }
 
+VOID KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
+	BASS_MIDI_StreamEvent(OMStream, chan, eventtype, param);
+}
+
 MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
 	return _PrsData(MODM_DATA, dwMsg, 0);

@@ -757,6 +757,7 @@ void ParseDebugData() {
 		}
 	}
 	else {
+		RenderingTime = 0.0f;
 		ManagedDebugInfo.ASIOInputLatency = 0;
 		ManagedDebugInfo.ASIOOutputLatency = 0;
 		for (int i = 0; i <= 15; ++i) {

@@ -101,7 +101,7 @@ The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of October 29th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
+As of November 14th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 ### **InitializeKDMAPIStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.
@@ -151,15 +151,39 @@ KDMAPIStatus = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "IsKDMAPIAvail
 ```
 <hr />
 
+### **GetCurrentDriverSettings**
+Allows developers to get the current driver's settings, which can then be edited and passed to ChangeDriverSettings.<br/>
+The available arguments are:
+
+- `Settings* Struct`: A pointer to your struct.
+```c
+VOID(WINAPI*KDMGetCurrentDriverSettings)(Settings* Struct) = 0;
+KDMGetCurrentDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "GetCurrentDriverSettings");
+...
+	Settings MySettings;
+
+	// Get driver settings
+	KDMGetCurrentDriverSettings(&MySettings);
+	
+	// Edit them here...
+	...
+	// Edit them here...
+	
+	// Pass them to KDMAPI now
+	KDMChangeSettings(&MySettings, sizeof(MySettings));
+...
+```
+<hr />
+
 ### **ChangeDriverSettings**
 Allows developers to change the driver's settings from within the app, rather than asking the user to change them in the configurator.<br/>
 Sending **0/nullptr** will make it fallback to the settings from the registry.<br />
 The available arguments are:
 
-- `const Settings* Struct`: A pointer to your struct.
+- `Settings* Struct`: A pointer to your struct.
 - `DWORD StructSize`: The size of the struct.
 ```c
-VOID(WINAPI*KDMChangeSettings)(const Settings* Struct, DWORD StructSize) = 0;
+VOID(WINAPI*KDMChangeSettings)(Settings* Struct, DWORD StructSize) = 0;
 KDMChangeSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ChangeDriverSettings");
 ...
 	Settings MySettings;
@@ -202,7 +226,7 @@ The available arguments are:
 
 - `const TCHAR* Directory`: A pointer to the unicode char array, containing the path.
 ```c
-VOID(WINAPI*KDMLoadCustomSFList)(const TCHAR* Directory) = 0;
+VOID(WINAPI*KDMLoadCustomSFList)(TCHAR* Directory) = 0;
 KDMLoadCustomSFList = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "LoadCustomSoundFontsList");
 ...
 	TCHAR Directory[MAX_PATH];
@@ -211,6 +235,20 @@ KDMLoadCustomSFList = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "LoadCu
 	// Forward it to the driver
 	KDMLoadCustomSFList(&Directory);
 ...
+```
+<hr />
+
+### **SendCustomEvent**
+Allows you to send a custom BASSMIDI event to the driver.<br />
+You can learn more about it here: http://www.un4seen.com/doc/#bassmidi/BASS_MIDI_StreamEvent.html<br />
+The available arguments are:
+
+- `DWORD eventtype`: The type of event you want to send.
+- `DWORD chan`: The target MIDI channel.
+- `DWORD param`: The parameters to send to the driver.
+```c
+VOID(WINAPI*KSendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) = 0;
+KSendCustomEvent = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendCustomEvent");
 ```
 <hr />
 

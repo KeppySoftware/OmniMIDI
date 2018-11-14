@@ -57,18 +57,34 @@ void SendToBASSMIDI(DWORD dwParam1) {
 
 	*/
 
-	DWORD dwParam2 = dwParam1 & 0xF0;
-	DWORD len = (dwParam2 >= 0xF8 && dwParam2 <= 0xFF) ? 1 : ((dwParam2 == 0xC0 || dwParam2 == 0xD0) ? 2 : 3);
-
-	BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+	BYTE TypeOfEvent = GETSTATUS(dwParam1);
+	if (TypeOfEvent == MIDI_NOTEON)
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
+	else if (TypeOfEvent == MIDI_NOTEOFF)
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
+	else
+	{
+		BASS_MIDI_StreamEvents(
+			OMStream, BASS_MIDI_EVENTS_RAW,
+			&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
+		);
+	}
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
 void SendToBASSMIDIHyper(DWORD dwParam1) {
-	BASS_MIDI_StreamEvents(
-		OMStream, BASS_MIDI_EVENTS_RAW, 
-		&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
-	);
+	BYTE TypeOfEvent = GETSTATUS(dwParam1);
+	if (TypeOfEvent == MIDI_NOTEON)
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, 1, dwParam1 >> 8);
+	else if (TypeOfEvent == MIDI_NOTEOFF)
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, 1, (BYTE)(dwParam1 >> 8));
+	else
+	{
+		BASS_MIDI_StreamEvents(
+			OMStream, BASS_MIDI_EVENTS_RAW,
+			&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
+		);
+	}
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {

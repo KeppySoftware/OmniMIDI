@@ -79,6 +79,7 @@ class KDMAPI
 		public int InitializeKDMAPIStream();
 		public int TerminateKDMAPIStream();
 		public void ResetKDMAPIStream();
+		public void SendCustomEvent(int eventtype, int chan, int param);
 		public int SendDirectData(int dwMsg);
 		public int SendDirectLongData(MIDIHDR dwMsg);
 		public int SendDirectDataNoBuf(int dwMsg);

@@ -5,8 +5,12 @@
 #define DEVICE_AVAILABLE 1
 
 // Things
-#define MIDI_IO_PACKED 0x00000000L			// Legacy mode, used by all MIDI apps
-#define MIDI_IO_COOKED 0x00000002L			// Stream mode, used by some apps (Such as Pinball 3D), NOT SUPPORTED
+#define GETSTATUS(f) (f & 0xF0)
+#define MIDI_NOTEOFF	0x80
+#define MIDI_NOTEON		0x90
+
+#define MIDI_IO_PACKED	0x00000000L			// Legacy mode, used by all MIDI apps
+#define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some apps (Such as Pinball 3D), NOT SUPPORTED
 
 // path
 #define NTFS_MAX_PATH 32767
@@ -21,12 +25,12 @@ struct evbuf_t {
 	DWORD_PTR		dwParam2;
 };	// The buffer's structure
 
-static LightweightLock LockSystem;			// LockSystem
-static evbuf_t * evbuf;						// The buffer
-static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
-static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
-static volatile LONGLONG eventcount = 0;	// Total events present in the buffer
-static ULONGLONG EvBufferSize = 4096;
+static LightweightLock LockSystem;				// LockSystem
+static evbuf_t * evbuf;							// The buffer
+static volatile ULONGLONG writehead = 0;		// Current write position in the buffer
+static volatile ULONGLONG readhead = 0;			// Current read position in the buffer
+static volatile LONGLONG eventcount = 0;		// Total events present in the buffer
+static QWORD EvBufferSize = 4096;
 static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 

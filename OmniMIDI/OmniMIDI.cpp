@@ -120,11 +120,11 @@ static DWORD(*_PlayBufDataChk)(void) = 0;
 // and passes the events without checking for anything
 
 // Predefined sleep values, useful for redundancy
-#define _DBGWAIT NTSleep(-10000)											// Normal wait
+#define _DBGWAIT NTSleep(-16667)											// Normal wait
 #define _FWAIT NTSleep(ManagedSettings.SleepStates ? -100 : 0)				// Fast wait
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)											// Very slow wait
-#define _CFRWAIT NTSleep(ManagedSettings.SleepStates ? -15667 : -16667)		// Cap framerate wait
+#define _CFRWAIT NTSleep(ManagedSettings.SleepStates ? -16667 : -16567)		// Cap framerate wait
 
 // LightweightLock by Brad Wilson
 #include "LwL.h"
@@ -144,7 +144,7 @@ static DWORD(*_PlayBufDataChk)(void) = 0;
 
 // OmniMIDI GUID
 // {62F3192B-A961-456D-ABCA-A5C95A14B9AA}
-static const GUID OMCLSID = { 0x62f3192b, 0xa961, 0x456d, { 0xab, 0xca, 0xa5, 0xc9, 0x5a, 0x14, 0xb9, 0xaa } };
+static const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 
 extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {

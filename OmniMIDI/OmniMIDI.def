@@ -10,6 +10,7 @@ EXPORTS
 	PrepareLongData
 	ResetKDMAPIStream
 	ReturnKDMAPIVer
+	SendCustomEvent
 	SendDirectData
 	SendDirectDataNoBuf
 	SendDirectLongData

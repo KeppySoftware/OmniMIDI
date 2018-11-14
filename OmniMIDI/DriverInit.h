@@ -790,9 +790,6 @@ void SetUpStream() {
 }
 
 void FreeUpStream() {
-	// Send dummy values to the mixer
-	CheckVolume(TRUE);
-
 	// Reset synth
 	ResetSynth(0);
 
@@ -813,4 +810,7 @@ void FreeUpStream() {
 	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
 	BASS_Free();
 	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+
+	// Send dummy values to the mixer
+	CheckVolume(TRUE);
 }
