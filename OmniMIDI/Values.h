@@ -26,8 +26,8 @@ static evbuf_t * evbuf;						// The buffer
 static volatile ULONGLONG writehead = 0;	// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;		// Current read position in the buffer
 static volatile LONGLONG eventcount = 0;	// Total events present in the buffer
-static ULONGLONG EvBufferSize;
-static DWORD EvBufferMultRatio;
+static ULONGLONG EvBufferSize = 4096;
+static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
@@ -60,8 +60,8 @@ static const char sysex_gs_reset[] = { 0xF0, 0x41, 0x10, 0x42, 0x12, 0x40, 0x00,
 static const char sysex_xg_reset[] = { 0xF0, 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00, 0xF7 };
 
 // Registry system
-static LSTATUS KEY_READY = ERROR_SUCCESS;
-static LSTATUS KEY_CLOSED = ERROR_INVALID_HANDLE;
+#define KEY_READY ERROR_SUCCESS
+#define KEY_CLOSED ERROR_INVALID_HANDLE
 
 typedef struct RegKey
 {
@@ -107,7 +107,6 @@ static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
 static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
-static BOOL CloseStreamMidiOutClose = TRUE;	// Close the stream when midiOutClose is called
 
 static FLOAT sndbflen = 64.0f;				// AudToWAV
 static FLOAT *sndbf;						// AudToWAV

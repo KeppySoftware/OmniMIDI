@@ -358,8 +358,22 @@ MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 	return SendDirectLongData(IIMidiHdr);
 }
 
-VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
-	if (Struct == nullptr) {
+VOID KDMAPI GetCurrentDriverSettings(Settings* Struct) {
+	if (!Struct || Struct == nullptr) {
+		// The app returned an invalid pointer, or "nullptr" on purpose
+		// Fallback to the registry
+		PrintMessageToDebugLog("KDMAPI_GCDS", "The app passed a nullptr. Invalid argument.");
+		return;
+	}
+
+	PrintMessageToDebugLog("KDMAPI_GCDS", "Copying current settings to app's \"Settings\" struct...");
+	memcpy(Struct, &ManagedSettings, min(sizeof(Settings), sizeof(ManagedSettings)));
+
+	PrintMessageToDebugLog("KDMAPI_GCDS", "Done.");
+}
+
+VOID KDMAPI ChangeDriverSettings(Settings* Struct, DWORD StructSize){
+	if (!Struct || Struct == nullptr) {
 		// The app returned an invalid pointer, or "nullptr" on purpose
 		// Fallback to the registry
 		PrintMessageToDebugLog("KDMAPI_CDS", "The app passed a nullptr. Fallback to registry enabled.");
@@ -373,7 +387,7 @@ VOID KDMAPI ChangeDriverSettings(const Settings* Struct, DWORD StructSize){
 	BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
 
 	// Copy the struct from the app to the driver
-	PrintMessageToDebugLog("KDMAPI_CDS", "Copying current settings to app's \"Settings\" struct...");
+	PrintMessageToDebugLog("KDMAPI_CDS", "Copying app's settings to driver's struct...");
 	memcpy(&ManagedSettings, Struct, min(sizeof(Settings), StructSize));
 	SettingsManagedByClient = TRUE;
 	PrintMessageToDebugLog("KDMAPI_CDS", "Done, the settings are now managed by the app.");

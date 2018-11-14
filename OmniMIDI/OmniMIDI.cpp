@@ -384,18 +384,15 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
 			ResetSynth(TRUE);
 
-			if (CloseStreamMidiOutClose) {
-				// The app wants us to close the driver
-				// Only close the stream if the user has chosen to
+			if (bass_initialized) {
 				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
-				if (bass_initialized) DoStopClient();
+				DoStopClient();
 			}
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app (If present)...");
 			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
-
 		}
 		else PrintMessageToDebugLog("MODM_OPEN", "The driver is already in use via KDMAPI. Cannot terminate it!");
 

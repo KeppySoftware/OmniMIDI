@@ -119,11 +119,14 @@ UINT KDMAPI(PrepareLongData)(MIDIHDR* IIMidiHdr);
 // Unlocks the memory, and unprepares the long data.
 UINT KDMAPI(UnprepareLongData)(MIDIHDR* IIMidiHdr);
 
+// Get the current settings for the driver. (Useful to prepare the struct for ChangeDriverSettings)
+VOID KDMAPI(GetCurrentDriverSettings)(Settings* Struct);
+
 // Push your own settings to the driver through the Settings struct.
-VOID KDMAPI(ChangeDriverSettings)(const Settings* Struct, DWORD StructSize);
+VOID KDMAPI(ChangeDriverSettings)(Settings* Struct, DWORD StructSize);
 
 // Load a custom sflist. (You can also load SF2 and SFZ files)
-VOID KDMAPI(LoadCustomSoundFontsList)(const TCHAR* Directory);
+VOID KDMAPI(LoadCustomSoundFontsList)(LPWSTR Directory);
 
 // Get a pointer to the debug info of the driver.
 DebugInfo* KDMAPI(GetDriverDebugInfo)();

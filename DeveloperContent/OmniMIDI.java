@@ -85,6 +85,7 @@ class KDMAPI
 		public int SendDirectLongDataNoBuf(MIDIHDR dwMsg);
 		public int PrepareLongData(MIDIHDR dwMsg);
 		public int UnprepareLongData(MIDIHDR dwMsg);
+		public void GetCurrentDriverSettings(Settings Struct);
 		public void ChangeDriverSettings(Settings Struct, int StructSize);
 		public void LoadCustomSoundFontsList(char[] Directory);
 		public DebugInfo GetDriverDebugInfo();

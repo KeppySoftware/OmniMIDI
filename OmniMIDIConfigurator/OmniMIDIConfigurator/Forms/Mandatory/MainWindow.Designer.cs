@@ -2892,7 +2892,7 @@
             // LoudMaxInstallMenu
             // 
             this.LoudMaxInstallMenu.Index = 0;
-            this.LoudMaxInstallMenu.Text = "Install LoudMax, to prevent clipping with ASIO";
+            this.LoudMaxInstallMenu.Text = "Install LoudMax, to prevent clipping";
             this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
             // 
             // menuItem7

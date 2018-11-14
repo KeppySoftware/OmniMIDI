@@ -232,10 +232,10 @@ BOOL UnloadBASSFunctions() {
 	try {
 		if (BASSLoadedToMemory) {
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
-			FreeLibrary(bass);
-			FreeLibrary(bassmidi);
-			FreeLibrary(bassenc);
-			FreeLibrary(bassasio);
+			if (bass) FreeLibrary(bass);
+			if (bassmidi) FreeLibrary(bassmidi);
+			if (bassenc) FreeLibrary(bassenc);
+			if (bassasio) FreeLibrary(bassasio);
 			if (bass_vst) FreeLibrary(bass_vst);
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}
@@ -415,9 +415,6 @@ void LoadSettings(BOOL restart)
 		if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
 		else ManagedSettings.NotesCatcherWithAudio = FALSE;
 
-		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(Configuration.Address, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
-		else CloseStreamMidiOutClose = TRUE;
-
 		RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 
 		// Stuff that works, don't bother
@@ -492,9 +489,6 @@ void LoadSettingsRT() {
 
 			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
 			else ManagedSettings.NotesCatcherWithAudio = FALSE;
-
-			if (ManagedSettings.CurrentEngine != ASIO_ENGINE) RegQueryValueEx(Configuration.Address, L"CloseStreamMidiOutClose", NULL, &dwType, (LPBYTE)&CloseStreamMidiOutClose, &dwSize);
-			else CloseStreamMidiOutClose = TRUE;
 
 			// Stuff that works so don't bother
 			if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }

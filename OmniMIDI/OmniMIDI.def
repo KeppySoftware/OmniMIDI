@@ -1,6 +1,7 @@
 LIBRARY		OmniMIDI.dll
 EXPORTS
 	ChangeDriverSettings
+	GetCurrentDriverSettings
 	DriverProc
 	GetDriverDebugInfo
 	InitializeKDMAPIStream

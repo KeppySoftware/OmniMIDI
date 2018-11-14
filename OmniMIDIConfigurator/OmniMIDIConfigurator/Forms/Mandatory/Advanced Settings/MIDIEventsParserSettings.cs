@@ -30,12 +30,8 @@ namespace OmniMIDIConfigurator
             SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0));
             FullVelocityMode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0));
             MT32Mode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0));
-            if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text == "ASIO")
-            {
-                CloseStreamMidiOutClose.Enabled = false;
-                CloseStreamMidiOutClose.Checked = true;
-            }
-            else CloseStreamMidiOutClose.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CloseStreamMidiOutClose", 1));
+            CloseStreamMidiOutClose.Enabled = false;
+            CloseStreamMidiOutClose.Checked = true;
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
         }

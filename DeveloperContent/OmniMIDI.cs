@@ -112,7 +112,10 @@ namespace KDMAPI
 	public static extern uint UnprepareLongData(ref MIDIHDR IIMidiHdr);
 			
 	[DllImport("OmniMIDI.dll")]
-	public static extern void ChangeDriverSettings(ref Settings IIMidiHdr, uint StructSize);
+	public static extern void GetCurrentDriverSettings(ref Settings SetStruct);
+	
+	[DllImport("OmniMIDI.dll")]
+	public static extern void ChangeDriverSettings(ref Settings SetStruct, uint StructSize);
 			
 	[DllImport("OmniMIDI.dll")]
 	public static extern void LoadCustomSoundFontsList(ref String Directory);
