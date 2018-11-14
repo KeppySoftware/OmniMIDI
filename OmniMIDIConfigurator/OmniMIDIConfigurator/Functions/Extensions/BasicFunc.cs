@@ -342,11 +342,14 @@ namespace OmniMIDIConfigurator
                 bool bit64 = false;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\LoudMax";
 
+                if (!Directory.Exists(userfolder))
+                    Directory.CreateDirectory(userfolder);
+
                 // 32-bit DLL
-                if (!File.Exists(userfolder + "\\LoudMax.dll"))
+                if (!File.Exists(userfolder + "\\LoudMax32.dll"))
                 {
                     Program.DebugToConsole(false, "Extracting LoudMax 32-bit...", null);
-                    File.WriteAllBytes(String.Format("{0}\\{1}", userfolder, "LoudMax.dll"), Properties.Resources.LoudMax32);
+                    File.WriteAllBytes(String.Format("{0}\\{1}", userfolder, "LoudMax32.dll"), Properties.Resources.LoudMax32);
                     Program.DebugToConsole(false, "LoudMax 32-bit is now installed.", null);
                     bit32 = true;
                 }
@@ -395,10 +398,10 @@ namespace OmniMIDIConfigurator
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\LoudMax";
 
                 // 32-bit DLL
-                if (File.Exists(userfolder + "\\LoudMax.dll"))
+                if (File.Exists(userfolder + "\\LoudMax32.dll"))
                 {
                     Program.DebugToConsole(false, "Uninstalling LoudMax 32-bit...", null);
-                    File.Delete(userfolder + "\\LoudMax.dll");
+                    File.Delete(userfolder + "\\LoudMax32.dll");
                     bit32 = true;
                 }
                 else
@@ -419,6 +422,8 @@ namespace OmniMIDIConfigurator
                     Program.DebugToConsole(false, "LoudMax 64-bit is already uninstalled.", null);
                     MessageBox.Show("LoudMax 64-bit seems to be already uninstalled.", "OmniMIDI - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
+                Directory.Delete(userfolder);
 
                 if (bit32 == true && bit64 == true)
                 {
