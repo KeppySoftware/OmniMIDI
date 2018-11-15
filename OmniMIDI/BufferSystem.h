@@ -94,18 +94,23 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
+void __inline PBufData(void) {
+	LockSystem.LockForReading();
+	ULONGLONG tempevent = readhead;
+	if (++readhead >= EvBufferSize) readhead = 0;
+	DWORD dwParam1 = (evbuf + tempevent)->dwParam1;
+	LockSystem.UnlockForReading();
+
+	_StoBASSMIDI(dwParam1);
+}
+
 DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	do {
-		LockSystem.LockForReading();
-		ULONGLONG tempevent = readhead;
-		if (++readhead >= EvBufferSize) readhead = 0;
-		evbuf_t TempBuffer = *(evbuf + tempevent);
-		LockSystem.UnlockForReading();
-
-		_StoBASSMIDI(TempBuffer.dwParam1);
-	} while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
+		PBufData();
+	} 
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
 }
@@ -114,14 +119,9 @@ DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do {
-		LockSystem.LockForReading();
-		ULONGLONG tempevent = readhead;
-		if (++readhead >= EvBufferSize) readhead = 0;
-		evbuf_t TempBuffer = *(evbuf + tempevent);
-		LockSystem.UnlockForReading();
-
-		_StoBASSMIDI(TempBuffer.dwParam1);
-	} while ((readhead != writehead) ? ~0 : 0);
+		PBufData();
+	}
+	while ((readhead != writehead) ? ~0 : 0);
 
 	return 0;
 }
@@ -131,14 +131,9 @@ DWORD __inline PlayBufferedDataChunk(void) {
 
 	ULONGLONG whe = writehead;
 	do {
-		LockSystem.LockForReading();
-		ULONGLONG tempevent = readhead;
-		if (++readhead >= EvBufferSize) readhead = 0;
-		evbuf_t TempBuffer = *(evbuf + tempevent);
-		LockSystem.UnlockForReading();
-
-		_StoBASSMIDI(TempBuffer.dwParam1);
-	} while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
+		PBufData();
+	}
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
@@ -146,14 +141,9 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 
 	ULONGLONG whe = writehead;
 	do {
-		LockSystem.LockForReading();
-		ULONGLONG tempevent = readhead;
-		if (++readhead >= EvBufferSize) readhead = 0;
-		evbuf_t TempBuffer = *(evbuf + tempevent);
-		LockSystem.UnlockForReading();
-
-		_StoBASSMIDI(TempBuffer.dwParam1);
-	} while ((readhead != whe) ? ~0 : 0);
+		PBufData();
+	}
+	while ((readhead != whe) ? ~0 : 0);
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -257,16 +247,12 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
+
 	long long tempevent = writehead;
 	if (++writehead >= EvBufferSize) writehead = 0;
 
-	evbuf_t evtobuf{
-		uMsg,
-		dwParam1,
-		dwParam2
-	};
+	evbuf[tempevent] = evbuf_t(uMsg, dwParam1, dwParam2);
 
-	evbuf[tempevent] = evtobuf;
 	LockSystem.UnlockForWriting();
 
 	// Some checks
@@ -279,16 +265,12 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
+
 	long long tempevent = writehead;
 	if (++writehead >= EvBufferSize) writehead = 0;
 
-	evbuf_t evtobuf{
-		uMsg,
-		dwParam1,
-		dwParam2
-	};
+	evbuf[tempevent] = evbuf_t(uMsg, dwParam1, dwParam2);
 
-	evbuf[tempevent] = evtobuf;
 	LockSystem.UnlockForWriting();
 
 	// Haha everything is fine

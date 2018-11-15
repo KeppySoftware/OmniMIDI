@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '6.0.57.9'
+#define Version '6.0.57.10'
                       
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -62,7 +62,6 @@ VersionInfoCompany={#Author}
 VersionInfoCopyright={#Copyright}
 VersionInfoDescription={#Description}
 VersionInfoProductName={#ProductName}
-VersionInfoProductTextVersion={#Version}
 VersionInfoTextVersion={#Description}
 VersionInfoVersion={#Version}
 WizardImageFile=scripts\image.bmp

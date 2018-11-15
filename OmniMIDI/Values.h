@@ -23,7 +23,18 @@ struct evbuf_t {
 	UINT			uMsg;
 	DWORD_PTR		dwParam1;
 	DWORD_PTR		dwParam2;
-};	// The buffer's structure
+
+	evbuf_t() :
+		uMsg(0),
+		dwParam1(0),
+		dwParam2(0){}
+
+	evbuf_t(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2):
+		uMsg(uMsg),
+		dwParam1(dwParam1),
+		dwParam2(dwParam2){}
+};	
+// The buffer's structure
 
 static LightweightLock LockSystem;				// LockSystem
 static evbuf_t * evbuf;							// The buffer

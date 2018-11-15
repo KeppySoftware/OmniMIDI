@@ -681,46 +681,47 @@ void FillContentDebug(
 	DOUBLE OL,					// ASIO's output latency
 	BOOL BUFOVD					// EVBuffer overload
 ) {
-	GetAppName();
+	if (hPipe == INVALID_HANDLE_VALUE || (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING)) StartDebugPipe(TRUE);
+	else {
+		GetAppName();
 
-	std::locale::global(std::locale::classic());	// DO NOT REMOVE
+		std::locale::global(std::locale::classic());	// DO NOT REMOVE
 
-	std::string PipeContent;
-	DWORD bytesWritten;								// Needed for Windows 7 apparently...
+		std::string PipeContent;
+		DWORD bytesWritten;								// Needed for Windows 7 apparently...
 
-	PipeContent += "OMDebugInfo";
-	PipeContent += "\nCurrentApp = ";
-	PipeContent += AppPath;
-	PipeContent += "\nBitApp = ";
+		PipeContent += "OMDebugInfo";
+		PipeContent += "\nCurrentApp = ";
+		PipeContent += AppPath;
 #if defined(_WIN64)
-	PipeContent += "64-bit";
+		PipeContent += "\nBitApp = 64-bit";
 #elif defined(_WIN32)
-	PipeContent += "32-bit";
+		PipeContent += "\nBitApp = 32-bit";
 #endif
 
-	ManagedDebugInfo.RenderingTime = CCUI0;
+		ManagedDebugInfo.RenderingTime = CCUI0;
 
-	for (int i = 0; i <= 15; ++i) {
-		ManagedDebugInfo.ActiveVoices[i] = cvvalues[i];
-		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
+		for (int i = 0; i <= 15; ++i) {
+			ManagedDebugInfo.ActiveVoices[i] = cvvalues[i];
+			PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
+		}
+
+		PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
+		PipeContent += "\nHandles = " + std::to_string(HC);
+		PipeContent += "\nRAMUsage = " + std::to_string(RUI);
+		PipeContent += "\nOMDirect = " + std::to_string(KDMAPIStatus);
+		PipeContent += "\nTd1 = " + std::to_string(TD1);
+		PipeContent += "\nTd2 = " + std::to_string(TD2);
+		PipeContent += "\nTd3 = " + std::to_string(TD3);
+		PipeContent += "\nTd4 = " + std::to_string(TD4);
+		PipeContent += "\nASIOInLat = " + std::to_string(IL);
+		PipeContent += "\nASIOOutLat = " + std::to_string(OL);
+		// PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
+
+		PipeContent += "\n\0";
+
+		WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), &bytesWritten, NULL);
 	}
-
-	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
-	PipeContent += "\nHandles = " + std::to_string(HC);
-	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
-	PipeContent += "\nOMDirect = " + std::to_string(KDMAPIStatus);
-	PipeContent += "\nTd1 = " + std::to_string(TD1);
-	PipeContent += "\nTd2 = " + std::to_string(TD2);
-	PipeContent += "\nTd3 = " + std::to_string(TD3);
-	PipeContent += "\nTd4 = " + std::to_string(TD4);
-	PipeContent += "\nASIOInLat = " + std::to_string(IL);
-	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
-	// PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
-
-	PipeContent += "\n\0";
-
-	if (hPipe != INVALID_HANDLE_VALUE) WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), &bytesWritten, NULL);
-	if (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING) StartDebugPipe(TRUE);
 }
 
 void ParseDebugData() {

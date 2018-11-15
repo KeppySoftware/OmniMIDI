@@ -122,10 +122,6 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				// how much time it takes to do its stuff
 				start2 = TimeNow();
 
-				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, 0);
-
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
 					MT32SetInstruments();
@@ -133,6 +129,10 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				}
 				// Else, open the EventProcesser thread
 				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
+
+				// If the current engine is ".WAV mode", then use AudioRender()
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + sndbflen * sizeof(float));
+				else BASS_ChannelUpdate(OMStream, 0);
 
 				_FWAIT;
 			}
