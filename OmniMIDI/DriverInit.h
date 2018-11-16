@@ -294,11 +294,11 @@ void InitializeBASSVST() {
 
 			if (bass_vst)
 			{
-				LOADBASS_VSTFUNCTION(BASS_VST_ChannelSetDSP);
-				LOADBASS_VSTFUNCTION(BASS_VST_ChannelFree);
-				LOADBASS_VSTFUNCTION(BASS_VST_ChannelCreate);
-				LOADBASS_VSTFUNCTION(BASS_VST_ProcessEvent);
-				LOADBASS_VSTFUNCTION(BASS_VST_ProcessEventRaw);
+				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelSetDSP);
+				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelFree);
+				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelCreate);
+				LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEvent);
+				LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEventRaw);
 
 				BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
 			}
@@ -416,16 +416,14 @@ void FreeUpBASS() {
 }
 
 void FreeUpBASSASIO() {
-	// Free up ASIO before doing anything
-	BASS_ASIO_ChannelPause(FALSE, 0);
-	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO channels have been paused.");
-	BASS_ASIO_ChannelReset(FALSE, -1, BASS_ASIO_RESET_ENABLE | BASS_ASIO_RESET_JOIN);
-	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO channels have been reset.");
-	BASS_ASIO_Stop();
-	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO stopped.");
-	BASS_ASIO_Free();
-	PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
-	ASIOReady = FALSE;
+	if (BASSLoadedToMemory) {
+		// Free up ASIO before doing anything
+		BASS_ASIO_Stop();
+		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO stopped.");
+		BASS_ASIO_Free();
+		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
+		ASIOReady = FALSE;
+	}
 }
 
 /*
@@ -738,10 +736,10 @@ bool InitializeBASS(BOOL restart) {
 	if (restart == TRUE) {
 		PrintMessageToDebugLog("InitializeBASSFunc", "The driver had to restart the stream.");
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
-	}
 
-	FreeUpBASSASIO();
-	FreeUpBASS();
+		FreeUpBASSASIO();
+		FreeUpBASS();
+	}
 
 	// Initialize BASS
 	BOOL init = InitializeBASSLibrary();
@@ -790,26 +788,28 @@ void SetUpStream() {
 }
 
 void FreeUpStream() {
-	// Reset synth
-	ResetSynth(0);
+	if (BASSLoadedToMemory) {
+		// Reset synth
+		ResetSynth(0);
 
-	// Free BASSASIO
-	BASS_ASIO_Stop();
-	PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
-	BASS_ASIO_Free();
-	PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
+		// Free up ASIO before doing anything
+		BASS_ASIO_Stop();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
+		BASS_ASIO_Free();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
 
-	// Stop the stream and free it as well
-	BASS_ChannelStop(OMStream);
-	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream stopped.");
-	BASS_StreamFree(OMStream);
-	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
+		// Stop the stream and free it as well
+		BASS_ChannelStop(OMStream);
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream stopped.");
+		BASS_StreamFree(OMStream);
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
 
-	// Deinitialize the BASS output and free it, since we need to restart it
-	BASS_Stop();
-	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
-	BASS_Free();
-	PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+		// Deinitialize the BASS output and free it, since we need to restart it
+		BASS_Stop();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
+		BASS_Free();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+	}
 
 	// Send dummy values to the mixer
 	CheckVolume(TRUE);

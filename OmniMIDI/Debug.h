@@ -345,7 +345,6 @@ void StartDebugPipe(BOOL RestartingPipe) {
 
 	if (RestartingPipe) {
 		FlushFileBuffers(hPipe);
-		DisconnectNamedPipe(hPipe);
 		CloseHandle(hPipe);
 		hPipe = NULL;
 	}
@@ -360,8 +359,8 @@ Retry:
 
 		// Now create the pipe
 		hPipe = CreateNamedPipe(PipeDes,
-			PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE | FILE_FLAG_OVERLAPPED,
-			PIPE_TYPE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
+			PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE,
+			PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
 			PIPE_UNLIMITED_INSTANCES,
 			NTFS_MAX_PATH,
 			0,

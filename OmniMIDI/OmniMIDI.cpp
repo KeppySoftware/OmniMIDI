@@ -88,11 +88,7 @@ static NULVM NtUnlockVirtualMemory = 0;
 // Blinx best game
 static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
 
-#define LOADBASSASIOFUNCTION(f) *((void**)&f)=GetProcAddress(bassasio,#f)
-#define LOADBASSENCFUNCTION(f) *((void**)&f)=GetProcAddress(bassenc,#f)
-#define LOADBASSFUNCTION(f) *((void**)&f)=GetProcAddress(bass,#f)
-#define LOADBASSMIDIFUNCTION(f) *((void**)&f)=GetProcAddress(bassmidi,#f)
-#define LOADBASS_VSTFUNCTION(f) *((void**)&f)=GetProcAddress(bass_vst,#f)
+#define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
 // #define LOADBASSWASAPIFUNCTION(f) *((void**)&f) = GetProcAddress(basswasapi, #f)
 
 // F**k Sleep() tbh

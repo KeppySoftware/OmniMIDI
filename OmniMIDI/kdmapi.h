@@ -65,10 +65,6 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 			// I SLEEP
 			Sleep(30);
 		}
-
-		// Release the SoundFonts and the stream
-		FreeFonts();
-		FreeUpStream();
 	}
 	catch (...) {
 		CrashMessage("SettingsAndHealthThread");
@@ -105,14 +101,14 @@ BOOL DoStartClient() {
 		// Initialize the stream
 		bass_initialized = FALSE;
 		while (!bass_initialized) {
-			// Load the settings, and allocate the memory for the EVBuffer
-			LoadSettings(FALSE);
-
 			// Load the BASS functions
-			BASSLoadedToMemory = LoadBASSFunctions();
+			LoadBASSFunctions();
 
 			// If BASS is still unavailable, commit suicide
 			if (!BASSLoadedToMemory) CrashMessage("NoBASSFound");
+
+			// Load the settings, and allocate the memory for the EVBuffer
+			LoadSettings(FALSE);
 
 			// Initialize the BASS output device, and set up the streams
 			if (InitializeBASS(FALSE)) {
@@ -180,7 +176,7 @@ BOOL DoStopClient() {
 		bass_initialized = FALSE;
 
 		// Unload BASS functions
-		BASSLoadedToMemory = UnloadBASSFunctions();
+		UnloadBASSFunctions();
 
 		// Boopers
 		DriverInitStatus = FALSE;
