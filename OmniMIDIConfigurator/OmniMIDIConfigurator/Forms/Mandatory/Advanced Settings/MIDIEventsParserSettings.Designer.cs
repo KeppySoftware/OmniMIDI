@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MIDIEventsParserSettings));
             this.ABS = new System.Windows.Forms.GroupBox();
-            this.CloseStreamMidiOutClose = new System.Windows.Forms.CheckBox();
+            this.OverrideNoteLengthWA = new System.Windows.Forms.PictureBox();
+            this.OverrideNoteLength = new System.Windows.Forms.CheckBox();
             this.MT32Mode = new System.Windows.Forms.CheckBox();
             this.IgnoreNotes = new System.Windows.Forms.CheckBox();
             this.FullVelocityMode = new System.Windows.Forms.CheckBox();
@@ -47,11 +47,14 @@
             this.CAE = new System.Windows.Forms.Label();
             this.OKBtn = new System.Windows.Forms.Button();
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.midiOutCloseDisabled = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.NoteLengthValue = new System.Windows.Forms.NumericUpDown();
+            this.NoteLengthValueMS = new System.Windows.Forms.Label();
             this.ABS.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OverrideNoteLengthWA)).BeginInit();
             this.AOS.SuspendLayout();
             this.OS.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.midiOutCloseDisabled)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NoteLengthValue)).BeginInit();
             this.SuspendLayout();
             // 
             // ABS
@@ -59,8 +62,11 @@
             this.ABS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ABS.Controls.Add(this.midiOutCloseDisabled);
-            this.ABS.Controls.Add(this.CloseStreamMidiOutClose);
+            this.ABS.Controls.Add(this.NoteLengthValueMS);
+            this.ABS.Controls.Add(this.NoteLengthValue);
+            this.ABS.Controls.Add(this.label1);
+            this.ABS.Controls.Add(this.OverrideNoteLengthWA);
+            this.ABS.Controls.Add(this.OverrideNoteLength);
             this.ABS.Controls.Add(this.MT32Mode);
             this.ABS.Controls.Add(this.IgnoreNotes);
             this.ABS.Controls.Add(this.FullVelocityMode);
@@ -73,17 +79,29 @@
             this.ABS.TabStop = false;
             this.ABS.Text = "Ignore specific stuff/Set full velocity";
             // 
-            // CloseStreamMidiOutClose
+            // OverrideNoteLengthWA
             // 
-            this.CloseStreamMidiOutClose.AutoSize = true;
-            this.CloseStreamMidiOutClose.Location = new System.Drawing.Point(6, 114);
-            this.CloseStreamMidiOutClose.Name = "CloseStreamMidiOutClose";
-            this.CloseStreamMidiOutClose.Size = new System.Drawing.Size(255, 17);
-            this.CloseStreamMidiOutClose.TabIndex = 9;
-            this.CloseStreamMidiOutClose.Text = "Close audio stream when midiOutClose() is called";
-            this.Requirements.SetToolTip(this.CloseStreamMidiOutClose, resources.GetString("CloseStreamMidiOutClose.ToolTip"));
-            this.CloseStreamMidiOutClose.UseVisualStyleBackColor = true;
-            this.CloseStreamMidiOutClose.CheckedChanged += new System.EventHandler(this.CloseStreamMidiOutClose_CheckedChanged);
+            this.OverrideNoteLengthWA.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.OverrideNoteLengthWA.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
+            this.OverrideNoteLengthWA.Location = new System.Drawing.Point(174, 115);
+            this.OverrideNoteLengthWA.Name = "OverrideNoteLengthWA";
+            this.OverrideNoteLengthWA.Size = new System.Drawing.Size(14, 14);
+            this.OverrideNoteLengthWA.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.OverrideNoteLengthWA.TabIndex = 11;
+            this.OverrideNoteLengthWA.TabStop = false;
+            this.OverrideNoteLengthWA.Click += new System.EventHandler(this.midiOutCloseDisabled_Click);
+            // 
+            // OverrideNoteLength
+            // 
+            this.OverrideNoteLength.AutoSize = true;
+            this.OverrideNoteLength.Location = new System.Drawing.Point(6, 114);
+            this.OverrideNoteLength.Name = "OverrideNoteLength";
+            this.OverrideNoteLength.Size = new System.Drawing.Size(169, 17);
+            this.OverrideNoteLength.TabIndex = 9;
+            this.OverrideNoteLength.Text = "Override length of note events";
+            this.Requirements.SetToolTip(this.OverrideNoteLength, "This doesn\'t work while minimum playback mode is enabled.\r\n");
+            this.OverrideNoteLength.UseVisualStyleBackColor = true;
+            this.OverrideNoteLength.CheckedChanged += new System.EventHandler(this.OverrideNoteLength_CheckedChanged);
             // 
             // MT32Mode
             // 
@@ -252,17 +270,32 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Information";
             // 
-            // midiOutCloseDisabled
+            // label1
             // 
-            this.midiOutCloseDisabled.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.midiOutCloseDisabled.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
-            this.midiOutCloseDisabled.Location = new System.Drawing.Point(261, 115);
-            this.midiOutCloseDisabled.Name = "midiOutCloseDisabled";
-            this.midiOutCloseDisabled.Size = new System.Drawing.Size(14, 14);
-            this.midiOutCloseDisabled.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.midiOutCloseDisabled.TabIndex = 11;
-            this.midiOutCloseDisabled.TabStop = false;
-            this.midiOutCloseDisabled.Click += new System.EventHandler(this.midiOutCloseDisabled_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(216, 115);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Length:";
+            // 
+            // NoteLengthValue
+            // 
+            this.NoteLengthValue.DecimalPlaces = 3;
+            this.NoteLengthValue.Location = new System.Drawing.Point(258, 113);
+            this.NoteLengthValue.Name = "NoteLengthValue";
+            this.NoteLengthValue.Size = new System.Drawing.Size(65, 20);
+            this.NoteLengthValue.TabIndex = 13;
+            this.NoteLengthValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NoteLengthValue.ValueChanged += new System.EventHandler(this.NoteLengthValue_ValueChanged);
+            // 
+            // NoteLengthValueMS
+            // 
+            this.NoteLengthValueMS.Location = new System.Drawing.Point(323, 115);
+            this.NoteLengthValueMS.Name = "NoteLengthValueMS";
+            this.NoteLengthValueMS.Size = new System.Drawing.Size(20, 13);
+            this.NoteLengthValueMS.TabIndex = 14;
+            this.NoteLengthValueMS.Text = "ms";
             // 
             // MIDIEventsParserSettings
             // 
@@ -285,10 +318,11 @@
             this.Load += new System.EventHandler(this.MIDIEventsParserSettings_Load);
             this.ABS.ResumeLayout(false);
             this.ABS.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OverrideNoteLengthWA)).EndInit();
             this.AOS.ResumeLayout(false);
             this.AOS.PerformLayout();
             this.OS.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.midiOutCloseDisabled)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NoteLengthValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -312,7 +346,10 @@
         private System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.Button EVBufDialog;
         private System.Windows.Forms.CheckBox MT32Mode;
-        private System.Windows.Forms.CheckBox CloseStreamMidiOutClose;
-        private System.Windows.Forms.PictureBox midiOutCloseDisabled;
+        private System.Windows.Forms.PictureBox OverrideNoteLengthWA;
+        private System.Windows.Forms.CheckBox OverrideNoteLength;
+        private System.Windows.Forms.NumericUpDown NoteLengthValue;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label NoteLengthValueMS;
     }
 }

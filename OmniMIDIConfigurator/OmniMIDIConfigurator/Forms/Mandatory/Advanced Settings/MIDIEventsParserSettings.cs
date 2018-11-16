@@ -19,19 +19,32 @@ namespace OmniMIDIConfigurator
 
         private void MIDIEventsParserSettings_Load(object sender, EventArgs e)
         {
+            AllNotesIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
+            SysExIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
+
             AllNotesIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0));
             SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0));
 
+            IgnoreNotes.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             IgnoreNotes.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
             IgnoreNotesInterval.Enabled = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
 
             CapFram.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("CapFramerate", 1));
+
+            Limit88.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             Limit88.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("LimitTo88Keys", 0));
+
             SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0));
+
+            FullVelocityMode.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             FullVelocityMode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0));
+
             MT32Mode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0));
-            CloseStreamMidiOutClose.Enabled = false;
-            CloseStreamMidiOutClose.Checked = true;
+
+            OverrideNoteLength.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
+            OverrideNoteLength.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("OverrideNoteLength", 0));
+            NoteLengthValue.Enabled = (!Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) && Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("OverrideNoteLength", 0)));
+            NoteLengthValue.Value = Convert.ToDecimal((double)Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NoteLengthValue", 5)) / 1000.0);
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
         }
@@ -75,15 +88,21 @@ namespace OmniMIDIConfigurator
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("MT32Mode", Convert.ToInt32(MT32Mode.Checked), RegistryValueKind.DWord);
         }
 
-        private void CloseStreamMidiOutClose_CheckedChanged(object sender, EventArgs e)
+        private void OverrideNoteLength_CheckedChanged(object sender, EventArgs e)
         {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("CloseStreamMidiOutClose", Convert.ToInt32(CloseStreamMidiOutClose.Checked), RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("OverrideNoteLength", Convert.ToInt32(OverrideNoteLength.Checked), RegistryValueKind.DWord);
+            NoteLengthValue.Enabled = OverrideNoteLength.Checked;
+        }
+
+        private void NoteLengthValue_ValueChanged(object sender, EventArgs e)
+        {
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("NoteLengthValue", Convert.ToInt32(NoteLengthValue.Value * 1000));
         }
 
         private void midiOutCloseDisabled_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("To follow the Steinberg ASIO standard, this option is always enabled when using the ASIO engine, " +
-                "to prevent the ASIO drivers from crashing during playback, or freezing during the app shutdown process.",
+            MessageBox.Show("This option doesn't guarantee that all the notes will be turned off immediately after the specified amount of time on the left numericbox." +
+                "\nPedal hold and other special events might delay the noteoff event even more.",
                 "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

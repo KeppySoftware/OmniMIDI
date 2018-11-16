@@ -143,7 +143,7 @@
             // 
             this.HModeWhat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.HModeWhat.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
-            this.HModeWhat.Location = new System.Drawing.Point(168, 38);
+            this.HModeWhat.Location = new System.Drawing.Point(182, 38);
             this.HModeWhat.Name = "HModeWhat";
             this.HModeWhat.Size = new System.Drawing.Size(14, 14);
             this.HModeWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -157,9 +157,9 @@
             this.HMode.AutoSize = true;
             this.HMode.Location = new System.Drawing.Point(6, 37);
             this.HMode.Name = "HMode";
-            this.HMode.Size = new System.Drawing.Size(163, 17);
+            this.HMode.Size = new System.Drawing.Size(177, 17);
             this.HMode.TabIndex = 9;
-            this.HMode.Text = "Enable hyper-playback mode";
+            this.HMode.Text = "Enable minimum playback mode";
             this.HMode.UseVisualStyleBackColor = true;
             this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
             // 
@@ -208,6 +208,7 @@
             this.SlowDownPlayback.Size = new System.Drawing.Size(244, 17);
             this.SlowDownPlayback.TabIndex = 5;
             this.SlowDownPlayback.Text = "Slow down playback instead of skipping notes";
+            this.Requirements.SetToolTip(this.SlowDownPlayback, "This doesn\'t work while minimum playback mode is enabled.");
             this.SlowDownPlayback.UseVisualStyleBackColor = true;
             this.SlowDownPlayback.CheckedChanged += new System.EventHandler(this.SlowDownPlayback_CheckedChanged);
             // 

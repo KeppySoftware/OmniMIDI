@@ -19,7 +19,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
-#define DEFAULT_SETTINGS { FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, 0, 44100, 0, 30, WASAPI_ENGINE, 1, 0, 0, 75, 1, 1, 10000, 127, 500, 2 }
+#define DEFAULT_SETTINGS { FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, 0, 44100, 0, 30, WASAPI_ENGINE, 1, 0, 0, 75, 1, 1, 10000, 127, 500, 2, FALSE, 5 }
 #define DEFAULT_DEBUG { 0.0f, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 
 // The settings struct, you can initialize it with the defaults value through by assigning DEFAULT_SETTINGS
@@ -69,6 +69,8 @@ typedef struct
 
 	// Add more down here
 	// ------------------
+	BOOL OverrideNoteLength;		// Override note length
+	DWORD NoteLengthValue;			// Length of the note overridden
 } Settings;
 
 // The debug info struct, you can set the default values by assigning DEFAULT_DEBUG

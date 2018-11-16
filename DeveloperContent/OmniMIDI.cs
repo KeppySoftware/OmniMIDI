@@ -66,6 +66,9 @@ namespace KDMAPI
 		uint TransposeValue;			// Pitch shift (127 = None)
 		uint MaxVoices;					// Voices limit
 		uint SincConv;					// Sinc
+		
+		bool OverrideNoteLength;		// Override note length
+		uint NoteLengthValue;			// Length of the note overridden
 	}
 	
 	struct DebugInfo 

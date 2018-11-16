@@ -59,6 +59,9 @@ class Settings
 	public int TransposeValue;				// Pitch shift (127 = None)
 	public int MaxVoices;					// Voices limit
 	public int SincConv;					// Sinc
+	
+	public int OverrideNoteLength;			// Override note length
+	public int NoteLengthValue;				// Length of the note overridden
 }
 
 class DebugInfo

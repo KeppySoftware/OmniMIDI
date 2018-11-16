@@ -28,14 +28,9 @@ int BufferCheckHyper(void) {
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
-	/*
-
-	THIS IS A WIP
-
-	if (OverrideNoteOff) {
+	if (ManagedSettings.OverrideNoteLength) {
 		if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
-			BASS_MIDI_EVENT e[2];
-			memset(e, 0, sizeof(e));
+			BASS_MIDI_EVENT e[2] = { 0, 0 };
 
 			e[0].event = MIDI_EVENT_NOTE;
 			e[0].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), LOBYTE(HIWORD(dwParam1)));
@@ -46,7 +41,7 @@ void SendToBASSMIDI(DWORD dwParam1) {
 			e[1].event = MIDI_EVENT_NOTE;
 			e[1].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
 			e[1].chan = dwParam1 & 0xF;
-			e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, 0.25);
+			e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.NoteLengthValue / 1000.0));
 			e[1].tick = 0;
 
 			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, 2);
@@ -55,20 +50,10 @@ void SendToBASSMIDI(DWORD dwParam1) {
 		else if (((dwParam1 & 0xFF) & 0xF0) == 0x80) return;
 	}
 
-	*/
-
-	BYTE TypeOfEvent = GETSTATUS(dwParam1);
-	if (TypeOfEvent == MIDI_NOTEON)
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
-	else if (TypeOfEvent == MIDI_NOTEOFF)
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
-	else
-	{
-		BASS_MIDI_StreamEvents(
-			OMStream, BASS_MIDI_EVENTS_RAW,
-			&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
-		);
-	}
+	BASS_MIDI_StreamEvents(
+		OMStream, BASS_MIDI_EVENTS_RAW,
+		&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
+	);
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
@@ -89,7 +74,7 @@ void SendToBASSMIDIHyper(DWORD dwParam1) {
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	PrintSysExMessageToDebugLog(
-		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, (int)IIMidiHdr->dwBufferLength),
+		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength),
 		IIMidiHdr);
 	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }

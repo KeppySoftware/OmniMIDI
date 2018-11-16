@@ -33,6 +33,7 @@ namespace OmniMIDIConfigurator
 
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) == 1)
                 HMode.Checked = true;
+            SlowDownPlayback.Enabled = !HMode.Checked;
 
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NotesCatcherWithAudio", 0)) == 1)
                 OldBuff.Checked = true;
@@ -87,6 +88,7 @@ namespace OmniMIDIConfigurator
         private void HMode_CheckedChanged(object sender, EventArgs e)
         {
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
+            SlowDownPlayback.Enabled = !HMode.Checked;
         }
 
         private void OldBuff_CheckedChanged(object sender, EventArgs e)
