@@ -52,13 +52,12 @@
             // 
             // VersionLabel
             // 
-            this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(357, 17);
+            this.VersionLabel.Location = new System.Drawing.Point(308, 17);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(146, 13);
+            this.VersionLabel.Size = new System.Drawing.Size(199, 13);
             this.VersionLabel.TabIndex = 1;
             this.VersionLabel.Text = "Changelog for version 0.0.0.0";
-            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // OkBtn
             // 
@@ -105,7 +104,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.OkBtn;
             this.ClientSize = new System.Drawing.Size(708, 438);
             this.Controls.Add(this.ReleasesList);

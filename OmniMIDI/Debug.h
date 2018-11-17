@@ -381,36 +381,84 @@ Retry:
 	}
 }
 
-MMRESULT DebugResult(MMRESULT ErrorToDisplay) {
+MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 	const DWORD MaxSize = 512;
 	CHAR ErrorTitle[MaxSize] = { 0 };
 	CHAR ErrorString[MaxSize] = { 0 };
 
-	switch (ErrorToDisplay) {
-	case MMSYSERR_NOTENABLED:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTENABLED");
-		sprintf_s(ErrorString, MaxSize, "OmniMIDI has not been initialized yet, or has failed to.");
-	case MMSYSERR_NOTSUPPORTED:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTSUPPORTED");
-		sprintf_s(ErrorString, MaxSize, "OmniMIDI does not support the requested function.");
-	case MMSYSERR_INVALPARAM:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALPARAM");
-		sprintf_s(ErrorString, MaxSize, "The app passed an invalid parameter to OmniMIDI.");
-	case MIDIERR_NOTREADY:
-		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_NOTREADY");
-		sprintf_s(ErrorString, MaxSize, "OmniMIDI is not ready to accept the MIDIHDR.");
-	case MIDIERR_UNPREPARED:	
-		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_UNPREPARED");
-		sprintf_s(ErrorString, MaxSize, "The MIDIHDR buffer passed to OmniMIDI hasn't been prepared yet.");
-	case MIDIERR_STILLPLAYING:	
-		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
-		sprintf_s(ErrorString, MaxSize, "A MIDIHDR buffer is still being played by OmniMIDI.");
-	default:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ERROR");
-		sprintf_s(ErrorString, MaxSize, "Windows Multimedia encountered an unknown error.");
+	if (ErrorToDisplay >= MMSYSERR_BASE + 21) {
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADERRNUM");
+		sprintf_s(ErrorString, MaxSize, "Error value is out of range.");
+	}
+	else {
+		switch (ErrorToDisplay) {
+		case MMSYSERR_NOMEM:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOMEM");
+			sprintf_s(ErrorString, MaxSize, "The system is unable to allocate or lock memory.");
+			break;
+		case MMSYSERR_MOREDATA:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_MOREDATA");
+			sprintf_s(ErrorString, MaxSize, "modMessage has more data to return.");
+			break;
+		case MMSYSERR_NODRIVERCB:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
+			sprintf_s(ErrorString, MaxSize, "The driver that works with modMessage does not call DriverCallback.");
+			break;
+		case MMSYSERR_HANDLEBUSY:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_HANDLEBUSY");
+			sprintf_s(ErrorString, MaxSize, "The specified handle is being used simultaneously by another thread.");
+			break;
+		case MMSYSERR_INVALIDALIAS:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALIDALIAS");
+			sprintf_s(ErrorString, MaxSize, "The specified alias was not found.");
+			break;
+		case MMSYSERR_INVALHANDLE:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALHANDLE");
+			sprintf_s(ErrorString, MaxSize, "The handle of the specified device is invalid.");
+			break;
+		case MMSYSERR_INVALFLAG:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALFLAG");
+			sprintf_s(ErrorString, MaxSize, "An invalid flag was passed to modMessage.");
+			break;
+		case MMSYSERR_INVALPARAM:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALPARAM");
+			sprintf_s(ErrorString, MaxSize, "An invalid parameter was passed to modMessage.");
+			break;
+		case MMSYSERR_NOTENABLED:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTENABLED");
+			sprintf_s(ErrorString, MaxSize, "The driver failed to load or initialize.");
+			break;
+		case MMSYSERR_NOTSUPPORTED:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTSUPPORTED");
+			sprintf_s(ErrorString, MaxSize, "The function requested by the message is not supported.");
+			break;
+		case MIDIERR_NOTREADY:
+			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_NOTREADY");
+			sprintf_s(ErrorString, MaxSize, "The hardware is busy with other data.");
+			break;
+		case MIDIERR_UNPREPARED:
+			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_UNPREPARED");
+			sprintf_s(ErrorString, MaxSize, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
+			break;
+		case MIDIERR_STILLPLAYING:
+			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
+			sprintf_s(ErrorString, MaxSize, "Buffers are still in the queue.");
+			break;
+		case MMSYSERR_BADDEVICEID:
+			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
+			sprintf_s(ErrorString, MaxSize, "The specified device ID is out of range.");
+			break;
+		default:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ERROR");
+			sprintf_s(ErrorString, MaxSize, "Unspecified error.");
+			break;
+		}
 	}
 
-	MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM error", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+	if (ManagedSettings.DebugMode)
+		strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
+
+	if (ShowError) MessageBoxA(NULL, ErrorString, "OmniMIDI - Windows Multimedia API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 	PrintMessageToDebugLog(ErrorTitle, ErrorString);
 
 	return ErrorToDisplay;

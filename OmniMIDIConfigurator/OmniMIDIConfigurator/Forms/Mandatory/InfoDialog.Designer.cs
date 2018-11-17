@@ -43,8 +43,6 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.KDMAPIVer = new System.Windows.Forms.LinkLabelEx();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
@@ -56,6 +54,8 @@
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
+            this.KDMAPIVer = new System.Windows.Forms.LinkLabelEx();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
@@ -208,30 +208,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OmniMIDI library info";
             // 
-            // KDMAPIVer
-            // 
-            this.KDMAPIVer.AutoSize = true;
-            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
-            this.KDMAPIVer.Name = "KDMAPIVer";
-            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 11;
-            this.KDMAPIVer.TabStop = true;
-            this.KDMAPIVer.Text = "KDMAPI VER";
-            this.KDMAPIVer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.KDMAPIVer_LinkClicked);
-            // 
-            // ChangeBranch
-            // 
-            this.ChangeBranch.AutoSize = true;
-            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
-            this.ChangeBranch.Name = "ChangeBranch";
-            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 10;
-            this.ChangeBranch.TabStop = true;
-            this.ChangeBranch.Text = "Change branch";
-            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
-            // 
             // CurBranch
             // 
             this.CurBranch.AutoSize = true;
@@ -282,7 +258,7 @@
             // OKClose
             // 
             this.OKClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKClose.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.OKClose.BackColor = System.Drawing.Color.Transparent;
             this.OKClose.Location = new System.Drawing.Point(286, 339);
             this.OKClose.Name = "OKClose";
             this.OKClose.Size = new System.Drawing.Size(87, 23);
@@ -294,7 +270,7 @@
             // CTC
             // 
             this.CTC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CTC.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.CTC.BackColor = System.Drawing.Color.Transparent;
             this.CTC.Location = new System.Drawing.Point(9, 339);
             this.CTC.Name = "CTC";
             this.CTC.Size = new System.Drawing.Size(105, 23);
@@ -306,7 +282,7 @@
             // CFU
             // 
             this.CFU.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CFU.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.CFU.BackColor = System.Drawing.Color.Transparent;
             this.CFU.Location = new System.Drawing.Point(120, 339);
             this.CFU.Name = "CFU";
             this.CFU.Size = new System.Drawing.Size(105, 23);
@@ -318,7 +294,7 @@
             // DonateBtn
             // 
             this.DonateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DonateBtn.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.DonateBtn.BackColor = System.Drawing.Color.Transparent;
             this.DonateBtn.Image = global::OmniMIDIConfigurator.Properties.Resources.ppdonate;
             this.DonateBtn.Location = new System.Drawing.Point(285, 12);
             this.DonateBtn.Name = "DonateBtn";
@@ -339,6 +315,30 @@
             // 
             this.DisableBB.Index = -1;
             this.DisableBB.Text = "";
+            // 
+            // KDMAPIVer
+            // 
+            this.KDMAPIVer.AutoSize = true;
+            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
+            this.KDMAPIVer.Name = "KDMAPIVer";
+            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
+            this.KDMAPIVer.TabIndex = 11;
+            this.KDMAPIVer.TabStop = true;
+            this.KDMAPIVer.Text = "KDMAPI VER";
+            this.KDMAPIVer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.KDMAPIVer_LinkClicked);
+            // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
             // 
             // LicenseFile
             // 
@@ -370,7 +370,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = global::OmniMIDIConfigurator.Properties.Resources.InfoBk;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(382, 370);

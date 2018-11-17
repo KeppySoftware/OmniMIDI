@@ -98,6 +98,10 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &ft);
 }
 
+DWORD DummyPlayBufData() {
+	return 0;
+}
+
 void DummySendToBASSMIDI(DWORD dwParam1) {
 	return;
 }
@@ -110,8 +114,8 @@ MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 static BOOL HyperMode = 0;
 static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = DummyParseData;
 static void(*_StoBASSMIDI)(DWORD dwParam1) = DummySendToBASSMIDI;
-static DWORD(*_PlayBufData)(void) = 0;
-static DWORD(*_PlayBufDataChk)(void) = 0;
+static DWORD(*_PlayBufData)(void) = DummyPlayBufData;
+static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 
@@ -172,8 +176,6 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
 	switch (uMsg) {
-	case DRV_QUERYCONFIGURE:
-		return DRV_OK;
 	case DRV_CONFIGURE:
 		TCHAR configuratorapp[MAX_PATH];
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
@@ -183,43 +185,37 @@ STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARA
 			return DRVCNF_OK;
 		}
 		return DRVCNF_CANCEL;
-	case DRV_LOAD:
-		return DRV_OK;
-	case DRV_ENABLE:
-		return DRV_OK;
-	case DRV_REMOVE:
-		return DRV_OK;
-	case DRV_FREE:
-		return DRV_OK;
 	case DRV_OPEN:
 		OMDevice = hdrvr;
 		return DRV_OK;
 	case DRV_CLOSE:
 		OMDevice = NULL;
 		return DRV_OK;
+	case DRV_QUERYCONFIGURE:
+	case DRV_LOAD:
+	case DRV_ENABLE:
+	case DRV_REMOVE:
+	case DRV_FREE:
+		return DRV_OK;
 	default:
 		return DefDriverProc(dwDriverId, hdrvr, uMsg, lParam1, lParam2);
 	}
 }
 
-DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
+DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	try {
 		// Create temp caps
-		static MIDIOUTCAPS2 MIDICaps = { 0 };
+		MIDIOUTCAPS2 MIDICaps;
 		
 		// Initialize values
-		WORD maximumvoices = 0xFFFF;
-		WORD maximumnotes = 0xFFFF;
-		DWORD CapsSupport = MIDICAPS_VOLUME;
 		DWORD Technology = NULL;
-
-		WORD VID = 0x0000;
+		WORD MID = 0x0000;
 		WORD PID = 0x0000;
 
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 		RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&VID, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&MID, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)&SynthNameW, &SNSize);
 
@@ -246,21 +242,18 @@ DWORD modGetCaps(PVOID capsPtr, DWORD capsSize) {
 		// CapsSupport |= MIDICAPS_STREAM;
 
 		// Prepare the caps item
-		if (!MIDICaps.wMid) {
-			wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
-			MIDICaps.ManufacturerGuid = OMCLSID;
-			MIDICaps.NameGuid = OMCLSID;
-			MIDICaps.ProductGuid = OMCLSID;
-			MIDICaps.dwSupport = CapsSupport;
-			MIDICaps.wChannelMask = 0xffff;
-			MIDICaps.wMid = VID;
-			MIDICaps.wNotes = maximumnotes;
-			MIDICaps.wPid = PID;
-			MIDICaps.wTechnology = Technology;
-			MIDICaps.wVoices = maximumvoices;
-			MIDICaps.vDriverVersion = 0x0501;
-			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Done sharing MIDI device caps.");
-		}
+		wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+		MIDICaps.ManufacturerGuid = OMCLSID;
+		MIDICaps.NameGuid = OMCLSID;
+		MIDICaps.ProductGuid = OMCLSID;
+		MIDICaps.dwSupport = 0L;
+		MIDICaps.wChannelMask = 0xFFFF;
+		MIDICaps.wMid = MID;
+		MIDICaps.wPid = PID;
+		MIDICaps.wTechnology = Technology;
+		MIDICaps.wVoices = 65535;
+		MIDICaps.vDriverVersion = MAKEWORD(6, 0);
+		PrintMessageToDebugLog("MODM_GETDEVCAPS", "Done sharing MIDI device caps.");
 
 		// Copy the item to the app's caps
 		memcpy(capsPtr, &MIDICaps, min(sizeof(MIDICaps), capsSize));
@@ -286,31 +279,8 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, dwParam1, 0);
 		return RetVal;
 	case MODM_STRMDATA:
-		/* 
-		// Reference the MIDIHDR
-		IIMidiHdr = (MIDIHDR*)dwParam1;
-
-		if (!IIMidiHdr || !(IIMidiHdr->dwFlags & MHDR_ISSTRM)) return MMSYSERR_INVALPARAM;		// The buffer doesn't exist, invalid 
-		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MIDIERR_UNPREPARED;					// The buffer is not prepared
-		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;						// The buffer is already being played
-
-		// Mark the buffer as in queue
-		IIMidiHdr->dwFlags &= ~MHDR_DONE;
-		IIMidiHdr->dwFlags |= MHDR_INQUEUE;
-
-		// Todo, I don't know how to play the stream yet.		
-
-		// Mark the buffer as done
-		IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
-		IIMidiHdr->dwFlags |= MHDR_DONE;
-
-		// Tell the app that the buffer has been played
-		DriverCallback(KSCallback, KSFlags, KSDevice, MOM_DONE, KSInstance, dwParam1, 0);
-		return MMSYSERR_NOERROR;
-		*/
-
 		PrintMessageToDebugLog("MODM_STRMDATA", "MIDI_IO_COOKED not supported by OmniMIDI.");
-		return DebugResult(MMSYSERR_NOTSUPPORTED);
+		return DebugResult(MMSYSERR_NOTSUPPORTED, TRUE);
 	case MODM_PREPARE:
 		// Pass it to a KDMAPI function
 		return PrepareLongData((MIDIHDR*)dwParam1);
@@ -322,7 +292,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return BlackListSystem();
 	case MODM_GETDEVCAPS:
 		// Return OM's caps to the app
-		return modGetCaps((PVOID)dwParam1, (DWORD)dwParam2);
+		return GiveOmniMIDICaps((PVOID)dwParam1, (DWORD)dwParam2);
 	case MODM_GETVOLUME:
 		// Tell the app the current output volume of the driver
 		PrintMessageToDebugLog("MODM_GETVOLUME", "The app wants to know the current output volume of the driver.");
@@ -344,13 +314,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		return MMSYSERR_NOERROR;
 	case MODM_OPEN:
 		// The driver doesn't support stream mode
-		PrintMessageToDebugLog("MODM_OPEN", "The app requested the driver to initialize its audio stream.");
-
 		if ((DWORD)dwParam2 & MIDI_IO_COOKED) {
 			PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED not supported by OmniMIDI.");
-			return DebugResult(MMSYSERR_NOTENABLED);
+			return DebugResult(MMSYSERR_NOTENABLED, TRUE);
 		}
 
+		PrintMessageToDebugLog("MODM_OPEN", "The app requested the driver to initialize its audio stream.");
 		if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 			// Parse callback and instance
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
@@ -396,10 +365,10 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Not needed for OmniMIDI
 		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACESIZE not supported by OmniMIDI.");
-		return MMSYSERR_NOTSUPPORTED;
+		return DebugResult(MMSYSERR_NOTSUPPORTED, FALSE);
 	case DRV_QUERYDEVICEINTERFACE:
 		// Not needed for OmniMIDI
 		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
-		return MMSYSERR_NOTSUPPORTED;
+		return DebugResult(MMSYSERR_NOTSUPPORTED, FALSE);
 	}
 }

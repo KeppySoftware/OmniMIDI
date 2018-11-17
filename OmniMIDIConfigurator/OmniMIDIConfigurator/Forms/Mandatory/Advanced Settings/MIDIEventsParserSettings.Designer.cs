@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.ABS = new System.Windows.Forms.GroupBox();
+            this.NoteLengthValueMS = new System.Windows.Forms.Label();
+            this.NoteLengthValue = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.OverrideNoteLengthWA = new System.Windows.Forms.PictureBox();
             this.OverrideNoteLength = new System.Windows.Forms.CheckBox();
             this.MT32Mode = new System.Windows.Forms.CheckBox();
@@ -47,14 +50,11 @@
             this.CAE = new System.Windows.Forms.Label();
             this.OKBtn = new System.Windows.Forms.Button();
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.NoteLengthValue = new System.Windows.Forms.NumericUpDown();
-            this.NoteLengthValueMS = new System.Windows.Forms.Label();
             this.ABS.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NoteLengthValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OverrideNoteLengthWA)).BeginInit();
             this.AOS.SuspendLayout();
             this.OS.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NoteLengthValue)).BeginInit();
             this.SuspendLayout();
             // 
             // ABS
@@ -78,6 +78,33 @@
             this.ABS.TabIndex = 11;
             this.ABS.TabStop = false;
             this.ABS.Text = "Ignore specific stuff/Set full velocity";
+            // 
+            // NoteLengthValueMS
+            // 
+            this.NoteLengthValueMS.Location = new System.Drawing.Point(332, 115);
+            this.NoteLengthValueMS.Name = "NoteLengthValueMS";
+            this.NoteLengthValueMS.Size = new System.Drawing.Size(9, 13);
+            this.NoteLengthValueMS.TabIndex = 14;
+            this.NoteLengthValueMS.Text = "s";
+            // 
+            // NoteLengthValue
+            // 
+            this.NoteLengthValue.DecimalPlaces = 3;
+            this.NoteLengthValue.Location = new System.Drawing.Point(267, 113);
+            this.NoteLengthValue.Name = "NoteLengthValue";
+            this.NoteLengthValue.Size = new System.Drawing.Size(65, 20);
+            this.NoteLengthValue.TabIndex = 13;
+            this.NoteLengthValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NoteLengthValue.ValueChanged += new System.EventHandler(this.NoteLengthValue_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(225, 115);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Length:";
             // 
             // OverrideNoteLengthWA
             // 
@@ -270,33 +297,6 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Information";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(216, 115);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Length:";
-            // 
-            // NoteLengthValue
-            // 
-            this.NoteLengthValue.DecimalPlaces = 3;
-            this.NoteLengthValue.Location = new System.Drawing.Point(258, 113);
-            this.NoteLengthValue.Name = "NoteLengthValue";
-            this.NoteLengthValue.Size = new System.Drawing.Size(65, 20);
-            this.NoteLengthValue.TabIndex = 13;
-            this.NoteLengthValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.NoteLengthValue.ValueChanged += new System.EventHandler(this.NoteLengthValue_ValueChanged);
-            // 
-            // NoteLengthValueMS
-            // 
-            this.NoteLengthValueMS.Location = new System.Drawing.Point(323, 115);
-            this.NoteLengthValueMS.Name = "NoteLengthValueMS";
-            this.NoteLengthValueMS.Size = new System.Drawing.Size(20, 13);
-            this.NoteLengthValueMS.TabIndex = 14;
-            this.NoteLengthValueMS.Text = "ms";
-            // 
             // MIDIEventsParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,11 +318,11 @@
             this.Load += new System.EventHandler(this.MIDIEventsParserSettings_Load);
             this.ABS.ResumeLayout(false);
             this.ABS.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NoteLengthValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OverrideNoteLengthWA)).EndInit();
             this.AOS.ResumeLayout(false);
             this.AOS.PerformLayout();
             this.OS.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.NoteLengthValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
