@@ -574,7 +574,7 @@ BOOL ApplyStreamSettings() {
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 7", TRUE);
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", FALSE);
+		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", TRUE);
 	}
 	return TRUE;
 }

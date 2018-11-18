@@ -81,9 +81,8 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 
 void __inline PBufData(void) {
 	LockSystem.LockForReading();
-	ULONGLONG tempevent = readhead;
+	DWORD dwParam1 = (evbuf + readhead)->dwParam1;
 	if (++readhead >= EvBufferSize) readhead = 0;
-	DWORD dwParam1 = (evbuf + tempevent)->dwParam1;
 	LockSystem.UnlockForReading();
 
 	_StoBASSMIDI(dwParam1);
@@ -225,7 +224,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 
 MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (!EVBuffReady || (uMsg != MODM_LONGDATA && CheckIfEventIsToIgnore(dwParam1)))
-		return MMSYSERR_NOERROR;
+		return DebugResult(MIDIERR_NOTREADY, TRUE);
 
 	if ((uMsg != MODM_LONGDATA) && (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F))
 		dwParam1 = ReturnEditedEvent(dwParam1);
@@ -233,10 +232,8 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 
-	long long tempevent = writehead;
+	evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
 	if (++writehead >= EvBufferSize) writehead = 0;
-
-	evbuf[tempevent] = evbuf_t(uMsg, dwParam1, dwParam2);
 
 	LockSystem.UnlockForWriting();
 
@@ -251,10 +248,8 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 
-	long long tempevent = writehead;
+	evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
 	if (++writehead >= EvBufferSize) writehead = 0;
-
-	evbuf[tempevent] = evbuf_t(uMsg, dwParam1, dwParam2);
 
 	LockSystem.UnlockForWriting();
 

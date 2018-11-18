@@ -359,7 +359,7 @@ MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 }
 
 VOID KDMAPI GetCurrentDriverSettings(Settings* Struct) {
-	if (!Struct || Struct == nullptr) {
+	if (!Struct) {
 		// The app returned an invalid pointer, or "nullptr" on purpose
 		// Fallback to the registry
 		PrintMessageToDebugLog("KDMAPI_GCDS", "The app passed a nullptr. Invalid argument.");
@@ -373,11 +373,15 @@ VOID KDMAPI GetCurrentDriverSettings(Settings* Struct) {
 }
 
 VOID KDMAPI ChangeDriverSettings(Settings* Struct, DWORD StructSize){
-	if (!Struct || Struct == nullptr) {
+	if (!Struct) {
 		// The app returned an invalid pointer, or "nullptr" on purpose
 		// Fallback to the registry
 		PrintMessageToDebugLog("KDMAPI_CDS", "The app passed a nullptr. Fallback to registry enabled.");
 		SettingsManagedByClient = FALSE;
+		return;
+	}
+	else if (StructSize < sizeof(ManagedSettings)) {
+		PrintMessageToDebugLog("KDMAPI_CDS", "The struct size is invalid.");
 		return;
 	}
 

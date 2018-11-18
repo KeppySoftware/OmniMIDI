@@ -229,11 +229,11 @@ std::wstring GetErrorAsString(DWORD ErrorID)
 }
 
 void CrashMessage(LPCSTR part) {
+	std::wstringstream ErrorMessage;
 	DWORD ErrorID = GetLastError();
 
 	printf("(Error at \"%s\") - Fatal error during the execution of the driver.", part);
 
-	std::wstringstream ErrorMessage;
 	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
 	if (ErrorID != 0) {
 		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
