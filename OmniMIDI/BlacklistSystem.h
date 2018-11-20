@@ -2,7 +2,7 @@
 OmniMIDI blacklist system
 */
 
-BOOL BannedSystemProcess() {
+BOOL BannedProcesses() {
 	// These processes are PERMANENTLY banned because of some internal bugs inside them.
 	GetAppName();
 
@@ -17,9 +17,6 @@ BOOL BannedSystemProcess() {
 }
 
 DWORD BlackListSystem(){
-	// If the process is in the permanent ban list, return 0
-	if (BannedSystemProcess()) return DEVICE_UNAVAILABLE;
-
 	// Blacklist system init
 	std::wstring DBLDir;
 	std::wstring UBLDir;
@@ -41,6 +38,8 @@ DWORD BlackListSystem(){
 			std::wifstream file(DBLDir.c_str());
 
 			if (file) {
+				file.imbue(UTF8Support);
+
 				// The default blacklist exists, continue
 				while (file.getline(TempString, sizeof(TempString) / sizeof(*TempString)))
 				{
@@ -48,7 +47,7 @@ DWORD BlackListSystem(){
 				}
 			}
 			else {
-				MessageBoxW(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+				MessageBoxW(NULL, L"Failed to parse the default blacklist!\nFatal error, can not continue!\n\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				exit(0);
 			}
 		}
@@ -60,6 +59,7 @@ DWORD BlackListSystem(){
 			std::wifstream file(UBLDir.c_str());
 
 			if (file) {
+				file.imbue(UTF8Support);
 				while (file.getline(TempString, sizeof(TempString) / sizeof(*TempString)))
 				{
 					if (_wcsicmp(AppNameW, TempString) == 0 ||

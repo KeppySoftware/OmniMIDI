@@ -81,7 +81,7 @@
             this.AudioBitDepth.Location = new System.Drawing.Point(89, 20);
             this.AudioBitDepth.Name = "AudioBitDepth";
             this.AudioBitDepth.Size = new System.Drawing.Size(85, 21);
-            this.AudioBitDepth.TabIndex = 3;
+            this.AudioBitDepth.TabIndex = 1;
             this.Requirements.SetToolTip(this.AudioBitDepth, "Changing this setting requires a restart of the audio stream.");
             this.AudioBitDepth.SelectedIndexChanged += new System.EventHandler(this.AudioBitDepth_SelectedIndexChanged);
             // 
@@ -102,7 +102,7 @@
             this.MonophonicFunc.Location = new System.Drawing.Point(6, 48);
             this.MonophonicFunc.Name = "MonophonicFunc";
             this.MonophonicFunc.Size = new System.Drawing.Size(153, 17);
-            this.MonophonicFunc.TabIndex = 1;
+            this.MonophonicFunc.TabIndex = 2;
             this.MonophonicFunc.Text = "Use monophonic rendering";
             this.Requirements.SetToolTip(this.MonophonicFunc, "Changing this setting requires a restart of the audio stream.");
             this.MonophonicFunc.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
             this.FadeoutDisable.Location = new System.Drawing.Point(6, 67);
             this.FadeoutDisable.Name = "FadeoutDisable";
             this.FadeoutDisable.Size = new System.Drawing.Size(217, 17);
-            this.FadeoutDisable.TabIndex = 0;
+            this.FadeoutDisable.TabIndex = 3;
             this.FadeoutDisable.Text = "Disable fade-out when killing an old note";
             this.FadeoutDisable.UseVisualStyleBackColor = true;
             this.FadeoutDisable.CheckedChanged += new System.EventHandler(this.FadeoutDisable_CheckedChanged);
@@ -158,7 +158,7 @@
             this.HMode.Location = new System.Drawing.Point(6, 37);
             this.HMode.Name = "HMode";
             this.HMode.Size = new System.Drawing.Size(177, 17);
-            this.HMode.TabIndex = 9;
+            this.HMode.TabIndex = 5;
             this.HMode.Text = "Enable minimum playback mode";
             this.HMode.UseVisualStyleBackColor = true;
             this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
@@ -181,7 +181,7 @@
             this.KSDAPIBox.Location = new System.Drawing.Point(6, 18);
             this.KSDAPIBox.Name = "KSDAPIBox";
             this.KSDAPIBox.Size = new System.Drawing.Size(244, 17);
-            this.KSDAPIBox.TabIndex = 7;
+            this.KSDAPIBox.TabIndex = 4;
             this.KSDAPIBox.Text = "Allow apps to use the Keppy\'s Direct MIDI API";
             this.KSDAPIBox.UseVisualStyleBackColor = true;
             this.KSDAPIBox.CheckedChanged += new System.EventHandler(this.KSDAPIBox_CheckedChanged);
@@ -193,7 +193,7 @@
             this.NoSleep.Location = new System.Drawing.Point(6, 94);
             this.NoSleep.Name = "NoSleep";
             this.NoSleep.Size = new System.Drawing.Size(250, 17);
-            this.NoSleep.TabIndex = 6;
+            this.NoSleep.TabIndex = 8;
             this.NoSleep.Text = "Disable sleep states in the notes catcher thread\r\n";
             this.Requirements.SetToolTip(this.NoSleep, "This doesn\'t work in .WAV mode.");
             this.NoSleep.UseVisualStyleBackColor = true;
@@ -206,7 +206,7 @@
             this.SlowDownPlayback.Location = new System.Drawing.Point(6, 56);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
             this.SlowDownPlayback.Size = new System.Drawing.Size(244, 17);
-            this.SlowDownPlayback.TabIndex = 5;
+            this.SlowDownPlayback.TabIndex = 6;
             this.SlowDownPlayback.Text = "Slow down playback instead of skipping notes";
             this.Requirements.SetToolTip(this.SlowDownPlayback, "This doesn\'t work while minimum playback mode is enabled.");
             this.SlowDownPlayback.UseVisualStyleBackColor = true;
@@ -219,7 +219,7 @@
             this.OldBuff.Location = new System.Drawing.Point(6, 75);
             this.OldBuff.Name = "OldBuff";
             this.OldBuff.Size = new System.Drawing.Size(318, 17);
-            this.OldBuff.TabIndex = 4;
+            this.OldBuff.TabIndex = 7;
             this.OldBuff.Text = "Run the notes catcher in the same thread as the audio engine";
             this.Requirements.SetToolTip(this.OldBuff, "This doesn\'t work in .WAV mode.");
             this.OldBuff.UseVisualStyleBackColor = true;
@@ -243,7 +243,7 @@
             this.ChangePitchShifting.Location = new System.Drawing.Point(177, 17);
             this.ChangePitchShifting.Name = "ChangePitchShifting";
             this.ChangePitchShifting.Size = new System.Drawing.Size(162, 23);
-            this.ChangePitchShifting.TabIndex = 1;
+            this.ChangePitchShifting.TabIndex = 10;
             this.ChangePitchShifting.Text = "Change transpose value";
             this.ChangePitchShifting.UseVisualStyleBackColor = true;
             this.ChangePitchShifting.Click += new System.EventHandler(this.ChangePitchShifting_Click);
@@ -253,7 +253,7 @@
             this.ChangeDefaultOutput.Location = new System.Drawing.Point(6, 17);
             this.ChangeDefaultOutput.Name = "ChangeDefaultOutput";
             this.ChangeDefaultOutput.Size = new System.Drawing.Size(160, 23);
-            this.ChangeDefaultOutput.TabIndex = 0;
+            this.ChangeDefaultOutput.TabIndex = 9;
             this.ChangeDefaultOutput.Text = "Change default audio output";
             this.Requirements.SetToolTip(this.ChangeDefaultOutput, "Changing this setting requires the user to restart the MIDI application.");
             this.ChangeDefaultOutput.UseVisualStyleBackColor = true;
@@ -265,7 +265,7 @@
             this.OKBtn.Location = new System.Drawing.Point(282, 291);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
-            this.OKBtn.TabIndex = 8;
+            this.OKBtn.TabIndex = 0;
             this.OKBtn.Text = "OK";
             this.OKBtn.UseVisualStyleBackColor = true;
             this.OKBtn.Click += new System.EventHandler(this.OKBtn_Click);

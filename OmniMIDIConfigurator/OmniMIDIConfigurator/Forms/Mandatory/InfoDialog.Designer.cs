@@ -274,7 +274,7 @@
             this.CTC.Location = new System.Drawing.Point(9, 339);
             this.CTC.Name = "CTC";
             this.CTC.Size = new System.Drawing.Size(105, 23);
-            this.CTC.TabIndex = 8;
+            this.CTC.TabIndex = 5;
             this.CTC.Text = "Copy to clipboard";
             this.CTC.UseVisualStyleBackColor = false;
             this.CTC.Click += new System.EventHandler(this.CTC_Click);
@@ -286,7 +286,7 @@
             this.CFU.Location = new System.Drawing.Point(120, 339);
             this.CFU.Name = "CFU";
             this.CFU.Size = new System.Drawing.Size(105, 23);
-            this.CFU.TabIndex = 9;
+            this.CFU.TabIndex = 6;
             this.CFU.Text = "Check for updates";
             this.CFU.UseVisualStyleBackColor = false;
             this.CFU.Click += new System.EventHandler(this.CFU_Click);
@@ -299,7 +299,7 @@
             this.DonateBtn.Location = new System.Drawing.Point(285, 12);
             this.DonateBtn.Name = "DonateBtn";
             this.DonateBtn.Size = new System.Drawing.Size(87, 23);
-            this.DonateBtn.TabIndex = 11;
+            this.DonateBtn.TabIndex = 0;
             this.DonateBtn.Text = "Donate";
             this.DonateBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.DonateBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -323,7 +323,7 @@
             this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
             this.KDMAPIVer.Name = "KDMAPIVer";
             this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 11;
+            this.KDMAPIVer.TabIndex = 3;
             this.KDMAPIVer.TabStop = true;
             this.KDMAPIVer.Text = "KDMAPI VER";
             this.KDMAPIVer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.KDMAPIVer_LinkClicked);
@@ -335,7 +335,7 @@
             this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
             this.ChangeBranch.Name = "ChangeBranch";
             this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 10;
+            this.ChangeBranch.TabIndex = 4;
             this.ChangeBranch.TabStop = true;
             this.ChangeBranch.Text = "Change branch";
             this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
@@ -348,7 +348,7 @@
             this.LicenseFile.Location = new System.Drawing.Point(232, 127);
             this.LicenseFile.Name = "LicenseFile";
             this.LicenseFile.Size = new System.Drawing.Size(85, 13);
-            this.LicenseFile.TabIndex = 4;
+            this.LicenseFile.TabIndex = 2;
             this.LicenseFile.TabStop = true;
             this.LicenseFile.Text = "Open license file";
             this.LicenseFile.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LicenseFile_LinkClicked);
@@ -361,7 +361,7 @@
             this.GitHubLink.Location = new System.Drawing.Point(97, 77);
             this.GitHubLink.Name = "GitHubLink";
             this.GitHubLink.Size = new System.Drawing.Size(229, 13);
-            this.GitHubLink.TabIndex = 3;
+            this.GitHubLink.TabIndex = 1;
             this.GitHubLink.TabStop = true;
             this.GitHubLink.Text = "https://github.com/KeppySoftware/OmniMIDI/";
             this.GitHubLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.GitHubLink_LinkClicked);

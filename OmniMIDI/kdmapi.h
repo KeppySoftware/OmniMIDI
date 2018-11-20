@@ -78,7 +78,7 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 }
 
 BOOL DoStartClient() {
-	if (!DriverInitStatus && !BannedSystemProcess()) {
+	if (!DriverInitStatus) {
 		GetAppName();
 
 		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
@@ -294,17 +294,17 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, TRUE);								// The driver isn't ready
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, TRUE);									// The driver isn't ready
 	if (!IIMidiHdr || 
-		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||								// The buffer either doesn't exist, it's too big or
-		sizeof(IIMidiHdr->lpData) > LONGMSG_MAXSIZE) return DebugResult(MMSYSERR_INVALPARAM, TRUE);	// the given size is invalid, invalid parameter
-	if (IIMidiHdr->dwFlags & MHDR_PREPARED) return MMSYSERR_NOERROR;								// Already prepared, everything is fine
+		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||									// The buffer either doesn't exist, it's too big or
+		sizeof(IIMidiHdr->lpData) >= LONGMSG_MAXSIZE) return DebugResult(MMSYSERR_INVALPARAM, TRUE);	// the given size is invalid, invalid parameter
+	if (IIMidiHdr->dwFlags & MHDR_PREPARED) return MMSYSERR_NOERROR;									// Already prepared, everything is fine
 
-	void* Mem = IIMidiHdr->lpData;
-	unsigned long Size = sizeof(IIMidiHdr->lpData);
+	VOID* m = IIMidiHdr->lpData;
+	ULONG s = sizeof(IIMidiHdr->lpData);
 
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	if (!NtLockVirtualMemory(GetCurrentProcess(), &Mem, &Size, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+	if (!NtLockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
 		return DebugResult(MMSYSERR_NOMEM, TRUE);
 
 	// Mark the buffer as prepared, and say that everything is oki-doki
@@ -321,11 +321,11 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 
 	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;													// Mark the buffer as unprepared
 
-	void* Mem = IIMidiHdr->lpData;
-	unsigned long Size = sizeof(IIMidiHdr->lpData);
+	VOID* m = IIMidiHdr->lpData;
+	ULONG s = sizeof(IIMidiHdr->lpData);
 
 	// Unlock the buffer, and say that everything is oki-doki
-	if (!NtUnlockVirtualMemory(GetCurrentProcess(), &Mem, &Size, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+	if (!NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
 		CrashMessage("UnlockMIDIHDR");
 
 	RtlSecureZeroMemory(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
@@ -336,7 +336,7 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, TRUE);							// The driver isn't ready
 	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM, TRUE);								// The buffer doesn't exist, invalid parameter
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED, TRUE);	// The buffer is not prepared
-
+	
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
@@ -355,6 +355,7 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 }
 
 MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
+	PrintMessageToDebugLog("KDMAPI_SDLDNBuf", "Deprecated command, please use SendDirectLongData instead.");
 	return SendDirectLongData(IIMidiHdr);
 }
 

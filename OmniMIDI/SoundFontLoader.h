@@ -109,8 +109,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 			if (SFList) {
 				PrintMessageToDebugLog("NewSFLoader", "SoundFont list is valid. Setting UTF-8 encoding...");
-				std::locale ulocale(std::locale(), new std::codecvt_utf8<wchar_t>);
-				SFList.imbue(ulocale);
+				SFList.imbue(UTF8Support);
 
 				PrintMessageToDebugLog("NewSFLoader", "Preparing values...");
 				BOOL AlreadyInitialized = FALSE;

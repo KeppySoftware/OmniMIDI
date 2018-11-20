@@ -398,11 +398,11 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 			break;
 		case MMSYSERR_MOREDATA:
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_MOREDATA");
-			sprintf_s(ErrorString, MaxSize, "modMessage has more data to return.");
+			sprintf_s(ErrorString, MaxSize, "OmniMIDI has more data to return.");
 			break;
 		case MMSYSERR_NODRIVERCB:
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
-			sprintf_s(ErrorString, MaxSize, "The driver that works with modMessage does not call DriverCallback.");
+			sprintf_s(ErrorString, MaxSize, "The driver does not call DriverCallback.");
 			break;
 		case MMSYSERR_HANDLEBUSY:
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_HANDLEBUSY");
@@ -445,7 +445,7 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 			sprintf_s(ErrorString, MaxSize, "Buffers are still in the queue.");
 			break;
 		case MMSYSERR_BADDEVICEID:
-			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADDEVICEID");
 			sprintf_s(ErrorString, MaxSize, "The specified device ID is out of range.");
 			break;
 		default:
@@ -458,7 +458,7 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 	if (ManagedSettings.DebugMode)
 		strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
 
-	if (ShowError) MessageBoxA(NULL, ErrorString, "OmniMIDI - Windows Multimedia API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+	if (ShowError) MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 	PrintMessageToDebugLog(ErrorTitle, ErrorString);
 
 	return ErrorToDisplay;

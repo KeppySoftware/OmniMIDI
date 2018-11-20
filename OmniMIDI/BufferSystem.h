@@ -28,7 +28,7 @@ int BufferCheckHyper(void) {
 }
 
 void SendToBASSMIDI(DWORD dwParam1) {
-	if (ManagedSettings.OverrideNoteLength) {
+	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
 		if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
 			BASS_MIDI_EVENT e[2] = { 0, 0 };
 
@@ -38,22 +38,40 @@ void SendToBASSMIDI(DWORD dwParam1) {
 			e[0].pos = 0;
 			e[0].tick = 0;
 
-			e[1].event = MIDI_EVENT_NOTE;
-			e[1].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
-			e[1].chan = dwParam1 & 0xF;
-			e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.NoteLengthValue / 1000.0));
-			e[1].tick = 0;
+			if (ManagedSettings.OverrideNoteLength)
+			{
+				e[1].event = MIDI_EVENT_NOTE;
+				e[1].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
+				e[1].chan = dwParam1 & 0xF;
+				e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.NoteLengthValue / 1000.0) + (ManagedSettings.DelayNoteOff ? ((double)ManagedSettings.DelayNoteOffValue / 1000.0) : 0));
+				e[1].tick = 0;
+			}
 
-			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, 2);
+			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, ManagedSettings.OverrideNoteLength ? 2 : 1);
 			return;
 		}
-		else if (((dwParam1 & 0xFF) & 0xF0) == 0x80) return;
+		else if (((dwParam1 & 0xFF) & 0xF0) == 0x80) {
+			if (!ManagedSettings.OverrideNoteLength && ManagedSettings.DelayNoteOff) {
+				BASS_MIDI_EVENT e;
+
+				e.event = MIDI_EVENT_NOTE;
+				e.param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
+				e.chan = dwParam1 & 0xF;
+				e.pos = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.DelayNoteOffValue / 1000.0));
+				e.tick = 0;
+
+				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, 1);
+				return;
+			}
+			else return;
+		}
 	}
 
 	BASS_MIDI_StreamEvents(
 		OMStream, BASS_MIDI_EVENTS_RAW,
 		&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
 	);
+	
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 

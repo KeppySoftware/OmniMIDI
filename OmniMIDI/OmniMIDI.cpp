@@ -150,7 +150,10 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
-		if (lpvReserved != NULL) OutputDebugString(L"The driver has been dynamically loaded");
+		if (BannedProcesses()) {
+			OutputDebugString(L"You can't load me!");
+			return FALSE;
+		}
 
 		hinst = (HINSTANCE)hinstDLL;
 		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
@@ -163,7 +166,6 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 
 		DisableThreadLibraryCalls((HMODULE)hinstDLL);
 		break;
-
 	case DLL_PROCESS_DETACH:
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH: 

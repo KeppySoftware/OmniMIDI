@@ -52,6 +52,7 @@ static DWORD OMFlags = NULL;
 static HDRVR OMDevice = NULL;
 
 // Important stuff
+static const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
 static BOOL DriverInitStatus = FALSE;
 static BOOL AlreadyInitializedViaKDMAPI = FALSE;
 static BOOL BASSLoadedToMemory = FALSE;
@@ -123,7 +124,7 @@ static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
 static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
 
-static FLOAT sndbflen = 64.0f;				// AudToWAV
+static const FLOAT sndbflen = 64.0f;		// AudToWAV
 static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug
@@ -144,7 +145,7 @@ static Settings ManagedSettings = DEFAULT_SETTINGS;
 static DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
 
 // Priority values
-static const DWORD prioval[7] =
+static const DWORD prioval[] =
 {
 	THREAD_PRIORITY_TIME_CRITICAL,
 	THREAD_PRIORITY_TIME_CRITICAL,
@@ -156,7 +157,7 @@ static const DWORD prioval[7] =
 };
 
 // Built-in blacklist
-static LPCWSTR BuiltInBlacklist[26] =
+static const LPCWSTR BuiltInBlacklist[] =
 {
 	_T("Battle.net Launcher.exe"),
 	_T("LogonUI.exe"),
@@ -165,6 +166,8 @@ static LPCWSTR BuiltInBlacklist[26] =
 	_T("NVIDIA Web Helper.exe"),
 	_T("RustClient.exe"),
 	_T("SearchUI.exe"),
+	_T("Fortnite.exe"),
+	_T("RainbowSix.exe"),
 	_T("SecurityHealthService.exe"),
 	_T("SecurityHealthSystray.exe"),
 	_T("ShellExperienceHost.exe"),
@@ -193,7 +196,7 @@ static DWORD cbank[16];			// MIDI bank setting per channel.
 static DWORD cpreset[16];		// MIDI preset setting for... you guess it!
 
 static DWORD SynthType = MOD_MIDIPORT;
-static DWORD SynthNamesTypes[7] =
+static const DWORD SynthNamesTypes[7] =
 {
 	MOD_FMSYNTH,
 	MOD_SYNTH,

@@ -46,6 +46,11 @@ namespace OmniMIDIConfigurator
             NoteLengthValue.Enabled = (!Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) && Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("OverrideNoteLength", 0)));
             NoteLengthValue.Value = Convert.ToDecimal((double)Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NoteLengthValue", 5)) / 1000.0);
 
+            DelayNoteOff.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
+            DelayNoteOff.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DelayNoteOff", 0));
+            NoteOffDelayValue.Enabled = (!Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) && Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DelayNoteOff", 0)));
+            NoteOffDelayValue.Value = Convert.ToDecimal((double)Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DelayNoteOffValue", 5)) / 1000.0);
+
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
         }
 
@@ -97,6 +102,17 @@ namespace OmniMIDIConfigurator
         private void NoteLengthValue_ValueChanged(object sender, EventArgs e)
         {
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("NoteLengthValue", Convert.ToInt32(NoteLengthValue.Value * 1000));
+        }
+
+        private void DelayNoteOff_CheckedChanged(object sender, EventArgs e)
+        {
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("DelayNoteOff", Convert.ToInt32(DelayNoteOff.Checked), RegistryValueKind.DWord);
+            NoteOffDelayValue.Enabled = DelayNoteOff.Checked;
+        }
+
+        private void NoteOffDelayValue_ValueChanged(object sender, EventArgs e)
+        {
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("DelayNoteOffValue", Convert.ToInt32(NoteOffDelayValue.Value * 1000));
         }
 
         private void midiOutCloseDisabled_Click(object sender, EventArgs e)

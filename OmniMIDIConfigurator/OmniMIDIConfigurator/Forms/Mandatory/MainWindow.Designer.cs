@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -250,6 +250,10 @@
             this.DebugModeOpenNotepad = new System.Windows.Forms.MenuItem();
             this.menuItem28 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
+            this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
             this.AMIDIMapUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem40 = new System.Windows.Forms.MenuItem();
@@ -291,10 +295,6 @@
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
-            this.LoudMaxInstallMenu = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.menuItem18 = new System.Windows.Forms.MenuItem();
-            this.LoudMaxUninstallMenu = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -466,7 +466,7 @@
             this.ExportPres.Location = new System.Drawing.Point(187, 362);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(45, 23);
-            this.ExportPres.TabIndex = 50;
+            this.ExportPres.TabIndex = 20;
             this.ExportPres.Text = "Export";
             this.ExportPres.UseVisualStyleBackColor = true;
             this.ExportPres.Click += new System.EventHandler(this.ExportPres_Click);
@@ -488,7 +488,7 @@
             this.ImportPres.Location = new System.Drawing.Point(140, 362);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(45, 23);
-            this.ImportPres.TabIndex = 48;
+            this.ImportPres.TabIndex = 19;
             this.ImportPres.Text = "Import";
             this.ImportPres.UseVisualStyleBackColor = true;
             this.ImportPres.Click += new System.EventHandler(this.ImportPres_Click);
@@ -1340,7 +1340,7 @@
             this.AudioEngBox.Location = new System.Drawing.Point(81, 20);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(90, 21);
-            this.AudioEngBox.TabIndex = 2;
+            this.AudioEngBox.TabIndex = 1;
             this.Requirements.SetToolTip(this.AudioEngBox, "Changing this setting requires a restart of the audio stream.");
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
             // 
@@ -1362,7 +1362,7 @@
             this.ChangeMask.Location = new System.Drawing.Point(7, 14);
             this.ChangeMask.Name = "ChangeMask";
             this.ChangeMask.Size = new System.Drawing.Size(145, 23);
-            this.ChangeMask.TabIndex = 5;
+            this.ChangeMask.TabIndex = 2;
             this.ChangeMask.Text = "Change synthesizer\'s mask";
             this.ChangeMask.UseVisualStyleBackColor = true;
             this.ChangeMask.Click += new System.EventHandler(this.MaskSynthesizerAsAnother_Click);
@@ -1395,7 +1395,7 @@
             this.resetToDefaultToolStripMenuItem.Location = new System.Drawing.Point(450, 362);
             this.resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
             this.resetToDefaultToolStripMenuItem.Size = new System.Drawing.Size(90, 23);
-            this.resetToDefaultToolStripMenuItem.TabIndex = 22;
+            this.resetToDefaultToolStripMenuItem.TabIndex = 17;
             this.resetToDefaultToolStripMenuItem.Text = "Reset to default";
             this.resetToDefaultToolStripMenuItem.UseVisualStyleBackColor = true;
             this.resetToDefaultToolStripMenuItem.Click += new System.EventHandler(this.resetToDefaultToolStripMenuItem_Click);
@@ -1407,7 +1407,7 @@
             this.applySettingsToolStripMenuItem.Location = new System.Drawing.Point(545, 362);
             this.applySettingsToolStripMenuItem.Name = "applySettingsToolStripMenuItem";
             this.applySettingsToolStripMenuItem.Size = new System.Drawing.Size(90, 23);
-            this.applySettingsToolStripMenuItem.TabIndex = 23;
+            this.applySettingsToolStripMenuItem.TabIndex = 16;
             this.applySettingsToolStripMenuItem.Text = "Apply settings";
             this.applySettingsToolStripMenuItem.UseVisualStyleBackColor = true;
             this.applySettingsToolStripMenuItem.Click += new System.EventHandler(this.applySettingsToolStripMenuItem_Click);
@@ -1447,7 +1447,7 @@
             this.SincConv.Location = new System.Drawing.Point(535, 16);
             this.SincConv.Name = "SincConv";
             this.SincConv.Size = new System.Drawing.Size(85, 21);
-            this.SincConv.TabIndex = 39;
+            this.SincConv.TabIndex = 12;
             this.Requirements.SetToolTip(this.SincConv, "Changing this setting requires the user to restart the MIDI application.");
             // 
             // SincConvLab
@@ -1518,7 +1518,7 @@
             this.SincInter.Location = new System.Drawing.Point(7, 17);
             this.SincInter.Name = "SincInter";
             this.SincInter.Size = new System.Drawing.Size(392, 17);
-            this.SincInter.TabIndex = 15;
+            this.SincInter.TabIndex = 11;
             this.SincInter.Text = "Enable sinc interpolation (improves audio quality, but increases rendering time)";
             this.SincInter.UseVisualStyleBackColor = true;
             this.SincInter.CheckedChanged += new System.EventHandler(this.SincInter_CheckedChanged);
@@ -1546,7 +1546,7 @@
             this.bufsize.Name = "bufsize";
             this.bufsize.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.bufsize.Size = new System.Drawing.Size(64, 20);
-            this.bufsize.TabIndex = 18;
+            this.bufsize.TabIndex = 15;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.Requirements.SetToolTip(this.bufsize, "Changing this setting requires a restart of the audio stream.");
             this.bufsize.Value = new decimal(new int[] {
@@ -1564,7 +1564,7 @@
             this.EnableSFX.Location = new System.Drawing.Point(7, 35);
             this.EnableSFX.Name = "EnableSFX";
             this.EnableSFX.Size = new System.Drawing.Size(430, 17);
-            this.EnableSFX.TabIndex = 7;
+            this.EnableSFX.TabIndex = 13;
             this.EnableSFX.Text = "Enable sound effects (i.e. reverb and chorus; disabling this can reduce rendering" +
     " time)";
             this.EnableSFX.UseVisualStyleBackColor = true;
@@ -1594,7 +1594,7 @@
             this.MaxCPU.Location = new System.Drawing.Point(556, 104);
             this.MaxCPU.Name = "MaxCPU";
             this.MaxCPU.Size = new System.Drawing.Size(64, 20);
-            this.MaxCPU.TabIndex = 12;
+            this.MaxCPU.TabIndex = 10;
             this.MaxCPU.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.MaxCPU.Value = new decimal(new int[] {
             75,
@@ -1611,7 +1611,7 @@
             this.SysResetIgnore.Location = new System.Drawing.Point(8, 37);
             this.SysResetIgnore.Name = "SysResetIgnore";
             this.SysResetIgnore.Size = new System.Drawing.Size(565, 17);
-            this.SysResetIgnore.TabIndex = 16;
+            this.SysResetIgnore.TabIndex = 7;
             this.SysResetIgnore.Text = "Ignore system reset events when the system mode is unchanged (might cause issues " +
     "with program change events)";
             this.SysResetIgnore.UseVisualStyleBackColor = true;
@@ -1654,7 +1654,7 @@
             0});
             this.PolyphonyLimit.Name = "PolyphonyLimit";
             this.PolyphonyLimit.Size = new System.Drawing.Size(64, 20);
-            this.PolyphonyLimit.TabIndex = 10;
+            this.PolyphonyLimit.TabIndex = 9;
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PolyphonyLimit.ThousandsSeparator = true;
             this.PolyphonyLimit.Value = new decimal(new int[] {
@@ -1696,7 +1696,7 @@
             this.SettingsPresetsBtn.Location = new System.Drawing.Point(55, 362);
             this.SettingsPresetsBtn.Name = "SettingsPresetsBtn";
             this.SettingsPresetsBtn.Size = new System.Drawing.Size(72, 23);
-            this.SettingsPresetsBtn.TabIndex = 21;
+            this.SettingsPresetsBtn.TabIndex = 18;
             this.SettingsPresetsBtn.Text = "Pre-made";
             this.SettingsPresetsBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SettingsPresetsBtn.UseVisualStyleBackColor = true;
@@ -1764,7 +1764,7 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -2616,6 +2616,31 @@
             this.menuItem28});
             this.menuItem2.Text = "More settings";
             // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 0;
+            this.menuItem7.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.LoudMaxInstallMenu,
+            this.LoudMaxUninstallMenu});
+            this.menuItem7.Text = "LoudMax, anti-clipping solution";
+            // 
+            // LoudMaxInstallMenu
+            // 
+            this.LoudMaxInstallMenu.Index = 0;
+            this.LoudMaxInstallMenu.Text = "Install LoudMax, to prevent clipping";
+            this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
+            // 
+            // LoudMaxUninstallMenu
+            // 
+            this.LoudMaxUninstallMenu.Index = 1;
+            this.LoudMaxUninstallMenu.Text = "Uninstall LoudMax, to restore the original audio";
+            this.LoudMaxUninstallMenu.Click += new System.EventHandler(this.LoudMaxUninstallMenu_Click);
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 1;
+            this.menuItem18.Text = "-";
+            // 
             // AMIDIMapInstallMenu
             // 
             this.AMIDIMapInstallMenu.Index = 0;
@@ -2888,31 +2913,6 @@
             // VolumeCheck
             // 
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
-            // 
-            // LoudMaxInstallMenu
-            // 
-            this.LoudMaxInstallMenu.Index = 0;
-            this.LoudMaxInstallMenu.Text = "Install LoudMax, to prevent clipping";
-            this.LoudMaxInstallMenu.Click += new System.EventHandler(this.LoudMaxInstallMenu_Click);
-            // 
-            // menuItem7
-            // 
-            this.menuItem7.Index = 0;
-            this.menuItem7.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.LoudMaxInstallMenu,
-            this.LoudMaxUninstallMenu});
-            this.menuItem7.Text = "LoudMax, anti-clipping solution";
-            // 
-            // menuItem18
-            // 
-            this.menuItem18.Index = 1;
-            this.menuItem18.Text = "-";
-            // 
-            // LoudMaxUninstallMenu
-            // 
-            this.LoudMaxUninstallMenu.Index = 1;
-            this.LoudMaxUninstallMenu.Text = "Uninstall LoudMax, to restore the original audio";
-            this.LoudMaxUninstallMenu.Click += new System.EventHandler(this.LoudMaxUninstallMenu_Click);
             // 
             // OmniMIDIConfiguratorMain
             // 
