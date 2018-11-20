@@ -382,11 +382,13 @@ Retry:
 }
 
 MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
+	if (ErrorToDisplay == MMSYSERR_NOERROR) return MMSYSERR_NOERROR;
+
 	const DWORD MaxSize = 512;
 	CHAR ErrorTitle[MaxSize] = { 0 };
 	CHAR ErrorString[MaxSize] = { 0 };
 
-	if (ErrorToDisplay >= MMSYSERR_BASE + 21) {
+	if (ErrorToDisplay > MMSYSERR_LASTERROR) {
 		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADERRNUM");
 		sprintf_s(ErrorString, MaxSize, "Error value is out of range.");
 	}
@@ -396,13 +398,21 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOMEM");
 			sprintf_s(ErrorString, MaxSize, "The system is unable to allocate or lock memory.");
 			break;
+		case MMSYSERR_ALLOCATED:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ALLOCATED");
+			sprintf_s(ErrorString, MaxSize, "The driver has been already allocated in a previous midiOutOpen call.");
+			break;
 		case MMSYSERR_MOREDATA:
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_MOREDATA");
-			sprintf_s(ErrorString, MaxSize, "OmniMIDI has more data to return.");
+			sprintf_s(ErrorString, MaxSize, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
 			break;
 		case MMSYSERR_NODRIVERCB:
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
 			sprintf_s(ErrorString, MaxSize, "The driver does not call DriverCallback.");
+			break;
+		case MMSYSERR_NODRIVER:
+			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
+			sprintf_s(ErrorString, MaxSize, "No device driver is present.");
 			break;
 		case MMSYSERR_HANDLEBUSY:
 			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_HANDLEBUSY");

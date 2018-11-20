@@ -74,6 +74,7 @@ output/*.pdb
 output/*.vshost.exe
 output/*.xml
 output/64
+output/ARM64
 output/OmniMIDIDriverRegister.exe
 output/OmniMIDIConfigurator.exe
 output/OmniMIDIDebugWindow.exe

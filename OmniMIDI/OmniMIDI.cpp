@@ -5,13 +5,9 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 
 #pragma once
-#pragma comment(lib,"shlwapi.lib")
-
-#if !_WIN32
-#error The driver only works on 32-bit and 64-bit versions of Windows x86. ARM is not supported.
-#endif
 
 typedef unsigned __int64 QWORD;
+typedef long NTSTATUS;
 
 // KDMAPI version
 #define CUR_MAJOR	1
@@ -69,10 +65,6 @@ typedef unsigned __int64 QWORD;
 #include <bassenc.h>
 #include <bassasio.h>
 #include <bass_vst.h>
-// #include <basswasapi.h>
-
-// Sleep
-typedef LONG NTSTATUS;
 
 // NTSTATUS
 #define NTAPI __stdcall
@@ -342,7 +334,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 		else {
 			PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized. Cannot initialize it twice!");
-			return MMSYSERR_ALLOCATED;
+			return DebugResult(MMSYSERR_ALLOCATED, TRUE);
 		}
 
 		return MMSYSERR_NOERROR;

@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="https://i.imgur.com/noVfUG6.png">
   <br />
   A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with more features.
@@ -90,7 +90,7 @@ The minimum requirements for this synthesizer to work are the following:
 - A CPU running at 2.0GHz (With SSE instruction set support)
 - 256MB of RAM
 - Realtek High Definition Audio or better<br />*(AC97 might work too, but it's really laggy.)*
-- Windows Vista SP2 or greater (Server versions are supported too)<br />*(Windows XP SP3 is supported too, but I won't give technical support for it.)*
+- Windows Vista SP2 or greater (Server versions are supported too)
 
 ### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:

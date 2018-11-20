@@ -407,6 +407,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\Hashes\DRVARM64.SHA" />
     <None Include="Resources\Text\vollab.ttf" />
     <None Include="Resources\Text\volnum.ttf" />
   </ItemGroup>

@@ -275,13 +275,17 @@ BOOL CreateThreads(BOOL startup) {
 }
 
 void InitializeBASSVST() {
+#if defined(_M_ARM64)
+	return;
+#endif
+
 	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t LoudMax[MAX_PATH] = { 0 };
 
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, LoudMax);
-#ifdef _WIN64
+#if defined(_M_AMD64)
 	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax64.dll"));
-#else
+#elif defined(_M_IX86)
 	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax32.dll"));
 #endif
 

@@ -259,7 +259,8 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 					if (ManagedSettings.PreloadSoundFonts) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");
-#ifdef _WIN64
+
+#if defined(_M_AMD64) || defined(_M_ARM64)
 						if (!BASS_MIDI_FontLoad(font, CurrentSF->SourcePreset, CurrentSF->SourceBank)) {
 							PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while preloading the SoundFont.");
 							SoundFontError(L"An error has occurred while preloading the SoundFont.", CurrentSF->Path);

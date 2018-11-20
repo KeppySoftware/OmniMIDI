@@ -303,7 +303,7 @@ void AllocateMemory(BOOL restart) {
 			}
 		}
 
-#if !_WIN64
+#if !_M_AMD64
 		// !! ONLY FOR x86 APPS !!
 
 		// Check if the EVBuffer size goes above 512MB of RAM
@@ -705,10 +705,12 @@ void FillContentDebug(
 	PipeContent += "OMDebugInfo";
 	PipeContent += "\nCurrentApp = ";
 	PipeContent += AppPath;
-#if defined(_WIN64)
+#if defined(_M_AMD64)
 	PipeContent += "\nBitApp = 64-bit";
-#elif defined(_WIN32)
+#elif defined(_M_IX86)
 	PipeContent += "\nBitApp = 32-bit";
+#elif defined(_M_ARM64)
+	PipeContent += "\nBitApp = 64-bit (ARM)";
 #endif
 
 	ManagedDebugInfo.RenderingTime = CCUI0;
