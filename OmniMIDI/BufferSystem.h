@@ -241,25 +241,28 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 }
 
 MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	if (!EVBuffReady || (uMsg != MODM_LONGDATA && CheckIfEventIsToIgnore(dwParam1)))
-		return DebugResult(MIDIERR_NOTREADY, TRUE);
+	if (!EVBuffReady) return DebugResult(MIDIERR_NOTREADY, TRUE);
+	else {
+		if (CheckIfEventIsToIgnore(dwParam1))
+			return MMSYSERR_NOERROR;
 
-	if ((uMsg != MODM_LONGDATA) && (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F))
-		dwParam1 = ReturnEditedEvent(dwParam1);
+		if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
+			dwParam1 = ReturnEditedEvent(dwParam1);
 
-	// Prepare the event in the buffer
-	LockSystem.LockForWriting();
+		// Prepare the event in the buffer
+		LockSystem.LockForWriting();
 
-	evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
-	if (++writehead >= EvBufferSize) writehead = 0;
+		evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
+		if (++writehead >= EvBufferSize) writehead = 0;
 
-	LockSystem.UnlockForWriting();
+		LockSystem.UnlockForWriting();
 
-	// Some checks
-	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
+		// Some checks
+		if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
 
-	// Haha everything is fine
-	return MMSYSERR_NOERROR;
+		// Haha everything is fine
+		return MMSYSERR_NOERROR;
+	}
 }
 
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {

@@ -388,81 +388,75 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 	CHAR ErrorTitle[MaxSize] = { 0 };
 	CHAR ErrorString[MaxSize] = { 0 };
 
-	if (ErrorToDisplay > MMSYSERR_LASTERROR) {
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADERRNUM");
-		sprintf_s(ErrorString, MaxSize, "Error value is out of range.");
-	}
-	else {
-		switch (ErrorToDisplay) {
-		case MMSYSERR_NOMEM:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOMEM");
-			sprintf_s(ErrorString, MaxSize, "The system is unable to allocate or lock memory.");
-			break;
-		case MMSYSERR_ALLOCATED:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ALLOCATED");
-			sprintf_s(ErrorString, MaxSize, "The driver has been already allocated in a previous midiOutOpen call.");
-			break;
-		case MMSYSERR_MOREDATA:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_MOREDATA");
-			sprintf_s(ErrorString, MaxSize, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
-			break;
-		case MMSYSERR_NODRIVERCB:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
-			sprintf_s(ErrorString, MaxSize, "The driver does not call DriverCallback.");
-			break;
-		case MMSYSERR_NODRIVER:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
-			sprintf_s(ErrorString, MaxSize, "No device driver is present.");
-			break;
-		case MMSYSERR_HANDLEBUSY:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_HANDLEBUSY");
-			sprintf_s(ErrorString, MaxSize, "The specified handle is being used simultaneously by another thread.");
-			break;
-		case MMSYSERR_INVALIDALIAS:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALIDALIAS");
-			sprintf_s(ErrorString, MaxSize, "The specified alias was not found.");
-			break;
-		case MMSYSERR_INVALHANDLE:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALHANDLE");
-			sprintf_s(ErrorString, MaxSize, "The handle of the specified device is invalid.");
-			break;
-		case MMSYSERR_INVALFLAG:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALFLAG");
-			sprintf_s(ErrorString, MaxSize, "An invalid flag was passed to modMessage.");
-			break;
-		case MMSYSERR_INVALPARAM:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALPARAM");
-			sprintf_s(ErrorString, MaxSize, "An invalid parameter was passed to modMessage.");
-			break;
-		case MMSYSERR_NOTENABLED:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTENABLED");
-			sprintf_s(ErrorString, MaxSize, "The driver failed to load or initialize.");
-			break;
-		case MMSYSERR_NOTSUPPORTED:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTSUPPORTED");
-			sprintf_s(ErrorString, MaxSize, "The function requested by the message is not supported.");
-			break;
-		case MIDIERR_NOTREADY:
-			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_NOTREADY");
-			sprintf_s(ErrorString, MaxSize, "The hardware is busy with other data.");
-			break;
-		case MIDIERR_UNPREPARED:
-			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_UNPREPARED");
-			sprintf_s(ErrorString, MaxSize, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
-			break;
-		case MIDIERR_STILLPLAYING:
-			sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
-			sprintf_s(ErrorString, MaxSize, "Buffers are still in the queue.");
-			break;
-		case MMSYSERR_BADDEVICEID:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADDEVICEID");
-			sprintf_s(ErrorString, MaxSize, "The specified device ID is out of range.");
-			break;
-		default:
-			sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ERROR");
-			sprintf_s(ErrorString, MaxSize, "Unspecified error.");
-			break;
-		}
+	switch (ErrorToDisplay) {
+	case MMSYSERR_NOMEM:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOMEM");
+		sprintf_s(ErrorString, MaxSize, "The system is unable to allocate or lock memory.");
+		break;
+	case MMSYSERR_ALLOCATED:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ALLOCATED");
+		sprintf_s(ErrorString, MaxSize, "The driver has been already allocated in a previous midiOutOpen call.");
+		break;
+	case MMSYSERR_MOREDATA:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_MOREDATA");
+		sprintf_s(ErrorString, MaxSize, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
+		break;
+	case MMSYSERR_NODRIVERCB:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
+		sprintf_s(ErrorString, MaxSize, "The driver does not call DriverCallback.");
+		break;
+	case MMSYSERR_NODRIVER:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
+		sprintf_s(ErrorString, MaxSize, "No device driver is present.");
+		break;
+	case MMSYSERR_HANDLEBUSY:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_HANDLEBUSY");
+		sprintf_s(ErrorString, MaxSize, "The specified handle is being used simultaneously by another thread.");
+		break;
+	case MMSYSERR_INVALIDALIAS:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALIDALIAS");
+		sprintf_s(ErrorString, MaxSize, "The specified alias was not found.");
+		break;
+	case MMSYSERR_INVALHANDLE:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALHANDLE");
+		sprintf_s(ErrorString, MaxSize, "The handle of the specified device is invalid.");
+		break;
+	case MMSYSERR_INVALFLAG:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALFLAG");
+		sprintf_s(ErrorString, MaxSize, "An invalid flag was passed to modMessage.");
+		break;
+	case MMSYSERR_INVALPARAM:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALPARAM");
+		sprintf_s(ErrorString, MaxSize, "An invalid parameter was passed to modMessage.");
+		break;
+	case MMSYSERR_NOTENABLED:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTENABLED");
+		sprintf_s(ErrorString, MaxSize, "The driver failed to load or initialize.");
+		break;
+	case MMSYSERR_NOTSUPPORTED:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTSUPPORTED");
+		sprintf_s(ErrorString, MaxSize, "The function requested by the message is not supported.");
+		break;
+	case MIDIERR_NOTREADY:
+		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_NOTREADY");
+		sprintf_s(ErrorString, MaxSize, "The hardware is busy with other data.");
+		break;
+	case MIDIERR_UNPREPARED:
+		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_UNPREPARED");
+		sprintf_s(ErrorString, MaxSize, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
+		break;
+	case MIDIERR_STILLPLAYING:
+		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
+		sprintf_s(ErrorString, MaxSize, "Buffers are still in the queue.");
+		break;
+	case MMSYSERR_BADDEVICEID:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADDEVICEID");
+		sprintf_s(ErrorString, MaxSize, "The specified device ID is out of range.");
+		break;
+	default:
+		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ERROR");
+		sprintf_s(ErrorString, MaxSize, "Unspecified error.");
+		break;
 	}
 
 	if (ManagedSettings.DebugMode)

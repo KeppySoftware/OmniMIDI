@@ -115,9 +115,9 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" />
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)lib\x86;$(LibraryPath);$(ProjectDir)\..\external_packages\lib</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(DXSDK_DIR)lib\x86;$(LibraryPath);$(ProjectDir)\..\external_packages\lib64</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(DXSDK_DIR)lib\x86;$(LibraryPath);$(ProjectDir)\..\external_packages\lib64</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(ProjectDir)\..\external_packages\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath);$(ProjectDir)\..\external_packages\lib64</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(LibraryPath);$(ProjectDir)\..\external_packages\libARM64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -217,18 +217,21 @@
       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
       <LargeAddressAware>true</LargeAddressAware>
       <Driver>NotSet</Driver>
-      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
-      <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
+      <GenerateWindowsMetadata>
+      </GenerateWindowsMetadata>
+      <WindowsMetadataLinkDelaySign>
+      </WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <EnableUAC>false</EnableUAC>
       <SetChecksum>true</SetChecksum>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -277,7 +280,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <OpenMPSupport>
@@ -320,12 +323,14 @@
       <LargeAddressAware>
       </LargeAddressAware>
       <Driver>NotSet</Driver>
-      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
-      <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
+      <GenerateWindowsMetadata>
+      </GenerateWindowsMetadata>
+      <WindowsMetadataLinkDelaySign>
+      </WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
@@ -425,12 +430,14 @@
       <LargeAddressAware>
       </LargeAddressAware>
       <Driver>NotSet</Driver>
-      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
-      <WindowsMetadataLinkDelaySign>false</WindowsMetadataLinkDelaySign>
+      <GenerateWindowsMetadata>
+      </GenerateWindowsMetadata>
+      <WindowsMetadataLinkDelaySign>
+      </WindowsMetadataLinkDelaySign>
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
