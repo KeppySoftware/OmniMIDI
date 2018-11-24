@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '6.0.57.18'
+#define Version '6.0.57.19'
                       
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
@@ -34,7 +34,7 @@ AppPublisherURL={#Link}
 AppSupportURL={#Link}/issues
 AppUpdatesURL={#Link}/releases
 AppVersion={#Version}
-ArchitecturesAllowed=x86 x64
+ArchitecturesAllowed=x86 x64 arm64
 ArchitecturesInstallIn64BitMode=x64
 CloseApplications=yes
 Compression=lzma2/ultra64
@@ -59,7 +59,6 @@ UninstallDisplaySize=8241947
 Uninstallable=no
 UpdateUninstallLogAppName=no
 UsePreviousAppDir=yes
-UsePreviousSetupType=False
 VersionInfoCompany={#Author}
 VersionInfoCopyright={#Copyright}
 VersionInfoDescription={#Description}
@@ -68,6 +67,9 @@ VersionInfoTextVersion={#Description}
 VersionInfoVersion={#Version}
 WizardImageFile=scripts\image.bmp
 WizardSmallImageFile=scripts\smallimage.bmp
+DisableWelcomePage=False
+DisableReadyPage=True
+DisableReadyMemo=True
 
 [Files]
 ; 64-bit OS
@@ -86,7 +88,7 @@ Source: "{#outputdir32}\midioutsetter32.exe"; DestDir: "{syswow64}\{#InstallDir}
 Source: "{#outputdir32}\midioutsetter64.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "midioutsetter64.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: Windows64
 
-; 32-bit OS
+; 32-bit files for IA32 OS
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; MinVersion: 0,6.0sp2; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#Configurator}XP.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; OnlyBelowVersion: 0,6.0; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
@@ -101,36 +103,32 @@ Source: "{#lib64}\amidimap.cpl"; DestDir: "{sys}\{#InstallDir}"; DestName: "amid
 Source: "{#lib64}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "{#lib64}\bassasio.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassasio.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "{#lib64}\bassenc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
-Source: "{#lib64}\bassflac.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "{#lib64}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
-Source: "{#lib64}\bassopus.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
-Source: "{#lib64}\basswv.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "{#lib64}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 
 ; ARM64 libs
-; currently empty
+; Alternative MIDI Mapper isn't available for ARM64
+Source: "{#libarm64}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: WindowsARM64
+; Source: "{#lib64}\bassasio.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassasio.dll"; Flags: replacesameversion ignoreversion; Check: WindowsARM64
+; Source: "{#lib64}\bassenc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: WindowsARM64
+Source: "{#lib64}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: WindowsARM64
+; LoudMax isn't available for ARM64
 
 ; 32-bit libs for AMD64 and ARM64
 Source: "{#lib32}\amidimap.cpl"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "amidimap.cpl"; Flags: uninsrestartdelete comparetimestamp restartreplace; Check: WindowsAMD64
 Source: "{#lib32}\bass.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bassasio.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassasio.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bassenc.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#lib32}\bassflac.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bassmidi.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#lib32}\bassopus.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#lib32}\basswv.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "output\{#InstallDir}.dbl"; DestDir: "{syswow64}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: Windows64
 
-; 32-bit libs
+; 32-bit libs for IA32
 Source: "{#lib32}\amidimap.cpl"; DestDir: "{sys}\{#InstallDir}"; DestName: "amidimap.cpl"; Flags: uninsrestartdelete comparetimestamp restartreplace; Check: not WindowsAMD64
 Source: "{#lib32}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bassasio.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassasio.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bassenc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#lib32}\bassflac.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassflac.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#lib32}\bassopus.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#lib32}\basswv.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "output\{#InstallDir}.dbl"; DestDir: "{sys}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 
@@ -229,23 +227,14 @@ Root: "HKCU"; Subkey: "Software\{#ProductName}\Watchdog"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Watchdog"; ValueType: dword; ValueName: "runwd"; ValueData: "0"; Flags: dontcreatekey deletevalue uninsdeletevalue
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Watchdog"; ValueType: dword; ValueName: "watchdog"; ValueData: "1"; Flags: dontcreatekey deletevalue uninsdeletevalue
 
-; 64-bit OS
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: Is64BitInstallMode
-Root: "HKLM"; Subkey: "Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: Is64BitInstallMode
-
-; 32-bit OS
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\Drivers32"; ValueType: none; ValueName: "midi9"; Flags: dontcreatekey deletevalue uninsdeletevalue; Check: not Is64BitInstallMode
-
 [InstallDelete]
-Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Windows64
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\"
-Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Windows64
 Type: filesandordirs; Name: "{sys}\keppydrv\"
-Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Windows64
 Type: filesandordirs; Name: "{sys}\keppysynth\"
 Type: filesandordirs; Name: "{group}\"
-Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstallMode
-Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
@@ -257,29 +246,32 @@ Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/toomni"; Flag
 
 [Messages]
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
-ExitSetupMessage=The MIDI driver hasn't been installed yet.%n%nAre you sure you want to quit?
-SetupWindowTitle=Setup - %1
+ExitSetupMessage={#ProductName} hasn't been updated yet.%n%nAre you sure you want to quit?
+SetupWindowTitle={#ProductName} - User-mode MIDI driver for Windows ({#Version})
 EntryAbortRetryIgnore=Click Retry to try again, Ignore to proceed anyway, or Abort to cancel installation.%n%nIf after retrying, the Setup is still unable to replace the file, please use the full installer.
 FileAbortRetryIgnore2=Click Retry to try again, Ignore to proceed anyway (not recommended), or Abort to cancel installation.%n%nIf after retrying, the Setup is still unable to replace the file, please use the full installer.
 FileAbortRetryIgnore=Click Retry to try again, Ignore to skip this file (not recommended), or Abort to cancel installation.%n%nIf after retrying, the Setup is still unable to replace the file, please use the full installer.
+WelcomeLabel1=Welcome to the [name] Update Tool
+WelcomeLabel2=This will install the latest update for [name] on your computer.%n%nIt is recommended that you close all other applications before continuing.
+SetupAppTitle={#ProductName} Update Tool
 
 [Code]
 function Windows64(): Boolean;
 begin
-  Result := (IsARM64 or Is64BitInstallMode);
+  Result := (IsARM64 or IsX64);
 end;
 
 function WindowsARM64(): Boolean;
 begin
-  Result := (IsARM64);
+  Result := (IsARM64 and (not IsX64));
 end;
 
 function WindowsAMD64(): Boolean;
 begin
-  Result := ((not IsARM64) and Is64BitInstallMode);
+  Result := ((not IsARM64) and IsX64);
 end;
 
 function WindowsIA32(): Boolean;
 begin
-  Result := ((not IsARM64) and (not Is64BitInstallMode));
+  Result := ((not IsARM64) and (not IsX64) and IsX86);
 end;
