@@ -85,12 +85,19 @@ Here's a list of applications that currently have *native* support for the Keppy
 You need this software installed before attempting to run the setup:
 - [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
 
-### Minimum system requirements for MIDI playback
+### Minimum system requirements for MIDI playback on x86/x64 systems
 The minimum requirements for this synthesizer to work are the following:
-- A CPU running at 2.0GHz (With SSE instruction set support)
+- A x86 CPU running at 2.0GHz (With SSE instruction set support)
 - 256MB of RAM
 - Realtek High Definition Audio or better<br />*(AC97 might work too, but it's really laggy.)*
 - Windows Vista SP2 or greater (Server versions are supported too)
+
+### Minimum system requirements for MIDI playback on ARM64 systems
+The minimum requirements for this synthesizer to work are the following:
+- Qualcomm® Snapdragon™ 835, or any ARM® Cortex-A57 based chip running at 2GHz or more
+- 1536MB of RAM (Required by Windows)
+- Any sound device supported by Windows 10 ARM64 (Qualcomm® Aqstic™ or aptX™ DACs are recommended)
+- Windows 10 Spring Creators Update 2018
 
 ### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
@@ -117,7 +124,8 @@ You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://
 ------------|-------------|-------------|-------------|-------------
 Easy-to-use configurator|✔️|✔️|✔️|❌
 Smaller memory footprint|✔️|❌|❌|❌
-Support for Windows XP|❌|✔️|✔️|✔️
+First driver to support Windows ARM64|✔️|❌|❌|❌
+Support for Windows XP|⚠️|✔️|✔️|✔️
 Suitable for day-to-day<br />music playback|✔️<span>*</span>|✔️|✔️|✔️
 Suitable for professional<br />music production|✔️|❌|❌|❌
 Mixer for easy volume<br />changes per MIDI channel|✔️|✔️|✔️|❌
