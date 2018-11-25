@@ -62,6 +62,38 @@ namespace OmniMIDIConfigurator
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
 
+        [DllImport("kernel32.dll")]
+        private static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
+
+        public const short PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFF;
+        public const short PROCESSOR_ARCHITECTURE_ARM64 = 12;
+        public const short PROCESSOR_ARCHITECTURE_AMD64 = 9;
+        public const short PROCESSOR_ARCHITECTURE_IA64 = 6;
+        public const short PROCESSOR_ARCHITECTURE_INTEL = 0;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SYSTEM_INFO
+        {
+            public short wProcessorArchitecture;
+            public short wReserved;
+            public int dwPageSize;
+            public IntPtr lpMinimumApplicationAddress;
+            public IntPtr lpMaximumApplicationAddress;
+            public IntPtr dwActiveProcessorMask;
+            public int dwNumberOfProcessors;
+            public int dwProcessorType;
+            public int dwAllocationGranularity;
+            public short wProcessorLevel;
+            public short wProcessorRevision;
+        }
+
+        public static int GetProcessorArchitecture()
+        {
+            SYSTEM_INFO si = new SYSTEM_INFO();
+            GetNativeSystemInfo(ref si);
+            return si.wProcessorArchitecture;
+        }
+
         public static string IsWindows8OrNewer() // Checks if you're using Windows 8.1 or newer
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
@@ -286,16 +318,22 @@ namespace OmniMIDIConfigurator
 
                     Current32SHA256 = System.Text.Encoding.UTF8.GetString(OmniMIDIConfigurator.Properties.Resources.DRV32);
 
-                    if (Environment.Is64BitOperatingSystem)
+                    String Potato = "";
+                    if (Functions.GetProcessorArchitecture() == Functions.PROCESSOR_ARCHITECTURE_AMD64)
+                        Potato = "64";
+                    else if (Functions.GetProcessorArchitecture() == Functions.PROCESSOR_ARCHITECTURE_ARM64)
+                        Potato = "ARM64";
+
+                    if (!String.IsNullOrEmpty(Potato))
                     {
-                        Stream Stream64 = client.OpenRead("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/Hashes/DRV64.SHA");
+                        Stream Stream64 = client.OpenRead(String.Format("https://raw.githubusercontent.com/KaleidonKep99/Keppy-s-Synthesizer/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/Hashes/DRV{0}.SHA", Potato));
                         StreamReader Reader64 = new StreamReader(Stream64);
                         New64SHA256 = Reader64.ReadToEnd();
                         New64SHA256 = rgx.Replace(New64SHA256, "");
                         Current64SHA256 = System.Text.Encoding.UTF8.GetString(OmniMIDIConfigurator.Properties.Resources.DRV64);
                     }
 
-                    DriverSignatureCheckup frm = new DriverSignatureCheckup(Current32SHA256, Current64SHA256, New32SHA256, New64SHA256, Environment.Is64BitOperatingSystem);
+                    DriverSignatureCheckup frm = new DriverSignatureCheckup(Current32SHA256, Current64SHA256, New32SHA256, New64SHA256);
                     frm.ShowDialog();
                     frm.Dispose();
                 }
@@ -1395,21 +1433,19 @@ namespace OmniMIDIConfigurator
         }
 
         // WinMM Patch
-        public enum MachineType { Native = 0, x86 = 0x014c, Itanium = 0x0200, x64 = 0x8664 }
+        public enum MachineType { Native = 0x0000, x86 = 0x014C, Itanium = 0x0200, x64 = 0x8664, ARM64 = 0xAA64 }
 
-        public static string GetAppCompiledMachineType(string fileName)
+        public static MachineType GetAppCompiledMachineType(string fileName)
         {
-            const int PE_POINTER_OFFSET = 60;
-            const int MACHINE_OFFSET = 4;
+            const int PE_POINTER_OFFSET = 60, MACHINE_OFFSET = 4;
             byte[] data = new byte[4096];
+
             using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
                 s.Read(data, 0, 4096);
-            }
-            // dos header is 64 bytes, last element, long (4 bytes) is the address of the PE header
+
             int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
             int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
-            return ((MachineType)machineUint).ToString();
+            return (MachineType)machineUint;
         }
 
         public static bool IsProcessElevated()
@@ -1445,7 +1481,7 @@ namespace OmniMIDIConfigurator
 
         public static Boolean ApplyWinMMWRPPatch(Boolean DAWMode)
         {
-            if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor <= 1) && Properties.Settings.Default.PatchInfoShow == true)
+            if ((Environment.OSVersion.Version.Major <= 6 && Environment.OSVersion.Version.Minor < 2) && Properties.Settings.Default.PatchInfoShow == true)
             {
                 Properties.Settings.Default.PatchInfoShow = false;
                 Properties.Settings.Default.Save();
@@ -1462,17 +1498,19 @@ namespace OmniMIDIConfigurator
 
                 if (WinMMDialog.ShowDialog() == DialogResult.OK)
                 {
-                    String BitApp = GetAppCompiledMachineType(WinMMDialog.FileName);
+                    MachineType BitApp = GetAppCompiledMachineType(WinMMDialog.FileName);
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
 
                     RemovePatchFiles(WinMMDialog.FileName, true);
-                    if (BitApp == "x86")
+                    if (BitApp == MachineType.x86)
                         File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm32DAW : Properties.Resources.winmm32wrp);
-                    else if (BitApp == "x64")
+                    else if (BitApp == MachineType.x64)
                         File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm64wrp);
+                    else if (BitApp == MachineType.ARM64)
+                        File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmmARM64DAW : Properties.Resources.winmmARM64wrp);
                     else
                     {
-                        ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nThe selected file is not a valid executable.\n\nPress OK to continue", false, null);
+                        ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "Unable to patch the following executable!\nThe configurator can only patch x86, x86-64 and ARM64 executables.\n\nPress OK to continue", false, null);
                         WinMMDialog.Dispose();
                         return false;
                     }
@@ -1481,10 +1519,7 @@ namespace OmniMIDIConfigurator
                     return true;
                 }
             }
-            catch (Exception ex)
-            {
-                RestartAsAdmin();
-            }
+            catch { RestartAsAdmin(); }
 
             WinMMDialog.Dispose();
             return false;
@@ -1504,10 +1539,7 @@ namespace OmniMIDIConfigurator
 
                 return true;
             }
-            catch
-            {
-                RestartAsAdmin();
-            }
+            catch { RestartAsAdmin(); }
 
             return false;
         }

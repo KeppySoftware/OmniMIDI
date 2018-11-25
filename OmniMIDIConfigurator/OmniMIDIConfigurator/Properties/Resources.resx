@@ -256,4 +256,10 @@
   <data name="DRVARM64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Hashes\DRVARM64.SHA;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="winmmARM64DAW" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMMARM64WRP\winmmARM64DAW.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="winmmARM64wrp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinMMARM64WRP\winmmARM64wrp.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

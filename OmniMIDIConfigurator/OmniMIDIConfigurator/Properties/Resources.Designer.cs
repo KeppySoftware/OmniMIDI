@@ -548,6 +548,26 @@ namespace OmniMIDIConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] winmmARM64DAW {
+            get {
+                object obj = ResourceManager.GetObject("winmmARM64DAW", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] winmmARM64wrp {
+            get {
+                object obj = ResourceManager.GetObject("winmmARM64wrp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap wir {

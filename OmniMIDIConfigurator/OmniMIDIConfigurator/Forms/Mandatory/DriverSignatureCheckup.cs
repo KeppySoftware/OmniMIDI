@@ -15,12 +15,11 @@ namespace OmniMIDIConfigurator
 {
     public partial class DriverSignatureCheckup : Form
     {
-        Boolean Is32BitMatch = true;
-        Boolean Is64BitMatch = true;
+        Boolean Is32BitMatch = true, Is64BitMatch = true, IsARM64Match = true;
         Boolean IsNewVerAvailable = false;
         IntPtr WOW64Value = IntPtr.Zero;
 
-        public DriverSignatureCheckup(String SHA25632, String SHA25664, String NewSHA25632, String NewSHA25664, Boolean Is64Bit)
+        public DriverSignatureCheckup(String SHA25632, String SHA25664, String NewSHA25632, String NewSHA25664)
         {
             InitializeComponent();
 
@@ -58,7 +57,7 @@ namespace OmniMIDIConfigurator
                 Is32BitMatch = true;
             }
 
-            if (Environment.Is64BitOperatingSystem)
+            if (Functions.GetProcessorArchitecture() == Functions.PROCESSOR_ARCHITECTURE_AMD64 || Functions.GetProcessorArchitecture() == Functions.PROCESSOR_ARCHITECTURE_ARM64)
             {
                 Functions.Wow64DisableWow64FsRedirection(ref WOW64Value);
                 var sha64 = new SHA256Managed();
@@ -67,32 +66,77 @@ namespace OmniMIDIConfigurator
                 Driver64SHA256 = BitConverter.ToString(checksum64).Replace("-", String.Empty);
                 Functions.Wow64RevertWow64FsRedirection(WOW64Value);
 
-                Driver64Current.Text = Driver64SHA256;
-                Driver64Expected.Text = SHA25664;
-
-                if (Driver64SHA256 != SHA25664)
+                if (Functions.GetProcessorArchitecture() == Functions.PROCESSOR_ARCHITECTURE_AMD64)
                 {
-                    if (!object.Equals(SHA25664, NewSHA25664))
+                    Driver64Current.Text = Driver64SHA256;
+                    Driver64Expected.Text = SHA25664;
+
+                    DriverARM64Current.Text = "None";
+                    DriverARM64Expected.Text = "None";
+                    DriverARM64Current.Enabled = false;
+                    DriverARM64Expected.Enabled = false;
+                    DriverARM64Status.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
+
+                    if (Driver64SHA256 != SHA25664)
                     {
-                        Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.erroriconupd;
+                        if (!object.Equals(SHA25664, NewSHA25664))
+                        {
+                            Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.erroriconupd;
+                        }
+                        else
+                        {
+                            Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.erroricon;
+                        }
+                        Is64BitMatch = false;
                     }
                     else
                     {
-                        Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.erroricon;
+                        if (!object.Equals(SHA25664, NewSHA25664))
+                        {
+                            Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.successiconupd;
+                        }
+                        else
+                        {
+                            Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
+                        }
+                        Is64BitMatch = true;
                     }
-                    Is64BitMatch = false;
                 }
                 else
                 {
-                    if (!object.Equals(SHA25664, NewSHA25664))
+                    DriverARM64Current.Text = Driver64SHA256;
+                    DriverARM64Expected.Text = SHA25664;
+
+                    Driver64Current.Text = "None";
+                    Driver64Expected.Text = "None";
+                    Driver64Current.Enabled = false;
+                    Driver64Expected.Enabled = false;
+                    Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
+
+                    if (Driver64SHA256 != SHA25664)
                     {
-                        Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.successiconupd;
+                        if (!object.Equals(SHA25664, NewSHA25664))
+                        {
+                            DriverARM64Status.Image = OmniMIDIConfigurator.Properties.Resources.erroriconupd;
+                        }
+                        else
+                        {
+                            DriverARM64Status.Image = OmniMIDIConfigurator.Properties.Resources.erroricon;
+                        }
+                        IsARM64Match = false;
                     }
                     else
                     {
-                        Driver64Status.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
+                        if (!object.Equals(SHA25664, NewSHA25664))
+                        {
+                            DriverARM64Status.Image = OmniMIDIConfigurator.Properties.Resources.successiconupd;
+                        }
+                        else
+                        {
+                            DriverARM64Status.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
+                        }
+                        IsARM64Match = true;
                     }
-                    Is64BitMatch = true;
                 }
             }
 
@@ -101,11 +145,11 @@ namespace OmniMIDIConfigurator
             String EverythingFine = "Both drivers are the originals from GitHub. Everything's good, click OK to close the dialog.";
             String EverythingFineUpd = "Both drivers are the originals from GitHub, but newer versions are available.\nClick here to download the latest release.";
             
-            if (!Is32BitMatch && !Is64BitMatch)
+            if (!Is32BitMatch && (!Is64BitMatch || !IsARM64Match))
             {
                 if (!object.Equals(SHA25632, NewSHA25632) || !object.Equals(SHA25664, NewSHA25664))
                 {
-                    BothDriverStatus.Text = String.Format(LatestRelease, "Both drivers are");
+                    BothDriverStatus.Text = String.Format(LatestRelease, "All drivers are");
                     BothDriverStatus.ForeColor = Color.DarkRed;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -113,7 +157,7 @@ namespace OmniMIDIConfigurator
                 }
                 else
                 {
-                    BothDriverStatus.Text = String.Format(OriginalRelease, "Both drivers are");
+                    BothDriverStatus.Text = String.Format(OriginalRelease, "All drivers are");
                     BothDriverStatus.ForeColor = Color.DarkRed;
                     BothDriverStatus.Cursor = Cursors.Hand;
                     BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -155,9 +199,27 @@ namespace OmniMIDIConfigurator
                     BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 }
             }
+            else if (!IsARM64Match)
+            {
+                if (!object.Equals(SHA25632, NewSHA25632) || !object.Equals(SHA25664, NewSHA25664))
+                {
+                    BothDriverStatus.Text = String.Format(LatestRelease, "The ARM64 driver is");
+                    BothDriverStatus.ForeColor = Color.Peru;
+                    BothDriverStatus.Cursor = Cursors.Hand;
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    IsNewVerAvailable = true;
+                }
+                else
+                {
+                    BothDriverStatus.Text = String.Format(OriginalRelease, "The ARM64 driver is");
+                    BothDriverStatus.ForeColor = Color.Peru;
+                    BothDriverStatus.Cursor = Cursors.Hand;
+                    BothDriverStatus.Font = new Font(BothDriverStatus.Font.FontFamily, BothDriverStatus.Font.Size, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                }
+            }
             else
             {
-                if (!object.Equals(Driver32SHA256, NewSHA25632) || !object.Equals(Driver64SHA256, NewSHA25664))
+                if (!object.Equals(SHA25632, NewSHA25632) || !object.Equals(SHA25664, NewSHA25664))
                 {
                     BothDriverStatus.Text = EverythingFineUpd;
                     BothDriverStatus.ForeColor = Color.Blue;
@@ -177,11 +239,11 @@ namespace OmniMIDIConfigurator
 
         private void DriverSignatureCheckup_Load(object sender, EventArgs e)
         {
-            if (!Is32BitMatch && !Is64BitMatch)
+            if (!Is32BitMatch && (!Is64BitMatch || !IsARM64Match))
             {
                 SystemSounds.Hand.Play();
             }
-            else if (!Is32BitMatch || !Is64BitMatch)
+            else if (!Is32BitMatch || (!Is64BitMatch || !IsARM64Match))
             {
                 SystemSounds.Exclamation.Play();
             }
@@ -194,7 +256,7 @@ namespace OmniMIDIConfigurator
 
         private void BothDriverStatus_Click(object sender, EventArgs e)
         {
-            if (!Is32BitMatch || !Is64BitMatch || IsNewVerAvailable)
+            if (!Is32BitMatch || !Is64BitMatch || !IsARM64Match || IsNewVerAvailable)
             {
                 UpdateSystem.CheckForUpdates(false, false, false);
             }

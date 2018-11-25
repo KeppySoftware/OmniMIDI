@@ -40,18 +40,24 @@
             this.Driver64Status = new System.Windows.Forms.PictureBox();
             this.ClosePls = new System.Windows.Forms.Button();
             this.BothDriverStatus = new System.Windows.Forms.Label();
+            this.DriverARM64Status = new System.Windows.Forms.PictureBox();
+            this.DriverARM64Expected = new System.Windows.Forms.TextBox();
+            this.DriverARM64Current = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Driver32Status)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Driver64Status)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DriverARM64Status)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Location = new System.Drawing.Point(39, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(128, 13);
+            this.label1.Size = new System.Drawing.Size(102, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Signature for 32-bit driver:";
+            this.label1.Text = "x86 driver signature:";
             // 
             // label2
             // 
@@ -134,11 +140,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 76);
+            this.label4.Location = new System.Drawing.Point(24, 76);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(128, 13);
+            this.label4.Size = new System.Drawing.Size(117, 13);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Signature for 64-bit driver:";
+            this.label4.Text = "x86-64 driver signature:";
             // 
             // Driver32Status
             // 
@@ -165,7 +171,7 @@
             // ClosePls
             // 
             this.ClosePls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ClosePls.Location = new System.Drawing.Point(572, 131);
+            this.ClosePls.Location = new System.Drawing.Point(572, 195);
             this.ClosePls.Name = "ClosePls";
             this.ClosePls.Size = new System.Drawing.Size(75, 23);
             this.ClosePls.TabIndex = 10;
@@ -175,10 +181,11 @@
             // 
             // BothDriverStatus
             // 
+            this.BothDriverStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BothDriverStatus.BackColor = System.Drawing.Color.Transparent;
             this.BothDriverStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BothDriverStatus.ForeColor = System.Drawing.Color.Pink;
-            this.BothDriverStatus.Location = new System.Drawing.Point(13, 122);
+            this.BothDriverStatus.Location = new System.Drawing.Point(13, 186);
             this.BothDriverStatus.Name = "BothDriverStatus";
             this.BothDriverStatus.Size = new System.Drawing.Size(553, 41);
             this.BothDriverStatus.TabIndex = 11;
@@ -186,13 +193,77 @@
             this.BothDriverStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BothDriverStatus.Click += new System.EventHandler(this.BothDriverStatus_Click);
             // 
+            // DriverARM64Status
+            // 
+            this.DriverARM64Status.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DriverARM64Status.Image = global::OmniMIDIConfigurator.Properties.Resources.successicon;
+            this.DriverARM64Status.Location = new System.Drawing.Point(603, 138);
+            this.DriverARM64Status.Name = "DriverARM64Status";
+            this.DriverARM64Status.Size = new System.Drawing.Size(44, 44);
+            this.DriverARM64Status.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.DriverARM64Status.TabIndex = 16;
+            this.DriverARM64Status.TabStop = false;
+            // 
+            // DriverARM64Expected
+            // 
+            this.DriverARM64Expected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DriverARM64Expected.BackColor = System.Drawing.Color.Black;
+            this.DriverARM64Expected.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DriverARM64Expected.ForeColor = System.Drawing.Color.White;
+            this.DriverARM64Expected.Location = new System.Drawing.Point(142, 164);
+            this.DriverARM64Expected.Name = "DriverARM64Expected";
+            this.DriverARM64Expected.ReadOnly = true;
+            this.DriverARM64Expected.Size = new System.Drawing.Size(455, 18);
+            this.DriverARM64Expected.TabIndex = 15;
+            this.DriverARM64Expected.Text = "(Driver not installed)";
+            this.DriverARM64Expected.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // DriverARM64Current
+            // 
+            this.DriverARM64Current.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DriverARM64Current.BackColor = System.Drawing.Color.Black;
+            this.DriverARM64Current.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DriverARM64Current.ForeColor = System.Drawing.Color.White;
+            this.DriverARM64Current.Location = new System.Drawing.Point(142, 138);
+            this.DriverARM64Current.Name = "DriverARM64Current";
+            this.DriverARM64Current.ReadOnly = true;
+            this.DriverARM64Current.Size = new System.Drawing.Size(455, 18);
+            this.DriverARM64Current.TabIndex = 14;
+            this.DriverARM64Current.Text = "(Driver not installed)";
+            this.DriverARM64Current.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(86, 165);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(55, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Expected:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(20, 139);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(121, 13);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "ARM64 driver signature:";
+            // 
             // DriverSignatureCheckup
             // 
             this.AcceptButton = this.ClosePls;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(659, 166);
+            this.ClientSize = new System.Drawing.Size(659, 230);
+            this.Controls.Add(this.DriverARM64Status);
+            this.Controls.Add(this.DriverARM64Expected);
+            this.Controls.Add(this.DriverARM64Current);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.BothDriverStatus);
             this.Controls.Add(this.ClosePls);
             this.Controls.Add(this.Driver64Status);
@@ -216,6 +287,7 @@
             this.Load += new System.EventHandler(this.DriverSignatureCheckup_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Driver32Status)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Driver64Status)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DriverARM64Status)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -235,5 +307,10 @@
         private System.Windows.Forms.PictureBox Driver64Status;
         private System.Windows.Forms.Button ClosePls;
         private System.Windows.Forms.Label BothDriverStatus;
+        private System.Windows.Forms.PictureBox DriverARM64Status;
+        private System.Windows.Forms.TextBox DriverARM64Expected;
+        private System.Windows.Forms.TextBox DriverARM64Current;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }

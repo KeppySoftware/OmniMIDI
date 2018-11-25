@@ -415,6 +415,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\WinMMARM64WRP\winmmARM64wrp.dll" />
+    <None Include="Resources\WinMMARM64WRP\winmmARM64DAW.dll" />
     <None Include="Resources\LoudMax\LoudMax32.dll" />
     <None Include="Resources\LoudMax\LoudMax64.dll" />
     <None Include="Resources\WinMM64WRP\winmm64DAW.dll" />

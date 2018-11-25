@@ -47,14 +47,15 @@ DWORD BlackListSystem(){
 				}
 			}
 			else {
-				MessageBoxW(NULL, L"Failed to parse the default blacklist!\nFatal error, can not continue!\n\nPress OK to quit.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-				exit(0);
+				MessageBoxW(NULL, L"Failed to parse the default blacklist!\nThe driver will refuse to run.\n\nPlease reinstall OmniMIDI to restore it.\nPress OK to continue.", L"OmniMIDI - ERROR", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+				return DEVICE_UNAVAILABLE;
 			}
 		}
 		else {
-			MessageBoxW(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nFatal error, can not continue!\n\nPress OK to qu'it.", L"OmniMIDI - FATAL ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-			exit(0);
+			MessageBoxW(NULL, L"The default blacklist is missing, or the driver is not installed properly!\nThe driver will refuse to run.\n\nPlease reinstall OmniMIDI to restore it.\nPress OK to continue.", L"OmniMIDI - ERROR", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+			return DEVICE_UNAVAILABLE;
 		}
+
 		if (PathFileExistsW(UBLDir.c_str())) {
 			std::wifstream file(UBLDir.c_str());
 
@@ -68,6 +69,7 @@ DWORD BlackListSystem(){
 				}
 			}
 		}
+
 		return DEVICE_AVAILABLE;
 	}
 	catch (...) {
