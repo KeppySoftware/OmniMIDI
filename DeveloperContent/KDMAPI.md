@@ -8,7 +8,7 @@
 It's quite easy actually.
 
 You can either import the functions through the header and library files here: [DeveloperContent folder](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent)<br />
-Or you can use this generic example by [Sono (MarcuzD)](https://github.com/MarcuzD), on how to make use of the Keppy's Direct MIDI API with LoadLibrary and GetProcAddress.<br />
+Or you can use this generic example by [Sono (MarcuzD)](https://github.com/SonoSooS), on how to make use of the Keppy's Direct MIDI API with LoadLibrary and GetProcAddress.<br />
 It works just like WinMM would, we'll see later the differences between using WinMM as usual, and using WinMM together with Keppy's Direct MIDI:
 ```c
 ...
