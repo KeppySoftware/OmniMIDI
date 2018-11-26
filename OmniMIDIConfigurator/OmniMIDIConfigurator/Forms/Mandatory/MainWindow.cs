@@ -156,7 +156,6 @@ namespace OmniMIDIConfigurator
                 VolSimView.MouseWheel += VolumeMouseWheel;
                 VolTrackBar.MouseWheel += VolumeMouseWheel;
                 SettingsPresetsBtn.ContextMenu = SettingsPresets;
-                TabsForTheControls.TabPages.Remove(DebugLog);
 
                 // SAS THEME HANDLER   
                 Bass.LoadMe();
@@ -2019,7 +2018,7 @@ namespace OmniMIDIConfigurator
                 UpdateStatus.Click += CheckUpdatesStartUp;
                 VersionLabel.Click += CheckUpdatesStartUp;
 
-                UpdateStatus.Image = Properties.Resources.dlnope;
+                UpdateStatus.Image = Properties.Resources.ok;
                 informationAboutTheDriverToolStripMenuItem.Enabled = true;
                 UpdateStatus.Enabled = true;
                 VersionLabel.Enabled = true;
@@ -2300,53 +2299,6 @@ namespace OmniMIDIConfigurator
             MixerBox.Visible = true;
             VolumeCheck.Enabled = true;
             Properties.Settings.Default.Save();
-        }
-
-        // Debug list
-        private string DebugListToAnalyze = null;
-
-        private void DebugList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Functions.MonitorStop == false) Functions.MonitorStop = true;
-            DebugListToAnalyze = DebugList.Text;
-
-            using (var fs = new FileStream(DebugListToAnalyze, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var sr = new StreamReader(fs, Encoding.Default)) DebugLogShow.Text = sr.ReadToEnd();
-
-            DebugLogAnalyze.RunWorkerAsync();
-        }
-
-        private void RefreshDebugList_Click(object sender, EventArgs e)
-        {
-            DebugList.Items.Clear();
-
-            string[] fileEntries = Directory.GetFiles(DebugTextFiles);
-            foreach (string fileName in fileEntries)
-            {
-                if (Path.GetExtension(fileName).ToLower() == ".txt")
-                    DebugList.Items.Add(fileName);
-            }
-        }
-
-        private void DebugLogAnalyze_Changed(object sender, FileSystemEventArgs e)
-        {
-            if (e.ChangeType == WatcherChangeTypes.Changed)
-            {
-                using (var fs = new FileStream(DebugListToAnalyze, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var sr = new StreamReader(fs, Encoding.Default))
-                {
-                    while (sr.EndOfStream == false)
-                    {
-                        DebugLogShow.AppendText(Environment.NewLine + sr.ReadLine());
-                        DebugLogShow.ScrollToCaret();
-                    }
-                }
-            }
-        }
-
-        private void DebugLogAnalyze_DoWork(object sender, DoWorkEventArgs e)
-        {
-            Functions.MonitorTailOfFile(DebugListToAnalyze);
         }
     }
 }

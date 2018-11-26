@@ -127,16 +127,6 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dlnope {
-            get {
-                object obj = ResourceManager.GetObject("dlnope", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap dlready {
             get {
                 object obj = ResourceManager.GetObject("dlready", resourceCulture);

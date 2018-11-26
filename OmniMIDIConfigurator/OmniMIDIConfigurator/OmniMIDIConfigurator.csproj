@@ -453,7 +453,6 @@
     <None Include="Resources\List Editor\EnableIcon.png" />
     <None Include="Resources\List Editor\ExportIcon.png" />
     <None Include="FodyWeavers.xml" />
-    <None Include="Resources\Icons\dlnope.png" />
     <None Include="Resources\Icons\dlready.png" />
     <None Include="Functions\Telemetry\BugReportTemplate.txt" />
     <Content Include="gear.ico" />
