@@ -4,7 +4,8 @@ OmniMIDI MIDI_IO_COOKED player (Ported from the mmidi project by Sono)
 #pragma once
 
 // Cooked player struct
-struct CookedPlayer {
+struct CookedPlayer
+{
 	LPMIDIHDR MIDIHeaderQueue;			// MIDIHDR buffer
 	BOOL Paused;						// Is the player paused?
 	BOOL Stopped;						// Is the player stopped?
@@ -18,18 +19,8 @@ struct CookedPlayer {
 	DWORD_PTR dwInstance;
 };
 
-DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
-	float qpcfreq = 10.0F;
-	BOOL(WINAPI*QPC)(QWORD*) = (BOOL(WINAPI*)(QWORD*))GetProcAddress(GetModuleHandle(L"ntdll"), "RtlQueryPerformanceFrequency");
-	if (QPC)
-	{
-		QWORD freq = 10;
-		if (QPC(&freq) && freq)
-			qpcfreq = 10000000.0F / freq;
-		QPC = (BOOL(WINAPI*)(QWORD*))GetProcAddress(GetModuleHandle(L"ntdll"), "RtlQueryPerformanceCounter");
-	}
-
-
+DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
+{
 	QWORD ticker = 0;
 	QWORD tickdiff = 0;
 	int sleeptime = 0;
@@ -44,8 +35,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 
 	PrintMessageToDebugLog("CookedPlayerThread", "Thread is alive!");
 
-	QPC(&tickdiff);
-	tickdiff *= qpcfreq;
+	NtQuerySystemTime(&tickdiff);
 
 	while (!Player->Stopped)
 	{
@@ -56,10 +46,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 			{
 				ticker = (QWORD)-(INT64)maxdelay;
 				NtDelayExecution(TRUE, (INT64*)&ticker);
-				QPC(&tickdiff); //reset timer
-				tickdiff *= qpcfreq;
-				deltasleep = 0; //reset drift
-				oldsleep = 0;
+				NtQuerySystemTime(&tickdiff); //reset timer
 			}
 			PrintMessageToDebugLog("CookedPlayerThread", "Playback started!");
 			continue;
@@ -67,32 +54,31 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 
 		if (delaytick)
 		{
-			QPC(&ticker);
-			ticker *= qpcfreq;
-			DWORD tdiff = (DWORD)(ticker - tickdiff); //calculate elapsed time
+			NtQuerySystemTime(&ticker);
+			DWORD tdiff = (DWORD)(ticker - tickdiff);		// Calculate elapsed time
 			tickdiff = ticker;
-			int delt = (int)(tdiff - oldsleep); //calculate drift
-			deltasleep += delt; //accumlate drift
-
-			sleeptime = (delaytick * Player->TempoMulti); //TODO: can overflow
+			int delt = (int)(tdiff - oldsleep);				// Calculate drift
+			deltasleep += delt;								// Accumlate drift
+            
+			sleeptime = (delaytick * Player->TempoMulti);	// TODO: can overflow
 			//sleeptime *= speedcontrol;
 			oldsleep = sleeptime;
-
+            
 			Player->TimeAccumulator += sleeptime;
-
-			if (deltasleep > 0) //can underflow, don't speed up if we pushed too hard
-				sleeptime -= deltasleep; //adjust for time drift
-
+            
+			if (deltasleep > 0)								// Can underflow, don't speed up if we pushed too hard
+				sleeptime -= deltasleep;					// Adjust for time drift
+            
 			if (0) //if(sleeptime > maxdelay)
-			{ //yes, this is very coarse, but the adaptive timer will keep it in sync
+			{ // Yes, this is very coarse, but the adaptive timer will keep it in sync
 				sleeptime = maxdelay;
-				DWORD acc = maxdelay / Player->TempoMulti; //time to ticks
+				DWORD acc = maxdelay / Player->TempoMulti;	// Time to ticks
 				if (!acc) acc = 1;
 
-				if (sleeptime <= 0) //overloaded
+				if (sleeptime <= 0)							// Overloaded
 				{
-					if (deltasleep < adaption); //trick MSVC
-					else deltasleep = adaption; //don't overpush
+					if (!(deltasleep < adaption))
+						deltasleep = adaption;				// Don't overpush
 				}
 				else
 				{
@@ -109,10 +95,10 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 			}
 			else
 			{
-				if (sleeptime <= 0) //overloaded
+				if (sleeptime <= 0)							// Overloaded
 				{
-					if (!(deltasleep < adaption)) //trick MSVC
-						deltasleep = adaption; //don't overpush
+					if (!(deltasleep < adaption))
+						deltasleep = adaption;				// Don't overpush
 				}
 				else
 				{
@@ -131,8 +117,11 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 
 		if (hdr->dwFlags & MHDR_DONE)
 		{
+            CrashMessage("CookedPlayerThread | MHDR_DONE is invalid here");
 			Player->Lock.LockForWriting();
+
 			Player->MIDIHeaderQueue = hdr->lpNext;
+
 			Player->Lock.UnlockForWriting();
 			continue;
 		}
@@ -141,15 +130,22 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 		{
 			if (hdr->dwOffset >= hdr->dwBytesRecorded)
 			{
-				PrintMessageToDebugLog("CookedPlayerThread", "MIDIHDR played, sending callback");
-				Player->Lock.LockForWriting();
-				hdr->dwFlags |= MHDR_DONE;
-				hdr->dwFlags &= ~MHDR_INQUEUE;
-				Player->MIDIHeaderQueue = hdr->lpNext;
-				Player->Lock.UnlockForWriting();
-				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+                Player->Lock.LockForWriting();
+
+                hdr->dwFlags |= MHDR_DONE;
+                hdr->dwFlags &= ~MHDR_INQUEUE;
+
+                Player->MIDIHeaderQueue = hdr->lpNext;
+
+                Player->Lock.UnlockForWriting();
+
+                DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+                
 				hdr->dwOffset = 0;
-				break;
+                hdr = hdr->lpNext;
+
+				if (hdr) continue;
+				else break;
 			}
 
 			MIDIEVENT* evt = (MIDIEVENT*)(hdr->lpData + hdr->dwOffset);
@@ -158,11 +154,12 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 			{
 				barrier = FALSE;
 				delaytick = evt->dwDeltaTime;
-				if (delaytick)
-					continue;
+
+				if (delaytick) break;
+				
 			}
 
-			//reset barrier
+			// Reset barrier
 			barrier = TRUE;
 
 			if (evt->dwEvent & MEVT_F_CALLBACK)
@@ -171,37 +168,32 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player) {
 				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 			}
 
-			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
-			if (evid == MEVT_SHORTMSG)
-			{ //favor ShortMSG for performance
-				//no need to mask away the high byte because it's ignored
-				_StoBASSMIDI(0, evt->dwEvent);
-			}
-			else if (evid == MEVT_TEMPO)
-			{ //tempo change spam
-				Player->Tempo = evt->dwEvent & 0xFFFFFF;
-				Player->TempoMulti = (DWORD)((Player->Tempo * 10) / Player->TimeDiv);
-				char asd[256];
-				sprintf(asd, "MEVT_TEMPO DEBUG tempo=%i timediv=%i tempomulti=%i\n",
-					Player->Tempo, Player->TimeDiv, Player->TempoMulti);
-				PrintMessageToDebugLog("CookedPlayerThread", asd);
-			}
-			else if (evid == MEVT_COMMENT)
-			{ //quickly skip over comments
-				//TODO
-			}
-			else if (evid == MEVT_LONGMSG)
-			{
-				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, evt->dwParms, evt->dwEvent & 0xFFFFFF);
-			}
-			/*else if(evid != MEVT_NOP && evid != MEVT_VERSION)
+			/*
+			if(evid != MEVT_NOP && evid != MEVT_VERSION)
 			{
 				CrashMessage("CookedPlayerThread | evid not NOP");
-			}*/
+			}
+			*/
+
+			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
+			switch (evid) {
+			case MEVT_SHORTMSG:
+				_StoBASSMIDI(0, evt->dwEvent);
+				break;
+			case MEVT_LONGMSG:
+				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, evt->dwParms, evt->dwEvent & 0xFFFFFF);
+				break;
+			case MEVT_TEMPO:
+				Player->Tempo = evt->dwEvent & 0xFFFFFF;
+				Player->TempoMulti = (DWORD)((Player->Tempo * 10) / Player->TimeDiv);
+				break;
+			default:
+				break;
+			}
 
 			if (evt->dwEvent & MEVT_F_LONG)
 			{
-				DWORD acc = ((evt->dwEvent & 0xFFFFFF) + 3) & ~3; //PAD
+				DWORD acc = ((evt->dwEvent & 0xFFFFFF) + 3) & ~3;	// PAD
 				Player->ByteAccumulator += acc;
 				hdr->dwOffset += acc;
 			}
