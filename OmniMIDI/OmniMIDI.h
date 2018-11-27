@@ -27,7 +27,7 @@ typedef struct
 {
 	BOOL AlternativeCPU;			// Autopanic switch (DEPRECATED)
 	BOOL CapFramerate;				// Cap input framerate
-	BOOL DebugMode;					// Debug console
+	DWORD DebugMode;				// Debug console
 	BOOL DisableNotesFadeOut;		// Disable fade-out
 	BOOL DontMissNotes;				// Slow down instead of missing notes
 

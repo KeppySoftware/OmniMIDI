@@ -1,6 +1,7 @@
 /*
 OmniMIDI errors list
 */
+#pragma once
 
 LPCWSTR ReturnBASSError(INT ErrorCode) {
 	switch (ErrorCode) {
@@ -129,27 +130,6 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 	}
 }
 
-void basserrconsole(int color, LPCWSTR error, LPCWSTR desc) {
-	if (ManagedSettings.DebugMode) {
-		// Get time
-		char buff[20];
-		struct tm *sTm;
-		time_t now = time(0);
-		sTm = gmtime(&now);
-		strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
-
-		// Get error
-		char errorC[MAX_PATH];
-		char descC[MAX_PATH];
-		wcstombs(errorC, error, wcslen(error) + 1);
-		wcstombs(descC, desc, wcslen(desc) + 1);
-		std::cout << std::endl;
-		std::cout << std::endl << buff << " - OmniMIDI encountered the following error: " << errorC;
-		std::cout << std::endl << buff << " - Description: " << descC;
-		std::cout << std::endl;
-	}
-}
-
 void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerror) {
 	TCHAR main[NTFS_MAX_PATH];
 	ZeroMemory(main, sizeof(main));
@@ -158,7 +138,7 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 	lstrcat(main, L" encountered the following error: ");
 
 	lstrcat(main, ReturnBASSError(error));
-	basserrconsole(FOREGROUND_RED, ReturnBASSError(error), ReturnBASSError(error));
+	PrintBASSErrorMessageToDebugLog(ReturnBASSError(error), ReturnBASSErrorDesc(error));
 
 	if (showerror) {
 		TCHAR title[MAX_PATH];
@@ -198,57 +178,16 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 		}
 
 		MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
+
+		if ((error == -1 ||
+			error >= 2 && error <= 10 ||
+			error == 19 ||
+			error >= 24 && error <= 26 ||
+			error == 44) && showerror)
+		{
+			exit(error);
+		}
 	}
-
-	if ((error == -1 ||
-		error >= 2 && error <= 10 ||
-		error == 19 ||
-		error >= 24 && error <= 26 ||
-		error == 44) && showerror)
-	{
-		exit(error);
-	}
-}
-
-std::wstring GetErrorAsString(DWORD ErrorID)
-{
-	//Get the error message, if any.
-	if (ErrorID == 0)
-		return std::wstring(); //No error message has been recorded
-
-	LPWSTR messageBuffer = nullptr;
-	size_t size = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL, ErrorID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&messageBuffer, 0, NULL);
-
-	std::wstring message(messageBuffer, size);
-
-	//Free the buffer.
-	LocalFree(messageBuffer);
-
-	return message;
-}
-
-void CrashMessage(LPCSTR part) {
-	std::wstringstream ErrorMessage;
-	DWORD ErrorID = GetLastError();
-
-	printf("(Error at \"%s\") - Fatal error during the execution of the driver.", part);
-
-	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
-	if (ErrorID != 0) {
-		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
-		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n";
-	}
-	ErrorMessage << L"\nClick OK to close the program.";
-
-	MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-
-	block_bassinit = TRUE;
-	stop_thread = TRUE;
-
-	throw ErrorID;
-	exit(ErrorID);
-	ExitThread(ErrorID);
 }
 
 BOOL CheckUp(BOOL IsASIO, int mode, TCHAR * codeline, bool showerror) {
@@ -258,44 +197,4 @@ BOOL CheckUp(BOOL IsASIO, int mode, TCHAR * codeline, bool showerror) {
 		return FALSE;
 	}
 	return TRUE;
-}
-
-bool GetVersionInfo(
-	LPCTSTR filename,
-	int &major,
-	int &minor,
-	int &build,
-	int &revision)
-{
-	DWORD   verBufferSize;
-	char    verBuffer[2048];
-
-	//  Get the size of the version info block in the file
-	verBufferSize = GetFileVersionInfoSize(filename, NULL);
-	if (verBufferSize > 0 && verBufferSize <= sizeof(verBuffer))
-	{
-		//  get the version block from the file
-		if (TRUE == GetFileVersionInfo(filename, NULL, verBufferSize, verBuffer))
-		{
-			UINT length;
-			VS_FIXEDFILEINFO *verInfo = NULL;
-
-			//  Query the version information for neutral language
-			if (TRUE == VerQueryValue(
-				verBuffer,
-				_T("\\"),
-				reinterpret_cast<LPVOID*>(&verInfo),
-				&length))
-			{
-				//  Pull the version values.
-				major = HIWORD(verInfo->dwProductVersionMS);
-				minor = LOWORD(verInfo->dwProductVersionMS);
-				build = HIWORD(verInfo->dwProductVersionLS);
-				revision = LOWORD(verInfo->dwProductVersionLS);
-				return true;
-			}
-		}
-	}
-
-	return false;
 }

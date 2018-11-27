@@ -9,8 +9,8 @@
 #define MIDI_NOTEOFF	0x80
 #define MIDI_NOTEON		0x90
 
-#define MIDI_IO_PACKED	0x00000000L			// Legacy mode, used by all MIDI apps
-#define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some apps (Such as Pinball 3D), NOT SUPPORTED
+#define MIDI_IO_PACKED	0x00000000L			// Legacy mode, used by most MIDI apps
+#define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some old MIDI apps (Such as GZDoom)
 
 // path
 #define NTFS_MAX_PATH 32767
@@ -38,6 +38,7 @@ struct evbuf_t {
 
 static LightweightLock LockSystem;				// LockSystem
 static evbuf_t * evbuf;							// The buffer
+static DWORD LastRunningStatus = 0;				// Last running status
 static volatile ULONGLONG writehead = 0;		// Current write position in the buffer
 static volatile ULONGLONG readhead = 0;			// Current read position in the buffer
 static volatile LONGLONG eventcount = 0;		// Total events present in the buffer
@@ -46,6 +47,7 @@ static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
+static HMIDI OMHMIDI = NULL;
 static DWORD_PTR OMCallback = NULL;
 static DWORD_PTR OMInstance = NULL;
 static DWORD OMFlags = NULL;
@@ -105,7 +107,7 @@ static BOOL stop_thread = FALSE;
 static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
 static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
-static Thread HealthThread, ATThread, EPThread, DThread;
+static Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
 
 // Mandatory values
 static HINSTANCE hinst = NULL;				// main DLL handle

@@ -27,6 +27,7 @@
     <ClInclude Include="BlacklistSystem.h" />
     <ClInclude Include="BASSErrors.h" />
     <ClInclude Include="BufferSystem.h" />
+    <ClInclude Include="CookedPlayer.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DriverInit.h" />
     <ClInclude Include="KDMAPI.h" />

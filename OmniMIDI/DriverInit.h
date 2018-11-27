@@ -1,6 +1,7 @@
 /*
 OmniMIDI stream init
 */
+#pragma once
 
 void MT32SetInstruments() {
 	if (ManagedSettings.MT32Mode) {

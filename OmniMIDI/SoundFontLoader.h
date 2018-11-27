@@ -2,6 +2,7 @@
 OmniMIDI soundfont lists loading system
 Don't bother understanding this stuff, as long as it works
 */
+#pragma once
 
 static void FreeFonts()
 {
@@ -94,9 +95,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 				PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
 				return TRUE;
 			}
-			else {
-				SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", TempItem.Path);
-			}
+			else SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", TempItem.Path);
 		}
 		else if (!_wcsicmp(Extension, _T(".omlist")))
 		{
@@ -162,6 +161,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 						// We've found the path! Parse it.
 						ZeroMemory(TempSF.Path, sizeof(TempSF.Path));
 						wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
+
 						PrintSoundFontToDebugLog(TempSF.Path, "Loaded SF path to SoundFontList struct.");
 						continue;
 					}
@@ -171,6 +171,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 						// We've found the enable state! Crush it!
 						TempSF.EnableState = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's enabled state to SoundFontList struct.");
 						continue;
 					}
@@ -180,6 +181,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 						// We've found the source preset! Take it!
 						TempSF.SourcePreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's source preset to SoundFontList struct.");
 						continue;
 					}
@@ -189,15 +191,17 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 						// We've found the source bank! Read it!
 						TempSF.SourceBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's source bank to SoundFontList struct.");
 						continue;
 					}
-					else if (TempLine.find(L"sf.desp") == 0)
+					else if (TempLine.find(L"sf.desp") == 0) // IT'S NOT DESPACITO
 					{
 						if (!AlreadyInitialized) continue;
 
 						// We've found the destination preset! Munch it!
 						TempSF.DestinationPreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's destination preset to SoundFontList struct.");
 						continue;
 					}
@@ -207,6 +211,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 						// We've found the destination bank! Look at it!
 						TempSF.DestinationBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's destination bank to SoundFontList struct.");
 						continue;
 					}
@@ -216,11 +221,8 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 						// We've found the destination bank! Look at it!
 						TempSF.XGBankMode = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+
 						PrintMessageToDebugLog("NewSFLoader", "Loaded SF's XG drum setting to SoundFontList struct.");
-						continue;
-					}
-					else if (TempLine.find(L"//") == 0 || TempLine.find(L"#") || TempLine.empty()) {
-						// Comment or emptiness, go on...
 						continue;
 					}
 					else continue;
@@ -259,20 +261,15 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 					if (ManagedSettings.PreloadSoundFonts) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");
-
-#if defined(_M_AMD64) || defined(_M_ARM64)
-						if (!BASS_MIDI_FontLoad(font, CurrentSF->SourcePreset, CurrentSF->SourceBank)) {
-							PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while preloading the SoundFont.");
-							SoundFontError(L"An error has occurred while preloading the SoundFont.", CurrentSF->Path);
-							continue;
-						}
-#else
+#if defined(_M_IX86)
 						if (FileSize(CurrentSF->Path) <= 1073741824) {
+#endif
 							if (!BASS_MIDI_FontLoad(font, CurrentSF->SourcePreset, CurrentSF->SourceBank)) {
 								PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while preloading the SoundFont.");
 								SoundFontError(L"An error has occurred while preloading the SoundFont.", CurrentSF->Path);
 								continue;
 							}
+#if defined(_M_IX86)
 						}
 						else {
 							MessageBeep(MB_ICONEXCLAMATION);
@@ -296,7 +293,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 			std::reverse(SoundFontPresets.begin(), SoundFontPresets.end());
 
 			PrintMessageToDebugLog("NewSFLoader", "Loading SoundFont(s) through BASS_MIDI_StreamSetFonts...");
-			BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (unsigned int)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
+			BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (DWORD)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
 
 			PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
 			return TRUE;

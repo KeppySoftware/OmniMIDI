@@ -3,6 +3,7 @@ OmniMIDI, a fork of BASSMIDI Driver
 
 Thank you Kode54 for allowing me to fork your awesome driver.
 */
+#pragma once
 
 // KDMAPI calls
 BOOL StreamHealthCheck(BOOL& Initialized) {
@@ -287,7 +288,7 @@ MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
-		_StoBASSMIDI(dwMsg);
+		_StoBASSMIDI(0, dwMsg);
 		return MMSYSERR_NOERROR;
 	}
 	return DebugResult(MIDIERR_NOTREADY, TRUE);

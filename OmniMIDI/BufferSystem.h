@@ -2,6 +2,7 @@
 OmniMIDI buffer system
 Some code has been optimized by Sono (MarcusD), the old one has been commented out
 */
+#pragma once
 
 #define SETVELOCITY(evento, newvelocity) evento = (DWORD(evento) & 0xFF00FFFF) | ((DWORD(newvelocity) & 0xFF) << 16)
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
@@ -27,7 +28,10 @@ int BufferCheckHyper(void) {
 	return (readhead != writehead) ? ~0 : 0;
 }
 
-void SendToBASSMIDI(DWORD dwParam1) {
+void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
+	if (!(dwParam1 & 0x80))
+		dwParam1 = dwParam1 << 8 | LastRunningStatus;
+
 	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
 		if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
 			BASS_MIDI_EVENT e[2] = { 0, 0 };
@@ -75,7 +79,10 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
 }
 
-void SendToBASSMIDIHyper(DWORD dwParam1) {
+void SendToBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
+	if (!(dwParam1 & 0x80))
+		dwParam1 = dwParam1 << 8 | LastRunningStatus;
+
 	BYTE TypeOfEvent = GETSTATUS(dwParam1);
 	if (TypeOfEvent == MIDI_NOTEON)
 		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, 1, dwParam1 >> 8);
@@ -99,11 +106,16 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 
 void __inline PBufData(void) {
 	LockSystem.LockForReading();
-	DWORD dwParam1 = (evbuf + readhead)->dwParam1;
+	evbuf_t* TempBuf = (evbuf + readhead);
+
+	DWORD dwParam1 = TempBuf->dwParam1;
+	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
+	DWORD TempLRS = LastRunningStatus;
+
 	if (++readhead >= EvBufferSize) readhead = 0;
 	LockSystem.UnlockForReading();
 
-	_StoBASSMIDI(dwParam1);
+	_StoBASSMIDI(TempLRS, dwParam1);
 }
 
 DWORD __inline PlayBufferedData(void) {
