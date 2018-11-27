@@ -118,6 +118,15 @@ void __inline PBufData(void) {
 	_StoBASSMIDI(TempLRS, dwParam1);
 }
 
+void __inline PBufDataHyper(void) {
+	LockSystem.LockForReading();
+	DWORD dwParam1 = (evbuf + readhead)->dwParam1;
+	if (++readhead >= EvBufferSize) readhead = 0;
+	LockSystem.UnlockForReading();
+
+	_StoBASSMIDI(0, dwParam1);
+}
+
 DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
@@ -133,7 +142,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do {
-		PBufData();
+		PBufDataHyper();
 	}
 	while ((readhead != writehead) ? ~0 : 0);
 
@@ -155,7 +164,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 
 	ULONGLONG whe = writehead;
 	do {
-		PBufData();
+		PBufDataHyper();
 	}
 	while ((readhead != whe) ? ~0 : 0);
 }

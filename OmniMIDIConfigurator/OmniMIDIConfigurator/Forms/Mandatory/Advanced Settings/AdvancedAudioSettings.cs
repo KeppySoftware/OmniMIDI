@@ -135,7 +135,7 @@ namespace OmniMIDIConfigurator
         {
             MessageBox.Show("Clicking this checkbox will remove all the checks done to the events, for example transposing and other settings in the configurator.\n" +
                 "The events will be sent straight to the buffer, and played immediately.\n\n" +
-                "The \"Slow down playback instead of skipping notes\" checkbox will not work, while this mode is enabled, along with other event processing-related functions.\n\n" +
+                "The \"Slow down playback instead of skipping notes\" checkbox will not work, while this mode is enabled, along with \"Running Status\" support and other event processing-related functions.\n\n" +
                 "WARNING: Playing too much with the live changes while this setting is enabled might crash the threads, rendering the synth unusable until a full restart of the application!",
                 "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
