@@ -77,8 +77,8 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 				if (sleeptime <= 0)							// Overloaded
 				{
-					if (!(deltasleep < adaption))
-						deltasleep = adaption;				// Don't overpush
+					if (deltasleep < adaption);
+					else deltasleep = adaption;				// Don't overpush
 				}
 				else
 				{
@@ -88,7 +88,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 				delaytick -= acc;
 				if (delaytick >> 31)
-					PrintMessageToDebugLog("CookedPlayerThread", "Warning: delaytick integer underflow");
+					PrintMessageToDebugLog("CookedPlayerThread", "Warning: DelayTick integer underflow!");
 				Player->TickAccumulator += acc;
 
 				continue;
@@ -97,8 +97,8 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 			{
 				if (sleeptime <= 0)							// Overloaded
 				{
-					if (!(deltasleep < adaption))
-						deltasleep = adaption;				// Don't overpush
+					if (deltasleep < adaption);
+					else deltasleep = adaption;				// Don't overpush
 				}
 				else
 				{
@@ -117,7 +117,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 		if (hdr->dwFlags & MHDR_DONE)
 		{
-            CrashMessage("CookedPlayerThread | MHDR_DONE is invalid here");
+            CrashMessage("CookedPlayerThread | MHDR_DONE invalid.");
 			Player->Lock.LockForWriting();
 
 			Player->MIDIHeaderQueue = hdr->lpNext;
@@ -164,7 +164,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
-				PrintMessageToDebugLog("CookedPlayerThread", "dwEvent requested callback");
+				PrintMessageToDebugLog("CookedPlayerThread", "dwEvent requested DriverCallback!");
 				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 			}
 
