@@ -508,8 +508,8 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 					TPlayer->Stopped = FALSE;
 					TPlayer->Paused = TRUE;
-					TPlayer->Tempo = 1000000;
-					TPlayer->TimeDiv = 140;
+					TPlayer->Tempo = 5000000;
+					TPlayer->TimeDiv = 348;
 					TPlayer->TempoMulti = ((TPlayer->Tempo * 10) / TPlayer->TimeDiv);
 					PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", TPlayer->TempoMulti);
 

@@ -46,7 +46,9 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 			{
 				ticker = (QWORD)-(INT64)maxdelay;
 				NtDelayExecution(TRUE, (INT64*)&ticker);
-				NtQuerySystemTime(&tickdiff); //reset timer
+				NtQuerySystemTime(&tickdiff);				// Reset timer
+				deltasleep = 0;								// Reset drift
+				oldsleep = 0;
 			}
 			PrintMessageToDebugLog("CookedPlayerThread", "Playback started!");
 			continue;
@@ -130,22 +132,20 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 		{
 			if (hdr->dwOffset >= hdr->dwBytesRecorded)
 			{
-                Player->Lock.LockForWriting();
+				Player->Lock.LockForWriting();
+				hdr->dwFlags |= MHDR_DONE;
+				hdr->dwFlags &= ~MHDR_INQUEUE;
+				LPMIDIHDR nexthdr = hdr->lpNext;
+				Player->Lock.UnlockForWriting();
 
-                hdr->dwFlags |= MHDR_DONE;
-                hdr->dwFlags &= ~MHDR_INQUEUE;
+				Player->MIDIHeaderQueue = nexthdr;
 
-                Player->MIDIHeaderQueue = hdr->lpNext;
+				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 
-                Player->Lock.UnlockForWriting();
-
-                DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
-                
 				hdr->dwOffset = 0;
-                hdr = hdr->lpNext;
-
-				if (hdr) continue;
-				else break;
+				hdr = nexthdr;
+		
+				break;
 			}
 
 			MIDIEVENT* evt = (MIDIEVENT*)(hdr->lpData + hdr->dwOffset);

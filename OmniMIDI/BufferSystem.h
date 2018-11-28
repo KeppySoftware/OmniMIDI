@@ -80,9 +80,6 @@ void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 }
 
 void SendToBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
-	if (!(dwParam1 & 0x80))
-		dwParam1 = dwParam1 << 8 | LastRunningStatus;
-
 	BYTE TypeOfEvent = GETSTATUS(dwParam1);
 	if (TypeOfEvent == MIDI_NOTEON)
 		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, 1, dwParam1 >> 8);
