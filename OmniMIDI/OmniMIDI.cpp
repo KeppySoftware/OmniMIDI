@@ -515,7 +515,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 					CookedPlayer* TPlayer = (CookedPlayer*)malloc(sizeof(CookedPlayer));
 					RtlZeroMemory(TPlayer, sizeof(*TPlayer));
 
-					TPlayer->Stopped = FALSE;
 					TPlayer->Paused = TRUE;
 					TPlayer->Tempo = 5000000;
 					TPlayer->TimeDiv = 348;
@@ -530,7 +529,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 					// Create player thread
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
-					CookedThread.ThreadHandle = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CookedPlayerThread, *(LPVOID*)dwUser, NULL, (LPDWORD)CookedThread.ThreadAddress);
+					CookedThread.ThreadHandle = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CookedPlayerSystem, *(LPVOID*)dwUser, NULL, (LPDWORD)CookedThread.ThreadAddress);
 					PrintMessageToDebugLog("MODM_OPEN", "Thread is running.");
 
 					PrintMessageToDebugLog("MODM_OPEN", "The driver is now ready to receive MIDI headers for the CookedPlayer.");
@@ -561,6 +560,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 			if (bass_initialized) {
 				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
+				KillOldCookedPlayer();
 				DoStopClient();
 			}
 

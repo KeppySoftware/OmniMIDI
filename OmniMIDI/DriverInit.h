@@ -204,14 +204,30 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	return data;
 }
 
-// Extremely useful in case the thread is still not dead
+// Extremely useful to check if a thread is alive
+BOOL IsThisThreadActive(HANDLE thread) {
+	// Check if the thread is still alive
+	PrintMessageToDebugLog("IsThisThreadActiveFunc", "Checking if previous thread passed to this function is still alive...");
+	DWORD result = WaitForSingleObject(thread, 0);
+
+	// Oh no it is!
+	if (result != WAIT_OBJECT_0) {
+		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It is!");
+		return TRUE;
+	}
+	else {
+		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It's not.");
+		return TRUE;
+	}
+}
+
 void CheckIfThreadClosed(HANDLE thread) {
 	// Check if the thread is still alive
 	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "Checking if previous thread passed to this function is still alive...");
 	DWORD result = WaitForSingleObject(thread, 0);
 
 	// Oh no it is!
-	if (thread != WAIT_OBJECT_0) {
+	if (result != WAIT_OBJECT_0) {
 		// KILL IT. DO IT.
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It is! I'm now waiting for it to stop...");
 		WaitForSingleObject(thread, INFINITE);

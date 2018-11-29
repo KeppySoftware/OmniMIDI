@@ -4,11 +4,11 @@ OmniMIDI MIDI_IO_COOKED player (Ported from the mmidi project by Sono)
 #pragma once
 
 // Cooked player struct
+static BOOL CookedPlayerHasToGo = FALSE;
 struct CookedPlayer
 {
 	LPMIDIHDR MIDIHeaderQueue;			// MIDIHDR buffer
 	BOOL Paused;						// Is the player paused?
-	BOOL Stopped;						// Is the player stopped?
 	DWORD Tempo;						// Player tempo
 	DWORD TimeDiv;						// Player time division
 	DWORD TempoMulti;					// Player time multiplier
@@ -19,7 +19,15 @@ struct CookedPlayer
 	DWORD_PTR dwInstance;
 };
 
-DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
+VOID KillOldCookedPlayer() {
+	if (IsThisThreadActive(CookedThread.ThreadHandle)) {
+		CookedPlayerHasToGo = TRUE;
+		CloseThread(CookedThread.ThreadHandle);
+		CookedPlayerHasToGo = FALSE;
+	}
+}
+
+DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 {
 	QWORD ticker = 0;
 	QWORD tickdiff = 0;
@@ -33,15 +41,15 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 	const DWORD maxdelay = 10e4; //adjust responsiveness here
 	const DWORD adaption = 1e5; //adaptive timer nice time >:]
 
-	PrintMessageToDebugLog("CookedPlayerThread", "Thread is alive!");
+	PrintMessageToDebugLog("CookedPlayerSystem", "Thread is alive!");
 
 	NtQuerySystemTime(&tickdiff);
 
-	while (!Player->Stopped)
+	while (!CookedPlayerHasToGo)
 	{
 		if (Player->Paused || !Player->MIDIHeaderQueue)
 		{
-			PrintMessageToDebugLog("CookedPlayerThread", "Waiting for unpause and/or header...");
+			PrintMessageToDebugLog("CookedPlayerSystem", "Waiting for unpause and/or header...");
 			while (Player->Paused || !Player->MIDIHeaderQueue)
 			{
 				ticker = (QWORD)-(INT64)maxdelay;
@@ -49,6 +57,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 				NtQuerySystemTime(&tickdiff);				// Reset timer
 				deltasleep = 0;								// Reset drift
 				oldsleep = 0;
+				if (CookedPlayerHasToGo) break;
 			}
 			PrintMessageToDebugLog("CookedPlayerThread", "Playback started!");
 			continue;
@@ -90,7 +99,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 				delaytick -= acc;
 				if (delaytick >> 31)
-					PrintMessageToDebugLog("CookedPlayerThread", "Warning: DelayTick integer underflow!");
+					PrintMessageToDebugLog("CookedPlayerSystem", "Warning: DelayTick integer underflow!");
 				Player->TickAccumulator += acc;
 
 				continue;
@@ -119,7 +128,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 		if (hdr->dwFlags & MHDR_DONE)
 		{
-            CrashMessage("CookedPlayerThread | MHDR_DONE invalid.");
+            CrashMessage("CookedPlayerSystem | MHDR_DONE invalid.");
 			Player->Lock.LockForWriting();
 
 			Player->MIDIHeaderQueue = hdr->lpNext;
@@ -155,8 +164,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 				barrier = FALSE;
 				delaytick = evt->dwDeltaTime;
 
-				if (delaytick) break;
-				
+				if (delaytick) break;			
 			}
 
 			// Reset barrier
@@ -164,7 +172,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
-				PrintMessageToDebugLog("CookedPlayerThread", "dwEvent requested DriverCallback!");
+				PrintMessageToDebugLog("CookedPlayerSystem", "dwEvent requested DriverCallback!");
 				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 			}
 
@@ -204,7 +212,7 @@ DWORD WINAPI CookedPlayerThread(CookedPlayer* Player)
 	}
 
 	// Close the thread
-	PrintMessageToDebugLog("CookedPlayerThread", "Closing CookedPlayer thread...");
+	PrintMessageToDebugLog("CookedPlayerSystem", "Closing CookedPlayer thread...");
 	CloseHandle(CookedThread.ThreadHandle);
 	CookedThread.ThreadHandle = NULL;
 	return 0;
