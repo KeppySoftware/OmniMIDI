@@ -1835,6 +1835,20 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        private void DisableChime_Click(object sender, EventArgs e)
+        {
+            if (DisableChime.Checked == false)
+            {
+                SynthSettings.SetValue("DisableChime", "1", RegistryValueKind.DWord);
+                DisableChime.Checked = true;
+            }
+            else
+            {
+                SynthSettings.SetValue("DisableChime", "0", RegistryValueKind.DWord);
+                DisableChime.Checked = false;
+            }
+        }
+
         private void LiveChangesTrigger_Click(object sender, EventArgs e)
         {
             if (LiveChangesTrigger.Checked == false)

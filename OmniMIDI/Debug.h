@@ -115,8 +115,11 @@ void CreateConsole() {
 		TCHAR DebugDir[MAX_PATH];
 		TCHAR CurrentTime[MAX_PATH];
 
-		Beep(440, 100);
-		Beep(440, 100);
+		if (!DisableChime)
+		{
+			Beep(440, 100);
+			Beep(440, 100);
+		}
 
 		// Get the debug info first
 		GetAppName();

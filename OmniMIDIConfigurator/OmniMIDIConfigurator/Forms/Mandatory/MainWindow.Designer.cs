@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -291,6 +291,7 @@
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
+            this.DisableChime = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1759,7 +1760,7 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem3});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -2291,7 +2292,7 @@
             // 
             // assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem
             // 
-            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Index = 9;
+            this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Index = 10;
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Text = "Assign a soundfont list to a specific app";
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem.Click += new System.EventHandler(this.assignASoundfontListToASpecificAppToolStripMenuItem_Click);
             // 
@@ -2359,42 +2360,42 @@
             // 
             // LiveChangesTrigger
             // 
-            this.LiveChangesTrigger.Index = 2;
+            this.LiveChangesTrigger.Index = 3;
             this.LiveChangesTrigger.Text = "Enable live changes for all the settings";
             this.LiveChangesTrigger.Click += new System.EventHandler(this.LiveChangesTrigger_Click);
             // 
             // hotkeys
             // 
-            this.hotkeys.Index = 3;
+            this.hotkeys.Index = 4;
             this.hotkeys.Text = "Enable fast hotkeys in MIDI application";
             this.hotkeys.Click += new System.EventHandler(this.hotkeys_Click);
             // 
             // AutoLoad
             // 
-            this.AutoLoad.Index = 4;
+            this.AutoLoad.Index = 5;
             this.AutoLoad.Text = "Reload list automatically after editing it";
             this.AutoLoad.Click += new System.EventHandler(this.AutoLoad_Click);
             // 
             // ShowOutLevel
             // 
-            this.ShowOutLevel.Index = 5;
+            this.ShowOutLevel.Index = 6;
             this.ShowOutLevel.Text = "Show output level meter";
             this.ShowOutLevel.Click += new System.EventHandler(this.ShowOutLevel_Click);
             // 
             // menuItem17
             // 
-            this.menuItem17.Index = 6;
+            this.menuItem17.Index = 7;
             this.menuItem17.Text = "-";
             // 
             // manageFolderFavouritesToolStripMenuItem
             // 
-            this.manageFolderFavouritesToolStripMenuItem.Index = 7;
+            this.manageFolderFavouritesToolStripMenuItem.Index = 8;
             this.manageFolderFavouritesToolStripMenuItem.Text = "Manage folder favourites";
             this.manageFolderFavouritesToolStripMenuItem.Click += new System.EventHandler(this.manageFolderFavouritesToolStripMenuItem_Click);
             // 
             // changeDirectoryOfTheOutputToWAVModeToolStripMenuItem
             // 
-            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 8;
+            this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Index = 9;
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Text = "Change WAV output directory";
             this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem.Click += new System.EventHandler(this.changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click);
             // 
@@ -2447,7 +2448,7 @@
             // 
             // menuItem31
             // 
-            this.menuItem31.Index = 10;
+            this.menuItem31.Index = 11;
             this.menuItem31.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DePrio,
             this.menuItem34,
@@ -2461,12 +2462,12 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 11;
+            this.menuItem21.Index = 12;
             this.menuItem21.Text = "-";
             // 
             // SpatialSound
             // 
-            this.SpatialSound.Index = 12;
+            this.SpatialSound.Index = 13;
             this.SpatialSound.Text = "Change spatial sound settings";
             this.SpatialSound.Visible = false;
             this.SpatialSound.Click += new System.EventHandler(this.menuItem46_Click);
@@ -2485,7 +2486,7 @@
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 13;
+            this.menuItem14.Index = 14;
             this.menuItem14.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MaskSynthesizerAsAnother,
             this.enableextra8sf});
@@ -2505,7 +2506,7 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 14;
+            this.menuItem12.Index = 15;
             this.menuItem12.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.ImportSettings,
             this.ExportSettings});
@@ -2513,7 +2514,7 @@
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 15;
+            this.menuItem15.Index = 16;
             this.menuItem15.Text = "-";
             // 
             // DebugModePls
@@ -2530,7 +2531,7 @@
             // 
             // menuItem28
             // 
-            this.menuItem28.Index = 16;
+            this.menuItem28.Index = 17;
             this.menuItem28.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DebugModePls,
             this.DebugModeOpenNotepad});
@@ -2542,6 +2543,7 @@
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem7,
             this.menuItem18,
+            this.DisableChime,
             this.LiveChangesTrigger,
             this.hotkeys,
             this.AutoLoad,
@@ -2866,6 +2868,12 @@
             // 
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
             // 
+            // DisableChime
+            // 
+            this.DisableChime.Index = 2;
+            this.DisableChime.Text = "Disable minimum playback/debug mode chime";
+            this.DisableChime.Click += new System.EventHandler(this.DisableChime_Click);
+            // 
             // OmniMIDIConfiguratorMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3163,6 +3171,7 @@
         private System.Windows.Forms.MenuItem menuItem18;
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem LMWarningARM64;
+        public System.Windows.Forms.MenuItem DisableChime;
     }
 }
 

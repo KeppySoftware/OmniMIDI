@@ -695,6 +695,9 @@ namespace OmniMIDIConfigurator
                 if (Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DebugMode", 0)))
                     OmniMIDIConfiguratorMain.Delegate.DebugModePls.Checked = true;
 
+                if (Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DisableChime", 0)))
+                    OmniMIDIConfiguratorMain.Delegate.DisableChime.Checked = true;
+
                 if (Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("Extra8Lists", 0)))
                 {
                     OmniMIDIConfiguratorMain.Delegate.enableextra8sf.Checked = true;

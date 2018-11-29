@@ -61,6 +61,7 @@ static BOOL BASSLoadedToMemory = FALSE;
 static HANDLE load_sfevent = NULL;
 static BOOL ASIOReady = FALSE;
 static BOOL EVBuffReady = FALSE;
+static BOOL DisableChime = FALSE;
 static BOOL KDMAPIEnabled = FALSE;
 static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 

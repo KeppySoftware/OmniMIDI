@@ -387,6 +387,7 @@ void LoadSettings(BOOL restart)
 		RegQueryValueEx(Configuration.Address, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"AudioOutput", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioOutputReg, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CurrentEngine", NULL, &dwType, (LPBYTE)&ManagedSettings.CurrentEngine, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"DisableNotesFadeOut", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableNotesFadeOut, &dwSize);
@@ -434,8 +435,8 @@ void LoadSettings(BOOL restart)
 		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
 
 		// Check if "Hyper-playback" mode has been enabled
-		if (HyperMode) {
-			// It's enabled, do some beeps to notify the user
+		if (HyperMode && !DisableChime) {
+			// It's enabled, do some beeps to notify the user (If the chime is enabled)
 			Beep(440, 100);
 			Beep(687, 100);
 		}
