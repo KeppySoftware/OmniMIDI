@@ -126,6 +126,7 @@ Easy-to-use configurator|✔️|✔️|✔️|❌
 Smaller memory footprint|✔️|❌|❌|❌
 First driver to support Windows ARM64|✔️|❌|❌|❌
 Support for Windows XP|⚠️|✔️|✔️|✔️
+Support for MIDI Stream API|✔️|❌|❌|❌
 Suitable for day-to-day<br />music playback|✔️<span>*</span>|✔️|✔️|✔️
 Suitable for professional<br />music production|✔️|❌|❌|❌
 Mixer for easy volume<br />changes per MIDI channel|✔️|✔️|✔️|❌
