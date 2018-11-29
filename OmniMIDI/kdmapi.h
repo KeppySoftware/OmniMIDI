@@ -295,41 +295,69 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, TRUE);									// The driver isn't ready
-	if (!IIMidiHdr || 
-		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||									// The buffer either doesn't exist, it's too big or
-		sizeof(IIMidiHdr->lpData) >= LONGMSG_MAXSIZE) return DebugResult(MMSYSERR_INVALPARAM, TRUE);	// the given size is invalid, invalid parameter
-	if (IIMidiHdr->dwFlags & MHDR_PREPARED) return MMSYSERR_NOERROR;									// Already prepared, everything is fine
+	if (!IIMidiHdr ||
+		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||							// The buffer either doesn't exist, it's too big or
+		sizeof(IIMidiHdr->lpData) >= LONGMSG_MAXSIZE) {
+		PrintMessageToDebugLog("PrepareLongData", "The buffer is too big, or it's invalid.");
+		return DebugResult(MMSYSERR_INVALPARAM, TRUE);											// the given size is invalid, invalid parameter
+	}
+	if (IIMidiHdr->dwFlags & MHDR_PREPARED) {
+		PrintMessageToDebugLog("PrepareLongData", "The buffer is already prepared.");
+		return MMSYSERR_NOERROR;																// Already prepared, everything is fine
+	}
 
+	PrintMessageToDebugLog("PrepareLongData", "Preparing to lock buffer...");
 	VOID* m = IIMidiHdr->lpData;
 	ULONG s = sizeof(IIMidiHdr->lpData);
 
+	PrintMessageToDebugLog("PrepareLongData", "Locking...");
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
 	if (!NtLockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+	{
+		PrintMessageToDebugLog("PrepareLongData", "NtLockVirtualMemory failed to lock the buffer!");
 		return DebugResult(MMSYSERR_NOMEM, TRUE);
+	}
+	PrintMessageToDebugLog("PrepareLongData", "Buffer is locked.");
 
 	// Mark the buffer as prepared, and say that everything is oki-doki
+	PrintMessageToDebugLog("PrepareLongData", "Marking as prepared...");
 	IIMidiHdr->dwFlags |= MHDR_PREPARED;
+
+	PrintMessageToDebugLog("PrepareLongData", "Function succeded.");
 	return MMSYSERR_NOERROR;
 }
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, TRUE);						// The driver isn't ready
-	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM, TRUE);							// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;						// Already unprepared, everything is fine
-	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return DebugResult(MIDIERR_STILLPLAYING, TRUE);	// The buffer is currently being played from the driver, cannot unprepare
+	if (!IIMidiHdr) {
+		PrintMessageToDebugLog("UnprepareLongData", "The buffer passed to this function is invalid.");
+		return DebugResult(MMSYSERR_INVALPARAM, TRUE);													// The buffer doesn't exist, invalid parameter
+	}
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) {
+		PrintMessageToDebugLog("UnprepareLongData", "The buffer is already unprepared.");
+		return MMSYSERR_NOERROR;																		// Already unprepared, everything is fine
+	}
+	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) {
+		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still in queue.");
+		return DebugResult(MIDIERR_STILLPLAYING, TRUE);													// The buffer is currently being played from the driver, cannot unprepare
+	}
 
-	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;													// Mark the buffer as unprepared
-
+	PrintMessageToDebugLog("UnprepareLongData", "Preparing to unlock buffer...");
 	VOID* m = IIMidiHdr->lpData;
 	ULONG s = sizeof(IIMidiHdr->lpData);
 
+	PrintMessageToDebugLog("UnprepareLongData", "Unlocking...");
 	// Unlock the buffer, and say that everything is oki-doki
 	if (!NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+	{
+		PrintMessageToDebugLog("UnprepareLongData", "FATAL ERROR: Failed to unlock buffer! Access violation exception.");
 		CrashMessage("UnlockMIDIHDR");
+	}
 
-	RtlSecureZeroMemory(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData));
+	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
+	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																// Mark the buffer as unprepared
+
+	PrintMessageToDebugLog("UnprepareLongData", "Function succeded.");
 	return MMSYSERR_NOERROR;
 }
 

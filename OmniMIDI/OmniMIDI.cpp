@@ -253,9 +253,15 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	}
 }
 
-STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
+STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	MMRESULT RetVal = MMSYSERR_NOERROR;
 	
+	/*
+	char Msg[NTFS_MAX_PATH] = { 0 };
+	sprintf(Msg, "Received modMessage(%u, %u, %X, %X, %X)", uDeviceID, uMsg, dwUser, dwParam1, dwParam2);
+	PrintMessageToDebugLog("MOD_MESSAGE", Msg);
+	*/
+
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
@@ -308,6 +314,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		((MIDIHDR*)dwParam1)->dwOffset = 0;
 		if (((CookedPlayer*)dwUser)->MIDIHeaderQueue)
 		{
+			PrintMessageToDebugLog("MODM_STRMDATA", "Another buffer is already present. Adding it to queue...");
 			LPMIDIHDR phdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
 			while (phdr->lpNext)
 				phdr = phdr->lpNext;
@@ -439,7 +446,9 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		((CookedPlayer*)dwUser)->Lock.LockForWriting();
 		while (hdr)
 		{
+			PrintMessageToDebugLog("MODM_STRMDATA", "Marking buffer as done and not in queue anymore...");
 			hdr->dwFlags |= MHDR_DONE;
+			hdr->dwFlags &= ~MHDR_INQUEUE;
 			hdr = hdr->lpNext;
 		}
 		((CookedPlayer*)dwUser)->Lock.UnlockForWriting();

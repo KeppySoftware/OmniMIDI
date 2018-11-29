@@ -346,10 +346,14 @@ void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
 
+		/*
+		// Create dump of MIDIHDR data
+
 		FILE* fo = fopen("mididata.bin", "ab");
 		fwrite(IIMidiHdr->lpData, 1, IIMidiHdr->dwBytesRecorded, fo);
 		fflush(fo);
 		fclose(fo);
+		*/
 
 		// Print to log
 		PrintCurrentTime();
@@ -626,8 +630,8 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 	if (ManagedSettings.DebugMode)
 		strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
 
-	if (ShowError) MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 	PrintMessageToDebugLog(ErrorTitle, ErrorString);
+	if (ShowError) MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 
 	return ErrorToDisplay;
 }
