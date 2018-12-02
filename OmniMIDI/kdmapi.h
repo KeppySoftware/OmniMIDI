@@ -225,6 +225,9 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
 
+		PrintMessageToDebugLog("KDMAPI_IKS", "Initializing OmniMIDICrashHandler...");
+		AddVectoredExceptionHandler(0, OmniMIDICrashHandler);
+
 		// Enable the debug log, if the process isn't banned
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
@@ -252,6 +255,8 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 			DoStopClient();
 			AlreadyInitializedViaKDMAPI = FALSE;
 			KDMAPIEnabled = FALSE;
+			PrintMessageToDebugLog("KDMAPI_IKS", "Removing OmniMIDICrashHandler...");
+			RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
 			PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 		}
 		else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
@@ -287,11 +292,8 @@ MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
-	if (EVBuffReady && AlreadyInitializedViaKDMAPI) {
-		_StoBASSMIDI(0, dwMsg);
-		return MMSYSERR_NOERROR;
-	}
-	return DebugResult(MIDIERR_NOTREADY, TRUE);
+	_StoBASSMIDI(0, dwMsg);
+	return MMSYSERR_NOERROR;
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {

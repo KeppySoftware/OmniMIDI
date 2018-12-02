@@ -2,6 +2,11 @@
 OmniMIDI debug functions
 */
 
+#define CurrentError(Title, Message, Error, Text) case Error: sprintf_s(Title, 512, "%s", #Error); sprintf_s(Message, 512, "%s", #Text); break
+#define arre(wat) case wat: sprintf(MessageBuf + strlen(MessageBuf), "\nCode: %s", #wat); break
+#define IsItValid(wat) case wat: return TRUE;
+
+static const char hex[] = "0123456789ABCDEF";
 static std::mutex DebugMutex;
 static BOOL IntroAlreadyShown = FALSE;
 static BOOL InfoAlreadyGot = FALSE;
@@ -42,7 +47,303 @@ void CrashMessage(LPCSTR part) {
 	block_bassinit = TRUE;
 	stop_thread = TRUE;
 
-	throw ErrorID;
+	exit(ErrorID);
+}
+
+void GetAppName() {
+	if (!InfoAlreadyGot)
+	{
+		try {
+			ZeroMemory(AppPath, sizeof(AppPath));
+			ZeroMemory(AppPathW, sizeof(AppPathW));
+			ZeroMemory(AppName, sizeof(AppName));
+			ZeroMemory(AppNameW, sizeof(AppNameW));
+
+			GetModuleFileNameW(NULL, AppPathW, NTFS_MAX_PATH);
+			wcstombs(AppPath, AppPathW, wcslen(AppPathW) + 1);
+
+			TCHAR * TempPoint = PathFindFileName(AppPathW);
+			wcsncpy(AppNameW, TempPoint, MAX_PATH);
+			wcstombs(AppName, AppNameW, wcslen(AppNameW) + 1);
+
+			InfoAlreadyGot = TRUE;
+		}
+		catch (...) {
+			CrashMessage("AppAnalysis");
+		}
+	}
+}
+
+static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
+	TCHAR CurrentTime[MAX_PATH];
+	TCHAR DumpDir[MAX_PATH];
+
+	auto hDbgHelp = LoadLibraryA("dbghelp");
+	if (hDbgHelp == nullptr)
+		return;
+	auto pMiniDumpWriteDump = (decltype(&MiniDumpWriteDump))GetProcAddress(hDbgHelp, "MiniDumpWriteDump");
+	if (pMiniDumpWriteDump == nullptr)
+		return;
+
+	// Get the debug info first
+	GetAppName();
+
+	// Get user profile's path
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, DumpDir);
+
+	// Append "\OmniMIDI\dumpfiles\" to "%userprofile%"
+	wcscat_s(DumpDir, MAX_PATH, L"\\OmniMIDI\\dumpfiles\\");
+
+	// Create "%userprofile%\OmniMIDI\dumpfiles\", in case it doesn't exist
+	CreateDirectory(DumpDir, NULL);
+
+	// Append the app's filename to the output file's path
+	wcscat_s(DumpDir, MAX_PATH, AppNameW);
+
+	// Parse current time, and append it
+	struct tm *sTm;
+	time_t now = time(0);
+	sTm = gmtime(&now);
+	wcsftime(CurrentTime, sizeof(CurrentTime), L" - %d-%m-%Y %H.%M.%S", sTm);
+	wcscat_s(DumpDir, MAX_PATH, CurrentTime);
+
+	// Append file extension, and that's it
+	wcscat_s(DumpDir, MAX_PATH, _T(" (OmniMIDI Minidump).mdmp"));
+
+	auto hFile = CreateFileW(DumpDir, GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return;
+
+	MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
+	exceptionInfo.ThreadId = GetCurrentThreadId();
+	exceptionInfo.ExceptionPointers = exc;
+	exceptionInfo.ClientPointers = FALSE;
+
+	auto dumped = pMiniDumpWriteDump(
+		GetCurrentProcess(),
+		GetCurrentProcessId(),
+		hFile,
+		MINIDUMP_TYPE(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory),
+		exc ? &exceptionInfo : nullptr,
+		NULL,
+		NULL);
+
+	CloseHandle(hFile);
+	return;
+}
+
+static __declspec(noinline) void ToHex32(char* Target, DWORD val)
+{
+	sprintf(Target + strlen(Target), "%08X", val);
+}
+
+static __declspec(noinline) void ToHex64(char* Target, QWORD valin)
+{
+	DWORD* valp = (DWORD*)&valin;
+	ToHex32(Target, valp[1]);
+	ToHex32(Target, valp[0]);
+}
+
+static __declspec(noinline) void WritePointer(char* Target, size_t valin)
+{
+	if (sizeof(valin) > 4)
+		ToHex64(Target, valin);
+	else
+		ToHex32(Target, valin);
+}
+
+static BOOL IsExceptionValid(DWORD ex) {
+	switch (ex)
+	{
+		IsItValid(EXCEPTION_ACCESS_VIOLATION);
+		IsItValid(EXCEPTION_ARRAY_BOUNDS_EXCEEDED);
+		IsItValid(EXCEPTION_BREAKPOINT);
+		IsItValid(EXCEPTION_DATATYPE_MISALIGNMENT);
+		IsItValid(EXCEPTION_FLT_DENORMAL_OPERAND);
+		IsItValid(EXCEPTION_FLT_DIVIDE_BY_ZERO);
+		IsItValid(EXCEPTION_FLT_INEXACT_RESULT);
+		IsItValid(EXCEPTION_FLT_INVALID_OPERATION);
+		IsItValid(EXCEPTION_FLT_OVERFLOW);
+		IsItValid(EXCEPTION_FLT_STACK_CHECK);
+		IsItValid(EXCEPTION_FLT_UNDERFLOW);
+		IsItValid(EXCEPTION_ILLEGAL_INSTRUCTION);
+		IsItValid(EXCEPTION_IN_PAGE_ERROR);
+		IsItValid(EXCEPTION_INT_DIVIDE_BY_ZERO);
+		IsItValid(EXCEPTION_INT_OVERFLOW);
+		IsItValid(EXCEPTION_INVALID_DISPOSITION);
+		IsItValid(EXCEPTION_NONCONTINUABLE_EXCEPTION);
+		IsItValid(EXCEPTION_PRIV_INSTRUCTION);
+		IsItValid(EXCEPTION_SINGLE_STEP);
+		IsItValid(EXCEPTION_STACK_OVERFLOW);
+	default:
+		return FALSE;
+	}
+}
+
+static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
+	if (!IsExceptionValid(exc->ExceptionRecord->ExceptionCode)) return 0;
+
+	HANDLE CurrentProcess = GetCurrentProcess();
+	MEMORY_BASIC_INFORMATION MBI;
+	BYTE* StackTrace[1024];
+	DWORD ret = CaptureStackBackTrace(0, 1024, (PVOID*)StackTrace, 0);
+
+	char MessageBuf[NTFS_MAX_PATH];
+	char NameBuf[NTFS_MAX_PATH];
+
+	sprintf(MessageBuf, "The program performed an illegal operation, and will be shut down!\n\n");
+	if (ret) {
+		sprintf(MessageBuf + strlen(MessageBuf), "== Stacktrace ==");
+		while (ret--) {
+			sprintf(MessageBuf + strlen(MessageBuf), "\n");
+			WritePointer(MessageBuf, (size_t)StackTrace[ret]);
+
+			if (!VirtualQuery(StackTrace[ret], &MBI, sizeof(MBI)))
+				continue;
+
+			HMODULE mod = (HMODULE)MBI.AllocationBase;
+
+			if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
+				continue;
+
+			NameBuf[31] = 0;
+			sprintf(MessageBuf + strlen(MessageBuf), " (");
+			sprintf(MessageBuf + strlen(MessageBuf), NameBuf);
+			sprintf(MessageBuf + strlen(MessageBuf), "+");
+			ToHex32(MessageBuf, (DWORD)(StackTrace[ret] - (BYTE*)mod));
+			sprintf(MessageBuf + strlen(MessageBuf), ")");
+		}
+		sprintf(MessageBuf + strlen(MessageBuf), "\n ");
+	}
+	else sprintf(MessageBuf + strlen(MessageBuf), " * No stack trace available\n\n");
+
+	sprintf(MessageBuf + strlen(MessageBuf), "\n== Exception ==");
+
+	switch (exc->ExceptionRecord->ExceptionCode)
+	{
+		arre(EXCEPTION_ACCESS_VIOLATION);
+		arre(EXCEPTION_ARRAY_BOUNDS_EXCEEDED);
+		arre(EXCEPTION_BREAKPOINT);
+		arre(EXCEPTION_DATATYPE_MISALIGNMENT);
+		arre(EXCEPTION_FLT_DENORMAL_OPERAND);
+		arre(EXCEPTION_FLT_DIVIDE_BY_ZERO);
+		arre(EXCEPTION_FLT_INEXACT_RESULT);
+		arre(EXCEPTION_FLT_INVALID_OPERATION);
+		arre(EXCEPTION_FLT_OVERFLOW);
+		arre(EXCEPTION_FLT_STACK_CHECK);
+		arre(EXCEPTION_FLT_UNDERFLOW);
+		arre(EXCEPTION_ILLEGAL_INSTRUCTION);
+		arre(EXCEPTION_IN_PAGE_ERROR);
+		arre(EXCEPTION_INT_DIVIDE_BY_ZERO);
+		arre(EXCEPTION_INT_OVERFLOW);
+		arre(EXCEPTION_INVALID_DISPOSITION);
+		arre(EXCEPTION_NONCONTINUABLE_EXCEPTION);
+		arre(EXCEPTION_PRIV_INSTRUCTION);
+		arre(EXCEPTION_SINGLE_STEP);
+		arre(EXCEPTION_STACK_OVERFLOW);
+	default: 
+		sprintf(MessageBuf + strlen(MessageBuf), "\nCode: unknown "); 
+		ToHex32(MessageBuf, exc->ExceptionRecord->ExceptionCode);
+		break;
+	}
+
+	sprintf(MessageBuf + strlen(MessageBuf), "\nAddress: "); 
+	WritePointer(MessageBuf, (size_t)exc->ExceptionRecord->ExceptionAddress);
+	if (exc->ExceptionRecord->NumberParameters)
+	{
+		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[0]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[0]);
+		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[1]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[1]);
+		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[2]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[2]);
+	}
+	sprintf(MessageBuf + strlen(MessageBuf), "\n\n");
+
+	sprintf(MessageBuf + strlen(MessageBuf), "== RegDump ==");
+#ifdef _M_AMD64
+	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Rip);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRAX: "); WritePointer(MessageBuf, exc->ContextRecord->Rax);
+	sprintf(MessageBuf + strlen(MessageBuf), " RCX: "); WritePointer(MessageBuf, exc->ContextRecord->Rcx);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRDX: "); WritePointer(MessageBuf, exc->ContextRecord->Rdx);
+	sprintf(MessageBuf + strlen(MessageBuf), " RBX: "); WritePointer(MessageBuf, exc->ContextRecord->Rbx);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRSP: "); WritePointer(MessageBuf, exc->ContextRecord->Rsp);
+	sprintf(MessageBuf + strlen(MessageBuf), " RBP: "); WritePointer(MessageBuf, exc->ContextRecord->Rbp);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRSI: "); WritePointer(MessageBuf, exc->ContextRecord->Rsi);
+	sprintf(MessageBuf + strlen(MessageBuf), " RDI: "); WritePointer(MessageBuf, exc->ContextRecord->Rdi);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nDR0: "); WritePointer(MessageBuf, exc->ContextRecord->Dr0);
+	sprintf(MessageBuf + strlen(MessageBuf), " DR1: "); WritePointer(MessageBuf, exc->ContextRecord->Dr1);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nDR2: "); WritePointer(MessageBuf, exc->ContextRecord->Dr2);
+	sprintf(MessageBuf + strlen(MessageBuf), " DR3: "); WritePointer(MessageBuf, exc->ContextRecord->Dr3);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nDR6: "); WritePointer(MessageBuf, exc->ContextRecord->Dr6);
+	sprintf(MessageBuf + strlen(MessageBuf), " DR7: "); WritePointer(MessageBuf, exc->ContextRecord->Dr7);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR8 : "); WritePointer(MessageBuf, exc->ContextRecord->R8);
+	sprintf(MessageBuf + strlen(MessageBuf), " R9 : "); WritePointer(MessageBuf, exc->ContextRecord->R9);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR10: "); WritePointer(MessageBuf, exc->ContextRecord->R10);
+	sprintf(MessageBuf + strlen(MessageBuf), " R11: "); WritePointer(MessageBuf, exc->ContextRecord->R11);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR12: "); WritePointer(MessageBuf, exc->ContextRecord->R12);
+	sprintf(MessageBuf + strlen(MessageBuf), " R13: "); WritePointer(MessageBuf, exc->ContextRecord->R13);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR14: "); WritePointer(MessageBuf, exc->ContextRecord->R14);
+	sprintf(MessageBuf + strlen(MessageBuf), " R15: "); WritePointer(MessageBuf, exc->ContextRecord->R15);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nLBT: "); WritePointer(MessageBuf, exc->ContextRecord->LastBranchToRip);
+	sprintf(MessageBuf + strlen(MessageBuf), " LBF: "); WritePointer(MessageBuf, exc->ContextRecord->LastBranchFromRip);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nLET: "); WritePointer(MessageBuf, exc->ContextRecord->LastExceptionToRip);
+	sprintf(MessageBuf + strlen(MessageBuf), " LEF: "); WritePointer(MessageBuf, exc->ContextRecord->LastExceptionFromRip);
+#else
+#ifdef _M_ARM64
+	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Pc);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nLR : "); WritePointer(MessageBuf, exc->ContextRecord->Lr);
+	sprintf(MessageBuf + strlen(MessageBuf), " SP : "); WritePointer(MessageBuf, exc->ContextRecord->Sp);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nFP : "); WritePointer(MessageBuf, exc->ContextRecord->Fp);
+	sprintf(MessageBuf + strlen(MessageBuf), " CPS: "); WritePointer(MessageBuf, exc->ContextRecord->Cpsr);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nFPS: "); WritePointer(MessageBuf, exc->ContextRecord->Fpsr);
+	sprintf(MessageBuf + strlen(MessageBuf), " FPC: "); WritePointer(MessageBuf, exc->ContextRecord->Fpcr);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX0 : "); WritePointer(MessageBuf, exc->ContextRecord->X[0]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X1 : "); WritePointer(MessageBuf, exc->ContextRecord->X[1]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX2 : "); WritePointer(MessageBuf, exc->ContextRecord->X[2]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X3 : "); WritePointer(MessageBuf, exc->ContextRecord->X[3]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX4 : "); WritePointer(MessageBuf, exc->ContextRecord->X[4]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X5 : "); WritePointer(MessageBuf, exc->ContextRecord->X[5]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX6 : "); WritePointer(MessageBuf, exc->ContextRecord->X[6]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X7 : "); WritePointer(MessageBuf, exc->ContextRecord->X[7]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX8 : "); WritePointer(MessageBuf, exc->ContextRecord->X[8]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X9 : "); WritePointer(MessageBuf, exc->ContextRecord->X[9]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX10: "); WritePointer(MessageBuf, exc->ContextRecord->X[10]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X11: "); WritePointer(MessageBuf, exc->ContextRecord->X[11]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX12: "); WritePointer(MessageBuf, exc->ContextRecord->X[12]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X13: "); WritePointer(MessageBuf, exc->ContextRecord->X[13]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX14: "); WritePointer(MessageBuf, exc->ContextRecord->X[14]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X15: "); WritePointer(MessageBuf, exc->ContextRecord->X[15]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX16: "); WritePointer(MessageBuf, exc->ContextRecord->X[16]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X17: "); WritePointer(MessageBuf, exc->ContextRecord->X[17]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX18: "); WritePointer(MessageBuf, exc->ContextRecord->X[18]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X19: "); WritePointer(MessageBuf, exc->ContextRecord->X[19]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX20: "); WritePointer(MessageBuf, exc->ContextRecord->X[20]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X21: "); WritePointer(MessageBuf, exc->ContextRecord->X[21]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX22: "); WritePointer(MessageBuf, exc->ContextRecord->X[22]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X23: "); WritePointer(MessageBuf, exc->ContextRecord->X[23]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX24: "); WritePointer(MessageBuf, exc->ContextRecord->X[24]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X25: "); WritePointer(MessageBuf, exc->ContextRecord->X[25]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX26: "); WritePointer(MessageBuf, exc->ContextRecord->X[26]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X27: "); WritePointer(MessageBuf, exc->ContextRecord->X[27]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX28: "); WritePointer(MessageBuf, exc->ContextRecord->X[28]);
+#else
+#ifdef _M_IX86
+	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Eip);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEDI: "); WritePointer(MessageBuf, exc->ContextRecord->Edi);
+	sprintf(MessageBuf + strlen(MessageBuf), " ESI: "); WritePointer(MessageBuf, exc->ContextRecord->Esi);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEBX: "); WritePointer(MessageBuf, exc->ContextRecord->Ebx);
+	sprintf(MessageBuf + strlen(MessageBuf), " EDX: "); WritePointer(MessageBuf, exc->ContextRecord->Edx);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEXC: "); WritePointer(MessageBuf, exc->ContextRecord->Ecx);
+	sprintf(MessageBuf + strlen(MessageBuf), " EAX: "); WritePointer(MessageBuf, exc->ContextRecord->Eax);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEBP: "); WritePointer(MessageBuf, exc->ContextRecord->Ebp);
+#else
+	sprintf(MessageBuf + strlen(MessageBuf), " * Regdumps are not supported on this platform");
+#endif
+#endif
+#endif
+
+	MakeMiniDump(exc);
+	MessageBoxA(NULL, MessageBuf, "OmniMIDI - Unhandled Exception", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+
+	return EXCEPTION_EXECUTE_HANDLER;
 }
 
 bool GetVersionInfo(
@@ -83,30 +384,6 @@ bool GetVersionInfo(
 	}
 
 	return false;
-}
-
-void GetAppName() {
-	if (!InfoAlreadyGot)
-	{
-		try {
-			ZeroMemory(AppPath, sizeof(AppPath));
-			ZeroMemory(AppPathW, sizeof(AppPathW));
-			ZeroMemory(AppName, sizeof(AppName));
-			ZeroMemory(AppNameW, sizeof(AppNameW));
-
-			GetModuleFileNameW(NULL, AppPathW, NTFS_MAX_PATH);
-			wcstombs(AppPath, AppPathW, wcslen(AppPathW) + 1);
-
-			TCHAR * TempPoint = PathFindFileName(AppPathW);
-			wcsncpy(AppNameW, TempPoint, MAX_PATH);
-			wcstombs(AppName, AppNameW, wcslen(AppNameW) + 1);
-
-			InfoAlreadyGot = TRUE;
-		}
-		catch (...) {
-			CrashMessage("AppAnalysis");
-		}
-	}
 }
 
 void CreateConsole() {
@@ -555,78 +832,29 @@ Retry:
 MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
 	if (ErrorToDisplay == MMSYSERR_NOERROR) return MMSYSERR_NOERROR;
 
-	const DWORD MaxSize = 512;
-	CHAR ErrorTitle[MaxSize] = { 0 };
-	CHAR ErrorString[MaxSize] = { 0 };
+	CHAR ErrorTitle[512] = { 0 };
+	CHAR ErrorString[512] = { 0 };
 
 	switch (ErrorToDisplay) {
-	case MMSYSERR_NOMEM:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOMEM");
-		sprintf_s(ErrorString, MaxSize, "The system is unable to allocate or lock memory.");
-		break;
-	case MMSYSERR_ALLOCATED:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ALLOCATED");
-		sprintf_s(ErrorString, MaxSize, "The driver has been already allocated in a previous midiOutOpen call.");
-		break;
-	case MMSYSERR_MOREDATA:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_MOREDATA");
-		sprintf_s(ErrorString, MaxSize, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
-		break;
-	case MMSYSERR_NODRIVERCB:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
-		sprintf_s(ErrorString, MaxSize, "The driver does not call DriverCallback.");
-		break;
-	case MMSYSERR_NODRIVER:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NODRIVERCB");
-		sprintf_s(ErrorString, MaxSize, "No device driver is present.");
-		break;
-	case MMSYSERR_HANDLEBUSY:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_HANDLEBUSY");
-		sprintf_s(ErrorString, MaxSize, "The specified handle is being used simultaneously by another thread.");
-		break;
-	case MMSYSERR_INVALIDALIAS:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALIDALIAS");
-		sprintf_s(ErrorString, MaxSize, "The specified alias was not found.");
-		break;
-	case MMSYSERR_INVALHANDLE:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALHANDLE");
-		sprintf_s(ErrorString, MaxSize, "The handle of the specified device is invalid.");
-		break;
-	case MMSYSERR_INVALFLAG:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALFLAG");
-		sprintf_s(ErrorString, MaxSize, "An invalid flag was passed to modMessage.");
-		break;
-	case MMSYSERR_INVALPARAM:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_INVALPARAM");
-		sprintf_s(ErrorString, MaxSize, "An invalid parameter was passed to modMessage.");
-		break;
-	case MMSYSERR_NOTENABLED:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTENABLED");
-		sprintf_s(ErrorString, MaxSize, "The driver failed to load or initialize.");
-		break;
-	case MMSYSERR_NOTSUPPORTED:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_NOTSUPPORTED");
-		sprintf_s(ErrorString, MaxSize, "The function requested by the message is not supported.");
-		break;
-	case MIDIERR_NOTREADY:
-		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_NOTREADY");
-		sprintf_s(ErrorString, MaxSize, "The hardware is busy with other data.");
-		break;
-	case MIDIERR_UNPREPARED:
-		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_UNPREPARED");
-		sprintf_s(ErrorString, MaxSize, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
-		break;
-	case MIDIERR_STILLPLAYING:
-		sprintf_s(ErrorTitle, MaxSize, "MIDIERR_STILLPLAYING");
-		sprintf_s(ErrorString, MaxSize, "Buffers are still in the queue.");
-		break;
-	case MMSYSERR_BADDEVICEID:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_BADDEVICEID");
-		sprintf_s(ErrorString, MaxSize, "The specified device ID is out of range.");
-		break;
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous midiStreamOpen/midiOutOpen call.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVERCB, "The driver does not call DriverCallback.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The specified alias was not found.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "The specified alias was not found.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "The handle of the specified device is invalid.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
+		CurrentError(ErrorTitle, ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");
+		CurrentError(ErrorTitle, ErrorString, MIDIERR_UNPREPARED, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
+		CurrentError(ErrorTitle, ErrorString, MIDIERR_STILLPLAYING, "Buffers are still in the queue.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_BADDEVICEID, "The specified device ID is out of range.");
 	default:
-		sprintf_s(ErrorTitle, MaxSize, "MMSYSERR_ERROR");
-		sprintf_s(ErrorString, MaxSize, "Unspecified error.");
+		sprintf_s(ErrorTitle, 512, "MMSYSERR_ERROR");
+		sprintf_s(ErrorString, 512, "Unspecified error.");
 		break;
 	}
 

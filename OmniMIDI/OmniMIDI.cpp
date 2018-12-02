@@ -56,6 +56,7 @@ typedef long NTSTATUS;
 #include <vector>
 #include <algorithm>
 #include <windows.h>
+#include <Dbghelp.h>
 #include <mmsystem.h>
 #include "Resource.h"
 #include "OmniMIDI.h"
@@ -493,6 +494,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 		if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 			// Parse callback and instance
+			AddVectoredExceptionHandler(1, OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
 			OMHMIDI = ((MIDIOPENDESC*)dwParam1)->hMidi;
 			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
@@ -556,6 +558,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	}
 	case MODM_CLOSE: {
 		if (!AlreadyInitializedViaKDMAPI) {
+			RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
 			ResetSynth(TRUE);
 
