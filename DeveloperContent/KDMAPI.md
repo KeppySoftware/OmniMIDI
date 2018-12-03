@@ -161,16 +161,16 @@ The available arguments are:
 - `UINT cbValue`: The size of the object. *(sizeof(Value))*
 ```c
 VOID(WINAPI*KDMDriverSettings)(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) = 0;
-KDMChangeSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSettings");
+KDMDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSettings");
 ...
 	DWORD Voices = 10;
 	DWORD Frequency = 0;
 	
 	// I want to change the voices
-	DriverSettings(OM_MAXVOICES, OM_SET, &Voices, sizeof(Voices));
+	KDMDriverSettings(OM_MAXVOICES, OM_SET, &Voices, sizeof(Voices));
 	
 	// Now I want to get the current frequency
-	DriverSettings(OM_AUDIOFREQ, OM_GET, &Frequency, sizeof(Frequency));
+	KDMDriverSettings(OM_AUDIOFREQ, OM_GET, &Frequency, sizeof(Frequency));
 ...
 ```
 You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/Values.h)
