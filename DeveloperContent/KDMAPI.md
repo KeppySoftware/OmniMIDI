@@ -161,7 +161,7 @@ The available arguments are:
 - `LPVOID Value`: A pointer to the value
 - `UINT cbValue`: The size of the object. *(sizeof(Value))*
 ```c
-VOID(WINAPI*KDMDriverSettings)(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) = 0;
+BOOL(WINAPI*KDMDriverSettings)(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) = 0;
 KDMDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSettings");
 ...
 	DWORD Voices = 10;
@@ -171,10 +171,11 @@ KDMDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSe
 	KDMDriverSettings(OM_MAXVOICES, OM_SET, &Voices, sizeof(Voices));
 	
 	// Now I want to get the current frequency
-	KDMDriverSettings(OM_AUDIOFREQ, OM_GET, &Frequency, sizeof(Frequency));
-	
-	// "The frequency is now 44100Hz!"
-	printf("The frequency is now %dHz", Frequency);
+	if (KDMDriverSettings(OM_AUDIOFREQ, OM_GET, &Frequency, sizeof(Frequency)))
+	{	
+		// "The frequency is now 44100Hz!"
+		printf("The frequency is now %dHz", Frequency);
+	}
 ...
 ```
 <hr />
