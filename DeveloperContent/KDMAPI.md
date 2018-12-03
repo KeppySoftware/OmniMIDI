@@ -104,11 +104,17 @@ It'll be slower when playing Black MIDIs, and the latency will also be higher, b
 As of December 3rd, 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 ### **InitializeKDMAPIStream**<br />
-It initializes the driver, its stream and all its required threads. There are no arguments.
+It initializes the driver, its stream and all its required threads. There are no arguments.<br />
+The function returns TRUE if everything goes well, or else returns FALSE.
 
 ```c
-void(WINAPI*KDMInit)() = 0;
+BOOL(WINAPI*KDMInit)() = 0;
 KDMInit = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "InitializeKDMAPIStream");
+...
+	if (!KDMInit()) {
+		printf("OmniMIDI failed to initialize!");
+	}
+...
 ```
 <hr />
 
@@ -116,8 +122,13 @@ KDMInit = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "InitializeKDMAPISt
 It tells the driver to wrap up its stuff and to leave! There are no arguments.
 
 ```c
-void(WINAPI*KDMStop)() = 0;
+BOOL(WINAPI*KDMStop)() = 0;
 KDMStop = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "TerminateKDMAPIStream");
+...
+	if (!KDMStop()) {
+		printf("OmniMIDI failed to terminate!");
+	}
+...
 ```
 <hr />
 
@@ -131,23 +142,37 @@ KDMReset = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ResetKDMAPIStream
 <hr />
 
 ### **ReturnKDMAPIVer**
-It returns the version of the Keppy's Direct MIDI API, as a string. There are no arguments available.
-Used by OmniMIDI Configurator.
+It returns the version of the Keppy's Direct MIDI API in 4 separate DWORDs.<br />
+The function returns TRUE if everything goes well, or else returns FALSE.
 
 ```c
-char const*(WINAPI*KDMAPIVer)() = 0;
+BOOL(WINAPI*KDMAPIVer)(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) = 0;
 KDMAPIVer = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ReturnKDMAPIVer");
+...
+	DWORD Major, Minor, Build, Rev;
+	
+	if (KDMAPIVer(&Major, &Minor, &Build, &Rev)) {
+		// Output example: "KDMAPI version: 1.30.1.0"
+		printf("KDMAPI version: %d.%d.%d.%d", Major, Minor, Build, Rev);
+	}
+	else printf("The function failed.");
+...
 ```
 <hr />
 
 ### **IsKDMAPIAvailable**
 A generic check, useful for people who want to see if KDMAPI v1.2+ is available.<br />
-You NEED to call this function at least once, in order to switch the KSDAPI status value in the debug window to active.<br />
-There are no arguments available, and you have to manually catch the exception, if the function isn't available.
+You NEED to call this function at least once, in order to switch the KDMAPI status value in the debug window to active.<br />
 
 ```c
 BOOL(WINAPI*KDMAPIStatus)() = 0;
 KDMAPIStatus = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "IsKDMAPIAvailable");
+...
+	if (!KDMAPIStatus()) {
+		printf("KDMAPI is unavailable.");
+		exit(0x0);
+	}
+...
 ```
 <hr />
 
@@ -191,7 +216,10 @@ KDMGetDebugInfo = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "GetDriverD
 	DebugInfoFromDriver = KDMGetDebugInfo();
 	
 	//Do something with the info
-	printf("Current rendering time: %d\n", DebugInfoFromDriver->RenderingTime); 
+	if (!DebugInfoFromDriver)
+		printf("Current rendering time: %d\n", DebugInfoFromDriver->RenderingTime); 
+	else
+		printf("Failed to get pointer to DebugInfo."); 	
 ...
 ```
 You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/Values.h)
@@ -201,16 +229,18 @@ You can get the code for the struct from **"val.h"**: [Click here!](https://gith
 Allows developers to load their own custom SoundFonts or SoundFonts lists.<br />
 The available arguments are:
 
-- `const TCHAR* Directory`: A pointer to the unicode char array, containing the path.
+- `TCHAR* Directory`: A pointer to the unicode char array, containing the path.
 ```c
-VOID(WINAPI*KDMLoadCustomSFList)(TCHAR* Directory) = 0;
+BOOL(WINAPI*KDMLoadCustomSFList)(TCHAR* Directory) = 0;
 KDMLoadCustomSFList = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "LoadCustomSoundFontsList");
 ...
 	TCHAR Directory[MAX_PATH];
 	wcscpy_s(Directory, MAX_PATH, _TEXT("C:\\MySF.sf2"));
 	
 	// Forward it to the driver
-	KDMLoadCustomSFList(&Directory);
+	if (!KDMLoadCustomSFList(&Directory)) {
+		printf("Failed to load SoundFont!");
+	}
 ...
 ```
 <hr />
@@ -237,6 +267,12 @@ The available arguments are:
 ```c
 MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
 KShortMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectData"); // Or SendDirectDataNoBuf
+...
+	MMRESULT res = KShortMsg(0x0);
+	if (res) {
+		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
+	}
+...
 ```
 <hr />
 
@@ -250,6 +286,12 @@ The available arguments are:
 ```c
 MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr) = 0;
 KLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectLongData"); // Or SendDirectLongDataNoBuf
+...
+	MMRESULT res = KLongMsg(&IIMidiHdr);
+	if (res) {
+		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
+	}
+...
 ```
 <hr />
 
@@ -262,6 +304,12 @@ The available arguments are:
 ```c
 MMRESULT(WINAPI*KPrepLongMsg)(MIDIHDR* IIMidiHdr) = 0;
 KPrepLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "PrepareLongData");
+...
+	MMRESULT res = KPrepLongMsg(&IIMidiHdr);
+	if (res) {
+		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
+	}
+...
 ```
 <hr />
 
@@ -274,4 +322,10 @@ The available arguments are:
 ```c
 MMRESULT(WINAPI*KUnprepLongMsg)(MIDIHDR* IIMidiHdr) = 0;
 KUnprepLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "UnprepareLongData");
+...
+	MMRESULT res = KUnprepLongMsg(&IIMidiHdr);
+	if (res) {
+		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
+	}
+...
 ```

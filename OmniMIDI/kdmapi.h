@@ -498,8 +498,11 @@ DebugInfo* KDMAPI GetDriverDebugInfo() {
 	return &ManagedDebugInfo;
 }
 
-VOID KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
+BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
-	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-	else FontLoader(Directory);
+	if (!AlreadyInitializedViaKDMAPI) {
+		MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+		return FALSE;
+	}
+	else return FontLoader(Directory);
 }

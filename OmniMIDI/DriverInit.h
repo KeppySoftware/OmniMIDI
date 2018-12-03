@@ -133,7 +133,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, 0);
+				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine == WASAPI_ENGINE) ? 1 : 0);
 
 				_FWAIT;
 			}
@@ -159,7 +159,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, 0);
+				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine == WASAPI_ENGINE) ? 1 : 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
