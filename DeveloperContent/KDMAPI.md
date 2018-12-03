@@ -153,6 +153,7 @@ KDMAPIStatus = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "IsKDMAPIAvail
 
 ### **DriverSettings**
 Allows developers to get the current settings, or change them from within the app, rather than asking the user to change them in the configurator.<br/>
+If the function succeeds, it'll return TRUE, or else it'll return FALSE.<br />
 The available arguments are:
 
 - `DWORD Setting`: The setting you want to change, you can find all the valid values in the header.
@@ -171,9 +172,11 @@ KDMDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSe
 	
 	// Now I want to get the current frequency
 	KDMDriverSettings(OM_AUDIOFREQ, OM_GET, &Frequency, sizeof(Frequency));
+	
+	// "The frequency is now 44100Hz!"
+	printf("The frequency is now %dHz", Frequency);
 ...
 ```
-You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/Values.h)
 <hr />
 
 ### **GetDriverDebugInfo**
