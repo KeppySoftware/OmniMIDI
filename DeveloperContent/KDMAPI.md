@@ -151,30 +151,6 @@ KDMAPIStatus = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "IsKDMAPIAvail
 ```
 <hr />
 
-### **GetCurrentDriverSettings**
-Allows developers to get the current driver's settings, which can then be edited and passed to ChangeDriverSettings.<br/>
-The available arguments are:
-
-- `Settings* Struct`: A pointer to your struct.
-```c
-VOID(WINAPI*KDMGetCurrentDriverSettings)(Settings* Struct) = 0;
-KDMGetCurrentDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "GetCurrentDriverSettings");
-...
-	Settings MySettings;
-
-	// Get driver settings
-	KDMGetCurrentDriverSettings(&MySettings);
-	
-	// Edit them here...
-	...
-	// Edit them here...
-	
-	// Pass them to KDMAPI now
-	KDMChangeSettings(&MySettings, sizeof(MySettings));
-...
-```
-<hr />
-
 ### **DriverSettings**
 Allows developers to get the current settings, or change them from within the app, rather than asking the user to change them in the configurator.<br/>
 The available arguments are:
