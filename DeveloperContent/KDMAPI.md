@@ -101,7 +101,7 @@ The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of November 14th 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
+As of December 3rd, 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 ### **InitializeKDMAPIStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.
@@ -175,29 +175,26 @@ KDMGetCurrentDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"),
 ```
 <hr />
 
-### **ChangeDriverSettings**
-Allows developers to change the driver's settings from within the app, rather than asking the user to change them in the configurator.<br/>
-Sending **0/nullptr** will make it fallback to the settings from the registry.<br />
+### **DriverSettings**
+Allows developers to get the current settings, or change them from within the app, rather than asking the user to change them in the configurator.<br/>
 The available arguments are:
 
-- `Settings* Struct`: A pointer to your struct.
-- `DWORD StructSize`: The size of the struct.
+- `DWORD Setting`: The setting you want to change, you can find all the valid values in the header.
+- `DWORD Mode`: OM_SET if you want to set the setting, or OM_GET if you want to get its current value.
+- `LPVOID Value`: A pointer to the value
+- `UINT cbValue`: The size of the object. *(sizeof(Value))*
 ```c
-VOID(WINAPI*KDMChangeSettings)(Settings* Struct, DWORD StructSize) = 0;
-KDMChangeSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "ChangeDriverSettings");
+VOID(WINAPI*KDMDriverSettings)(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) = 0;
+KDMChangeSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSettings");
 ...
-	Settings MySettings;
+	DWORD Voices = 10;
+	DWORD Frequency = 0;
 	
-	// Change your settings
-	Settings.MaxVoices = 4;
-	Settings.AudioFrequency = 22050;
-	Settings.LiveChanges = TRUE;
+	// I want to change the voices
+	DriverSettings(OM_MAXVOICES, OM_SET, &Voices, sizeof(Voices));
 	
-	// Push the settings to the driver
-	KDMChangeSettings(&MySettings, sizeof(MySettings));
-	
-	// Now make the driver fallback to the settings from the registry
-	KDMChangeSettings(nullptr, 0);
+	// Now I want to get the current frequency
+	DriverSettings(OM_AUDIOFREQ, OM_GET, &Frequency, sizeof(Frequency));
 ...
 ```
 You can get the code for the struct from **"val.h"**: [Click here!](https://github.com/KeppySoftware/OmniMIDI/blob/master/OmniMIDI/Values.h)

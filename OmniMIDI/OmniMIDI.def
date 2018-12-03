@@ -1,20 +1,19 @@
 LIBRARY		OmniMIDI.dll
 EXPORTS
-	ChangeDriverSettings
-	GetCurrentDriverSettings
 	DriverProc
+	modMessage
 	GetDriverDebugInfo
 	InitializeKDMAPIStream
-	IsKDMAPIAvailable
-	LoadCustomSoundFontsList
-	PrepareLongData
+	TerminateKDMAPIStream
 	ResetKDMAPIStream
+	IsKDMAPIAvailable
 	ReturnKDMAPIVer
+	DriverSettings
 	SendCustomEvent
 	SendDirectData
 	SendDirectDataNoBuf
 	SendDirectLongData
 	SendDirectLongDataNoBuf
-	TerminateKDMAPIStream
+	PrepareLongData
 	UnprepareLongData
-	modMessage
+	LoadCustomSoundFontsList

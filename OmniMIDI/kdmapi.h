@@ -5,6 +5,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 #pragma once
 
+#define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) case Setting: if (cbValue != sizeof(Type)) return FALSE; if (Mode = OM_SET) SettingStruct = *(Type*)Value; else if (Mode = OM_GET) *(Type*)Value = SettingStruct; else return FALSE; break;
+
 // KDMAPI calls
 BOOL StreamHealthCheck(BOOL& Initialized) {
 	// If BASS is forbidden from initializing itself, then abort immediately
@@ -390,92 +392,114 @@ MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 	return SendDirectLongData(IIMidiHdr);
 }
 
-VOID KDMAPI GetCurrentDriverSettings(Settings* Struct) {
-	if (!Struct) {
-		// The app returned an invalid pointer, or "nullptr" on purpose
-		// Fallback to the registry
-		PrintMessageToDebugLog("KDMAPI_GCDS", "The app passed a nullptr. Invalid argument.");
-		return;
-	}
-
-	PrintMessageToDebugLog("KDMAPI_GCDS", "Copying current settings to app's \"Settings\" struct...");
-	memcpy(Struct, &ManagedSettings, min(sizeof(Settings), sizeof(ManagedSettings)));
-
-	PrintMessageToDebugLog("KDMAPI_GCDS", "Done.");
-}
-
-VOID KDMAPI ChangeDriverSettings(Settings* Struct, DWORD StructSize){
-	if (!Struct) {
-		// The app returned an invalid pointer, or "nullptr" on purpose
-		// Fallback to the registry
-		PrintMessageToDebugLog("KDMAPI_CDS", "The app passed a nullptr. Fallback to registry enabled.");
-		SettingsManagedByClient = FALSE;
-		return;
-	}
-	else if (StructSize < sizeof(ManagedSettings)) {
-		PrintMessageToDebugLog("KDMAPI_CDS", "The struct size is invalid.");
-		return;
-	}
-
-	PrintMessageToDebugLog("KDMAPI_CDS", "The app passed a valid pointer. Disabled live settings from registry.");
-
-	// Temp setting we need to keep
+BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
 	BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
 
-	// Copy the struct from the app to the driver
-	PrintMessageToDebugLog("KDMAPI_CDS", "Copying app's settings to driver's struct...");
-	memcpy(&ManagedSettings, Struct, min(sizeof(Settings), StructSize));
-	SettingsManagedByClient = TRUE;
-	PrintMessageToDebugLog("KDMAPI_CDS", "Done, the settings are now managed by the app.");
+	switch (Setting) {
+		DriverSettingsCase(OM_CAPFRAMERATE, Mode, BOOL, ManagedSettings.CapFramerate, Value, cbValue);
+		DriverSettingsCase(OM_DEBUGMMODE, Mode, DWORD, ManagedSettings.DebugMode, Value, cbValue);
+		DriverSettingsCase(OM_DISABLEFADEOUT, Mode, BOOL, ManagedSettings.DisableNotesFadeOut, Value, cbValue);
+		DriverSettingsCase(OM_DONTMISSNOTES, Mode, BOOL, ManagedSettings.DontMissNotes, Value, cbValue);
 
-	// The new value is different from the temporary one, reset the synth
-	// to avoid stuck notes or crashes
-	if (DontMissNotesTemp != ManagedSettings.DontMissNotes) {
-		ResetSynth(TRUE);
+		DriverSettingsCase(OM_ENABLESFX, Mode, BOOL, ManagedSettings.EnableSFX, Value, cbValue);
+		DriverSettingsCase(OM_FULLVELOCITY, Mode, BOOL, ManagedSettings.FullVelocityMode, Value, cbValue);
+		DriverSettingsCase(OM_IGNOREVELOCITYRANGE, Mode, BOOL, ManagedSettings.IgnoreNotesBetweenVel, Value, cbValue);
+		DriverSettingsCase(OM_IGNOREALLEVENTS, Mode, BOOL, ManagedSettings.IgnoreAllEvents, Value, cbValue);
+		DriverSettingsCase(OM_IGNORESYSEX, Mode, BOOL, ManagedSettings.IgnoreSysEx, Value, cbValue);
+		DriverSettingsCase(OM_IGNORESYSRESET, Mode, BOOL, ManagedSettings.IgnoreSysReset, Value, cbValue);
+		DriverSettingsCase(OM_LIMITRANGETO88, Mode, BOOL, ManagedSettings.LimitTo88Keys, Value, cbValue);
+		DriverSettingsCase(OM_MT32MODE, Mode, BOOL, ManagedSettings.MT32Mode, Value, cbValue);
+		DriverSettingsCase(OM_MONORENDERING, Mode, BOOL, ManagedSettings.MonoRendering, Value, cbValue);
+		DriverSettingsCase(OM_NOTEOFF1, Mode, BOOL, ManagedSettings.NoteOff1, Value, cbValue);
+		DriverSettingsCase(OM_EVENTPROCWITHAUDIO, Mode, BOOL, ManagedSettings.NotesCatcherWithAudio, Value, cbValue);
+		DriverSettingsCase(OM_SINCINTER, Mode, BOOL, ManagedSettings.SincInter, Value, cbValue);
+		DriverSettingsCase(OM_SLEEPSTATES, Mode, BOOL, ManagedSettings.SleepStates, Value, cbValue);
+
+		DriverSettingsCase(OM_AUDIOBITDEPTH, Mode, DWORD, ManagedSettings.AudioBitDepth, Value, cbValue);
+		DriverSettingsCase(OM_AUDIOFREQ, Mode, DWORD, ManagedSettings.AudioFrequency, Value, cbValue);
+		DriverSettingsCase(OM_CURRENTENGINE, Mode, DWORD, ManagedSettings.CurrentEngine, Value, cbValue);
+		DriverSettingsCase(OM_BUFFERLENGTH, Mode, DWORD, ManagedSettings.BufferLength, Value, cbValue);
+		DriverSettingsCase(OM_MAXRENDERINGTIME, Mode, DWORD, ManagedSettings.MaxRenderingTime, Value, cbValue);
+		DriverSettingsCase(OM_MINIGNOREVELRANGE, Mode, DWORD, ManagedSettings.MinVelIgnore, Value, cbValue);
+		DriverSettingsCase(OM_MAXIGNOREVELRANGE, Mode, DWORD, ManagedSettings.MaxVelIgnore, Value, cbValue);
+		DriverSettingsCase(OM_OUTPUTVOLUME, Mode, DWORD, ManagedSettings.OutputVolume, Value, cbValue);
+		DriverSettingsCase(OM_TRANSPOSE, Mode, DWORD, ManagedSettings.TransposeValue, Value, cbValue);
+		DriverSettingsCase(OM_MAXVOICES, Mode, DWORD, ManagedSettings.MaxVoices, Value, cbValue);
+		DriverSettingsCase(OM_SINCINTERCONV, Mode, DWORD, ManagedSettings.SincConv, Value, cbValue);
+
+		DriverSettingsCase(OM_OVERRIDENOTELENGTH, Mode, BOOL, ManagedSettings.OverrideNoteLength, Value, cbValue);
+		DriverSettingsCase(OM_NOTELENGTH, Mode, DWORD, ManagedSettings.NoteLengthValue, Value, cbValue);
+		DriverSettingsCase(OM_ENABLEDELAYNOTEOFF, Mode, BOOL, ManagedSettings.DelayNoteOff, Value, cbValue);
+		DriverSettingsCase(OM_DELAYNOTEOFFVAL, Mode, DWORD, ManagedSettings.DelayNoteOffValue, Value, cbValue);
+
+	default:
+		MessageBox(NULL, L"Unknown setting passed to DriverSettings.", L"OmniMIDI - KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+		return FALSE;
 	}
 
-	// Stuff lol
-	if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
-	if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
+	if (Mode == OM_SET) {
+		PrintMessageToDebugLog("KDMAPI_DS", "Applying new settings to the driver...");
 
-	// Parse the new volume value, and set it
-	sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
-	ChVolumeStruct.fCurrent = 1.0f;
-	ChVolumeStruct.fTarget = sound_out_volume_float;
-	ChVolumeStruct.fTime = 0.0f;
-	ChVolumeStruct.lCurve = 0;
+		// The new value is different from the temporary one, reset the synth
+		// to avoid stuck notes or crashes
+		if (DontMissNotesTemp != ManagedSettings.DontMissNotes) ResetSynth(TRUE);
 
-	if (AlreadyInitializedViaKDMAPI) {
-		PrintMessageToDebugLog("KDMAPI_CDS", "Applying new settings to the driver...");
+		// Stuff lol
+		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) ManagedSettings.MinVelIgnore = 1;
+		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) ManagedSettings.MaxVelIgnore = 1;
 
-		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-		CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Set", FALSE);
+		// Parse the new volume value, and set it
+		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
+		ChVolumeStruct.fCurrent = 1.0f;
+		ChVolumeStruct.fTarget = sound_out_volume_float;
+		ChVolumeStruct.fTime = 0.0f;
+		ChVolumeStruct.lCurve = 0;
 
-		// Set the rendering time threshold, if the driver's own panic system is disabled
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+		if (AlreadyInitializedViaKDMAPI) {
+			BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+			CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Set", FALSE);
 
-		// Set the stream's settings
-		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+			// Set the rendering time threshold, if the driver's own panic system is disabled
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 
-		// Set the stream's attributes
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+			// Set the stream's settings
+			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+			BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
 
-		PrintMessageToDebugLog("KDMAPI_CDS", "Done!");
+			// Set the stream's attributes
+			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 1", TRUE);
+			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 2", TRUE);
+			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 3", TRUE);
+			BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 4", TRUE);
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 5", TRUE);
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 6", TRUE);
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 7", TRUE);
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
+			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", TRUE);
+		}
+
+		PrintMessageToDebugLog("KDMAPI_DS", "Done.");
 	}
-}
-
-VOID KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
-	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
-	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-	else FontLoader(Directory);
+	return TRUE;
 }
 
 DebugInfo* KDMAPI GetDriverDebugInfo() {
 	// Parse the debug info, and return them to the app.
 	PrintMessageToDebugLog("KDMAPI_GDDI", "Passed pointer to DebugInfo to the KDMAPI-ready application.");
 	return &ManagedDebugInfo;
+}
+
+VOID KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
+	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
+	if (!AlreadyInitializedViaKDMAPI) MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	else FontLoader(Directory);
 }
