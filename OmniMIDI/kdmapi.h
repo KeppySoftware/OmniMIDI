@@ -94,11 +94,11 @@ BOOL DoStartClient() {
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
 		// Create an event, to load the default SoundFonts synchronously
-		load_sfevent = CreateEvent(
+		OMReady = CreateEvent(
 			NULL,               // default security attributes
 			TRUE,               // manual-reset event
 			FALSE,              // initial state is nonsignaled
-			TEXT("SoundFontEvent")  // object name
+			TEXT("OMReady")		// object name
 		);
 
 		// Initialize the stream
@@ -132,8 +132,8 @@ BOOL DoStartClient() {
 
 		// Wait for the SoundFonts to load, then close the event's handle
 		PrintMessageToDebugLog("StartDriver", "Waiting for the SoundFonts to load...");
-		if (WaitForSingleObject(load_sfevent, INFINITE) == WAIT_OBJECT_0)
-			CloseHandle(load_sfevent);
+		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
+			CloseHandle(OMReady);
 
 		// Ok, everything's ready, do not open more debug pipes from now on
 		DriverInitStatus = TRUE;
@@ -227,8 +227,8 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
 
-		PrintMessageToDebugLog("KDMAPI_IKS", "Initializing OmniMIDICrashHandler...");
-		AddVectoredExceptionHandler(0, OmniMIDICrashHandler);
+		// PrintMessageToDebugLog("KDMAPI_IKS", "Initializing OmniMIDICrashHandler...");
+		// AddVectoredExceptionHandler(0, OmniMIDICrashHandler);
 
 		// Enable the debug log, if the process isn't banned
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
@@ -257,8 +257,8 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 			DoStopClient();
 			AlreadyInitializedViaKDMAPI = FALSE;
 			KDMAPIEnabled = FALSE;
-			PrintMessageToDebugLog("KDMAPI_IKS", "Removing OmniMIDICrashHandler...");
-			RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
+			// PrintMessageToDebugLog("KDMAPI_IKS", "Removing OmniMIDICrashHandler...");
+			// RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
 			PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 		}
 		else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");

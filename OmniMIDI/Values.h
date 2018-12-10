@@ -47,6 +47,7 @@ static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
+static HANDLE OMReady = NULL;
 static HMIDI OMHMIDI = NULL;
 static DWORD_PTR OMCallback = NULL;
 static DWORD_PTR OMInstance = NULL;
@@ -58,7 +59,6 @@ static const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_
 static BOOL DriverInitStatus = FALSE;
 static BOOL AlreadyInitializedViaKDMAPI = FALSE;
 static BOOL BASSLoadedToMemory = FALSE;
-static HANDLE load_sfevent = NULL;
 static BOOL ASIOReady = FALSE;
 static BOOL EVBuffReady = FALSE;
 static BOOL DisableChime = FALSE;
@@ -90,7 +90,7 @@ typedef struct RegKey
 
 static RegKey MainKey, Configuration, Channels, ChanOverride, SFDynamicLoader;
 
-static DWORD Blank = 0;
+static DWORD Blank = NULL;
 static DWORD dwType = REG_DWORD, dwSize = sizeof(DWORD);
 static DWORD qwType = REG_QWORD, qwSize = sizeof(QWORD);
 static DWORD SNType = REG_SZ, SNSize = sizeof(SynthNameW);

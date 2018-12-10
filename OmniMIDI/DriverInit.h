@@ -112,7 +112,7 @@ void InitializeNotesCatcherThread() {
 }
 
 DWORD WINAPI AudioEngine(LPVOID lpParam) {
-	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
+	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
@@ -143,7 +143,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 		CrashMessage("AudioEngineThread");
 	}
 
-	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
+	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
 	CloseHandle(ATThread.ThreadHandle);
 	ATThread.ThreadHandle = NULL;
 	return 0;
@@ -263,9 +263,6 @@ void CloseThreads(BOOL MainClose) {
 }
 
 BOOL CreateThreads(BOOL startup) {
-	// Load the SoundFont on startup
-	if (startup == TRUE) SetEvent(load_sfevent);
-
 	PrintMessageToDebugLog("CreateThreadsFunc", "Closing existing threads, if they're open...");
 	CloseThreads(FALSE);
 
@@ -286,6 +283,9 @@ BOOL CreateThreads(BOOL startup) {
 		SetThreadPriority(DThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
+
+	// The threads are ready!
+	if (startup == TRUE) SetEvent(OMReady);
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Threads are now active!");
 	return TRUE;
@@ -437,6 +437,7 @@ void FreeUpBASS() {
 }
 
 void FreeUpBASSASIO() {
+#if !defined(_M_ARM64)
 	if (BASSLoadedToMemory) {
 		// Free up ASIO before doing anything
 		BASS_ASIO_Stop();
@@ -445,6 +446,7 @@ void FreeUpBASSASIO() {
 		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
 		ASIOReady = FALSE;
 	}
+#endif
 }
 
 /*
@@ -773,9 +775,17 @@ bool InitializeBASS(BOOL restart) {
 		// Else, initialize the default stream
 		else if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
 			InitializeBASSOutput();
+#if !defined(_M_ARM64)
 		// Or else, initialize ASIO
 		else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
 			InitializeASIO();
+#endif
+		else {
+			PrintMessageToDebugLog("InitializeBASSFunc", "Unknown engine, falling back to WASAPI...");
+			ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+			RegSetValueEx(Configuration.Address, L"CurrentEngine", NULL, dwType, (LPBYTE)&ManagedSettings.CurrentEngine, sizeof(DWORD));
+			InitializeBASSOutput();
+		}
 
 		if (!ApplyStreamSettings()) return FALSE;
 
@@ -813,11 +823,13 @@ void FreeUpStream() {
 		// Reset synth
 		ResetSynth(0);
 
+#if !defined(_M_ARM64)
 		// Free up ASIO before doing anything
 		BASS_ASIO_Stop();
 		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
 		BASS_ASIO_Free();
 		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
+#endif
 
 		// Stop the stream and free it as well
 		BASS_ChannelStop(OMStream);
