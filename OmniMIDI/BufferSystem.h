@@ -80,21 +80,45 @@ void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 }
 
 void SendToBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
-	BYTE TypeOfEvent = GETSTATUS(dwParam1);
-	if (TypeOfEvent == MIDI_NOTEON)
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, 1, dwParam1 >> 8);
-	else if (TypeOfEvent == MIDI_NOTEOFF)
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, 1, (BYTE)(dwParam1 >> 8));
-	else
-	{
-		BASS_MIDI_StreamEvents(
-			OMStream, BASS_MIDI_EVENTS_RAW,
-			&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
-		);
+	DWORD len = 3;
+
+	switch (GETSTATUS(dwParam1)) {
+	case MIDI_NOTEON:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
+		return;
+	case MIDI_NOTEOFF:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
+		return;
+	default:
+		if (!(dwParam1 - 0x80 & 0xC0))
+		{
+			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
+			return;
+		}
+
+		if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
+		else if ((dwParam1 & 0xF0) == 0xF0)
+		{
+			switch (dwParam1 & 0xF)
+			{
+			case 3:
+				len = 2;
+				break;
+			default:
+				len = 1;
+				break;
+			}
+		}
+
+		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+		return;
 	}
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+	// The buffer doesn't exist or isn't ready
+	if (!IIMidiHdr && !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return;								
+
 	PrintSysExMessageToDebugLog(
 		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength),
 		IIMidiHdr);
@@ -127,9 +151,7 @@ void __inline PBufDataHyper(void) {
 DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
-	do {
-		PBufData();
-	} 
+	do PBufData();
 	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
 
 	return 0;
@@ -138,9 +160,7 @@ DWORD __inline PlayBufferedData(void) {
 DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
-	do {
-		PBufDataHyper();
-	}
+	do PBufDataHyper();
 	while ((readhead != writehead) ? ~0 : 0);
 
 	return 0;
@@ -150,9 +170,7 @@ DWORD __inline PlayBufferedDataChunk(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	ULONGLONG whe = writehead;
-	do {
-		PBufData();
-	}
+	do PBufData();
 	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
 }
 
@@ -160,9 +178,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	ULONGLONG whe = writehead;
-	do {
-		PBufDataHyper();
-	}
+	do PBufDataHyper();
 	while ((readhead != whe) ? ~0 : 0);
 }
 
@@ -259,28 +275,27 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 }
 
 MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	if (!EVBuffReady) return DebugResult(MIDIERR_NOTREADY, TRUE);
-	else {
-		if (CheckIfEventIsToIgnore(dwParam1))
-			return MMSYSERR_NOERROR;
-
-		if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
-			dwParam1 = ReturnEditedEvent(dwParam1);
-
-		// Prepare the event in the buffer
-		LockSystem.LockForWriting();
-
-		evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
-		if (++writehead >= EvBufferSize) writehead = 0;
-
-		LockSystem.UnlockForWriting();
-
-		// Some checks
-		if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
-
-		// Haha everything is fine
+	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
-	}
+
+	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
+		dwParam1 = ReturnEditedEvent(dwParam1);
+
+	if (!EVBuffReady) return DebugResult(MIDIERR_NOTREADY, TRUE);
+
+	// Prepare the event in the buffer
+	LockSystem.LockForWriting();
+
+	evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
+	if (++writehead >= EvBufferSize) writehead = 0;
+
+	LockSystem.UnlockForWriting();
+
+	// Some checks
+	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
+
+	// Haha everything is fine
+	return MMSYSERR_NOERROR;
 }
 
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {

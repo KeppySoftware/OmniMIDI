@@ -8,6 +8,11 @@
 #define GETSTATUS(f) (f & 0xF0)
 #define MIDI_NOTEOFF	0x80
 #define MIDI_NOTEON		0x90
+#define MIDI_POLYAFTER	0xA0
+#define MIDI_CMC		0xB0
+#define MIDI_PROGCHAN	0xC0
+#define MIDI_CHANAFTER	0xD0
+#define MIDI_PITCHWHEEL	0xE0
 
 #define MIDI_IO_PACKED	0x00000000L			// Legacy mode, used by most MIDI apps
 #define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some old MIDI apps (Such as GZDoom)
