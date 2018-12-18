@@ -1,7 +1,7 @@
 ﻿<p align="center">
   <img src="https://i.imgur.com/noVfUG6.png">
   <br />
-  A fork of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with more features.
+  A reboot of the original <a href="https://github.com/kode54/BASSMIDI-Driver">BASSMIDI Driver by Kode54</a>, with more features.
 </p>
 
 ## F.A.Q.

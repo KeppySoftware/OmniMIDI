@@ -442,7 +442,6 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY, TRUE);				// The driver isn't ready
 
 		((CookedPlayer*)dwUser)->Paused = TRUE;
-		ResetSynth(0);
 
 		LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
 		((CookedPlayer*)dwUser)->Lock.LockForWriting();
@@ -454,6 +453,8 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			hdr = hdr->lpNext;
 		}
 		((CookedPlayer*)dwUser)->Lock.UnlockForWriting();
+
+		ResetSynth(FALSE);
 
 		PrintMessageToDebugLog("MODM_STOP", "CookedPlayer is now stopped.");
 		return MMSYSERR_NOERROR;
@@ -512,6 +513,9 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 				{
 					PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
 
+					PrintMessageToDebugLog("MODM_OPEN", "Checking if old CookedPlayer thread is alive...");
+					KillOldCookedPlayer();
+
 					// Prepare the CookedPlayer
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
 
@@ -539,6 +543,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 				}
 				else {
 					PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED is only supported with CALLBACK_FUNCTION! Preparation aborted.");
+					DoStopClient();
 					return DebugResult(MMSYSERR_NOTSUPPORTED, TRUE);
 				}
 			}

@@ -307,22 +307,22 @@ SetupAppTitle={#ProductName} Installer
 
 function Windows64(): Boolean;
 begin
-  Result := (IsARM64 or Is64BitInstallMode);
+  Result := IsWin64;
 end;
 
 function WindowsARM64(): Boolean;
 begin
-  Result := (IsARM64);
+  Result := (IsWin64 and IsARM64);
 end;
 
 function WindowsAMD64(): Boolean;
 begin
-  Result := ((not IsARM64) and Is64BitInstallMode);
+  Result := (IsWin64 and (not IsARM64));
 end;
 
 function WindowsIA32(): Boolean;
 begin
-  Result := ((not IsARM64) and (not Is64BitInstallMode));
+  Result := (not IsWin64);
 end;
 
 function IsWindowsVersionOrNewer(Major, Minor: Integer): boolean;
