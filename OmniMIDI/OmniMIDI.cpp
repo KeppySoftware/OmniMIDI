@@ -13,7 +13,7 @@ typedef long NTSTATUS;
 #define CUR_MAJOR	1
 #define CUR_MINOR	50
 #define CUR_BUILD	1
-#define CUR_REV		0
+#define CUR_REV		17
 
 #define STRICT
 #define VC_EXTRALEAN

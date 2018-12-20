@@ -415,15 +415,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\WinMMARM64WRP\winmmARM64wrp.dll" />
-    <None Include="Resources\WinMMARM64WRP\winmmARM64DAW.dll" />
+    <Content Include="Resources\WinMMWRP\winmm32DAW.dll" />
+    <Content Include="Resources\WinMMWRP\winmm32wrp.dll" />
+    <Content Include="Resources\WinMMWRP\winmm64DAW.dll" />
+    <Content Include="Resources\WinMMWRP\winmm64wrp.dll" />
+    <Content Include="Resources\WinMMWRP\winmmARM64DAW.dll" />
+    <Content Include="Resources\WinMMWRP\winmmARM64wrp.dll" />
     <None Include="Resources\LoudMax\LoudMax32.dll" />
     <None Include="Resources\LoudMax\LoudMax64.dll" />
-    <None Include="Resources\WinMM64WRP\winmm64DAW.dll" />
-    <None Include="Resources\WinMM32WRP\winmm32DAW.dll" />
     <None Include="Resources\Pictures\InfoBk.png" />
-    <None Include="Resources\WinMM64WRP\winmm64wrp.dll" />
-    <None Include="Resources\WinMM32WRP\winmm32wrp.dll" />
     <None Include="Resources\List Editor\ReloadIcon.png" />
     <None Include="Resources\List Editor\RmvSFIcon.png" />
     <None Include="Resources\List Editor\MvUpIcon.png" />

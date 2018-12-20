@@ -506,3 +506,10 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	}
 	else return FontLoader(Directory);
 }
+
+DWORD64 KDMAPI timeGetTime64() {
+	static LARGE_INTEGER frequency = { {0,0} };
+	LARGE_INTEGER startingTime;
+	QueryPerformanceCounter(&startingTime);
+	return (1000 * (startingTime.QuadPart % frequency.QuadPart) / frequency.QuadPart) + (1000 * (startingTime.QuadPart / frequency.QuadPart));
+}

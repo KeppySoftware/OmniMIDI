@@ -190,7 +190,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <TreatWarningAsError>true</TreatWarningAsError>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -297,7 +297,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -404,7 +404,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>

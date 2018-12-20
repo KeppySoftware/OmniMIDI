@@ -172,4 +172,7 @@ DebugInfo* KDMAPI(GetDriverDebugInfo)();
 
 // Load a custom sflist. (You can also load SF2 and SFZ files)
 VOID KDMAPI(LoadCustomSoundFontsList)(LPWSTR Directory);
+
+// timeGetTime, but 64-bit
+UINT DWORD64(timeGetTime64)(MIDIHDR* IIMidiHdr);
 #endif
