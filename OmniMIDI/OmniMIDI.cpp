@@ -209,6 +209,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&MID, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)&SynthNameW, &SNSize);
+		RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 
 		// If the synth type ID is bigger than the size of the synth types array,
 		// set it automatically to MOD_MIDIPORT
@@ -237,7 +238,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		MIDICaps.ManufacturerGuid = OMCLSID;
 		MIDICaps.NameGuid = OMCLSID;
 		MIDICaps.ProductGuid = OMCLSID;
-		MIDICaps.dwSupport = MIDICAPS_STREAM;
+		MIDICaps.dwSupport = (ManagedSettings.DisableCookedPlayer ? 0 : MIDICAPS_STREAM) | MIDICAPS_VOLUME;
 		MIDICaps.wChannelMask = 0xFFFF;
 		MIDICaps.wMid = MID;
 		MIDICaps.wPid = PID;
@@ -273,7 +274,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
 
 		// Tell the app that the buffer has been played
-		DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, dwParam1, 0);
+		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, dwParam1, 0);
 		return RetVal;
 	}
 	case MODM_STRMDATA: {
@@ -432,6 +433,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 
 		if (((CookedPlayer*)dwUser)->Paused != TRUE) {
 			((CookedPlayer*)dwUser)->Paused = TRUE;
+			ResetSynth(FALSE);
 			PrintMessageToDebugLog("MODM_RESTART", "CookedPlayer is now paused.");
 		}
 		else PrintMessageToDebugLog("MODM_RESTART", "CookedPlayer is already paused.");
@@ -441,18 +443,21 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_STOP: {
 		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY, TRUE);				// The driver isn't ready
 
+		PrintMessageToDebugLog("MODM_STOP", "The app requested OmniMIDI to stop CookedPlayer.");
 		((CookedPlayer*)dwUser)->Paused = TRUE;
 
 		LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
-		((CookedPlayer*)dwUser)->Lock.LockForWriting();
 		while (hdr)
 		{
+			((CookedPlayer*)dwUser)->Lock.LockForWriting();
 			PrintMessageToDebugLog("MODM_STRMDATA", "Marking buffer as done and not in queue anymore...");
-			hdr->dwFlags |= MHDR_DONE;
 			hdr->dwFlags &= ~MHDR_INQUEUE;
+			hdr->dwFlags |= MHDR_DONE;
+			((CookedPlayer*)dwUser)->Lock.UnlockForWriting();
+
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 			hdr = hdr->lpNext;
 		}
-		((CookedPlayer*)dwUser)->Lock.UnlockForWriting();
 
 		ResetSynth(FALSE);
 
@@ -507,7 +512,11 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			DoStartClient();
 			ResetSynth(TRUE);
 
-			if ((DWORD)dwParam2 & MIDI_IO_COOKED) {
+			// Prepare registry for CookedPlayer
+			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
+
+			if ((DWORD)dwParam2 & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
 				// CookedPlayer only supports CALLBACK_FUNCTION
 				if (!((DWORD)dwParam2 & ~(MIDI_IO_COOKED | CALLBACK_FUNCTION)))
 				{
@@ -537,6 +546,12 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 					// Create player thread
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
 					CookedThread.ThreadHandle = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CookedPlayerSystem, *(LPVOID*)dwUser, NULL, (LPDWORD)CookedThread.ThreadAddress);
+					while (!TPlayer->IsThreadReady)
+					{ 
+						PrintMessageToDebugLog("MODM_OPEN", "Waiting for thread to start...");
+						Sleep(1);
+					}
+
 					PrintMessageToDebugLog("MODM_OPEN", "Thread is running.");
 
 					PrintMessageToDebugLog("MODM_OPEN", "The driver is now ready to receive MIDI headers for the CookedPlayer.");
@@ -547,10 +562,15 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 					return DebugResult(MMSYSERR_NOTSUPPORTED, TRUE);
 				}
 			}
+			else if (ManagedSettings.DisableCookedPlayer) {
+				PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
+				DoStopClient();
+				return DebugResult(MMSYSERR_NOTSUPPORTED, TRUE);
+			}
 
 			// Tell the app that the driver is ready
 			PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app (If present)...");
-			DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_OPEN, OMInstance, 0, 0);
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
 
 			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
 		}
@@ -574,7 +594,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 			}
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app (If present)...");
-			DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_CLOSE, OMInstance, 0, 0);
+			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
 		}

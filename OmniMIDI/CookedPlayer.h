@@ -7,6 +7,7 @@ OmniMIDI MIDI_IO_COOKED player (Ported from the mmidi project by Sono)
 static BOOL CookedPlayerHasToGo = FALSE;
 struct CookedPlayer
 {
+	BOOL IsThreadReady;					// Is the thread ready to accept data?
 	LPMIDIHDR MIDIHeaderQueue;			// MIDIHDR buffer
 	BOOL Paused;						// Is the player paused?
 	DWORD Tempo;						// Player tempo
@@ -52,6 +53,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			PrintMessageToDebugLog("CookedPlayerSystem", "Waiting for unpause and/or header...");
 			while (Player->Paused || !Player->MIDIHeaderQueue)
 			{
+				Player->IsThreadReady = TRUE;
 				ticker = (QWORD)-(INT64)maxdelay;
 				NtDelayExecution(TRUE, (INT64*)&ticker);
 				NtQuerySystemTime(&tickdiff);				// Reset timer
@@ -149,7 +151,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 
 				Player->MIDIHeaderQueue = nexthdr;
 
-				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+				DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 
 				hdr->dwOffset = 0;
 				hdr = nexthdr;
@@ -173,7 +175,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
 				PrintMessageToDebugLog("CookedPlayerSystem", "dwEvent requested DriverCallback!");
-				DriverCallback(OMCallback, OMFlags, (HDRVR)OMHMIDI, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+				DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 			}
 
 			/*

@@ -19,6 +19,8 @@ namespace OmniMIDIConfigurator
 
         private void MIDIEventsParserSettings_Load(object sender, EventArgs e)
         {
+            DisableCookedPlayer.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DisableCookedPlayer", 0));
+
             AllNotesIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             SysExIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
 
@@ -60,6 +62,11 @@ namespace OmniMIDIConfigurator
                 Functions.SetFramerate(1);
             else
                 Functions.SetFramerate(0);
+        }
+
+        private void DisableCookedPlayer_CheckedChanged(object sender, EventArgs e)
+        {
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("DisableCookedPlayer", Convert.ToInt32(DisableCookedPlayer.Checked), RegistryValueKind.DWord);
         }
 
         private void Limit88_CheckedChanged(object sender, EventArgs e)

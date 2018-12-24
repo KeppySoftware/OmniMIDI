@@ -19,7 +19,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
-#define DEFAULT_SETTINGS { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 44100, 0, 30, WASAPI_ENGINE, 1, 0, 0, 75, 1, 1, 10000, 127, 500, 2, 0, 5, 0, 5 }
+#define DEFAULT_SETTINGS { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 44100, 0, 30, WASAPI_ENGINE, 1, 0, 0, 75, 1, 1, 10000, 127, 500, 2, 0, 5, 0, 5, FALSE }
 #define DEFAULT_DEBUG { 0.0f, { 0 } }
 
 // Settings
@@ -111,6 +111,8 @@ typedef struct
 	DWORD NoteLengthValue;			// Length of the note overridden
 	BOOL DelayNoteOff;				// Delay note off events
 	DWORD DelayNoteOffValue;		// Length of the delay
+
+	BOOL DisableCookedPlayer;		// Disable CookedPlayer
 } Settings;
 
 // The debug info struct, you can set the default values by assigning DEFAULT_DEBUG
