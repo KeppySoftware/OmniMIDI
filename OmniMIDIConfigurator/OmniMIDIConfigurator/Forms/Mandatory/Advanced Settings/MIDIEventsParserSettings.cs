@@ -22,10 +22,8 @@ namespace OmniMIDIConfigurator
             DisableCookedPlayer.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DisableCookedPlayer", 0));
 
             AllNotesIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
-            SysExIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
 
             AllNotesIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0));
-            SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreAllNotes", 0));
 
             IgnoreNotes.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             IgnoreNotes.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
@@ -35,8 +33,6 @@ namespace OmniMIDIConfigurator
 
             Limit88.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             Limit88.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("LimitTo88Keys", 0));
-
-            SysExIgnore.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("IgnoreSysEx", 0));
 
             FullVelocityMode.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             FullVelocityMode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0));

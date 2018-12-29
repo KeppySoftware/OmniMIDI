@@ -19,7 +19,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
-#define DEFAULT_SETTINGS { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 44100, 0, 30, WASAPI_ENGINE, 1, 0, 0, 75, 1, 1, 10000, 127, 500, 2, 0, 5, 0, 5, FALSE }
 #define DEFAULT_DEBUG { 0.0f, { 0 } }
 
 // Settings
@@ -62,58 +61,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define OM_ENABLEDELAYNOTEOFF		0x10030
 #define OM_DELAYNOTEOFFVAL			0x10031
 
-// The settings struct, you can initialize it with the defaults value through by assigning DEFAULT_SETTINGS
-typedef struct
-{
-	BOOL CapFramerate;				// Cap input framerate
-	DWORD DebugMode;				// Debug console
-	BOOL DisableNotesFadeOut;		// Disable fade-out
-	BOOL DontMissNotes;				// Slow down instead of missing notes
-
-	BOOL EnableSFX;					// Enable or disable FXs
-	BOOL FastHotkeys;				// Enable/Disable fast hotkeys
-	BOOL FullVelocityMode;			// Enable full velocity mode
-	BOOL IgnoreNotesBetweenVel;		// Ignore notes in between two velocity values
-	BOOL IgnoreAllEvents;			// Ignore all MIDI events
-	BOOL IgnoreSysEx;				// Ignore SysEx events
-	BOOL IgnoreSysReset;			// Ignore sysex messages
-	BOOL LimitTo88Keys;				// Limit to 88 keys
-	BOOL LiveChanges;				// Live changes
-	BOOL MT32Mode;					// Roland MT-32 mode
-	BOOL MonoRendering;				// Mono rendering (Instead of stereo by default)
-	BOOL NoBlacklistMessage;		// Disable blacklist message (DEPRECATED)
-	BOOL NoteOff1;					// Note cut INT
-	BOOL NotesCatcherWithAudio;		// For old-ass PCs
-	BOOL OverrideInstruments;		// Override channel instruments
-	BOOL PreloadSoundFonts;			// Soundfont preloading
-	BOOL SincInter;					// Sinc
-	BOOL SleepStates;				// Reduce CPU overhead
-	BOOL VolumeMonitor;				// Volume monitoring
-
-	DWORD AudioBitDepth;			// Floating point audio
-	DWORD AudioFrequency;			// Audio frequency
-	DWORD AudioOutputReg;			// Audio output (All devices except AudToWAV and ASIO)
-	DWORD BufferLength;				// Default
-	DWORD CurrentEngine;			// Current engine
-	DWORD DriverPriority;			// Process priority
-	BOOL Extra8Lists;				// Enable extra 8 SoundFont lists
-	DWORD MaxRenderingTime;			// CPU usage INT
-	DWORD MaxVelIgnore;				// Ignore notes in between two velocity values
-	DWORD MinVelIgnore;				// Ignore notes in between two velocity values
-	DWORD OutputVolume;				// Volume
-	DWORD TransposeValue;			// Pitch shift (127 = None)
-	DWORD MaxVoices;				// Voices limit
-	DWORD SincConv;					// Sinc
-
-	// Add more down here
-	// ------------------
-	BOOL OverrideNoteLength;		// Override note length
-	DWORD NoteLengthValue;			// Length of the note overridden
-	BOOL DelayNoteOff;				// Delay note off events
-	DWORD DelayNoteOffValue;		// Length of the delay
-
-	BOOL DisableCookedPlayer;		// Disable CookedPlayer
-} Settings;
+#define OM_CHANUPDLENGTH			0x10032
 
 // The debug info struct, you can set the default values by assigning DEFAULT_DEBUG
 typedef struct
@@ -128,6 +76,55 @@ typedef struct
 	// Add more down here
 	// ------------------
 } DebugInfo;
+
+#ifdef KDMAPI_OMONLY
+// The settings struct, you can initialize it with the defaults value through by assigning DEFAULT_SETTINGS
+struct Settings
+{
+	BOOL CapFramerate = FALSE;				// Cap input framerate
+	BOOL DelayNoteOff = FALSE;				// Delay note off events
+	BOOL DisableCookedPlayer = FALSE;		// Disable CookedPlayer
+	BOOL DisableNotesFadeOut = FALSE;		// Disable fade-out
+	BOOL DontMissNotes = FALSE;				// Slow down instead of missing notes
+	BOOL EnableSFX = TRUE;					// Enable or disable FXs
+	BOOL Extra8Lists = FALSE;				// Enable extra 8 SoundFont lists
+	BOOL FastHotkeys = FALSE;				// Enable/Disable fast hotkeys
+	BOOL FullVelocityMode = FALSE;			// Enable full velocity mode
+	BOOL IgnoreAllEvents = FALSE;			// Ignore all MIDI events
+	BOOL IgnoreNotesBetweenVel = FALSE;		// Ignore notes in between two velocity values
+	BOOL IgnoreSysReset = FALSE;			// Ignore SysEx Reset events
+	BOOL LimitTo88Keys = FALSE;				// Limit to 88 keys
+	BOOL LiveChanges = FALSE;				// Live changes
+	BOOL MT32Mode = FALSE;					// Roland MT-32 mode
+	BOOL MonoRendering = FALSE;				// Mono rendering (Instead of stereo by default)
+	BOOL NoteOff1 = FALSE;					// Note cut INT
+	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
+	BOOL OverrideInstruments = FALSE;		// Override channel instruments
+	BOOL OverrideNoteLength = FALSE;		// Override note length
+	BOOL PreloadSoundFonts = FALSE;			// Soundfont preloading
+	BOOL SincInter = FALSE;					// Sinc
+	BOOL SleepStates = FALSE;				// Reduce CPU overhead
+	BOOL VolumeMonitor = FALSE;				// Volume monitoring
+
+	DWORD AudioBitDepth = 0;				// Floating point audio
+	DWORD AudioFrequency = 44100;			// Audio frequency
+	DWORD AudioOutputReg = 0;				// Audio output (All devices except AudToWAV and ASIO)
+	DWORD BufferLength = 30;				// Default
+	DWORD ChannelUpdateLength = 1;			// Length of buffer in BASS_ChannelUpdate
+	DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
+	DWORD DebugMode = 0;					// Debug console
+	DWORD DelayNoteOffValue = 5;			// Length of the delay
+	DWORD DriverPriority = 0;				// Process priority
+	DWORD MaxRenderingTime = 75;			// CPU usage INT
+	DWORD MaxVelIgnore = 1;					// Ignore notes in between two velocity values
+	DWORD MaxVoices = 500;					// Voices limit
+	DWORD MinVelIgnore = 1;					// Ignore notes in between two velocity values
+	DWORD NoteLengthValue = 5;				// Length of the note overridden
+	DWORD OutputVolume = 10000;				// Volume
+	DWORD SincConv = 2;						// Sinc
+	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
+};
+#endif
 
 #ifndef KDMAPI_ONLYSTRUCTS
 // Return the KDMAPI version from OmniMIDI as the following output: Major.Minor.Build.Revision (eg. 1.30.0 Rev. 51).

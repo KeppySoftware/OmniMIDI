@@ -147,9 +147,9 @@ struct SoundFontList
 	int XGBankMode;
 } SFLIST, *PSFLIST;
 
-static BOOL SettingsManagedByClient = FALSE;
+static BOOL SettingsManagedByClient;
 static FLOAT RenderingTime = 0.0f;
-static Settings ManagedSettings = DEFAULT_SETTINGS;
+static Settings ManagedSettings = Settings();
 static DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
 
 // Priority values

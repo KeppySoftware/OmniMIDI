@@ -374,10 +374,8 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
-	// Do the stuff with it, if it's not to be ignored
-	if (!ManagedSettings.IgnoreSysEx) SendLongToBASSMIDI(IIMidiHdr);
-	// It has to be ignored, send info to console
-	else PrintMessageToDebugLog("KDMAPI_SDLD", "Ignored SysEx MIDI event...");
+	// Do the stuff with it
+	SendLongToBASSMIDI(IIMidiHdr);
 
 	// Mark the buffer as done
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
@@ -405,7 +403,6 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 		DriverSettingsCase(OM_FULLVELOCITY, Mode, BOOL, ManagedSettings.FullVelocityMode, Value, cbValue);
 		DriverSettingsCase(OM_IGNOREVELOCITYRANGE, Mode, BOOL, ManagedSettings.IgnoreNotesBetweenVel, Value, cbValue);
 		DriverSettingsCase(OM_IGNOREALLEVENTS, Mode, BOOL, ManagedSettings.IgnoreAllEvents, Value, cbValue);
-		DriverSettingsCase(OM_IGNORESYSEX, Mode, BOOL, ManagedSettings.IgnoreSysEx, Value, cbValue);
 		DriverSettingsCase(OM_IGNORESYSRESET, Mode, BOOL, ManagedSettings.IgnoreSysReset, Value, cbValue);
 		DriverSettingsCase(OM_LIMITRANGETO88, Mode, BOOL, ManagedSettings.LimitTo88Keys, Value, cbValue);
 		DriverSettingsCase(OM_MT32MODE, Mode, BOOL, ManagedSettings.MT32Mode, Value, cbValue);
@@ -432,9 +429,12 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 		DriverSettingsCase(OM_ENABLEDELAYNOTEOFF, Mode, BOOL, ManagedSettings.DelayNoteOff, Value, cbValue);
 		DriverSettingsCase(OM_DELAYNOTEOFFVAL, Mode, DWORD, ManagedSettings.DelayNoteOffValue, Value, cbValue);
 
+		DriverSettingsCase(OM_CHANUPDLENGTH, Mode, DWORD, ManagedSettings.ChannelUpdateLength, Value, cbValue);
+
 	default:
 		MessageBox(NULL, L"Unknown setting passed to DriverSettings.", L"OmniMIDI - KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 		return FALSE;
+
 	}
 
 	if (Mode == OM_SET) {
@@ -461,12 +461,6 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 
 			// Set the rendering time threshold, if the driver's own panic system is disabled
 			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-
-			// Set the stream's settings
-			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-			BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
 
 			// Set the stream's attributes
 			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);

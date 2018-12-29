@@ -87,6 +87,7 @@ namespace OmniMIDIConfigurator
         private void GetChangelog(String version)
         {
             SwitchingChangelog = true;
+            ChangelogBrowser.AllowNavigation = true;
 
             try
             {
@@ -102,6 +103,8 @@ namespace OmniMIDIConfigurator
             }
             catch
             {
+                SwitchingChangelog = false;
+                ChangelogBrowser.AllowNavigation = false;
                 Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Hand, "Error", "An error has occurred while parsing the changelog from GitHub.", false, null);
                 Close();
             }
@@ -110,6 +113,7 @@ namespace OmniMIDIConfigurator
         private void ChangelogBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             SwitchingChangelog = false;
+            ChangelogBrowser.AllowNavigation = false;
         }
 
         private void UpdateBtn_Click(object sender, EventArgs e)
@@ -119,6 +123,7 @@ namespace OmniMIDIConfigurator
 
         private void ReleasesList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ChangelogBrowser.AllowNavigation = true;
             GetChangelog(ReleasesList.SelectedItem.ToString());
         }
     }
