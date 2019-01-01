@@ -2,6 +2,9 @@
 OmniMIDI, a fork of BASSMIDI Driver - Declarations
 
 Thank you Kode54 for allowing me to fork your awesome driver.
+
+KDMAPI_OMONLY = Used internally by OmniMIDI
+KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 */
 #pragma once
 
