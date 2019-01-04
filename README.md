@@ -43,10 +43,20 @@ Make sure that KeppyCert.cer is in the same folder as InstallCert.exe.
 ### Can I use your program's source code for my program?
 Sure, as long as you follow the [LICENSE](LICENSE.txt).
 
+### Keppy's Direct MIDI API for developers
+You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
+You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
+
+Here's a list of applications that currently have *native* support for the Keppy's Direct MIDI API:
+- mmidi by Sono, the first third-party project to feature my API at all: https://sono.9net.org/prog/mmidi/
+- Ultralight MIDI Player by Pipiramine, a clone of Piano From Above made in Java: https://pipiraworld.web.fc2.com/ump/en.html
+
 ### I'm here just for the WinMM patch. How can I get it without downloading your driver?
 Aw, do you have something against it?
 <br />
-Aight, here is the version without the KDMAPI. [Click me for the direct download](https://github.com/KeppySoftware/OmniMIDI/raw/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/VanillaWinMM.zip)
+Aight, here is the version without the KDMAPI. It will perform worse though.
+<br />
+[Click me for the direct download](https://github.com/KeppySoftware/OmniMIDI/raw/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/VanillaWinMM.zip)
 
 ### Can you make a WinMM patch for other drivers too?
 I am definitely planning a patch for VirtualMIDISynth, but I don't know about other drivers.
@@ -73,13 +83,6 @@ Take all of that, and you get a synthesizer that's a powerhouse for creative fre
 ## Info about the driver
 ### Features compared to other software synthesizers
 Click here: [Features compared to other software synthesizers](#features-compared-to-other-software-synthesizers)
-
-### Keppy's Direct MIDI API for developers
-You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
-You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
-
-Here's a list of applications that currently have *native* support for the Keppy's Direct MIDI API:
-- mmidi by Sono, the first third-party project to feature my API at all: https://sono.9net.org/prog/mmidi/
 
 ### Required software for it to work
 You need this software installed before attempting to run the setup:
