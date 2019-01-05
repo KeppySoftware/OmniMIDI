@@ -70,11 +70,6 @@ namespace OmniMIDIConfigurator
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("LimitTo88Keys", Convert.ToInt32(Limit88.Checked), RegistryValueKind.DWord);
         }
 
-        private void SysExIgnore_CheckedChanged(object sender, EventArgs e)
-        {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreSysEx", Convert.ToInt32(SysExIgnore.Checked), RegistryValueKind.DWord);
-        }
-
         private void AllNotesIgnore_CheckedChanged(object sender, EventArgs e)
         {
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("IgnoreAllEvents", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);

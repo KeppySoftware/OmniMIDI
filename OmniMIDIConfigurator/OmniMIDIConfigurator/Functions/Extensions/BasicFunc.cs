@@ -1504,6 +1504,15 @@ namespace OmniMIDIConfigurator
                     MachineType BitApp = GetAppCompiledMachineType(WinMMDialog.FileName);
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
 
+                    if (DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32")) ||
+                        DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64")) ||
+                        DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32")))
+                    {
+                        ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "I'm afraid I can't do that, Dave.", false, null);
+                        WinMMDialog.Dispose();
+                        return false;
+                    }
+
                     RemovePatchFiles(WinMMDialog.FileName, true);
                     if (BitApp == MachineType.x86)
                         File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm32DAW : Properties.Resources.winmm32wrp);
@@ -1538,7 +1547,21 @@ namespace OmniMIDIConfigurator
                 WinMMDialog.Multiselect = false;
                 WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-                if (WinMMDialog.ShowDialog() == DialogResult.OK) RemovePatchFiles(WinMMDialog.FileName, false);
+                if (WinMMDialog.ShowDialog() == DialogResult.OK)
+                {
+                    String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
+
+                    if (DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32")) ||
+                        DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64")) ||
+                        DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32")))
+                    {
+                        ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Exclamation, "Error", "I'm afraid I can't do that, Dave.", false, null);
+                        WinMMDialog.Dispose();
+                        return false;
+                    }
+
+                    RemovePatchFiles(WinMMDialog.FileName, false);
+                }
 
                 return true;
             }

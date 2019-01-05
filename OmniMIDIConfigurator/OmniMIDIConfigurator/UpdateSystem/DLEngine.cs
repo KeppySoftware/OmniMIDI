@@ -28,7 +28,7 @@ namespace OmniMIDIConfigurator.Forms
 
         string UserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI";
 
-        public DLEngine(String Version, String MessageText, String toDL, String PutWhere, int IM, bool reinstall)
+        public DLEngine(String Version, String MessageText, String toDL, String PutWhere, int IM)
         {
             InitializeComponent();
             MessageToDisplay = MessageText;
@@ -37,7 +37,8 @@ namespace OmniMIDIConfigurator.Forms
             DestinationPath = PutWhere;
             FullURL = toDL;
             InstallMode = IM;
-            DriverReinstall = reinstall;
+
+            DriverReinstall = (InstallMode == UpdateSystem.WIPE_SETTINGS);
         }
 
         private void OmniMIDIUpdateDL_Load(object sender, EventArgs e)
