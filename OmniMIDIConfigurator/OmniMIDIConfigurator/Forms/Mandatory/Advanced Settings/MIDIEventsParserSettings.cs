@@ -19,7 +19,7 @@ namespace OmniMIDIConfigurator
 
         private void MIDIEventsParserSettings_Load(object sender, EventArgs e)
         {
-            DisableCookedPlayer.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DisableCookedPlayer", 0));
+            DisableCookedPlayer.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DisableCookedPlayer", 0));
 
             AllNotesIgnore.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
 

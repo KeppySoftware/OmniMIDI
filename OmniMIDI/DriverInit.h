@@ -132,7 +132,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, BASS_DATA_FLOAT + sndbflen * sizeof(float));
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, ManagedSettings.ChannelUpdateLength);
 
 				_FWAIT;

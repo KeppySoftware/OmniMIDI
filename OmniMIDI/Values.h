@@ -132,7 +132,7 @@ static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
 static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
 
-static const FLOAT sndbflen = 64.0f;		// AudToWAV
+static const FLOAT sndbflen = 256.0f;		// AudToWAV
 static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug
