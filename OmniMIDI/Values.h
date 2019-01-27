@@ -24,34 +24,23 @@
 static BOOL AlreadyStartedOnce = FALSE;
 
 // EVBuffer
-struct evbuf_t {
-	UINT			uMsg;
-	DWORD_PTR		dwParam1;
-	DWORD_PTR		dwParam2;
-
-	evbuf_t() :
-		uMsg(0),
-		dwParam1(0),
-		dwParam2(0){}
-
-	evbuf_t(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2):
-		uMsg(uMsg),
-		dwParam1(dwParam1),
-		dwParam2(dwParam2){}
-};	
+struct EventsBuffer {
+	DWORD*			Buffer;
+	ULONGLONG		ReadHead;
+	ULONGLONG		WriteHead;
+	LONGLONG		EventsCount;
+};
 // The buffer's structure
 
 static LightweightLock LockSystem;				// LockSystem
-static evbuf_t * evbuf;							// The buffer
+static EventsBuffer EVBuffer;					// The buffer
 static DWORD LastRunningStatus = 0;				// Last running status
-static volatile ULONGLONG writehead = 0;		// Current write position in the buffer
-static volatile ULONGLONG readhead = 0;			// Current read position in the buffer
-static volatile LONGLONG eventcount = 0;		// Total events present in the buffer
 static QWORD EvBufferSize = 4096;
 static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
+static HSTREAM OMStream = NULL;
 static HANDLE OMReady = NULL;
 static HMIDI OMHMIDI = NULL;
 static DWORD_PTR OMCallback = NULL;
@@ -65,27 +54,17 @@ static BOOL DriverInitStatus = FALSE;
 static BOOL AlreadyInitializedViaKDMAPI = FALSE;
 static BOOL BASSLoadedToMemory = FALSE;
 static BOOL ASIOReady = FALSE;
-static BOOL EVBuffReady = FALSE;
 static BOOL DisableChime = FALSE;
 static BOOL KDMAPIEnabled = FALSE;
 static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 
 // Stream
-static HSTREAM OMStream = NULL;
 static BASS_INFO info;
-static FLOAT sound_out_volume_float = 1.0;
-
-// GM/GS/XG reset values
-static BYTE gs_part_to_ch[16];
-static BYTE drum_channels[16];
-static const BYTE part_to_ch[16] = { 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15 };
-static const char sysex_gm_reset[] = { 0xF0, 0x7E, 0x7F, 0x09, 0x01, 0xF7 };
-static const char sysex_gs_reset[] = { 0xF0, 0x41, 0x10, 0x42, 0x12, 0x40, 0x00, 0x7F, 0x00, 0x41, 0xF7 };
-static const char sysex_xg_reset[] = { 0xF0, 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00, 0xF7 };
+static FLOAT SynthVolume = 1.0;
 
 // Registry system
-#define KEY_READY ERROR_SUCCESS
-#define KEY_CLOSED ERROR_INVALID_HANDLE
+#define KEY_READY	ERROR_SUCCESS
+#define KEY_CLOSED	ERROR_INVALID_HANDLE
 
 typedef struct RegKey
 {
@@ -110,8 +89,6 @@ typedef struct Thread
 static BOOL bass_initialized = FALSE;
 static BOOL block_bassinit = FALSE;
 static BOOL stop_thread = FALSE;
-static ULONGLONG start1 = 0, start2 = 0, start3 = 0, start4 = 0;
-static FLOAT Thread1Usage = 0.0f, Thread2Usage = 0.0f, Thread3Usage = 0.0f, Thread4Usage = 0.0f;
 
 static Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
 

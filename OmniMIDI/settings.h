@@ -5,9 +5,10 @@ OmniMIDI settings loading system
 
 void ResetSynth(BOOL SwitchingBufferMode) {
 	if (SwitchingBufferMode) {
-		writehead = 0;
-		readhead = 0;
-		eventcount = 0;
+		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
+		EVBuffer.WriteHead = 0;
+		EVBuffer.ReadHead = 0;
+		EVBuffer.EventsCount = 0;
 	}
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
 	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
@@ -267,9 +268,9 @@ void ResetEVBufferSettings() {
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
-	RtlSecureZeroMemory(evbuf, sizeof(evbuf));
-	free(evbuf);
-	evbuf = NULL;
+	RtlSecureZeroMemory(EVBuffer.Buffer, sizeof(EVBuffer.Buffer));
+	free(EVBuffer.Buffer);
+	EVBuffer.Buffer = NULL;
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing audio buffer...");
@@ -334,21 +335,20 @@ void AllocateMemory(BOOL restart) {
 		if (restart) FreeUpMemory();
 
 		// Begin allocating the EVBuffer
-		if (evbuf != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
+		if (EVBuffer.Buffer != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
 		else {
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
-			evbuf = (evbuf_t *)calloc(EvBufferSize, sizeof(evbuf_t));
-			if (!evbuf) {
+			EVBuffer.Buffer = (DWORD*)calloc(EvBufferSize, sizeof(DWORD));
+			if (!EVBuffer.Buffer) {
 				MessageBox(NULL, L"An error has occured while allocating the events buffer!\nIt will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Error allocating memory", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 				ResetEVBufferSettings();
-				evbuf = (evbuf_t *)calloc(EvBufferSize, sizeof(evbuf_t));
-				if (!evbuf) {
+				EVBuffer.Buffer = (DWORD*)calloc(EvBufferSize, sizeof(DWORD));
+				if (!EVBuffer.Buffer) {
 					MessageBox(NULL, L"Fatal error while allocating the events buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 					exit(0x8);
 				}
 			}
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
-			EVBuffReady = TRUE;
 		}
 
 		// Done, now allocate the buffer for the ".WAV mode"
@@ -432,7 +432,7 @@ void LoadSettings(BOOL restart)
 		// Stuff that works, don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
-		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
+		SynthVolume = (float)ManagedSettings.OutputVolume / 10000.0f;
 
 		// Check if "Hyper-playback" mode has been enabled
 		if (HyperMode && !DisableChime) {
@@ -512,9 +512,9 @@ void LoadSettingsRT() {
 			// Volume
 			if (TempOV != ManagedSettings.OutputVolume) {
 				ManagedSettings.OutputVolume = TempOV;
-				sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
+				SynthVolume = (float)ManagedSettings.OutputVolume / 10000.0f;
 				ChVolumeStruct.fCurrent = 1.0f;
-				ChVolumeStruct.fTarget = sound_out_volume_float;
+				ChVolumeStruct.fTarget = SynthVolume;
 				ChVolumeStruct.fTime = 0.0f;
 				ChVolumeStruct.lCurve = 0;
 				BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
@@ -688,10 +688,6 @@ void FillContentDebug(
 	INT HC,						// App's handles
 	ULONGLONG RUI,				// App's working size/RAM usage
 	BOOL KDMAPIStatus,			// KDMAPI status
-	DOUBLE TD1,					// Thread 1's latency
-	DOUBLE TD2,					// Thread 2's latency
-	DOUBLE TD3,					// Thread 3's latency
-	DOUBLE TD4,					// Thread 4's latency
 	DOUBLE IL,					// ASIO's input latency
 	DOUBLE OL,					// ASIO's output latency
 	BOOL BUFOVD					// EVBuffer overload
@@ -725,10 +721,6 @@ void FillContentDebug(
 	PipeContent += "\nHandles = " + std::to_string(HC);
 	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
 	PipeContent += "\nOMDirect = " + std::to_string(KDMAPIStatus);
-	PipeContent += "\nTd1 = " + std::to_string(TD1);
-	PipeContent += "\nTd2 = " + std::to_string(TD2);
-	PipeContent += "\nTd3 = " + std::to_string(TD3);
-	PipeContent += "\nTd4 = " + std::to_string(TD4);
 	PipeContent += "\nASIOInLat = " + std::to_string(IL);
 	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
 	// PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
@@ -795,7 +787,6 @@ void SendDebugDataToPipe() {
 		long long TimeDuringDebug = HyperMode ? 0 : TimeNow();
 
 		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KDMAPIEnabled,
-			TimeDuringDebug - start1, TimeDuringDebug - start2, TimeDuringDebug - start3, ManagedSettings.NotesCatcherWithAudio ? 0.0f : TimeDuringDebug - start4,
 			ManagedDebugInfo.ASIOInputLatency, ManagedDebugInfo.ASIOOutputLatency, FALSE /* It's supposed to be a buffer overload check */);
 
 		FlushFileBuffers(hPipe);
@@ -807,7 +798,7 @@ void SendDebugDataToPipe() {
 
 void SendDummyDataToPipe() {
 	try {
-		FillContentDebug(0.0f, 0, 0, KDMAPIEnabled, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, FALSE);
+		FillContentDebug(0.0f, 0, 0, KDMAPIEnabled, 0.0, 0.0, FALSE);
 		FlushFileBuffers(hPipe);
 	}
 	catch (...) {

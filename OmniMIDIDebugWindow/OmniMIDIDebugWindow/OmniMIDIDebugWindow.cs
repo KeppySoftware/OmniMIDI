@@ -128,7 +128,6 @@ namespace OmniMIDIDebugWindow
                 GetWindowsInfoData();                   // Get info about your Windows installation
                 SynthDbg.ContextMenu = MainCont;        // Assign ContextMenu (Not the strip one) to the tab
                 ChannelVoices.ContextMenu = MainCont;   // Assign ContextMenu (Not the strip one) to the tab
-                ThreadTime.ContextMenu = MainCont;      // Assign ContextMenu (Not the strip one) to the tab
                 PCSpecs.ContextMenu = MainCont;         // Assign ContextMenu (Not the strip one) to the tab
                 Tabs.SelectedIndex = 1;
                 Tabs.SelectedIndex = 0;
@@ -603,10 +602,6 @@ namespace OmniMIDIDebugWindow
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
         Int32 KDMAPIStatus = 0;
-        Double Td1 = 0.0;
-        Double Td2 = 0.0;
-        Double Td3 = 0.0;
-        Double Td4 = 0.0;
         Double ASIOInLat = 0;
         Double ASIOOutLat = 0;
         // Int32 BufferOverload = 0;
@@ -622,10 +617,6 @@ namespace OmniMIDIDebugWindow
                     if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
                     if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
                     if (!ReadPipeBoolean(StreamDebugReader, "OMDirect", ref KDMAPIStatus)) KDMAPIStatus = 0;
-                    if (!ReadPipeDouble(StreamDebugReader, "Td1", ref Td1)) Td1 = 0.0f;
-                    if (!ReadPipeDouble(StreamDebugReader, "Td2", ref Td2)) Td2 = 0.0f;
-                    if (!ReadPipeDouble(StreamDebugReader, "Td3", ref Td3)) Td3 = 0.0f;
-                    if (!ReadPipeDouble(StreamDebugReader, "Td4", ref Td4)) Td4 = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
                     // if (!ReadPipeBoolean(StreamDebugReader, "BufferOverload", ref BufferOverload)) BufferOverload = 0;
@@ -639,10 +630,6 @@ namespace OmniMIDIDebugWindow
                     Handles = 0;
                     RAMUsage = 0;
                     KDMAPIStatus = 0;
-                    Td1 = 0.0f;
-                    Td2 = 0.0f;
-                    Td3 = 0.0f;
-                    Td4 = 0.0f;
                     ASIOInLat = 0.0f;
                     ASIOOutLat = 0.0f;
                     // BufferOverload = 0;
@@ -847,13 +834,6 @@ namespace OmniMIDIDebugWindow
                 CHV16.Text = String.Format(FormatForVoices, CHs[15]);
             }
             else if (Tabs.SelectedIndex == 2)
-            {
-                MTRT.Text = String.Format("{0}ms", Td1.LimitDoubleToRange(0.0, 1E7));
-                AERTi.Text = String.Format("{0}ms", Td2.LimitDoubleToRange(0.0, 1E7));
-                SLRT.Text = String.Format("{0}ms", Td3.LimitDoubleToRange(0.0, 1E7));
-                NCRT.Text = String.Format("{0}ms", Td4.LimitDoubleToRange(0.0, 1E7));
-            }
-            else if (Tabs.SelectedIndex == 3)
             {
                 TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
                 AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));

@@ -479,7 +479,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_GETVOLUME: {
 		// Tell the app the current output volume of the driver
 		PrintMessageToDebugLog("MODM_GETVOLUME", "The app wants to know the current output volume of the driver.");
-		*(LONG*)dwParam1 = (LONG)(sound_out_volume_float * 0xFFFF);
+		*(LONG*)dwParam1 = (LONG)(SynthVolume * 0xFFFF);
 		PrintMessageToDebugLog("MODM_GETVOLUME", "The app knows the volume now.");
 		return MMSYSERR_NOERROR;
 	}

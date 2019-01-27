@@ -45,10 +45,6 @@ DWORD WINAPI Watchdog(LPVOID lpV) {
 		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
 
 		while (!stop_thread) {
-			// Start the timer, which calculates 
-			// how much time it takes to do its stuff
-			if (!HyperMode) start1 = TimeNow();
-
 			// Check if the threads and streams are still alive
 			if (StreamHealthCheck(bass_initialized));
 			{
@@ -449,9 +445,9 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) ManagedSettings.MaxVelIgnore = 1;
 
 		// Parse the new volume value, and set it
-		sound_out_volume_float = (float)ManagedSettings.OutputVolume / 10000.0f;
+		SynthVolume = (float)ManagedSettings.OutputVolume / 10000.0f;
 		ChVolumeStruct.fCurrent = 1.0f;
-		ChVolumeStruct.fTarget = sound_out_volume_float;
+		ChVolumeStruct.fTarget = SynthVolume;
 		ChVolumeStruct.fTime = 0.0f;
 		ChVolumeStruct.lCurve = 0;
 

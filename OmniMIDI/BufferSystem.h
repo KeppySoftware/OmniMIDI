@@ -8,24 +8,12 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-void ResetDrumChannels()
-{
-	unsigned i;
-
-	memset(drum_channels, 0, sizeof(drum_channels));
-	drum_channels[9] = 1;
-
-	memcpy(gs_part_to_ch, part_to_ch, sizeof(gs_part_to_ch));
-
-	for (i = 0; i < 16; ++i) BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_DRUMS, drum_channels[i]);
-}
-
 int BufferCheck(void) {
-	return ManagedSettings.DontMissNotes ? eventcount : (readhead != writehead) ? ~0 : 0;
+	return ManagedSettings.DontMissNotes ? EVBuffer.EventsCount : (EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0;
 }
 
 int BufferCheckHyper(void) {
-	return (readhead != writehead) ? ~0 : 0;
+	return (EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0;
 }
 
 void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
@@ -127,13 +115,12 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 
 void __inline PBufData(void) {
 	LockSystem.LockForReading();
-	evbuf_t* TempBuf = (evbuf + readhead);
 
-	DWORD dwParam1 = TempBuf->dwParam1;
+	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
 	DWORD TempLRS = LastRunningStatus;
 
-	if (++readhead >= EvBufferSize) readhead = 0;
+	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
 	LockSystem.UnlockForReading();
 
 	_StoBASSMIDI(TempLRS, dwParam1);
@@ -141,8 +128,8 @@ void __inline PBufData(void) {
 
 void __inline PBufDataHyper(void) {
 	LockSystem.LockForReading();
-	DWORD dwParam1 = (evbuf + readhead)->dwParam1;
-	if (++readhead >= EvBufferSize) readhead = 0;
+	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
+	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
 	LockSystem.UnlockForReading();
 
 	_StoBASSMIDI(0, dwParam1);
@@ -152,7 +139,7 @@ DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	do PBufData();
-	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != writehead) ? ~0 : 0));
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : ((EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0));
 
 	return 0;
 }
@@ -161,7 +148,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do PBufDataHyper();
-	while ((readhead != writehead) ? ~0 : 0);
+	while ((EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0);
 
 	return 0;
 }
@@ -169,17 +156,17 @@ DWORD __inline PlayBufferedDataHyper(void) {
 DWORD __inline PlayBufferedDataChunk(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
-	ULONGLONG whe = writehead;
+	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufData();
-	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&eventcount) : ((readhead != whe) ? ~0 : 0));
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : ((EVBuffer.ReadHead != whe) ? ~0 : 0));
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
-	ULONGLONG whe = writehead;
+	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufDataHyper();
-	while ((readhead != whe) ? ~0 : 0);
+	while ((EVBuffer.ReadHead != whe) ? ~0 : 0);
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -281,18 +268,18 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
-	if (!EVBuffReady) return DebugResult(MIDIERR_NOTREADY, TRUE);
+	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY, TRUE);
 
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 
-	evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
-	if (++writehead >= EvBufferSize) writehead = 0;
+	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
 	LockSystem.UnlockForWriting();
 
 	// Some checks
-	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&eventcount) >= EvBufferSize) do { /* Absolutely nothing */ } while (eventcount >= EvBufferSize);
+	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&EVBuffer.EventsCount) >= EvBufferSize) do { /* Absolutely nothing */ } while (EVBuffer.EventsCount >= EvBufferSize);
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;
@@ -302,8 +289,8 @@ MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
 	LockSystem.LockForWriting();
 
-	evbuf[writehead] = evbuf_t(uMsg, dwParam1, dwParam2);
-	if (++writehead >= EvBufferSize) writehead = 0;
+	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
 	LockSystem.UnlockForWriting();
 

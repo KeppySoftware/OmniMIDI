@@ -56,10 +56,6 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
-			// Start the timer, which calculates 
-			// how much time it takes to do its stuff
-			start4 = TimeNow();
-
 			// If the notes catcher thread is supposed to run together with the audio thread,
 			// break from the EventProcesser's loop, and close the thread, and move the processing to AudioThread
 			if (ManagedSettings.NotesCatcherWithAudio) break;
@@ -118,10 +114,6 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 			while (!stop_thread) {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
-
-				// Start the timer, which calculates 
-				// how much time it takes to do its stuff
-				start2 = TimeNow();
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
@@ -184,10 +176,6 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
 {
-	// Start the timer, which calculates 
-	// how much time it takes to do its stuff
-	start2 = TimeNow();
-
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
 		MT32SetInstruments();
@@ -606,7 +594,7 @@ void PrepareVolumeKnob() {
 	// Enable the volume knob in the configurator
 	ChVolume = BASS_ChannelSetFX(OMStream, BASS_FX_VOLUME, 1);
 	ChVolumeStruct.fCurrent = 1.0f;
-	ChVolumeStruct.fTarget = sound_out_volume_float;
+	ChVolumeStruct.fTarget = SynthVolume;
 	ChVolumeStruct.fTime = 0.0f;
 	ChVolumeStruct.lCurve = 0;
 	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
