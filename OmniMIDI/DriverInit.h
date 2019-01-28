@@ -63,7 +63,7 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 			MT32SetInstruments();
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData() && !stop_thread) _FWAIT;
+			if (_PlayBufData() && !stop_thread) _WAIT;
 			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
@@ -86,7 +86,7 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 			if (ManagedSettings.NotesCatcherWithAudio) break;
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData()) _FWAIT;
+			if (_PlayBufData()) _WAIT;
 		}
 	}
 	catch (...) {
@@ -127,7 +127,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, ManagedSettings.ChannelUpdateLength);
 
-				_FWAIT;
+				_WAIT;
 			}
 		}
 	}
@@ -160,7 +160,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 				// Else, open the EventProcesser thread
 				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
-				_FWAIT;
+				_WAIT;
 			}
 		}
 	}

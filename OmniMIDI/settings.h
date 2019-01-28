@@ -321,7 +321,7 @@ void AllocateMemory(BOOL restart) {
 		EvBufferSize = TempEvBufferSize / (unsigned long long)EvBufferMultRatio;
 
 		if (EvBufferSize < 1) {
-			MessageBox(NULL, L"The events buffer cannot be 0 bytes!\nIts size will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+			MessageBox(NULL, L"The size of the buffer cannot be 0!\nIts size will now default to 4096 bytes.\n\nThe settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 			ResetEVBufferSettings();
 			TempEvBufferSize = EvBufferSize;
 		}
