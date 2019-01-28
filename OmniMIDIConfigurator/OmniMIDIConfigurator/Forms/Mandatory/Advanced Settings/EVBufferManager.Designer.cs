@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EVBufferManager));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.BytesVal = new System.Windows.Forms.NumericUpDown();
+            this.ArraySize = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.RatioVal = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -44,7 +44,7 @@
             this.ResetSettings = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ExemptRealTime = new System.Windows.Forms.ToolStripStatusLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.BytesVal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ArraySize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RatioVal)).BeginInit();
             this.WarningPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WarningSign)).BeginInit();
@@ -73,25 +73,25 @@
             this.label2.Text = resources.GetString("label2.Text");
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // BytesVal
+            // ArraySize
             // 
-            this.BytesVal.Location = new System.Drawing.Point(112, 97);
-            this.BytesVal.Maximum = new decimal(new int[] {
+            this.ArraySize.Location = new System.Drawing.Point(112, 97);
+            this.ArraySize.Maximum = new decimal(new int[] {
             0,
             128,
             0,
             0});
-            this.BytesVal.Name = "BytesVal";
-            this.BytesVal.Size = new System.Drawing.Size(101, 20);
-            this.BytesVal.TabIndex = 2;
-            this.BytesVal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.BytesVal.ThousandsSeparator = true;
-            this.BytesVal.Value = new decimal(new int[] {
+            this.ArraySize.Name = "ArraySize";
+            this.ArraySize.Size = new System.Drawing.Size(101, 20);
+            this.ArraySize.TabIndex = 2;
+            this.ArraySize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ArraySize.ThousandsSeparator = true;
+            this.ArraySize.Value = new decimal(new int[] {
             0,
             128,
             0,
             0});
-            this.BytesVal.ValueChanged += new System.EventHandler(this.BytesVal_ValueChanged);
+            this.ArraySize.ValueChanged += new System.EventHandler(this.BytesVal_ValueChanged);
             // 
             // label3
             // 
@@ -131,25 +131,26 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(148, 82);
+            this.label4.Location = new System.Drawing.Point(123, 82);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(28, 12);
+            this.label4.Size = new System.Drawing.Size(77, 12);
             this.label4.TabIndex = 5;
-            this.label4.Text = "bytes";
+            this.label4.Text = "amount of events";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(244, 82);
+            this.label5.Location = new System.Drawing.Point(239, 82);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 12);
+            this.label5.Size = new System.Drawing.Size(66, 12);
             this.label5.TabIndex = 6;
-            this.label5.Text = "division ratio";
+            this.label5.Text = "RAM div. ratio";
             // 
             // ApplySettings
             // 
-            this.ApplySettings.Location = new System.Drawing.Point(336, 170);
+            this.ApplySettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ApplySettings.Location = new System.Drawing.Point(336, 194);
             this.ApplySettings.Name = "ApplySettings";
             this.ApplySettings.Size = new System.Drawing.Size(75, 23);
             this.ApplySettings.TabIndex = 7;
@@ -159,8 +160,9 @@
             // 
             // GetRAMSize
             // 
+            this.GetRAMSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.GetRAMSize.AutoSize = true;
-            this.GetRAMSize.Location = new System.Drawing.Point(12, 174);
+            this.GetRAMSize.Location = new System.Drawing.Point(12, 198);
             this.GetRAMSize.Name = "GetRAMSize";
             this.GetRAMSize.Size = new System.Drawing.Size(167, 17);
             this.GetRAMSize.TabIndex = 8;
@@ -170,11 +172,14 @@
             // 
             // WarningPanel
             // 
+            this.WarningPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.WarningPanel.Controls.Add(this.WarningLabel);
             this.WarningPanel.Controls.Add(this.WarningSign);
             this.WarningPanel.Location = new System.Drawing.Point(12, 128);
             this.WarningPanel.Name = "WarningPanel";
-            this.WarningPanel.Size = new System.Drawing.Size(399, 32);
+            this.WarningPanel.Size = new System.Drawing.Size(399, 56);
             this.WarningPanel.TabIndex = 9;
             // 
             // WarningLabel
@@ -184,7 +189,7 @@
             this.WarningLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.WarningLabel.Location = new System.Drawing.Point(32, 0);
             this.WarningLabel.Name = "WarningLabel";
-            this.WarningLabel.Size = new System.Drawing.Size(367, 32);
+            this.WarningLabel.Size = new System.Drawing.Size(367, 56);
             this.WarningLabel.TabIndex = 1;
             this.WarningLabel.Text = "SAS";
             this.WarningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -197,14 +202,15 @@
             this.WarningSign.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
             this.WarningSign.Location = new System.Drawing.Point(0, 0);
             this.WarningSign.Name = "WarningSign";
-            this.WarningSign.Size = new System.Drawing.Size(32, 32);
+            this.WarningSign.Size = new System.Drawing.Size(32, 56);
             this.WarningSign.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.WarningSign.TabIndex = 0;
             this.WarningSign.TabStop = false;
             // 
             // ResetSettings
             // 
-            this.ResetSettings.Location = new System.Drawing.Point(255, 170);
+            this.ResetSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ResetSettings.Location = new System.Drawing.Point(255, 194);
             this.ResetSettings.Name = "ResetSettings";
             this.ResetSettings.Size = new System.Drawing.Size(75, 23);
             this.ResetSettings.TabIndex = 8;
@@ -216,7 +222,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExemptRealTime});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 205);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 229);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(423, 22);
             this.statusStrip1.SizingGrip = false;
@@ -235,7 +241,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 227);
+            this.ClientSize = new System.Drawing.Size(423, 251);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.ResetSettings);
             this.Controls.Add(this.WarningPanel);
@@ -245,7 +251,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.RatioVal);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.BytesVal);
+            this.Controls.Add(this.ArraySize);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -257,7 +263,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change size of the EV buffer";
             this.Load += new System.EventHandler(this.EVBufferManager_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.BytesVal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ArraySize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RatioVal)).EndInit();
             this.WarningPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.WarningSign)).EndInit();
@@ -272,7 +278,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown BytesVal;
+        private System.Windows.Forms.NumericUpDown ArraySize;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown RatioVal;
         private System.Windows.Forms.Label label4;

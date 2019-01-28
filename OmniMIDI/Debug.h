@@ -28,27 +28,6 @@ std::wstring GetErrorAsString(DWORD ErrorID)
 	return message;
 }
 
-void CrashMessage(LPCSTR part) {
-	std::wstringstream ErrorMessage;
-	DWORD ErrorID = GetLastError();
-
-	fprintf(stdout, "(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
-
-	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
-	if (ErrorID != 0) {
-		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
-		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n";
-	}
-	ErrorMessage << L"\nClick OK to close the program.";
-
-	MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-
-	block_bassinit = TRUE;
-	stop_thread = TRUE;
-
-	exit(ErrorID);
-}
-
 void GetAppName() {
 	if (!InfoAlreadyGot)
 	{
@@ -67,9 +46,7 @@ void GetAppName() {
 
 			InfoAlreadyGot = TRUE;
 		}
-		catch (...) {
-			CrashMessage("AppAnalysis");
-		}
+		catch (...) { }
 	}
 }
 
@@ -129,6 +106,29 @@ static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
 
 	CloseHandle(hFile);
 	return;
+}
+
+void CrashMessage(LPCSTR part) {
+	std::wstringstream ErrorMessage;
+	DWORD ErrorID = GetLastError();
+
+	fprintf(stdout, "(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
+
+	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
+	if (ErrorID != 0) {
+		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
+		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n";
+	}
+	ErrorMessage << L"\nClick OK to close the program.";
+
+	MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+
+	block_bassinit = TRUE;
+	stop_thread = TRUE;
+
+	MakeMiniDump(nullptr);
+
+	exit(ErrorID);
 }
 
 static __declspec(noinline) void ToHex32(char* Target, DWORD val)
@@ -676,97 +676,6 @@ void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 	}
 }
 
-/*
-/ Unused, but still here for people who wants to mess around with it
-
-void StatusType(int status, char* &statustoprint) {
-	// Pretty self explanatory
-
-	std::string statusstring = "";
-
-	if (Between(status, 0x80, 0xEF)) {
-		if (Between(status, 0x80, 0x8F)) {
-			statusstring += "Note OFF event on channel ";
-			statusstring += std::to_string((status - 0x80));
-		}
-		else if (Between(status, 0x90, 0x9F)) {
-			statusstring += "Note ON event on channel ";
-			statusstring += std::to_string((status - 0x90));
-		}
-		else if (Between(status, 0xA0, 0xAF)) {
-			statusstring += "Polyphonic aftertouch event on channel ";
-			statusstring += std::to_string((status - 0xA0));
-		}
-		else if (Between(status, 0xB0, 0xBF)) {
-			statusstring += "Channel reset on channel ";
-			statusstring += std::to_string((status - 0xB0));
-		}
-		else if (Between(status, 0xC0, 0xCF)) {
-			statusstring += "Program change on channel ";
-			statusstring += std::to_string((status - 0xC0));
-		}
-		else if (Between(status, 0xD0, 0xDF)) {
-			statusstring += "Channel aftertouch event on channel ";
-			statusstring += std::to_string((status - 0xD0));
-		}
-		else if (Between(status, 0xE0, 0xEF)) {
-			statusstring += "Pitch change on channel ";
-			statusstring += std::to_string((status - 0xE0));
-		}
-
-		statustoprint = strdup(statusstring.c_str());
-	}
-	else if (status == 0xF0) statustoprint = "System Exclusive\0";
-	else if (status == 0xF1) statustoprint = "System Common - undefined\0";
-	else if (status == 0xF2) statustoprint = "Sys Com Song Position Pntr\0";
-	else if (status == 0xF3) statustoprint = "Sys Com Song Select\0";
-	else if (status == 0xF4) statustoprint = "System Common - undefined\0";
-	else if (status == 0xF5) statustoprint = "System Common - undefined\0";
-	else if (status == 0xF6) statustoprint = "Sys Com Tune Request\0";
-	else if (status == 0xF7) statustoprint = "Sys Com-end of SysEx (EOX)\0";
-	else if (status == 0xF8) statustoprint = "Sys Real Time Timing Clock\0";
-	else if (status == 0xF9) statustoprint = "Sys Real Time - undefined\0";
-	else if (status == 0xFA) statustoprint = "Sys Real Time Start\0";
-	else if (status == 0xFB) statustoprint = "Sys Real Time Continue\0";
-	else if (status == 0xFC) statustoprint = "Sys Real Time Stop\0";
-	else if (status == 0xFD) statustoprint = "Sys Real Time - undefined\0";
-	else if (status == 0xFE) statustoprint = "Sys Real Time Active Sensing\0";
-	else if (status == 0xFF) statustoprint = "Sys Real Time Sys Reset\0";
-	else statustoprint = "Unknown event\0";
-}
-
-*/
-
-/*
-/ Unused, but still here for people who wants to mess around with it
-
-void PrintEventToConsole(int color, int stage, bool issysex, const char* text) {
-	if (debugmode) {
-		if (printmidievent) {
-			// Set color
-			SetConsoleTextAttribute(hConsole, color);
-
-			// Get time
-			char buff[20];
-			struct tm *sTm;
-			time_t now = time(0);
-			sTm = gmtime(&now);
-			strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
-
-			// Print to log
-			if (issysex) std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Type = SysEx event";
-			else {
-				// Get status
-				char* statustoprint = { 0 };
-				StatusType(stage & 0xFF, statustoprint);
-				std::cout << std::endl << buff << " - (" << stage << ") - " << text << " ~ Channel = " << (stage & 0xF) << " | Type = " << statustoprint << " | Note = " << ((stage >> 8) & 0xFF) << " | Velocity = " << ((stage >> 16) & 0xFF);
-			}
-		}
-	}
-}
-
-*/
-
 std::string GetLastErrorAsString()
 {
 	//Get the error message, if any.
@@ -829,40 +738,41 @@ Retry:
 	}
 }
 
-MMRESULT DebugResult(MMRESULT ErrorToDisplay, BOOL ShowError) {
-	if (ErrorToDisplay == MMSYSERR_NOERROR) return MMSYSERR_NOERROR;
-
-	CHAR ErrorTitle[512] = { 0 };
-	CHAR ErrorString[512] = { 0 };
-
-	switch (ErrorToDisplay) {
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous midiStreamOpen/midiOutOpen call.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVERCB, "The driver does not call DriverCallback.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The specified alias was not found.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "The specified alias was not found.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "The handle of the specified device is invalid.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
-		CurrentError(ErrorTitle, ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");
-		CurrentError(ErrorTitle, ErrorString, MIDIERR_UNPREPARED, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
-		CurrentError(ErrorTitle, ErrorString, MIDIERR_STILLPLAYING, "Buffers are still in the queue.");
-		CurrentError(ErrorTitle, ErrorString, MMSYSERR_BADDEVICEID, "The specified device ID is out of range.");
-	default:
-		sprintf_s(ErrorTitle, 512, "MMSYSERR_ERROR");
-		sprintf_s(ErrorString, 512, "Unspecified error.");
-		break;
-	}
-
+MMRESULT DebugResult(MMRESULT ErrorToDisplay) {
 	if (ManagedSettings.DebugMode)
-		strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
+	{
+		if (ErrorToDisplay == MMSYSERR_NOERROR) return MMSYSERR_NOERROR;
 
-	PrintMessageToDebugLog(ErrorTitle, ErrorString);
-	if (ShowError) MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		CHAR ErrorTitle[512] = { 0 };
+		CHAR ErrorString[512] = { 0 };
+
+		switch (ErrorToDisplay) {
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous midiStreamOpen/midiOutOpen call.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVERCB, "The driver does not call DriverCallback.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The specified alias was not found.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "The specified alias was not found.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "The handle of the specified device is invalid.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
+			CurrentError(ErrorTitle, ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");
+			CurrentError(ErrorTitle, ErrorString, MIDIERR_UNPREPARED, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
+			CurrentError(ErrorTitle, ErrorString, MIDIERR_STILLPLAYING, "Buffers are still in the queue.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_BADDEVICEID, "The specified device ID is out of range.");
+		default:
+			sprintf_s(ErrorTitle, 512, "MMSYSERR_ERROR");
+			sprintf_s(ErrorString, 512, "Unspecified error.");
+			break;
+		}
+
+		strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
+		PrintMessageToDebugLog(ErrorTitle, ErrorString);
+		MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+	}
 
 	return ErrorToDisplay;
 }

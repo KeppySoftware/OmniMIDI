@@ -41,9 +41,6 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OmniMIDI.def" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="ksicon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

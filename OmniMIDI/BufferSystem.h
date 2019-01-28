@@ -261,39 +261,49 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	// Some checks
 	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
 
 	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
 		dwParam1 = ReturnEditedEvent(dwParam1);
+	// Some checks
 
-	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY, TRUE);
+	// The buffer is not ready yet
+	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY);
 
 	// Prepare the event in the buffer
+
+	// Enter the protected zone
 	EnterProtectedZone(&EVBufferLock);
 
+	// Write the event to the buffer
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
+	// Leave the protected zone
 	LeaveProtectedZone(&EVBufferLock);
 
 	// Some checks
 	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&EVBuffer.EventsCount) >= EvBufferSize) do { /* Absolutely nothing */ } while (EVBuffer.EventsCount >= EvBufferSize);
+	// Some checks
 
-	// Haha everything is fine
+	// Go!
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	// Prepare the event in the buffer
+extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	// Enter the protected zone
 	EnterProtectedZone(&EVBufferLock);
 
+	// Write the event to the buffer
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
+	// Leave the protected zone
 	LeaveProtectedZone(&EVBufferLock);
 
-	// Haha everything is fine
+	// Go!
 	return MMSYSERR_NOERROR;
 }

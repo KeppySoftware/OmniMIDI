@@ -328,9 +328,9 @@ void AllocateMemory(BOOL restart) {
 
 		// Print the values to the log
 		PrintMessageToDebugLog("AllocateMemoryFunc", "Final EV buffer settings: ");
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in bytes)", FALSE, TempEvBufferSize);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in amount of DWORDs)", FALSE, TempEvBufferSize);
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes)", FALSE, EvBufferSize);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one DWORD is 4 bytes)", FALSE, EvBufferSize * 4);
 
 		if (restart) FreeUpMemory();
 

@@ -13,7 +13,7 @@ typedef long NTSTATUS;
 #define CUR_MAJOR	1
 #define CUR_MINOR	50
 #define CUR_BUILD	1
-#define CUR_REV		17
+#define CUR_REV		21
 
 #define STRICT
 #define VC_EXTRALEAN
@@ -26,7 +26,6 @@ typedef long NTSTATUS;
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASS_VSTDEF(f) (WINAPI *f)
-// #define BASSWASAPIDEF(f) (WINAPI *f)
 #define Between(value, a, b) (value <= b && value >= a)
 
 #define ERRORCODE		0
@@ -85,7 +84,6 @@ static NQST NtQuerySystemTime = 0;
 static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
 
 #define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
-// #define LOADBASSWASAPIFUNCTION(f) *((void**)&f) = GetProcAddress(basswasapi, #f)
 
 // F**k Sleep() tbh
 void NTSleep(__int64 usec) {
@@ -106,7 +104,13 @@ extern "C" void EnterProtectedZone(volatile short* LockStatus)
 extern "C" void LeaveProtectedZone(volatile short* LockStatus)
 {
 	if (InterlockedExchange16(LockStatus, 0) != 1)
-		exit(-1);
+	{
+		MessageBox(NULL, L"An error has occured while leaving a protected memory area.\n\nFatal error, can not continue.\nPress OK to quit.", 
+			L"OmniMIDI - Fatal execution error", 
+			MB_ICONERROR | MB_SYSTEMMODAL);
+
+		exit(ERROR_INVALID_ADDRESS);
+	}
 }
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 
@@ -245,9 +249,6 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "Sharing MIDI device caps with application...");
 
-		// Not yet
-		// CapsSupport |= MIDICAPS_STREAM;
-
 		// Prepare the caps item
 		wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
 		MIDICaps.ManufacturerGuid = OMCLSID;
@@ -267,7 +268,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		return MMSYSERR_NOERROR;
 	}
 	catch (...) {
-		CrashMessage("MIDICapsException");
+		return MMSYSERR_READERROR;
 	}
 }
 
@@ -295,7 +296,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	case MODM_STRMDATA: {
 		if (!bass_initialized || !dwUser) {
 			PrintMessageToDebugLog("MODM_STRMDATA", "You can't call midiStreamData with a normal MIDI stream, or the driver isn't ready.");
-			return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+			return DebugResult(MMSYSERR_INVALPARAM);
 		}
 
 		if ((DWORD)dwParam2 < offsetof(MIDIHDR, dwOffset) ||
@@ -304,18 +305,18 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			((MIDIHDR*)dwParam1)->dwBytesRecorded % 4)
 		{
 			PrintMessageToDebugLog("MODM_STRMDATA", "You can't call midiStreamOut with a normal MIDI stream, or the driver isn't ready.");
-			return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+			return DebugResult(MMSYSERR_INVALPARAM);
 		}
 
 		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_PREPARED)) {
 			PrintMessageToDebugLog("MODM_STRMDATA", "The buffer is not prepared.");
-			return DebugResult(MIDIERR_UNPREPARED, TRUE);
+			return DebugResult(MIDIERR_UNPREPARED);
 		}
 
 		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_DONE)) {
 			if (((MIDIHDR*)dwParam1)->dwFlags & MHDR_INQUEUE) {
 				PrintMessageToDebugLog("MODM_STRMDATA", "The buffer is still being played.");
-				return DebugResult(MIDIERR_STILLPLAYING, TRUE);
+				return DebugResult(MIDIERR_STILLPLAYING);
 			}
 		}
 
@@ -350,18 +351,18 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	case MODM_PROPERTIES: {
 		if (!bass_initialized || !dwUser) {
 			PrintMessageToDebugLog("MODM_PROPERTIES", "You can't call midiStreamProperties with a normal MIDI stream, or the driver isn't ready.");
-			return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+			return DebugResult(MMSYSERR_INVALPARAM);
 		}
 		else if (!((DWORD)dwParam2 & (MIDIPROP_GET | MIDIPROP_SET))) {
 			PrintMessageToDebugLog("MODM_PROPERTIES", "The MIDI application is confused, and didn't specify if it wanted to get the properties or set them.");
-			return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+			return DebugResult(MMSYSERR_INVALPARAM);
 		}
 		else if ((DWORD)dwParam2 & MIDIPROP_TEMPO) {
 			MIDIPROPTEMPO* MPropTempo = (MIDIPROPTEMPO*)dwParam1;
 
 			if (sizeof(MIDIPROPTEMPO) != MPropTempo->cbStruct) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "Invalid pointer to MIDIPROPTEMPO struct.");
-				return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+				return DebugResult(MMSYSERR_INVALPARAM);
 			}
 			else if ((DWORD)dwParam2 & MIDIPROP_SET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's tempo set to received value.");
@@ -380,7 +381,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 
 			if (sizeof(MIDIPROPTIMEDIV) != MPropTimeDiv->cbStruct) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "Invalid pointer to MIDIPROPTIMEDIV struct.");
-				return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+				return DebugResult(MMSYSERR_INVALPARAM);
 			}
 			else if ((DWORD)dwParam2 & MIDIPROP_SET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's time division set to received value.");
@@ -396,14 +397,14 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		}
 		else {
 			PrintMessageToDebugLog("MODM_PROPERTIES", "Invalid properties.");
-			return DebugResult(MMSYSERR_INVALPARAM, TRUE);
+			return DebugResult(MMSYSERR_INVALPARAM);
 		}
 
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_GETPOS: {
-		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY, TRUE);				// The driver isn't ready
-		if (!dwParam1 || !dwParam2) return DebugResult(MMSYSERR_INVALPARAM, TRUE);					// Invalid parameters
+		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY);						// The driver isn't ready
+		if (!dwParam1 || !dwParam2) return DebugResult(MMSYSERR_INVALPARAM);						// Invalid parameters
 
 		PrintMessageToDebugLog("MODM_GETPOS", "The app wants to know the current position of the stream.");
 		switch (((MMTIME*)dwParam1)->wType) {
@@ -433,7 +434,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_RESTART: {
-		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY, TRUE);				// The driver isn't ready
+		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY);						// The driver isn't ready
 
 		if (((CookedPlayer*)dwUser)->Paused != FALSE) {
 			((CookedPlayer*)dwUser)->Paused = FALSE;
@@ -444,7 +445,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_PAUSE: {
-		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY, TRUE);				// The driver isn't ready
+		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY		);				// The driver isn't ready
 
 		if (((CookedPlayer*)dwUser)->Paused != TRUE) {
 			((CookedPlayer*)dwUser)->Paused = TRUE;
@@ -456,7 +457,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_STOP: {
-		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY, TRUE);				// The driver isn't ready
+		if (!bass_initialized || !dwUser) return DebugResult(MIDIERR_NOTREADY);					// The driver isn't ready
 
 		PrintMessageToDebugLog("MODM_STOP", "The app requested OmniMIDI to stop CookedPlayer.");
 		((CookedPlayer*)dwUser)->Paused = TRUE;
@@ -574,13 +575,13 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 				else {
 					PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED is only supported with CALLBACK_FUNCTION! Preparation aborted.");
 					DoStopClient();
-					return DebugResult(MMSYSERR_NOTSUPPORTED, TRUE);
+					return DebugResult(MMSYSERR_NOTSUPPORTED);
 				}
 			}
 			else if (ManagedSettings.DisableCookedPlayer) {
 				PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
 				DoStopClient();
-				return DebugResult(MMSYSERR_NOTSUPPORTED, TRUE);
+				return DebugResult(MMSYSERR_NOTSUPPORTED);
 			}
 
 			// Tell the app that the driver is ready
@@ -591,7 +592,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		}
 		else {
 			PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized. Cannot initialize it twice!");
-			return DebugResult(MMSYSERR_ALLOCATED, TRUE);
+			return DebugResult(MMSYSERR_ALLOCATED);
 		}
 
 		return MMSYSERR_NOERROR;
@@ -628,10 +629,12 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Not needed for OmniMIDI
 		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACESIZE not supported by OmniMIDI.");
-		return DebugResult(MMSYSERR_NOTSUPPORTED, FALSE);
+		return DebugResult(MMSYSERR_NOTSUPPORTED);
 	case DRV_QUERYDEVICEINTERFACE:
 		// Not needed for OmniMIDI
 		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
-		return DebugResult(MMSYSERR_NOTSUPPORTED, FALSE);
+		return DebugResult(MMSYSERR_NOTSUPPORTED);
+	default:
+		return DebugResult(MMSYSERR_ERROR);
 	}
 }

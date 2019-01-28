@@ -186,7 +186,7 @@ BOOL DoStopClient() {
 	return TRUE;
 }
 
-BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
+extern "C" BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
 	if (Major == NULL || Minor == NULL || Build == NULL || Revision == NULL) {
 		PrintMessageToDebugLog("KDMAPI_RKV", "One of the pointers passed to the RKV function is invalid.");
 		MessageBox(NULL, L"One of the pointers passed to the ReturnKDMAPIVer function is invalid!", L"KDMAPI ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
@@ -199,7 +199,7 @@ BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD
 	return TRUE;
 }
 
-BOOL KDMAPI IsKDMAPIAvailable()  {
+extern "C" BOOL KDMAPI IsKDMAPIAvailable()  {
 	// Parse the current state of the KDMAPI
 	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
@@ -215,7 +215,7 @@ BOOL KDMAPI IsKDMAPIAvailable()  {
 	return KDMAPIEnabled;
 }
 
-BOOL KDMAPI InitializeKDMAPIStream() {
+extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 		PrintMessageToDebugLog("KDMAPI_IKS", "The app requested the driver to initialize its audio stream.");
 
@@ -245,7 +245,7 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 	return FALSE;
 }
 
-BOOL KDMAPI TerminateKDMAPIStream() {
+extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
 	try {
 		// If the driver is already initialized, close it
 		if (AlreadyInitializedViaKDMAPI && bass_initialized) {
@@ -257,6 +257,7 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 			// RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
 			PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 		}
+		else if (!AlreadyInitializedViaKDMAPI) PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
 		else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
 
 		return TRUE;
@@ -274,32 +275,32 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 	}
 }
 
-VOID KDMAPI ResetKDMAPIStream() {
+extern "C" VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
 	if (bass_initialized) ResetSynth(FALSE);
 }
 
-VOID KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
+extern "C" VOID KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
 	BASS_MIDI_StreamEvent(OMStream, chan, eventtype, param);
 }
 
-MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
+extern "C" MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
 	return _PrsData(MODM_DATA, dwMsg, 0);
 }
 
-MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
+extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	_StoBASSMIDI(0, dwMsg);
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
+extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	if (!IIMidiHdr ||
 		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||							// The buffer either doesn't exist, it's too big or
 		sizeof(IIMidiHdr->lpData) >= LONGMSG_MAXSIZE) {
 		PrintMessageToDebugLog("PrepareLongData", "The buffer is too big, or it's invalid.");
-		return DebugResult(MMSYSERR_INVALPARAM, TRUE);											// the given size is invalid, invalid parameter
+		return DebugResult(MMSYSERR_INVALPARAM);												// the given size is invalid, invalid parameter
 	}
 	if (IIMidiHdr->dwFlags & MHDR_PREPARED) {
 		PrintMessageToDebugLog("PrepareLongData", "The buffer is already prepared.");
@@ -315,7 +316,7 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	if (!NtLockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
 	{
 		PrintMessageToDebugLog("PrepareLongData", "NtLockVirtualMemory failed to lock the buffer!");
-		return DebugResult(MMSYSERR_NOMEM, TRUE);
+		return DebugResult(MMSYSERR_NOMEM);
 	}
 	PrintMessageToDebugLog("PrepareLongData", "Buffer is locked.");
 
@@ -327,11 +328,11 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
+extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
 	if (!IIMidiHdr) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer passed to this function is invalid.");
-		return DebugResult(MMSYSERR_INVALPARAM, TRUE);													// The buffer doesn't exist, invalid parameter
+		return DebugResult(MMSYSERR_INVALPARAM);														// The buffer doesn't exist, invalid parameter
 	}
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is already unprepared.");
@@ -339,7 +340,7 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	}
 	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still in queue.");
-		return DebugResult(MIDIERR_STILLPLAYING, TRUE);													// The buffer is currently being played from the driver, cannot unprepare
+		return DebugResult(MIDIERR_STILLPLAYING);														// The buffer is currently being played from the driver, cannot unprepare
 	}
 
 	PrintMessageToDebugLog("UnprepareLongData", "Preparing to unlock buffer...");
@@ -361,10 +362,10 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, TRUE);							// The driver isn't ready
-	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM, TRUE);								// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED, TRUE);	// The buffer is not prepared
+extern "C" MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);						// The driver isn't ready
+	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM);							// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED);	// The buffer is not prepared
 	
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
@@ -381,12 +382,12 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
+extern "C" MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
 	PrintMessageToDebugLog("KDMAPI_SDLDNBuf", "Deprecated command, please use SendDirectLongData instead.");
 	return SendDirectLongData(IIMidiHdr);
 }
 
-BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
+extern "C" BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
 	BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
 
 	switch (Setting) {
@@ -482,13 +483,13 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 	return TRUE;
 }
 
-DebugInfo* KDMAPI GetDriverDebugInfo() {
+extern "C" DebugInfo* KDMAPI GetDriverDebugInfo() {
 	// Parse the debug info, and return them to the app.
 	PrintMessageToDebugLog("KDMAPI_GDDI", "Passed pointer to DebugInfo to the KDMAPI-ready application.");
 	return &ManagedDebugInfo;
 }
 
-BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
+extern "C" BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	if (!AlreadyInitializedViaKDMAPI) {
 		MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
@@ -497,7 +498,7 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	else return FontLoader(Directory);
 }
 
-DWORD64 KDMAPI timeGetTime64() {
+extern "C" DWORD64 KDMAPI timeGetTime64() {
 	static LARGE_INTEGER frequency = { {0,0} };
 	LARGE_INTEGER startingTime;
 	QueryPerformanceCounter(&startingTime);

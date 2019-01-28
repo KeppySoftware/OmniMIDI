@@ -13,7 +13,6 @@ namespace OmniMIDIConfigurator
     public partial class EVBufferManager : Form
     {
         ulong installedMemory;
-        string basetextwarning = "WARNING:\nYou should leave at least {0} of RAM available to Windows.";
 
         public EVBufferManager()
         {
@@ -33,7 +32,7 @@ namespace OmniMIDIConfigurator
                 else
                     GetRAMSize.Checked = false;
 
-                BytesVal.Maximum = installedMemory;
+                ArraySize.Maximum = installedMemory;
 
                 PerformCheck();
                 PerformRAMCheck();
@@ -50,9 +49,9 @@ namespace OmniMIDIConfigurator
             {
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "1", Microsoft.Win32.RegistryValueKind.DWord);
                 decimal evbuffratiotemp = Convert.ToDecimal(OmniMIDIConfiguratorMain.SynthSettings.GetValue("EvBufferMultRatio", "1"));
-                BytesVal.Enabled = false;
+                ArraySize.Enabled = false;
                 RatioVal.Enabled = true;
-                BytesVal.Value = installedMemory;
+                ArraySize.Value = installedMemory / 4;
                 if (evbuffratiotemp == 1) RatioVal.Value = 128;
                 else RatioVal.Value = evbuffratiotemp;
             }
@@ -60,30 +59,33 @@ namespace OmniMIDIConfigurator
             {
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "0", Microsoft.Win32.RegistryValueKind.DWord);
                 ulong evbuffsizetemp = Convert.ToUInt64(OmniMIDIConfiguratorMain.SynthSettings.GetValue("EvBufferSize", "4096"));
-                BytesVal.Enabled = true;
+                ArraySize.Enabled = true;
                 RatioVal.Enabled = false;
-                if (evbuffsizetemp >= installedMemory) BytesVal.Value = 4096;
-                else BytesVal.Value = evbuffsizetemp;
+                if (evbuffsizetemp >= installedMemory) ArraySize.Value = 4096;
+                else ArraySize.Value = evbuffsizetemp;
                 RatioVal.Value = 1;
             }
         }
 
         private void PerformRAMCheck()
         {
-            ulong check = (ulong)(BytesVal.Value / RatioVal.Value);
+            ulong check = (ulong)((ArraySize.Value * 4) / RatioVal.Value);
 
             if (check >= (installedMemory / 8))
             {
                 if ((check >= installedMemory) || ((RatioVal.Value == 1) && (GetRAMSize.Checked == true)))
                 {
                     WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wir;
-                    WarningLabel.Text = String.Format("ERROR:\nYou cannot use all the available memory!");
+                    WarningLabel.Text = String.Format("ERROR:\nYou cannot use all the available memory!\n(Size: {0} ({1} DWORDs * 4 / {2}))", 
+                        SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                     ApplySettings.Enabled = false;
                 }
                 else
                 {
                     WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                    WarningLabel.Text = String.Format(basetextwarning, SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 8));
+                    WarningLabel.Text = String.Format("WARNING:\nYou should leave at least {0} of RAM available to Windows.\n(Size: {1} ({2} DWORDs * 4 / {3}))",
+                        SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 6),
+                        SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                     ApplySettings.Enabled = true;
                 }
             }
@@ -96,7 +98,7 @@ namespace OmniMIDIConfigurator
             else if (check == 1)
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                WarningLabel.Text = "WARNING: Good luck.";
+                WarningLabel.Text = String.Format("The final size will be {0}.\n(({1} DWORDs * 4) / {2})\nGood luck.", SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                 ApplySettings.Enabled = true;
             }
             else if (check < 1)
@@ -108,7 +110,7 @@ namespace OmniMIDIConfigurator
             else
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
-                WarningLabel.Text = "Looks perfect!";
+                WarningLabel.Text = String.Format("The final size will be {0}.\n({1} DWORDs * 4) / {2})\nLooks good!", SFListFunc.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                 ApplySettings.Enabled = true;
             }
         }
@@ -134,16 +136,16 @@ namespace OmniMIDIConfigurator
         private void ResetSettings_Click(object sender, EventArgs e)
         {
             GetRAMSize.Checked = false;
-            BytesVal.Value = 4096;
+            ArraySize.Value = 4096;
             RatioVal.Value = 1;
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("GetEvBuffSizeFromRAM", "0", Microsoft.Win32.RegistryValueKind.DWord);
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferSize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferSize", ArraySize.Value, Microsoft.Win32.RegistryValueKind.QWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferMultRatio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
         }
 
         private void ApplySettings_Click(object sender, EventArgs e)
         {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferSize", BytesVal.Value, Microsoft.Win32.RegistryValueKind.QWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferSize", ArraySize.Value, Microsoft.Win32.RegistryValueKind.QWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("EvBufferMultRatio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
             if (Properties.Settings.Default.LiveChanges) OmniMIDIConfiguratorMain.SynthSettings.SetValue("LiveChanges", "1", Microsoft.Win32.RegistryValueKind.DWord);
             Close();
