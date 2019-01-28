@@ -92,6 +92,24 @@ void NTSleep(__int64 usec) {
 	NtDelayExecution(FALSE, &usec);
 }
 
+// Critical sections but handled by OmniMIDI functions because f**k Windows
+extern "C" void EnterProtectedZone(volatile short* LockStatus)
+{
+	for (;;) {
+		if (InterlockedExchange16(LockStatus, 1) == 0)
+			return;
+
+		NTSleep(-1);
+	}
+}
+
+extern "C" void LeaveProtectedZone(volatile short* LockStatus)
+{
+	if (InterlockedExchange16(LockStatus, 0) != 1)
+		exit(-1);
+}
+// Critical sections but handled by OmniMIDI functions because f**k Windows
+
 DWORD DummyPlayBufData() { return 0; }
 VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
 MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) { return MIDIERR_NOTREADY; }
@@ -111,9 +129,6 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 #define _LWAIT NTSleep(ManagedSettings.SleepStates ? -1000 : 0)				// Slow wait
 #define _VLWAIT NTSleep(-200000)											// Very slow wait
 #define _CFRWAIT NTSleep(ManagedSettings.SleepStates ? -16667 : -16567)		// Cap framerate wait
-
-// LightweightLock by Brad Wilson
-#include "LwL.h"
 
 // Variables
 #include "Values.h"
@@ -163,7 +178,7 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 	return TRUE;
 }
 
-STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
+extern "C" STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
 	switch (uMsg) {
 	case DRV_CONFIGURE:
@@ -256,7 +271,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	}
 }
 
-STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	MMRESULT RetVal = MMSYSERR_NOERROR;
 	
 	/*
@@ -305,7 +320,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		}
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Locking for writing...");
-		((CookedPlayer*)dwUser)->Lock.LockForWriting();
+		EnterProtectedZone(&((CookedPlayer*)dwUser)->Lock);
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Copying pointer of buffer...");
 
@@ -327,7 +342,7 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		PrintMessageToDebugLog("MODM_STRMDATA", "Copied.");
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Unlocking...");
-		((CookedPlayer*)dwUser)->Lock.UnlockForWriting();
+		LeaveProtectedZone(&((CookedPlayer*)dwUser)->Lock);
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "All done!");
 		return MMSYSERR_NOERROR;
@@ -449,11 +464,11 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 		LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
 		while (hdr)
 		{
-			((CookedPlayer*)dwUser)->Lock.LockForWriting();
+			EnterProtectedZone(&((CookedPlayer*)dwUser)->Lock);
 			PrintMessageToDebugLog("MODM_STRMDATA", "Marking buffer as done and not in queue anymore...");
 			hdr->dwFlags &= ~MHDR_INQUEUE;
 			hdr->dwFlags |= MHDR_DONE;
-			((CookedPlayer*)dwUser)->Lock.UnlockForWriting();
+			LeaveProtectedZone(&((CookedPlayer*)dwUser)->Lock);
 
 			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
 			hdr = hdr->lpNext;

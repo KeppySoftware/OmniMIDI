@@ -31,7 +31,6 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DriverInit.h" />
     <ClInclude Include="KDMAPI.h" />
-    <ClInclude Include="LwL.h" />
     <ClInclude Include="OmniMIDI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Settings.h" />
@@ -207,7 +206,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\OmniMIDI.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB32\OmniMIDI_Win32.lib</ImportLibrary>
@@ -215,7 +214,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib</AdditionalLibraryDirectories>
-      <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+      <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
       <LargeAddressAware>true</LargeAddressAware>
       <Driver>NotSet</Driver>
       <GenerateWindowsMetadata>
@@ -226,7 +225,7 @@
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
-      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
@@ -312,7 +311,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\OmniMIDI.def</ModuleDefinitionFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB64\OmniMIDI_Win64.lib</ImportLibrary>
@@ -320,7 +319,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib64</AdditionalLibraryDirectories>
-      <MinimumRequiredVersion>5.2</MinimumRequiredVersion>
+      <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
       <LargeAddressAware>
       </LargeAddressAware>
       <Driver>NotSet</Driver>
@@ -331,7 +330,7 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
@@ -419,7 +418,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\OmniMIDI.def</ModuleDefinitionFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIBARM64\OmniMIDI_ARM64.lib</ImportLibrary>
@@ -427,7 +426,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\libarm64</AdditionalLibraryDirectories>
-      <MinimumRequiredVersion>6.2</MinimumRequiredVersion>
+      <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <LargeAddressAware>
       </LargeAddressAware>
       <Driver>NotSet</Driver>
@@ -438,7 +437,7 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>

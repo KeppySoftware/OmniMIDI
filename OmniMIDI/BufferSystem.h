@@ -114,23 +114,23 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 }
 
 void __inline PBufData(void) {
-	LockSystem.LockForReading();
+	EnterProtectedZone(&EVBufferLock);
 
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
 	DWORD TempLRS = LastRunningStatus;
 
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
-	LockSystem.UnlockForReading();
+	LeaveProtectedZone(&EVBufferLock);
 
 	_StoBASSMIDI(TempLRS, dwParam1);
 }
 
 void __inline PBufDataHyper(void) {
-	LockSystem.LockForReading();
+	EnterProtectedZone(&EVBufferLock);
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
-	LockSystem.UnlockForReading();
+	LeaveProtectedZone(&EVBufferLock);
 
 	_StoBASSMIDI(0, dwParam1);
 }
@@ -271,12 +271,12 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY, TRUE);
 
 	// Prepare the event in the buffer
-	LockSystem.LockForWriting();
+	EnterProtectedZone(&EVBufferLock);
 
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
-	LockSystem.UnlockForWriting();
+	LeaveProtectedZone(&EVBufferLock);
 
 	// Some checks
 	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&EVBuffer.EventsCount) >= EvBufferSize) do { /* Absolutely nothing */ } while (EVBuffer.EventsCount >= EvBufferSize);
@@ -287,12 +287,12 @@ MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 
 MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	// Prepare the event in the buffer
-	LockSystem.LockForWriting();
+	EnterProtectedZone(&EVBufferLock);
 
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
-	LockSystem.UnlockForWriting();
+	LeaveProtectedZone(&EVBufferLock);
 
 	// Haha everything is fine
 	return MMSYSERR_NOERROR;

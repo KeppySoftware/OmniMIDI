@@ -16,7 +16,7 @@ struct CookedPlayer
 	DWORD TimeAccumulator;				// ?
 	DWORD ByteAccumulator;				// ?
 	DWORD TickAccumulator;				// ?
-	LightweightLock Lock;				// LockSystem
+	volatile short Lock;				// LockSystem
 	DWORD_PTR dwInstance;
 };
 
@@ -131,11 +131,11 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 		if (hdr->dwFlags & MHDR_DONE)
 		{
             CrashMessage("CookedPlayerSystem | MHDR_DONE invalid.");
-			Player->Lock.LockForWriting();
+			EnterProtectedZone(&Player->Lock);
 
 			Player->MIDIHeaderQueue = hdr->lpNext;
 
-			Player->Lock.UnlockForWriting();
+			LeaveProtectedZone(&Player->Lock);
 			continue;
 		}
 
@@ -143,11 +143,11 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 		{
 			if (hdr->dwOffset >= hdr->dwBytesRecorded)
 			{
-				Player->Lock.LockForWriting();
+				EnterProtectedZone(&Player->Lock);
 				hdr->dwFlags |= MHDR_DONE;
 				hdr->dwFlags &= ~MHDR_INQUEUE;
 				LPMIDIHDR nexthdr = hdr->lpNext;
-				Player->Lock.UnlockForWriting();
+				LeaveProtectedZone(&Player->Lock);
 
 				Player->MIDIHeaderQueue = nexthdr;
 

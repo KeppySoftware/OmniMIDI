@@ -32,7 +32,7 @@ struct EventsBuffer {
 };
 // The buffer's structure
 
-static LightweightLock LockSystem;				// LockSystem
+static volatile short EVBufferLock;				// LockSystem
 static EventsBuffer EVBuffer;					// The buffer
 static DWORD LastRunningStatus = 0;				// Last running status
 static QWORD EvBufferSize = 4096;
