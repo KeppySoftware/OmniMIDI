@@ -93,12 +93,7 @@ void NTSleep(__int64 usec) {
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 extern "C" void EnterProtectedZone(volatile short* LockStatus)
 {
-	for (;;) {
-		if (InterlockedExchange16(LockStatus, 1) == 0)
-			return;
-
-		NTSleep(-1);
-	}
+	while (InterlockedExchange16(LockStatus, 1) == 0);
 }
 
 extern "C" void LeaveProtectedZone(volatile short* LockStatus)
@@ -114,9 +109,9 @@ extern "C" void LeaveProtectedZone(volatile short* LockStatus)
 }
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 
-DWORD DummyPlayBufData() { return 0; }
-VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
-MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) { return MIDIERR_NOTREADY; }
+static DWORD DummyPlayBufData() { return 0; }
+static VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
+static MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) { return MIDIERR_NOTREADY; }
 
 // Hyper switch
 static BOOL HyperMode = 0;

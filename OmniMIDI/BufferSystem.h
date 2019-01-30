@@ -8,12 +8,12 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-int BufferCheck(void) {
-	return ManagedSettings.DontMissNotes ? EVBuffer.EventsCount : (EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0;
+int __inline BufferCheck(void) {
+	return ManagedSettings.DontMissNotes ? EVBuffer.EventsCount : (EVBuffer.ReadHead != EVBuffer.WriteHead);
 }
 
-int BufferCheckHyper(void) {
-	return (EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0;
+int __inline BufferCheckHyper(void) {
+	return (EVBuffer.ReadHead != EVBuffer.WriteHead);
 }
 
 void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
@@ -114,23 +114,18 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 }
 
 void __inline PBufData(void) {
-	EnterProtectedZone(&EVBufferLock);
-
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
 	DWORD TempLRS = LastRunningStatus;
 
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
-	LeaveProtectedZone(&EVBufferLock);
 
 	_StoBASSMIDI(TempLRS, dwParam1);
 }
 
 void __inline PBufDataHyper(void) {
-	EnterProtectedZone(&EVBufferLock);
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
-	LeaveProtectedZone(&EVBufferLock);
 
 	_StoBASSMIDI(0, dwParam1);
 }
@@ -139,7 +134,7 @@ DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	do PBufData();
-	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : ((EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0));
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : (EVBuffer.ReadHead != EVBuffer.WriteHead));
 
 	return 0;
 }
@@ -148,7 +143,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheckHyper()) return 1;
 
 	do PBufDataHyper();
-	while ((EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0);
+	while (EVBuffer.ReadHead != EVBuffer.WriteHead);
 
 	return 0;
 }
@@ -158,7 +153,7 @@ DWORD __inline PlayBufferedDataChunk(void) {
 
 	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufData();
-	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : ((EVBuffer.ReadHead != whe) ? ~0 : 0));
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : (EVBuffer.ReadHead != whe));
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
@@ -166,7 +161,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 
 	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufDataHyper();
-	while ((EVBuffer.ReadHead != whe) ? ~0 : 0);
+	while (EVBuffer.ReadHead != whe);
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -273,17 +268,9 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 	// The buffer is not ready yet
 	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY);
 
-	// Prepare the event in the buffer
-
-	// Enter the protected zone
-	EnterProtectedZone(&EVBufferLock);
-
 	// Write the event to the buffer
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
-
-	// Leave the protected zone
-	LeaveProtectedZone(&EVBufferLock);
 
 	// Some checks
 	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&EVBuffer.EventsCount) >= EvBufferSize) do { /* Absolutely nothing */ } while (EVBuffer.EventsCount >= EvBufferSize);
@@ -294,15 +281,9 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 }
 
 extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	// Enter the protected zone
-	EnterProtectedZone(&EVBufferLock);
-
 	// Write the event to the buffer
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
-
-	// Leave the protected zone
-	LeaveProtectedZone(&EVBufferLock);
 
 	// Go!
 	return MMSYSERR_NOERROR;
