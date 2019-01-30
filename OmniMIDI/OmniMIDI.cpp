@@ -93,7 +93,12 @@ void NTSleep(__int64 usec) {
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 extern "C" void EnterProtectedZone(volatile short* LockStatus)
 {
-	while (InterlockedExchange16(LockStatus, 1) == 0);
+	for (;;) {
+		if (InterlockedExchange16(LockStatus, 1) == 0)
+			return;
+
+		NTSleep(-1);
+	}
 }
 
 extern "C" void LeaveProtectedZone(volatile short* LockStatus)

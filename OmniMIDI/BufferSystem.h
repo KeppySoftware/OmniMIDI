@@ -8,8 +8,12 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-int __inline BufferCheck(void) {
-	return (EVBuffer.ReadHead != EVBuffer.WriteHead);
+int BufferCheck(void) {
+	return ManagedSettings.DontMissNotes ? EVBuffer.EventsCount : (EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0;
+}
+
+int BufferCheckHyper(void) {
+	return (EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0;
 }
 
 void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
@@ -110,18 +114,23 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 }
 
 void __inline PBufData(void) {
+	EnterProtectedZone(&EVBufferLock);
+
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
 	DWORD TempLRS = LastRunningStatus;
 
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
+	LeaveProtectedZone(&EVBufferLock);
 
 	_StoBASSMIDI(TempLRS, dwParam1);
 }
 
 void __inline PBufDataHyper(void) {
+	EnterProtectedZone(&EVBufferLock);
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
+	LeaveProtectedZone(&EVBufferLock);
 
 	_StoBASSMIDI(0, dwParam1);
 }
@@ -130,16 +139,16 @@ DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
 	do PBufData();
-	while (BufferCheck());
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : ((EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0));
 
 	return 0;
 }
 
 DWORD __inline PlayBufferedDataHyper(void) {
-	if (!BufferCheck()) return 1;
+	if (!BufferCheckHyper()) return 1;
 
 	do PBufDataHyper();
-	while (BufferCheck());
+	while ((EVBuffer.ReadHead != EVBuffer.WriteHead) ? ~0 : 0);
 
 	return 0;
 }
@@ -149,15 +158,15 @@ DWORD __inline PlayBufferedDataChunk(void) {
 
 	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufData();
-	while (EVBuffer.ReadHead != whe);
+	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : ((EVBuffer.ReadHead != whe) ? ~0 : 0));
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
-	if (!BufferCheck()) return 1;
+	if (!BufferCheckHyper()) return 1;
 
 	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufDataHyper();
-	while (EVBuffer.ReadHead != whe);
+	while ((EVBuffer.ReadHead != whe) ? ~0 : 0);
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -265,56 +274,35 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY);
 
 	// Prepare the event in the buffer
-	auto NextWriteHead = EVBuffer.WriteHead + 1;
-	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
 
-	if (NextWriteHead != EVBuffer.ReadHead)
-	{
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-		EVBuffer.WriteHead = NextWriteHead;
-	}
-	else if (!ManagedSettings.DontMissNotes)
-	{
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-		//do NOT advance the WriteHead for a more sensical note skipping
-		//EVBuffer.WriteHead = NextWriteHead;
-	}
-	else
-	{
-		// Do it in-house lmao
-		if (EvBufferSize < 3) {
-			if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
-			DWORD TempLRS = LastRunningStatus;
+	// Enter the protected zone
+	EnterProtectedZone(&EVBufferLock);
 
-			_StoBASSMIDI(TempLRS, dwParam1);
-			return MMSYSERR_NOERROR;
-		}
+	// Write the event to the buffer
+	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
 
-		while (NextWriteHead == EVBuffer.ReadHead) /*do sleep or something*/;
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-		EVBuffer.WriteHead = NextWriteHead;
-	}
+	// Leave the protected zone
+	LeaveProtectedZone(&EVBufferLock);
+
+	// Some checks
+	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&EVBuffer.EventsCount) >= EvBufferSize) do { /* Absolutely nothing */ } while (EVBuffer.EventsCount >= EvBufferSize);
+	// Some checks
 
 	// Go!
 	return MMSYSERR_NOERROR;
 }
 
 extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	// Prepare the event in the buffer
-	auto NextWriteHead = EVBuffer.WriteHead + 1;
-	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
+	// Enter the protected zone
+	EnterProtectedZone(&EVBufferLock);
 
-	if (NextWriteHead != EVBuffer.ReadHead)
-	{
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-		EVBuffer.WriteHead = NextWriteHead;
-	}
-	else
-	{
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-		//do NOT advance the WriteHead for a more sensical note skipping
-		//EVBuffer.WriteHead = NextWriteHead;
-	}
+	// Write the event to the buffer
+	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
+
+	// Leave the protected zone
+	LeaveProtectedZone(&EVBufferLock);
 
 	// Go!
 	return MMSYSERR_NOERROR;

@@ -25,9 +25,10 @@ static BOOL AlreadyStartedOnce = FALSE;
 
 // EVBuffer
 struct EventsBuffer {
-	DWORD*					Buffer;
-	volatile ULONGLONG		ReadHead;
-	volatile ULONGLONG		WriteHead;
+	DWORD*			Buffer;
+	ULONGLONG		ReadHead;
+	ULONGLONG		WriteHead;
+	LONGLONG		EventsCount;
 };
 // The buffer's structure
 
