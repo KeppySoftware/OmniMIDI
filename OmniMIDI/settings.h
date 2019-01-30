@@ -5,10 +5,9 @@ OmniMIDI settings loading system
 
 void ResetSynth(BOOL SwitchingBufferMode) {
 	if (SwitchingBufferMode) {
-		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
-		EVBuffer.WriteHead = 0;
 		EVBuffer.ReadHead = 0;
-		EVBuffer.EventsCount = 0;
+		EVBuffer.WriteHead = 0;
+		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
 	}
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
 	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
