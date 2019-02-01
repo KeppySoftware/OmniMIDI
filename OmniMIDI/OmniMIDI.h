@@ -18,7 +18,7 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 
 // Audio engines
 #define AUDTOWAV 0
-#define DSOUND_ENGINE 1
+#define DXAUDIO_ENGINE 1
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 

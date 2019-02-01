@@ -655,7 +655,7 @@ void CheckVolume(BOOL Closing) {
 				float levels[2];
 				DWORD left, right;
 
-				if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+				if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
 					BASS_ChannelGetLevelEx(OMStream, levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 				}
 				else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)

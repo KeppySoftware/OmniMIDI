@@ -206,9 +206,9 @@
             this.SlowDownPlayback.AutoSize = true;
             this.SlowDownPlayback.Location = new System.Drawing.Point(6, 56);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
-            this.SlowDownPlayback.Size = new System.Drawing.Size(284, 17);
+            this.SlowDownPlayback.Size = new System.Drawing.Size(258, 17);
             this.SlowDownPlayback.TabIndex = 6;
-            this.SlowDownPlayback.Text = "Slow down events processing instead of skipping them";
+            this.SlowDownPlayback.Text = "Slow down events processing instead of skipping";
             this.Requirements.SetToolTip(this.SlowDownPlayback, "This doesn\'t work while minimum playback mode is enabled.");
             this.SlowDownPlayback.UseVisualStyleBackColor = true;
             this.SlowDownPlayback.CheckedChanged += new System.EventHandler(this.SlowDownPlayback_CheckedChanged);

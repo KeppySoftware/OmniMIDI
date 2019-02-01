@@ -1,6 +1,6 @@
 /*
 OmniMIDI buffer system
-Some code has been optimized by Sono (MarcusD), the old one has been commented out
+Some code has been optimized by Sono (SonoSooS), the old one has been commented out
 */
 #pragma once
 

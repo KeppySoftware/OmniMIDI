@@ -64,6 +64,28 @@ namespace OmniMIDIConfigurator
         public static String KDMAPIVer = "Null";
     }
 
+    static class CrashMyComputer
+    {
+        public static bool DummyBool = false;
+        public static uint DummyDWORD = 0;
+
+        [DllImport("ntdll.dll", CharSet = CharSet.Ansi, SetLastError = true)]
+        public static extern uint RtlAdjustPrivilege(
+            int Privilege, 
+            bool bEnablePrivilege, 
+            bool IsThreadPrivilege, 
+            ref bool PreviousValue);
+
+        [DllImport("ntdll.dll", CharSet = CharSet.Ansi, SetLastError = true)]
+        public static extern uint NtRaiseHardError(
+            uint ErrorStatus,
+            uint NumberOfParameters,
+            uint UnicodeStringParameterMask,
+            IntPtr Parameters,
+            uint ValidResponseOption,
+            ref uint Response);
+    }
+
     static class SecurityProtocolNET45
     {
         public static SecurityProtocolType Tls12 = (SecurityProtocolType)3072;
@@ -234,6 +256,12 @@ namespace OmniMIDIConfigurator
                             runmode = 2;
                             window = 1;
                             break;
+                        }
+                        else if (s.ToLowerInvariant() == "/egg")
+                        {
+                            CrashMyComputer.RtlAdjustPrivilege(19, true, false, ref CrashMyComputer.DummyBool);
+                            CrashMyComputer.NtRaiseHardError(0xC01E0200, 0U, 0U, IntPtr.Zero, 6U, ref CrashMyComputer.DummyDWORD);
+                            return;
                         }
                         else
                         {

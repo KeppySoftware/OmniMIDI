@@ -125,7 +125,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, ManagedSettings.ChannelUpdateLength);
+				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 
 				_SWAIT;
 			}
@@ -151,7 +151,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, 0);
+				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
@@ -320,7 +320,7 @@ void InitializeStream(INT32 mixfreq) {
 	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
 
 	// If the current audio engine is DS or WASAPI, then it's not a decoding channel
-	if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || 
+	if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE ||
 		ManagedSettings.CurrentEngine == WASAPI_ENGINE) 
 	{ isdecode = FALSE; }
 	// Else, it is
@@ -557,9 +557,9 @@ void InitializeBASSOutput() {
 
 BOOL InitializeBASSLibrary() {
 	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
-	BOOL isds = (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
+	BOOL isds = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
 	// Stream flags
-	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DSOUND_ENGINE) ? BASS_DEVICE_DSOUND : 0);
+	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) ? BASS_DEVICE_DSOUND : 0);
 	// DWORDs on the registry are unsigned, so parse the value and subtract 1 to get the selected audio device
 	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
@@ -776,7 +776,7 @@ bool InitializeBASS(BOOL restart) {
 		if (ManagedSettings.CurrentEngine == AUDTOWAV)
 			InitializeWAVEnc();
 		// Else, initialize the default stream
-		else if (ManagedSettings.CurrentEngine == DSOUND_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
+		else if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
 			InitializeBASSOutput();
 #if !defined(_M_ARM64)
 		// Or else, initialize ASIO
