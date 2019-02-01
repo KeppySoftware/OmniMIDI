@@ -192,10 +192,11 @@
             this.NoSleep.AutoSize = true;
             this.NoSleep.Location = new System.Drawing.Point(6, 94);
             this.NoSleep.Name = "NoSleep";
-            this.NoSleep.Size = new System.Drawing.Size(250, 17);
+            this.NoSleep.Size = new System.Drawing.Size(266, 17);
             this.NoSleep.TabIndex = 8;
-            this.NoSleep.Text = "Disable sleep states in the notes catcher thread\r\n";
-            this.Requirements.SetToolTip(this.NoSleep, "This doesn\'t work in .WAV mode.");
+            this.NoSleep.Text = "Disable sleep states in the events processer thread\r\n";
+            this.Requirements.SetToolTip(this.NoSleep, "This doesn\'t work in .WAV mode nor when the \r\n\"Run events processer and audio eng" +
+        "ine on the same thread/core\" \r\nsetting is enabled");
             this.NoSleep.UseVisualStyleBackColor = true;
             this.NoSleep.CheckedChanged += new System.EventHandler(this.NoSleep_CheckedChanged);
             // 
@@ -205,9 +206,9 @@
             this.SlowDownPlayback.AutoSize = true;
             this.SlowDownPlayback.Location = new System.Drawing.Point(6, 56);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
-            this.SlowDownPlayback.Size = new System.Drawing.Size(244, 17);
+            this.SlowDownPlayback.Size = new System.Drawing.Size(284, 17);
             this.SlowDownPlayback.TabIndex = 6;
-            this.SlowDownPlayback.Text = "Slow down playback instead of skipping notes";
+            this.SlowDownPlayback.Text = "Slow down events processing instead of skipping them";
             this.Requirements.SetToolTip(this.SlowDownPlayback, "This doesn\'t work while minimum playback mode is enabled.");
             this.SlowDownPlayback.UseVisualStyleBackColor = true;
             this.SlowDownPlayback.CheckedChanged += new System.EventHandler(this.SlowDownPlayback_CheckedChanged);
@@ -218,9 +219,9 @@
             this.OldBuff.AutoSize = true;
             this.OldBuff.Location = new System.Drawing.Point(6, 75);
             this.OldBuff.Name = "OldBuff";
-            this.OldBuff.Size = new System.Drawing.Size(318, 17);
+            this.OldBuff.Size = new System.Drawing.Size(335, 17);
             this.OldBuff.TabIndex = 7;
-            this.OldBuff.Text = "Run the notes catcher in the same thread as the audio engine";
+            this.OldBuff.Text = "Run events processer and audio engine on the same thread/core";
             this.Requirements.SetToolTip(this.OldBuff, "This doesn\'t work in .WAV mode.");
             this.OldBuff.UseVisualStyleBackColor = true;
             this.OldBuff.CheckedChanged += new System.EventHandler(this.OldBuff_CheckedChanged);
