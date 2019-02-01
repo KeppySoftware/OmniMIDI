@@ -8,11 +8,9 @@ Some code has been optimized by Sono (MarcusD), the old one has been commented o
 #define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
 #define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
 
-int __inline BufferCheck(void) {
-	return ManagedSettings.DontMissNotes ? EVBuffer.EventsCount : (EVBuffer.ReadHead != EVBuffer.WriteHead);
-}
+#define SMALLBUFFER 2
 
-int __inline BufferCheckHyper(void) {
+int __inline BufferCheck(void) {
 	return (EVBuffer.ReadHead != EVBuffer.WriteHead);
 }
 
@@ -114,6 +112,7 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 }
 
 void __inline PBufData(void) {
+
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
 	DWORD TempLRS = LastRunningStatus;
@@ -124,23 +123,63 @@ void __inline PBufData(void) {
 }
 
 void __inline PBufDataHyper(void) {
+	
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
 
 	_StoBASSMIDI(0, dwParam1);
 }
 
+DWORD PlaySmallBufferedData(void)
+{
+	auto HeadStart = EVBuffer.ReadHead;
+	auto HeadPos = HeadStart; //fast volatile
+	DWORD dwParam1 = EVBuffer.Buffer[HeadPos];
+
+	if (!~dwParam1) return 1;
+
+	for (;;)
+	{
+		EVBuffer.Buffer[HeadPos] = ~0;
+
+		if (++HeadPos >= EvBufferSize)
+			HeadPos = 0;
+
+		EVBuffer.ReadHead = HeadPos;
+
+		if (~dwParam1)
+		{
+			if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
+			DWORD TempLRS = LastRunningStatus;
+
+			_StoBASSMIDI(TempLRS, dwParam1);
+		}
+		else return 0;
+
+		if (HeadPos == HeadStart) return 0;
+
+		dwParam1 = EVBuffer.Buffer[HeadPos];
+		if (!~dwParam1) return 0;
+	}
+}
+
 DWORD __inline PlayBufferedData(void) {
-	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
+	if (ManagedSettings.IgnoreAllEvents) return 1;
+	
+	if (EvBufferSize >= SMALLBUFFER)
+	{
+		if(!BufferCheck()) return 1;
 
-	do PBufData();
-	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : (EVBuffer.ReadHead != EVBuffer.WriteHead));
+		do PBufData();
+		while (BufferCheck());
 
-	return 0;
+		return 0;
+	}
+	else return PlaySmallBufferedData();
 }
 
 DWORD __inline PlayBufferedDataHyper(void) {
-	if (!BufferCheckHyper()) return 1;
+	if (!BufferCheck()) return 1;
 
 	do PBufDataHyper();
 	while (EVBuffer.ReadHead != EVBuffer.WriteHead);
@@ -151,17 +190,25 @@ DWORD __inline PlayBufferedDataHyper(void) {
 DWORD __inline PlayBufferedDataChunk(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
-	ULONGLONG whe = EVBuffer.WriteHead;
-	do PBufData();
-	while (ManagedSettings.DontMissNotes ? InterlockedDecrement64(&EVBuffer.EventsCount) : (EVBuffer.ReadHead != whe));
+	if (EvBufferSize >= SMALLBUFFER)
+	{
+		ULONGLONG whe = EVBuffer.WriteHead;
+		do PBufData();
+		while (EVBuffer.ReadHead != whe);
+
+		return 0;
+	}
+	else return PlaySmallBufferedData();
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
-	if (!BufferCheckHyper()) return 1;
+	if (!BufferCheck()) return 1;
 
 	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufDataHyper();
 	while (EVBuffer.ReadHead != whe);
+
+	return 0;
 }
 
 BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
@@ -268,22 +315,55 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 	// The buffer is not ready yet
 	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY);
 
-	// Write the event to the buffer
-	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
+	// Prepare the event in the buffer
 
-	// Some checks
-	if (ManagedSettings.DontMissNotes && InterlockedIncrement64(&EVBuffer.EventsCount) >= EvBufferSize) do { /* Absolutely nothing */ } while (EVBuffer.EventsCount >= EvBufferSize);
-	// Some checks
+	auto NextWriteHead = EVBuffer.WriteHead + 1;
+	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
 
+	if (NextWriteHead != EVBuffer.ReadHead)
+	{
+		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+		EVBuffer.WriteHead = NextWriteHead;
+	}
+	else if (!ManagedSettings.DontMissNotes)
+	{
+		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+		//do NOT advance the WriteHead for a more sensical note skipping
+		//EVBuffer.WriteHead = NextWriteHead;
+	}
+	else
+	{
+		if (NextWriteHead >= EvBufferSize)
+			NextWriteHead = EVBuffer.ReadHead; //guaranteed to be always in bounds
+
+		if(EvBufferSize >= SMALLBUFFER)
+			while (NextWriteHead == EVBuffer.ReadHead) /*do sleep or something*/;
+		else
+		{
+			volatile DWORD* dwVolatileEvent = EVBuffer.Buffer; // + NextWriteHead;
+			/* EvBuffer resize resets both heads to 0, so checking
+				anything but the first event in the buffer will softlock completely*/
+			while (~*dwVolatileEvent) /*do sleep or something*/;
+		}
+
+		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+		EVBuffer.WriteHead = NextWriteHead;
+	}
+
+	
 	// Go!
 	return MMSYSERR_NOERROR;
 }
 
 extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	// Write the event to the buffer
+
+	auto NextWriteHead = EVBuffer.WriteHead + 1;
+	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
+
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
-	if (++EVBuffer.WriteHead >= EvBufferSize) EVBuffer.WriteHead = 0;
+
+	if (NextWriteHead != EVBuffer.ReadHead)
+		EVBuffer.WriteHead = NextWriteHead; //skip notes properly
 
 	// Go!
 	return MMSYSERR_NOERROR;

@@ -27,8 +27,7 @@ static BOOL AlreadyStartedOnce = FALSE;
 struct EventsBuffer {
 	DWORD*					Buffer;
 	volatile ULONGLONG		ReadHead;
-	volatile ULONGLONG		WriteHead;
-	volatile LONGLONG		EventsCount;
+	ULONGLONG				WriteHead;
 };
 // The buffer's structure
 

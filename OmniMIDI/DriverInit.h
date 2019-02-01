@@ -127,7 +127,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, ManagedSettings.ChannelUpdateLength);
 
-				_WAIT;
+				_SWAIT;
 			}
 		}
 	}
@@ -151,7 +151,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, ManagedSettings.ChannelUpdateLength);
+				else BASS_ChannelUpdate(OMStream, 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
@@ -160,7 +160,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 				// Else, open the EventProcesser thread
 				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
-				_WAIT;
+				_SWAIT;
 			}
 		}
 	}
@@ -521,22 +521,37 @@ LONG ASIODetectID() {
 
 void InitializeBASSOutput() {
 	// Final BASS initialization, set some settings
+	PrintMessageToDebugLog("InitializeBASSOutput", "Configuring stream...");
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+
+	PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
 	BASS_GetInfo(&info);
-	BASS_SetConfig(BASS_CONFIG_BUFFER, ManagedSettings.BufferLength);
+	DWORD minbuf = (info.minbuf + 1);
+
+	PrintMessageToDebugLog("InitializeBASSOutput", "Setting buffer...");
+	BASS_SetConfig(BASS_CONFIG_BUFFER, ((minbuf > ManagedSettings.BufferLength) ? minbuf : ManagedSettings.BufferLength));
+
+	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo", false, minbuf);
+	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry", false, ManagedSettings.BufferLength);
+
+	PrintMessageToDebugLog("InitializeBASSOutput", "Initializing stream...");
 	InitializeStream(ManagedSettings.AudioFrequency);
+
 	if (AudioOutput != NULL)
 	{
-		// And finally, open the stream
-		BASS_ChannelPlay(OMStream, false);
-		CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
-		
 		// If using WASAPI, disable playback buffering
 		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+			PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
+			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
 			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
 			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering", TRUE);
 		}
+
+		// And finally, open the stream
+		PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
+		BASS_ChannelPlay(OMStream, false);
+		CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
 	}
 }
 
@@ -549,7 +564,7 @@ BOOL InitializeBASSLibrary() {
 	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
 	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
-	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, flags, 0, NULL);
+	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, (isds ? BASS_DEVICE_LATENCY : 0) | flags, 0, NULL);
 	CheckUp(FALSE, ERRORCODE, L"BASS Lib Initialization", TRUE);
 
 	//load_bassaddons();

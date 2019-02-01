@@ -874,7 +874,7 @@ namespace OmniMIDIDebugWindow
                                 {
                                     if (DebugInfoCheck.CancellationPending) break;
                                     ParseInfoFromPipe(StreamDebugReader, false);
-                                    TimerFuncs.MicroSleep(100);
+                                    System.Threading.Thread.Sleep(1);
                                 }
                             }
                             catch (Exception ex)

@@ -604,7 +604,7 @@ namespace OmniMIDIConfigurator
             else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == AudioEngine.DSOUND_ENGINE)
             {
                 OmniMIDIConfiguratorMain.Delegate.BufferText.Enabled = true;
-                OmniMIDIConfiguratorMain.Delegate.BufferText.Text = "Output buffer (in ms, from 1 to 1000)\n(Helps to reduce stuttering, keep it between 60-70ms for best quality)";
+                OmniMIDIConfiguratorMain.Delegate.BufferText.Text = "Output buffer (in ms, from 1 to 1000)\n(If the buffer is too small, it'll be set automatically to the lowest value possible)";
                 OmniMIDIConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
                 OmniMIDIConfiguratorMain.Delegate.Frequency.Enabled = true;
                 OmniMIDIConfiguratorMain.Delegate.MaxCPU.Enabled = true;
@@ -638,7 +638,7 @@ namespace OmniMIDIConfigurator
             else if (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == AudioEngine.WASAPI_ENGINE)
             {
                 OmniMIDIConfiguratorMain.Delegate.BufferText.Enabled = true;
-                OmniMIDIConfiguratorMain.Delegate.BufferText.Text = "Output buffer (in ms, from 1 to 1000)\n(If set to 0, it'll be set automatically to the lowest value possible)";
+                OmniMIDIConfiguratorMain.Delegate.BufferText.Text = "Output buffer (in ms, from 1 to 1000)\n(If the buffer is too small, it'll be set automatically to the lowest value possible)";
                 OmniMIDIConfiguratorMain.Delegate.DrvHzLabel.Enabled = true;
                 OmniMIDIConfiguratorMain.Delegate.Frequency.Enabled = true;
                 OmniMIDIConfiguratorMain.Delegate.MaxCPU.Enabled = true;

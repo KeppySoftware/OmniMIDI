@@ -7,7 +7,6 @@ void ResetSynth(BOOL SwitchingBufferMode) {
 	if (SwitchingBufferMode) {	
 		EVBuffer.ReadHead = 0;
 		EVBuffer.WriteHead = 0;
-		EVBuffer.EventsCount = 0;
 		memset(EVBuffer.Buffer, -1, sizeof(EVBuffer.Buffer));
 	}
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);

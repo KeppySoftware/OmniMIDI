@@ -113,7 +113,7 @@ struct Settings
 	DWORD AudioFrequency = 44100;			// Audio frequency
 	DWORD AudioOutputReg = 0;				// Audio output (All devices except AudToWAV and ASIO)
 	DWORD BufferLength = 30;				// Default
-	DWORD ChannelUpdateLength = 1;			// Length of buffer in BASS_ChannelUpdate
+	DWORD ChannelUpdateLength = 0;			// Length of buffer in BASS_ChannelUpdate
 	DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
 	DWORD DebugMode = 0;					// Debug console
 	DWORD DelayNoteOffValue = 5;			// Length of the delay
