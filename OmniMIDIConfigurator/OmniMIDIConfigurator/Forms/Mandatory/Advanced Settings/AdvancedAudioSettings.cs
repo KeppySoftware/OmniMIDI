@@ -50,8 +50,8 @@ namespace OmniMIDIConfigurator
             else if (FPVal == 3)
                 AudioBitDepth.SelectedIndex = 2;
 
-            OldBuff.Enabled = !(OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0);
-            NoSleep.Enabled = !(OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex == 0);
+            OldBuff.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
+            NoSleep.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
             ChangeDefaultOutput.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);

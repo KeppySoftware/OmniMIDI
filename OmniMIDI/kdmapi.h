@@ -280,8 +280,8 @@ extern "C" VOID KDMAPI ResetKDMAPIStream() {
 	if (bass_initialized) ResetSynth(FALSE);
 }
 
-extern "C" VOID KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
-	BASS_MIDI_StreamEvent(OMStream, chan, eventtype, param);
+extern "C" BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
+	return BASS_MIDI_StreamEvent(OMStream, chan, eventtype, param);
 }
 
 extern "C" MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {

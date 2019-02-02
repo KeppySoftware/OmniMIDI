@@ -2183,7 +2183,7 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                if (AudioEngBox.SelectedIndex == 0)
+                if (AudioEngBox.SelectedIndex == AudioEngine.AUDTOWAV)
                 {
                     if (alreadydone != true)
                     {

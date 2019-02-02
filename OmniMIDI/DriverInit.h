@@ -527,13 +527,17 @@ void InitializeBASSOutput() {
 
 	PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
 	BASS_GetInfo(&info);
-	DWORD minbuf = (info.minbuf + 1);
 
+	// The safest value is usually minbuf - 10
+	DWORD minbuf = info.minbuf - 10;
+
+	// If the minimum buffer is bigger than the requested buffer length, use the minimum buffer value instead
 	PrintMessageToDebugLog("InitializeBASSOutput", "Setting buffer...");
 	BASS_SetConfig(BASS_CONFIG_BUFFER, ((minbuf > ManagedSettings.BufferLength) ? minbuf : ManagedSettings.BufferLength));
 
-	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo", false, minbuf);
-	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry", false, ManagedSettings.BufferLength);
+	// Print debug info
+	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo (in ms)", false, minbuf);
+	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry (in ms)", false, ManagedSettings.BufferLength);
 
 	PrintMessageToDebugLog("InitializeBASSOutput", "Initializing stream...");
 	InitializeStream(ManagedSettings.AudioFrequency);

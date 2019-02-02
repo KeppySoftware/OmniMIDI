@@ -251,6 +251,7 @@
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.LMWarningARM64 = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.DisableChime = new System.Windows.Forms.MenuItem();
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
             this.AMIDIMapUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem40 = new System.Windows.Forms.MenuItem();
@@ -291,7 +292,6 @@
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
-            this.DisableChime = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1287,7 +1287,7 @@
             this.EnginesBox.Size = new System.Drawing.Size(181, 95);
             this.EnginesBox.TabIndex = 0;
             this.EnginesBox.TabStop = false;
-            this.EnginesBox.Text = "Engine settings";
+            this.EnginesBox.Text = "Audio engine settings";
             // 
             // WhatIsXAudio
             // 
@@ -1305,7 +1305,7 @@
             // 
             this.WhatIsOutput.AutoSize = true;
             this.WhatIsOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WhatIsOutput.Location = new System.Drawing.Point(8, 50);
+            this.WhatIsOutput.Location = new System.Drawing.Point(71, 68);
             this.WhatIsOutput.Name = "WhatIsOutput";
             this.WhatIsOutput.Size = new System.Drawing.Size(103, 13);
             this.WhatIsOutput.TabIndex = 15;
@@ -1316,11 +1316,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 23);
+            this.label2.Location = new System.Drawing.Point(9, 21);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 13);
+            this.label2.Size = new System.Drawing.Size(54, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Audio engine:";
+            this.label2.Text = "Renderer:";
             this.Requirements.SetToolTip(this.label2, "To change this in real-time, enable the \"Enable live changes for all the settings" +
         "\" function.");
             // 
@@ -1329,13 +1329,13 @@
             this.AudioEngBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
-            ".WAV mode",
-            "DirectX Audio",
-            "ASIO",
-            "WASAPI"});
-            this.AudioEngBox.Location = new System.Drawing.Point(81, 20);
+            "Audio to .WAV mode",
+            "Microsoft DirectX Audio",
+            "Audio Stream Input/Output",
+            "Windows Audio Session API"});
+            this.AudioEngBox.Location = new System.Drawing.Point(11, 37);
             this.AudioEngBox.Name = "AudioEngBox";
-            this.AudioEngBox.Size = new System.Drawing.Size(90, 21);
+            this.AudioEngBox.Size = new System.Drawing.Size(159, 21);
             this.AudioEngBox.TabIndex = 1;
             this.Requirements.SetToolTip(this.AudioEngBox, "Changing this setting requires a restart of the audio stream.");
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
@@ -2599,6 +2599,12 @@
             this.menuItem18.Index = 1;
             this.menuItem18.Text = "-";
             // 
+            // DisableChime
+            // 
+            this.DisableChime.Index = 2;
+            this.DisableChime.Text = "Disable minimum playback/debug mode chime";
+            this.DisableChime.Click += new System.EventHandler(this.DisableChime_Click);
+            // 
             // AMIDIMapInstallMenu
             // 
             this.AMIDIMapInstallMenu.Index = 0;
@@ -2867,12 +2873,6 @@
             // VolumeCheck
             // 
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
-            // 
-            // DisableChime
-            // 
-            this.DisableChime.Index = 2;
-            this.DisableChime.Text = "Disable minimum playback/debug mode chime";
-            this.DisableChime.Click += new System.EventHandler(this.DisableChime_Click);
             // 
             // OmniMIDIConfiguratorMain
             // 
