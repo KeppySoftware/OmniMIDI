@@ -63,7 +63,7 @@ namespace OmniMIDIConfigurator
 
             ComputerInfo CI = new ComputerInfo();
             String Version = String.Format("{0}.{1}.{2}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart);
-            VerLabel.Text = String.Format("OmniMIDI {0}\n\nCopyright Ⓒ 2011\nKaleidonKep99, Kode54 && Mudlord", Version, DateTime.Now.Year.ToString());
+            VerLabel.Text = String.Format("OmniMIDI {0}\nⒸ 2011 Riccardo Loi\n\nFork of BASSMIDI Driver by Kode54 and Mudlord", Version, DateTime.Now.Year.ToString());
             DriverVer.Text = ReturnDriverAssemblyVersion(Version, Driver.FilePrivatePart);
             BASSVer.Text = ReturnBASSAssemblyVersion(BASS.FileVersion, BASS.FilePrivatePart);
             BASSMIDIVer.Text = ReturnBASSAssemblyVersion(BASSMIDI.FileVersion, BASSMIDI.FilePrivatePart);

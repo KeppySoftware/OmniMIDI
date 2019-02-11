@@ -234,16 +234,19 @@ void CloseThreads(BOOL MainClose) {
 
 	// Wait for each thread to close, and free their handles
 	PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
-	CloseThread(ATThread.ThreadHandle);
+	if (!CloseThread(ATThread.ThreadHandle))
+		PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
 
 	PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
-	CloseThread(EPThread.ThreadHandle);
+	if (!CloseThread(EPThread.ThreadHandle))
+		PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
 
 	if (MainClose)
 	{
 		// Close main as well
 		PrintMessageToDebugLog("CloseThreadsFunc", "Closing main thread...");
-		CloseThread(HealthThread.ThreadHandle);
+		if (!CloseThread(HealthThread.ThreadHandle))
+			PrintMessageToDebugLog("CloseThreadsFunc", "Main thread is already closed.");
 	}
 
 	PrintMessageToDebugLog("CloseThreadsFunc", "Threads closed.");
@@ -368,7 +371,7 @@ void InitializeBASSEnc() {
 
 	// Append it to a temporary string, along with how many times it got restarted
 	// (Ex. "Dummy.exe - OmniMIDI Output File (Restart number 4).wav")
-	std::wstring stemp = tstring(out) + L" - OmniMIDI Output File (Restart number" + rv.str() + L").wav";
+	std::wstring stemp = tstring(out) + L" - OmniMIDI Output File (Restart number " + rv.str() + L").wav";
 	LPCWSTR result2 = stemp.c_str();
 
 	// Open the registry key, and check the current output path set in the configurator
@@ -548,13 +551,14 @@ void InitializeBASSOutput() {
 		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
 			PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
 			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
+			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering 1", TRUE);
 			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
-			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering", TRUE);
+			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering 2", TRUE);
 		}
 
 		// And finally, open the stream
 		PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
-		BASS_ChannelPlay(OMStream, false);
+		BASS_ChannelPlay(OMStream, FALSE);
 		CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
 	}
 }

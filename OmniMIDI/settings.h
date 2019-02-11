@@ -40,15 +40,26 @@ void CloseRegistryKey(RegKey &hKey) {
 	hKey.Status = KEY_CLOSED;
 }
 
-void CloseThread(HANDLE thread) {
+BOOL CloseThread(HANDLE thread) {
 	// Wait for the thread to finish its job
-	WaitForSingleObject(thread, INFINITE);
+	if (thread) {
+		PrintMessageToDebugLog("CloseThread", "Waiting for passed thread to finish...");
+		WaitForSingleObject(thread, INFINITE);
 
-	// Close its handle
-	CloseHandle(thread);
+		// Close its handle
+		PrintMessageToDebugLog("CloseThread", "Closing its handle...");
+		CloseHandle(thread);
 
-	// And mark it as NULL
-	thread = NULL;
+		// And mark it as NULL
+		PrintMessageToDebugLog("CloseThread", "Cleaning up...");
+		thread = NULL;
+
+		PrintMessageToDebugLog("CloseThread", "Thread is down.");
+		return TRUE;
+	}
+
+	PrintMessageToDebugLog("CloseThread", "The passed thread doesn't exist.");
+	return FALSE;
 }
 
 void DLLLoadError(LPWSTR dll) {

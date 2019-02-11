@@ -296,12 +296,12 @@ extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
-	if (!IIMidiHdr ||
-		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||							// The buffer either doesn't exist, it's too big or
-		sizeof(IIMidiHdr->lpData) >= LONGMSG_MAXSIZE) {
+	if (!IIMidiHdr ||																			// The buffer either doesn't exist, or
+		IIMidiHdr->dwBufferLength >= LONGMSG_MAXSIZE) {											// the given size is invalid
 		PrintMessageToDebugLog("PrepareLongData", "The buffer is too big, or it's invalid.");
-		return DebugResult(MMSYSERR_INVALPARAM);												// the given size is invalid, invalid parameter
+		return DebugResult(MMSYSERR_INVALPARAM);												// Invalid parameter
 	}
+
 	if (IIMidiHdr->dwFlags & MHDR_PREPARED) {
 		PrintMessageToDebugLog("PrepareLongData", "The buffer is already prepared.");
 		return MMSYSERR_NOERROR;																// Already prepared, everything is fine
