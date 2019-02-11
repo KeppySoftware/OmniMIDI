@@ -307,13 +307,9 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 		return MMSYSERR_NOERROR;																// Already prepared, everything is fine
 	}
 
-	PrintMessageToDebugLog("PrepareLongData", "Preparing to lock buffer...");
-	VOID* m = IIMidiHdr->lpData;
-	ULONG s = sizeof(IIMidiHdr->lpData);
-
-	PrintMessageToDebugLog("PrepareLongData", "Locking...");
+	PrintMessageToDebugLog("PrepareLongData", "Locking buffer...");
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	if (!NtLockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+	if (!VirtualLock(IIMidiHdr->lpData, sizeof(LPSTR)))
 	{
 		PrintMessageToDebugLog("PrepareLongData", "NtLockVirtualMemory failed to lock the buffer!");
 		return DebugResult(MMSYSERR_NOMEM);
@@ -343,13 +339,9 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 		return DebugResult(MIDIERR_STILLPLAYING);														// The buffer is currently being played from the driver, cannot unprepare
 	}
 
-	PrintMessageToDebugLog("UnprepareLongData", "Preparing to unlock buffer...");
-	VOID* m = IIMidiHdr->lpData;
-	ULONG s = sizeof(IIMidiHdr->lpData);
-
-	PrintMessageToDebugLog("UnprepareLongData", "Unlocking...");
+	PrintMessageToDebugLog("UnprepareLongData", "Unlocking buffer...");
 	// Unlock the buffer, and say that everything is oki-doki
-	if (!NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, LOCK_VM_IN_WORKING_SET | LOCK_VM_IN_RAM))
+	if (!VirtualUnlock(IIMidiHdr->lpData, sizeof(LPSTR)))
 	{
 		PrintMessageToDebugLog("UnprepareLongData", "FATAL ERROR: Failed to unlock buffer! Access violation exception.");
 		CrashMessage("UnlockMIDIHDR");
