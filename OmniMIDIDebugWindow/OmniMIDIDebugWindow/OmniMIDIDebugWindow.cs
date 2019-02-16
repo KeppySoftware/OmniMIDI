@@ -139,6 +139,8 @@ namespace OmniMIDIDebugWindow
                 SelectedDebug_SelectionChangeCommitted(null, null);
 
                 DebugInfo.Enabled = true;
+
+                SwitchPipe(true);
             }
             catch (Exception ex)
             {
@@ -859,36 +861,34 @@ namespace OmniMIDIDebugWindow
         NamedPipeClientStream PipeClient = null;
         private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (DoesPipeStillExist(SelectedDebugVal))
+            using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", SelectedDebugVal), PipeDirection.InOut, PipeOptions.Asynchronous))
             {
-                using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", SelectedDebugVal), PipeDirection.In, PipeOptions.Asynchronous))
+                PipeClient.Connect();
+                if (PipeClient.IsConnected)
                 {
-                    PipeClient.Connect();
-                    if (PipeClient.IsConnected)
+                    using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
                     {
-                        using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
+                        try
                         {
-                            try
+                            while (PipeClient.IsConnected)
                             {
-                                while (PipeClient.IsConnected)
-                                {
-                                    if (DebugInfoCheck.CancellationPending) break;
-                                    ParseInfoFromPipe(StreamDebugReader, false);
-                                    System.Threading.Thread.Sleep(1);
-                                }
+                                if (DebugInfoCheck.CancellationPending) break;
+                                ParseInfoFromPipe(StreamDebugReader, false);
+                                System.Threading.Thread.Sleep(1);
                             }
-                            catch (Exception ex)
-                            {
-                                // If something goes wrong, here's an error handler
-                                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                Application.ExitThread();
-                            }
+                            DebugInfoCheck.CancelAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            // If something goes wrong, here's an error handler
+                            MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.ExitThread();
                         }
                     }
-                    else DebugInfoCheck.CancelAsync();
                 }
+                else DebugInfoCheck.CancelAsync();
             }
-            System.Threading.Thread.Sleep(1);
+            System.Threading.Thread.Sleep(100);
         }
 
         private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
