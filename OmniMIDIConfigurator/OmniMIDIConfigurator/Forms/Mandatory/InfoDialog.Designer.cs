@@ -43,6 +43,8 @@
             this.WinName = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.KDMAPIVer = new System.Windows.Forms.LinkLabelEx();
+            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
@@ -54,8 +56,6 @@
             this.DonateBtn = new System.Windows.Forms.Button();
             this.BranchToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DisableBB = new System.Windows.Forms.MenuItem();
-            this.KDMAPIVer = new System.Windows.Forms.LinkLabelEx();
-            this.ChangeBranch = new System.Windows.Forms.LinkLabelEx();
             this.LicenseFile = new System.Windows.Forms.LinkLabelEx();
             this.GitHubLink = new System.Windows.Forms.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentLogo)).BeginInit();
@@ -78,9 +78,9 @@
             this.VerLabel.BackColor = System.Drawing.Color.Transparent;
             this.VerLabel.Location = new System.Drawing.Point(97, 12);
             this.VerLabel.Name = "VerLabel";
-            this.VerLabel.Size = new System.Drawing.Size(172, 52);
+            this.VerLabel.Size = new System.Drawing.Size(142, 52);
             this.VerLabel.TabIndex = 1;
-            this.VerLabel.Text = "OmniMIDI VERSION\r\n\r\nCopyright Ⓒ 2011\r\nKaleidonKep99, Kode54 && Mudlord";
+            this.VerLabel.Text = "OmniMIDI VERSION\r\n\r\nCopyright Ⓒ 2011\r\nKaleidonKep99 && SonoSooS";
             // 
             // label2
             // 
@@ -208,6 +208,30 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OmniMIDI library info";
             // 
+            // KDMAPIVer
+            // 
+            this.KDMAPIVer.AutoSize = true;
+            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
+            this.KDMAPIVer.Name = "KDMAPIVer";
+            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
+            this.KDMAPIVer.TabIndex = 3;
+            this.KDMAPIVer.TabStop = true;
+            this.KDMAPIVer.Text = "KDMAPI VER";
+            this.KDMAPIVer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.KDMAPIVer_LinkClicked);
+            // 
+            // ChangeBranch
+            // 
+            this.ChangeBranch.AutoSize = true;
+            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
+            this.ChangeBranch.Name = "ChangeBranch";
+            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
+            this.ChangeBranch.TabIndex = 4;
+            this.ChangeBranch.TabStop = true;
+            this.ChangeBranch.Text = "Change branch";
+            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
+            // 
             // CurBranch
             // 
             this.CurBranch.AutoSize = true;
@@ -315,30 +339,6 @@
             // 
             this.DisableBB.Index = -1;
             this.DisableBB.Text = "";
-            // 
-            // KDMAPIVer
-            // 
-            this.KDMAPIVer.AutoSize = true;
-            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.KDMAPIVer.Location = new System.Drawing.Point(110, 76);
-            this.KDMAPIVer.Name = "KDMAPIVer";
-            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 3;
-            this.KDMAPIVer.TabStop = true;
-            this.KDMAPIVer.Text = "KDMAPI VER";
-            this.KDMAPIVer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.KDMAPIVer_LinkClicked);
-            // 
-            // ChangeBranch
-            // 
-            this.ChangeBranch.AutoSize = true;
-            this.ChangeBranch.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeBranch.Location = new System.Drawing.Point(279, 96);
-            this.ChangeBranch.Name = "ChangeBranch";
-            this.ChangeBranch.Size = new System.Drawing.Size(80, 13);
-            this.ChangeBranch.TabIndex = 4;
-            this.ChangeBranch.TabStop = true;
-            this.ChangeBranch.Text = "Change branch";
-            this.ChangeBranch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeBranch_LinkClicked);
             // 
             // LicenseFile
             // 

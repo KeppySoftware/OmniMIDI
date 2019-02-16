@@ -91,23 +91,6 @@ void NTSleep(__int64 usec) {
 }
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
-extern "C" void EnterProtectedZone(volatile short* LockStatus)
-{
-	while (InterlockedExchange16(LockStatus, 1) == 0);
-}
-
-extern "C" void LeaveProtectedZone(volatile short* LockStatus)
-{
-	if (InterlockedExchange16(LockStatus, 0) != 1)
-	{
-		MessageBox(NULL, L"An error has occured while leaving a protected memory area.\n\nFatal error, can not continue.\nPress OK to quit.", 
-			L"OmniMIDI - Fatal execution error", 
-			MB_ICONERROR | MB_SYSTEMMODAL);
-
-		exit(ERROR_INVALID_ADDRESS);
-	}
-}
-// Critical sections but handled by OmniMIDI functions because f**k Windows
 
 static DWORD DummyPlayBufData() { return 0; }
 static VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
@@ -132,6 +115,7 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 #include "Values.h"
 #include "Debug.h"
 #include "BASSErrors.h"
+#include "LockSystem.h"
 
 // OmniMIDI vital parts
 #include "SoundFontLoader.h"
@@ -139,8 +123,8 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 #include "Settings.h"
 #include "BlacklistSystem.h"
 #include "DriverInit.h"
-#include "CookedPlayer.h"
 #include "KDMAPI.h"
+#include "CookedPlayer.h"
 
 // OmniMIDI GUID
 // {62F3192B-A961-456D-ABCA-A5C95A14B9AA}
@@ -284,7 +268,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
 
 		// Tell the app that the buffer has been played
-		DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, dwParam1, 0);
+		if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
 		return RetVal;
 	}
 	case MODM_STRMDATA: {
@@ -315,8 +299,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		}
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Locking for writing...");
-		EnterProtectedZone(&((CookedPlayer*)dwUser)->Lock);
-
+		LockForWriting(&((CookedPlayer*)dwUser)->Lock);
 		PrintMessageToDebugLog("MODM_STRMDATA", "Copying pointer of buffer...");
 
 		PrintMIDIHDRToDebugLog("MODM_STRMDATA", (MIDIHDR*)dwParam1);
@@ -337,7 +320,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		PrintMessageToDebugLog("MODM_STRMDATA", "Copied.");
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Unlocking...");
-		LeaveProtectedZone(&((CookedPlayer*)dwUser)->Lock);
+		UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "All done!");
 		return MMSYSERR_NOERROR;
@@ -459,13 +442,13 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
 		while (hdr)
 		{
-			EnterProtectedZone(&((CookedPlayer*)dwUser)->Lock);
+			LockForWriting(&((CookedPlayer*)dwUser)->Lock);
 			PrintMessageToDebugLog("MODM_STRMDATA", "Marking buffer as done and not in queue anymore...");
 			hdr->dwFlags &= ~MHDR_INQUEUE;
 			hdr->dwFlags |= MHDR_DONE;
-			LeaveProtectedZone(&((CookedPlayer*)dwUser)->Lock);
+			UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
 
-			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+			if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 			hdr = hdr->lpNext;
 		}
 
@@ -512,10 +495,10 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			// Parse callback and instance
 			// AddVectoredExceptionHandler(1, OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
-			OMHMIDI = ((MIDIOPENDESC*)dwParam1)->hMidi;
-			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
-			OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
+			memcpy(&OMMOD, ((MIDIOPENDESC*)dwParam1), sizeof(MIDIOPENDESC));
 			OMFlags = HIWORD((DWORD)dwParam2);
+
+			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", &OMMOD, OMFlags);
 
 			// Open the driver
 			PrintMessageToDebugLog("MODM_OPEN", "Initializing driver...");
@@ -525,6 +508,11 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			// Prepare registry for CookedPlayer
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
+
+			if (((DWORD)dwParam2 != CALLBACK_NULL) && ((DWORD)dwParam2 != CALLBACK_EVENT)) {
+				CustomCallback = (WMMC)OMMOD.dwCallback;
+				WMMCI = OMMOD.dwInstance;
+			}
 
 			if ((DWORD)dwParam2 & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
 				// CookedPlayer only supports CALLBACK_FUNCTION
@@ -562,9 +550,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 						Sleep(1);
 					}
 
-					PrintMessageToDebugLog("MODM_OPEN", "Thread is running.");
-
-					PrintMessageToDebugLog("MODM_OPEN", "The driver is now ready to receive MIDI headers for the CookedPlayer.");
+					PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
 				}
 				else {
 					PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED is only supported with CALLBACK_FUNCTION! Preparation aborted.");
@@ -580,7 +566,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 
 			// Tell the app that the driver is ready
 			PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app (If present)...");
-			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_OPEN, OMInstance, 0, 0);
+			if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_OPEN, WMMCI, 0, 0);
 
 			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
 		}
@@ -604,7 +590,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			}
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app (If present)...");
-			DriverCallback(OMCallback, OMFlags, OMDevice, MOM_CLOSE, OMInstance, 0, 0);
+			if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_CLOSE, WMMCI, 0, 0);
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
 		}

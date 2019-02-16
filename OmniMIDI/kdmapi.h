@@ -7,6 +7,11 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 #define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) case Setting: if (cbValue != sizeof(Type)) return FALSE; if (Mode = OM_SET) SettingStruct = *(Type*)Value; else if (Mode = OM_GET) *(Type*)Value = SettingStruct; else return FALSE; break;
 
+// F**k WinMM and Microsoft
+typedef VOID(CALLBACK*WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
+static DWORD_PTR WMMCI;
+static WMMC CustomCallback = 0;
+
 // KDMAPI calls
 BOOL StreamHealthCheck(BOOL& Initialized) {
 	// If BASS is forbidden from initializing itself, then abort immediately
@@ -297,7 +302,8 @@ extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 
 extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	if (!IIMidiHdr ||																			// The buffer either doesn't exist, or
-		IIMidiHdr->dwBufferLength >= LONGMSG_MAXSIZE) {											// the given size is invalid
+		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||							// the given size is invalid
+		IIMidiHdr->dwBufferLength >= LONGMSG_MAXSIZE) {
 		PrintMessageToDebugLog("PrepareLongData", "The buffer is too big, or it's invalid.");
 		return DebugResult(MMSYSERR_INVALPARAM);												// Invalid parameter
 	}
@@ -309,7 +315,7 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 
 	PrintMessageToDebugLog("PrepareLongData", "Locking buffer...");
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	if (!VirtualLock(IIMidiHdr->lpData, sizeof(LPSTR)))
+	if (!VirtualLock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength))
 	{
 		PrintMessageToDebugLog("PrepareLongData", "NtLockVirtualMemory failed to lock the buffer!");
 		return DebugResult(MMSYSERR_NOMEM);
@@ -341,10 +347,11 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 
 	PrintMessageToDebugLog("UnprepareLongData", "Unlocking buffer...");
 	// Unlock the buffer, and say that everything is oki-doki
-	if (!VirtualUnlock(IIMidiHdr->lpData, sizeof(LPSTR)))
+	if (!VirtualUnlock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength))
 	{
-		PrintMessageToDebugLog("UnprepareLongData", "FATAL ERROR: Failed to unlock buffer! Access violation exception.");
-		CrashMessage("UnlockMIDIHDR");
+		// The buffer isn't locked
+		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still already unlocked.");
+		return MMSYSERR_NOERROR;
 	}
 
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");

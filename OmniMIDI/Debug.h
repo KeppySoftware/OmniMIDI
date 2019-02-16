@@ -619,6 +619,25 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 	}
 }
 
+void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD Flags) {
+	if (ManagedSettings.DebugMode) {
+		char Msg[NTFS_MAX_PATH] = { 0 };
+
+		// Debug log is busy now
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		// Print to log
+		PrintCurrentTime();
+		sprintf(Msg, "Stage <<%s>> | HMIDI: %08X - dwCallback: %08X - dwInstance: %08X - OMFlags: %08X\n", Stage, MIDIOD->hMidi, MIDIOD->dwCallback, MIDIOD->dwInstance, Flags);
+
+		fprintf(stdout, Msg);
+		OutputDebugStringA(Msg);
+
+		// Flush buffer
+		fflush(stdout);
+	}
+}
+
 void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
 		char Msg[NTFS_MAX_PATH] = { 0 };

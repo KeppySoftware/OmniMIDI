@@ -31,6 +31,7 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DriverInit.h" />
     <ClInclude Include="KDMAPI.h" />
+    <ClInclude Include="LockSystem.h" />
     <ClInclude Include="OmniMIDI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Settings.h" />

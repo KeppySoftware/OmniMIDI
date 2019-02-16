@@ -8,7 +8,7 @@
 #define Author "KaleidonKep99"
 #define Icon "Branding\OMSetupICO.ico"
 #define Configurator "OmniMIDIConfigurator"
-#define Copyright 'Copyright (c) 2011 Brad Miller, Chris Moeller and Riccardo Loi. All rights reserved.'
+#define Copyright 'Copyright (c) 2011 KaleidonKep99 & SonoSooS. All rights reserved.'
 #define DebugWindow "OmniMIDIDebugWindow"
 #define Description "OmniMIDI, User-Mode Windows MIDI Driver"
 #define DriverRegister "OmniMIDIDriverRegister"
@@ -18,8 +18,8 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '6.3.0.5'
-                        
+#define Version '6.3.0.6'
+                       
 #define lib32 'external_packages\lib'
 #define lib64 'external_packages\lib64'
 #define libARM64 'external_packages\libARM64'

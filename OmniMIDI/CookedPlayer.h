@@ -16,7 +16,7 @@ struct CookedPlayer
 	DWORD TimeAccumulator;				// ?
 	DWORD ByteAccumulator;				// ?
 	DWORD TickAccumulator;				// ?
-	volatile short Lock;				// LockSystem
+	LockSystem Lock;					// Critical section
 	DWORD_PTR dwInstance;
 };
 
@@ -131,31 +131,35 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 		if (hdr->dwFlags & MHDR_DONE)
 		{
             CrashMessage("CookedPlayerSystem | MHDR_DONE invalid.");
-			EnterProtectedZone(&Player->Lock);
+			LockForWriting(&Player->Lock);
 
 			Player->MIDIHeaderQueue = hdr->lpNext;
 
-			LeaveProtectedZone(&Player->Lock);
+			UnlockForWriting(&Player->Lock);
 			continue;
 		}
 
 		while (!Player->Paused)
 		{
+			PrintMessageToDebugLog("CookedPlayerSystem", "Before offset callback STUB");
+
 			if (hdr->dwOffset >= hdr->dwBytesRecorded)
 			{
-				EnterProtectedZone(&Player->Lock);
+				LockForWriting(&Player->Lock);
 				hdr->dwFlags |= MHDR_DONE;
 				hdr->dwFlags &= ~MHDR_INQUEUE;
 				LPMIDIHDR nexthdr = hdr->lpNext;
-				LeaveProtectedZone(&Player->Lock);
+				UnlockForWriting(&Player->Lock);
 
 				Player->MIDIHeaderQueue = nexthdr;
 
-				DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+				PrintMessageToDebugLog("CookedPlayerSystem", "Sending offset callback...");
+				if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 
 				hdr->dwOffset = 0;
 				hdr = nexthdr;
-		
+
+				PrintMessageToDebugLog("CookedPlayerSystem", "Breaking from if statement with offset callback...");
 				break;
 			}
 
@@ -175,7 +179,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
 				PrintMessageToDebugLog("CookedPlayerSystem", "dwEvent requested DriverCallback!");
-				DriverCallback(OMCallback, OMFlags, OMDevice, MOM_DONE, OMInstance, (DWORD_PTR)hdr, 0);
+				if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 			}
 
 			/*

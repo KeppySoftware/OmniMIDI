@@ -55,6 +55,9 @@
     <ClInclude Include="CookedPlayer.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="LockSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

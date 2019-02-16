@@ -30,8 +30,6 @@ struct EventsBuffer {
 	ULONGLONG				WriteHead;
 };
 // The buffer's structure
-
-static volatile short EVBufferLock;				// LockSystem
 static EventsBuffer EVBuffer;					// The buffer
 static DWORD LastRunningStatus = 0;				// Last running status
 static QWORD EvBufferSize = 4096;
@@ -41,11 +39,9 @@ static DWORD GetEvBuffSizeFromRAM = 0;
 // Device stuff
 static HSTREAM OMStream = NULL;
 static HANDLE OMReady = NULL;
-static HMIDI OMHMIDI = NULL;
-static DWORD_PTR OMCallback = NULL;
-static DWORD_PTR OMInstance = NULL;
-static DWORD OMFlags = NULL;
+static MIDIOPENDESC OMMOD = { 0 };
 static HDRVR OMDevice = NULL;
+static DWORD OMFlags = NULL;
 
 // Important stuff
 static const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
