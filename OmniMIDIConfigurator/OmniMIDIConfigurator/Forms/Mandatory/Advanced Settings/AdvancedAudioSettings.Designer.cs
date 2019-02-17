@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdvancedAudioSettings));
             this.AOS = new System.Windows.Forms.GroupBox();
             this.AudioBitDepth = new System.Windows.Forms.ComboBox();
             this.AudioBitDepthLabel = new System.Windows.Forms.Label();
@@ -39,7 +40,7 @@
             this.HMode = new System.Windows.Forms.CheckBox();
             this.KSDAPIBoxWhat = new System.Windows.Forms.PictureBox();
             this.KSDAPIBox = new System.Windows.Forms.CheckBox();
-            this.NoSleep = new System.Windows.Forms.CheckBox();
+            this.NewTGT = new System.Windows.Forms.CheckBox();
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -129,7 +130,7 @@
             this.ABS.Controls.Add(this.HMode);
             this.ABS.Controls.Add(this.KSDAPIBoxWhat);
             this.ABS.Controls.Add(this.KSDAPIBox);
-            this.ABS.Controls.Add(this.NoSleep);
+            this.ABS.Controls.Add(this.NewTGT);
             this.ABS.Controls.Add(this.SlowDownPlayback);
             this.ABS.Controls.Add(this.OldBuff);
             this.ABS.Location = new System.Drawing.Point(12, 110);
@@ -186,19 +187,18 @@
             this.KSDAPIBox.UseVisualStyleBackColor = true;
             this.KSDAPIBox.CheckedChanged += new System.EventHandler(this.KSDAPIBox_CheckedChanged);
             // 
-            // NoSleep
+            // NewTGT
             // 
-            this.NoSleep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.NoSleep.AutoSize = true;
-            this.NoSleep.Location = new System.Drawing.Point(6, 94);
-            this.NoSleep.Name = "NoSleep";
-            this.NoSleep.Size = new System.Drawing.Size(266, 17);
-            this.NoSleep.TabIndex = 8;
-            this.NoSleep.Text = "Disable sleep states in the events processer thread\r\n";
-            this.Requirements.SetToolTip(this.NoSleep, "This doesn\'t work in .WAV mode nor when the \r\n\"Run events processer and audio eng" +
-        "ine on the same thread/core\" \r\nsetting is enabled");
-            this.NoSleep.UseVisualStyleBackColor = true;
-            this.NoSleep.CheckedChanged += new System.EventHandler(this.NoSleep_CheckedChanged);
+            this.NewTGT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.NewTGT.AutoSize = true;
+            this.NewTGT.Location = new System.Drawing.Point(6, 94);
+            this.NewTGT.Name = "NewTGT";
+            this.NewTGT.Size = new System.Drawing.Size(327, 17);
+            this.NewTGT.TabIndex = 8;
+            this.NewTGT.Text = "Use QPC in the wrapper instead of WinMM\'s stock timeGetTime\r\n";
+            this.Requirements.SetToolTip(this.NewTGT, resources.GetString("NewTGT.ToolTip"));
+            this.NewTGT.UseVisualStyleBackColor = true;
+            this.NewTGT.CheckedChanged += new System.EventHandler(this.NoSleep_CheckedChanged);
             // 
             // SlowDownPlayback
             // 
@@ -332,7 +332,7 @@
         private System.Windows.Forms.CheckBox FadeoutDisable;
         private System.Windows.Forms.ComboBox AudioBitDepth;
         private System.Windows.Forms.GroupBox ABS;
-        private System.Windows.Forms.CheckBox NoSleep;
+        private System.Windows.Forms.CheckBox NewTGT;
         private System.Windows.Forms.CheckBox SlowDownPlayback;
         private System.Windows.Forms.CheckBox OldBuff;
         private System.Windows.Forms.GroupBox groupBox1;

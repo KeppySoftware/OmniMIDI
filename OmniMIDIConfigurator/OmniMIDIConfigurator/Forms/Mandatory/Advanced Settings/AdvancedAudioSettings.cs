@@ -28,7 +28,7 @@ namespace OmniMIDIConfigurator
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("DontMissNotes", 0)) == 1)
                 SlowDownPlayback.Checked = true;
 
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("KSDAPIEnabled", 1)) == 1)
+            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("KDMAPIEnabled", 1)) == 1)
                 KSDAPIBox.Checked = true;
 
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) == 1)
@@ -38,8 +38,8 @@ namespace OmniMIDIConfigurator
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NotesCatcherWithAudio", 0)) == 1)
                 OldBuff.Checked = true;
 
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("SleepStates", 1)) == 0)
-                NoSleep.Checked = true;
+            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NewTGT", 0)) == 1)
+                NewTGT.Checked = true;
 
             int FPVal = Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioBitDepth", 1));
 
@@ -51,7 +51,7 @@ namespace OmniMIDIConfigurator
                 AudioBitDepth.SelectedIndex = 2;
 
             OldBuff.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
-            NoSleep.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
+            NewTGT.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
             ChangeDefaultOutput.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
@@ -98,7 +98,7 @@ namespace OmniMIDIConfigurator
 
         private void NoSleep_CheckedChanged(object sender, EventArgs e)
         {
-            Functions.SleepStates(Convert.ToInt32(!NoSleep.Checked));
+            Functions.NewTGT(Convert.ToInt32(NewTGT.Checked));
         }
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)

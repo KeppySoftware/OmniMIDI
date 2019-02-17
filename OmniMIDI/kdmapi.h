@@ -406,7 +406,6 @@ extern "C" BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, U
 		DriverSettingsCase(OM_NOTEOFF1, Mode, BOOL, ManagedSettings.NoteOff1, Value, cbValue);
 		DriverSettingsCase(OM_EVENTPROCWITHAUDIO, Mode, BOOL, ManagedSettings.NotesCatcherWithAudio, Value, cbValue);
 		DriverSettingsCase(OM_SINCINTER, Mode, BOOL, ManagedSettings.SincInter, Value, cbValue);
-		DriverSettingsCase(OM_SLEEPSTATES, Mode, BOOL, ManagedSettings.SleepStates, Value, cbValue);
 
 		DriverSettingsCase(OM_AUDIOBITDEPTH, Mode, DWORD, ManagedSettings.AudioBitDepth, Value, cbValue);
 		DriverSettingsCase(OM_AUDIOFREQ, Mode, DWORD, ManagedSettings.AudioFrequency, Value, cbValue);
@@ -500,6 +499,10 @@ extern "C" BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 extern "C" DWORD64 KDMAPI timeGetTime64() {
 	static LARGE_INTEGER frequency = { {0,0} };
 	LARGE_INTEGER startingTime;
+
+	if (frequency.QuadPart == 0)
+		QueryPerformanceFrequency(&frequency);
+
 	QueryPerformanceCounter(&startingTime);
 	return (1000 * (startingTime.QuadPart % frequency.QuadPart) / frequency.QuadPart) + (1000 * (startingTime.QuadPart / frequency.QuadPart));
 }

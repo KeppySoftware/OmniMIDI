@@ -120,6 +120,13 @@
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="NewTGT.ToolTip" xml:space="preserve">
+    <value>QPC might improve performance, but some system might also have a
+buggy HPET implementation, which could actually make performance worse.
+
+Requires a restart of the MIDI app that has
+been patched with the Windows Multimedia Wrapper.</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>65</value>
   </metadata>

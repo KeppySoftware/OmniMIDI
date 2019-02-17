@@ -106,7 +106,6 @@ struct Settings
 	BOOL OverrideNoteLength = FALSE;		// Override note length
 	BOOL PreloadSoundFonts = FALSE;			// Soundfont preloading
 	BOOL SincInter = FALSE;					// Sinc
-	BOOL SleepStates = FALSE;				// Reduce CPU overhead
 	BOOL VolumeMonitor = FALSE;				// Volume monitoring
 
 	DWORD AudioBitDepth = 0;				// Floating point audio

@@ -362,9 +362,9 @@ namespace OmniMIDIConfigurator
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("CapFramerate", yesno, RegistryValueKind.DWord);
         }
 
-        public static void SleepStates(int yesno)
+        public static void NewTGT(int yesno)
         {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("SleepStates", yesno, RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("NewTGT", yesno, RegistryValueKind.DWord);
         }
 
         public static void OldBufferMode(int yesno)
@@ -990,16 +990,16 @@ namespace OmniMIDIConfigurator
         /// <param name="vms2emu">Set if the driver has to emulate VirtualMIDISynth 2.x (Example: Slowdowns when the EVBuffer is full). 0 = Disabled, 1 = Enabled</param>
         /// <param name="allowksdapi">Set if the driver has to allow apps to use the KSDirect API. 0 = Disallow, 1 = Allow</param>
         /// <param name="oldbuffermode">Set if the driver should use the old buffer mode (Only DirectSound and XAudio). 0 = Disabled, 1 = Enabled</param>
-        /// <param name="sleepstates">Set if the driver should disable sleepstates (Only DirectSound). 0 = Disable them, 1 = Keep them enabled</param>
-        public static void ChangeAdvancedAudioSettings(int audiodepth, int monorendering, int fadeoutdisable, int vms2emu, int allowksdapi, int oldbuffermode, int sleepstates)
+        /// <param name="newtgt">Set if the wrapper should use QPC instead of timeGetTime. 0 = timeGetTime, 1 = QPC</param>
+        public static void ChangeAdvancedAudioSettings(int audiodepth, int monorendering, int fadeoutdisable, int vms2emu, int allowksdapi, int oldbuffermode, int newtgt)
         {
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", audiodepth, RegistryValueKind.DWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("MonoRendering", monorendering, RegistryValueKind.DWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", fadeoutdisable, RegistryValueKind.DWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("DontMissNotes", vms2emu, RegistryValueKind.DWord);
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("KSDAPIEnabled", allowksdapi, RegistryValueKind.DWord);
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("KDMAPIEnabled", allowksdapi, RegistryValueKind.DWord);
             Functions.OldBufferMode(oldbuffermode);
-            Functions.SleepStates(sleepstates);
+            Functions.NewTGT(newtgt);
         }
 
         /// <summary>
@@ -1063,7 +1063,7 @@ namespace OmniMIDIConfigurator
                             else if (SettingName(x) == "VoiceLimit") OmniMIDIConfiguratorMain.Delegate.PolyphonyLimit.Value = Convert.ToInt32(SettingValue(x));
                             else if (SettingName(x) == "Volume") OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value = Convert.ToInt32(SettingValue(x));
                             // Advanced audio settings
-                            else if (SettingName(x) == "AllowKSDAPI") OmniMIDIConfiguratorMain.SynthSettings.SetValue("KSDAPIEnabled", SettingValue(x), RegistryValueKind.DWord);
+                            else if (SettingName(x) == "AllowKDMAPI") OmniMIDIConfiguratorMain.SynthSettings.SetValue("KDMAPIEnabled", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "HyperMode") OmniMIDIConfiguratorMain.SynthSettings.SetValue("HyperPlayback", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "AudioDepth") OmniMIDIConfiguratorMain.SynthSettings.SetValue("AudioBitDepth", SettingValue(x), RegistryValueKind.DWord);
                             else if (SettingName(x) == "FadeOutDisable") OmniMIDIConfiguratorMain.SynthSettings.SetValue("DisableNotesFadeOut", SettingValue(x), RegistryValueKind.DWord);
@@ -1147,7 +1147,7 @@ namespace OmniMIDIConfigurator
                     SettingsToText.AppendLine(String.Format("Volume = {0}", OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value));
                     SettingsToText.AppendLine();
                     SettingsToText.AppendLine("// Advanced audio settings");
-                    SettingsToText.AppendLine(String.Format("AllowKSDAPI = {0}", OmniMIDIConfiguratorMain.SynthSettings.GetValue("KSDAPIEnabled", 1)));
+                    SettingsToText.AppendLine(String.Format("AllowKDMAPI = {0}", OmniMIDIConfiguratorMain.SynthSettings.GetValue("KDMAPIEnabled", 1)));
                     SettingsToText.AppendLine(String.Format("HyperMode = {0}", OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)));
                     SettingsToText.AppendLine(String.Format("AudioDepth = {0}", OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioBitDepth", 1)));
                     SettingsToText.AppendLine(String.Format("FadeOutDisable = {0}", OmniMIDIConfiguratorMain.SynthSettings.GetValue("DisableNotesFadeOut", 0)));
