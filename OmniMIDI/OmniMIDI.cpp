@@ -94,11 +94,11 @@ void NTSleep(__int64 usec) {
 
 static DWORD DummyPlayBufData() { return 0; }
 static VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
-static MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) { return MIDIERR_NOTREADY; }
+static MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
 
 // Hyper switch
 static BOOL HyperMode = 0;
-static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) = DummyParseData;
+static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1) = DummyParseData;
 static VOID(*_StoBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummySendToBASSMIDI;
 static DWORD(*_PlayBufData)(void) = DummyPlayBufData;
 static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
@@ -328,7 +328,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
-		return _PrsData(uMsg, dwParam1, dwParam2);
+		return _PrsData(uMsg, dwParam1);
 	case MODM_LONGDATA: {
 		// Pass it to a KDMAPI function
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);

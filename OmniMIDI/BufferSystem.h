@@ -303,7 +303,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1) {
 	// Some checks
 	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
@@ -355,7 +355,7 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1) {
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;

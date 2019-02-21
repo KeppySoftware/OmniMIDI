@@ -291,7 +291,7 @@ extern "C" BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param)
 
 extern "C" MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
-	return _PrsData(MODM_DATA, dwMsg, 0);
+	return _PrsData(MODM_DATA, dwMsg);
 }
 
 extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {

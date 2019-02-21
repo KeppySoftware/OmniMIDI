@@ -186,7 +186,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 
 			switch (evid) {
 			case MEVT_SHORTMSG:
-				_StoBASSMIDI(0, evt->dwEvent);
+				_PrsData(MODM_DATA, evt->dwEvent);
 				break;
 			case MEVT_LONGMSG:
 				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, evt->dwParms, evt->dwEvent & 0xFFFFFF);
