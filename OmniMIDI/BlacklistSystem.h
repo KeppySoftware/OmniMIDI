@@ -7,7 +7,7 @@ BOOL BannedProcesses() {
 	GetAppName();
 
 	// Check if the current process is banned
-	for (int i = 0; i < (sizeof(BuiltInBlacklist) / sizeof(BuiltInBlacklist[0])); i++) {
+	for (int i = 0; i < (sizeof(BuiltInBlacklist) / sizeof(*BuiltInBlacklist)); i++) {
 		// It's a match, the process is banned
 		if (!_wcsicmp(AppNameW, BuiltInBlacklist[i])) return TRUE;
 	}

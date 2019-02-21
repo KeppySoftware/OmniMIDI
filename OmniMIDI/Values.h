@@ -39,9 +39,11 @@ static DWORD GetEvBuffSizeFromRAM = 0;
 // Device stuff
 static HSTREAM OMStream = NULL;
 static HANDLE OMReady = NULL;
-static MIDIOPENDESC OMMOD = { 0 };
-static HDRVR OMDevice = NULL;
+static HMIDI OMHMIDI = NULL;
+static DWORD_PTR OMCallback = NULL;
+static DWORD_PTR OMInstance = NULL;
 static DWORD OMFlags = NULL;
+static HDRVR OMDevice = NULL;
 
 // Important stuff
 static const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
@@ -52,6 +54,7 @@ static BOOL ASIOReady = FALSE;
 static BOOL DisableChime = FALSE;
 static BOOL KDMAPIEnabled = FALSE;
 static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
+static CHAR SynthName[MAXPNAMELEN];			// Synthesizer name, but ASCII
 
 // Stream
 static BASS_INFO info;
@@ -140,14 +143,18 @@ static const DWORD prioval[] =
 static const LPCWSTR BuiltInBlacklist[] =
 {
 	_T("Battle.net Launcher.exe"),
+	_T("Discord.exe"),
+	_T("DiscordCanary.exe"),
+	_T("Fortnite.exe"),
+	_T("ICEsoundService64.exe"),
 	_T("LogonUI.exe"),
 	_T("NVDisplay.Container.exe"),
 	_T("NVIDIA Share.exe"),
 	_T("NVIDIA Web Helper.exe"),
+	_T("RainbowSix.exe"),
+	_T("RuntimeBroker.exe"),
 	_T("RustClient.exe"),
 	_T("SearchUI.exe"),
-	_T("Fortnite.exe"),
-	_T("RainbowSix.exe"),
 	_T("SecurityHealthService.exe"),
 	_T("SecurityHealthSystray.exe"),
 	_T("ShellExperienceHost.exe"),
@@ -159,6 +166,7 @@ static const LPCWSTR BuiltInBlacklist[] =
 	_T("ctfmon.exe"),
 	_T("dwm.exe"),
 	_T("explorer.exe"),
+	_T("fontdrvhost.exe"),
 	_T("lsass.exe"),
 	_T("mstsc.exe"),
 	_T("nvcontainer.exe"),
@@ -166,7 +174,9 @@ static const LPCWSTR BuiltInBlacklist[] =
 	_T("smss.exe"),
 	_T("spoolsv.exe"),
 	_T("vcpkgsrv.exe"),
-	_T("vmware-hostd.exe")
+	_T("vmware-hostd.exe"),
+	_T("wininit.exe"),
+	_T("winlogon.exe")
 };
 
 // Per channel values

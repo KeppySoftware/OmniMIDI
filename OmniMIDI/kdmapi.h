@@ -301,24 +301,25 @@ extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
-	if (!IIMidiHdr ||																			// The buffer either doesn't exist, or
-		!(IIMidiHdr->dwBytesRecorded <= IIMidiHdr->dwBufferLength) ||							// the given size is invalid
-		IIMidiHdr->dwBufferLength >= LONGMSG_MAXSIZE) {
-		PrintMessageToDebugLog("PrepareLongData", "The buffer is too big, or it's invalid.");
-		return DebugResult(MMSYSERR_INVALPARAM);												// Invalid parameter
+	if (!IIMidiHdr) {
+		PrintMessageToDebugLog("PrepareLongData", "The buffer doesn't exist, or hasn't been allocated.");
+		return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// Buffer doesn't exist
 	}
-
+	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE) {
+		PrintMessageToDebugLog("PrepareLongData", "The given stream buffer is greater than 64K.");
+		return DebugResult(MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");			// Buffer is bigger than 64K
+	}
 	if (IIMidiHdr->dwFlags & MHDR_PREPARED) {
 		PrintMessageToDebugLog("PrepareLongData", "The buffer is already prepared.");
-		return MMSYSERR_NOERROR;																// Already prepared, everything is fine
+		return MMSYSERR_NOERROR;																			// Already prepared, everything is fine
 	}
 
 	PrintMessageToDebugLog("PrepareLongData", "Locking buffer...");
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	if (!VirtualLock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength))
+	if (!VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
 	{
-		PrintMessageToDebugLog("PrepareLongData", "NtLockVirtualMemory failed to lock the buffer!");
-		return DebugResult(MMSYSERR_NOMEM);
+		PrintMessageToDebugLog("PrepareLongData", "VirtualLock failed to lock the buffer!");
+		return DebugResult(MMSYSERR_NOMEM, "VirtualLock failed to lock the buffer!");
 	}
 	PrintMessageToDebugLog("PrepareLongData", "Buffer is locked.");
 
@@ -333,38 +334,37 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
 	if (!IIMidiHdr) {
-		PrintMessageToDebugLog("UnprepareLongData", "The buffer passed to this function is invalid.");
-		return DebugResult(MMSYSERR_INVALPARAM);														// The buffer doesn't exist, invalid parameter
+		PrintMessageToDebugLog("UnprepareLongData", "The buffer doesn't exist, or hasn't been allocated.");
+		return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// The buffer doesn't exist, invalid parameter
 	}
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is already unprepared.");
-		return MMSYSERR_NOERROR;																		// Already unprepared, everything is fine
+		return MMSYSERR_NOERROR;																			// Already unprepared, everything is fine
 	}
 	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still in queue.");
-		return DebugResult(MIDIERR_STILLPLAYING);														// The buffer is currently being played from the driver, cannot unprepare
+		return DebugResult(MIDIERR_STILLPLAYING, "The buffer is still in queue.");							// The buffer is currently being played from the driver, cannot unprepare
 	}
 
 	PrintMessageToDebugLog("UnprepareLongData", "Unlocking buffer...");
 	// Unlock the buffer, and say that everything is oki-doki
-	if (!VirtualUnlock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength))
+	if (!VirtualUnlock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
 	{
 		// The buffer isn't locked
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still already unlocked.");
-		return MMSYSERR_NOERROR;
 	}
 
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
-	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																// Mark the buffer as unprepared
+	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																	// Mark the buffer as unprepared
 
 	PrintMessageToDebugLog("UnprepareLongData", "Function succeded.");
 	return MMSYSERR_NOERROR;
 }
 
 extern "C" MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY);						// The driver isn't ready
-	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM);							// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED);	// The buffer is not prepared
+	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, "BASS hasn't been initialized yet");					// The driver isn't ready
+	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// The buffer doesn't exist, invalid parameter
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED, "The buffer is not prepared");	// The buffer is not prepared
 	
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;

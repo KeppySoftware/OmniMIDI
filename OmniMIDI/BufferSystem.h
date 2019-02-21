@@ -313,7 +313,7 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 	// Some checks
 
 	// The buffer is not ready yet
-	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY);
+	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY, "The events buffer isn't ready yet!");
 
 	// Prepare the event in the buffer
 

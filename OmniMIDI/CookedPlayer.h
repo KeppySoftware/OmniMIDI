@@ -16,7 +16,7 @@ struct CookedPlayer
 	DWORD TimeAccumulator;				// ?
 	DWORD ByteAccumulator;				// ?
 	DWORD TickAccumulator;				// ?
-	LockSystem Lock;					// Critical section
+	LockSystem Lock;					// LockSystem
 	DWORD_PTR dwInstance;
 };
 
@@ -72,16 +72,16 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			tickdiff = ticker;
 			int delt = (int)(tdiff - oldsleep);				// Calculate drift
 			deltasleep += delt;								// Accumlate drift
-            
+
 			sleeptime = (delaytick * Player->TempoMulti);	// TODO: can overflow
 			//sleeptime *= speedcontrol;
 			oldsleep = sleeptime;
-            
+
 			Player->TimeAccumulator += sleeptime;
-            
+
 			if (deltasleep > 0)								// Can underflow, don't speed up if we pushed too hard
 				sleeptime -= deltasleep;					// Adjust for time drift
-            
+
 			if (0) //if(sleeptime > maxdelay)
 			{ // Yes, this is very coarse, but the adaptive timer will keep it in sync
 				sleeptime = maxdelay;
@@ -130,19 +130,14 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 
 		if (hdr->dwFlags & MHDR_DONE)
 		{
-            CrashMessage("CookedPlayerSystem | MHDR_DONE invalid.");
 			LockForWriting(&Player->Lock);
-
 			Player->MIDIHeaderQueue = hdr->lpNext;
-
 			UnlockForWriting(&Player->Lock);
 			continue;
 		}
 
 		while (!Player->Paused)
 		{
-			PrintMessageToDebugLog("CookedPlayerSystem", "Before offset callback STUB");
-
 			if (hdr->dwOffset >= hdr->dwBytesRecorded)
 			{
 				LockForWriting(&Player->Lock);
@@ -153,13 +148,11 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 
 				Player->MIDIHeaderQueue = nexthdr;
 
-				PrintMessageToDebugLog("CookedPlayerSystem", "Sending offset callback...");
-				if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 
 				hdr->dwOffset = 0;
 				hdr = nexthdr;
 
-				PrintMessageToDebugLog("CookedPlayerSystem", "Breaking from if statement with offset callback...");
 				break;
 			}
 
@@ -170,7 +163,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 				barrier = FALSE;
 				delaytick = evt->dwDeltaTime;
 
-				if (delaytick) break;			
+				if (delaytick) break;
 			}
 
 			// Reset barrier
@@ -179,8 +172,10 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
 				PrintMessageToDebugLog("CookedPlayerSystem", "dwEvent requested DriverCallback!");
-				if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 			}
+
+			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
 
 			/*
 			if(evid != MEVT_NOP && evid != MEVT_VERSION)
@@ -189,7 +184,6 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			}
 			*/
 
-			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
 			switch (evid) {
 			case MEVT_SHORTMSG:
 				_StoBASSMIDI(0, evt->dwEvent);

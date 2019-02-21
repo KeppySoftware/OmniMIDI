@@ -757,41 +757,43 @@ Retry:
 	}
 }
 
-MMRESULT DebugResult(MMRESULT ErrorToDisplay) {
-	if (ManagedSettings.DebugMode)
-	{
-		if (ErrorToDisplay == MMSYSERR_NOERROR) return MMSYSERR_NOERROR;
+MMRESULT DebugResult(MMRESULT ErrorToDisplay, LPCSTR ExactError) {
+	if (ErrorToDisplay == MMSYSERR_NOERROR) return MMSYSERR_NOERROR;
 
-		CHAR ErrorTitle[512] = { 0 };
-		CHAR ErrorString[512] = { 0 };
+	CHAR ErrorTitle[512] = { 0 };
+	CHAR ErrorString[512] = { 0 };
 
-		switch (ErrorToDisplay) {
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous midiStreamOpen/midiOutOpen call.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVERCB, "The driver does not call DriverCallback.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The specified alias was not found.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "The specified alias was not found.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "The handle of the specified device is invalid.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
-			CurrentError(ErrorTitle, ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");
-			CurrentError(ErrorTitle, ErrorString, MIDIERR_UNPREPARED, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
-			CurrentError(ErrorTitle, ErrorString, MIDIERR_STILLPLAYING, "Buffers are still in the queue.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_BADDEVICEID, "The specified device ID is out of range.");
-		default:
-			sprintf_s(ErrorTitle, 512, "MMSYSERR_ERROR");
-			sprintf_s(ErrorString, 512, "Unspecified error.");
-			break;
-		}
-
-		strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
-		PrintMessageToDebugLog(ErrorTitle, ErrorString);
-		MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+	switch (ErrorToDisplay) {
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous midiStreamOpen/midiOutOpen call.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVERCB, "The driver does not call DriverCallback.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The specified alias was not found.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "The specified alias was not found.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "The handle of the specified device is invalid.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
+		CurrentError(ErrorTitle, ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");
+		CurrentError(ErrorTitle, ErrorString, MIDIERR_UNPREPARED, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
+		CurrentError(ErrorTitle, ErrorString, MIDIERR_STILLPLAYING, "Buffers are still in the queue.");
+		CurrentError(ErrorTitle, ErrorString, MMSYSERR_BADDEVICEID, "The specified device ID is out of range.");
+	default:
+		sprintf_s(ErrorTitle, 512, "MMSYSERR_ERROR");
+		sprintf_s(ErrorString, 512, "Unspecified error.");
+		break;
 	}
+
+	if (ExactError) {
+		strcat(ErrorString, "\n\nCause: ");
+		strcat(ErrorString, ExactError);
+	}
+
+	strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
+	PrintMessageToDebugLog(ErrorTitle, ErrorString);
+	MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 
 	return ErrorToDisplay;
 }

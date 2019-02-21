@@ -37,32 +37,36 @@ namespace OmniMIDIConfigurator
 
         private void MidiProc(IntPtr hMidiIn, uint wMsg, UIntPtr dwInstance, UIntPtr dwParam1, UIntPtr dwParam2)
         {
+            String StrEvent = dwParam1.ToUInt32().ToString("X6");
             switch (wMsg)
             {
                 case MIDIInEvent.MIM_DATA:
                     KDMAPI.SendDirectData(dwParam1.ToUInt32());
-                    SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
-                    break;
+                    SetLastEvent(StrEvent, false);
+                    return;
+                case MIDIInEvent.MIM_MOREDATA:
+                    KDMAPI.SendDirectDataNoBuf(dwParam1.ToUInt32());
+                    SetLastEvent(String.Format("SLOW {0}", StrEvent), false);
+                    return;
                 case MIDIInEvent.MIM_LONGDATA:
                     KDMAPI.SendDirectLongData(dwParam1);
-                    SetLastEvent(dwParam1.ToUInt32().ToString("X6"), false);
-                    break;
+                    SetLastEvent(StrEvent, false);
+                    return;
+                case MIDIInEvent.MIM_OPEN:
+                    SetLastEvent("MIM_OPEN", false);
+                    return;
+                case MIDIInEvent.MIM_CLOSE:
+                    SetLastEvent("MIM_CLOSE", false);
+                    return;
                 case MIDIInEvent.MIM_ERROR:
-                    MessageBox.Show(
-                        String.Format("Failed to parse the following message: {0:X}", dwParam1.ToUInt32()),
-                        "OmniMIDI - Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    SetLastEvent("MIM_ERROR", true);
-                    break;
+                    SetLastEvent(String.Format("MIM_ERROR {0}", StrEvent), true);
+                    return;
                 case MIDIInEvent.MIM_LONGERROR:
-                    MessageBox.Show(
-                        String.Format("Failed to parse the following long message: {0:X}", dwParam1.ToUInt32()),
-                        "OmniMIDI - Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    SetLastEvent("MIM_LONGERROR", true);
-                    break;
+                    SetLastEvent(String.Format("MIM_LONGERROR {0}", StrEvent), true);
+                    return;
+                default:
+                    SetLastEvent("MIM_UNK", true);
+                    return;
             }
         }
 
@@ -129,9 +133,9 @@ namespace OmniMIDIConfigurator
         {
             if (handle != IntPtr.Zero && WhenItGotReceived != null)
             {
-                if (WhenItGotReceived != null && WhenItGotReceived.ElapsedMilliseconds < 200)
+                if (WhenItGotReceived != null)
                 {
-                    ActivityPanel.BackColor = Color.DarkGreen;
+                    ActivityPanel.BackColor = (WhenItGotReceived.ElapsedMilliseconds < 200) ? Color.DarkGreen : Color.DarkOrange;
                     ActivityLabel.Text = String.Format("Received {0}.", LastEvent);
                 }
                 else
@@ -193,10 +197,13 @@ namespace OmniMIDIConfigurator
     internal static class MIDIInEvent
     {
         // Internal
+        public const int MIM_OPEN = 0x3C1;
+        public const int MIM_CLOSE = 0x3C2;
         public const int MIM_DATA = 0x3C3;
         public const int MIM_LONGDATA = 0x3C4;
         public const int MIM_ERROR = 0x3C5;
         public const int MIM_LONGERROR = 0x3C6;
+        public const int MIM_MOREDATA = 0x3CC;
     }
 
     [StructLayout(LayoutKind.Sequential)]
