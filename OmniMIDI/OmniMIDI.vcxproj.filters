@@ -78,4 +78,9 @@
       <Filter>Runtime</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="OmniMIDI.def">
+      <Filter>Runtime</Filter>
+    </None>
+  </ItemGroup>
 </Project>

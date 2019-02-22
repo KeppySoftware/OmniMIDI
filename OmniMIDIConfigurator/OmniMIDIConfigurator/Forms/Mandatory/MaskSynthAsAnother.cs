@@ -58,13 +58,16 @@ namespace OmniMIDIConfigurator
             {
                 if (Names.Text.Length >= 1)
                 {
+                    if (Names.Text.Equals("OmniMapper", StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show("You can not set the mask name to OmniMapper!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     OmniMIDIConfiguratorMain.SynthSettings.SetValue("SynthName", Names.Text, RegistryValueKind.String);
                     Close();
                 }
-                else
-                {
-                    MessageBox.Show("The mask name can not be blank!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                else MessageBox.Show("The mask name can not be blank!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {

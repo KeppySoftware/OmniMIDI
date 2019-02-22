@@ -93,6 +93,7 @@ namespace OmniMIDIConfigurator
 
         public static RegistryKey Mixer = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI", true);
         public static RegistryKey SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", true);
+        public static RegistryKey Mapper = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Mapper", true);
         public static RegistryKey Channels = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Channels", true);
         public static RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Watchdog", true);
         public static RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Paths", true);
@@ -1925,16 +1926,7 @@ namespace OmniMIDIConfigurator
 
         private void AMIDIMapCpl_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Program.DebugToConsole(false, "Opening the Alternative MIDI Mapper applet.", null);
-                var process = System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\amidimap.cpl");
-                process.WaitForExit();
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "Can not open the Alternative MIDI Mapper applet!", true, ex);
-            }
+            new OmniMapperCpl().ShowDialog();
         }
 
         // Snap feature

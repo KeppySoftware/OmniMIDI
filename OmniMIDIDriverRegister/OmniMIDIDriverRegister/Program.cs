@@ -86,8 +86,8 @@ namespace OmniMIDIDriverRegister
             }
             else if (arguments[0] == "/associate")
             {
-                string ExecutableName = "KeppySynthConfigurator.exe";
-                string OpenWith = Path.GetFullPath("KeppySynthConfigurator.exe");
+                string ExecutableName = "OmniMIDIConfigurator.exe";
+                string OpenWith = Path.GetFullPath("OmniMIDIConfigurator.exe");
                 string[] extensions = { "sf2", "sfz", "sfpack" };
                 try
                 {
@@ -222,12 +222,12 @@ namespace OmniMIDIDriverRegister
                 Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Multimedia\MIDIMap");
                 if (Environment.Is64BitOperatingSystem)
                 {
-                    clsid32.SetValue("midimapper", "OmniMIDI\\amidimap.cpl");
-                    clsid64.SetValue("midimapper", "OmniMIDI\\amidimap.cpl");
+                    clsid32.SetValue("midimapper", "OmniMIDI\\OmniMapper.dll");
+                    clsid64.SetValue("midimapper", "OmniMIDI\\OmniMapper.dll");
                 }
                 else
                 {
-                    clsid32.SetValue("midimapper", "OmniMIDI\\amidimap.cpl");
+                    clsid32.SetValue("midimapper", "OmniMIDI\\OmniMapper.dll");
                 }
                 ShowMessage(IsSilent, "MIDI mapper successfully registered.", "Information", MessageBoxIcon.Information);
             }

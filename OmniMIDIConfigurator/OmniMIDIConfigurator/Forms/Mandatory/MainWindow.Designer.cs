@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -209,7 +209,7 @@
             this.openTheBlacklistManagerToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
-            this.AMIDIMapCpl = new System.Windows.Forms.MenuItem();
+            this.OmniMapperCpl = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
@@ -1760,7 +1760,7 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -2301,12 +2301,12 @@
             this.menuItem9.Index = 3;
             this.menuItem9.Text = "-";
             // 
-            // AMIDIMapCpl
+            // OmniMapperCpl
             // 
-            this.AMIDIMapCpl.Index = 4;
-            this.AMIDIMapCpl.Text = "Open the Alternative MIDI Mapper applet";
-            this.AMIDIMapCpl.Visible = false;
-            this.AMIDIMapCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
+            this.OmniMapperCpl.Index = 4;
+            this.OmniMapperCpl.Text = "Open the OmniMapper control panel";
+            this.OmniMapperCpl.Visible = false;
+            this.OmniMapperCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
             // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem1
             // 
@@ -2349,7 +2349,7 @@
             this.openTheMixerToolStripMenuItem,
             this.openTheBlacklistManagerToolStripMenuItem,
             this.menuItem9,
-            this.AMIDIMapCpl,
+            this.OmniMapperCpl,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem,
@@ -2623,7 +2623,7 @@
             this.menuItem40.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AMIDIMapInstallMenu,
             this.AMIDIMapUninstallMenu});
-            this.menuItem40.Text = "Alternative MIDI Mapper";
+            this.menuItem40.Text = "OmniMapper";
             // 
             // RegDriver
             // 
@@ -3072,7 +3072,7 @@
         private System.Windows.Forms.MenuItem openTheBlacklistManagerToolStripMenuItem;
         private System.Windows.Forms.MenuItem assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem9;
-        public System.Windows.Forms.MenuItem AMIDIMapCpl;
+        public System.Windows.Forms.MenuItem OmniMapperCpl;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;

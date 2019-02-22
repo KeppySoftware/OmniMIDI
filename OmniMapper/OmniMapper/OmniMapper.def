@@ -1,0 +1,4 @@
+LIBRARY		OmniMapper.dll
+EXPORTS
+	DriverProc
+	modMessage

@@ -44,6 +44,9 @@
   <ItemGroup>
     <Image Include="ksicon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="OmniMIDI.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>OmniMIDI</ProjectName>
     <ProjectGuid>{BD7491C1-986F-4D48-99E6-018AB4ACF801}</ProjectGuid>

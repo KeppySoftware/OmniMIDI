@@ -547,16 +547,16 @@ namespace OmniMIDIConfigurator
         public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
         {
             RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
-            if (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\amidimap.cpl")
+            if (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll")
             {
-                OmniMIDIConfiguratorMain.Delegate.AMIDIMapCpl.Visible = true;
+                OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Visible = true;
                 OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
                 OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
                 OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
             }
             else
             {
-                OmniMIDIConfiguratorMain.Delegate.AMIDIMapCpl.Visible = false;
+                OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Visible = false;
                 if (Environment.OSVersion.Version.Major > 6)
                 {
                     OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
@@ -858,12 +858,18 @@ namespace OmniMIDIConfigurator
             try
             {
                 // Initialize the registry
+                Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI\\Mapper");
                 Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI\\Settings");
                 Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI\\Watchdog");
                 Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI\\Paths");
+                OmniMIDIConfiguratorMain.Mapper = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Mapper", true);
                 OmniMIDIConfiguratorMain.SynthSettings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
                 OmniMIDIConfiguratorMain.Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
                 OmniMIDIConfiguratorMain.SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Settings", true);
+
+                // Mapper
+                OmniMIDIConfiguratorMain.Mapper.SetValue("TrgtSynth", "500", RegistryValueKind.DWord);
+                OmniMIDIConfiguratorMain.Mapper.SetValue("MaxRenderingTime", "65", RegistryValueKind.DWord);
 
                 // Normal settings
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("MaxVoices", "500", RegistryValueKind.DWord);
