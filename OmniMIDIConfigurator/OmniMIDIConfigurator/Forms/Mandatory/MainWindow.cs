@@ -1418,7 +1418,9 @@ namespace OmniMIDIConfigurator
 
         private void WMMPatches_Click(object sender, EventArgs e)
         {
-            new WinMMPatches().ShowDialog();
+            WinMMPatches frm = new WinMMPatches();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1470,7 +1472,7 @@ namespace OmniMIDIConfigurator
 
         private void SetHandCursor(object sender, EventArgs e)
         {
-            Cursor = System.Windows.Forms.LinkLabelEx.SystemHandCursor;
+            Cursor = LinkLabelEx.SystemHandCursor;
         }
 
         private void SetDefaultCursor(object sender, EventArgs e)
@@ -1518,31 +1520,41 @@ namespace OmniMIDIConfigurator
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening WAV output dialog.", null);
-            new OutputWAVDir().ShowDialog();
+            OutputWAVDir frm = new OutputWAVDir();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         private void AASMenu_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening advanced audio settings.", null);
-            new AdvancedAudioSettings().ShowDialog(this);
+            AdvancedAudioSettings frm = new AdvancedAudioSettings();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         private void MEPSMenu_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening MIDI events parser settings.", null);
-            new MIDIEventsParserSettings().ShowDialog(this);
+            MIDIEventsParserSettings frm = new MIDIEventsParserSettings();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         private void assignASoundfontListToASpecificAppToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening SoundFont list assign dialog.", null);
-            new SFListAssign().ShowDialog();
+            SFListAssign frm = new SFListAssign();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         private void manageFolderFavouritesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening folder favourites dialog.", null);
-            new FavouritesManager().ShowDialog();
+            FavouritesManager frm = new FavouritesManager();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         private void RegDriver_Click(object sender, EventArgs e)
@@ -1724,14 +1736,8 @@ namespace OmniMIDIConfigurator
 
         private void SignatureCheck_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                Functions.GetSHA256OfDLLs(true);
-            }
-            else
-            {
-                Functions.GetSHA256OfDLLs(false);
-            }
+            if (Control.ModifierKeys == Keys.Shift) Functions.GetSHA256OfDLLs(true);
+            else Functions.GetSHA256OfDLLs(false);
         }
 
         private void WhatIsXAudio_Click(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1926,7 +1932,9 @@ namespace OmniMIDIConfigurator
 
         private void AMIDIMapCpl_Click(object sender, EventArgs e)
         {
-            new OmniMapperCpl().ShowDialog();
+            OmniMapperCpl frm = new OmniMapperCpl();
+            frm.ShowDialog(this);
+            frm.Dispose();
         }
 
         // Snap feature

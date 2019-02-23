@@ -44,20 +44,20 @@ namespace OmniMIDIConfigurator
             UIntPtr dwParam1,
             UIntPtr dwParam2);
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiInGetNumDevs();
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiInGetDevCaps(
             uint uDeviceID,
             out MIDIINCAPS caps,
             uint cbMidiInCaps);
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiInClose(
             IntPtr hMidiIn);
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiInOpen(
             out IntPtr lphMidiIn,
             int uDeviceID,
@@ -65,18 +65,18 @@ namespace OmniMIDIConfigurator
             IntPtr dwCallbackInstance,
             int dwFlags);
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiInStart(
             IntPtr hMidiIn);
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiInStop(
             IntPtr hMidiIn);
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiOutGetNumDevs();
 
-        [DllImport("winmm.dll")]
+        [DllImport("winmm")]
         internal static extern int midiOutGetDevCaps(
             uint uDeviceID,
             out MIDIOUTCAPS caps,
@@ -317,71 +317,63 @@ namespace OmniMIDIConfigurator
 
                 TriggerDate();
 
-                try
+                foreach (String s in args)
                 {
-                    foreach (String s in args)
+                    if (s.ToLowerInvariant() == "/rei")
                     {
-                        if (s.ToLowerInvariant() == "/rei")
-                        {
-                            TLS12Enable(true);
+                        TLS12Enable(true);
 
-                            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);        
+                        FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
 
-                            var current = Process.GetCurrentProcess();
-                            Process.GetProcessesByName(current.ProcessName)
-                                .Where(t => t.Id != current.Id)
-                                .ToList()
-                                .ForEach(t => t.Kill());
+                        var current = Process.GetCurrentProcess();
+                        Process.GetProcessesByName(current.ProcessName)
+                            .Where(t => t.Id != current.Id)
+                            .ToList()
+                            .ForEach(t => t.Kill());
 
-                            UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
-                            return;
-                        }
-                        else if (s.ToLowerInvariant() == "/toomni")
-                        {
-                            UpdateToOmniMIDI();
-                            return;
-                        }
-                        else if (s.ToLowerInvariant() == "/inf")
-                        {
-                            runmode = 2;
-                            window = 1;
-                            break;
-                        }
-                        else if (s.ToLowerInvariant() == "/egg")
-                        {
-                            CrashMyComputer.RtlAdjustPrivilege(19, true, false, ref CrashMyComputer.DummyBool);
-                            CrashMyComputer.NtRaiseHardError(0xC01E0200, 0U, 0U, IntPtr.Zero, 6U, ref CrashMyComputer.DummyDWORD);
-                            return;
-                        }
-                        else
-                        {
-                            runmode = 0;
-                            window = 0;
-                            break;
-                        }
+                        UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
+                        return;
                     }
-
-                    TLS12Enable(false);
-                    if (Properties.Settings.Default.UpdateBranch == "choose")
+                    else if (s.ToLowerInvariant() == "/toomni")
                     {
-                        SelectBranch frm = new SelectBranch();
-                        frm.ShowInTaskbar = true;
-                        frm.StartPosition = FormStartPosition.CenterScreen;
-                        frm.ShowDialog();
-                        frm.Dispose();
+                        UpdateToOmniMIDI();
+                        return;
                     }
-
-                    ExecuteForm(runmode, args, m, window);
+                    else if (s.ToLowerInvariant() == "/inf")
+                    {
+                        runmode = 2;
+                        window = 1;
+                        break;
+                    }
+                    else if (s.ToLowerInvariant() == "/egg")
+                    {
+                        CrashMyComputer.RtlAdjustPrivilege(19, true, false, ref CrashMyComputer.DummyBool);
+                        CrashMyComputer.NtRaiseHardError(0xC01E0200, 0U, 0U, IntPtr.Zero, 6U, ref CrashMyComputer.DummyDWORD);
+                        return;
+                    }
+                    else
+                    {
+                        runmode = 0;
+                        window = 0;
+                        break;
+                    }
                 }
-                catch
+
+                TLS12Enable(false);
+                if (Properties.Settings.Default.UpdateBranch == "choose")
                 {
-                    Application.EnableVisualStyles();
-                    Application.Run(new OmniMIDIConfiguratorMain(args));
+                    SelectBranch frm = new SelectBranch();
+                    frm.ShowInTaskbar = true;
+                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    frm.ShowDialog();
+                    frm.Dispose();
                 }
+
+                ExecuteForm(runmode, args, m, window);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(String.Format("Fatal error during the execution of the configurator!\nMore details: {0}\n\nPress OK to quit.", ex.ToString()), "OmniMIDI Configurator - FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 

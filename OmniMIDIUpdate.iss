@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '6.3.0.11'
+#define Version '6.3.0.12'
                          
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -191,6 +191,9 @@ Root: "HKCU"; Subkey: "Software\{#ProductName}\Configuration"; ValueType: dword;
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Configuration"; ValueType: string; ValueName: "ASIOOutput"; ValueData: "FL Studio ASIO"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Configuration"; ValueType: string; ValueName: "SynthName"; ValueData: "OmniMIDI"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Settings"; Flags: uninsdeletekey deletekey
+       
+;Mapper
+Root: "HKCU"; Subkey: "Software\{#ProductName}\Mapper"; ValueType: string; ValueName: "TrgtSynth"; ValueData: "Microsoft GS Wavetable Synth"; Flags: createvalueifdoesntexist uninsdeletevalue
 
 ;Override instruments
 Root: "HKCU"; Subkey: "Software\{#ProductName}\ChanOverride"; ValueType: dword; ValueName: "overrideinstruments"; ValueData: "0"; Flags: createvalueifdoesntexist uninsdeletekey
@@ -228,9 +231,6 @@ Root: "HKCU"; Subkey: "Software\{#ProductName}\Watchdog"; ValueType: dword; Valu
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Watchdog"; ValueType: dword; ValueName: "runwd"; ValueData: "0"; Flags: dontcreatekey deletevalue uninsdeletevalue
 Root: "HKCU"; Subkey: "Software\{#ProductName}\Watchdog"; ValueType: dword; ValueName: "watchdog"; ValueData: "1"; Flags: dontcreatekey deletevalue uninsdeletevalue
   
-;Mapper
-Root: "HKCU"; Subkey: "Software\{#ProductName}\Mapper"; ValueType: string; ValueName: "TrgtSynth"; ValueData: "Microsoft GS Wavetable Synth"; Flags: dontcreatekey deletevalue uninsdeletevalue
-
 [InstallDelete]
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\amidimap.cpl"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\amidimap.cpl"

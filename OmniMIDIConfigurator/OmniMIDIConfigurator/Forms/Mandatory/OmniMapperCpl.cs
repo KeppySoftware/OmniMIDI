@@ -23,28 +23,35 @@ namespace OmniMIDIConfigurator
 
         private void OmniMapperCpl_Load(object sender, EventArgs e)
         {
-            MIDIOUTCAPS OutCaps = new MIDIOUTCAPS();
-            for (uint i = 0; i < DeviceCount; i++)
+            try
             {
-                WinMM.midiOutGetDevCaps(i, out OutCaps, (uint)Marshal.SizeOf(OutCaps));
-                if (OutCaps.szPname.Equals("OmniMapper")) continue;
-
-                MIDIOutList.Items.Add(OutCaps.szPname);
-            }
-
-            bool Found = false;
-            String SelDevice = OmniMIDIConfiguratorMain.Mapper.GetValue("TrgtSynth", "Microsoft GS Wavetable Synth").ToString();
-            for (int i = 0; i < MIDIOutList.Items.Count; i++)
-            {
-                if (MIDIOutList.Items[i].ToString().Equals(SelDevice))
+                MIDIOUTCAPS OutCaps = new MIDIOUTCAPS();
+                for (uint i = 0; i < DeviceCount; i++)
                 {
-                    MIDIOutList.SelectedIndex = i;
-                    Found = true;
-                    break;
-                }
-            }
+                    WinMM.midiOutGetDevCaps(i, out OutCaps, (uint)Marshal.SizeOf(OutCaps));
+                    if (OutCaps.szPname.Equals("OmniMapper")) continue;
 
-            if (!Found) MIDIOutList.SelectedIndex = 0;
+                    MIDIOutList.Items.Add(OutCaps.szPname);
+                }
+
+                bool Found = false;
+                String SelDevice = OmniMIDIConfiguratorMain.Mapper.GetValue("TrgtSynth", "Microsoft GS Wavetable Synth").ToString();
+                for (int i = 0; i < MIDIOutList.Items.Count; i++)
+                {
+                    if (MIDIOutList.Items[i].ToString().Equals(SelDevice))
+                    {
+                        MIDIOutList.SelectedIndex = i;
+                        Found = true;
+                        break;
+                    }
+                }
+
+                if (!Found) MIDIOutList.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void ApplyBtn_Click(object sender, EventArgs e)
