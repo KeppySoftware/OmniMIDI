@@ -593,20 +593,33 @@ BOOL ApplyStreamSettings() {
 	}
 	else {
 		// Load the settings to BASS
+		BASS_SetConfig(BASS_CONFIG_SRC, ManagedSettings.SincConv);
+		CheckUp(FALSE, ERRORCODE, L"BASS Attributes 1", TRUE);
+
+		BASS_SetConfig(BASS_CONFIG_SRC_SAMPLE, ManagedSettings.SincConv);
+		CheckUp(FALSE, ERRORCODE, L"BASS Attributes 2", TRUE);
+
 		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 1", TRUE);
+
 		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 2", TRUE);
+
 		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 3", TRUE);
+
 		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 4", TRUE);
+
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 5", TRUE);
+
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 6", TRUE);
+
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 7", TRUE);
+
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", TRUE);
 	}

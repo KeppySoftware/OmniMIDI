@@ -13,6 +13,7 @@ namespace OmniMIDIConfigurator
 {
     public partial class OmniMapperCpl : Form
     {
+        private const string CurDrvLab = "Current device: {0}";
         private static Int32 DeviceCount;
 
         public OmniMapperCpl()
@@ -36,6 +37,7 @@ namespace OmniMIDIConfigurator
 
                 bool Found = false;
                 String SelDevice = OmniMIDIConfiguratorMain.Mapper.GetValue("TrgtSynth", "Microsoft GS Wavetable Synth").ToString();
+                CurDevice.Text = String.Format(CurDrvLab, SelDevice);
                 for (int i = 0; i < MIDIOutList.Items.Count; i++)
                 {
                     if (MIDIOutList.Items[i].ToString().Equals(SelDevice))

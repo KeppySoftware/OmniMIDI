@@ -147,6 +147,41 @@
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1174, 56</value>
   </metadata>
+  <data name="SincConv.ToolTip" xml:space="preserve">
+    <value>When a channel has a different sample rate to what the output device is using,
+the channel's sample data will need to be converted to match the output device's rate during playback. 
+This attribute determines how that is done. The linear interpolation option uses less CPU, but the sinc interpolation
+gives better sound quality (less aliasing), with the quality and CPU usage increasing with the number of points.
+A good compromise for lower spec systems could be to use sinc interpolation for music playback and
+linear interpolation for sound effects. </value>
+  </data>
+  <data name="SincConvLab.ToolTip" xml:space="preserve">
+    <value>When a channel has a different sample rate to what the output device is using,
+the channel's sample data will need to be converted to match the output device's rate during playback. 
+This attribute determines how that is done. The linear interpolation option uses less CPU, but the sinc interpolation
+gives better sound quality (less aliasing), with the quality and CPU usage increasing with the number of points.
+A good compromise for lower spec systems could be to use sinc interpolation for music playback and
+linear interpolation for sound effects. </value>
+  </data>
+  <data name="SincInter.ToolTip" xml:space="preserve">
+    <value>When a channel has a different sample rate to what the output device is using,
+the channel's sample data will need to be converted to match the output device's rate during playback. 
+This attribute determines how that is done. The linear interpolation option uses less CPU, but the sinc interpolation
+gives better sound quality (less aliasing), with the quality and CPU usage increasing with the number of points.
+A good compromise for lower spec systems could be to use sinc interpolation for music playback and
+linear interpolation for sound effects. </value>
+  </data>
+  <data name="MaxCPU.ToolTip" xml:space="preserve">
+    <value>It is not strictly the CPU usage that is measured, but rather how timely the stream is able to render data.
+For example, a limit of 50% would mean that the rendering would need to be at least 2x real-time speed.
+When the limit is exceeded, OmniMIDI will begin killing voices, starting with the most quiet. 
+</value>
+  </data>
+  <data name="RenderingTimeLabel.ToolTip" xml:space="preserve">
+    <value>It is not strictly the CPU usage that is measured, but rather how timely the stream is able to render data.
+For example, a limit of 50% would mean that the rendering would need to be at least 2x real-time speed.
+When the limit is exceeded, OmniMIDI will begin killing voices, starting with the most quiet. </value>
+  </data>
   <metadata name="TabImgs.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>546, 17</value>
   </metadata>
@@ -154,51 +189,51 @@
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
-        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAa
-        CgAAAk1TRnQBSQFMAgEBAgEAARABFAEQARQBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAY
+        CgAAAk1TRnQBSQFMAgEBAgEAASABFAEgARQBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABEAMAAQEBAAEgBgABEB0AAQEDBgEIAwYBCAMGAQgDBgEIAwYBCAMGAQgDBgEIAwYBCAMGAQgDBgEI
         AwEBAhAAAwEBAgMOARMMAAMKAQ0DCAELBwABAQQAAw0BEgMEAQWIAAMDAQQEAAM/AWwDXQHtAV8BWgFf
         AdsBYAFaAWAB3gFgAVoBYAHeAWABWgFgAd4BYAFaAWAB3gFgAVoBYAHeAWABWgFgAd4BXwFaAV8B2wNd
         Ae0DQwF3BAADAwEEAwEBAgQAAxoBJAFeAlsB2QMNARIIAAFSAVEBUgGnA04BlAQAAwIBAwQAAV4CWgHV
-        AzIBUAQAAwIBA4AAAwMBBAQAA0oBiwH/AQABEQH/AWcBIQFUAfsB/wEAARcC/wEAARcB/wH9AQABFwH/
-        Af4BAAEUAv8BAAEVAv8BAAEfAf8BZAEhAVgB+wH/AQABJAH/A1ABmgQAAwMBBAMBAQIEAAMfASwBXwJM
+        AzIBUAQAAwIBA4AAAwMBBAQAA0oBiwH/AQABDwH/AWIBIQFUAfsB/wEAARUC/wEAARUB/wH9AQABFQH/
+        Af4BAAESAv8BAAETAv8BAAEdAf8BYAEhAVgB+wH/AQABIgH/A1ABmgQAAwMBBAMBAQIEAAMfASwBXwJM
         AfMDEgEYCAADUgGpAU4CTQGWBAADAQECAwABAQFhAlQB7gM4AV4EAAMDAQSAAAMDAQQEAANKAYkB/wEA
-        ASIB/wNqAfkBqAGlAagB/QGoAaMBqAH9AagBiwGoAf0BkAFAAZAB/QGoAkAB/QGoAkAB/QFqAUEBVwH5
-        Af8BAAEiAf8BTwFOAU8BlwQAAwMBBAMBAQIEAAMeASsBXQJOAfADEgEYBAADGAEhAzwBZgM6AWEDDQES
-        BAADAQECAWQCWQHsAzgBXQQAAwMBBIAAAwMBBAQAA0oBigH/AQABGQH/AWcBMAFfAfsB/QEAATYC/wEA
-        AS8B/wG9AQABRAH/AQABIwHAAf8BAAEzAdkB/wEAAT8B7QH/AV8BMgFfAfsB/wEAARIB/wNOAZkEAAMD
-        AQQDAQECBAADHwEsAWcCWQHyAxQBGwQAAU0BTAFNAZEBqwEAARMB/wGrAQABEwH/AzoBYgQAAwUBBwFh
-        AlQB7gM5AV8EAAMDAQSAAAMDAQQEAANKAYoB/wEAASAB/wFnAl8B+wH+AZ4BvQL/AZwBvAH/AfEBlgGw
-        Af8BAAGEAegB/wEdAUIBxQH/AQABjwH6Af8BVAJfAfsB/wEAARwB/wNOAZkEAAMDAQQDAQECBAADHwEs
-        AWcCWQHyAxQBGwQAAU4CTQGVAasBAAETAf8BqwEAARMB/wM8AWYEAAMEAQUBYQJcAdwDNQFXBAADAwEE
-        gAADAwEEBAADSgGKAf8BAAEZAf8BZwEvAV8B+wH/AQABNAH/Af0BAAE3Av8BAAEjAf8BMAEYAa0B/wEA
-        AZEC/wEAAYUC/wEhAl8B+wHkAQABJwH/A04BmQQAAwMBBAMBAQIEAAMeASsBYQJUAe4DEwEaBAADQgF2
-        AWECWwHhAWECXgHaAzEBTgQAAxUBHQMqAUADGwEmiAADAwEEBAADSgGKAf8BAAEhAf8BZwJfAfsB/wGk
-        AcEB/wH+AaIBwAL/AZ8BvQH/AdwBpAHCAf8BpwGrAdMB/wEgAYwB3AH/ASsBPAFlAfwBAAE/AeUB/wJV
-        AVYBsQQAAwIBAwMBAQIEAAMgAS8BXwJMAfMDEwEaCAADNQFXA0ABcAQAAwQBBgFeAloB2AGqAQABEQH/
-        AWECWAHmAw0BEYQAAwMBBAQAA0oBigH/AQABGQH/AWcBLQFfAfsB/wEAATMC/wEAATMC/wEAATQB/wH+
-        AQABLwH/Af4BAAEpAv8BAAEXAf8BJgEiAbQB/wE6AZEBqAH9AQABjwL/A0gBhAcAAQEEAAMTARoBTAJL
-        AY8DCgENAwABAQQAAU8CTgGXA1sByAQAAwkBDAFfAlgB4wGqAQABEAH/AWcCWQHyAxEBF4QAAwMBBAQA
-        A0oBigH/AQABIQH/AWcCXwH7Af8BpwHDAv8BpAHCAv8BpQHCAf8B/gGmAcMB/wH8AacBxQL/AacBwwH/
-        A38B/gEAAT8B4wH/AVkCZAHsAy4BRwgAAwcBCQNQAZ0BVQJTAbADTAGSAwQBBQQAAU4CTQGVAVsCWQHE
-        BAADBgEIAV0CWQHXAWoBQQFHAfkBYQJbAeEDDQEShAADAwEEBAADSgGKAf8BAAEYAf8BZwEhAV8B+wH/
-        AQABKgL/AQABKgL/AQABKgL/AQABKgL/AQABKgH/Af0BAAEqAf8BZAEpAU0B+gHOAQABKAH/A1ABngQA
-        AwMBBAQAAxEBFwFnAlkB8gGqAQABEQH/AWECXQHiAwoBDQQAA04BmANZAccHAAEBAxIBGQNDAXcDJwE7
-        BwABAYAAAwMBBAQAA0oBigH/AQABFwH/AWcBIQFeAfsB/wEAASEC/wEAASEC/wEAASEC/wEAASIC/wEA
-        ARsB/wFtASsBOwH8AWQBTQFPAfoB/wE5AawB/wE1AjQBVQQAAwIBAwQAAxABFgFkAlMB8QGqAQABEQH/
-        AWECWwHhAwkBDAQAA04BmANZAccHAAQBAQIBYQJUAe4DOAFeBAADAwEEgAADAwEEBAADSgGJAf8BAAEY
-        Af8BagFBAWEB+QGoAkAB/QGoAkAB/QGoAkAB/QGoAkAB/QGoAkAB/QNcAfgB/wGkAdMB/wNIAYMEAAMB
-        AQIIAAMEAQUDQAFuAUYBRQFGAX4DPAFmAwMBBAQAAU4CTQGWAVsCWAHGBwABAQMCAQMBZAJZAewDOAFd
-        BAADAwEEgAADAwEEBAADSgGLAf8BAAESAf8BZwEhAVsB+wH/AQABHgL/AQABHgL/AQABHgL/AQABIAH/
-        AW0CKwH8Af8BEAGLAf8DVgGrBAADAQECCwABAQQAAxUBHQFRAlABnwMLAQ8IAAFPAk4BlwNZAccHAAQB
-        AQIBYQJUAe4DOAFeBAADAwEEgAADAwEEBAADPwFsA10B7QFfAVoBXwHbAWABWgFgAd4BYAFaAWAB3gFg
-        AVoBYAHeAWEBXAFhAdwBYQFaAWEB5ANYAbwDCgEOBwABAQgAAwEBAgQAAx0BKgFfAlcB6AMRARcIAANI
-        AYUBVgJVAbEEAAMBAQIEAAFeAloB1QMyAVEEAAMCAQOIAAMBAQIDBgEIAwYBCAMGAQgDBgEIAwYBCAMG
-        AQgDBwEJAwMBBAMAAQEDAAEBFwABAQMNAREMAAMIBAsBDwcAAQEEAAMOARMDBAEFiAABQgFNAT4HAAE+
-        AwABKAMAAUADAAEQAwABAQEAAQEFAAGAFwAD/wEAAcABAwHOAVMEAAFAAQIBRgFSBAABQAECAUYBQgQA
-        AUABAgFEASIEAAFAAQIBRAEiBAABQAECAUQBIgQAAUABAgFEASMEAAFAAQIBRgFBBAABQAEBAUIBQQQA
-        AUABAQGCAUEEAAFAAQIBggFCBAABQAECAYIBQgQAAUABBQGCAUIEAAFAAQsBRgFCBAABQAELAUYBUgQA
-        AcABBwHOAVMEAAs=
+        ASAB/wNqAfkBqAGlAagB/QGoAaMBqAH9AagBiwGoAf0BkAFAAZAB/QGoAkAB/QGoAkAB/QFqAUEBVwH5
+        Af8BAAEgAf8BTwFOAU8BlwQAAwMBBAMBAQIEAAMeASsBXQJOAfADEgEYBAADGAEhAzwBZgM6AWEDDQES
+        BAADAQECAWQCWQHsAzgBXQQAAwMBBIAAAwMBBAQAA0oBigH/AQABFwH/AWIBMAFfAfsB/QEAATQC/wEA
+        AS0B/wG9AQABQgH/AQABIQHAAf8BAAExAdkB/wEAAT0B7QH/AV8BMgFfAfsB/wEAARAB/wNOAZkEAAMD
+        AQQDAQECBAADHwEsAWcCWQHyAxQBGwQAAU0BTAFNAZEBqwEAAREB/wGrAQABEQH/AzoBYgQAAwUBBwFh
+        AlQB7gM5AV8EAAMDAQSAAAMDAQQEAANKAYoB/wEAAR4B/wFiAl8B+wH+AZ4BvQL/AZwBvAH/AfEBlgGw
+        Af8BAAGEAegB/wEbAUABxQH/AQABjwH6Af8BVAJfAfsB/wEAARoB/wNOAZkEAAMDAQQDAQECBAADHwEs
+        AWcCWQHyAxQBGwQAAU4CTQGVAasBAAERAf8BqwEAAREB/wM8AWYEAAMEAQUBYQJcAdwDNQFXBAADAwEE
+        gAADAwEEBAADSgGKAf8BAAEXAf8BYgEvAV8B+wH/AQABMgH/Af0BAAE1Av8BAAEhAf8BLgEWAa0B/wEA
+        AZEC/wEAAYUC/wEhAl8B+wHkAQABJQH/A04BmQQAAwMBBAMBAQIEAAMeASsBYQJUAe4DEwEaBAADQgF2
+        AWECWwHhAWECXgHaAzEBTgQAAxUBHQMqAUADGwEmiAADAwEEBAADSgGKAf8BAAEfAf8BYgJfAfsB/wGk
+        AcEB/wH+AaIBwAL/AZ8BvQH/AdwBpAHCAf8BpwGrAdMB/wEeAYwB3AH/ASsBOgFjAfwBAAE9AeUB/wJV
+        AVYBsQQAAwIBAwMBAQIEAAMgAS8BXwJMAfMDEwEaCAADNQFXA0ABcAQAAwQBBgFeAloB2AGqAQABDwH/
+        AWECWAHmAw0BEYQAAwMBBAQAA0oBigH/AQABFwH/AWIBLQFfAfsB/wEAATEC/wEAATEC/wEAATIB/wH+
+        AQABLQH/Af4BAAEnAv8BAAEVAf8BJAEgAbQB/wE8AZEBqAH9AQABjwL/A0gBhAcAAQEEAAMTARoBTAJL
+        AY8DCgENAwABAQQAAU8CTgGXA1sByAQAAwkBDAFfAlgB4wGqAQABDgH/AWcCWQHyAxEBF4QAAwMBBAQA
+        A0oBigH/AQABHwH/AWICXwH7Af8BpwHDAv8BpAHCAv8BpQHCAf8B/gGmAcMB/wH8AacBxQL/AacBwwH/
+        A38B/gEAAT0B4wH/AVkCZAHsAy4BRwgAAwcBCQNQAZ0BVQJTAbADTAGSAwQBBQQAAU4CTQGVAVsCWQHE
+        BAADBgEIAV0CWQHXAWoBQQFHAfkBYQJbAeEDDQEShAADAwEEBAADSgGKAf8BAAEWAf8BYgEhAV8B+wH/
+        AQABKAL/AQABKAL/AQABKAL/AQABKAL/AQABKAH/Af0BAAEoAf8BYAEpAU0B+gHOAQABJgH/A1ABngQA
+        AwMBBAQAAxEBFwFnAlkB8gGqAQABDwH/AWECXQHiAwoBDQQAA04BmANZAccHAAEBAxIBGQNDAXcDJwE7
+        BwABAYAAAwMBBAQAA0oBigH/AQABFQH/AWIBIQFeAfsB/wEAAR8C/wEAAR8C/wEAAR8C/wEAASAC/wEA
+        ARkB/wFrASsBOQH8AWACTQH6Af8BNwGsAf8BNQI0AVUEAAMCAQMEAAMQARYBZAJTAfEBqgEAAQ8B/wFh
+        AlsB4QMJAQwEAANOAZgDWQHHBwAEAQECAWECVAHuAzgBXgQAAwMBBIAAAwMBBAQAA0oBiQH/AQABFgH/
+        AWoBQQFhAfkBqAJAAf0BqAJAAf0BqAJAAf0BqAJAAf0BqAJAAf0DXAH4Af8BpAHTAf8DSAGDBAADAQEC
+        CAADBAEFA0ABbgFGAUUBRgF+AzwBZgMDAQQEAAFOAk0BlgFbAlgBxgcAAQEDAgEDAWQCWQHsAzgBXQQA
+        AwMBBIAAAwMBBAQAA0oBiwH/AQABEAH/AWIBIQFbAfsB/wEAARwC/wEAARwC/wEAARwC/wEAAR4B/wFr
+        AisB/AH/AQ4BiwH/A1YBqwQAAwEBAgsAAQEEAAMVAR0BUQJQAZ8DCwEPCAABTwJOAZcDWQHHBwAEAQEC
+        AWECVAHuAzgBXgQAAwMBBIAAAwMBBAQAAz8BbANdAe0BXwFaAV8B2wFgAVoBYAHeAWABWgFgAd4BYAFa
+        AWAB3gFhAVwBYQHcAWEBWgFhAeQDWAG8AwoBDgcAAQEIAAMBAQIEAAMdASoBXwJXAegDEQEXCAADSAGF
+        AVYCVQGxBAADAQECBAABXgJaAdUDMgFRBAADAgEDiAADAQECAwYBCAMGAQgDBgEIAwYBCAMGAQgDBgEI
+        AwcBCQMDAQQDAAEBAwABARcAAQEDDQERDAADCAQLAQ8HAAEBBAADDgETAwQBBYgAAUIBTQE+BwABPgMA
+        ASgDAAFAAwABEAMAAQEBAAEBBQABgBcAA/8BAAHAAQMBzgFTBAABQAECAUYBUgQAAUABAgFGAUIEAAFA
+        AQIBRAEiBAABQAECAUQBIgQAAUABAgFEASIEAAFAAQIBRAEjBAABQAECAUYBQQQAAUABAQFCAUEEAAFA
+        AQEBggFBBAABQAECAYIBQgQAAUABAgGCAUIEAAFAAQUBggFCBAABQAELAUYBQgQAAUABCwFGAVIEAAHA
+        AQcBzgFTBAAL
 </value>
   </data>
   <metadata name="SettingsPresets.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

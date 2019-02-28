@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OmniMIDIConfiguratorMain));
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
@@ -38,7 +39,6 @@
             "Yes",
             "0",
             "0"}, -1);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OmniMIDIConfiguratorMain));
             this.SoundfontImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
             this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
@@ -1444,7 +1444,7 @@
             this.SincConv.Name = "SincConv";
             this.SincConv.Size = new System.Drawing.Size(85, 21);
             this.SincConv.TabIndex = 12;
-            this.Requirements.SetToolTip(this.SincConv, "Changing this setting requires the user to restart the MIDI application.");
+            this.Requirements.SetToolTip(this.SincConv, resources.GetString("SincConv.ToolTip"));
             // 
             // SincConvLab
             // 
@@ -1457,17 +1457,17 @@
             this.SincConvLab.Size = new System.Drawing.Size(96, 13);
             this.SincConvLab.TabIndex = 17;
             this.SincConvLab.Text = "Conversion quality:";
+            this.Requirements.SetToolTip(this.SincConvLab, resources.GetString("SincConvLab.ToolTip"));
             // 
             // DrvHzLabel
             // 
             this.DrvHzLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DrvHzLabel.AutoSize = true;
             this.DrvHzLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.DrvHzLabel.Location = new System.Drawing.Point(6, 58);
             this.DrvHzLabel.Name = "DrvHzLabel";
-            this.DrvHzLabel.Size = new System.Drawing.Size(147, 13);
+            this.DrvHzLabel.Size = new System.Drawing.Size(544, 13);
             this.DrvHzLabel.TabIndex = 13;
-            this.DrvHzLabel.Text = "Driver audio frequency (in Hz)";
+            this.DrvHzLabel.Text = "Output sample rate (in Hertz)";
             this.Requirements.SetToolTip(this.DrvHzLabel, "To change this in real-time, enable the \"Enable live changes for all the settings" +
         "\" function.");
             // 
@@ -1477,19 +1477,21 @@
             this.Frequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Frequency.FormattingEnabled = true;
             this.Frequency.Items.AddRange(new object[] {
+            "384000",
+            "352800",
             "192000",
             "176400",
-            "142180",
             "96000",
             "88200",
             "74750",
             "66150",
+            "64000",
             "50400",
             "50000",
             "48000",
-            "47250 ",
+            "47250",
             "44100",
-            "44056 ",
+            "44056",
             "37800",
             "34750",
             "32000",
@@ -1509,13 +1511,13 @@
             // SincInter
             // 
             this.SincInter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.SincInter.AutoSize = true;
             this.SincInter.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.SincInter.Location = new System.Drawing.Point(7, 17);
             this.SincInter.Name = "SincInter";
-            this.SincInter.Size = new System.Drawing.Size(392, 17);
+            this.SincInter.Size = new System.Drawing.Size(427, 17);
             this.SincInter.TabIndex = 11;
             this.SincInter.Text = "Enable sinc interpolation (improves audio quality, but increases rendering time)";
+            this.ButtonsDesc.SetToolTip(this.SincInter, resources.GetString("SincInter.ToolTip"));
             this.SincInter.UseVisualStyleBackColor = true;
             this.SincInter.CheckedChanged += new System.EventHandler(this.SincInter_CheckedChanged);
             // 
@@ -1592,6 +1594,7 @@
             this.MaxCPU.Size = new System.Drawing.Size(64, 20);
             this.MaxCPU.TabIndex = 10;
             this.MaxCPU.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ButtonsDesc.SetToolTip(this.MaxCPU, resources.GetString("MaxCPU.ToolTip"));
             this.MaxCPU.Value = new decimal(new int[] {
             75,
             0,
@@ -1615,24 +1618,25 @@
             // RenderingTimeLabel
             // 
             this.RenderingTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.RenderingTimeLabel.AutoSize = true;
             this.RenderingTimeLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.RenderingTimeLabel.Location = new System.Drawing.Point(6, 107);
             this.RenderingTimeLabel.Name = "RenderingTimeLabel";
-            this.RenderingTimeLabel.Size = new System.Drawing.Size(319, 13);
+            this.RenderingTimeLabel.Size = new System.Drawing.Size(544, 13);
             this.RenderingTimeLabel.TabIndex = 11;
-            this.RenderingTimeLabel.Text = "Maximum rendering time percent (percentage, set to 0 to disable it)";
+            this.RenderingTimeLabel.Text = "Maximum rendering time (percentage, set to 0% to disable it)";
+            this.ButtonsDesc.SetToolTip(this.RenderingTimeLabel, resources.GetString("RenderingTimeLabel.ToolTip"));
             // 
             // VoiceLimitLabel
             // 
             this.VoiceLimitLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.VoiceLimitLabel.AutoSize = true;
             this.VoiceLimitLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.VoiceLimitLabel.Location = new System.Drawing.Point(6, 82);
             this.VoiceLimitLabel.Name = "VoiceLimitLabel";
-            this.VoiceLimitLabel.Size = new System.Drawing.Size(187, 13);
+            this.VoiceLimitLabel.Size = new System.Drawing.Size(544, 13);
             this.VoiceLimitLabel.TabIndex = 9;
             this.VoiceLimitLabel.Text = "Driver voice limit (1 to 100,000 voices)";
+            this.ButtonsDesc.SetToolTip(this.VoiceLimitLabel, "If there are currently more voices active than the new limit, then some voices wi" +
+        "ll be killed to meet the limit.");
             // 
             // PolyphonyLimit
             // 
@@ -1653,6 +1657,8 @@
             this.PolyphonyLimit.TabIndex = 9;
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PolyphonyLimit.ThousandsSeparator = true;
+            this.Requirements.SetToolTip(this.PolyphonyLimit, "If there are currently more voices active than the new limit, then some voices wi" +
+        "ll be killed to meet the limit.");
             this.PolyphonyLimit.Value = new decimal(new int[] {
             500,
             0,
@@ -2247,6 +2253,11 @@
             this.VersionLabel.Click += new System.EventHandler(this.CheckUpdatesStartUp);
             this.VersionLabel.MouseEnter += new System.EventHandler(this.SetHandCursor);
             this.VersionLabel.MouseLeave += new System.EventHandler(this.SetDefaultCursor);
+            // 
+            // ButtonsDesc
+            // 
+            this.ButtonsDesc.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ButtonsDesc.ToolTipTitle = "Information";
             // 
             // Requirements
             // 

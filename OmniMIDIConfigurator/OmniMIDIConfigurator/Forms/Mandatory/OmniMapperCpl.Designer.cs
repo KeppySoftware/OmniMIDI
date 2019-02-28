@@ -31,12 +31,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.MIDIOutList = new System.Windows.Forms.ComboBox();
             this.ApplyBtn = new System.Windows.Forms.Button();
+            this.CurDevice = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 7);
+            this.label1.Location = new System.Drawing.Point(9, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 13);
             this.label1.TabIndex = 0;
@@ -48,7 +49,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MIDIOutList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MIDIOutList.FormattingEnabled = true;
-            this.MIDIOutList.Location = new System.Drawing.Point(12, 25);
+            this.MIDIOutList.Location = new System.Drawing.Point(12, 56);
             this.MIDIOutList.Name = "MIDIOutList";
             this.MIDIOutList.Size = new System.Drawing.Size(339, 21);
             this.MIDIOutList.TabIndex = 3;
@@ -56,7 +57,7 @@
             // ApplyBtn
             // 
             this.ApplyBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplyBtn.Location = new System.Drawing.Point(277, 55);
+            this.ApplyBtn.Location = new System.Drawing.Point(277, 83);
             this.ApplyBtn.Name = "ApplyBtn";
             this.ApplyBtn.Size = new System.Drawing.Size(75, 23);
             this.ApplyBtn.TabIndex = 4;
@@ -64,12 +65,21 @@
             this.ApplyBtn.UseVisualStyleBackColor = true;
             this.ApplyBtn.Click += new System.EventHandler(this.ApplyBtn_Click);
             // 
+            // CurDevice
+            // 
+            this.CurDevice.AutoSize = true;
+            this.CurDevice.Location = new System.Drawing.Point(10, 14);
+            this.CurDevice.Name = "CurDevice";
+            this.CurDevice.Size = new System.Drawing.Size(108, 13);
+            this.CurDevice.TabIndex = 5;
+            this.CurDevice.Text = "Current device: None";
+            // 
             // OmniMapperCpl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(363, 90);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(359, 114);
+            this.Controls.Add(this.CurDevice);
             this.Controls.Add(this.ApplyBtn);
             this.Controls.Add(this.MIDIOutList);
             this.Controls.Add(this.label1);
@@ -92,5 +102,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox MIDIOutList;
         private System.Windows.Forms.Button ApplyBtn;
+        private System.Windows.Forms.Label CurDevice;
     }
 }

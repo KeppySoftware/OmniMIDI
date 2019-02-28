@@ -19,7 +19,7 @@ static const WCHAR IAmDummy[MAXPNAMELEN] = L"I'm OmniMapper, don't read me!\0";
 
 static WCHAR AppPath[32767];
 static WCHAR AppName[MAX_PATH];
-static HMIDI Target = NULL;
+static HANDLE Target = NULL;
 static HDRVR MapperDevice = NULL;
 static DWORD SelectedDevice = 2;
 static BOOL StreamMode = FALSE;
@@ -94,10 +94,10 @@ DWORD GiveMapperCaps(MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 	// First check if registry key exists
 	HKEY MapperKey;
-	LSTATUS s = RegOpenKeyEx(HKEY_CURRENT_USER, "Software\\OmniMIDI\\Mapper", 0, KEY_ALL_ACCESS, &MapperKey);
+	LSTATUS s = RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\OmniMIDI\\Mapper", 0, KEY_ALL_ACCESS, &MapperKey);
 	if (s == ERROR_NO_MATCH || s == ERROR_FILE_NOT_FOUND) {
 		// If it doesn't, create it
-		s = RegCreateKeyEx(HKEY_CURRENT_USER, "Software\\OmniMIDI\\Mapper", 0L, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &MapperKey, NULL);
+		s = RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\OmniMIDI\\Mapper", 0L, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &MapperKey, NULL);
 	}
 	
 	// Operation succesfull, get data from registry
@@ -116,7 +116,7 @@ DWORD GiveMapperCaps(MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 	if (!Found) {
 		MessageBox(NULL, "Can not find the device set in the OmniMIDI control panel!\nPlease set up the MIDI mapper in the OmniMIDI configurator.\n\nPress OK to continue.", "OmniMapper - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
-		wcsncpy(TrgtSynthW, L"Microsoft GS Wavetable Synth\0", MAXPNAMELEN);
+		return MMSYSERR_ERROR;
 	}
 
 	switch (capsSize) {
@@ -160,6 +160,12 @@ DWORD GiveMapperCaps(MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	switch (uMsg) {
+	case DRVM_INIT:
+	case DRVM_EXIT:
+	case DRVM_ENABLE:
+	case DRVM_DISABLE:
+		// Stub, pretend it's supported
+		return MMSYSERR_NOERROR;
 	case MODM_DATA:
 		return midiOutShortMsg((HMIDIOUT)Target, dwParam1);
 	case MODM_LONGDATA:

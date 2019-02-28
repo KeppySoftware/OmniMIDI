@@ -130,54 +130,54 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 	}
 }
 
-void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerror) {
-	TCHAR main[NTFS_MAX_PATH];
-	ZeroMemory(main, sizeof(main));
+void ShowError(int error, int mode, wchar_t* engine, wchar_t* codeline, int showerror) {
+	wchar_t main[NTFS_MAX_PATH];
+	memset(main, 0, sizeof(main));
 
-	lstrcat(main, engine);
-	lstrcat(main, L" encountered the following error: ");
+	wcscat(main, engine);
+	wcscat(main, L" encountered the following error: ");
 
-	lstrcat(main, ReturnBASSError(error));
+	wcscat(main, ReturnBASSError(error));
 	PrintBASSErrorMessageToDebugLog(ReturnBASSError(error), ReturnBASSErrorDesc(error));
 
 	if (showerror) {
 		TCHAR title[MAX_PATH];
-		ZeroMemory(title, sizeof(title));
+		memset(title, 0, sizeof(title));
 
 		std::wstring ernumb = std::to_wstring(error);
 
-		lstrcat(title, L"OmniMIDI - ");
-		lstrcat(title, engine);
-		lstrcat(title, L" execution error");
+		wcscat(title, L"OmniMIDI - ");
+		wcscat(title, engine);
+		wcscat(title, L" execution error");
 
-		lstrcat(main, L" (E");
-		lstrcat(main, ernumb.c_str());
-		lstrcat(main, L")");
+		wcscat(main, L" (E");
+		wcscat(main, ernumb.c_str());
+		wcscat(main, L")");
 
 		if (mode == 0) {
-			lstrcat(main, L"\n\nCode line error: ");
-			lstrcat(main, codeline);
+			wcscat(main, L"\n\nCode line error: ");
+			wcscat(main, codeline);
 		}
 
-		lstrcat(main, L"\n\nExplanation: ");
-		lstrcat(main, ReturnBASSErrorDesc(error));
+		wcscat(main, L"\n\nExplanation: ");
+		wcscat(main, ReturnBASSErrorDesc(error));
 
 		if (mode == 1) {
-			lstrcat(main, L"\n\nWhat might have caused this error:\n");
-			lstrcat(main, codeline);
+			wcscat(main, L"\n\nWhat might have caused this error:\n");
+			wcscat(main, codeline);
 		}
 		else {
-			lstrcat(main, L"\n\nPossible fixes:\n");
-			lstrcat(main, ReturnBASSErrorFix(error));
+			wcscat(main, L"\n\nPossible fixes:\n");
+			wcscat(main, ReturnBASSErrorFix(error));
 		}
 
-		lstrcat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
+		wcscat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
 
-		if (!_tcsicmp(engine, L"BASSASIO") && error != -1) {
-			lstrcat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+		if (!_wcsicmp(engine, L"BASSASIO") && error != -1) {
+			wcscat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
 		}
 
-		MessageBox(NULL, main, title, MB_OK | MB_ICONERROR);
+		MessageBoxW(NULL, main, title, MB_OK | MB_ICONERROR);
 
 		if ((error == -1 ||
 			error >= 2 && error <= 10 ||
@@ -193,7 +193,7 @@ void ShowError(int error, int mode, TCHAR* engine, TCHAR* codeline, BOOL showerr
 BOOL CheckUp(BOOL IsASIO, int mode, TCHAR * codeline, bool showerror) {
 	int error = IsASIO ? BASS_ASIO_ErrorGetCode() : BASS_ErrorGetCode();
 	if (error != 0) {
-		ShowError(error, mode, IsASIO ? L"BASS" : L"BASSASIO", codeline, showerror);
+		ShowError(error, mode, IsASIO ? L"BASSASIO" : L"BASS", codeline, showerror);
 		return FALSE;
 	}
 	return TRUE;
