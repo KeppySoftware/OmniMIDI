@@ -593,12 +593,6 @@ BOOL ApplyStreamSettings() {
 	}
 	else {
 		// Load the settings to BASS
-		BASS_SetConfig(BASS_CONFIG_SRC, ManagedSettings.SincConv);
-		CheckUp(FALSE, ERRORCODE, L"BASS Attributes 1", TRUE);
-
-		BASS_SetConfig(BASS_CONFIG_SRC_SAMPLE, ManagedSettings.SincConv);
-		CheckUp(FALSE, ERRORCODE, L"BASS Attributes 2", TRUE);
-
 		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
 		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 1", TRUE);
 

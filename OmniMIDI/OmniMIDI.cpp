@@ -70,13 +70,11 @@ typedef long NTSTATUS;
 // NTSTATUS
 #define NTAPI __stdcall
 // these functions have identical prototypes
-typedef NTSTATUS(NTAPI* NLVM)(IN HANDLE, IN OUT VOID**, IN OUT ULONG*, IN ULONG);
-typedef NTSTATUS(NTAPI* NULVM)(IN HANDLE, IN OUT VOID**, IN OUT ULONG*, IN ULONG);
+typedef NTSTATUS(NTAPI* NSTR)(IN ULONG, IN BOOLEAN, OUT PULONG);
 typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
 typedef NTSTATUS(NTAPI* NQST)(QWORD*);
 
-static NLVM NtLockVirtualMemory = 0;
-static NULVM NtUnlockVirtualMemory = 0;
+static NSTR NtSetTimerResolution = 0;
 static NDE NtDelayExecution = 0;
 static NQST NtQuerySystemTime = 0;
 
@@ -87,7 +85,8 @@ static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, ba
 
 // F**k Sleep() tbh
 void NTSleep(__int64 usec) {
-	NtDelayExecution(FALSE, &usec);
+	__int64 neg = (usec * -1);
+	NtDelayExecution(FALSE, &neg);
 }
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
@@ -106,10 +105,10 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 // and passes the events without checking for anything
 
 // Predefined sleep values, useful for redundancy
-#define _DBGWAIT NTSleep(-16667)						// Debuglog wait
-#define _WAIT NTSleep(-1)								// Normal wait
-#define _SWAIT NTSleep(-100)							// Normal wait
-#define _CFRWAIT NTSleep(-16667)						// Cap framerate wait
+#define _DBGWAIT NTSleep(16667)							// Debuglog wait
+#define _WAIT NTSleep(1)								// Normal wait
+#define _SWAIT NTSleep(100)								// Normal wait
+#define _CFRWAIT NTSleep(16667)							// Cap framerate wait
 
 // Variables
 #include "Values.h"
@@ -134,23 +133,30 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvRes
 {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
+	{
 		if (BannedProcesses()) {
 			OutputDebugString(L"You can't load me!");
 			return FALSE;
 		}
 
 		hinst = (HINSTANCE)hinstDLL;
+		NtSetTimerResolution = (NSTR)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSetTimerResolution");
 		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
-		NtLockVirtualMemory = (NLVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtLockVirtualMemory");
-		NtUnlockVirtualMemory = (NULVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtUnlockVirtualMemory");
 		NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQuerySystemTime");
-		if (!NtDelayExecution || !NtLockVirtualMemory || !NtUnlockVirtualMemory || !NtQuerySystemTime) {
-			OutputDebugString(L"Failed to parse functions from NTDLL!\nThe driver will not be loaded.");
+		if (!NtSetTimerResolution || !NtDelayExecution || !NtQuerySystemTime) {
+			OutputDebugString(L"Failed to parse functions from NTDLL! The driver will not load.");
+			return FALSE;
+		}
+
+		ULONG dum = 0;
+		if (NtSetTimerResolution(1, TRUE, &dum)) {
+			OutputDebugString(L"NtSetTimerResolution won't collaborate. Quitting...");
 			return FALSE;
 		}
 
 		DisableThreadLibraryCalls((HMODULE)hinstDLL);
 		break;
+	}
 	case DLL_PROCESS_DETACH:
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH: 
