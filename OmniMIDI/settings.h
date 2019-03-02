@@ -46,10 +46,6 @@ BOOL CloseThread(HANDLE thread) {
 		PrintMessageToDebugLog("CloseThread", "Waiting for passed thread to finish...");
 		WaitForSingleObject(thread, INFINITE);
 
-		// Close its handle
-		PrintMessageToDebugLog("CloseThread", "Closing its handle...");
-		CloseHandle(thread);
-
 		// And mark it as NULL
 		PrintMessageToDebugLog("CloseThread", "Cleaning up...");
 		thread = NULL;

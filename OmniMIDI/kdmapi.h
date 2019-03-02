@@ -251,33 +251,20 @@ extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 }
 
 extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
-	try {
-		// If the driver is already initialized, close it
-		if (AlreadyInitializedViaKDMAPI && bass_initialized) {
-			PrintMessageToDebugLog("KDMAPI_TKS", "The app requested the driver to terminate its audio stream.");
-			DoStopClient();
-			AlreadyInitializedViaKDMAPI = FALSE;
-			KDMAPIEnabled = FALSE;
-			// PrintMessageToDebugLog("KDMAPI_IKS", "Removing OmniMIDICrashHandler...");
-			// RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
-			PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
-		}
-		else if (!AlreadyInitializedViaKDMAPI) PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
-		else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
-
-		return TRUE;
+	// If the driver is already initialized, close it
+	if (AlreadyInitializedViaKDMAPI && bass_initialized) {
+		PrintMessageToDebugLog("KDMAPI_TKS", "The app requested the driver to terminate its audio stream.");
+		DoStopClient();
+		AlreadyInitializedViaKDMAPI = FALSE;
+		KDMAPIEnabled = FALSE;
+		// PrintMessageToDebugLog("KDMAPI_IKS", "Removing OmniMIDICrashHandler...");
+		// RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
+		PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 	}
-	catch (...) {
-		// Uh oh, the driver did a bad!
-		PrintMessageToDebugLog("KDMAPI_TKS", "Unhandled exception while terminating the stream.");
-		MessageBox(
-			NULL,
-			L"An error has occured in the TerminateKDMAPIStream() function.",
-			L"KDMAPI ERROR",
-			MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+	else if (!AlreadyInitializedViaKDMAPI) PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
+	else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
 
-		return FALSE;
-	}
+	return TRUE;
 }
 
 extern "C" VOID KDMAPI ResetKDMAPIStream() {
