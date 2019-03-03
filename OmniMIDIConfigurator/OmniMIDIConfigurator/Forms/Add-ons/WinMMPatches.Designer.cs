@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WinMMPatches));
             this.OKClose = new System.Windows.Forms.Button();
             this.UnpatchApp = new System.Windows.Forms.Button();
             this.PatchStatusLabel = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@
             this.BMPatch = new System.Windows.Forms.GroupBox();
             this.WMMD = new System.Windows.Forms.Button();
             this.DAWPatch = new System.Windows.Forms.GroupBox();
+            this.WinMMWRPDesc = new System.Windows.Forms.Label();
             this.BMPatch.SuspendLayout();
             this.DAWPatch.SuspendLayout();
             this.SuspendLayout();
@@ -43,18 +45,18 @@
             // OKClose
             // 
             this.OKClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKClose.Location = new System.Drawing.Point(198, 133);
+            this.OKClose.Location = new System.Drawing.Point(199, 208);
             this.OKClose.Name = "OKClose";
-            this.OKClose.Size = new System.Drawing.Size(37, 23);
+            this.OKClose.Size = new System.Drawing.Size(111, 23);
             this.OKClose.TabIndex = 5;
-            this.OKClose.Text = "OK";
+            this.OKClose.Text = "Close";
             this.OKClose.UseVisualStyleBackColor = true;
             this.OKClose.Click += new System.EventHandler(this.OKClose_Click);
             // 
             // UnpatchApp
             // 
             this.UnpatchApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UnpatchApp.Location = new System.Drawing.Point(12, 133);
+            this.UnpatchApp.Location = new System.Drawing.Point(13, 208);
             this.UnpatchApp.Name = "UnpatchApp";
             this.UnpatchApp.Size = new System.Drawing.Size(180, 23);
             this.UnpatchApp.TabIndex = 4;
@@ -68,9 +70,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PatchStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PatchStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            this.PatchStatusLabel.Location = new System.Drawing.Point(52, 110);
+            this.PatchStatusLabel.Location = new System.Drawing.Point(52, 185);
             this.PatchStatusLabel.Name = "PatchStatusLabel";
-            this.PatchStatusLabel.Size = new System.Drawing.Size(183, 13);
+            this.PatchStatusLabel.Size = new System.Drawing.Size(258, 13);
             this.PatchStatusLabel.TabIndex = 7;
             this.PatchStatusLabel.Text = "Waiting...";
             // 
@@ -79,7 +81,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 110);
+            this.label1.Location = new System.Drawing.Point(12, 185);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 13);
             this.label1.TabIndex = 6;
@@ -91,7 +93,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.WMMW.Location = new System.Drawing.Point(4, 16);
             this.WMMW.Name = "WMMW";
-            this.WMMW.Size = new System.Drawing.Size(215, 24);
+            this.WMMW.Size = new System.Drawing.Size(290, 24);
             this.WMMW.TabIndex = 2;
             this.WMMW.Text = "Patch an application";
             this.WMMW.UseVisualStyleBackColor = true;
@@ -100,12 +102,12 @@
             // 
             // BMPatch
             // 
-            this.BMPatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.BMPatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BMPatch.Controls.Add(this.WMMW);
-            this.BMPatch.Location = new System.Drawing.Point(12, 9);
+            this.BMPatch.Location = new System.Drawing.Point(12, 84);
             this.BMPatch.Name = "BMPatch";
-            this.BMPatch.Size = new System.Drawing.Size(223, 45);
+            this.BMPatch.Size = new System.Drawing.Size(298, 45);
             this.BMPatch.TabIndex = 8;
             this.BMPatch.TabStop = false;
             this.BMPatch.Text = "For Black MIDIs";
@@ -117,7 +119,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.WMMD.Location = new System.Drawing.Point(4, 16);
             this.WMMD.Name = "WMMD";
-            this.WMMD.Size = new System.Drawing.Size(215, 24);
+            this.WMMD.Size = new System.Drawing.Size(290, 24);
             this.WMMD.TabIndex = 2;
             this.WMMD.Text = "Patch an application";
             this.WMMD.UseVisualStyleBackColor = true;
@@ -126,16 +128,25 @@
             // 
             // DAWPatch
             // 
-            this.DAWPatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.DAWPatch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DAWPatch.Controls.Add(this.WMMD);
-            this.DAWPatch.Location = new System.Drawing.Point(12, 57);
+            this.DAWPatch.Location = new System.Drawing.Point(12, 132);
             this.DAWPatch.Name = "DAWPatch";
-            this.DAWPatch.Size = new System.Drawing.Size(223, 45);
+            this.DAWPatch.Size = new System.Drawing.Size(298, 45);
             this.DAWPatch.TabIndex = 9;
             this.DAWPatch.TabStop = false;
             this.DAWPatch.Text = "For DAWs";
             this.DAWPatch.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.DAWPatch_HelpRequested);
+            // 
+            // WinMMWRPDesc
+            // 
+            this.WinMMWRPDesc.Location = new System.Drawing.Point(12, 9);
+            this.WinMMWRPDesc.Name = "WinMMWRPDesc";
+            this.WinMMWRPDesc.Size = new System.Drawing.Size(298, 68);
+            this.WinMMWRPDesc.TabIndex = 10;
+            this.WinMMWRPDesc.Text = resources.GetString("WinMMWRPDesc.Text");
+            this.WinMMWRPDesc.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // WinMMPatches
             // 
@@ -143,7 +154,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(247, 168);
+            this.ClientSize = new System.Drawing.Size(322, 243);
+            this.Controls.Add(this.WinMMWRPDesc);
             this.Controls.Add(this.DAWPatch);
             this.Controls.Add(this.BMPatch);
             this.Controls.Add(this.PatchStatusLabel);
@@ -158,7 +170,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "WinMM Wrapper patch";
+            this.Text = "Windows Multimedia Wrapper";
             this.Load += new System.EventHandler(this.WinMMPatches_Load);
             this.BMPatch.ResumeLayout(false);
             this.DAWPatch.ResumeLayout(false);
@@ -176,5 +188,6 @@
         private System.Windows.Forms.GroupBox BMPatch;
         private System.Windows.Forms.Button WMMD;
         private System.Windows.Forms.GroupBox DAWPatch;
+        private System.Windows.Forms.Label WinMMWRPDesc;
     }
 }

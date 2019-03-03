@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="WinMMWRPDesc.Text" xml:space="preserve">
+    <value>The MME API (also known as WinMM) was the first universal and standardized Windows audio API. Wave sound events and MIDI I/O use MME. Ever since MIcrosoft released Windows 8, the MIDI functions have been affected by horrible latency issues. The wrapper aims to fix those issues.</value>
+  </data>
 </root>

@@ -263,8 +263,10 @@ extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
 
 		return TRUE;
 	}
-	else if (!AlreadyInitializedViaKDMAPI) PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
-	else PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
+	else if (!AlreadyInitializedViaKDMAPI && bass_initialized) 
+		PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
+	else 
+		PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
 
 	return FALSE;
 }
