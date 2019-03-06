@@ -39,8 +39,8 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 	DWORD delaytick = 0;
 	BOOL barrier = TRUE;			// This is horrible :s
 
-	const DWORD maxdelay = 10e4;	// Adjust responsiveness here
-	const DWORD adaption = 1e5;		// Adaptive timer nice time >:3
+	const DWORD maxdelay = 100000;	// Adjust responsiveness here
+	const DWORD adaption = 100000;	// Adaptive timer nice time >:3
 
 	PrintMessageToDebugLog("CookedPlayerSystem", "Thread is alive!");
 

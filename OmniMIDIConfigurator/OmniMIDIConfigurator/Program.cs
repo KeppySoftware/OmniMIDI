@@ -406,7 +406,7 @@ namespace OmniMIDIConfigurator
             Int32 CurrentYear = Convert.ToInt32(BirthDate.ToString("yyyy"));
             Int32 YearsOld = (CurrentYear - 2015);
             if (BirthDate.ToString("dd/MM") == "17/05")
-                MessageBox.Show(String.Format("Today, OmniMIDI turned {0} years old!\n\nThank you fellow user for using it and helping me with the development, and happy anniversary, OmniMIDI!", (CurrentYear - 2015).ToString()), String.Format("{0} anniversary since the first release of OmniMIDI", Ordinal(YearsOld)), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(String.Format("Today, OmniMIDI turned {0} years old!\n\nThank you fellow user for using it and helping me with the development, and happy birthday, OmniMIDI!", (CurrentYear - 2015).ToString()), String.Format("{0} anniversary since the first release of OmniMIDI", Ordinal(YearsOld)), MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (BirthDate.ToString("dd/MM") == "05/12")
                 MessageBox.Show(String.Format("Today is Keppy's birthday! He turned {0} years old!\n\nHappy birthday, you potato!", (CurrentYear - 1999).ToString()), "Happy birthday to Kepperino", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
