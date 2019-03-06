@@ -602,6 +602,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			OMFlags = HIWORD((DWORD)dwParam2);
 
 			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", (MIDIOPENDESC*)dwParam1, OMFlags);
+			EnableBuiltInHandler("MODM_OPEN");
 
 			// Open the driver
 			PrintMessageToDebugLog("MODM_OPEN", "Initializing driver...");
@@ -692,6 +693,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
 				KillOldCookedPlayer();
 				DoStopClient();
+				DisableBuiltInHandler("MODM_CLOSE");
 			}
 
 			if (CustomCallback) {

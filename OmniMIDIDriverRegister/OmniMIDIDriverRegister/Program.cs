@@ -140,6 +140,7 @@ namespace OmniMIDIDriverRegister
             }
             else if (arguments[0] == "/showdialog")
             {
+                Application.EnableVisualStyles();
                 new OmniMIDIDefaultDialog().ShowDialog();
                 Application.Exit();
             }
@@ -248,18 +249,6 @@ namespace OmniMIDIDriverRegister
 
         public static void Unregister(bool IsSilent, String WhichBit, RegistryKey WhichKey)
         {
-            try
-            {
-                if (WhichKey.GetValue("midi9").ToString() == "OmniMIDI\\OmniMIDI.dll")
-                {
-                    WhichKey.DeleteValue("midi9");
-                }
-            }
-            catch
-            {
-
-            }
-
             for (int i = 1; i <= 9; i++)
             {
                 try

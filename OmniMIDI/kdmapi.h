@@ -227,9 +227,7 @@ extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
 		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
-
-		// PrintMessageToDebugLog("KDMAPI_IKS", "Initializing OmniMIDICrashHandler...");
-		// AddVectoredExceptionHandler(0, OmniMIDICrashHandler);
+		EnableBuiltInHandler("KDMAPI_IKS");
 
 		// Enable the debug log, if the process isn't banned
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
@@ -257,8 +255,7 @@ extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
 		DoStopClient();
 		AlreadyInitializedViaKDMAPI = FALSE;
 		KDMAPIEnabled = FALSE;
-		// PrintMessageToDebugLog("KDMAPI_IKS", "Removing OmniMIDICrashHandler...");
-		// RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
+		DisableBuiltInHandler("KDMAPI_TKS");
 		PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
 
 		return TRUE;

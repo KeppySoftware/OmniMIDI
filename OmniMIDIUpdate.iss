@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '6.4.0.2'
+#define Version '6.4.0.3'
                          
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -78,8 +78,8 @@ Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; Dest
 Source: "{#outputdir64}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 
 ; ARM64 OS
-Source: "{#outputdirARM64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
-Source: "{#outputdirARM64}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
+Source: "{#outputdirARM64}\{#InstallDir}.dll"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
+Source: "{#outputdirARM64}\{#MIDIMapper}.dll"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 
 ; 32-bit files for AMD64 and ARM64
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64

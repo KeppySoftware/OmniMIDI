@@ -5,6 +5,7 @@ OmniMIDI debug functions
 #define CurrentError(Title, Message, Error, Text) case Error: sprintf_s(Title, 512, "%s", #Error); sprintf_s(Message, 512, "%s", #Text); break
 #define arre(wat) case wat: sprintf(MessageBuf + strlen(MessageBuf), "\nCode: %s", #wat); break
 
+static HANDLE ExceptionHandler = nullptr;
 static const char hex[] = "0123456789ABCDEF";
 static std::mutex DebugMutex;
 static BOOL IntroAlreadyShown = FALSE;
@@ -191,7 +192,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 	char MessageBuf[NTFS_MAX_PATH];
 	char NameBuf[NTFS_MAX_PATH];
 
-	sprintf(MessageBuf, "The program performed an illegal operation, and will be shut down!\n\n");
+	sprintf(MessageBuf, "The program performed an illegal operation!\n\nIf you're the developer, check the stacktrace to see where the crash occured.\nIf you're a normal user, report this issue to either KaleidonKep99 on GitHub or the app developer.\n\n");
 	if (ret) {
 		sprintf(MessageBuf + strlen(MessageBuf), "== Stacktrace ==");
 		while (ret--) {
@@ -203,7 +204,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 
 			HMODULE mod = (HMODULE)MBI.AllocationBase;
 
-			if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
+			if (!K32GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
 				continue;
 
 			NameBuf[31] = 0;
@@ -242,7 +243,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 		arre(EXCEPTION_SINGLE_STEP);
 		arre(EXCEPTION_STACK_OVERFLOW);
 	default: 
-		sprintf(MessageBuf + strlen(MessageBuf), "\nCode: unknown "); 
+		sprintf(MessageBuf + strlen(MessageBuf), "\nCode: unk"); 
 		ToHex32(MessageBuf, exc->ExceptionRecord->ExceptionCode);
 		break;
 	}
@@ -693,6 +694,30 @@ void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 		// Flush buffer
 		fflush(stdout);
 	}
+}
+
+BOOL EnableBuiltInHandler(LPCSTR Stage) {
+	if (ManagedSettings.DebugMode) {
+		PrintMessageToDebugLog(Stage, "Initializing OmniMIDICrashHandler...");
+		if (NULL == (ExceptionHandler = AddVectoredExceptionHandler(1, OmniMIDICrashHandler))) {
+			MessageBoxA(NULL, "An error has occured while initializing the built-in crash handler.", "OmniMIDI - ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+BOOL DisableBuiltInHandler(LPCSTR Stage) {
+	if (ExceptionHandler != nullptr) {
+		PrintMessageToDebugLog(Stage, "Removing OmniMIDICrashHandler...");
+		if (!RemoveVectoredExceptionHandler(ExceptionHandler)) {
+			CrashMessage("DIsableBuiltInHandlerFail");
+			return FALSE;
+		}
+	}
+
+	return TRUE;
 }
 
 std::string GetLastErrorAsString()
