@@ -3,11 +3,6 @@ OmniMIDI buffer system
 Some code has been optimized by Sono (SonoSooS), the old one has been commented out
 */
 #pragma once
-
-#define SETVELOCITY(evento, newvelocity) evento = (DWORD(evento) & 0xFF00FFFF) | ((DWORD(newvelocity) & 0xFF) << 16)
-#define SETNOTE(evento, newnote) evento = (DWORD(evento) & 0xFFFF00FF) | ((DWORD(newnote) & 0xFF) << 8)
-#define SETSTATUS(evento, newstatus) evento = (DWORD(evento) & 0xFFFFFF00) | (DWORD(newstatus) & 0xFF)
-
 #define SMALLBUFFER 2
 
 int __inline BufferCheck(void) {

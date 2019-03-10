@@ -6,6 +6,13 @@
 
 // Things
 #define GETSTATUS(f) (f & 0xF0)
+#define GETCHANNEL(f) (f & 0xF)
+#define GETEVENT(f) (f >> 8)
+
+#define SETVELOCITY(f, nf) f = (f & 0xFF00FFFF) | ((DWORD(nf) & 0xFF) << 16)
+#define SETNOTE(f, nf) f = (f & 0xFFFF00FF) | ((DWORD(nf) & 0xFF) << 8)
+#define SETSTATUS(f, nf) f = (f & 0xFFFFFF00) | (DWORD(nf) & 0xFF)
+
 #define MIDI_NOTEOFF	0x80
 #define MIDI_NOTEON		0x90
 #define MIDI_POLYAFTER	0xA0

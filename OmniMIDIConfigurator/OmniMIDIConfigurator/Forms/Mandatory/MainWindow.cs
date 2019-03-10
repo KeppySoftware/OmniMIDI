@@ -1514,7 +1514,7 @@ namespace OmniMIDIConfigurator
         private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening PayPal page for donation.", null);
-            Process.Start("https://paypal.me/KaleidonKep99");
+            Process.Start("https://paypal.me/Keppy99");
         }
 
         private void changeDirectoryOfTheOutputToWAVModeToolStripMenuItem_Click(object sender, EventArgs e)
