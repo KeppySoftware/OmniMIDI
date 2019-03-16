@@ -672,6 +672,26 @@ void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 	}
 }
 
+void PrintEventToDebugLog(DWORD dwParam) {
+	if (ManagedSettings.DebugMode) {
+		char Msg[NTFS_MAX_PATH] = { 0 };
+
+		// Debug log is busy now
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		// Print to log
+		PrintCurrentTime();
+		sprintf(Msg, "Stage <<MIDIEvent | %08X>> | Event ID: 0x%X, Channel: %u, Note: %u, Velocity: %u\n", 
+			GETEVENT(dwParam), GETSTATUS(dwParam), GETCHANNEL(dwParam), GETVELOCITY(dwParam), GETNOTE(dwParam));
+
+		fprintf(stdout, Msg);
+		OutputDebugStringA(Msg);
+
+		// Flush buffer
+		fflush(stdout);
+	}
+}
+
 void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
 		char Msg[NTFS_MAX_PATH] = { 0 };

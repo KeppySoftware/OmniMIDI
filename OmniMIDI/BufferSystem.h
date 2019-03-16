@@ -10,6 +10,8 @@ int __inline BufferCheck(void) {
 }
 
 void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
+	DWORD ogDW = dwParam1;
+
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
@@ -57,11 +59,14 @@ void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 		&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
 	);
 	
-	// PrintEventToConsole(FOREGROUND_GREEN, dwParam1, FALSE, "Parsed normal MIDI event.");
+	// PrintEventToDebugLog(ogDW);
 }
 
 void SendToBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
 	DWORD len = 3;
+
+	if (!(dwParam1 & 0x80))
+		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
 	switch (GETSTATUS(dwParam1)) {
 	case MIDI_NOTEON:
@@ -103,29 +108,23 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	PrintSysExMessageToDebugLog(
 		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength),
 		IIMidiHdr);
-	// PrintEventToConsole(FOREGROUND_GREEN, 0, TRUE, "Parsed SysEx MIDI event.");
 }
 
+// PBufData and PBufDataHyper have been merged,
+// since Running Status is a MANDATORY feature in MIDI drivers
+// and can not be skipped
 void __inline PBufData(void) {
 
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
-	if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
-	DWORD TempLRS = LastRunningStatus;
+	if (dwParam1 & 0x80 && !Between(dwParam1 & 0x80, 0xF8, 0xFF))
+		LastRunningStatus = (BYTE)dwParam1;
 
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
 
-	_StoBASSMIDI(TempLRS, dwParam1);
+	_StoBASSMIDI(LastRunningStatus, dwParam1);
 }
 
-void __inline PBufDataHyper(void) {
-	
-	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
-	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
-
-	_StoBASSMIDI(0, dwParam1);
-}
-
-DWORD PlaySmallBufferedData(void)
+unsigned int __inline PSmallBufData(void)
 {
 	auto HeadStart = EVBuffer.ReadHead;
 	auto HeadPos = HeadStart; //fast volatile
@@ -144,10 +143,10 @@ DWORD PlaySmallBufferedData(void)
 
 		if (~dwParam1)
 		{
-			if (dwParam1 & 0x80) LastRunningStatus = (BYTE)dwParam1;
-			DWORD TempLRS = LastRunningStatus;
+			if (dwParam1 & 0x80 && !Between(dwParam1 & 0x80, 0xF8, 0xFF))
+				LastRunningStatus = (BYTE)dwParam1;
 
-			_StoBASSMIDI(TempLRS, dwParam1);
+			_StoBASSMIDI(LastRunningStatus, dwParam1);
 		}
 		else return 0;
 
@@ -170,13 +169,13 @@ DWORD __inline PlayBufferedData(void) {
 
 		return 0;
 	}
-	else return PlaySmallBufferedData();
+	else return PSmallBufData();
 }
 
 DWORD __inline PlayBufferedDataHyper(void) {
 	if (!BufferCheck()) return 1;
 
-	do PBufDataHyper();
+	do PBufData();
 	while (EVBuffer.ReadHead != EVBuffer.WriteHead);
 
 	return 0;
@@ -193,14 +192,14 @@ DWORD __inline PlayBufferedDataChunk(void) {
 
 		return 0;
 	}
-	else return PlaySmallBufferedData();
+	else return PSmallBufData();
 }
 
 DWORD __inline PlayBufferedDataChunkHyper(void) {
 	if (!BufferCheck()) return 1;
 
 	ULONGLONG whe = EVBuffer.WriteHead;
-	do PBufDataHyper();
+	do PBufData();
 	while (EVBuffer.ReadHead != whe);
 
 	return 0;

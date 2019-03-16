@@ -5,7 +5,9 @@
 #define DEVICE_AVAILABLE 1
 
 // Things
-#define GETSTATUS(f) (f & 0xF0)
+#define GETSTATUS(f) ((f & 0xFF) & 0xF0)
+#define GETVELOCITY(f) (f >> 16)
+#define GETNOTE(f) (((f >> 8) & 0xFF) - 0x7F)
 #define GETCHANNEL(f) (f & 0xF)
 #define GETEVENT(f) (f >> 8)
 
