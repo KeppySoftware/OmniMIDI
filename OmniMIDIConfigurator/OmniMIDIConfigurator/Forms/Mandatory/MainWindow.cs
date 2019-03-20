@@ -169,6 +169,7 @@ namespace OmniMIDIConfigurator
                 FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
                 VersionLabel.Text = String.Format("Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
 
+                SFlg.BackgroundImage = Properties.Resources.Question;
                 CLi.BackgroundImage = Properties.Resources.ClearIcon;
                 AddSF.BackgroundImage = Properties.Resources.AddSFIcon;
                 RmvSF.BackgroundImage = Properties.Resources.RmvSFIcon;
@@ -324,6 +325,11 @@ namespace OmniMIDIConfigurator
                 Functions.ImportSettings(this, ImportSettingsDialog.FileName);
                 MessageBox.Show("The settings have been imported from the selected registry file!", "OmniMIDI - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void SFlg_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(Properties.Resources.sflistguide, "OmniMIDI Configurator ~ SoundFonts list guide", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void CLi_Click(object sender, EventArgs e)
@@ -1129,6 +1135,12 @@ namespace OmniMIDIConfigurator
         {
             // Ye, it's not really that easy to explain...
             ColorButton(CLi, Pens.BlueViolet, e);
+        }
+
+        private void SoundFontListGuideButton(object sender, PaintEventArgs e)
+        {
+            // Ye, it's not really that easy to explain...
+            ColorButton(SFlg, Pens.Coral, e);
         }
 
         // Stuff

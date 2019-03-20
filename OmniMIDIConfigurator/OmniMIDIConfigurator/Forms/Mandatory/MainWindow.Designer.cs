@@ -153,6 +153,7 @@
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
             this.SettingsPresetsBtn = new OmniMIDIConfigurator.MenuButton();
             this.SoundFontTab = new System.Windows.Forms.TabPage();
+            this.SFlg = new System.Windows.Forms.Button();
             this.Separator = new System.Windows.Forms.Label();
             this.Lis = new OmniMIDIConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1707,6 +1708,7 @@
             // SoundFontTab
             // 
             this.SoundFontTab.BackColor = System.Drawing.Color.Transparent;
+            this.SoundFontTab.Controls.Add(this.SFlg);
             this.SoundFontTab.Controls.Add(this.Separator);
             this.SoundFontTab.Controls.Add(this.Lis);
             this.SoundFontTab.Controls.Add(this.EL);
@@ -1729,6 +1731,24 @@
             this.SoundFontTab.Size = new System.Drawing.Size(641, 394);
             this.SoundFontTab.TabIndex = 0;
             this.SoundFontTab.Text = "Lists editor";
+            // 
+            // SFlg
+            // 
+            this.SFlg.AccessibleDescription = "SoundFont list guide";
+            this.SFlg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFlg.BackColor = System.Drawing.Color.Transparent;
+            this.SFlg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.SFlg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SFlg.ForeColor = System.Drawing.Color.Transparent;
+            this.SFlg.Location = new System.Drawing.Point(581, 6);
+            this.SFlg.Name = "SFlg";
+            this.SFlg.Size = new System.Drawing.Size(24, 24);
+            this.SFlg.TabIndex = 16;
+            this.SFlg.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonsDesc.SetToolTip(this.SFlg, "SoundFont list guide");
+            this.SFlg.UseVisualStyleBackColor = false;
+            this.SFlg.Click += new System.EventHandler(this.SFlg_Click);
+            this.SFlg.Paint += new System.Windows.Forms.PaintEventHandler(this.SoundFontListGuideButton);
             // 
             // Separator
             // 
@@ -3183,6 +3203,7 @@
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem LMWarningARM64;
         public System.Windows.Forms.MenuItem DisableChime;
+        private System.Windows.Forms.Button SFlg;
     }
 }
 

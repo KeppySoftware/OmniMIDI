@@ -493,7 +493,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			((MMTIME*)dwParam1)->u.ticks = ((CookedPlayer*)dwUser)->TickAccumulator;
 			break;
 		default:
-			PrintMessageToDebugLog("MODM_GETPOS", "Unrecognized wType. Parsing in the default format of milliseconds.");
+			PrintMessageToDebugLog("TIME_UNK", "Unrecognized wType. Parsing in the default format of milliseconds.");
 			((MMTIME*)dwParam1)->u.ms = ((CookedPlayer*)dwUser)->TimeAccumulator / 10000;
 			break;
 		}
@@ -648,11 +648,9 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 					// Create player thread
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
 					CookedThread.ThreadHandle = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CookedPlayerSystem, *(LPVOID*)dwUser, NULL, (LPDWORD)CookedThread.ThreadAddress);
-					while (!TPlayer->IsThreadReady)
-					{ 
-						PrintMessageToDebugLog("MODM_OPEN", "Waiting for thread to start...");
-						Sleep(1);
-					}
+					
+					// Wait for the thread to spawn
+					while (!TPlayer->IsThreadReady);
 
 					PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
 				}
@@ -685,7 +683,6 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	}
 	case MODM_CLOSE: {
 		if (!AlreadyInitializedViaKDMAPI) {
-			// RemoveVectoredExceptionHandler(OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
 			ResetSynth(TRUE);
 
@@ -724,6 +721,13 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
 		return DebugResult(MMSYSERR_NOTSUPPORTED, "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
 	default:
-		return DebugResult(MMSYSERR_ERROR, "The application sent an unrecognized parameter... What?");
+	{
+		// Unrecognized uMsg
+		CHAR Msg[MAX_PATH];
+		sprintf_s(Msg, 
+			"The application sent an unknown message! ID: 0x%08x - dwUser: 0x%08x - dwParam1: 0x%08x - dwParam2: 0x%08x", 
+			uMsg, dwUser, dwParam1, dwParam2);
+		return DebugResult(MMSYSERR_ERROR, Msg);
+	}
 	}
 }

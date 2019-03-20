@@ -389,6 +389,16 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Question {
+            get {
+                object obj = ResourceManager.GetObject("Question", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap refreshicon {
             get {
                 object obj = ResourceManager.GetObject("refreshicon", resourceCulture);
@@ -423,6 +433,21 @@ namespace OmniMIDIConfigurator.Properties {
             get {
                 object obj = ResourceManager.GetObject("rollbackicon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a The lists editor allows you to edit your SoundFonts lists, and import/export them whenever you like.
+        ///Each SoundFont item in the list will be loaded by the driver in a &quot;SoundFont array&quot;, which&apos;s loading order is from top to bottom. The last item will always override the previous one.
+        ///
+        ///Legend:
+        ///SB - Source Bank, the bank you want to import from the SoundFont
+        ///SP - Source Preset, the present you want to import from the source bank
+        ///DB - Destination Bank, the bank you want to replace in the SoundFont array w [stringa troncata]&quot;;.
+        /// </summary>
+        internal static string sflistguide {
+            get {
+                return ResourceManager.GetString("sflistguide", resourceCulture);
             }
         }
         

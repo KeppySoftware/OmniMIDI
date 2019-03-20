@@ -33,7 +33,7 @@
 static BOOL AlreadyStartedOnce = FALSE;
 
 // EVBuffer
-struct EventsBuffer {
+typedef struct EventsBuffer {
 	DWORD*					Buffer;
 	volatile ULONGLONG		ReadHead;
 	ULONGLONG				WriteHead;
@@ -120,7 +120,7 @@ static const FLOAT sndbflen = 256.0f;		// AudToWAV
 static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug
-struct SoundFontList
+typedef struct SoundFontList
 {
 	int EnableState;
 	wchar_t Path[NTFS_MAX_PATH];
@@ -129,7 +129,7 @@ struct SoundFontList
 	int DestinationPreset;
 	int DestinationBank;
 	int XGBankMode;
-} SFLIST, *PSFLIST;
+};
 
 static BOOL SettingsManagedByClient;
 static FLOAT RenderingTime = 0.0f;

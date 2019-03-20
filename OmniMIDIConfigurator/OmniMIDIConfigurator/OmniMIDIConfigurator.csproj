@@ -417,13 +417,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\Hashes\DRVARM64.SHA" />
-    <None Include="Resources\Text\vollab.ttf" />
-    <None Include="Resources\Text\volnum.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\List Editor\Question.png" />
+    <Content Include="Resources\Text\sflistguide.txt" />
     <Content Include="Resources\WinMMWRP\winmm32DAW.dll" />
     <Content Include="Resources\WinMMWRP\winmm32wrp.dll" />
     <Content Include="Resources\WinMMWRP\winmm64DAW.dll" />

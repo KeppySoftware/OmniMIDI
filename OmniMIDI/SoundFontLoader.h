@@ -159,7 +159,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 						if (!AlreadyInitialized) continue;
 
 						// We've found the path! Parse it.
-						ZeroMemory(TempSF.Path, sizeof(TempSF.Path));
+						memset(TempSF.Path, 0, sizeof(TempSF.Path));
 						wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
 
 						PrintSoundFontToDebugLog(TempSF.Path, "Loaded SF path to SoundFontList struct.");

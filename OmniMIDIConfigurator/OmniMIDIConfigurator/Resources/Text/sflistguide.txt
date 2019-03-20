@@ -1,0 +1,21 @@
+The lists editor allows you to edit your SoundFonts lists, and import/export them whenever you like.
+Each SoundFont item in the list will be loaded by the driver in a "SoundFont array", which's loading order is from top to bottom. The last item will always override the previous one.
+
+Legend:
+SB - Source Bank, the bank you want to import from the SoundFont
+SP - Source Preset, the present you want to import from the source bank
+DB - Destination Bank, the bank you want to replace in the SoundFont array with the source bank
+DP - Destination Preset, the preset you want to replace in the SoundFont array with the source preset
+XG - You should only check this when the SoundFont has a XG bank/preset
+Format - Shows you the format of the SoundFont
+
+Some examples (Sequence is always SB, SP, DB, DP):
+-1, -1, 0, -1: The following sequence will make the driver import all the banks and presents, and place them to their respective position. This is the default behavior when importing SoundFont 2.x files.
+0, 0, 0, 0: The following sequence will make the driver import the first preset of the first bank (Default bank, Acoustic Piano). This is the default behavior when importing a SFZ bank.
+0, 0, 0, 1: The following sequence will make the driver import the first preset of the first bank, and place it in the Bright Acoustic Piano preset of the SoundFont array.
+And so on...
+
+If the first item in a list has the sequence "0, 0, 0, 0", and the next one has the sequence "0, 1, 0, 0", the previous item will be ignored and will be replaced by the last one instead.
+If, instead, the first item has the sequence "0, 0, 0, 0", and the next one has the sequence "0, 0, 0, 0", both items will be loaded in the SoundFont array, but the last one will replace the Bright Acoustic Piano.
+
+If you still don't understand how the SoundFont array system works, make an issue in the OmniMIDI's GitHub page.

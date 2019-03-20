@@ -305,7 +305,7 @@ void AllocateMemory(BOOL restart) {
 		else {
 			// He didn't, check if the selected EVBuffer size doesn't exceed the maximum amount of RAM available
 			if (TempEvBufferSize >= status.ullTotalPhys) {
-				MessageBox(NULL, L"The events buffer cannot allocate more than the total RAM available!\nIts size will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+				MessageBox(NULL, L"The events buffer cannot allocate more than the total RAM available!\nIts size will now default to 16384 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 				ResetEVBufferSettings();
 				TempEvBufferSize = EvBufferSize;
 			}
@@ -316,10 +316,10 @@ void AllocateMemory(BOOL restart) {
 
 		// Check if the EVBuffer size goes above 512MB of RAM
 		// Each 32-bit app is limited to a 2GB working set size
-		if (TempEvBufferSize > 536870912) {
+		if (TempEvBufferSize > 134217728) {
 			// It is, limit the EVBuffer to 512MB
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer is too big, limiting to 512MB...");
-			TempEvBufferSize = 536870912;
+			TempEvBufferSize = 134217728;
 		}
 #endif
 
@@ -327,7 +327,7 @@ void AllocateMemory(BOOL restart) {
 		EvBufferSize = TempEvBufferSize / (unsigned long long)EvBufferMultRatio;
 
 		if (EvBufferSize < 1) {
-			MessageBox(NULL, L"The size of the buffer cannot be 0!\nIts size will now default to 4096 bytes.\n\nThe settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
+			MessageBox(NULL, L"The size of the buffer cannot be 0!\nIts size will now default to 16384 bytes.\n\nThe settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 			ResetEVBufferSettings();
 			TempEvBufferSize = EvBufferSize;
 		}
@@ -351,7 +351,7 @@ void AllocateMemory(BOOL restart) {
 				EVBuffer.Buffer = (DWORD*)calloc(EvBufferSize, sizeof(DWORD));
 				if (!EVBuffer.Buffer) {
 					MessageBox(NULL, L"Fatal error while allocating the events buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					exit(0x8);
+					exit(0x3623);
 				}
 			}
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
@@ -365,7 +365,7 @@ void AllocateMemory(BOOL restart) {
 			if (!sndbf) {
 				PrintMessageToDebugLog("AllocateMemoryFunc", "An error has occurred while allocating the audio buffer.");
 				MessageBox(NULL, L"Fatal error while allocating the sound buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-				exit(0x8);
+				exit(0x3623);
 			}
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer allocated.");
 		}
@@ -373,10 +373,6 @@ void AllocateMemory(BOOL restart) {
 	catch (...) {
 		CrashMessage("EVBufAlloc");
 	}
-}
-
-LPCWSTR BoolToString(BOOL A) {
-	return A ? L"TRUE" : L"FALSE";
 }
 
 void LoadSettings(BOOL restart)
