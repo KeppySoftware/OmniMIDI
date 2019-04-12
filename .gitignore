@@ -11,6 +11,7 @@
 /external_packages/lib/*.dll
 /external_packages/lib64/*.dll
 /Debug
+/OmniMIDIConfiguratorXP
 /OmniMIDIDriverRegister/KSDriverRegister/bin/
 /OmniMIDIDriverRegister/KSDriverRegister/obj/
 /OmniMIDIDriverRegister/output/
@@ -109,3 +110,4 @@ Sign WinMM patches and BASS.bat
 output/OmniMIDIDev.zip
 Sign, compile setup and create portable DLLs for devs.bat
 OmniMIDIConfigurator/.vs/OmniMIDIConfigurator/v15/Server/sqlite3/storage.ide-wal
+output/OmniMIDIConfiguratorXP.exe

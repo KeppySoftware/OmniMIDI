@@ -204,7 +204,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 
 			HMODULE mod = (HMODULE)MBI.AllocationBase;
 
-			if (!K32GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
+			if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
 				continue;
 
 			NameBuf[31] = 0;

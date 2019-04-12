@@ -8,12 +8,12 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) case Setting: if (cbValue != sizeof(Type)) return FALSE; if (Mode = OM_SET) SettingStruct = *(Type*)Value; else if (Mode = OM_GET) *(Type*)Value = SettingStruct; else return FALSE; break;
 
 // F**k WinMM and Microsoft
-typedef VOID(CALLBACK*WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
+typedef VOID(CALLBACK * WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
 static DWORD_PTR WMMCI;
 static WMMC CustomCallback = 0;
 
 // KDMAPI calls
-BOOL StreamHealthCheck(BOOL& Initialized) {
+BOOL StreamHealthCheck(BOOL & Initialized) {
 	// If BASS is forbidden from initializing itself, then abort immediately
 	if (block_bassinit) return FALSE;
 
@@ -89,7 +89,7 @@ BOOL DoStartClient() {
 
 		// Load the selected driver priority value from the registry
 		OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
-		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
+		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)& ManagedSettings.DriverPriority, &dwSize);
 
 		// Parse the app name, and start the debug pipe to the debug window
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
@@ -191,7 +191,7 @@ BOOL DoStopClient() {
 	return TRUE;
 }
 
-extern "C" BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
+BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
 	if (Major == NULL || Minor == NULL || Build == NULL || Revision == NULL) {
 		PrintMessageToDebugLog("KDMAPI_RKV", "One of the pointers passed to the RKV function is invalid.");
 		MessageBox(NULL, L"One of the pointers passed to the ReturnKDMAPIVer function is invalid!", L"KDMAPI ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
@@ -204,23 +204,23 @@ extern "C" BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Bui
 	return TRUE;
 }
 
-extern "C" BOOL KDMAPI IsKDMAPIAvailable()  {
+BOOL KDMAPI IsKDMAPIAvailable() {
 	// Parse the current state of the KDMAPI
 	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 	PrintMessageToDebugLog("KDMAPI_IKA", "Interrogating registry about KDMAPI status...");
-	long lResult = RegQueryValueEx(Configuration.Address, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)&KDMAPIEnabled, &dwSize);
+	long lResult = RegQueryValueEx(Configuration.Address, L"KDMAPIEnabled", NULL, &dwType, (LPBYTE)& KDMAPIEnabled, &dwSize);
 	PrintMessageToDebugLog("KDMAPI_IKA", "Done!");
 
 	// If the state is not available or it hasn't been set, keep it enabled by default
-	if (lResult != ERROR_SUCCESS) 
+	if (lResult != ERROR_SUCCESS)
 		KDMAPIEnabled = TRUE;
 
 	// Return the state
 	return KDMAPIEnabled;
 }
 
-extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
+BOOL KDMAPI InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 		PrintMessageToDebugLog("KDMAPI_IKS", "The app requested the driver to initialize its audio stream.");
 
@@ -231,7 +231,7 @@ extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 
 		// Enable the debug log, if the process isn't banned
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)& ManagedSettings.DebugMode, &dwSize);
 		if (ManagedSettings.DebugMode) CreateConsole();
 
 		// Start the driver's engine
@@ -248,7 +248,7 @@ extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 	return FALSE;
 }
 
-extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
+BOOL KDMAPI TerminateKDMAPIStream() {
 	// If the driver is already initialized, close it
 	if (AlreadyInitializedViaKDMAPI && bass_initialized) {
 		PrintMessageToDebugLog("KDMAPI_TKS", "The app requested the driver to terminate its audio stream.");
@@ -260,35 +260,35 @@ extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
 
 		return TRUE;
 	}
-	else if (!AlreadyInitializedViaKDMAPI && bass_initialized) 
+	else if (!AlreadyInitializedViaKDMAPI && bass_initialized)
 		PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
-	else 
+	else
 		PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
 
 	return FALSE;
 }
 
-extern "C" VOID KDMAPI ResetKDMAPIStream() {
+VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
 	if (bass_initialized) ResetSynth(FALSE);
 }
 
-extern "C" BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
+BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
 	return BASS_MIDI_StreamEvent(OMStream, chan, eventtype, param);
 }
 
-extern "C" MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
+MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
 	return _PrsData(MODM_DATA, dwMsg);
 }
 
-extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
+MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	_StoBASSMIDI(0, dwMsg);
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
+MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 	if (!IIMidiHdr) {
 		PrintMessageToDebugLog("PrepareLongData", "The buffer doesn't exist, or hasn't been allocated.");
 		return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// Buffer doesn't exist
@@ -319,7 +319,7 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
+MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
 	if (!IIMidiHdr) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer doesn't exist, or hasn't been allocated.");
@@ -349,11 +349,11 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
+MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, "BASS hasn't been initialized yet");					// The driver isn't ready
 	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// The buffer doesn't exist, invalid parameter
 	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED, "The buffer is not prepared");	// The buffer is not prepared
-	
+
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
@@ -369,12 +369,12 @@ extern "C" MMRESULT KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr) {
+MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR * IIMidiHdr) {
 	PrintMessageToDebugLog("KDMAPI_SDLDNBuf", "Deprecated command, please use SendDirectLongData instead.");
 	return SendDirectLongData(IIMidiHdr);
 }
 
-extern "C" BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
+BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
 	BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
 
 	switch (Setting) {
@@ -469,13 +469,13 @@ extern "C" BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, U
 	return TRUE;
 }
 
-extern "C" DebugInfo* KDMAPI GetDriverDebugInfo() {
+DebugInfo* KDMAPI GetDriverDebugInfo() {
 	// Parse the debug info, and return them to the app.
 	PrintMessageToDebugLog("KDMAPI_GDDI", "Passed pointer to DebugInfo to the KDMAPI-ready application.");
 	return &ManagedDebugInfo;
 }
 
-extern "C" BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
+BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	if (!AlreadyInitializedViaKDMAPI) {
 		MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
@@ -484,7 +484,7 @@ extern "C" BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	else return FontLoader(Directory);
 }
 
-extern "C" DWORD64 KDMAPI timeGetTime64() {
+DWORD64 KDMAPI timeGetTime64() {
 	static LARGE_INTEGER frequency = { {0,0} };
 	LARGE_INTEGER startingTime;
 

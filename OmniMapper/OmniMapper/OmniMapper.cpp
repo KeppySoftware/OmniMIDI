@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include <Shlwapi.h>
-#include <shlobj_core.h>
+#include <shlobj.h>
 #include <stdio.h>
 #include <locale.h>
 #include <fstream>

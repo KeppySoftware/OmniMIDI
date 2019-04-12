@@ -82,6 +82,8 @@ namespace OmniMIDIConfigurator
 
         public static void CheckChangelog()
         {
+            if (!Functions.IsWindowsVistaOrNewer()) return;
+
             bool internetok = IsInternetAvailable();
             if (internetok == false)
             {
@@ -145,6 +147,8 @@ namespace OmniMIDIConfigurator
 
         public static string CheckForUpdatesMini()
         {
+            if (!Functions.IsWindowsVistaOrNewer()) return "nointernet";
+
             Program.DebugToConsole(false, "Checking for updates...", null);
 
             bool internetok = IsInternetAvailable();
@@ -236,6 +240,8 @@ namespace OmniMIDIConfigurator
 
         public static void CheckForUpdates(bool forced, bool startup, bool isitfromthechangelogwindow)
         {
+            if (!Functions.IsWindowsVistaOrNewer()) return;
+
             bool internetok = IsInternetAvailable();
             if (internetok == false)
             {

@@ -550,10 +550,8 @@ void InitializeBASSOutput() {
 		// If using WASAPI, disable playback buffering
 		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
 			PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
-			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering 1", TRUE);
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
-			CheckUp(FALSE, ERRORCODE, L"Disable Stream Buffering 2", TRUE);
+			if (BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0))
+				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
 		}
 
 		// And finally, open the stream

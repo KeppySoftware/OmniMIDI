@@ -125,7 +125,7 @@ namespace OmniMIDIConfigurator
     {
         // KSDAPI info
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int ReturnKDMAPIVer(out Int32 Major, out Int32 Minor, out Int32 Build, out Int32 Revision);
+        public static extern int ReturnKDMAPIVer(ref Int32 Major, ref Int32 Minor, ref Int32 Build, ref Int32 Revision);
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int InitializeKDMAPIStream();
@@ -290,18 +290,23 @@ namespace OmniMIDIConfigurator
             {
                 DebugToConsole(false, "Started configurator.", null);
 
+                if (!Functions.IsWindowsVistaOrNewer())
+                {
+                    MessageBox.Show("This version of the configurator won't work on Windows XP and older!", "OmniMIDI Configurator - FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.ExitThread();
+                }
+
                 // Parse KDMAPI version
-                Int32 Major, Minor, Build, Revision;
-                if (Convert.ToBoolean(KDMAPI.ReturnKDMAPIVer(out Major, out Minor, out Build, out Revision)))
+                Int32 Major = 0, Minor = 0, Build = 0, Revision = 0;
+                if (Convert.ToBoolean(KDMAPI.ReturnKDMAPIVer(ref Major, ref Minor, ref Build, ref Revision)))
                     KDMAPI.KDMAPIVer = String.Format("{0}.{1}.{2} (Revision {3})", Major, Minor, Build, Revision);
                 else
                 {
                     MessageBox.Show("Failed to initialize KDMAPI!\n\nPress OK to quit.", "OmniMIDI ~ Configurator | FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.ExitThread();
                 }
-                    
+
                 Application.SetCompatibleTextRenderingDefault(false);
-                if (!Functions.IsWindowsVistaOrNewer()) Application.ExitThread();
 
                 int runmode = 0;
                 int window = 0;
@@ -360,6 +365,7 @@ namespace OmniMIDIConfigurator
                 }
 
                 TLS12Enable(false);
+
                 if (Properties.Settings.Default.UpdateBranch == "choose")
                 {
                     SelectBranch frm = new SelectBranch();

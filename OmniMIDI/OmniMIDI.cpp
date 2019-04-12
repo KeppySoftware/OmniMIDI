@@ -67,6 +67,10 @@ typedef long NTSTATUS;
 #include <bassasio.h>
 #include <bass_vst.h>
 
+// Important
+#include "Values.h"
+#include "Debug.h"
+
 // NTSTATUS
 #define NTAPI __stdcall
 // these functions have identical prototypes
@@ -90,7 +94,6 @@ void NTSleep(__int64 usec) {
 }
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
-
 static DWORD DummyPlayBufData() { return 0; }
 static VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
 static MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
@@ -111,8 +114,6 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 #define _CFRWAIT NTSleep(16667)							// Cap framerate wait
 
 // Variables
-#include "Values.h"
-#include "Debug.h"
 #include "BASSErrors.h"
 #include "LockSystem.h"
 
@@ -129,32 +130,35 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 // {62F3192B-A961-456D-ABCA-A5C95A14B9AA}
 static const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 
-extern "C" BOOL APIENTRY DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 {
-	switch (fdwReason) {
+	OutputDebugStringA("OmniMIDI got called by LoadLibrary!");
+
+	if (BannedProcesses()) {
+		OutputDebugStringA("You can't load me!");
+		return FALSE;
+	}
+
+	switch (CallReason) {
 	case DLL_PROCESS_ATTACH:
 	{
-		if (BannedProcesses()) {
-			OutputDebugString(L"You can't load me!");
-			return FALSE;
-		}
+		DisableThreadLibraryCalls((HMODULE)hModule);
 
-		hinst = (HINSTANCE)hinstDLL;
+		hinst = (HINSTANCE)hModule;
 		NtSetTimerResolution = (NSTR)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSetTimerResolution");
 		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
 		NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQuerySystemTime");
 		if (!NtSetTimerResolution || !NtDelayExecution || !NtQuerySystemTime) {
-			OutputDebugString(L"Failed to parse functions from NTDLL! The driver will not load.");
+			OutputDebugStringA("Failed to parse functions from NTDLL! The driver will not load.");
 			return FALSE;
 		}
 
 		ULONG dum = 0;
 		if (NtSetTimerResolution(1, TRUE, &dum)) {
-			OutputDebugString(L"NtSetTimerResolution won't collaborate. Quitting...");
+			OutputDebugStringA("NtSetTimerResolution won't collaborate. Quitting...");
 			return FALSE;
 		}
 
-		DisableThreadLibraryCalls((HMODULE)hinstDLL);
 		break;
 	}
 	case DLL_PROCESS_DETACH:
