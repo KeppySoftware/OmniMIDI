@@ -86,14 +86,15 @@ Click here: [Features compared to other software synthesizers](#features-compare
 
 ### Required software for it to work
 You need this software installed before attempting to run the setup:
-- [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
+- [Microsoft .NET Framework 4.0 if you're on Windows XP](https://www.microsoft.com/en-US/download/details.aspx?id=17718)
+- [Microsoft .NET Framework 4.5.2 if you're on Vista and newer](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
 
 ### Minimum system requirements for MIDI playback on x86/x64 systems
 The minimum requirements for this synthesizer to work are the following:
-- A x86 CPU running at 2.0GHz (With SSE instruction set support)
-- 256MB of RAM
+- A x86 CPU running at 1.6GHz (With SSE instruction set support)
+- 384MB of RAM
 - Realtek High Definition Audio or better<br />*(AC97 might work too, but it's really laggy.)*
-- Windows Vista SP2 or greater (Server versions are supported too)
+- Windows XP SP3 (XP SP2 x64) or greater (Server versions are supported too)
 
 ### Minimum system requirements for MIDI playback on ARM64 systems
 The minimum requirements for this synthesizer to work are the following:
@@ -112,7 +113,7 @@ For the best experience, it's recommended to run the synthesizer on a PC with th
 
 ### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
-- Microsoft Visual Studio 2017 (or newer)
+- Microsoft Visual Studio 2013 and 2019 installed on the same PC
 - Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
 - Microsoft Windows SDK 7.1A (Windows XP C++ support for VS2013+)
