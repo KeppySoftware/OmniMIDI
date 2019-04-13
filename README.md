@@ -113,10 +113,10 @@ For the best experience, it's recommended to run the synthesizer on a PC with th
 
 ### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
-- Microsoft Visual Studio 2013 and 2019 installed on the same PC
+- Microsoft Visual Studio 2019
 - Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
-- Microsoft Windows SDK 7.1A (Windows XP C++ support for VS2013+)
+- Microsoft Windows SDK 7.1A (Windows XP C++ support for VS2017)
 
 ## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)
