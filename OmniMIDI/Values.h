@@ -52,7 +52,6 @@ static HMIDI OMHMIDI = NULL;
 static DWORD_PTR OMCallback = NULL;
 static DWORD_PTR OMInstance = NULL;
 static DWORD OMFlags = NULL;
-static HDRVR OMDevice = NULL;
 
 // Important stuff
 static const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
@@ -100,8 +99,8 @@ static BOOL stop_thread = FALSE;
 static Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
 
 // Mandatory values
-static HINSTANCE hinst = NULL;				// main DLL handle
-static HINSTANCE ntdll = NULL;				// ?
+static HMODULE hinst = NULL;				// main DLL handle
+static HMODULE winmm = NULL;				// ?
 
 static CHAR AppPath[NTFS_MAX_PATH];			// debug info
 static TCHAR AppPathW[NTFS_MAX_PATH];		// debug info

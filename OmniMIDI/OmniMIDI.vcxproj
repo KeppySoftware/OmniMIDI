@@ -70,8 +70,7 @@
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>
-    </WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120_xp</PlatformToolset>
     <CLRSupport>false</CLRSupport>
   </PropertyGroup>
@@ -104,12 +103,9 @@
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\output\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\output\64\</OutDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    </LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    </LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    </LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -136,7 +132,6 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EmbedManifest>true</EmbedManifest>
     <GenerateManifest>true</GenerateManifest>
-    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
@@ -151,8 +146,8 @@
       <TypeLibraryName>bassmidi_win32drv.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -173,17 +168,28 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ExceptionHandling>false</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <EnableParallelCodeGeneration>
-      </EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <OpenMPSupport>false</OpenMPSupport>
-      <CallingConvention>StdCall</CallingConvention>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
+      <OpenMPSupport>
+      </OpenMPSupport>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <LanguageStandard>
+      </LanguageStandard>
+      <SDLCheck>false</SDLCheck>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -201,10 +207,10 @@
       <ModuleDefinitionFile>.\OmniMIDI.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB32\OmniMIDI_Win32.lib</ImportLibrary>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib</AdditionalLibraryDirectories>
@@ -218,11 +224,17 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <FixedBaseAddress>
-      </FixedBaseAddress>
-      <TurnOffAssemblyGeneration>
-      </TurnOffAssemblyGeneration>
+      <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <UACUIAccess>false</UACUIAccess>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <EnableUAC>false</EnableUAC>
+      <SetChecksum>true</SetChecksum>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <NoEntryPoint>false</NoEntryPoint>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -247,8 +259,8 @@
       <TypeLibraryName>bassmidi_win32drv.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -268,17 +280,26 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>false</MinimalRebuild>
-      <ExceptionHandling>false</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <EnableParallelCodeGeneration>
-      </EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
-      <OpenMPSupport>true</OpenMPSupport>
+      <OpenMPSupport>
+      </OpenMPSupport>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
+      <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <CallingConvention>StdCall</CallingConvention>
+      <CallingConvention>Cdecl</CallingConvention>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <SDLCheck>false</SDLCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -294,14 +315,16 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\OmniMIDI.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB64\OmniMIDI_Win64.lib</ImportLibrary>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib64</AdditionalLibraryDirectories>
       <MinimumRequiredVersion>5.2</MinimumRequiredVersion>
+      <LargeAddressAware>
+      </LargeAddressAware>
       <Driver>NotSet</Driver>
       <GenerateWindowsMetadata>
       </GenerateWindowsMetadata>
@@ -310,11 +333,19 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <FixedBaseAddress>
-      </FixedBaseAddress>
-      <TurnOffAssemblyGeneration>
-      </TurnOffAssemblyGeneration>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <UACUIAccess>false</UACUIAccess>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
+      <GenerateMapFile>false</GenerateMapFile>
+      <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EnableUAC>false</EnableUAC>
+      <SetChecksum>true</SetChecksum>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <NoEntryPoint>false</NoEntryPoint>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -344,7 +375,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\external_packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_USRDLL;ISOLATION_AWARE_ENABLED;KDMAPI_ONLYSTRUCTS;KDMAPI_OMONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;ISOLATION_AWARE_ENABLED;KDMAPI_ONLYSTRUCTS;KDMAPI_OMONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -359,7 +390,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -374,11 +405,11 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <CallingConvention>Cdecl</CallingConvention>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -397,7 +428,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIBARM64\OmniMIDI_ARM64.lib</ImportLibrary>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\libarm64</AdditionalLibraryDirectories>
@@ -412,21 +443,18 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
-      <ImageHasSafeExceptionHandlers>
-      </ImageHasSafeExceptionHandlers>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <GenerateMapFile>false</GenerateMapFile>
       <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <EnableUAC>
-      </EnableUAC>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <EnableUAC>false</EnableUAC>
       <SetChecksum>true</SetChecksum>
-      <AllowIsolation>
-      </AllowIsolation>
-      <CLRImageType />
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
     <PostBuildEvent>
       <Command>

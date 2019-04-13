@@ -18,7 +18,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '6.5.0.0'
+#define Version '6.5.0.1'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -143,10 +143,10 @@ Source: "LICENSE.TXT"; DestDir: "{%USERPROFILE}\{#ProductName}"; Flags: replaces
 
 [Dirs]
 ; 64-bit OS
-Name: "{sys}\{#InstallDir}"; Attribs: system; Permissions: everyone-full; Check: Windows64
-Name: "{syswow64}\{#InstallDir}"; Attribs: system; Permissions: everyone-full; Check: Windows64
+Name: "{sys}\{#InstallDir}"; Permissions: everyone-full; Flags: setntfscompression; Check: Windows64
+Name: "{syswow64}\{#InstallDir}";  Permissions: everyone-full; Flags: setntfscompression; Check: Windows64
 ; 32-bit OS
-Name: "{sys}\{#InstallDir}"; Attribs: system; Permissions: everyone-full; Check: WindowsIA32
+Name: "{sys}\{#InstallDir}"; Permissions: everyone-full; Flags: setntfscompression; Check: WindowsIA32
 
 [Icons]
 ; 64-bit OS

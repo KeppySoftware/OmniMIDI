@@ -77,10 +77,12 @@ typedef long NTSTATUS;
 typedef NTSTATUS(NTAPI* NSTR)(IN ULONG, IN BOOLEAN, OUT PULONG);
 typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
 typedef NTSTATUS(NTAPI* NQST)(QWORD*);
+typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
 
 static NSTR NtSetTimerResolution = 0;
 static NDE NtDelayExecution = 0;
 static NQST NtQuerySystemTime = 0;
+static DDP DefDriverProcImp = 0;
 
 // Blinx best game
 static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
@@ -135,7 +137,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	OutputDebugStringA("OmniMIDI got called by LoadLibrary!");
 
 	if (BannedProcesses()) {
-		OutputDebugStringA("You can't load me!");
+		OutputDebugStringA("Process is banned! You can't load me!");
 		return FALSE;
 	}
 
@@ -145,12 +147,31 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 		DisableThreadLibraryCalls((HMODULE)hModule);
 
 		hinst = (HINSTANCE)hModule;
+
 		NtSetTimerResolution = (NSTR)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSetTimerResolution");
 		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
 		NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQuerySystemTime");
+
 		if (!NtSetTimerResolution || !NtDelayExecution || !NtQuerySystemTime) {
-			OutputDebugStringA("Failed to parse functions from NTDLL! The driver will not load.");
+			OutputDebugStringA("Failed to parse NT functions from NTDLL! The driver will not load.");
 			return FALSE;
+		}
+
+		if (!winmm) {
+			winmm = GetModuleHandleA("winmm");
+			if (!winmm) {
+				winmm = LoadLibraryA("winmm");
+				if (!winmm) {
+					OutputDebugStringA("Failed to load Windows Multimedia! This is a bad thing!");
+					return FALSE;
+				}
+			}
+
+			DefDriverProcImp = (DDP)GetProcAddress(winmm, "DefDriverProc");
+			if (!DefDriverProcImp) {
+				OutputDebugStringA("Failed to parse DefDriverProc function from WinMM! The driver will not load.");
+				return FALSE;
+			}
 		}
 
 		ULONG dum = 0;
@@ -170,9 +191,20 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	return TRUE;
 }
 
-extern "C" STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
+LONG WINAPI DriverProc(DWORD dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LONG lParam1, LONG lParam2)
 {
 	switch (uMsg) {
+	case DRV_LOAD:
+	case DRV_FREE:
+		return DRVCNF_OK;
+
+	case DRV_OPEN:
+	case DRV_CLOSE:
+		return DRVCNF_OK;
+
+	case DRV_QUERYCONFIGURE:
+		return DRVCNF_OK;
+
 	case DRV_CONFIGURE:
 		TCHAR configuratorapp[MAX_PATH];
 		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
@@ -182,21 +214,19 @@ extern "C" STDAPI_(LONG_PTR) DriverProc(DWORD_PTR dwDriverId, HDRVR hdrvr, UINT 
 			return DRVCNF_OK;
 		}
 		return DRVCNF_CANCEL;
-	case DRV_OPEN:
-		OMDevice = hdrvr;
-		return DRV_OK;
-	case DRV_CLOSE:
-		OMDevice = NULL;
-		return DRV_OK;
-	case DRV_QUERYCONFIGURE:
-	case DRV_LOAD:
+
 	case DRV_ENABLE:
+	case DRV_DISABLE:
+		return DRVCNF_OK;
+
+	case DRV_INSTALL:
+		return DRVCNF_OK;
+
 	case DRV_REMOVE:
-	case DRV_FREE:
-		return DRV_OK;
-	default:
-		return DefDriverProc(dwDriverId, hdrvr, uMsg, lParam1, lParam2);
+		return DRVCNF_OK;
 	}
+
+	return DefDriverProcImp(dwDriverIdentifier, (HDRVR)hdrvr, uMsg, lParam1, lParam2);
 }
 
 DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
