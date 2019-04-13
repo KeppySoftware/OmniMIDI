@@ -151,6 +151,7 @@ ravbg64.exe
 ravcpl.exe
 ravcpl32.exe
 ravcpl64.exe
+regedit.exe
 regsrvc.exe
 rog armoury.exe
 rthdcpl.exe
@@ -217,6 +218,7 @@ vcpkgsrv.exe
 vctip.exe
 virtualmidisynth.exe
 vmplayer.exe
+vmtoolsd.exe
 vmware-hostd.exe
 vmware.exe
 volumouse.exe
@@ -230,6 +232,7 @@ wininit.exe
 winlogon.exe
 wisptis.exe
 wlanext.exe
+wmiprvse.exe
 wuauclt.exe
 wudfhost.exe
 xboxstat.exe

@@ -18,7 +18,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '6.5.0.1'
+#define Version '6.7.0.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -350,6 +350,19 @@ begin
   Result := IsWindowsVersionOrNewer(6, 0);
 end;
 
+function Framework40IsNotInstalled(): boolean;
+var
+  bSuccess: Boolean;
+  installVer: String;
+begin
+  Result := True;
+
+  bSuccess := RegQueryStringValue(HKLM, 'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'TargetVersion', installVer);
+  if (True = bSuccess) and (installVer = '4.0.0') then begin
+    Result := False;
+  end;
+end;
+
 function Framework45IsNotInstalled(): boolean;
 var
   bSuccess: Boolean;
@@ -365,10 +378,16 @@ end;
 
 procedure InitializeWizard;
 begin
-  if Framework45IsNotInstalled() and IsWindowsVistaOrNewer() then
-  begin
-    idpAddFile('http://go.microsoft.com/fwlink/?LinkId=397707', ExpandConstant('{tmp}\NetFrameworkInstaller.exe'));
-    idpDownloadAfter(wpPreparing);
+  if IsWindowsVistaOrNewer() then begin
+    if Framework45IsNotInstalled() then begin
+      idpAddFile('http://go.microsoft.com/fwlink/?LinkId=397707', ExpandConstant('{tmp}\NetFramework45Installer.exe'));
+      idpDownloadAfter(wpPreparing);
+    end;
+  end else begin
+    if Framework40IsNotInstalled() then begin
+      idpAddFile('http://go.microsoft.com/fwlink/?linkid=182805', ExpandConstant('{tmp}\NetFramework40Installer.exe'));
+      idpDownloadAfter(wpPreparing);
+    end;
   end;
 end;
 
@@ -377,31 +396,53 @@ var
   StatusText: string;
   ResultCode: Integer;
 begin
-  StatusText := WizardForm.StatusLabel.Caption;
-  WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.5.2 for you...';
-  WizardForm.ProgressGauge.Style := npbstMarquee;
-  try
-    if not Exec(ExpandConstant('{tmp}\NetFrameworkInstaller.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
-    begin
-      MsgBox('OmniIMDI failed to install .NET Framework 4.5.2!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
-    end;
-  finally
-    WizardForm.StatusLabel.Caption := StatusText;
-    WizardForm.ProgressGauge.Style := npbstNormal;
+  if IsWindowsVistaOrNewer() then begin
+    StatusText := WizardForm.StatusLabel.Caption;
+    WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.5.2 for you...';
+    WizardForm.ProgressGauge.Style := npbstMarquee;
+    try
+      if not Exec(ExpandConstant('{tmp}\NetFramework45Installer.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+      begin
+        MsgBox('OmniIMDI failed to install .NET Framework 4.5.2!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
+      end;
+    finally
+      WizardForm.StatusLabel.Caption := StatusText;
+      WizardForm.ProgressGauge.Style := npbstNormal;
 
-    DeleteFile(ExpandConstant('{tmp}\NetFrameworkInstaller.exe'));
+      DeleteFile(ExpandConstant('{tmp}\NetFramework45Installer.exe'));
+    end;
+  end else begin
+    StatusText := WizardForm.StatusLabel.Caption;
+    WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.0.3 for you...';
+    WizardForm.ProgressGauge.Style := npbstMarquee;
+    try
+      if not Exec(ExpandConstant('{tmp}\NetFramework40Installer.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+      begin
+        MsgBox('OmniIMDI failed to install .NET Framework 4.0.3!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
+      end;
+    finally
+      WizardForm.StatusLabel.Caption := StatusText;
+      WizardForm.ProgressGauge.Style := npbstNormal;
+
+      DeleteFile(ExpandConstant('{tmp}\NetFramework40Installer.exe'));
+    end;
   end;
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   case CurStep of
-    ssPostInstall:
+    ssInstall:
       begin
-        if Framework45IsNotInstalled() then
-        begin
+      if IsWindowsVistaOrNewer() then begin
+        if Framework45IsNotInstalled() then begin
+          InstallFramework();
+        end;
+      end else begin
+        if Framework40IsNotInstalled() then begin
           InstallFramework();
         end;
       end;
+    end;
   end;
 end;

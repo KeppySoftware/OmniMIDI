@@ -32,8 +32,8 @@ typedef long NTSTATUS;
 #define CAUSE			1
 #define LONGMSG_MAXSIZE	65535
 
-#define LOCK_VM_IN_WORKING_SET 1
-#define LOCK_VM_IN_RAM 2
+#define STATUS_SUCCESS 0
+#define STATUS_TIMER_RESOLUTION_NOT_SET 0xC0000245
 
 #include "stdafx.h"
 #include <Psapi.h>
@@ -72,14 +72,17 @@ typedef long NTSTATUS;
 #include "Debug.h"
 
 // NTSTATUS
+#define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) >= 0)
 #define NTAPI __stdcall
 // these functions have identical prototypes
-typedef NTSTATUS(NTAPI* NSTR)(IN ULONG, IN BOOLEAN, OUT PULONG);
+typedef NTSTATUS(NTAPI* NLVM)(IN HANDLE, IN OUT VOID**, IN OUT ULONG*, IN ULONG);
+typedef NTSTATUS(NTAPI* NULVM)(IN HANDLE, IN OUT VOID**, IN OUT ULONG*, IN ULONG);
 typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
 typedef NTSTATUS(NTAPI* NQST)(QWORD*);
 typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
 
-static NSTR NtSetTimerResolution = 0;
+static NLVM NtLockVirtualMemory = 0;
+static NULVM NtUnlockVirtualMemory = 0;
 static NDE NtDelayExecution = 0;
 static NQST NtQuerySystemTime = 0;
 static DDP DefDriverProcImp = 0;
@@ -148,12 +151,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 
 		hinst = (HINSTANCE)hModule;
 
-		NtSetTimerResolution = (NSTR)GetProcAddress(GetModuleHandle(L"ntdll"), "NtSetTimerResolution");
+		NtLockVirtualMemory = (NLVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtLockVirtualMemory");
+		NtUnlockVirtualMemory = (NULVM)GetProcAddress(GetModuleHandle(L"ntdll"), "NtUnlockVirtualMemory");
 		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
 		NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandle(L"ntdll"), "NtQuerySystemTime");
 
-		if (!NtSetTimerResolution || !NtDelayExecution || !NtQuerySystemTime) {
-			OutputDebugStringA("Failed to parse NT functions from NTDLL! The driver will not load.");
+		if (!NtLockVirtualMemory || !NtUnlockVirtualMemory || !NtDelayExecution || !NtQuerySystemTime) {
+			MessageBoxA(NULL, "Failed to parse NT functions from NTDLL!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
 			return FALSE;
 		}
 
@@ -162,22 +166,16 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 			if (!winmm) {
 				winmm = LoadLibraryA("winmm");
 				if (!winmm) {
-					OutputDebugStringA("Failed to load Windows Multimedia! This is a bad thing!");
+					MessageBoxA(NULL, "Failed to load WinMM!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
 					return FALSE;
 				}
 			}
 
 			DefDriverProcImp = (DDP)GetProcAddress(winmm, "DefDriverProc");
 			if (!DefDriverProcImp) {
-				OutputDebugStringA("Failed to parse DefDriverProc function from WinMM! The driver will not load.");
+				MessageBoxA(NULL, "Failed to parse DefDriverProc function from WinMM!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
 				return FALSE;
 			}
-		}
-
-		ULONG dum = 0;
-		if (NtSetTimerResolution(1, TRUE, &dum)) {
-			OutputDebugStringA("NtSetTimerResolution won't collaborate. Quitting...");
-			return FALSE;
 		}
 
 		break;

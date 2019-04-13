@@ -304,10 +304,15 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 
 	PrintMessageToDebugLog("PrepareLongData", "Locking buffer...");
 	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	if (!VirtualLock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
+	char Msg[NTFS_MAX_PATH];
+	DWORD NTVMErr;
+	VOID* m = IIMidiHdr->lpData;
+	ULONG s = sizeof(IIMidiHdr->lpData);
+	if (!NT_SUCCESS(NtLockVirtualMemory(GetCurrentProcess(), &m, &s, 0)))
 	{
-		PrintMessageToDebugLog("PrepareLongData", "VirtualLock failed to lock the buffer!");
-		return DebugResult(MMSYSERR_NOMEM, "VirtualLock failed to lock the buffer!");
+		NTVMErr = GetLastError();
+		sprintf(Msg, "Failed to unlock the MIDI header buffer!\nNtLockVirtualMemory err: %d", NTVMErr);
+		PrintMessageToDebugLog("PrepareLongData", Msg);
 	}
 	PrintMessageToDebugLog("PrepareLongData", "Buffer is locked.");
 
@@ -336,10 +341,15 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 
 	PrintMessageToDebugLog("UnprepareLongData", "Unlocking buffer...");
 	// Unlock the buffer, and say that everything is oki-doki
-	if (!VirtualUnlock(IIMidiHdr->lpData, sizeof(IIMidiHdr->lpData)))
+	char Msg[NTFS_MAX_PATH];
+	DWORD NTVMErr;
+	VOID* m = IIMidiHdr->lpData;
+	ULONG s = sizeof(IIMidiHdr->lpData);
+	if (!NT_SUCCESS(NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, 0)))
 	{
-		// The buffer isn't locked
-		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still already unlocked.");
+		NTVMErr = GetLastError();
+		sprintf(Msg, "Failed to unlock the MIDI header buffer!\nNtUnlockVirtualMemory err: %d", NTVMErr);
+		PrintMessageToDebugLog("UnprepareLongData", Msg);
 	}
 
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
