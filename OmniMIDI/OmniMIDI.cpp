@@ -662,27 +662,20 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 					// Prepare the CookedPlayer
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
 
-					CookedPlayer* TPlayer = (CookedPlayer*)malloc(sizeof(CookedPlayer));
-					RtlZeroMemory(TPlayer, sizeof(*TPlayer));
+					*(CookedPlayer**)dwUser = (CookedPlayer*)malloc(sizeof(CookedPlayer));
+					RtlZeroMemory(*(CookedPlayer**)dwUser, sizeof(**(CookedPlayer**)dwUser));
 
-					TPlayer->Paused = TRUE;
-					TPlayer->Tempo = 500000;
-					TPlayer->TimeDiv = 384;
-					TPlayer->TempoMulti = ((TPlayer->Tempo * 10) / TPlayer->TimeDiv);
-					PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", TPlayer->TempoMulti);
+					(*(CookedPlayer**)dwUser)->Paused = TRUE;
+					(*(CookedPlayer**)dwUser)->Tempo = 500000;
+					(*(CookedPlayer**)dwUser)->TimeDiv = 384;
+					(*(CookedPlayer**)dwUser)->TempoMulti = (((*(CookedPlayer**)dwUser)->Tempo * 10) / (*(CookedPlayer**)dwUser)->TimeDiv);
+					PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", (*(CookedPlayer**)dwUser)->TempoMulti);
 
 					PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer struct prepared.");
-
-					// Transfer player to dwUser
-					*(CookedPlayer**)dwUser = TPlayer;
-					PrintMessageToDebugLog("MODM_OPEN", "Passed struct to dwUser.");
 
 					// Create player thread
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
 					CookedThread.ThreadHandle = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CookedPlayerSystem, *(LPVOID*)dwUser, NULL, (LPDWORD)CookedThread.ThreadAddress);
-					
-					// Wait for the thread to spawn
-					while (!TPlayer->IsThreadReady);
 
 					PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
 				}

@@ -7,7 +7,6 @@ OmniMIDI MIDI_IO_COOKED player (Ported from the mmidi project by Sono)
 static BOOL CookedPlayerHasToGo = FALSE;
 struct CookedPlayer
 {
-	BOOL IsThreadReady;					// Is the thread ready to accept data?
 	LPMIDIHDR MIDIHeaderQueue;			// MIDIHDR buffer
 	BOOL Paused;						// Is the player paused?
 	DWORD Tempo;						// Player tempo
@@ -39,8 +38,8 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 	DWORD delaytick = 0;
 	BOOL barrier = TRUE;			// This is horrible :s
 
-	const DWORD maxdelay = 100000;	// Adjust responsiveness here
-	const DWORD adaption = 100000;	// Adaptive timer nice time >:3
+	const DWORD maxdelay = 10e4;	// Adjust responsiveness here
+	const DWORD adaption = 1e5;		// Adaptive timer nice time >:3
 
 	PrintMessageToDebugLog("CookedPlayerSystem", "Thread is alive!");
 
@@ -53,7 +52,6 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 			PrintMessageToDebugLog("CookedPlayerSystem", "Waiting for unpause and/or header...");
 			while (Player->Paused || !Player->MIDIHeaderQueue)
 			{
-				Player->IsThreadReady = TRUE;
 				ticker = (QWORD)-(INT64)maxdelay;
 				NtDelayExecution(TRUE, (INT64*)&ticker);
 				NtQuerySystemTime(&tickdiff);				// Reset timer
