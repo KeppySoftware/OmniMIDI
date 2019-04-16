@@ -178,6 +178,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 			}
 		}
 
+		if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
+			MessageBoxA(NULL, "Failed to parse starting tick through NtQuerySystemTime!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+			return FALSE;
+		}
+
 		break;
 	}
 	case DLL_PROCESS_DETACH:

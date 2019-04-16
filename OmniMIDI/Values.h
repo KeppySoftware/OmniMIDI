@@ -46,6 +46,7 @@ static DWORD EvBufferMultRatio = 1;
 static DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
+static ULONGLONG TickStart = 0;			// For TGT64
 static HSTREAM OMStream = NULL;
 static HANDLE OMReady = NULL;
 static HMIDI OMHMIDI = NULL;

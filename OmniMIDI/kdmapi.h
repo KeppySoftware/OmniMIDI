@@ -495,12 +495,7 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 }
 
 DWORD64 KDMAPI timeGetTime64() {
-	static LARGE_INTEGER frequency = { {0,0} };
-	LARGE_INTEGER startingTime;
-
-	if (frequency.QuadPart == 0)
-		QueryPerformanceFrequency(&frequency);
-
-	QueryPerformanceCounter(&startingTime);
-	return (1000 * (startingTime.QuadPart % frequency.QuadPart) / frequency.QuadPart) + (1000 * (startingTime.QuadPart / frequency.QuadPart));
+	ULONGLONG CurrentTime;
+	NtQuerySystemTime(&CurrentTime);
+	return (CurrentTime - TickStart) * (1.0 / 10000.0);
 }

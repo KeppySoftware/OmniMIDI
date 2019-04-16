@@ -38,9 +38,6 @@ namespace OmniMIDIConfigurator
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NotesCatcherWithAudio", 0)) == 1)
                 OldBuff.Checked = true;
 
-            if (Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("NewTGT", 0)) == 1)
-                NewTGT.Checked = true;
-
             int FPVal = Convert.ToInt32(OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioBitDepth", 1));
 
             if (FPVal == 1)
@@ -51,7 +48,6 @@ namespace OmniMIDIConfigurator
                 AudioBitDepth.SelectedIndex = 2;
 
             OldBuff.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
-            NewTGT.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
             ChangeDefaultOutput.Enabled = (OmniMIDIConfiguratorMain.Delegate.AudioEngBox.SelectedIndex != AudioEngine.AUDTOWAV);
 
             CAE.Text = String.Format(CAE.Text, OmniMIDIConfiguratorMain.Delegate.AudioEngBox.Text);
@@ -94,11 +90,6 @@ namespace OmniMIDIConfigurator
         private void OldBuff_CheckedChanged(object sender, EventArgs e)
         {
             Functions.OldBufferMode(Convert.ToInt32(OldBuff.Checked));
-        }
-
-        private void NoSleep_CheckedChanged(object sender, EventArgs e)
-        {
-            Functions.NewTGT(Convert.ToInt32(NewTGT.Checked));
         }
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
