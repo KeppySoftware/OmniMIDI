@@ -47,6 +47,7 @@
             this.DeviceNameLab = new System.Windows.Forms.Label();
             this.ASIOSeparateThread = new System.Windows.Forms.CheckBox();
             this.ASIODevicesSupport = new System.Windows.Forms.LinkLabelEx();
+            this.LatencyWarning = new System.Windows.Forms.LinkLabelEx();
             this.InfoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,7 +88,7 @@
             this.DevicesList.FormattingEnabled = true;
             this.DevicesList.Location = new System.Drawing.Point(95, 11);
             this.DevicesList.Name = "DevicesList";
-            this.DevicesList.Size = new System.Drawing.Size(414, 21);
+            this.DevicesList.Size = new System.Drawing.Size(326, 21);
             this.DevicesList.TabIndex = 4;
             this.DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             // 
@@ -243,19 +244,36 @@
             this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ASIODevicesSupport.AutoSize = true;
             this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ASIODevicesSupport.Location = new System.Drawing.Point(356, 200);
+            this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
             this.ASIODevicesSupport.Name = "ASIODevicesSupport";
-            this.ASIODevicesSupport.Size = new System.Drawing.Size(153, 13);
+            this.ASIODevicesSupport.Size = new System.Drawing.Size(85, 26);
             this.ASIODevicesSupport.TabIndex = 10;
             this.ASIODevicesSupport.TabStop = true;
-            this.ASIODevicesSupport.Text = "List of supported ASIO devices";
+            this.ASIODevicesSupport.Text = "List of supported\r\nASIO devices";
+            this.ASIODevicesSupport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
+            // 
+            // LatencyWarning
+            // 
+            this.LatencyWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.LatencyWarning.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
+            this.LatencyWarning.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LatencyWarning.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.LatencyWarning.Location = new System.Drawing.Point(371, 196);
+            this.LatencyWarning.Name = "LatencyWarning";
+            this.LatencyWarning.Size = new System.Drawing.Size(136, 19);
+            this.LatencyWarning.TabIndex = 15;
+            this.LatencyWarning.TabStop = true;
+            this.LatencyWarning.Text = "Read me! It\'s important!";
+            this.LatencyWarning.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LatencyWarning.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LatencyWarning_LinkClicked);
             // 
             // DefaultASIOAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(518, 251);
+            this.Controls.Add(this.LatencyWarning);
             this.Controls.Add(this.ASIOSeparateThread);
             this.Controls.Add(this.InfoGroupBox);
             this.Controls.Add(this.ASIODevicesSupport);
@@ -301,5 +319,6 @@
         private System.Windows.Forms.Label InputsLab;
         private System.Windows.Forms.Label DeviceNameLab;
         private System.Windows.Forms.CheckBox ASIOSeparateThread;
+        private System.Windows.Forms.LinkLabelEx LatencyWarning;
     }
 }

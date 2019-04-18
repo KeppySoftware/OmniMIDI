@@ -26,7 +26,7 @@ typedef long NTSTATUS;
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
 #define BASS_VSTDEF(f) (WINAPI *f)
-#define Between(value, a, b) (value <= b && value >= a)
+#define Between(value, a, b) ((value) >= a && (value) <= b)
 
 #define ERRORCODE		0
 #define CAUSE			1
@@ -72,7 +72,7 @@ typedef long NTSTATUS;
 #include "Debug.h"
 
 // NTSTATUS
-#define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) >= 0)
+#define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) == 0)
 #define NTAPI __stdcall
 // these functions have identical prototypes
 typedef NTSTATUS(NTAPI* NLVM)(IN HANDLE, IN OUT VOID**, IN OUT ULONG*, IN ULONG);
@@ -100,13 +100,13 @@ void NTSleep(__int64 usec) {
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 static DWORD DummyPlayBufData() { return 0; }
-static VOID DummySendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
-static MMRESULT DummyParseData(UINT dwMsg, DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
+static VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
+static MMRESULT DummyParseData(DWORD dwParam1) { return MIDIERR_NOTREADY; }
 
 // Hyper switch
 static BOOL HyperMode = 0;
-static MMRESULT(*_PrsData)(UINT uMsg, DWORD_PTR dwParam1) = DummyParseData;
-static VOID(*_StoBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummySendToBASSMIDI;
+static MMRESULT(*_PrsData)(DWORD dwParam1) = DummyParseData;
+static VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
 static DWORD(*_PlayBufData)(void) = DummyPlayBufData;
 static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 // What does it do? It gets rid of the useless functions,
@@ -371,7 +371,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
-		return _PrsData(uMsg, dwParam1);
+		return _PrsData(dwParam1);
 	case MODM_LONGDATA: {
 		// Pass it to a KDMAPI function
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);

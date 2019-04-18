@@ -279,12 +279,12 @@ BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
 
 MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
-	return _PrsData(MODM_DATA, dwMsg);
+	return _PrsData(dwMsg);
 }
 
 MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
-	_StoBASSMIDI(0, dwMsg);
+	_PforBASSMIDI(0, dwMsg);
 	return MMSYSERR_NOERROR;
 }
 
@@ -308,7 +308,7 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 	DWORD NTVMErr;
 	VOID* m = IIMidiHdr->lpData;
 	ULONG s = sizeof(IIMidiHdr->lpData);
-	if (!NT_SUCCESS(NtLockVirtualMemory(GetCurrentProcess(), &m, &s, 0)))
+	if (!NT_SUCCESS(NtLockVirtualMemory(GetCurrentProcess(), &m, &s, 1)))
 	{
 		NTVMErr = GetLastError();
 		sprintf(Msg, "Failed to unlock the MIDI header buffer!\nNtLockVirtualMemory err: %d", NTVMErr);
@@ -338,19 +338,20 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still in queue.");
 		return DebugResult(MIDIERR_STILLPLAYING, "The buffer is still in queue.");							// The buffer is currently being played from the driver, cannot unprepare
 	}
-
+	
 	PrintMessageToDebugLog("UnprepareLongData", "Unlocking buffer...");
 	// Unlock the buffer, and say that everything is oki-doki
 	char Msg[NTFS_MAX_PATH];
 	DWORD NTVMErr;
 	VOID* m = IIMidiHdr->lpData;
 	ULONG s = sizeof(IIMidiHdr->lpData);
-	if (!NT_SUCCESS(NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, 0)))
+	if (!NT_SUCCESS(NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, 1)))
 	{
 		NTVMErr = GetLastError();
 		sprintf(Msg, "Failed to unlock the MIDI header buffer!\nNtUnlockVirtualMemory err: %d", NTVMErr);
 		PrintMessageToDebugLog("UnprepareLongData", Msg);
 	}
+
 
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
 	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																	// Mark the buffer as unprepared
@@ -497,5 +498,5 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 DWORD64 KDMAPI timeGetTime64() {
 	ULONGLONG CurrentTime;
 	NtQuerySystemTime(&CurrentTime);
-	return (CurrentTime - TickStart) * (1.0 / 10000.0);
+	return (DWORD64)(CurrentTime - TickStart) / 10000;
 }

@@ -9,9 +9,45 @@ int __inline BufferCheck(void) {
 	return (EVBuffer.ReadHead != EVBuffer.WriteHead);
 }
 
-void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
-	DWORD ogDW = dwParam1;
+void SendToBASSMIDI(DWORD dwParam1) {
+	DWORD len = 3;
 
+	// PrintEventToDebugLog(dwParam1);
+
+	switch (GETSTATUS(dwParam1)) {
+	case MIDI_NOTEON:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
+		return;
+	case MIDI_NOTEOFF:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
+		return;
+	default:
+		if (!(dwParam1 - 0x80 & 0xC0))
+		{
+			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
+			return;
+		}
+
+		if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
+		else if ((dwParam1 & 0xF0) == 0xF0)
+		{
+			switch (dwParam1 & 0xF)
+			{
+			case 3:
+				len = 2;
+				break;
+			default:
+				// Not supported by OmniMIDI!
+				return;
+			}
+		}
+
+		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+		return;
+	}
+}
+
+void PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
@@ -54,51 +90,14 @@ void SendToBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 		}
 	}
 
-	BASS_MIDI_StreamEvents(
-		OMStream, BASS_MIDI_EVENTS_RAW,
-		&dwParam1, ((dwParam1 & 0xF0) >= 0xF8 && (dwParam1 & 0xF0) <= 0xFF) ? 1 : (((dwParam1 & 0xF0) == 0xC0 || (dwParam1 & 0xF0) == 0xD0) ? 2 : 3)
-	);
-	
-	// PrintEventToDebugLog(ogDW);
+	SendToBASSMIDI(dwParam1);
 }
 
-void SendToBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
-	DWORD len = 3;
-
+void PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
-	switch (GETSTATUS(dwParam1)) {
-	case MIDI_NOTEON:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
-		return;
-	case MIDI_NOTEOFF:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
-		return;
-	default:
-		if (!(dwParam1 - 0x80 & 0xC0))
-		{
-			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
-			return;
-		}
-
-		if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
-		else if ((dwParam1 & 0xF0) == 0xF0)
-		{
-			switch (dwParam1 & 0xF)
-			{
-			case 3:
-				len = 2;
-				break;
-			default:
-				len = 1;
-				break;
-			}
-		}
-
-		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
-		return;
-	}
+	SendToBASSMIDI(dwParam1);
 }
 
 void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
@@ -116,12 +115,12 @@ void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 void __inline PBufData(void) {
 
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
-	if (dwParam1 & 0x80 && !Between(dwParam1 & 0x80, 0xF8, 0xFF))
+	if (dwParam1 & 0x80)
 		LastRunningStatus = (BYTE)dwParam1;
 
 	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
 
-	_StoBASSMIDI(LastRunningStatus, dwParam1);
+	_PforBASSMIDI(LastRunningStatus, dwParam1);
 }
 
 unsigned int __inline PSmallBufData(void)
@@ -143,10 +142,10 @@ unsigned int __inline PSmallBufData(void)
 
 		if (~dwParam1)
 		{
-			if (dwParam1 & 0x80 && !Between(dwParam1 & 0x80, 0xF8, 0xFF))
+			if (dwParam1 & 0x80)
 				LastRunningStatus = (BYTE)dwParam1;
 
-			_StoBASSMIDI(LastRunningStatus, dwParam1);
+			_PforBASSMIDI(LastRunningStatus, dwParam1);
 		}
 		else return 0;
 
@@ -273,14 +272,14 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 		}
 	}
 	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
-	SETVELOCITY(dwParam1, 127);
+		SETVELOCITY(dwParam1, 127);
 	
 	Understandable version of what the following function does
 	*/
 
 	if (ManagedSettings.TransposeValue != 0x7F)
 	{
-		if (!((dwParam1 - 0x80) & 0xE0) && (dwParam1 & 0xF) != 9)
+		if (!((dwParam1 - 0x80) & 0xE0))
 		{
 			if (pitchshiftchan[dwParam1 & 0xF])
 			{
@@ -297,7 +296,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1) {
+extern "C" MMRESULT ParseData(DWORD dwParam1) {
 	// Some checks
 	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
@@ -349,7 +348,7 @@ extern "C" MMRESULT ParseData(UINT uMsg, DWORD_PTR dwParam1) {
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT ParseDataHyper(UINT uMsg, DWORD_PTR dwParam1) {
+extern "C" MMRESULT ParseDataHyper(DWORD dwParam1) {
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;

@@ -444,7 +444,7 @@ void LoadSettings(BOOL restart)
 
 		// Assign the pointed functions
 		_PrsData = HyperMode ? ParseDataHyper : ParseData;
-		_StoBASSMIDI = HyperMode ? SendToBASSMIDIHyper : SendToBASSMIDI;
+		_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 		_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
 		_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
 
@@ -538,7 +538,7 @@ void LoadSettingsRT() {
 
 				// Check if "Hyper-playback" mode has been enabled
 				_PrsData = HyperMode ? ParseDataHyper : ParseData;
-				_StoBASSMIDI = HyperMode ? SendToBASSMIDIHyper : SendToBASSMIDI;
+				_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 				_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
 				_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
 

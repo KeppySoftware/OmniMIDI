@@ -138,17 +138,14 @@ namespace OmniMIDIConfigurator
                 CH9.Checked = true;
             }
 
-            CH10.Checked = true;
-            CH10.CheckState = CheckState.Indeterminate;
-
-            //if (Convert.ToInt32(OmniMIDIConfiguratorMain.Channels.GetValue(names[9], "0")) == 0)
-            //{
-            //    CH10.Checked = false;
-            //}
-            //else
-            //{
-            //    CH10.Checked = true;
-            //}
+            if (Convert.ToInt32(OmniMIDIConfiguratorMain.Channels.GetValue(names[9], "0")) == 0)
+            {
+                CH10.Checked = false;
+            }
+            else
+            {
+                CH10.Checked = true;
+            }
 
             if (Convert.ToInt32(OmniMIDIConfiguratorMain.Channels.GetValue(names[10], "0")) == 0)
             {
@@ -217,7 +214,7 @@ namespace OmniMIDIConfigurator
             CH7.Checked = true;
             CH8.Checked = true;
             CH9.Checked = true;
-            //CH10.Checked = true;
+            CH10.Checked = true;
             CH11.Checked = true;
             CH12.Checked = true;
             CH13.Checked = true;
@@ -237,18 +234,13 @@ namespace OmniMIDIConfigurator
             CH7.Checked = false;
             CH8.Checked = false;
             CH9.Checked = false;
-            //CH10.Checked = false;
+            CH10.Checked = false;
             CH11.Checked = false;
             CH12.Checked = false;
             CH13.Checked = false;
             CH14.Checked = false;
             CH15.Checked = false;
             CH16.Checked = false;
-        }
-
-        private void CH10Quest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MessageBox.Show("There's really no reason on applying pitch shifting to the drums channel, since it'll just play random drums instead of the right ones.", "Why is channel 10 disabled?", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void LiveBtn_CheckedChanged(object sender, EventArgs e)
@@ -283,17 +275,9 @@ namespace OmniMIDIConfigurator
                     OmniMIDIConfiguratorMain.Channels.SetValue(names[i], value, RegistryValueKind.DWord);
                 }
 
-                OmniMIDIConfiguratorMain.Channels.SetValue(names[9], 0, RegistryValueKind.DWord);
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
-
-                System.Threading.Thread.Sleep(1);
             }
             catch { }
-        }
-
-        private void CH4_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

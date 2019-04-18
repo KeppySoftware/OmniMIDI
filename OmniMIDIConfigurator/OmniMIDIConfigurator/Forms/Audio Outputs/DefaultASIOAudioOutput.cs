@@ -225,6 +225,14 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        private void LatencyWarning_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("Changing the buffer size/update rate of your ASIO device will affect the MIDI timings of your host app!\n" +
+                "That means that the MIDI events might be delayed before the sound is actually played on your speakers.\n\n" +
+                "Always keep the buffer size to the smallest size possible, and the update rate to the highest value your sound card can handle with no dropouts, " +
+                "if you want to avoid this issue.", "OmniMIDI Configurator ~ ASIO warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
         private int SupportedDevice(String Info)
         {
             Status.Font = new Font(Status.Font, FontStyle.Regular);

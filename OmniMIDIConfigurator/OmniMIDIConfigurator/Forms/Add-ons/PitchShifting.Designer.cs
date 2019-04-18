@@ -41,7 +41,6 @@
             this.CH3 = new System.Windows.Forms.CheckBox();
             this.CH4 = new System.Windows.Forms.CheckBox();
             this.CH5 = new System.Windows.Forms.CheckBox();
-            this.CH10 = new System.Windows.Forms.CheckBox();
             this.CH9 = new System.Windows.Forms.CheckBox();
             this.CH8 = new System.Windows.Forms.CheckBox();
             this.CH7 = new System.Windows.Forms.CheckBox();
@@ -50,7 +49,6 @@
             this.CH14 = new System.Windows.Forms.CheckBox();
             this.CH13 = new System.Windows.Forms.CheckBox();
             this.CH12 = new System.Windows.Forms.CheckBox();
-            this.CH11 = new System.Windows.Forms.CheckBox();
             this.CH16 = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -68,11 +66,12 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.CH10Quest = new System.Windows.Forms.LinkLabelEx();
             this.LiveBtn = new System.Windows.Forms.CheckBox();
             this.CheckA = new System.Windows.Forms.Button();
             this.UncheckA = new System.Windows.Forms.Button();
             this.TimerLive = new System.Windows.Forms.Timer(this.components);
+            this.CH11 = new System.Windows.Forms.CheckBox();
+            this.CH10 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NewPitch)).BeginInit();
             this.SuspendLayout();
             // 
@@ -175,7 +174,6 @@
             this.CH4.Size = new System.Drawing.Size(15, 14);
             this.CH4.TabIndex = 13;
             this.CH4.UseVisualStyleBackColor = true;
-            this.CH4.CheckedChanged += new System.EventHandler(this.CH4_CheckedChanged);
             // 
             // CH5
             // 
@@ -185,19 +183,6 @@
             this.CH5.Size = new System.Drawing.Size(15, 14);
             this.CH5.TabIndex = 14;
             this.CH5.UseVisualStyleBackColor = true;
-            // 
-            // CH10
-            // 
-            this.CH10.AutoSize = true;
-            this.CH10.Checked = true;
-            this.CH10.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.CH10.Enabled = false;
-            this.CH10.Location = new System.Drawing.Point(344, 71);
-            this.CH10.Name = "CH10";
-            this.CH10.Size = new System.Drawing.Size(15, 14);
-            this.CH10.TabIndex = 19;
-            this.CH10.ThreeState = true;
-            this.CH10.UseVisualStyleBackColor = true;
             // 
             // CH9
             // 
@@ -270,15 +255,6 @@
             this.CH12.Size = new System.Drawing.Size(15, 14);
             this.CH12.TabIndex = 21;
             this.CH12.UseVisualStyleBackColor = true;
-            // 
-            // CH11
-            // 
-            this.CH11.AutoSize = true;
-            this.CH11.Location = new System.Drawing.Point(362, 71);
-            this.CH11.Name = "CH11";
-            this.CH11.Size = new System.Drawing.Size(15, 14);
-            this.CH11.TabIndex = 20;
-            this.CH11.UseVisualStyleBackColor = true;
             // 
             // CH16
             // 
@@ -382,7 +358,6 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Enabled = false;
             this.label14.Location = new System.Drawing.Point(341, 88);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(19, 13);
@@ -434,18 +409,6 @@
             this.label19.TabIndex = 41;
             this.label19.Text = "15";
             // 
-            // CH10Quest
-            // 
-            this.CH10Quest.AutoSize = true;
-            this.CH10Quest.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.CH10Quest.Location = new System.Drawing.Point(15, 112);
-            this.CH10Quest.Name = "CH10Quest";
-            this.CH10Quest.Size = new System.Drawing.Size(84, 13);
-            this.CH10Quest.TabIndex = 42;
-            this.CH10Quest.TabStop = true;
-            this.CH10Quest.Text = "No Channel 10?";
-            this.CH10Quest.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CH10Quest_LinkClicked);
-            // 
             // LiveBtn
             // 
             this.LiveBtn.Appearance = System.Windows.Forms.Appearance.Button;
@@ -462,7 +425,7 @@
             // 
             // CheckA
             // 
-            this.CheckA.Location = new System.Drawing.Point(123, 107);
+            this.CheckA.Location = new System.Drawing.Point(15, 107);
             this.CheckA.Name = "CheckA";
             this.CheckA.Size = new System.Drawing.Size(75, 23);
             this.CheckA.TabIndex = 43;
@@ -472,7 +435,7 @@
             // 
             // UncheckA
             // 
-            this.UncheckA.Location = new System.Drawing.Point(197, 107);
+            this.UncheckA.Location = new System.Drawing.Point(92, 107);
             this.UncheckA.Name = "UncheckA";
             this.UncheckA.Size = new System.Drawing.Size(75, 23);
             this.UncheckA.TabIndex = 44;
@@ -484,16 +447,34 @@
             // 
             this.TimerLive.Tick += new System.EventHandler(this.TimerLive_Tick);
             // 
+            // CH11
+            // 
+            this.CH11.AutoSize = true;
+            this.CH11.Location = new System.Drawing.Point(362, 71);
+            this.CH11.Name = "CH11";
+            this.CH11.Size = new System.Drawing.Size(15, 14);
+            this.CH11.TabIndex = 20;
+            this.CH11.UseVisualStyleBackColor = true;
+            // 
+            // CH10
+            // 
+            this.CH10.AutoSize = true;
+            this.CH10.Location = new System.Drawing.Point(344, 71);
+            this.CH10.Name = "CH10";
+            this.CH10.Size = new System.Drawing.Size(15, 14);
+            this.CH10.TabIndex = 19;
+            this.CH10.UseVisualStyleBackColor = true;
+            // 
             // PitchShifting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(485, 142);
+            this.Controls.Add(this.CH10);
             this.Controls.Add(this.LiveBtn);
             this.Controls.Add(this.UncheckA);
             this.Controls.Add(this.CheckA);
-            this.Controls.Add(this.CH10Quest);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.label17);
@@ -516,7 +497,6 @@
             this.Controls.Add(this.CH13);
             this.Controls.Add(this.CH12);
             this.Controls.Add(this.CH11);
-            this.Controls.Add(this.CH10);
             this.Controls.Add(this.CH9);
             this.Controls.Add(this.CH8);
             this.Controls.Add(this.CH7);
@@ -558,7 +538,6 @@
         private System.Windows.Forms.CheckBox CH3;
         private System.Windows.Forms.CheckBox CH4;
         private System.Windows.Forms.CheckBox CH5;
-        private System.Windows.Forms.CheckBox CH10;
         private System.Windows.Forms.CheckBox CH9;
         private System.Windows.Forms.CheckBox CH8;
         private System.Windows.Forms.CheckBox CH7;
@@ -567,7 +546,6 @@
         private System.Windows.Forms.CheckBox CH14;
         private System.Windows.Forms.CheckBox CH13;
         private System.Windows.Forms.CheckBox CH12;
-        private System.Windows.Forms.CheckBox CH11;
         private System.Windows.Forms.CheckBox CH16;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
@@ -585,10 +563,11 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.LinkLabelEx CH10Quest;
         private System.Windows.Forms.CheckBox LiveBtn;
         private System.Windows.Forms.Button CheckA;
         private System.Windows.Forms.Button UncheckA;
         private System.Windows.Forms.Timer TimerLive;
+        private System.Windows.Forms.CheckBox CH11;
+        private System.Windows.Forms.CheckBox CH10;
     }
 }

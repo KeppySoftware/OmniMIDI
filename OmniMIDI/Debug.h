@@ -682,7 +682,7 @@ void PrintEventToDebugLog(DWORD dwParam) {
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<MIDIEvent | %08X>> | Event ID: 0x%X, Channel: %u, Note: %u, Velocity: %u\n", 
-			GETEVENT(dwParam), GETSTATUS(dwParam), GETCHANNEL(dwParam), GETVELOCITY(dwParam), GETNOTE(dwParam));
+			dwParam, dwParam & 0xFF, GETCHANNEL(dwParam), GETVELOCITY(dwParam), GETNOTE(dwParam));
 
 		fprintf(stdout, Msg);
 		OutputDebugStringA(Msg);
