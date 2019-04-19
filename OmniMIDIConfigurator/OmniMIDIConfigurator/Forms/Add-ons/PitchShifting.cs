@@ -35,17 +35,10 @@ namespace OmniMIDIConfigurator
                 CH11.Checked, CH12.Checked, CH13.Checked, CH14.Checked, CH15.Checked, CH16.Checked };
 
             for (int i = 0; i <= 15; i++)
-            {
-                int value;
-                if (booleans[i] == true)
-                    value = 1;
-                else
-                    value = 0;
-                OmniMIDIConfiguratorMain.Channels.SetValue(names[i], value, RegistryValueKind.DWord);
-            }
+                OmniMIDIConfiguratorMain.Channels.SetValue(names[i], Convert.ToInt32(booleans[i]), RegistryValueKind.DWord);
 
-            OmniMIDIConfiguratorMain.Channels.SetValue(names[9], 0, RegistryValueKind.DWord);
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
+
             Dispose();
         }
 
@@ -266,14 +259,7 @@ namespace OmniMIDIConfigurator
                 CH11.Checked, CH12.Checked, CH13.Checked, CH14.Checked, CH15.Checked, CH16.Checked };
 
                 for (int i = 0; i <= 15; i++)
-                {
-                    int value;
-                    if (booleans[i] == true)
-                        value = 1;
-                    else
-                        value = 0;
-                    OmniMIDIConfiguratorMain.Channels.SetValue(names[i], value, RegistryValueKind.DWord);
-                }
+                    OmniMIDIConfiguratorMain.Channels.SetValue(names[i], Convert.ToInt32(booleans[i]), RegistryValueKind.DWord);
 
                 OmniMIDIConfiguratorMain.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
             }

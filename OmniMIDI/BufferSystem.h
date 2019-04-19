@@ -9,6 +9,98 @@ int __inline BufferCheck(void) {
 	return (EVBuffer.ReadHead != EVBuffer.WriteHead);
 }
 
+BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
+{
+	/*
+	if (ignorenotes1) {
+		if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
+			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
+			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+			return TRUE;
+		}
+		else {
+			if (limit88) {
+				if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+					if (!(note >= 21 && note <= 108)) {
+						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+						return TRUE;
+					}
+				}
+			}
+		}
+	}
+	else {
+		if (limit88 == 1) {
+			if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+				if (!(note >= 21 && note <= 108)) {
+					PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
+					return TRUE;
+				}
+			}
+		}
+	}
+
+	Understandable version of what the following function does
+	*/
+
+	if (ManagedSettings.IgnoreNotesBetweenVel && !((dwParam1 - 0x80) & 0xE0)
+		&& ((HIWORD(dwParam1) & 0xFF) >= ManagedSettings.MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= ManagedSettings.MaxVelIgnore))
+	{
+		PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
+		return TRUE;
+	}
+
+	if (ManagedSettings.LimitTo88Keys && (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89))
+	{
+		if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
+		{
+			PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+DWORD ReturnEditedEvent(DWORD dwParam1) {
+	// SETSTATUS(dwParam1, status);
+
+	/*
+	if (pitchshift != 127) {
+		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
+			if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
+				int newnote = (note - 127) + pitchshift;
+				if (newnote > 127) { newnote = 127; }
+				else if (newnote < 0) { newnote = 0; }
+				SETNOTE(dwParam1, newnote);
+			}
+		}
+	}
+	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
+		SETVELOCITY(dwParam1, 127);
+
+	Understandable version of what the following function does
+	*/
+
+	if (ManagedSettings.TransposeValue != 0x7F)
+	{
+		if (!((dwParam1 - 0x80) & 0xE0))
+		{
+			if (pitchshiftchan[dwParam1 & 0xF])
+			{
+				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + ManagedSettings.TransposeValue;
+				if (newnote > 0x7F) { newnote = 0x7F; }
+				else if (newnote < 0) { newnote = 0; }
+				SETNOTE(dwParam1, newnote);
+			}
+		}
+	}
+	if (ManagedSettings.FullVelocityMode && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
+		SETVELOCITY(dwParam1, 0x7F);
+
+	return dwParam1;
+}
+
 void SendToBASSMIDI(DWORD dwParam1) {
 	DWORD len = 3;
 
@@ -50,6 +142,9 @@ void SendToBASSMIDI(DWORD dwParam1) {
 void PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
+
+	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
+		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
 		if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
@@ -204,106 +299,10 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 	return 0;
 }
 
-BOOL CheckIfEventIsToIgnore(DWORD dwParam1) 
-{
-	/* 
-	if (ignorenotes1) {
-		if (((LOWORD(dwParam1) & 0xF0) == 128 || (LOWORD(dwParam1) & 0xF0) == 144)
-			&& ((HIWORD(dwParam1) & 0xFF) >= lovel && (HIWORD(dwParam1) & 0xFF) <= hivel)) {
-			PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-			return TRUE;
-		}
-		else {
-			if (limit88) {
-				if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-					if (!(note >= 21 && note <= 108)) {
-						PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-						return TRUE;
-					}
-				}
-			}
-		}
-	}
-	else {
-		if (limit88 == 1) {
-			if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-				if (!(note >= 21 && note <= 108)) {
-					PrintToConsole(FOREGROUND_RED, dwParam1, "Ignored NoteON/NoteOFF MIDI event.");
-					return TRUE;
-				}
-			}
-		}
-	}
-
-	Understandable version of what the following function does
-	*/
-
-	if (ManagedSettings.IgnoreNotesBetweenVel && !((dwParam1 - 0x80) & 0xE0)
-		&& ((HIWORD(dwParam1) & 0xFF) >= ManagedSettings.MinVelIgnore && (HIWORD(dwParam1) & 0xFF) <= ManagedSettings.MaxVelIgnore))
-	{
-		PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
-		return TRUE;
-	}
-
-	if (ManagedSettings.LimitTo88Keys && (!((dwParam1 - 0x80) & 0xE0) && dwParam1 != 0x89))
-	{
-		if (!(((dwParam1 >> 8) & 0xFF) >= 21 && ((dwParam1 >> 8) & 0xFF) <= 108))
-		{
-			PrintMessageToDebugLog("CheckIfEventIsToIgnoreFunc", "Ignored NoteON/NoteOFF MIDI event.");
-			return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-
-DWORD ReturnEditedEvent(DWORD dwParam1) {
-	// SETSTATUS(dwParam1, status);
-
-	/* 
-	if (pitchshift != 127) {
-		if ((Between(status, 0x80, 0x8f) && (status != 0x89)) || (Between(status, 0x90, 0x9f) && (status != 0x99))) {
-			if (pitchshiftchan[status - 0x80] == 1 || pitchshiftchan[status - 0x90] == 1) {
-				int newnote = (note - 127) + pitchshift;
-				if (newnote > 127) { newnote = 127; }
-				else if (newnote < 0) { newnote = 0; }
-				SETNOTE(dwParam1, newnote);
-			}
-		}
-	}
-	if (fullvelocity == 1 && (Between(status, 0x90, 0x9f) && velocity != 0))
-		SETVELOCITY(dwParam1, 127);
-	
-	Understandable version of what the following function does
-	*/
-
-	if (ManagedSettings.TransposeValue != 0x7F)
-	{
-		if (!((dwParam1 - 0x80) & 0xE0))
-		{
-			if (pitchshiftchan[dwParam1 & 0xF])
-			{
-				int newnote = (((dwParam1 >> 8) & 0xFF) - 0x7F) + ManagedSettings.TransposeValue;
-				if (newnote > 0x7F) { newnote = 0x7F; }
-				else if (newnote < 0) { newnote = 0; }
-				SETNOTE(dwParam1, newnote);
-			}
-		}
-	}
-	if (ManagedSettings.FullVelocityMode && (((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF)))
-		SETVELOCITY(dwParam1, 0x7F);
-
-	return dwParam1;
-}
-
 extern "C" MMRESULT ParseData(DWORD dwParam1) {
 	// Some checks
 	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
-
-	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
-		dwParam1 = ReturnEditedEvent(dwParam1);
-	// Some checks
 
 	// The buffer is not ready yet
 	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY, "The events buffer isn't ready yet!");
