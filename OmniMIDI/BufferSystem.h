@@ -9,7 +9,7 @@ int __inline BufferCheck(void) {
 	return (EVBuffer.ReadHead != EVBuffer.WriteHead);
 }
 
-BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
+BOOL __inline CheckIfEventIsToIgnore(DWORD dwParam1)
 {
 	/*
 	if (ignorenotes1) {
@@ -62,7 +62,7 @@ BOOL CheckIfEventIsToIgnore(DWORD dwParam1)
 	return FALSE;
 }
 
-DWORD ReturnEditedEvent(DWORD dwParam1) {
+DWORD __inline ReturnEditedEvent(DWORD dwParam1) {
 	// SETSTATUS(dwParam1, status);
 
 	/*
@@ -101,7 +101,7 @@ DWORD ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-void SendToBASSMIDI(DWORD dwParam1) {
+void __inline SendToBASSMIDI(DWORD dwParam1) {
 	DWORD len = 3;
 
 	// PrintEventToDebugLog(dwParam1);
@@ -139,7 +139,7 @@ void SendToBASSMIDI(DWORD dwParam1) {
 	}
 }
 
-void PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
+void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
@@ -188,14 +188,14 @@ void PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	SendToBASSMIDI(dwParam1);
 }
 
-void PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
+void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
 	SendToBASSMIDI(dwParam1);
 }
 
-void SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+void __inline SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	// The buffer doesn't exist or isn't ready
 	if (!IIMidiHdr && !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return;								
 
@@ -299,7 +299,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 	return 0;
 }
 
-extern "C" MMRESULT ParseData(DWORD dwParam1) {
+MMRESULT __inline ParseData(DWORD dwParam1) {
 	// Some checks
 	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
@@ -347,7 +347,7 @@ extern "C" MMRESULT ParseData(DWORD dwParam1) {
 	return MMSYSERR_NOERROR;
 }
 
-extern "C" MMRESULT ParseDataHyper(DWORD dwParam1) {
+MMRESULT __inline ParseDataHyper(DWORD dwParam1) {
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;

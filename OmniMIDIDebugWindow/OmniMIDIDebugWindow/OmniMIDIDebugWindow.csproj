@@ -55,6 +55,12 @@
     <Compile Include="OSInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectPipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectPipe.Designer.cs">
+      <DependentUpon>SelectPipe.cs</DependentUpon>
+    </Compile>
     <Compile Include="TimerFuncs.cs" />
     <EmbeddedResource Include="OmniMIDIDebugWindow.resx">
       <DependentUpon>OmniMIDIDebugWindow.cs</DependentUpon>
@@ -63,6 +69,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectPipe.resx">
+      <DependentUpon>SelectPipe.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="app.manifest" />

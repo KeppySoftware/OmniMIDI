@@ -134,13 +134,9 @@ namespace OmniMIDIDebugWindow
 
                 CheckMem.RunWorkerAsync();
 
-                CheckDebugPorts();
-                SelectedDebug.SelectedIndex = 0;
-                SelectedDebug_SelectionChangeCommitted(null, null);
-
                 DebugInfo.Enabled = true;
 
-                SwitchPipe(true);
+                // SwitchPipe(true);
             }
             catch (Exception ex)
             {
@@ -646,94 +642,6 @@ namespace OmniMIDIDebugWindow
             }
         }
 
-        private bool DoesPipeStillExist(int requestedpipe)
-        {
-            try
-            {
-                String PipeToAdd;
-
-                IntPtr ptr = FindFirstFile(@"\\.\pipe\*", out WIN32_FIND_DATA lpFindFileData);
-                PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
-                if (PipeToAdd.Contains(String.Format("OmniMIDIDbg{0}", requestedpipe))) return true;
-
-                while (FindNextFile(ptr, out lpFindFileData))
-                {
-                    PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
-                    if (PipeToAdd.Contains(String.Format("OmniMIDIDbg{0}", requestedpipe))) return true;
-                }
-                FindClose(ptr);
-
-                return false;
-            }
-            catch { return false; }
-        }
-
-        static string NoPipes = "No pipes available";
-        private void CheckDebugPorts()
-        {
-            SelectedDebug.SelectedIndexChanged -= SelectedDebug_SelectedIndexChanged;
-            List<String> KSPipesCheck = new List<String>();
-
-            Int32 PreviousCount = 1;
-            String PreviousItem = NoPipes;
-
-            if (KSPipes.Count > 0)
-            {
-                PreviousCount = KSPipes.Count;
-                PreviousItem = KSPipes[0];
-            }
-
-            try
-            {
-                String PipeToAdd;
-                WIN32_FIND_DATA lpFindFileData;
-
-                IntPtr ptr = FindFirstFile(@"\\.\pipe\*", out lpFindFileData);
-                PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
-                if (PipeToAdd.Contains("OmniMIDIDbg"))
-                    KSPipesCheck.Add(String.Format("Debug pipe {0}", Regex.Match(PipeToAdd, @"\d+").Value));
-
-                while (FindNextFile(ptr, out lpFindFileData))
-                {
-                    PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
-                    if (PipeToAdd.Contains("OmniMIDIDbg"))
-                        KSPipesCheck.Add(String.Format("Debug pipe {0}", Regex.Match(PipeToAdd, @"\d+").Value));
-                }
-                FindClose(ptr);
-                
-                KSPipesCheck.Sort();
-            }
-            catch (Exception ex)
-            {
-                // If something goes wrong, here's an error handler
-                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.ExitThread();
-            }
-
-            if (KSPipesCheck.Count < 1)
-            {
-                SelectedDebug.DataSource = null;
-                KSPipes = new BindingList<String>() { NoPipes };
-                SelectedDebug.Enabled = false;
-                SelectedDebug.DataSource = KSPipes;
-            }
-            else
-            {
-                if (PreviousCount != KSPipesCheck.Count || PreviousItem == NoPipes)
-                {
-                    SelectedDebug.DataSource = null;
-                    KSPipes = new BindingList<String>(KSPipesCheck);
-                    SelectedDebug.DataSource = KSPipes;
-                    if (!PreviousItem.Equals(NoPipes)) SelectedDebug.Text = PreviousItem;
-                    else SelectedDebug_SelectionChangeCommitted(null, null);
-                }
-                SelectedDebug.Enabled = true;
-            }
-
-            if (SelectedDebug.Items.Count < SelectedDebugVal) SelectedDebugVal = SelectedDebug.Items.Count;
-            SelectedDebug.SelectedIndexChanged += SelectedDebug_SelectedIndexChanged;
-        }
-
         private void GetInfo()
         {
             if (Tabs.SelectedIndex == 0)
@@ -847,7 +755,6 @@ namespace OmniMIDIDebugWindow
             try
             {
                 GetInfo();
-                CheckDebugPorts();
             }
             catch (Exception ex)
             {
@@ -855,6 +762,56 @@ namespace OmniMIDIDebugWindow
                 MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.ExitThread();
             }
+        }
+
+        private void SelectDebugPipe_Click(object sender, EventArgs e)
+        {
+            using (var SP = new SelectPipe())
+            {
+                var result = SP.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    int val = SP.SelectedPipe + 1;
+                    SwitchPipe(val);
+                }
+            }
+        }
+
+        public bool DoesPipeStillExist(int requestedpipe)
+        {
+            try
+            {
+                String PipeToAdd;
+
+                IntPtr ptr = FindFirstFile(@"\\.\pipe\*", out WIN32_FIND_DATA lpFindFileData);
+                PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
+                if (PipeToAdd.Contains(String.Format("OmniMIDIDbg{0}", requestedpipe))) return true;
+
+                while (FindNextFile(ptr, out lpFindFileData))
+                {
+                    PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
+                    if (PipeToAdd.Contains(String.Format("OmniMIDIDbg{0}", requestedpipe))) return true;
+                }
+                FindClose(ptr);
+
+                return false;
+            }
+            catch { return false; }
+        }
+
+        private void SwitchPipe(int pipe)
+        {
+            try
+            {
+                if (DoesPipeStillExist(pipe))
+                {
+                    SelectedDebugVal = pipe;
+                    if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
+                    else DebugInfoCheck.RunWorkerAsync();
+                }
+                else MessageBox.Show("This debug pipe is not available anymore.", "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch { }
         }
 
         Int32 SelectedDebugVal = 1;
@@ -888,52 +845,12 @@ namespace OmniMIDIDebugWindow
                 }
                 else DebugInfoCheck.CancelAsync();
             }
-            System.Threading.Thread.Sleep(100);
         }
 
         private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ParseInfoFromPipe(null, true);
             DebugInfoCheck.RunWorkerAsync();
-        }
-
-        private void SelectedDebug_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            SelectedDebug.SelectedIndexChanged -= SelectedDebug_SelectedIndexChanged;
-            SwitchPipe(false);
-            SelectedDebug.SelectedIndexChanged += SelectedDebug_SelectedIndexChanged;
-        }
-
-        private void SelectedDebug_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SwitchPipe(true);
-        }
-
-        private void RefreshDebugApps_Click(object sender, EventArgs e)
-        {
-            CheckDebugPorts();
-            SelectedDebug.SelectedIndex = 0;
-            SelectedDebug_SelectionChangeCommitted(null, null);
-            SwitchPipe(false);
-        }
-
-        private void SwitchPipe(bool silent)
-        {
-            try
-            {
-                if (SelectedDebug.Enabled)
-                {
-                    Int32 SelectedValueToCheck = Convert.ToInt32(Regex.Match((String)SelectedDebug.Items[SelectedDebug.SelectedIndex], @"\d+").Value);
-                    if (DoesPipeStillExist(SelectedValueToCheck))
-                    {
-                        SelectedDebugVal = SelectedValueToCheck;
-                        if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
-                        else DebugInfoCheck.RunWorkerAsync();
-                    }
-                    else { if (!silent) MessageBox.Show("This debug pipe is not available anymore.", "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information); } 
-                }
-            }
-            catch { }
         }
 
         private void OpenConfigurator_Click(object sender, EventArgs e)

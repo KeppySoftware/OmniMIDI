@@ -47,6 +47,7 @@
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
+            this.SelectDebugPipe = new System.Windows.Forms.Button();
             this.BufStatus = new System.Windows.Forms.Label();
             this.BufStatusLabel = new System.Windows.Forms.Label();
             this.KDMAPI = new System.Windows.Forms.Label();
@@ -119,7 +120,6 @@
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
             this.WinLogo = new System.Windows.Forms.PictureBox();
-            this.SelectedDebug = new System.Windows.Forms.ComboBox();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyToClip1 = new System.Windows.Forms.Button();
             this.KSLogo = new System.Windows.Forms.PictureBox();
@@ -129,7 +129,6 @@
             this.DebugInfo = new System.Windows.Forms.Timer(this.components);
             this.DebugInfoCheck = new System.ComponentModel.BackgroundWorker();
             this.ReloadDebugInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.RefreshDebugApps = new System.Windows.Forms.PictureBox();
             this.CheckMem = new System.ComponentModel.BackgroundWorker();
             this.Tabs.SuspendLayout();
             this.SynthDbg.SuspendLayout();
@@ -138,7 +137,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).BeginInit();
             this.SuspendLayout();
             // 
             // MainCont
@@ -232,6 +230,17 @@
             this.SynthDbg.Size = new System.Drawing.Size(424, 170);
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
+            // 
+            // SelectDebugPipe
+            // 
+            this.SelectDebugPipe.BackColor = System.Drawing.Color.Transparent;
+            this.SelectDebugPipe.Location = new System.Drawing.Point(281, 223);
+            this.SelectDebugPipe.Name = "SelectDebugPipe";
+            this.SelectDebugPipe.Size = new System.Drawing.Size(147, 23);
+            this.SelectDebugPipe.TabIndex = 50;
+            this.SelectDebugPipe.Text = "Select debug pipe";
+            this.SelectDebugPipe.UseVisualStyleBackColor = false;
+            this.SelectDebugPipe.Click += new System.EventHandler(this.SelectDebugPipe_Click);
             // 
             // BufStatus
             // 
@@ -1081,18 +1090,6 @@
             this.WinLogo.TabIndex = 24;
             this.WinLogo.TabStop = false;
             // 
-            // SelectedDebug
-            // 
-            this.SelectedDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SelectedDebug.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SelectedDebug.FormattingEnabled = true;
-            this.SelectedDebug.Location = new System.Drawing.Point(310, 225);
-            this.SelectedDebug.Name = "SelectedDebug";
-            this.SelectedDebug.Size = new System.Drawing.Size(118, 21);
-            this.SelectedDebug.TabIndex = 46;
-            this.SelectedDebug.SelectedIndexChanged += new System.EventHandler(this.SelectedDebug_SelectedIndexChanged);
-            this.SelectedDebug.SelectionChangeCommitted += new System.EventHandler(this.SelectedDebug_SelectionChangeCommitted);
-            // 
             // VersionLabel
             // 
             this.VersionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1109,10 +1106,10 @@
             // CopyToClip1
             // 
             this.CopyToClip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyToClip1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.CopyToClip1.BackColor = System.Drawing.Color.Transparent;
             this.CopyToClip1.Location = new System.Drawing.Point(281, 199);
             this.CopyToClip1.Name = "CopyToClip1";
-            this.CopyToClip1.Size = new System.Drawing.Size(148, 23);
+            this.CopyToClip1.Size = new System.Drawing.Size(147, 23);
             this.CopyToClip1.TabIndex = 34;
             this.CopyToClip1.Text = "Copy all tabs to clipboard";
             this.CopyToClip1.UseVisualStyleBackColor = false;
@@ -1160,18 +1157,6 @@
             this.ReloadDebugInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ReloadDebugInfo.ToolTipTitle = "What does this do?";
             // 
-            // RefreshDebugApps
-            // 
-            this.RefreshDebugApps.Image = global::OmniMIDIDebugWindow.Properties.Resources.ReloadIcon;
-            this.RefreshDebugApps.Location = new System.Drawing.Point(282, 224);
-            this.RefreshDebugApps.Name = "RefreshDebugApps";
-            this.RefreshDebugApps.Size = new System.Drawing.Size(24, 24);
-            this.RefreshDebugApps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.RefreshDebugApps.TabIndex = 47;
-            this.RefreshDebugApps.TabStop = false;
-            this.ReloadDebugInfo.SetToolTip(this.RefreshDebugApps, "Force refresh the debug pipes list");
-            this.RefreshDebugApps.Click += new System.EventHandler(this.RefreshDebugApps_Click);
-            // 
             // CheckMem
             // 
             this.CheckMem.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckMem_DoWork);
@@ -1182,9 +1167,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(432, 251);
-            this.Controls.Add(this.RefreshDebugApps);
+            this.Controls.Add(this.SelectDebugPipe);
             this.Controls.Add(this.Tabs);
-            this.Controls.Add(this.SelectedDebug);
             this.Controls.Add(this.CopyToClip1);
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.KSLogo);
@@ -1206,9 +1190,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.CPULogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KSLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RefreshDebugApps)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -1300,14 +1282,13 @@
         private System.Windows.Forms.Label ASIOL;
         private System.Windows.Forms.Label ASIOLLabel;
         private System.ComponentModel.BackgroundWorker DebugInfoCheck;
-        private System.Windows.Forms.ComboBox SelectedDebug;
         private System.Windows.Forms.ToolTip ReloadDebugInfo;
         private System.ComponentModel.BackgroundWorker CheckMem;
         private System.Windows.Forms.Label KDMAPI;
         private System.Windows.Forms.Label KDMAPILabel;
         private System.Windows.Forms.Label BufStatus;
         private System.Windows.Forms.Label BufStatusLabel;
-        private System.Windows.Forms.PictureBox RefreshDebugApps;
+        private System.Windows.Forms.Button SelectDebugPipe;
     }
 }
 
