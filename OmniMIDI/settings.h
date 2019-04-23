@@ -608,17 +608,14 @@ void LoadCustomInstruments() {
 }
 
 int AudioRenderingType(BOOLEAN IsItStreamCreation, INT RegistryVal) {
-	if (ManagedSettings.CurrentEngine == ASIO_ENGINE) return BASS_SAMPLE_FLOAT;
-	else {
-		if (RegistryVal == 1)
-			return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
-		else if (RegistryVal == 2 || RegistryVal == 0)
-			return IsItStreamCreation ? 0 : BASS_DATA_FIXED;
-		else if (RegistryVal == 3)
-			return IsItStreamCreation ? BASS_SAMPLE_8BITS : BASS_DATA_FIXED;
-		else
-			return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
-	}
+	if (RegistryVal == 1 || ManagedSettings.CurrentEngine == ASIO_ENGINE)
+		return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
+	else if (RegistryVal == 2 || RegistryVal == 0)
+		return IsItStreamCreation ? 0 : BASS_DATA_FIXED;
+	else if (RegistryVal == 3)
+		return IsItStreamCreation ? BASS_SAMPLE_8BITS : BASS_DATA_FIXED;
+	else
+		return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
 }
 
 void SFDynamicLoaderCheck() {
@@ -773,6 +770,23 @@ void ParseDebugData() {
 		}
 	}
 }
+
+/*
+void CheckForInfoFromPipe() {
+	wchar_t buffer[NTFS_MAX_PATH];
+	DWORD dwRead;
+
+	if (ConnectNamedPipe(hPipe, NULL) != FALSE)
+	{
+		while (ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL) != FALSE)
+		{
+			buffer[dwRead] = '\0';
+			
+			if (wcsicmp(buffer, L"OMRSTSTREAM")) ManagedSettings.LiveChanges = 1;
+		}
+	}
+}
+*/
 
 void SendDebugDataToPipe() {
 	try {

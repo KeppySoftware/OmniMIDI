@@ -127,7 +127,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
 				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 
-				_SWAIT;
+				_WAIT;
 			}
 		}
 	}
@@ -160,7 +160,7 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 				// Else, open the EventProcesser thread
 				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
 
-				_SWAIT;
+				_WAIT;
 			}
 		}
 	}

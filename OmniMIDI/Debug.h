@@ -779,12 +779,12 @@ Retry:
 		swprintf_s(PipeDes, MAX_PATH, OMPipeTemplate, PipeVal);
 
 		// Now create the pipe
-		hPipe = CreateNamedPipe(PipeDes,
+		hPipe = CreateNamedPipeW(PipeDes,
 			PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE,
 			PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
 			PIPE_UNLIMITED_INSTANCES,
 			NTFS_MAX_PATH,
-			0,
+			NTFS_MAX_PATH,
 			NMPWAIT_USE_DEFAULT_WAIT,
 			NULL);
 

@@ -302,20 +302,6 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 		return MMSYSERR_NOERROR;																			// Already prepared, everything is fine
 	}
 
-	PrintMessageToDebugLog("PrepareLongData", "Locking buffer...");
-	// Lock the MIDIHDR buffer, to prevent the MIDI app from accidentally writing to it
-	char Msg[NTFS_MAX_PATH];
-	DWORD NTVMErr;
-	VOID* m = IIMidiHdr->lpData;
-	ULONG s = sizeof(IIMidiHdr->lpData);
-	if (!NT_SUCCESS(NtLockVirtualMemory(GetCurrentProcess(), &m, &s, 1)))
-	{
-		NTVMErr = GetLastError();
-		sprintf(Msg, "Failed to unlock the MIDI header buffer!\nNtLockVirtualMemory err: %d", NTVMErr);
-		PrintMessageToDebugLog("PrepareLongData", Msg);
-	}
-	PrintMessageToDebugLog("PrepareLongData", "Buffer is locked.");
-
 	// Mark the buffer as prepared, and say that everything is oki-doki
 	PrintMessageToDebugLog("PrepareLongData", "Marking as prepared...");
 	IIMidiHdr->dwFlags |= MHDR_PREPARED;
@@ -338,20 +324,6 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still in queue.");
 		return DebugResult(MIDIERR_STILLPLAYING, "The buffer is still in queue.");							// The buffer is currently being played from the driver, cannot unprepare
 	}
-	
-	PrintMessageToDebugLog("UnprepareLongData", "Unlocking buffer...");
-	// Unlock the buffer, and say that everything is oki-doki
-	char Msg[NTFS_MAX_PATH];
-	DWORD NTVMErr;
-	VOID* m = IIMidiHdr->lpData;
-	ULONG s = sizeof(IIMidiHdr->lpData);
-	if (!NT_SUCCESS(NtUnlockVirtualMemory(GetCurrentProcess(), &m, &s, 1)))
-	{
-		NTVMErr = GetLastError();
-		sprintf(Msg, "Failed to unlock the MIDI header buffer!\nNtUnlockVirtualMemory err: %d", NTVMErr);
-		PrintMessageToDebugLog("UnprepareLongData", Msg);
-	}
-
 
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
 	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																	// Mark the buffer as unprepared
