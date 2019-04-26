@@ -1520,7 +1520,7 @@ namespace OmniMIDIConfigurator
         private void downloadTheSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, "Opening OmniMIDI's GitHub page.", null);
-            Process.Start("https://github.com/KaleidonKep99/Keppy-s-MIDI-Driver");
+            Process.Start("https://github.com/KeppySoftware/OmniMIDI");
         }
 
         private void donateToSupportUsToolStripMenuItem_Click(object sender, EventArgs e)
