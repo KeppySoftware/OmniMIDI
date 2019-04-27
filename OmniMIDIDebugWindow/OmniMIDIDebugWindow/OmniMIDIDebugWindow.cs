@@ -136,7 +136,8 @@ namespace OmniMIDIDebugWindow
 
                 DebugInfo.Enabled = true;
 
-                // SwitchPipe(true);
+                if (Program.ConnectToFirstAvailablePipe())
+                    DebugInfoCheck.RunWorkerAsync();
             }
             catch (Exception ex)
             {
@@ -245,7 +246,7 @@ namespace OmniMIDIDebugWindow
             }
         }
 
-        private System.Drawing.Bitmap WinImage()
+        private Bitmap WinImage()
         {
             OSInfo.OSVERSIONINFOEX osVersionInfo = new OSInfo.OSVERSIONINFOEX
             { dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSInfo.OSVERSIONINFOEX)) };
@@ -265,10 +266,17 @@ namespace OmniMIDIDebugWindow
                 }
                 else
                 {
-                    if (Environment.OSVersion.Version.Major < 6)
+                    if (Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor == 1)
                     {
-                        WinLogoTT.SetToolTip(WinLogo, "You're using an unsupported OS.");
-                        return Properties.Resources.other;
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2003.");
+                        else
+                            WinLogoTT.SetToolTip(WinLogo, "You're using Windows XP.");
+
+                        if (VisualStyleInformation.IsEnabledByUser)
+                            return Properties.Resources.wxp;
+                        else
+                            return Properties.Resources.w9x;
                     }
                     if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 0)
                     {
@@ -310,14 +318,14 @@ namespace OmniMIDIDebugWindow
                     }
                     else if (Environment.OSVersion.Version.Major == 10)
                     {
-                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER) WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2016.");
+                        if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER) WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server.");
                         else WinLogoTT.SetToolTip(WinLogo, "You're using Windows 10.");
 
                         return Properties.Resources.w8;
                     }
                     else
                     {
-                        WinLogoTT.SetToolTip(WinLogo, "You're using an unknown OS.");
+                        WinLogoTT.SetToolTip(WinLogo, "You're using an unknown/unsupported OS.");
                         return Properties.Resources.other;
                     }
                 }
@@ -326,16 +334,19 @@ namespace OmniMIDIDebugWindow
 
         private string CPUArch(int Value)
         {
-            if (Value == 0)
-                return "x86";
-            else if (Value == 5)
-                return "ARM";
-            else if (Value == 6)
-                return "IA64";
-            else if (Value == 9)
-                return "x64";
-            else
-                return "N/A";
+            switch (Value)
+            {
+                case 0:
+                    return "x86";
+                case 5:
+                    return "ARM";
+                case 6:
+                    return "IA64";
+                case 9:
+                    return "AMD64";
+                default:
+                    return "UNKNOWN";
+            }
         }
 
         private void GetWindowsInfoData()
@@ -366,45 +377,46 @@ namespace OmniMIDIDebugWindow
                 }
                 catch
                 {
-                    // The GPU doesn't want to share its internal chip. Skip.
-                    // This might be caused by outdated drivers, an integrated GPU, or by a GPU that doesn't support WMI data.
-                    // (The latter is usually caused by using non-WDDM drivers)
-                    GPUInternalChip.Enabled = false;
-                    foreach (ManagementObject moGPU in mosGPU.Get())
-                    {
-                        gpuchip = "The graphics card refused to share this info";
-                        gpuname = moGPU["Name"].ToString();
-                        gpuvram = Convert.ToUInt32(moGPU["AdapterRAM"]);
-                        gpuver = moGPU["DriverVersion"].ToString();
-                    }
+                    gpuchip = "Error while parsing info for GPU";
+                    gpuname = "N/A";
+                    gpuvram = 0;
+                    gpuver = "N/A";
                 }
 
                 // Get enclosure info
                 foreach (ManagementObject moEnc in mosEnc.Get())
                 {
                     foreach (int i in (UInt16[])(moEnc["ChassisTypes"]))
-                    {
                         enclosure = OSInfo.Chassis[i];
-                    }
                 }
 
-                if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
-                {
-                    FullVersion = String.Format("{0}.{1}.{2}.{3}",
-                       Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
-                       Environment.OSVersion.Version.Build.ToString(), WinVer.GetValue("UBR", 0).ToString());
-                }
-                else // Else, give normal version number
-                {
-                    FullVersion = String.Format("{0}.{1}.{2}",
-                       Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
-                       Environment.OSVersion.Version.Build.ToString());
-                }
+                FullVersion = String.Format("{0}.{1}.{2}{3}",
+                         Environment.OSVersion.Version.Major.ToString(), Environment.OSVersion.Version.Minor.ToString(),
+                         Environment.OSVersion.Version.Build.ToString(),
+                         // If using Windows 10, get UBR too
+                         (Environment.OSVersion.Version.Major == 10) ? String.Format(".{0}", WinVer.GetValue("UBR", 0).ToString()) : null);
 
                 WinLogo.Image = WinImage();
                 CPULogo.Image = CPUImage();
 
-                if (Environment.Is64BitOperatingSystem == true) { bit = "AMD64"; } else { bit = "i386"; }  // Gets Windows architecture  
+                switch (Program.GetProcessorArchitecture())
+                {
+                    case Program.PROCESSOR_ARCHITECTURE_AMD64:
+                        bit = "AMD64";
+                        break;
+                    case Program.PROCESSOR_ARCHITECTURE_ARM64:
+                        bit = "ARM64";
+                        break;
+                    case Program.PROCESSOR_ARCHITECTURE_IA64:
+                        bit = "IA64";
+                        break;
+                    case Program.PROCESSOR_ARCHITECTURE_INTEL:
+                        bit = "i386";
+                        break;
+                    default:
+                        bit = "UNK";
+                        break;
+                }
 
                 if (cpuclock < 1000)
                     Frequency = String.Format("{0}MHz", cpuclock);
@@ -413,7 +425,7 @@ namespace OmniMIDIDebugWindow
 
                 COS.Text = String.Format("{0} ({1}, {2})", OSInfo.Name, FullVersion, bit);
                 CPU.Text = String.Format("{0} ({1} processor)", cpuname, cpubit);
-                CPUInfo.Text = String.Format("Made by {0}, {1} cores and {2} threads, {3}", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency);
+                CPUInfo.Text = String.Format("{0}, {1}/{2} cores, {3} ({4}MHz)", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency, cpuclock);
                 GPU.Text = gpuname;
                 GPUInternalChip.Text = gpuchip;
                 GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", (gpuvram / 1048576), gpuver);
@@ -770,42 +782,17 @@ namespace OmniMIDIDebugWindow
             {
                 var result = SP.ShowDialog();
                 if (result == DialogResult.OK)
-                {
-                    int val = SP.SelectedPipe + 1;
-                    SwitchPipe(val);
-                }
+                    SwitchPipe(SP.SelectedPipe);
             }
-        }
-
-        public bool DoesPipeStillExist(int requestedpipe)
-        {
-            try
-            {
-                String PipeToAdd;
-
-                IntPtr ptr = FindFirstFile(@"\\.\pipe\*", out WIN32_FIND_DATA lpFindFileData);
-                PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
-                if (PipeToAdd.Contains(String.Format("OmniMIDIDbg{0}", requestedpipe))) return true;
-
-                while (FindNextFile(ptr, out lpFindFileData))
-                {
-                    PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
-                    if (PipeToAdd.Contains(String.Format("OmniMIDIDbg{0}", requestedpipe))) return true;
-                }
-                FindClose(ptr);
-
-                return false;
-            }
-            catch { return false; }
         }
 
         private void SwitchPipe(int pipe)
         {
             try
             {
-                if (DoesPipeStillExist(pipe))
+                if (Program.DoesPipeStillExist(pipe))
                 {
-                    SelectedDebugVal = pipe;
+                    Program.SelectedDebugVal = pipe;
                     if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
                     else DebugInfoCheck.RunWorkerAsync();
                 }
@@ -814,11 +801,10 @@ namespace OmniMIDIDebugWindow
             catch { }
         }
 
-        Int32 SelectedDebugVal = 1;
         NamedPipeClientStream PipeClient = null;
         private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", SelectedDebugVal), PipeDirection.InOut, PipeOptions.Asynchronous))
+            using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", Program.SelectedDebugVal), PipeDirection.InOut, PipeOptions.Asynchronous))
             {
                 PipeClient.Connect();
                 if (PipeClient.IsConnected)
