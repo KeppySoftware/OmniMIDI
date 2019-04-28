@@ -34,19 +34,26 @@ void MT32SetInstruments() {
 	}
 }
 
-DWORD WINAPI DebugThread(LPVOID lpV) {
-	PrintMessageToDebugLog("DebugThread", "Initializing debug pipe thread...");
+DWORD WINAPI DebugPipe(LPVOID lpV) {
+	PrintMessageToDebugLog("DebugPipe", "Initializing debug pipe thread...");
 	while (true) {
-		// Parse the debug info (Active voices, rendering time etc..)
-		ParseDebugData();
+		// Wait for someone to connect to the pipe
+		while (ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED))
+		{
+			// Parse the debug info (Active voices, rendering time etc..)
+			ParseDebugData();
 
-		// Send the debug info to the pipes
-		SendDebugDataToPipe();
+			// Send the debug info to the pipes
+			SendDebugDataToPipe();
 
-		// Wait
-		_DBGWAIT;
+			// Wait
+			_FWAIT;
+		}
+
+		// Disconnect from pipe
+		DisconnectNamedPipe(hPipe);
 	}
-	PrintMessageToDebugLog("DebugThread", "Closing debug pipe thread...");
+	PrintMessageToDebugLog("DebugPipe", "Closing debug pipe thread...");
 	CloseHandle(DThread.ThreadHandle);
 	DThread.ThreadHandle = NULL;
 	return 0;
@@ -63,7 +70,7 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 			MT32SetInstruments();
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData() && !stop_thread) _WAIT;
+			if (_PlayBufData() && !stop_thread) _FWAIT;
 			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
@@ -77,8 +84,8 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 	return 0;
 }
 
-DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
-	PrintMessageToDebugLog("EventsProcesserHP", "Initializing notes catcher thread...");
+DWORD WINAPI FastEventsProcesser(LPVOID lpV) {
+	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
 			// If the notes catcher thread is supposed to run together with the audio thread,
@@ -86,14 +93,14 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 			if (ManagedSettings.NotesCatcherWithAudio) break;
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData()) _WAIT;
+			if (_PlayBufData()) _FWAIT;
 		}
 	}
 	catch (...) {
-		CrashMessage("NotesCatcherThreadHP");
+		CrashMessage("FastEventsProcesserThread");
 	}
 
-	PrintMessageToDebugLog("EventsProcesserHP", "Closing notes catcher thread...");
+	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
 	CloseHandle(EPThread.ThreadHandle);
 	EPThread.ThreadHandle = NULL;
 	return 0;
@@ -102,7 +109,7 @@ DWORD WINAPI EventsProcesserHP(LPVOID lpV) {
 void InitializeNotesCatcherThread() {
 	// If the EventProcesser thread is not valid, then open a new one
 	if (EPThread.ThreadHandle == NULL) {
-		EPThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? EventsProcesserHP : EventsProcesser), NULL, 0, (LPDWORD)EPThread.ThreadAddress);
+		EPThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? FastEventsProcesser : EventsProcesser), NULL, 0, (LPDWORD)EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
 }
@@ -141,8 +148,8 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 	return 0;
 }
 
-DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
-	PrintMessageToDebugLog("AudioEngineHP", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
+DWORD WINAPI FastAudioEngine(LPVOID lpParam) {
+	PrintMessageToDebugLog("FastAudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 			while (!stop_thread) {
@@ -165,10 +172,10 @@ DWORD WINAPI AudioEngineHP(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage("AudioEngineThreadHP");
+		CrashMessage("FastAudioEngineThread");
 	}
 
-	PrintMessageToDebugLog("AudioEngineHP", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
+	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	CloseHandle(ATThread.ThreadHandle);
 	ATThread.ThreadHandle = NULL;
 	return 0;
@@ -255,7 +262,7 @@ BOOL CreateThreads(BOOL startup) {
 	if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
 		CheckIfThreadClosed(ATThread.ThreadHandle);
-		ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? AudioEngineHP : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
+		ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
 		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
@@ -263,13 +270,13 @@ BOOL CreateThreads(BOOL startup) {
 	if (!DThread.ThreadHandle)
 	{
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening debug thread...");
-		DThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugThread, NULL, 0, (LPDWORD)DThread.ThreadAddress);
-		SetThreadPriority(DThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
+		DThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugPipe, NULL, 0, (LPDWORD)DThread.ThreadAddress);
+		SetThreadPriority(DThread.ThreadHandle, THREAD_PRIORITY_NORMAL);
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
 	// The threads are ready!
-	if (startup == TRUE) SetEvent(OMReady);
+	if (startup) SetEvent(OMReady);
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Threads are now active!");
 	return TRUE;

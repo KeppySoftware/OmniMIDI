@@ -737,24 +737,21 @@ void ParseDebugData() {
 
 		if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 			ASIOTempInLatency = BASS_ASIO_GetLatency(TRUE);
-			if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempInLatency = 0;
+			if (BASS_ASIO_ErrorGetCode()) ASIOTempInLatency = 0;
 
 			ASIOTempOutLatency = BASS_ASIO_GetLatency(FALSE);
-			if (BASS_ASIO_ErrorGetCode() != 0) ASIOTempOutLatency = 0;
+			if (BASS_ASIO_ErrorGetCode()) ASIOTempOutLatency = 0;
 
 			ASIORate = BASS_ASIO_GetRate();
-			if (BASS_ASIO_ErrorGetCode() != 0) ASIORate = 0.0;
+			if (BASS_ASIO_ErrorGetCode()) ASIORate = 0.0;
 
 			// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
 			if (ASIORate != 0.0) {
-				ManagedDebugInfo.ASIOInputLatency = (ASIOTempInLatency != 0) ? ((DOUBLE)ASIOTempInLatency * 1000.0 / ASIORate) : 0.0;
-				ManagedDebugInfo.ASIOOutputLatency = (ASIOTempOutLatency != 0) ? ((DOUBLE)ASIOTempOutLatency * 1000.0 / ASIORate) : 0.0;
+				ManagedDebugInfo.ASIOInputLatency = (ASIOTempInLatency) ? ((DOUBLE)ASIOTempInLatency * 1000.0 / ASIORate) : 0.0;
+				ManagedDebugInfo.ASIOOutputLatency = (ASIOTempOutLatency) ? ((DOUBLE)ASIOTempOutLatency * 1000.0 / ASIORate) : 0.0;
 			}
 		}
-		else {
-			ManagedDebugInfo.ASIOInputLatency = 0.0;
-			ManagedDebugInfo.ASIOOutputLatency = 0.0;
-		}
+		else ManagedDebugInfo.ASIOOutputLatency = ManagedDebugInfo.ASIOInputLatency = 0.0;
 
 		for (int i = 0; i <= 15; ++i) {
 			int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
@@ -765,9 +762,7 @@ void ParseDebugData() {
 		RenderingTime = 0.0f;
 		ManagedDebugInfo.ASIOInputLatency = 0;
 		ManagedDebugInfo.ASIOOutputLatency = 0;
-		for (int i = 0; i <= 15; ++i) {
-			cvvalues[i] = 0;
-		}
+		for (int i = 0; i <= 15; ++i) cvvalues[i] = 0;
 	}
 }
 

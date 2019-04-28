@@ -113,9 +113,9 @@ static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 // and passes the events without checking for anything
 
 // Predefined sleep values, useful for redundancy
-#define _DBGWAIT NTSleep(16667)							// Debuglog wait
-#define _WAIT NTSleep(1)								// Normal wait
-#define _SWAIT NTSleep(100)								// Normal wait
+#define _FWAIT NTSleep(1)								// Fast wait
+#define _WAIT NTSleep(100)								// Normal wait
+#define _SWAIT NTSleep(5000)							// Slow wait
 #define _CFRWAIT NTSleep(16667)							// Cap framerate wait
 
 // Variables

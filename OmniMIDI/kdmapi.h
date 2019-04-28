@@ -44,7 +44,7 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 	return TRUE;
 }
 
-DWORD WINAPI Watchdog(LPVOID lpV) {
+DWORD WINAPI Supervisor(LPVOID lpV) {
 	try {
 		// Check system
 		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
@@ -127,8 +127,8 @@ BOOL DoStartClient() {
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
 		CheckIfThreadClosed(HealthThread.ThreadHandle);
-		HealthThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Watchdog, NULL, 0, (LPDWORD)HealthThread.ThreadAddress);
-		SetThreadPriority(HealthThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
+		HealthThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Supervisor, NULL, 0, (LPDWORD)HealthThread.ThreadAddress);
+		SetThreadPriority(HealthThread.ThreadHandle, THREAD_PRIORITY_NORMAL);
 		PrintMessageToDebugLog("StartDriver", "Done!");
 
 		// Wait for the SoundFonts to load, then close the event's handle
