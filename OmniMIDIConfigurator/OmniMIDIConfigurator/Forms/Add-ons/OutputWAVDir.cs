@@ -40,9 +40,8 @@ namespace OmniMIDIConfigurator
                 if (NewOutputDir.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", true);
-                    Settings.SetValue("AudToWAVFolder", Path.GetDirectoryName(NewOutputDir.FileName), RegistryValueKind.String);
-                    NewDir.Text = Path.GetDirectoryName(NewOutputDir.FileName);
-                    DefaultDir.Text = Path.GetDirectoryName(NewOutputDir.FileName);
+                    Settings.SetValue("AudToWAVFolder", NewOutputDir.FileName, RegistryValueKind.String);
+                    NewDir.Text = NewOutputDir.FileName;
                 }
             }
             catch (Exception ex)

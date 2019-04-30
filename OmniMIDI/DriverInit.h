@@ -75,7 +75,7 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage("NotesCatcherThread");
+		CrashMessage("EventsProcesserThread");
 	}
 
 	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
@@ -106,7 +106,7 @@ DWORD WINAPI FastEventsProcesser(LPVOID lpV) {
 	return 0;
 }
 
-void InitializeNotesCatcherThread() {
+void InitializeEventsProcesserThread() {
 	// If the EventProcesser thread is not valid, then open a new one
 	if (EPThread.ThreadHandle == NULL) {
 		EPThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? FastEventsProcesser : EventsProcesser), NULL, 0, (LPDWORD)EPThread.ThreadAddress);
@@ -128,7 +128,7 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
-				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
+				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThread();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
@@ -165,7 +165,7 @@ DWORD WINAPI FastAudioEngine(LPVOID lpParam) {
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
-				else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
+				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThread();
 
 				_WAIT;
 			}
@@ -181,15 +181,14 @@ DWORD WINAPI FastAudioEngine(LPVOID lpParam) {
 	return 0;
 }
 
-DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user)
-{
+DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) {
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
 		MT32SetInstruments();
 		_PlayBufDataChk();
 	}
 	// Else, open the EventProcesser thread
-	else if (!EPThread.ThreadHandle) InitializeNotesCatcherThread();
+	else if (!EPThread.ThreadHandle) InitializeEventsProcesserThread();
 
 	// Get the processed audio data, and send it to the ASIO device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
@@ -379,25 +378,22 @@ void InitializeBASSEnc() {
 	DWORD dwType = REG_SZ;
 	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
-	if (RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, reinterpret_cast<LPBYTE>(&confpath), &cbValueLength) == ERROR_FILE_NOT_FOUND) {
+	if (!RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, (LPBYTE)&confpath, &cbValueLength)) {
 		// If the folder exists, then set the path to that
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
-	}
-	else {
-		// Otherwise, set the default path to the desktop
 		PathAppend(encpath, confpath);
 		PathAppend(encpath, result2);
+		MessageBox(NULL, encpath, L"DEBUG", MB_OK);
 	}
+	// Otherwise, set the default path to the desktop
+	else if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
 
 	// Convert some values for the following MsgBox
-	_bstr_t b(encpath);
-	const char* c = b;
 	const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"OmniMIDI", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
 	switch (result)
 	{
 	case IDYES:
 		// If the user chose to output to WAV, then continue initializing BASSEnc
-		BASS_Encode_Start(OMStream, c, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT, NULL, 0);
+		BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_UNICODE, NULL, 0);
 		// Error handling
 		CheckUp(FALSE, ERRORCODE, L"Encoder Start", TRUE);
 		break;
