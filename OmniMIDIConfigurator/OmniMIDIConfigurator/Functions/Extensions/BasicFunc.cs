@@ -546,37 +546,20 @@ namespace OmniMIDIConfigurator
 
         public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
         {
-            RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
-            if (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll")
-            {
-                OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Visible = true;
-                OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-            }
-            else
-            {
-                OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Visible = false;
-                if (Environment.OSVersion.Version.Major > 6)
-                {
-                    OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device for Windows Media Player";
-                    OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                    OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-                }
+            bool IsWin8OrLater = (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor > 1));
 
-                if (!Environment.Is64BitOperatingSystem)
-                {
-                    OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = true;
-                    OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = false;
-                    OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = false;
-                }
-                else
-                {
-                    OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-                    OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
-                    OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = true;
-                }
+            RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
+            OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Visible = (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll");
+            CLSID.Close();
+
+            if (IsWin8OrLater)
+            {
+                OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
+                OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
             }
+
+            OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
+            OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = Environment.Is64BitOperatingSystem;
         }
 
 

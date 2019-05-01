@@ -47,7 +47,6 @@
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
-            this.SelectDebugPipe = new System.Windows.Forms.Button();
             this.BufStatus = new System.Windows.Forms.Label();
             this.BufStatusLabel = new System.Windows.Forms.Label();
             this.KDMAPI = new System.Windows.Forms.Label();
@@ -120,6 +119,7 @@
             this.COS = new System.Windows.Forms.Label();
             this.COSLabel = new System.Windows.Forms.Label();
             this.WinLogo = new System.Windows.Forms.PictureBox();
+            this.SelectDebugPipe = new System.Windows.Forms.Button();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyToClip1 = new System.Windows.Forms.Button();
             this.KSLogo = new System.Windows.Forms.PictureBox();
@@ -230,17 +230,6 @@
             this.SynthDbg.Size = new System.Drawing.Size(424, 170);
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
-            // 
-            // SelectDebugPipe
-            // 
-            this.SelectDebugPipe.BackColor = System.Drawing.Color.Transparent;
-            this.SelectDebugPipe.Location = new System.Drawing.Point(281, 223);
-            this.SelectDebugPipe.Name = "SelectDebugPipe";
-            this.SelectDebugPipe.Size = new System.Drawing.Size(147, 23);
-            this.SelectDebugPipe.TabIndex = 50;
-            this.SelectDebugPipe.Text = "Select debug pipe";
-            this.SelectDebugPipe.UseVisualStyleBackColor = false;
-            this.SelectDebugPipe.Click += new System.EventHandler(this.SelectDebugPipe_Click);
             // 
             // BufStatus
             // 
@@ -874,7 +863,6 @@
             // 
             this.CPULogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CPULogo.Cursor = System.Windows.Forms.Cursors.Help;
-            this.CPULogo.Image = global::OmniMIDIDebugWindow.Properties.Resources.unknown;
             this.CPULogo.Location = new System.Drawing.Point(389, 37);
             this.CPULogo.Name = "CPULogo";
             this.CPULogo.Size = new System.Drawing.Size(32, 32);
@@ -1083,12 +1071,22 @@
             // 
             this.WinLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.WinLogo.Cursor = System.Windows.Forms.Cursors.Help;
-            this.WinLogo.Image = global::OmniMIDIDebugWindow.Properties.Resources.unknown;
             this.WinLogo.Location = new System.Drawing.Point(389, 3);
             this.WinLogo.Name = "WinLogo";
             this.WinLogo.Size = new System.Drawing.Size(32, 32);
             this.WinLogo.TabIndex = 24;
             this.WinLogo.TabStop = false;
+            // 
+            // SelectDebugPipe
+            // 
+            this.SelectDebugPipe.BackColor = System.Drawing.Color.Transparent;
+            this.SelectDebugPipe.Location = new System.Drawing.Point(281, 223);
+            this.SelectDebugPipe.Name = "SelectDebugPipe";
+            this.SelectDebugPipe.Size = new System.Drawing.Size(147, 23);
+            this.SelectDebugPipe.TabIndex = 50;
+            this.SelectDebugPipe.Text = "Select debug pipe";
+            this.SelectDebugPipe.UseVisualStyleBackColor = false;
+            this.SelectDebugPipe.Click += new System.EventHandler(this.SelectDebugPipe_Click);
             // 
             // VersionLabel
             // 
@@ -1118,11 +1116,11 @@
             // KSLogo
             // 
             this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.KSLogo.Image = global::OmniMIDIDebugWindow.Properties.Resources.DebugIcon;
             this.KSLogo.Location = new System.Drawing.Point(9, 207);
             this.KSLogo.Name = "KSLogo";
             this.KSLogo.Size = new System.Drawing.Size(32, 32);
             this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.KSLogo.BackgroundImage = Properties.Resources.DebugIcon;
             this.KSLogo.TabIndex = 25;
             this.KSLogo.TabStop = false;
             // 

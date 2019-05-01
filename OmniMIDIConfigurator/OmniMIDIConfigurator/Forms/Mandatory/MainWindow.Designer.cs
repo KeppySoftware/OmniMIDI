@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OmniMIDIConfiguratorMain));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -211,7 +211,6 @@
             this.assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.OmniMapperCpl = new System.Windows.Forms.MenuItem();
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1 = new System.Windows.Forms.MenuItem();
             this.changeDefaultMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem13 = new System.Windows.Forms.MenuItem();
@@ -1786,7 +1785,7 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -2339,13 +2338,6 @@
             this.OmniMapperCpl.Visible = false;
             this.OmniMapperCpl.Click += new System.EventHandler(this.AMIDIMapCpl_Click);
             // 
-            // changeDefaultMIDIOutDeviceToolStripMenuItem1
-            // 
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Index = 5;
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Text = "Change default MIDI out device";
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Visible = false;
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1.Click += new System.EventHandler(this.changeDefaultMIDIOutDeviceToolStripMenuItem_Click);
-            // 
             // changeDefaultMIDIOutDeviceToolStripMenuItem
             // 
             this.changeDefaultMIDIOutDeviceToolStripMenuItem.Index = 6;
@@ -2381,7 +2373,6 @@
             this.openTheBlacklistManagerToolStripMenuItem,
             this.menuItem9,
             this.OmniMapperCpl,
-            this.changeDefaultMIDIOutDeviceToolStripMenuItem1,
             this.changeDefaultMIDIOutDeviceToolStripMenuItem,
             this.changeDefault64bitMIDIOutDeviceToolStripMenuItem,
             this.menuItem13,
@@ -3104,7 +3095,6 @@
         private System.Windows.Forms.MenuItem assignASoundfontListToASpecificAppToolStripMenuItemToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem9;
         public System.Windows.Forms.MenuItem OmniMapperCpl;
-        public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem1;
         public System.Windows.Forms.MenuItem changeDefaultMIDIOutDeviceToolStripMenuItem;
         public System.Windows.Forms.MenuItem changeDefault64bitMIDIOutDeviceToolStripMenuItem;
         private System.Windows.Forms.MenuItem menuItem13;
