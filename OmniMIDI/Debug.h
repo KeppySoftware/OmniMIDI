@@ -11,6 +11,30 @@ static std::mutex DebugMutex;
 static BOOL IntroAlreadyShown = FALSE;
 static BOOL InfoAlreadyGot = FALSE;
 
+double GetThreadUsage(Thread* Thread) {
+	if (!(WaitForSingleObject(Thread->ThreadHandle, 0) != WAIT_OBJECT_0)) return 0.0;
+
+	FILETIME ftime, fsys, fuser;
+	ULARGE_INTEGER now, sys, user;
+	double percent;
+
+	GetSystemTimeAsFileTime(&ftime);
+	memcpy(&now, &ftime, sizeof(FILETIME));
+
+	GetThreadTimes(Thread->ThreadHandle, &ftime, &ftime, &fsys, &fuser);
+	memcpy(&sys, &fsys, sizeof(FILETIME));
+	memcpy(&user, &fuser, sizeof(FILETIME));
+	percent = (sys.QuadPart - Thread->KernelCPU.QuadPart) +
+		(user.QuadPart - Thread->UserCPU.QuadPart);
+	percent /= (now.QuadPart - Thread->CPU.QuadPart);
+	percent /= CPUThreadsAvailable;
+	Thread->CPU = now;
+	Thread->UserCPU = user;
+	Thread->KernelCPU = sys;
+
+	return percent * 100;
+}
+
 std::wstring GetErrorAsString(DWORD ErrorID)
 {
 	//Get the error message, if any.
@@ -692,7 +716,7 @@ void PrintEventToDebugLog(DWORD dwParam) {
 	}
 }
 
-void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
+void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
 		char Msg[NTFS_MAX_PATH] = { 0 };
 
@@ -701,12 +725,12 @@ void PrintSysExMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Stage %s ", (IsRecognized ? "<<UnrecognizedSysEx>> | Unrecognized SysEx event:" : "<<ParsedSysEx>> | Parsed SysEx event:"));
+		sprintf(Msg, "Stage <<%s>> | %s long message: ", (IsRecognized ? "ParsedLongMsg" : "UnknownLongMsg"), (IsRecognized ? "Parsed" : "Unknown"));
 
 		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
 			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));
 
-		sprintf(Msg + strlen(Msg), " (Recorded bytes: %u)\n", IIMidiHdr->dwBytesRecorded);
+		sprintf(Msg + strlen(Msg), " (Recorded bytes: %u)", IIMidiHdr->dwBytesRecorded);
 
 		fprintf(stdout, Msg);
 		OutputDebugStringA(Msg);
@@ -817,9 +841,9 @@ MMRESULT DebugResult(MMRESULT ErrorToDisplay, LPCSTR ExactError) {
 			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
 			CurrentError(ErrorTitle, ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
 			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The specified alias was not found.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "The specified alias was not found.");
-			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "The handle of the specified device is invalid.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALHANDLE, "The handle of the specified device is invalid.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALFLAG, "An invalid flag was passed to modMessage through argument dwParam2.");
+			CurrentError(ErrorTitle, ErrorString, MMSYSERR_INVALPARAM, "An invalid parameter was passed to modMessage.");
 			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
 			CurrentError(ErrorTitle, ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
 			CurrentError(ErrorTitle, ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");

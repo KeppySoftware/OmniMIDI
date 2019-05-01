@@ -136,8 +136,8 @@ namespace OmniMIDIDebugWindow
 
                 DebugInfo.Enabled = true;
 
-                if (Program.ConnectToFirstAvailablePipe())
-                    DebugInfoCheck.RunWorkerAsync();
+                Program.ConnectToFirstAvailablePipe();
+                DebugInfoCheck.RunWorkerAsync();
             }
             catch (Exception ex)
             {
@@ -612,8 +612,12 @@ namespace OmniMIDIDebugWindow
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
         Int32 KDMAPIStatus = 0;
-        Double ASIOInLat = 0;
-        Double ASIOOutLat = 0;
+        Double ASIOInLat = 0.0f;
+        Double ASIOOutLat = 0.0f;
+        Double HealthThreadTime = 0.0f;
+        Double ATThreadTime = 0.0f;
+        Double EPThreadTime = 0.0f;
+        Double CookedThreadTime = 0.0f;
         // Int32 BufferOverload = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
@@ -629,6 +633,10 @@ namespace OmniMIDIDebugWindow
                     if (!ReadPipeBoolean(StreamDebugReader, "OMDirect", ref KDMAPIStatus)) KDMAPIStatus = 0;
                     if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
                     if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
+                    // if (!ReadPipeDouble(StreamDebugReader, "HealthThreadTime", ref HealthThreadTime)) HealthThreadTime = 0.0f;
+                    // if (!ReadPipeDouble(StreamDebugReader, "ATThreadTime", ref ATThreadTime)) ATThreadTime = 0.0f;
+                    // if (!ReadPipeDouble(StreamDebugReader, "EPThreadTime", ref EPThreadTime)) EPThreadTime = 0.0f;
+                    // if (!ReadPipeDouble(StreamDebugReader, "CookedThreadTime", ref CookedThreadTime)) CookedThreadTime = 0.0f;
                     // if (!ReadPipeBoolean(StreamDebugReader, "BufferOverload", ref BufferOverload)) BufferOverload = 0;
                     UpdateActiveVoicesPerChannel(StreamDebugReader, ClosingPipe);
                 }
@@ -642,6 +650,10 @@ namespace OmniMIDIDebugWindow
                     KDMAPIStatus = 0;
                     ASIOInLat = 0.0f;
                     ASIOOutLat = 0.0f;
+                    HealthThreadTime = 0.0f;
+                    ATThreadTime = 0.0f;
+                    EPThreadTime = 0.0f;
+                    CookedThreadTime = 0.0f;
                     // BufferOverload = 0;
                     UpdateActiveVoicesPerChannel(null, ClosingPipe);
                 }
@@ -793,8 +805,7 @@ namespace OmniMIDIDebugWindow
                 if (Program.DoesPipeStillExist(pipe))
                 {
                     Program.SelectedDebugVal = pipe;
-                    if (DebugInfoCheck.IsBusy) DebugInfoCheck.CancelAsync();
-                    else DebugInfoCheck.RunWorkerAsync();
+                    if (!DebugInfoCheck.IsBusy) DebugInfoCheck.RunWorkerAsync();
                 }
                 else MessageBox.Show("This debug pipe is not available anymore.", "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -804,33 +815,37 @@ namespace OmniMIDIDebugWindow
         NamedPipeClientStream PipeClient = null;
         private void DebugInfoCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", Program.SelectedDebugVal), PipeDirection.InOut, PipeOptions.Asynchronous))
+            if (Program.DoesPipeStillExist(Program.SelectedDebugVal))
             {
-                PipeClient.Connect();
-                if (PipeClient.IsConnected)
+                using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", Program.SelectedDebugVal), PipeDirection.InOut, PipeOptions.Asynchronous))
                 {
-                    using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
+                    PipeClient.Connect();
+                    if (PipeClient.IsConnected)
                     {
-                        try
+                        using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
                         {
-                            while (PipeClient.IsConnected)
+                            try
                             {
-                                if (DebugInfoCheck.CancellationPending) break;
-                                ParseInfoFromPipe(StreamDebugReader, false);
-                                System.Threading.Thread.Sleep(1);
+                                while (PipeClient.IsConnected)
+                                {
+                                    if (DebugInfoCheck.CancellationPending) break;
+                                    ParseInfoFromPipe(StreamDebugReader, false);
+                                    Thread.Sleep(1);
+                                }
+                                DebugInfoCheck.CancelAsync();
                             }
-                            DebugInfoCheck.CancelAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            // If something goes wrong, here's an error handler
-                            MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Application.ExitThread();
+                            catch (Exception ex)
+                            {
+                                // If something goes wrong, here's an error handler
+                                MessageBox.Show(ex.ToString() + "\n\nPress OK to stop the debug mode.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                Application.ExitThread();
+                            }
                         }
                     }
+                    else DebugInfoCheck.CancelAsync();
                 }
-                else DebugInfoCheck.CancelAsync();
             }
+            Thread.Sleep(100);
         }
 
         private void DebugInfoCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

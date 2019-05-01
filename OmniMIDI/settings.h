@@ -720,7 +720,14 @@ void FillContentDebug(
 	PipeContent += "\nOMDirect = " + std::to_string(KDMAPIStatus);
 	PipeContent += "\nASIOInLat = " + std::to_string(IL);
 	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
-	// PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
+
+	/*
+	PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
+	PipeContent += "\nHealthThreadTime = " + std::to_string(GetThreadUsage(&HealthThread));
+	PipeContent += "\nATThreadTime = " + std::to_string(GetThreadUsage(&ATThread));
+	PipeContent += "\nEPThreadTime = " + std::to_string(GetThreadUsage(&EPThread));
+	PipeContent += "\nCookedThreadTime = " + std::to_string(GetThreadUsage(&CookedThread));
+	*/
 
 	PipeContent += "\n\0";
 
@@ -757,6 +764,13 @@ void ParseDebugData() {
 			int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
 			if (temp != -1) cvvalues[i] = temp;
 		}
+
+		/*
+		ManagedDebugInfo.HealthThreadTime = GetThreadUsage(&HealthThread);
+		ManagedDebugInfo.ATThreadTime = GetThreadUsage(&ATThread);
+		ManagedDebugInfo.EPThreadTime = GetThreadUsage(&EPThread);
+		ManagedDebugInfo.CookedThreadTime = GetThreadUsage(&CookedThread);
+		*/
 	}
 	else {
 		RenderingTime = 0.0f;

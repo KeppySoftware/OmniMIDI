@@ -260,10 +260,12 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 
 		return TRUE;
 	}
-	else if (!AlreadyInitializedViaKDMAPI && bass_initialized)
-		PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
-	else
-		PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
+	else {
+		if (!AlreadyInitializedViaKDMAPI && bass_initialized)
+			PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
+		else
+			PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
+	}
 
 	return FALSE;
 }
@@ -342,13 +344,24 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 	// Do the stuff with it
-	SendLongToBASSMIDI(IIMidiHdr);
+	BOOL res = SendLongToBASSMIDI(IIMidiHdr);
 
 	// Mark the buffer as done
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 	IIMidiHdr->dwFlags |= MHDR_DONE;
 
 	// Tell the app that the buffer has been played
+	if (!res) {
+		char Msg[NTFS_MAX_PATH] = { 0 };
+
+		sprintf(Msg, "The long buffer (MIDIHDR) sent to OmniMIDI wasn't able to be recognized.\n\nUnrecognized sequence: ");
+
+		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
+			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));
+
+		return DebugResult(MMSYSERR_INVALPARAM, Msg);
+	}
+
 	return MMSYSERR_NOERROR;
 }
 
@@ -464,7 +477,8 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 		MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 		return FALSE;
 	}
-	else return FontLoader(Directory);
+	
+	return FontLoader(Directory);
 }
 
 DWORD64 KDMAPI timeGetTime64() {

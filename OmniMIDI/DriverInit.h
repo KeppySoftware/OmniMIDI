@@ -34,13 +34,42 @@ void MT32SetInstruments() {
 	}
 }
 
+/*
+DWORD WINAPI DebugParser(Thread* DPThread) {
+	PrintMessageToDebugLog("DebugParser", "Initializing debug pipe helper thread...");
+	while (DriverInitStatus) {
+		// Parse debug data, that's it...
+		ParseDebugData();
+		_FWAIT;
+	}
+	PrintMessageToDebugLog("DebugParser", "Closing debug pipe helper thread...");
+	CloseHandle(DPThread->ThreadHandle);
+	DPThread->ThreadHandle = NULL;
+	return 0;
+}
+*/
+
 DWORD WINAPI DebugPipe(LPVOID lpV) {
+	// Thread DPThread;
+
 	PrintMessageToDebugLog("DebugPipe", "Initializing debug pipe thread...");
 	while (true) {
-		// Wait for someone to connect to the pipe
-		while (ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED))
+		/*
+		// Check if parser is present
+		if (!DPThread.ThreadHandle)
 		{
-			// Parse the debug info (Active voices, rendering time etc..)
+			// Not present! Start it now.
+			PrintMessageToDebugLog("DebugPipe", "Opening debug helper thread...");
+			DPThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugParser, (LPVOID*)&DPThread, 0, (LPDWORD)DPThread.ThreadAddress);
+			SetThreadPriority(DPThread.ThreadHandle, THREAD_PRIORITY_NORMAL);
+			PrintMessageToDebugLog("DebugPipe", "Done!");
+		}
+		*/
+
+		// Wait for someone to connect to the pipe
+		while (ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED) /* && DPThread.ThreadHandle */)
+		{
+			// Parse debug data
 			ParseDebugData();
 
 			// Send the debug info to the pipes

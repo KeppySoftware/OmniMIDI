@@ -183,6 +183,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 			return FALSE;
 		}
 
+		SYSTEM_INFO sysInfo;
+		GetSystemInfo(&sysInfo);
+		CPUThreadsAvailable = sysInfo.dwNumberOfProcessors;
+
 		break;
 	}
 	case DLL_PROCESS_DETACH:

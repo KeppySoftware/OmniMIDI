@@ -76,13 +76,19 @@ typedef struct
 	DOUBLE ASIOInputLatency;
 	DOUBLE ASIOOutputLatency;
 
+	// Threads info
+	DOUBLE HealthThreadTime;
+	DOUBLE ATThreadTime;
+	DOUBLE EPThreadTime;
+	DOUBLE CookedThreadTime;
+
 	// Add more down here
 	// ------------------
 } DebugInfo;
 
 #ifdef KDMAPI_OMONLY
 // The settings struct, you can initialize it with the defaults value through by assigning DEFAULT_SETTINGS
-struct Settings
+typedef struct
 {
 	BOOL CapFramerate = FALSE;				// Cap input framerate
 	BOOL DelayNoteOff = FALSE;				// Delay note off events
@@ -125,7 +131,7 @@ struct Settings
 	DWORD OutputVolume = 10000;				// Volume
 	DWORD SincConv = 2;						// Sinc
 	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
-};
+} Settings;
 #endif
 
 #ifndef KDMAPI_ONLYSTRUCTS

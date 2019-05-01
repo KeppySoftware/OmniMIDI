@@ -195,13 +195,14 @@ void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
 	SendToBASSMIDI(dwParam1);
 }
 
-void __inline SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+BOOL __inline SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 	// The buffer doesn't exist or isn't ready
-	if (!IIMidiHdr && !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return;								
+	if (!IIMidiHdr && !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return FALSE;								
 
-	PrintSysExMessageToDebugLog(
-		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength),
-		IIMidiHdr);
+	BOOL rec = (BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength) != -1);
+	PrintLongMessageToDebugLog(rec, IIMidiHdr);
+
+	return rec;
 }
 
 // PBufData and PBufDataHyper have been merged,

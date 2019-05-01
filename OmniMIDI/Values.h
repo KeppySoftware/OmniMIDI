@@ -5,6 +5,8 @@
 #define DEVICE_AVAILABLE 1
 
 // Things
+static UINT CPUThreadsAvailable = 0;
+
 #define GETSTATUS(f) ((f & 0xFF) & 0xF0)
 #define GETVELOCITY(f) (f >> 16)
 #define GETNOTE(f) (((f >> 8) & 0xFF) - 0x7F)
@@ -91,6 +93,9 @@ typedef struct Thread
 {
 	HANDLE ThreadHandle = NULL;
 	ULONG ThreadAddress = NULL;
+	FILETIME Time, Kernel, User;
+	ULARGE_INTEGER CPU, KernelCPU, UserCPU;
+	BOOL DebugAvailable;					// <<<<<<<< USED INTERNALLY BY OMNIMIDI!
 };
 
 static BOOL bass_initialized = FALSE;
