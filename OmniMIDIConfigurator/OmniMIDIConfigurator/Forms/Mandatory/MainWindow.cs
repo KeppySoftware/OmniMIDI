@@ -1435,32 +1435,6 @@ namespace OmniMIDIConfigurator
             frm.Dispose();
         }
 
-        private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.DebugToConsole(false, "Opening the MIDI out setter x86.", null);
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\midioutsetter32.exe");
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
-            }
-        }
-
-        private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.DebugToConsole(false, "Opening the MIDI out setter x64.", null);
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\midioutsetter64.exe");
-            }
-            catch (Exception ex)
-            {
-                Functions.ShowErrorDialog(ErrorType.Error, System.Media.SystemSounds.Asterisk, "Error", "Error while opening the MIDI out setter.", true, ex);
-            }
-        }
-
         private void openUpdaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Control.ModifierKeys == Keys.Shift) UpdateSystem.CheckForUpdates(true, false, false);
@@ -2325,6 +2299,16 @@ namespace OmniMIDIConfigurator
             MixerBox.Visible = true;
             VolumeCheck.Enabled = true;
             Properties.Settings.Default.Save();
+        }
+
+        private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -534,6 +534,11 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        public static bool IsWindows8OrLater()
+        {
+            return (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor > 1));
+        }
+
         public static void SetDefaultDevice(int engine, int dev, string asiodev)
         {
             if (engine == AudioEngine.DSOUND_ENGINE || engine == AudioEngine.WASAPI_ENGINE)
@@ -544,22 +549,16 @@ namespace OmniMIDIConfigurator
             if (Properties.Settings.Default.LiveChanges) OmniMIDIConfiguratorMain.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
         }
 
-        public static void CheckMIDIMapper() // Check if the Alternative MIDI Mapper is installed
+        public static void CheckMIDIMapper() // Check if OmniMapper is installed
         {
-            bool IsWin8OrLater = (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor > 1));
-
             RegistryKey CLSID = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
-            OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Visible = (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll");
+            bool OmniMapperInstalled = (CLSID.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll");
             CLSID.Close();
 
-            if (IsWin8OrLater)
-            {
-                OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 32-bit";
-                OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Text = "Change default MIDI out device for Windows Media Player 64-bit";
-            }
-
-            OmniMIDIConfiguratorMain.Delegate.changeDefaultMIDIOutDeviceToolStripMenuItem.Visible = true;
-            OmniMIDIConfiguratorMain.Delegate.changeDefault64bitMIDIOutDeviceToolStripMenuItem.Visible = Environment.Is64BitOperatingSystem;
+            if (!OmniMapperInstalled)
+                OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Text = String.Format("Change the default {0} output", IsWindows8OrLater() ? "Windows Media Player MIDI" : "MIDI mapper");   
+            else
+                OmniMIDIConfiguratorMain.Delegate.OmniMapperCpl.Text = "Open the OmniMapper control panel";
         }
 
 

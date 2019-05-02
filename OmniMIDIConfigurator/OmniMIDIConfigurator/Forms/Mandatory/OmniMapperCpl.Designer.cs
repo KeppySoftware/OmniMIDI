@@ -37,7 +37,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 38);
+            this.label1.Location = new System.Drawing.Point(9, 36);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 13);
             this.label1.TabIndex = 0;
@@ -49,15 +49,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MIDIOutList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MIDIOutList.FormattingEnabled = true;
-            this.MIDIOutList.Location = new System.Drawing.Point(12, 56);
+            this.MIDIOutList.Location = new System.Drawing.Point(12, 54);
             this.MIDIOutList.Name = "MIDIOutList";
-            this.MIDIOutList.Size = new System.Drawing.Size(339, 21);
+            this.MIDIOutList.Size = new System.Drawing.Size(335, 21);
             this.MIDIOutList.TabIndex = 3;
             // 
             // ApplyBtn
             // 
             this.ApplyBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplyBtn.Location = new System.Drawing.Point(277, 83);
+            this.ApplyBtn.Location = new System.Drawing.Point(273, 80);
             this.ApplyBtn.Name = "ApplyBtn";
             this.ApplyBtn.Size = new System.Drawing.Size(75, 23);
             this.ApplyBtn.TabIndex = 4;
@@ -68,7 +68,7 @@
             // CurDevice
             // 
             this.CurDevice.AutoSize = true;
-            this.CurDevice.Location = new System.Drawing.Point(10, 14);
+            this.CurDevice.Location = new System.Drawing.Point(10, 12);
             this.CurDevice.Name = "CurDevice";
             this.CurDevice.Size = new System.Drawing.Size(108, 13);
             this.CurDevice.TabIndex = 5;
