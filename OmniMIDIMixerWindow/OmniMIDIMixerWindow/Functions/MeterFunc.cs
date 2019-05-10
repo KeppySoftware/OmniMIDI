@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace OmniMIDIMixerWindow
 {
@@ -6,7 +7,7 @@ namespace OmniMIDIMixerWindow
     {
         public static void ChangeMeter(int channel, int volume)
         {
-            TurnOnLEDs(channel, (int)(22 + ((volume - 32768) * (double)(0 - 22) / (0 - 32768))));
+            TurnOnLEDs(channel, (int)(22 + (volume - 32768) * (double)(0 - 22) / (0 - 32768)));
         }
 
         public static void ChangeStyle(Color TextColor, Color BackgroundColor, Color MeterTextColor, Color MeterBackgroundColor, Font FontFamily, Font MeterFontFamily)

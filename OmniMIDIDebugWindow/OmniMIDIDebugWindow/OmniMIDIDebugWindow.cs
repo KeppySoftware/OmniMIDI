@@ -806,6 +806,7 @@ namespace OmniMIDIDebugWindow
                 {
                     Program.SelectedDebugVal = pipe;
                     if (!DebugInfoCheck.IsBusy) DebugInfoCheck.RunWorkerAsync();
+                    else DebugInfoCheck.CancelAsync();
                 }
                 else MessageBox.Show("This debug pipe is not available anymore.", "OmniMIDI - Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

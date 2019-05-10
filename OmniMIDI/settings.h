@@ -16,7 +16,7 @@ void ResetSynth(BOOL SwitchingBufferMode) {
 
 void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 	// If the key isn't ready, open it again
-	if (hKey.Status != KEY_READY) {
+	if (!hKey.Address && hKey.Status != KEY_READY) {
 		// Open the key
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
@@ -26,18 +26,20 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 }
 
 void CloseRegistryKey(RegKey &hKey) {
-	// Try to flush the key
-	LSTATUS Action = RegFlushKey(hKey.Address);
-	// If the key can't be flushed, throw a crash
-	if (Action != ERROR_SUCCESS) CrashMessage("hKeyFlush");
+	if (hKey.Address && hKey.Status == KEY_READY) {
+		// Try to flush the key
+		LSTATUS Action = RegFlushKey(hKey.Address);
+		// If the key can't be flushed, throw a crash
+		if (Action != ERROR_SUCCESS) CrashMessage("hKeyFlush");
 
-	// Try to close the key
-	Action = RegCloseKey(hKey.Address);
-	// If the key can't be closed, throw a crash
-	if (Action != ERROR_SUCCESS) CrashMessage("hKeyClose");
+		// Try to close the key
+		Action = RegCloseKey(hKey.Address);
+		// If the key can't be closed, throw a crash
+		if (Action != ERROR_SUCCESS) CrashMessage("hKeyClose");
 
-	// Everything is fine, mark the key as closed
-	hKey.Status = KEY_CLOSED;
+		// Everything is fine, mark the key as closed
+		hKey.Status = KEY_CLOSED;
+	}
 }
 
 BOOL CloseThread(HANDLE thread) {

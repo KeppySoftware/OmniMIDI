@@ -331,7 +331,6 @@ namespace OmniMIDIMixerWindow
             {
                 MessageBox.Show("Can not write settings to the registry!\n\nPress OK to quit.\n\n.NET error:\n" + ex.Message.ToString(), "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-            System.Threading.Thread.Sleep(1);
         }
 
         private void showTheConfiguratorWindowToolStripMenuItem_Click(object sender, EventArgs e)

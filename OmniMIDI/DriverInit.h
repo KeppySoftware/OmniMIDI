@@ -595,8 +595,17 @@ BOOL InitializeBASSLibrary() {
 	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
 	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
-	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, (isds ? BASS_DEVICE_LATENCY : 0) | flags, 0, NULL);
+	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, (isds ? (BASS_DEVICE_LATENCY | BASS_DEVICE_CPSPEAKERS) : 0) | flags, GetActiveWindow(), NULL);
 	CheckUp(FALSE, ERRORCODE, L"BASS Lib Initialization", TRUE);
+
+	/*
+	if (isds) {
+		IDirectSound* ds = (IDirectSound*)BASS_GetDSoundObject(BASS_OBJECT_DS);
+		CheckUp(FALSE, ERRORCODE, L"BASS Get DSound Object", TRUE);
+
+		if (ds) IDirectSound_SetSpeakerConfig(ds, DSSPEAKER_STEREO);
+	}
+	*/
 
 	//load_bassaddons();
 
@@ -831,7 +840,7 @@ bool InitializeBASS(BOOL restart) {
 		if (!ApplyStreamSettings()) return FALSE;
 
 		// Enable the volume knob in the configurator
-		PrepareVolumeKnob();
+		if (ManagedSettings.CurrentEngine != AUDTOWAV) PrepareVolumeKnob();
 		
 		// Apply LoudMax, if requested
 		InitializeBASSVST();
