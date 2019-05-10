@@ -16,7 +16,7 @@ void ResetSynth(BOOL SwitchingBufferMode) {
 
 void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 	// If the key isn't ready, open it again
-	if (!hKey.Address && hKey.Status != KEY_READY) {
+	if (hKey.Status != KEY_READY) {
 		// Open the key
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
@@ -26,7 +26,7 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 }
 
 void CloseRegistryKey(RegKey &hKey) {
-	if (hKey.Address && hKey.Status == KEY_READY) {
+	if (hKey.Address) {
 		// Try to flush the key
 		LSTATUS Action = RegFlushKey(hKey.Address);
 		// If the key can't be flushed, throw a crash
