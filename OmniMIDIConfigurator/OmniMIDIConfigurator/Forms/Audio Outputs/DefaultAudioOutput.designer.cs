@@ -31,6 +31,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.DefOut = new System.Windows.Forms.Label();
             this.Quit = new System.Windows.Forms.Button();
+            this.SwitchDefaultAudio = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // DevicesList
@@ -71,12 +72,24 @@
             this.Quit.UseVisualStyleBackColor = true;
             this.Quit.Click += new System.EventHandler(this.Quit_Click);
             // 
+            // SwitchDefaultAudio
+            // 
+            this.SwitchDefaultAudio.AutoSize = true;
+            this.SwitchDefaultAudio.Location = new System.Drawing.Point(13, 68);
+            this.SwitchDefaultAudio.Name = "SwitchDefaultAudio";
+            this.SwitchDefaultAudio.Size = new System.Drawing.Size(221, 17);
+            this.SwitchDefaultAudio.TabIndex = 4;
+            this.SwitchDefaultAudio.Text = "Switch default audio device automatically";
+            this.SwitchDefaultAudio.UseVisualStyleBackColor = true;
+            this.SwitchDefaultAudio.CheckedChanged += new System.EventHandler(this.SwitchDefaultAudio_CheckedChanged);
+            // 
             // DefaultOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(394, 98);
+            this.Controls.Add(this.SwitchDefaultAudio);
             this.Controls.Add(this.Quit);
             this.Controls.Add(this.DefOut);
             this.Controls.Add(this.label1);
@@ -84,7 +97,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "OmniMIDIDefaultOutput";
+            this.Name = "DefaultOutput";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -101,5 +114,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label DefOut;
         private System.Windows.Forms.Button Quit;
+        private System.Windows.Forms.CheckBox SwitchDefaultAudio;
     }
 }

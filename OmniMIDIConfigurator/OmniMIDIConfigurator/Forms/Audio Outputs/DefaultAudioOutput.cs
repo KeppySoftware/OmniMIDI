@@ -29,29 +29,20 @@ namespace OmniMIDIConfigurator
                 else Text = String.Format(Text, "DirectSound");
 
                 int selecteddeviceprev = (int)OmniMIDIConfiguratorMain.SynthSettings.GetValue("AudioOutput", 0);
+                SwitchDefaultAudio.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FollowDefaultAudioDevice", 0));
+
                 BASS_DEVICEINFO info = new BASS_DEVICEINFO();
                 DevicesList.Items.Add("Default Windows audio output");
                 Bass.BASS_GetDeviceInfo(selecteddeviceprev - 1, info);
                 Bass.BASS_GetDeviceInfo(-1, info);
+
                 if (selecteddeviceprev < 1)
-                {
                     DefOut.Text = String.Format("Def. Windows audio output: Default Windows audio output", info.ToString());
-                }
                 else
-                {
-                    if (info.ToString() == "")
-                    {
-                        DefOut.Text = String.Format("Def. Windows audio output: No devices have been found", info.ToString());
-                    }
-                    else
-                    {
-                        DefOut.Text = String.Format("Def. Windows audio output: {0}", info.ToString());
-                    }
-                }
+                    DefOut.Text = String.Format("Def. Windows audio output: {0}", (info.ToString() == "") ? "No devices have been found" : info.ToString());
+
                 for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
-                {
                     DevicesList.Items.Add(info.ToString());
-                }
 
                 try { DevicesList.SelectedIndex = selecteddeviceprev; }
                 catch { DevicesList.SelectedIndex = 0; }
@@ -69,6 +60,11 @@ namespace OmniMIDIConfigurator
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
             Functions.SetDefaultDevice(AudioEngine.DSOUND_OR_WASAPI, DevicesList.SelectedIndex, null);
+        }
+
+        private void SwitchDefaultAudio_CheckedChanged(object sender, EventArgs e)
+        {
+            OmniMIDIConfiguratorMain.SynthSettings.SetValue("FollowDefaultAudioDevice", SwitchDefaultAudio.Checked, Microsoft.Win32.RegistryValueKind.DWord);
         }
 
         private void Quit_Click(object sender, EventArgs e)

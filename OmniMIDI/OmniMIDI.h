@@ -131,6 +131,8 @@ typedef struct
 	DWORD OutputVolume = 10000;				// Volume
 	DWORD SincConv = 2;						// Sinc
 	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
+
+	BOOL FollowDefaultAudioDevice = FALSE;	// Follow the default audio device whenever it's changed
 } Settings;
 #endif
 

@@ -595,6 +595,13 @@ BOOL InitializeBASSLibrary() {
 	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
 	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
+
+	if (isds && ManagedSettings.FollowDefaultAudioDevice) {
+		// If the audio output is set to -1 (Default device),
+		// force BASS to follow Windows' default device whenever it's changed
+		if (AudioOutput == -1) BASS_SetConfig(BASS_CONFIG_DEV_DEFAULT, 1);
+	}
+
 	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, (isds ? (BASS_DEVICE_LATENCY | BASS_DEVICE_CPSPEAKERS) : 0) | flags, GetActiveWindow(), NULL);
 	CheckUp(FALSE, ERRORCODE, L"BASS Lib Initialization", TRUE);
 
