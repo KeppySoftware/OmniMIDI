@@ -156,6 +156,7 @@ BOOL DoStopClient() {
 
 		// Close the threads and free up the allocated memory
 		PrintMessageToDebugLog("StopDriver", "Freeing memory...");
+		bass_initialized = FALSE;
 		FreeFonts();
 		FreeUpStream();
 		CloseThreads(TRUE);
@@ -177,7 +178,6 @@ BOOL DoStopClient() {
 		// OK now it's fine
 		PrintMessageToDebugLog("StopDriver", "Just a few more things...");
 		block_bassinit = FALSE;
-		bass_initialized = FALSE;
 
 		// Unload BASS functions
 		UnloadBASSFunctions();
@@ -291,18 +291,15 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 }
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
-	if (!IIMidiHdr) {
-		PrintMessageToDebugLog("PrepareLongData", "The buffer doesn't exist, or hasn't been allocated.");
-		return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// Buffer doesn't exist
-	}
-	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE) {
-		PrintMessageToDebugLog("PrepareLongData", "The given stream buffer is greater than 64K.");
-		return DebugResult(MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");			// Buffer is bigger than 64K
-	}
-	if (IIMidiHdr->dwFlags & MHDR_PREPARED) {
-		PrintMessageToDebugLog("PrepareLongData", "The buffer is already prepared.");
-		return MMSYSERR_NOERROR;																			// Already prepared, everything is fine
-	}
+	// Check if the MIDIHDR buffer is valid
+	if (!IIMidiHdr)										// Buffer doesn't exist
+		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
+
+	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)	// Buffer is bigger than 64K
+		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
+
+	if (IIMidiHdr->dwFlags & MHDR_PREPARED)				// Already prepared, everything is fine
+		return DebugResult("PrepareLongData", MMSYSERR_NOERROR, "The buffer is already prepared.");
 
 	// Mark the buffer as prepared, and say that everything is oki-doki
 	PrintMessageToDebugLog("PrepareLongData", "Marking as prepared...");
@@ -314,30 +311,33 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!IIMidiHdr) {
-		PrintMessageToDebugLog("UnprepareLongData", "The buffer doesn't exist, or hasn't been allocated.");
-		return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// The buffer doesn't exist, invalid parameter
-	}
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) {
-		PrintMessageToDebugLog("UnprepareLongData", "The buffer is already unprepared.");
-		return MMSYSERR_NOERROR;																			// Already unprepared, everything is fine
-	}
-	if (IIMidiHdr->dwFlags & MHDR_INQUEUE) {
-		PrintMessageToDebugLog("UnprepareLongData", "The buffer is still in queue.");
-		return DebugResult(MIDIERR_STILLPLAYING, "The buffer is still in queue.");							// The buffer is currently being played from the driver, cannot unprepare
-	}
+	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
+		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED))	// Already unprepared, everything is fine
+		return DebugResult("UnprepareLongData", MMSYSERR_NOERROR, "The buffer is already unprepared.");
+
+	if (IIMidiHdr->dwFlags & MHDR_INQUEUE)		// The buffer is currently being played from the driver, cannot unprepare
+		return DebugResult("UnprepareLongData", MIDIERR_STILLPLAYING, "The buffer is still in queue.");
+
+	// Mark the buffer as unprepared
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
-	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;																	// Mark the buffer as unprepared
+	IIMidiHdr->dwFlags &= ~MHDR_PREPARED;
 
 	PrintMessageToDebugLog("UnprepareLongData", "Function succeded.");
 	return MMSYSERR_NOERROR;
 }
 
 MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
-	if (!bass_initialized) return DebugResult(MIDIERR_NOTREADY, "BASS hasn't been initialized yet");					// The driver isn't ready
-	if (!IIMidiHdr) return DebugResult(MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");		// The buffer doesn't exist, invalid parameter
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return DebugResult(MIDIERR_UNPREPARED, "The buffer is not prepared");	// The buffer is not prepared
+	// Check if the MIDIHDR buffer is valid and if the stream is alive
+	if (!bass_initialized)						// The driver isn't ready
+		return DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
+
+	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
+		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
+
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED))	// The buffer is not prepared
+		return DebugResult("SendDirectLongData", MIDIERR_UNPREPARED, "The buffer is not prepared");
 
 	// Mark the buffer as in queue
 	IIMidiHdr->dwFlags &= ~MHDR_DONE;
@@ -359,7 +359,7 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
 			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));
 
-		return DebugResult(MMSYSERR_INVALPARAM, Msg);
+		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, Msg);
 	}
 
 	return MMSYSERR_NOERROR;

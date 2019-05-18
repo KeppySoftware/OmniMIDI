@@ -306,7 +306,7 @@ MMRESULT __inline ParseData(DWORD dwParam1) {
 		return MMSYSERR_NOERROR;
 
 	// The buffer is not ready yet
-	if (!EVBuffer.Buffer) return DebugResult(MIDIERR_NOTREADY, "The events buffer isn't ready yet!");
+	if (!EVBuffer.Buffer) return DebugResult("ParseData", MIDIERR_NOTREADY, "The events buffer isn't ready yet!");
 
 	// Prepare the event in the buffer
 
