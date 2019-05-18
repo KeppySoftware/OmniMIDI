@@ -65,7 +65,7 @@ void DLLLoadError(LPWSTR dll) {
 
 	// Print to log
 	PrintCurrentTime();
-	fprintf(stdout, "ERROR | Unable to load the following DLL: %s\n", dll);
+	if (DebugLog) fprintf(DebugLog, "ERROR | Unable to load the following DLL: %s\n", dll);
 
 	// Show error message
 	swprintf_s(Error, L"An error has occurred while loading the following library: %s\n\nClick OK to close the program.", dll);

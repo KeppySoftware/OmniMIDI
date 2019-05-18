@@ -137,7 +137,7 @@ void CrashMessage(LPCSTR part) {
 	std::wstringstream ErrorMessage;
 	DWORD ErrorID = GetLastError();
 
-	fprintf(stdout, "(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
+	fprintf(DebugLog, "(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
 
 	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
 	if (ErrorID != 0) {
@@ -413,9 +413,9 @@ bool GetVersionInfo(
 
 void CreateConsole() {
 	if (!IntroAlreadyShown) {
-		TCHAR MainLibrary[MAX_PATH];
-		TCHAR DebugDir[MAX_PATH];
-		TCHAR CurrentTime[MAX_PATH];
+		TCHAR MainLibrary[NTFS_MAX_PATH];
+		TCHAR DebugDir[NTFS_MAX_PATH];
+		TCHAR CurrentTime[NTFS_MAX_PATH];
 
 		if (!DisableChime)
 		{
@@ -427,48 +427,50 @@ void CreateConsole() {
 		GetAppName();
 
 		// Get user profile's path
-		SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, DebugDir);
+		SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, DebugDir);
 
 		// Append "\OmniMIDI\debug\" to "%userprofile%"
-		wcscat_s(DebugDir, MAX_PATH, L"\\OmniMIDI\\debug\\");
+		wcscat_s(DebugDir, NTFS_MAX_PATH, L"\\OmniMIDI\\debug\\");
 
 		// Create "%userprofile%\OmniMIDI\debug\", in case it doesn't exist
-		CreateDirectory(DebugDir, NULL);
+		CreateDirectoryW(DebugDir, NULL);
 
 		// Append the app's filename to the output file's path
-		wcscat_s(DebugDir, MAX_PATH, AppNameW);
+		wcscat_s(DebugDir, NTFS_MAX_PATH, AppNameW);
 
 		// Parse current time, and append it
 		struct tm *sTm;
 		time_t now = time(0);
 		sTm = gmtime(&now);
 		wcsftime(CurrentTime, sizeof(CurrentTime), L" - %d-%m-%Y %H.%M.%S", sTm);
-		wcscat_s(DebugDir, MAX_PATH, CurrentTime);
+		wcscat_s(DebugDir, NTFS_MAX_PATH, CurrentTime);
 
 		// Append file extension, and that's it
-		wcscat_s(DebugDir, MAX_PATH, _T(" (Debug output).txt"));
+		wcscat_s(DebugDir, NTFS_MAX_PATH, _T(" (Debug output).txt"));
 
 		// Parse OmniMIDI's current version
-		GetModuleFileName(hinst, MainLibrary, MAX_PATH);
-		PathRemoveFileSpec(MainLibrary);
-		wcscat_s(MainLibrary, MAX_PATH, L"\\OmniMIDI.dll");
+		GetModuleFileNameW(hinst, MainLibrary, NTFS_MAX_PATH);
+		PathRemoveFileSpecW(MainLibrary);
+		wcscat_s(MainLibrary, NTFS_MAX_PATH, L"\\OmniMIDI.dll");
 		int major, minor, build, revision;
 		GetVersionInfo(MainLibrary, major, minor, build, revision);
 
 		// Open the debug output's file
-		if (ManagedSettings.DebugMode == 1)
-			_wfreopen(DebugDir, L"w", stdout);
-		else
-			fprintf(stdout, "Enabled file-less debug log.\n\n");
+		if (ManagedSettings.DebugMode)
+		{
+			DebugLog = _wfopen(DebugDir, L"a+");
 
-		std::lock_guard<std::mutex> lock(DebugMutex);
+			std::lock_guard<std::mutex> lock(DebugMutex);
 
-		// Begin writing to it
-		fprintf(stdout, "Those who cannot change their minds cannot change anything.\n\n");
-		fprintf(stdout, "OmniMIDI %d.%d.%d CR%d (KDMAPI %d.%d.%d, Revision %d)\n", major, minor, build, revision, CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
-		fprintf(stdout, "%d threads available to the ASIO engine\n", std::thread::hardware_concurrency());
-		fprintf(stdout, "Copyright(C) 2013 - KaleidonKep99\n\n");
-		IntroAlreadyShown = TRUE;
+			// Begin writing to it
+			fprintf(DebugLog, "Those who cannot change their minds cannot change anything.\n\n");
+			fprintf(DebugLog, "OmniMIDI %d.%d.%d ", major, minor, build);
+			if (revision) fprintf(DebugLog, "CR%d ", revision);
+			fprintf(DebugLog, "(KDMAPI %d.%d.%d, Revision %d)\n", CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
+			fprintf(DebugLog, "%d threads available to the ASIO engine\n", std::thread::hardware_concurrency());
+			fprintf(DebugLog, "Copyright(C) 2013 - KaleidonKep99\n\n");
+			IntroAlreadyShown = TRUE;
+		}
 	}
 }
 
@@ -494,7 +496,7 @@ void PrintCurrentTime() {
 	FileTimeToSystemTime(&ltime, &stime); //convert in system time and store in stime
 
 	// Print to log
-	fprintf(stdout, "%02d-%02d-%04d %02d:%02d:%02d.%03d - ",
+	fprintf(DebugLog, "%02d-%02d-%04d %02d:%02d:%02d.%03d - ",
 		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
 }
 
@@ -522,11 +524,11 @@ void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam
 			}
 		}
 	
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -542,11 +544,11 @@ void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Library <<%s>> | %s\n", LibraryA, Status);
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -564,11 +566,11 @@ void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<NewSFLoader>> | SoundFont \"%s\" -> %s\n", SoundFontNameA, Status);
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -582,11 +584,11 @@ void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<%s>> | %s\n", Stage, Status);
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -600,11 +602,11 @@ void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<%s>> | %s: %d\n", Stage, ValueName, Value);
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -618,11 +620,11 @@ void PrintBASSErrorMessageToDebugLog(LPCWSTR ErrorTitle, LPCWSTR ErrorDesc) {
 		// Print to log
 		PrintCurrentTime();
 		swprintf(Msg, L"BASS error <<%s>> encountered | %s\n", ErrorTitle, ErrorDesc);
-		fwprintf(stdout, Msg);
+		fwprintf(DebugLog, Msg);
 		OutputDebugStringW(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -636,11 +638,11 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<%s>> | %s: %u\n", Stage, Status, Memory);
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -655,11 +657,11 @@ void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD Flags
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<%s>> | HMIDI: %08X - dwCallback: %08X - dwInstance: %08X - OMFlags: %08X\n", Stage, MIDIOD->hMidi, MIDIOD->dwCallback, MIDIOD->dwInstance, Flags);
 
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -688,11 +690,11 @@ void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 
 		sprintf(Msg + strlen(Msg), " (Recorded bytes: %u)\n", IIMidiHdr->dwBytesRecorded);
 
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -708,11 +710,11 @@ void PrintEventToDebugLog(DWORD dwParam) {
 		sprintf(Msg, "Stage <<MIDIEvent | %08X>> | Event ID: 0x%X, Channel: %u, Note: %u, Velocity: %u\n", 
 			dwParam, dwParam & 0xFF, GETCHANNEL(dwParam), GETVELOCITY(dwParam), GETNOTE(dwParam));
 
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 
@@ -730,13 +732,13 @@ void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
 			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));
 
-		sprintf(Msg + strlen(Msg), " (Recorded bytes: %u)", IIMidiHdr->dwBytesRecorded);
+		sprintf(Msg + strlen(Msg), " (Recorded bytes: %u)\n", IIMidiHdr->dwBytesRecorded);
 
-		fprintf(stdout, Msg);
+		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
 		// Flush buffer
-		fflush(stdout);
+		fflush(DebugLog);
 	}
 }
 

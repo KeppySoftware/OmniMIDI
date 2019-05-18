@@ -136,6 +136,7 @@ typedef struct SoundFontList
 	int XGBankMode;
 };
 
+static FILE* DebugLog = NULL;
 static BOOL SettingsManagedByClient;
 static FLOAT RenderingTime = 0.0f;
 static Settings ManagedSettings = Settings();
