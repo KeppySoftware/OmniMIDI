@@ -35,33 +35,47 @@ LONGLONG FileSize(const wchar_t* name)
 	return (LONGLONG)size.QuadPart;
 }
 
-static void SoundFontError(LPCWSTR Cause, LPCWSTR Path) {
+static void SoundFontError(LPWSTR Cause, LPCWSTR Path) {
 	TCHAR Message[NTFS_MAX_PATH];
 	RtlZeroMemory(Message, sizeof(Message));
 	wsprintf(Message, L"%s\n\nAffected SoundFont: %s\n\nSolution:\nThe soundfont might be of an unknown format, its functions might be unsupported by BASSMIDI, or it might not exist in memory.\nPlease check if the path to the soundfont is correct, and ultimately check if the functions (If using a SFZ soundfont) are supported by BASSMIDI.\nIf they're not, contact Ian Luck about the issue at Un4seen forums.\n\nThe soundfont will not be loaded. Press OK to continue the loading process.", Cause, Path);
 	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
 }
 
-static void SoundFontTooBig(LPCWSTR Path) {
+static void SoundFontTooBig(LPWSTR Path) {
 	TCHAR Message[NTFS_MAX_PATH];
 	RtlZeroMemory(Message, sizeof(Message));
 	wsprintf(Message, L"The SoundFont is too big for this 32-bit app to load!\n\nAffected SoundFont: %s\n\nSolution:\nSwitch to the 64-bit version of this app (if it exists), or switch to another MIDI app that offers a 64-bit release.\n\nThe SoundFont will not be preloaded. Press OK to continue the loading process.", Path);
 	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONWARNING);
 }
 
-static BOOL FontLoader(LPCWSTR in_path) {
-	try {
-		if (in_path == NULL && *in_path == NULL) return FALSE;
+static BOOL FontLoader(LPWSTR in_path) {
+	PrintMessageToDebugLog("NewSFLoader", "A...");
 
-		LPCWSTR Extension = PathFindExtension(in_path);
+	try {
+		PrintMessageToDebugLog("NewSFLoader", "Preparing FontLoader...");
+
+		if (!in_path && !*in_path) {
+			PrintMessageToDebugLog("NewSFLoader", "Invalid path passed to function. No SF loaded.");
+			return FALSE;
+		}
+
+		PrintMessageToDebugLog("NewSFLoader", "Getting extension of path passed to FontLoader...");
+		LPWSTR Extension = PathFindExtensionW(in_path);
+		PrintMessageToDebugLog("NewSFLoader", "Path has been parsed...");
+
+		PrintMessageToDebugLog("NewSFLoader", "Checking if it's a SoundFont or a list...");
 		if (!_wcsicmp(Extension, _T(".sf2")) ||
 			!_wcsicmp(Extension, _T(".sf2pack")) ||
 			!_wcsicmp(Extension, _T(".sfz")))
 		{
+			PrintMessageToDebugLog("NewSFLoader", "It's a SoundFont. Initializing...");
+
 			SoundFontList TempItem;
 			ZeroMemory(TempItem.Path, sizeof(TempItem.Path));
 			wcsncpy(TempItem.Path, in_path, NTFS_MAX_PATH);
 
+			PrintMessageToDebugLog("NewSFLoader", "Checking if list exists...");
 			if (PathFileExists(in_path))
 			{
 				TempItem.SourcePreset = -1;
@@ -100,10 +114,9 @@ static BOOL FontLoader(LPCWSTR in_path) {
 		else if (!_wcsicmp(Extension, _T(".omlist")))
 		{
 			// Open file
-
 			PrintMessageToDebugLog("NewSFLoader", "Opening SoundFont list...");
 			wchar_t *end;
-			std::vector<SoundFontList> TempSoundFonts;
+			std::vector<SoundFontList> *TempSoundFonts = new std::vector<SoundFontList>;
 			std::wifstream SFList(in_path);
 
 			if (SFList) {
@@ -149,7 +162,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 						// We've found the enable state! Crush it!
 						AlreadyInitialized = FALSE;
-						TempSoundFonts.push_back(TempSF);
+						TempSoundFonts->push_back(TempSF);
 
 						PrintMessageToDebugLog("NewSFLoader", "Ended loading SF. Searching for a new one...");
 						continue;
@@ -231,7 +244,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 
 				if (AlreadyInitialized) {
 					AlreadyInitialized = FALSE;
-					TempSoundFonts.push_back(TempSF);
+					TempSoundFonts->push_back(TempSF);
 				}
 			}
 			else return FALSE;
@@ -239,7 +252,7 @@ static BOOL FontLoader(LPCWSTR in_path) {
 			// Free fonts, to prepare the arrays
 			FreeFonts();
 
-			for (auto CurrentSF = TempSoundFonts.begin(); CurrentSF != TempSoundFonts.end(); ++CurrentSF)
+			for (auto CurrentSF = TempSoundFonts->begin(); CurrentSF != TempSoundFonts->end(); ++CurrentSF)
 			{
 				if (!CurrentSF->EnableState) {
 					PrintSoundFontToDebugLog(CurrentSF->Path, "SoundFont disabled, skipping to next one...");
@@ -296,6 +309,9 @@ static BOOL FontLoader(LPCWSTR in_path) {
 			BASS_MIDI_StreamSetFonts(OMStream, &SoundFontPresets[0], (DWORD)SoundFontPresets.size() | BASS_MIDI_FONT_EX);
 
 			PrintMessageToDebugLog("NewSFLoader", "SoundFont(s) loaded into memory.");
+			assert(TempSoundFonts != NULL);
+			delete(TempSoundFonts);
+
 			return TRUE;
 		}
 

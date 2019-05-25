@@ -1,6 +1,6 @@
 /*
-	BASSASIO 1.3 C/C++ header file
-	Copyright (c) 2005-2018 Un4seen Developments Ltd.
+	BASSASIO 1.4 C/C++ header file
+	Copyright (c) 2005-2019 Un4seen Developments Ltd.
 
 	See the BASSASIO.CHM file for more detailed documentation
 */
@@ -18,12 +18,13 @@ extern "C" {
 #define BASSASIODEF(f) WINAPI f
 #endif
 
-#define BASSASIOVERSION 0x103	// API version
+#define BASSASIOVERSION 0x104	// API version
 
 // error codes returned by BASS_ASIO_ErrorGetCode
 #define BASS_OK				0	// all is OK
 #define BASS_ERROR_FILEOPEN	2	// can't open the file
 #define BASS_ERROR_DRIVER	3	// can't find a free/valid driver
+#define BASS_ERROR_HANDLE	5	// invalid handle
 #define BASS_ERROR_FORMAT	6	// unsupported sample format
 #define BASS_ERROR_INIT		8	// BASS_ASIO_Init has not been successfully called
 #define BASS_ERROR_START	9	// BASS_ASIO_Start has/hasn't been called
@@ -113,7 +114,7 @@ BOOL BASSASIODEF(BASS_ASIO_GetDeviceInfo)(DWORD device, BASS_ASIO_DEVICEINFO *in
 DWORD BASSASIODEF(BASS_ASIO_AddDevice)(const GUID *clsid, const char *driver, const char *name);
 BOOL BASSASIODEF(BASS_ASIO_SetDevice)(DWORD device);
 DWORD BASSASIODEF(BASS_ASIO_GetDevice)();
-BOOL BASSASIODEF(BASS_ASIO_Init)(DWORD device, DWORD flags);
+BOOL BASSASIODEF(BASS_ASIO_Init)(int device, DWORD flags);
 BOOL BASSASIODEF(BASS_ASIO_Free)();
 BOOL BASSASIODEF(BASS_ASIO_Lock)(BOOL lock);
 BOOL BASSASIODEF(BASS_ASIO_SetNotify)(ASIONOTIFYPROC *proc, void *user);

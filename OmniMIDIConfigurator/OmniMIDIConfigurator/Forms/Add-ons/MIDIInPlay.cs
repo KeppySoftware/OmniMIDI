@@ -25,7 +25,6 @@ namespace OmniMIDIConfigurator
         public MIDIInPlay()
         {
             InitializeComponent();
-            DeviceCount = WinMM.midiInGetNumDevs();
         }
 
         private void SetLastEvent(String EventName, Boolean Failed)
@@ -73,6 +72,7 @@ namespace OmniMIDIConfigurator
         private void MIDIInPlay_Load(object sender, EventArgs e)
         {
             // Check count
+            DeviceCount = WinMM.midiInGetNumDevs();
             if (DeviceCount < 1)
             {
                 // None available, close
@@ -82,8 +82,7 @@ namespace OmniMIDIConfigurator
             }
 
             // Initialize KDMAPI
-            if (Convert.ToBoolean(KDMAPI.IsKDMAPIAvailable())) KDMAPI.InitializeKDMAPIStream();
-            else
+            if (Convert.ToBoolean(KDMAPI.InitializeKDMAPIStream()))
             {
                 MessageBox.Show("Unable to initialize KDMAPI.", "OmniMIDI - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
@@ -94,6 +93,7 @@ namespace OmniMIDIConfigurator
 
             // Initialize MIDI inputs list
             MIDIINCAPS InCaps = new MIDIINCAPS();
+            MIDIInList.Items.Clear();
             for (uint i = 0; i < DeviceCount; i++)
             {
                 WinMM.midiInGetDevCaps(i, out InCaps, (uint)Marshal.SizeOf(InCaps));
@@ -133,22 +133,19 @@ namespace OmniMIDIConfigurator
         {
             if (handle != IntPtr.Zero && WhenItGotReceived != null)
             {
-                if (WhenItGotReceived != null)
-                {
-                    ActivityPanel.BackColor = (WhenItGotReceived.ElapsedMilliseconds < 200) ? Color.DarkGreen : Color.DarkOrange;
-                    ActivityLabel.Text = String.Format("Received {0}.", LastEvent);
-                }
-                else
-                {
-                    ActivityPanel.BackColor = Color.DarkRed;
-                    ActivityLabel.Text = "No activity.";
-                }
+                ActivityPanel.BackColor = (WhenItGotReceived.ElapsedMilliseconds < 200) ? Color.DarkGreen : Color.DarkOrange;
+                ActivityLabel.Text = String.Format("Received {0}.", LastEvent);
             }
             else
             {
                 ActivityPanel.BackColor = Color.DarkRed;
-                ActivityLabel.Text = "zZᶻ⋯";
+                ActivityLabel.Text = "Inactive.";
             }
+        }
+
+        private void RefreshInputs_Click(object sender, EventArgs e)
+        {
+            MIDIInPlay_Load(sender, e);
         }
     }
 }

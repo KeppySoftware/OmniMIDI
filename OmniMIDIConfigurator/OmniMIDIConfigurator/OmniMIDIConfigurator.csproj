@@ -96,6 +96,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\Add-ons\WinMMTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Add-ons\WinMMTest.Designer.cs">
+      <DependentUpon>WinMMTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Mandatory\BlacklistSystemProcesses.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -316,6 +322,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Add-ons\WinMMPatches.resx">
       <DependentUpon>WinMMPatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Add-ons\WinMMTest.resx">
+      <DependentUpon>WinMMTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\BlacklistSystemProcesses.resx">
       <DependentUpon>BlacklistSystemProcesses.cs</DependentUpon>

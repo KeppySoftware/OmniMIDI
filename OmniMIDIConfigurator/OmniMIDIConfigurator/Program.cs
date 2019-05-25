@@ -44,6 +44,13 @@ namespace OmniMIDIConfigurator
             UIntPtr dwParam1,
             UIntPtr dwParam2);
 
+        internal delegate void MidiOutProc(
+            IntPtr hMidiOut,
+            uint wMsg,
+            UIntPtr dwInstance,
+            UIntPtr dwParam1,
+            UIntPtr dwParam2);
+
         [DllImport("winmm")]
         internal static extern int midiOutGetNumDevs();
 
@@ -52,6 +59,18 @@ namespace OmniMIDIConfigurator
             uint uDeviceID,
             out MIDIOUTCAPS caps,
             uint cbMidiOutCaps);
+
+        [DllImport("winmm.dll")]
+        internal static extern int midiOutClose(
+            IntPtr hMidiOut);
+
+        [DllImport("winmm.dll")]
+        internal static extern int midiOutOpen(
+            out IntPtr hMidiOut,
+            int uDeviceID,
+            MidiOutProc dwCallback,
+            IntPtr dwInstance, 
+            uint dwFlags);
 
         [DllImport("winmm")]
         internal static extern int midiInGetNumDevs();
@@ -81,6 +100,18 @@ namespace OmniMIDIConfigurator
         [DllImport("winmm")]
         internal static extern int midiInStop(
             IntPtr hMidiIn);
+
+        [DllImport("winmm.dll")]
+        internal static extern int midiConnect(
+            IntPtr hMidi,
+            IntPtr hMidiOut, 
+            IntPtr pReserved);
+
+        [DllImport("winmm.dll")]
+        internal static extern int midiDisconnect(
+            IntPtr hMidi, 
+            IntPtr hMidiOut, 
+            IntPtr pReserved);
     }
 
     internal static class MIDIInEvent
@@ -350,6 +381,14 @@ namespace OmniMIDIConfigurator
                         window = 1;
                         break;
                     }
+                    /*
+                    else if (s.ToLowerInvariant() == "/winmmdbg")
+                    {
+                        runmode = 2;
+                        window = 2;
+                        break;
+                    }
+                    */
                     else if (s.ToLowerInvariant() == "/egg")
                     {
                         CrashMyComputer.RtlAdjustPrivilege(19, true, false, ref CrashMyComputer.DummyBool);
@@ -456,6 +495,8 @@ namespace OmniMIDIConfigurator
                 Application.Run(new OmniMIDIConfiguratorMain(args));
             else if (form == 1)
                 Application.Run(new InfoDialog(1));
+            else if (form == 2)
+                Application.Run(new WinMMTest());
             GC.KeepAlive(m);
         }
 

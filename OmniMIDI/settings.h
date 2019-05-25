@@ -16,7 +16,7 @@ void ResetSynth(BOOL SwitchingBufferMode) {
 
 void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 	// If the key isn't ready, open it again
-	if (hKey.Status != KEY_READY) {
+	if (hKey.Status != KEY_READY && !hKey.Address) {
 		// Open the key
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
@@ -39,6 +39,7 @@ void CloseRegistryKey(RegKey &hKey) {
 
 		// Everything is fine, mark the key as closed
 		hKey.Status = KEY_CLOSED;
+		hKey.Address = NULL;
 	}
 }
 
@@ -83,29 +84,26 @@ long long TimeNow() {
 
 void LoadSoundfont(int whichsf) {
 	DWORD CurrentList = (whichsf + 1);
-	wchar_t UserProfile[MAX_PATH] = { 0 };
-	wchar_t ListToLoad[MAX_PATH] = { 0 };
+	wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
 
-	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, UserProfile)) {
+	if (!SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, ListToLoad)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
+
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
-		RegSetValueEx(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&CurrentList, sizeof(CurrentList));
+		RegSetValueExW(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&CurrentList, sizeof(CurrentList));
+		swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf], L"omlist");
 
-		swprintf_s(ListToLoad, MAX_PATH, OMFileTemplate, UserProfile, L"lists", OMLetters[whichsf], L"omlist");
-		FontLoader(ListToLoad);
-
-		PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
+		if (FontLoader(ListToLoad)) PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
 	}
 }
 
 bool LoadSoundfontStartup() {
-	wchar_t UserProfile[MAX_PATH] = { 0 };
-	wchar_t CurrentAppList[MAX_PATH] = { 0 };
-	wchar_t CurrentString[MAX_PATH] = { 0 };
+	wchar_t CurrentAppList[NTFS_MAX_PATH] = { 0 };
+	wchar_t CurrentString[NTFS_MAX_PATH] = { 0 };
 
-	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, UserProfile)) {
+	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, CurrentAppList)) {
 		for (int i = 0; i <= 15; ++i) {
-			swprintf_s(CurrentAppList, MAX_PATH, UserProfile, OMFileTemplate, L"applists", OMLetters[i], L"applist");
+			swprintf_s(CurrentAppList + wcslen(CurrentAppList), NTFS_MAX_PATH, OMFileTemplate, L"applists", OMLetters[i], L"applist");
 
 			std::wifstream AppList(CurrentAppList);
 			if (AppList) {

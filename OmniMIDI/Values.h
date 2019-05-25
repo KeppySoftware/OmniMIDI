@@ -52,6 +52,7 @@ static ULONGLONG TickStart = 0;			// For TGT64
 static HSTREAM OMStream = NULL;
 static HANDLE OMReady = NULL;
 static HMIDI OMHMIDI = NULL;
+static HDRVR OMHDRVR = NULL;
 static DWORD_PTR OMCallback = NULL;
 static DWORD_PTR OMInstance = NULL;
 static DWORD OMFlags = NULL;
@@ -105,15 +106,15 @@ static BOOL stop_thread = FALSE;
 static Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
 
 // Mandatory values
-static HMODULE hinst = NULL;				// main DLL handle
-static HMODULE winmm = NULL;				// ?
+static HMODULE hinst = NULL;					// main DLL handle
+static HMODULE winmm = NULL;					// ?
 
-static CHAR AppPath[NTFS_MAX_PATH];			// debug info
-static TCHAR AppPathW[NTFS_MAX_PATH];		// debug info
-static CHAR AppName[MAX_PATH];				// debug info
-static TCHAR AppNameW[MAX_PATH];			// debug info
+static CHAR AppPath[NTFS_MAX_PATH] = { 0 };		// debug info
+static TCHAR AppPathW[NTFS_MAX_PATH] = { 0 };	// debug info
+static CHAR AppName[MAX_PATH] = { 0 };			// debug info
+static TCHAR AppNameW[MAX_PATH] = { 0 };		// debug info
 
-static HANDLE hPipe = INVALID_HANDLE_VALUE;	// debug info
+static HANDLE hPipe = INVALID_HANDLE_VALUE;		// debug info
 
 // Main values
 static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
@@ -155,6 +156,11 @@ static const DWORD prioval[] =
 };
 
 // Built-in blacklist
+static const LPCWSTR CookedPlayerBlacklist[] =
+{
+	_T("wmplayer.exe"),
+};
+
 static const LPCWSTR BuiltInBlacklist[] =
 {
 	_T("Battle.net Launcher.exe"),
@@ -191,7 +197,7 @@ static const LPCWSTR BuiltInBlacklist[] =
 	_T("vcpkgsrv.exe"),
 	_T("vmware-hostd.exe"),
 	_T("wininit.exe"),
-	_T("winlogon.exe")
+	_T("winlogon.exe"),
 };
 
 // Per channel values
@@ -222,7 +228,7 @@ static DWORD rvalues[16];
 // -----------------------------------------------------------------------
 
 static const wchar_t * OMPipeTemplate = L"\\\\.\\pipe\\OmniMIDIDbg%u";
-static const wchar_t * OMFileTemplate = L"%s\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
+static const wchar_t * OMFileTemplate = L"\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
 static const wchar_t * OMLetters[16] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q", L"R" };
 
 // -----------------------------------------------------------------------

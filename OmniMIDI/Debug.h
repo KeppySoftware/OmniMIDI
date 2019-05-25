@@ -14,6 +14,7 @@ static BOOL InfoAlreadyGot = FALSE;
 double GetThreadUsage(Thread* Thread) {
 	if (!(WaitForSingleObject(Thread->ThreadHandle, 0) != WAIT_OBJECT_0)) return 0.0;
 
+	SYSTEM_INFO sysInfo;
 	FILETIME ftime, fsys, fuser;
 	ULARGE_INTEGER now, sys, user;
 	double percent;
@@ -22,6 +23,9 @@ double GetThreadUsage(Thread* Thread) {
 	memcpy(&now, &ftime, sizeof(FILETIME));
 
 	GetThreadTimes(Thread->ThreadHandle, &ftime, &ftime, &fsys, &fuser);
+	GetSystemInfo(&sysInfo);
+	CPUThreadsAvailable = sysInfo.dwNumberOfProcessors;
+
 	memcpy(&sys, &fsys, sizeof(FILETIME));
 	memcpy(&user, &fuser, sizeof(FILETIME));
 	percent = (sys.QuadPart - Thread->KernelCPU.QuadPart) +
@@ -56,22 +60,13 @@ std::wstring GetErrorAsString(DWORD ErrorID)
 void GetAppName() {
 	if (!InfoAlreadyGot)
 	{
-		try {
-			ZeroMemory(AppPath, sizeof(AppPath));
-			ZeroMemory(AppPathW, sizeof(AppPathW));
-			ZeroMemory(AppName, sizeof(AppName));
-			ZeroMemory(AppNameW, sizeof(AppNameW));
+		GetModuleFileName(NULL, AppPathW, NTFS_MAX_PATH);
+		wcstombs(AppPath, AppPathW, sizeof(AppPath));
 
-			GetModuleFileNameW(NULL, AppPathW, NTFS_MAX_PATH);
-			wcstombs(AppPath, AppPathW, wcslen(AppPathW) + 1);
+		wcsncpy(AppNameW, PathFindFileNameW(AppPathW), MAX_PATH);
+		wcstombs(AppName, AppNameW, sizeof(AppName));
 
-			TCHAR * TempPoint = PathFindFileName(AppPathW);
-			wcsncpy(AppNameW, TempPoint, MAX_PATH);
-			wcstombs(AppName, AppNameW, wcslen(AppNameW) + 1);
-
-			InfoAlreadyGot = TRUE;
-		}
-		catch (...) { }
+		InfoAlreadyGot = TRUE;
 	}
 }
 
@@ -646,7 +641,7 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 	}
 }
 
-void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD Flags) {
+void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD_PTR dwUser, DWORD Flags) {
 	if (ManagedSettings.DebugMode) {
 		char Msg[NTFS_MAX_PATH] = { 0 };
 
@@ -655,7 +650,10 @@ void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD Flags
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Stage <<%s>> | HMIDI: %08X - dwCallback: %08X - dwInstance: %08X - OMFlags: %08X\n", Stage, MIDIOD->hMidi, MIDIOD->dwCallback, MIDIOD->dwInstance, Flags);
+		sprintf(
+			Msg, 
+			"Stage <<%s>> | HMIDI: %08X - dwCallback: %08X - dwInstance: %08X - dwUser: %08X - OMFlags: %08X\n", 
+			Stage, MIDIOD->hMidi, MIDIOD->dwCallback, MIDIOD->dwInstance, dwUser, Flags);
 
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);

@@ -36,6 +36,7 @@
             this.ActivityPanel = new System.Windows.Forms.Panel();
             this.ActivityLabel = new System.Windows.Forms.Label();
             this.StatusTimer = new System.Windows.Forms.Timer(this.components);
+            this.RefreshInputs = new System.Windows.Forms.Button();
             this.ActivityPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,7 +72,7 @@
             this.MIDIInList.FormattingEnabled = true;
             this.MIDIInList.Location = new System.Drawing.Point(70, 120);
             this.MIDIInList.Name = "MIDIInList";
-            this.MIDIInList.Size = new System.Drawing.Size(232, 21);
+            this.MIDIInList.Size = new System.Drawing.Size(172, 21);
             this.MIDIInList.TabIndex = 2;
             this.MIDIInList.SelectedIndexChanged += new System.EventHandler(this.MIDIInList_SelectedIndexChanged);
             // 
@@ -100,7 +101,7 @@
             // ActivityLabel
             // 
             this.ActivityLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ActivityLabel.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ActivityLabel.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ActivityLabel.ForeColor = System.Drawing.Color.White;
             this.ActivityLabel.Location = new System.Drawing.Point(0, 0);
             this.ActivityLabel.Name = "ActivityLabel";
@@ -108,6 +109,7 @@
             this.ActivityLabel.TabIndex = 0;
             this.ActivityLabel.Text = "No activity.";
             this.ActivityLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ActivityLabel.UseCompatibleTextRendering = true;
             // 
             // StatusTimer
             // 
@@ -115,12 +117,23 @@
             this.StatusTimer.Interval = 1;
             this.StatusTimer.Tick += new System.EventHandler(this.StatusTimer_Tick);
             // 
+            // RefreshInputs
+            // 
+            this.RefreshInputs.Location = new System.Drawing.Point(245, 119);
+            this.RefreshInputs.Name = "RefreshInputs";
+            this.RefreshInputs.Size = new System.Drawing.Size(57, 23);
+            this.RefreshInputs.TabIndex = 5;
+            this.RefreshInputs.Text = "Refresh";
+            this.RefreshInputs.UseVisualStyleBackColor = true;
+            this.RefreshInputs.Click += new System.EventHandler(this.RefreshInputs_Click);
+            // 
             // MIDIInPlay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(314, 153);
+            this.Controls.Add(this.RefreshInputs);
             this.Controls.Add(this.ActivityPanel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.MIDIInList);
@@ -149,5 +162,6 @@
         private System.Windows.Forms.Panel ActivityPanel;
         private System.Windows.Forms.Label ActivityLabel;
         private System.Windows.Forms.Timer StatusTimer;
+        private System.Windows.Forms.Button RefreshInputs;
     }
 }

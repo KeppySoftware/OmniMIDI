@@ -344,13 +344,13 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 	// Do the stuff with it
-	BOOL res = SendLongToBASSMIDI(IIMidiHdr);
+	BOOL res = bass_initialized ? SendLongToBASSMIDI(IIMidiHdr) : MIDIERR_NOTREADY;
 
 	// Mark the buffer as done
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 	IIMidiHdr->dwFlags |= MHDR_DONE;
 
-	// Tell the app that the buffer has been played
+	// Tell the app that the buffer has failed to be played
 	if (!res) {
 		char Msg[NTFS_MAX_PATH] = { 0 };
 

@@ -19,11 +19,13 @@ struct CookedPlayer
 	DWORD_PTR dwInstance;
 };
 
-VOID KillOldCookedPlayer() {
-	if (IsThisThreadActive(CookedThread.ThreadHandle)) {
+VOID KillOldCookedPlayer(DWORD_PTR dwUser) {
+	if (IsThisThreadActive(CookedThread.ThreadHandle))
+	{
 		CookedPlayerHasToGo = TRUE;
 		CloseThread(CookedThread.ThreadHandle);
 		CookedPlayerHasToGo = FALSE;
+		if (dwUser) free((*(CookedPlayer * *)dwUser));
 	}
 }
 
@@ -169,8 +171,8 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
-				PrintMessageToDebugLog("CookedPlayerSystem", "dwEvent requested DriverCallback!");
-				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+				PrintMessageToDebugLog("CookedPlayerSystem", "Reached MEVT_F_CALLBACK! Let's warn the app about it.");
+				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_POSITIONCB, WMMCI, (DWORD_PTR)hdr, 0);
 			}
 
 			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
