@@ -138,6 +138,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	switch (CallReason) {
 	case DLL_PROCESS_ATTACH:
 	{
+		if (BannedProcesses()) {
+			OutputDebugStringA("Process is banned! Bye!");
+			return FALSE;
+		}
+
 		hinst = hModule;
 		DisableThreadLibraryCalls(hinst);
 
@@ -236,6 +241,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	MIDIOUTCAPS2A* MIDICaps2A;
 	MIDIOUTCAPS2W* MIDICaps2W;
 
+	DWORD StreamCapable = NULL;
 	DWORD Technology = NULL;
 	WORD MID = 0x0000;
 	WORD PID = 0x0000;
@@ -274,6 +280,8 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "Converting SynthNameW to SynthNameA...");
 		wcstombs(SynthName, SynthNameW, MAXPNAMELEN);
 
+		StreamCapable = (!ManagedSettings.DisableCookedPlayer && !CPBlacklisted);
+
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "Sharing MIDI device caps with application...");
 
 		// Prepare the caps item
@@ -284,7 +292,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 
 			MIDICapsA = (MIDIOUTCAPSA*)capsPtr;
 			strncpy(MIDICapsA->szPname, SynthName, MAXPNAMELEN);
-			MIDICapsA->dwSupport = (ManagedSettings.DisableCookedPlayer ? 0 : MIDICAPS_STREAM) | MIDICAPS_VOLUME;
+			MIDICapsA->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
 			MIDICapsA->wChannelMask = 0xFFFF;
 			MIDICapsA->wMid = MID;
 			MIDICapsA->wPid = PID;
@@ -300,7 +308,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 
 			MIDICapsW = (MIDIOUTCAPSW*)capsPtr;
 			wcsncpy(MIDICapsW->szPname, SynthNameW, MAXPNAMELEN);
-			MIDICapsW->dwSupport = (ManagedSettings.DisableCookedPlayer ? 0 : MIDICAPS_STREAM) | MIDICAPS_VOLUME;
+			MIDICapsW->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
 			MIDICapsW->wChannelMask = 0xFFFF;
 			MIDICapsW->wMid = MID;
 			MIDICapsW->wPid = PID;
@@ -319,7 +327,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps2A->ManufacturerGuid = OMCLSID;
 			MIDICaps2A->NameGuid = OMCLSID;
 			MIDICaps2A->ProductGuid = OMCLSID;
-			MIDICaps2A->dwSupport = (ManagedSettings.DisableCookedPlayer ? 0 : MIDICAPS_STREAM) | MIDICAPS_VOLUME;
+			MIDICaps2A->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
 			MIDICaps2A->wChannelMask = 0xFFFF;
 			MIDICaps2A->wMid = MID;
 			MIDICaps2A->wPid = PID;
@@ -338,7 +346,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps2W->ManufacturerGuid = OMCLSID;
 			MIDICaps2W->NameGuid = OMCLSID;
 			MIDICaps2W->ProductGuid = OMCLSID;
-			MIDICaps2W->dwSupport = (ManagedSettings.DisableCookedPlayer ? 0 : MIDICAPS_STREAM) | MIDICAPS_VOLUME;
+			MIDICaps2W->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
 			MIDICaps2W->wChannelMask = 0xFFFF;
 			MIDICaps2W->wMid = MID;
 			MIDICaps2W->wPid = PID;
@@ -377,7 +385,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
 
 		// Tell the app that the buffer has been played
-		if (CustomCallback) CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, dwParam1, 0);
+		if (CustomCallback) CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, dwParam1, 0);
 		// if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
 		return RetVal;
 	}
@@ -560,7 +568,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			hdr->dwFlags |= MHDR_DONE;
 			UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
 
-			CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+			CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 			hdr = hdr->lpNext;
 		}
 
@@ -574,29 +582,23 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		if (dwUser)
 		{
 			PrintMessageToDebugLog("MODM_RESET", "The app requested OmniMIDI to reset CookedPlayer.");
-			((CookedPlayer*)dwUser)->Paused = TRUE;
 
 			LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
 			while (hdr)
 			{
 				LockForWriting(&((CookedPlayer*)dwUser)->Lock);
-				PrintMessageToDebugLog("MODM_RESTART", "Marking buffer as done and not in queue anymore...");
+				PrintMessageToDebugLog("MODM_RESET", "Marking buffer as done and not in queue anymore...");
 				hdr->dwFlags &= ~MHDR_INQUEUE;
 				hdr->dwFlags |= MHDR_DONE;
 				UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
 
-				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 				hdr = hdr->lpNext;
 			}
-
-			ResetSynth(FALSE);
-			((CookedPlayer*)dwUser)->Paused = FALSE;
 		}
-		else {
-			PrintMessageToDebugLog("MODM_RESET", "The app sent a reset command.");
-			ResetSynth(FALSE);
-		}
+		else PrintMessageToDebugLog("MODM_RESET", "The app sent a reset command.");
 
+		ResetSynth(FALSE);
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_PREPARE:
@@ -700,7 +702,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			// Tell the app that the driver is ready
 			if (CustomCallback) {
 				PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app...");
-				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_OPEN, WMMCI, 0, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MOM_OPEN, WMMCI, 0, 0);
 			}
 
 			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
@@ -732,7 +734,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 
 			if (CustomCallback) {
 				PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app...");
-				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_CLOSE, WMMCI, 0, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MOM_CLOSE, WMMCI, 0, 0);
 			}
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
@@ -752,10 +754,12 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		return MMSYSERR_NOTSUPPORTED;
 	case DRV_QUERYDEVICEINTERFACESIZE:
 		// Not needed for OmniMIDI
-		return DebugResult("DRV_QUERYDEVICEINTERFACESIZE", MMSYSERR_NOTSUPPORTED, "DRV_QUERYDEVICEINTERFACESIZE not supported by OmniMIDI.");
+		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACESIZE is not required by OmniMIDI.");
+		return MMSYSERR_NOTSUPPORTED;
 	case DRV_QUERYDEVICEINTERFACE:
 		// Not needed for OmniMIDI
-		return DebugResult("DRV_QUERYDEVICEINTERFACE", MMSYSERR_NOTSUPPORTED, "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
+		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACE is not required by OmniMIDI.");
+		return MMSYSERR_NOTSUPPORTED;
 	default: {
 		// Unrecognized uMsg
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);

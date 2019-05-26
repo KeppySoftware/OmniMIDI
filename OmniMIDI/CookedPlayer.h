@@ -152,7 +152,7 @@ void CookedPlayerSystem(CookedPlayer* Player)
 
 				Player->MIDIHeaderQueue = nexthdr;
 
-				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
 
 				hdr->dwOffset = 0;
 				hdr = nexthdr;
@@ -176,7 +176,7 @@ void CookedPlayerSystem(CookedPlayer* Player)
 			if (evt->dwEvent & MEVT_F_CALLBACK)
 			{
 				PrintMessageToDebugLog("CookedPlayerSystem", "Reached MEVT_F_CALLBACK! Let's warn the app about it.");
-				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_POSITIONCB, WMMCI, (DWORD_PTR)hdr, 0);
+				CustomCallback((HMIDIOUT)OMHMIDI, MOM_POSITIONCB, WMMCI, (DWORD_PTR)hdr, 0);
 			}
 
 			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
@@ -184,7 +184,7 @@ void CookedPlayerSystem(CookedPlayer* Player)
 			/*
 			if(evid != MEVT_NOP && evid != MEVT_VERSION)
 			{
-				CrashMessage("CookedPlayerThread | evid not NOP");
+				CrashMessage("CookedPlayerThread | evid not NOP", nullptr);
 			}
 			*/
 

@@ -157,6 +157,12 @@ static const DWORD prioval[] =
 };
 
 // Built-in blacklist
+static BOOL CPBlacklisted = FALSE;
+static const LPCWSTR CookedPlayerBlacklist[] =
+{
+	_T("wmplayer.exe"),
+};
+
 static const LPCWSTR BuiltInBlacklist[] =
 {
 	_T("Battle.net Launcher.exe"),

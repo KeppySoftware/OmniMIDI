@@ -12,16 +12,17 @@ BOOL BannedProcesses() {
 		if (!_wcsicmp(AppNameW, BuiltInBlacklist[i])) return TRUE;
 	}
 
+	// Also check if it's blacklisted from using CookedPlayer
+	for (int i = 0; i < (sizeof(CookedPlayerBlacklist) / sizeof(*CookedPlayerBlacklist)); i++) {
+		// It's a match, the process is banned
+		if (!_wcsicmp(AppNameW, CookedPlayerBlacklist[i])) CPBlacklisted = TRUE;
+	}
+
 	// All good, go on
 	return FALSE;
 }
 
 DWORD BlackListSystem(){
-	if (BannedProcesses()) {
-		OutputDebugStringA("Process is banned! No devs available for you!");
-		return 0;
-	}
-
 	// Blacklist system init
 	std::wstring DBLDir;
 	std::wstring UBLDir;

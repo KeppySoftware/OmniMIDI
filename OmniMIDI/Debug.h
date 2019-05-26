@@ -129,19 +129,27 @@ static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
 }
 
 void CrashMessage(LPCSTR part) {
-	std::wstringstream ErrorMessage;
+	char* ErrorMessage = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 	DWORD ErrorID = GetLastError();
 
 	fprintf(DebugLog, "(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
 
-	ErrorMessage << L"An error has been detected while executing the following function: " << part << "\n";
-	if (ErrorID != 0) {
-		ErrorMessage << L"\nError code: 0x" << std::uppercase << std::hex << ErrorID << L" - " << GetErrorAsString(ErrorID);
-		ErrorMessage << L"\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n";
-	}
-	ErrorMessage << L"\nClick OK to close the program.";
+	sprintf(ErrorMessage, "An error has been detected while executing the following function: %s\n", part);
 
-	MessageBox(NULL, ErrorMessage.str().c_str(), L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	if (ErrorID != 0) {
+		sprintf(
+			ErrorMessage + strlen(ErrorMessage), 
+			"\nError code: 0x%X - %s\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n", 
+			ErrorID, GetErrorAsString(ErrorID)
+		);
+	}
+
+	sprintf(
+		ErrorMessage + strlen(ErrorMessage),
+		"\nClick OK to close the program."
+	);
+
+	MessageBoxA(NULL, ErrorMessage, "OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 
 	block_bassinit = TRUE;
 	stop_thread = TRUE;

@@ -89,7 +89,7 @@ BOOL DoStartClient() {
 
 		// Load the selected driver priority value from the registry
 		OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
-		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)& ManagedSettings.DriverPriority, &dwSize);
+		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
 		// Parse the app name, and start the debug pipe to the debug window
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
