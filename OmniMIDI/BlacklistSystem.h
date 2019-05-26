@@ -17,6 +17,11 @@ BOOL BannedProcesses() {
 }
 
 DWORD BlackListSystem(){
+	if (BannedProcesses()) {
+		OutputDebugStringA("Process is banned! No devs available for you!");
+		return 0;
+	}
+
 	// Blacklist system init
 	std::wstring DBLDir;
 	std::wstring UBLDir;

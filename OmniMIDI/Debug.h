@@ -408,9 +408,8 @@ bool GetVersionInfo(
 
 void CreateConsole() {
 	if (!IntroAlreadyShown) {
-		TCHAR MainLibrary[NTFS_MAX_PATH];
-		TCHAR DebugDir[NTFS_MAX_PATH];
-		TCHAR CurrentTime[NTFS_MAX_PATH];
+		TCHAR* MainLibrary = (TCHAR*)malloc(sizeof(TCHAR) * NTFS_MAX_PATH);
+		TCHAR* DebugDir = (TCHAR*)malloc(sizeof(TCHAR) * NTFS_MAX_PATH);
 
 		if (!DisableChime)
 		{
@@ -432,15 +431,6 @@ void CreateConsole() {
 
 		// Append the app's filename to the output file's path
 		wcscat_s(DebugDir, NTFS_MAX_PATH, AppNameW);
-
-		// Parse current time, and append it
-		struct tm *sTm;
-		time_t now = time(0);
-		sTm = gmtime(&now);
-		wcsftime(CurrentTime, sizeof(CurrentTime), L" - %d-%m-%Y %H.%M.%S", sTm);
-		wcscat_s(DebugDir, NTFS_MAX_PATH, CurrentTime);
-
-		// Append file extension, and that's it
 		wcscat_s(DebugDir, NTFS_MAX_PATH, _T(" (Debug output).txt"));
 
 		// Parse OmniMIDI's current version
@@ -458,7 +448,7 @@ void CreateConsole() {
 			std::lock_guard<std::mutex> lock(DebugMutex);
 
 			// Begin writing to it
-			fprintf(DebugLog, "Those who cannot change their minds cannot change anything.\n\n");
+			fprintf(DebugLog, "=======================================\n");
 			fprintf(DebugLog, "OmniMIDI %d.%d.%d ", major, minor, build);
 			if (revision) fprintf(DebugLog, "CR%d ", revision);
 			fprintf(DebugLog, "(KDMAPI %d.%d.%d, Revision %d)\n", CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
@@ -466,6 +456,9 @@ void CreateConsole() {
 			fprintf(DebugLog, "Copyright(C) 2013 - KaleidonKep99\n\n");
 			IntroAlreadyShown = TRUE;
 		}
+
+		free(MainLibrary);
+		free(DebugDir);
 	}
 }
 
@@ -497,7 +490,7 @@ void PrintCurrentTime() {
 
 void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -522,6 +515,8 @@ void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -529,8 +524,8 @@ void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam
 
 void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
-		char LibraryA[MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+		char* LibraryA = (char*)malloc(sizeof(char) * MAX_PATH);
 		wcstombs(LibraryA, LibraryW, wcslen(LibraryW) + 1);
 
 		// Debug log is busy now
@@ -542,6 +537,9 @@ void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+		free(LibraryA);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -549,11 +547,11 @@ void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 
 void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
-		char SoundFontA[MAX_PATH] = { 0 };
-		char * SoundFontNameA;
+		char* Msg = (char*)malloc(sizeof(char) * MAX_PATH);
+		char* SoundFontA = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+
 		wcstombs(SoundFontA, SoundFontW, wcslen(SoundFontW) + 1);
-		SoundFontNameA = PathFindFileNameA(SoundFontA);
+		LPSTR SoundFontNameA = PathFindFileNameA(SoundFontA);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -564,6 +562,9 @@ void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+		free(SoundFontA);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -571,7 +572,7 @@ void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
 
 void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -582,6 +583,8 @@ void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -589,7 +592,7 @@ void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 
 void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -600,6 +603,8 @@ void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -607,7 +612,7 @@ void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
 
 void PrintBASSErrorMessageToDebugLog(LPCWSTR ErrorTitle, LPCWSTR ErrorDesc) {
 	if (ManagedSettings.DebugMode) {
-		wchar_t Msg[NTFS_MAX_PATH] = { 0 };
+		wchar_t* Msg = (wchar_t*)malloc(sizeof(wchar_t) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -618,6 +623,8 @@ void PrintBASSErrorMessageToDebugLog(LPCWSTR ErrorTitle, LPCWSTR ErrorDesc) {
 		fwprintf(DebugLog, Msg);
 		OutputDebugStringW(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -625,7 +632,7 @@ void PrintBASSErrorMessageToDebugLog(LPCWSTR ErrorTitle, LPCWSTR ErrorDesc) {
 
 void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULONGLONG Memory) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -636,6 +643,8 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -643,7 +652,7 @@ void PrintMemoryMessageToDebugLog(LPCSTR Stage, LPCSTR Status, BOOL IsRatio, ULO
 
 void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD_PTR dwUser, DWORD Flags) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -658,6 +667,8 @@ void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD_PTR d
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -665,7 +676,7 @@ void PrintMIDIOPENDESCToDebugLog(LPCSTR Stage, MIDIOPENDESC* MIDIOD, DWORD_PTR d
 
 void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -691,6 +702,8 @@ void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -698,7 +711,7 @@ void PrintMIDIHDRToDebugLog(LPCSTR Stage, MIDIHDR* IIMidiHdr) {
 
 void PrintEventToDebugLog(DWORD dwParam) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -711,6 +724,8 @@ void PrintEventToDebugLog(DWORD dwParam) {
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Msg);
+
 		// Flush buffer
 		fflush(DebugLog);
 	}
@@ -718,7 +733,7 @@ void PrintEventToDebugLog(DWORD dwParam) {
 
 void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -734,6 +749,8 @@ void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
+
+		free(Msg);
 
 		// Flush buffer
 		fflush(DebugLog);
@@ -764,8 +781,7 @@ BOOL DisableBuiltInHandler(LPCSTR Stage) {
 	return TRUE;
 }
 
-std::string GetLastErrorAsString()
-{
+std::string GetLastErrorAsString() {
 	//Get the error message, if any.
 	DWORD errorMessageID = ::GetLastError();
 	if (errorMessageID == 0)

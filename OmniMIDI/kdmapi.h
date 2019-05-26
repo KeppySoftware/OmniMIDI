@@ -37,14 +37,13 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 
 		return FALSE;
 	}
-	else {
-		if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != ASIO_ENGINE)) CreateThreads(FALSE);
+	else { if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != ASIO_ENGINE)) CreateThreads(FALSE);
 	}
 
 	return TRUE;
 }
 
-DWORD WINAPI Supervisor(LPVOID lpV) {
+void Supervisor(LPVOID lpV) {
 	try {
 		// Check system
 		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
@@ -77,8 +76,9 @@ DWORD WINAPI Supervisor(LPVOID lpV) {
 	// Close the thread
 	PrintMessageToDebugLog("StreamWatchdog", "Closing health thread...");
 	CloseHandle(HealthThread.ThreadHandle);
-	HealthThread.ThreadHandle = NULL;
-	return 0;
+	HealthThread.ThreadHandle = nullptr;
+	HealthThread.ThreadAddress = 0;
+	_endthreadex(0);
 }
 
 BOOL DoStartClient() {
@@ -126,8 +126,8 @@ BOOL DoStartClient() {
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
-		CheckIfThreadClosed(HealthThread.ThreadHandle);
-		HealthThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Supervisor, NULL, 0, (LPDWORD)HealthThread.ThreadAddress);
+		CheckIfThreadClosed(&HealthThread);
+		HealthThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)Supervisor, NULL, 0, &HealthThread.ThreadAddress);
 		SetThreadPriority(HealthThread.ThreadHandle, THREAD_PRIORITY_NORMAL);
 		PrintMessageToDebugLog("StartDriver", "Done!");
 

@@ -139,28 +139,33 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	case DLL_PROCESS_ATTACH:
 	{
 		hinst = hModule;
-
-		if (BannedProcesses()) {
-			OutputDebugStringA("Process is banned! You can't load me!");
-			return FALSE;
-		}
-
-		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
-		NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQuerySystemTime");
+		DisableThreadLibraryCalls(hinst);
 
 		if (!NtDelayExecution || !NtQuerySystemTime) {
-			MessageBoxA(NULL, "Failed to parse NT functions from NTDLL!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
-			return FALSE;
-		}
+			NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
+			NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQuerySystemTime");
 
-		if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
-			MessageBoxA(NULL, "Failed to parse starting tick through NtQuerySystemTime!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
-			return FALSE;
+			if (!NtDelayExecution || !NtQuerySystemTime) {
+				MessageBoxA(NULL, "Failed to parse NT functions from NTDLL!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+				return FALSE;
+			}
+
+			if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
+				MessageBoxA(NULL, "Failed to parse starting tick through NtQuerySystemTime!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+				return FALSE;
+			}
+
+			// Loaded!
+			return TRUE;
 		}
 
 		break;
 	}
 	case DLL_PROCESS_DETACH:
+	{
+		hinst = NULL;
+		break;
+	}
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH: 
 		break;
@@ -357,9 +362,10 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	MMRESULT RetVal = MMSYSERR_NOERROR;
 	
 	/*
-	char Msg[NTFS_MAX_PATH] = { 0 };
+	char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 	sprintf(Msg, "Received modMessage(%u, %u, %X, %X, %X)", uDeviceID, uMsg, dwUser, dwParam1, dwParam2);
 	PrintMessageToDebugLog("MOD_MESSAGE", Msg);
+	free(Msg);
 	*/
 
 	switch (uMsg) {
@@ -507,8 +513,8 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			break;
 		default:
 			PrintMessageToDebugLog("TIME_UNK", "Unrecognized wType. Parsing in the default format of ticks.");
-			((MMTIME*)dwParam1)->wType = TIME_BYTES;
-			((MMTIME*)dwParam1)->u.cb = ((CookedPlayer*)dwUser)->ByteAccumulator;
+			((MMTIME*)dwParam1)->wType = TIME_TICKS;
+			((MMTIME*)dwParam1)->u.ticks = ((CookedPlayer*)dwUser)->TickAccumulator;
 			break;
 		}
 
@@ -517,11 +523,10 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	}
 	case MODM_RESTART: {
 		if (!bass_initialized || !dwUser)
-			return DebugResult("MODM_RESTART", MMSYSERR_NOTENABLED, "You can't call midiStreamPosition with a normal MIDI stream, or the driver isn't ready.");
+			return DebugResult("MODM_RESTART", MMSYSERR_NOTENABLED, "You can't call midiStreamRestart with a normal MIDI stream, or the driver isn't ready.");
 
 		if (((CookedPlayer*)dwUser)->Paused) {
-			((CookedPlayer*)dwUser)->Paused = !((CookedPlayer*)dwUser)->Paused;
-
+			((CookedPlayer*)dwUser)->Paused = FALSE;
 			PrintMessageToDebugLog("MODM_RESTART", "CookedPlayer is now playing.");
 		}
 
@@ -529,11 +534,10 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	}
 	case MODM_PAUSE: {
 		if (!bass_initialized || !dwUser)
-			return DebugResult("MODM_PAUSE", MMSYSERR_NOTENABLED, "You can't call midiStreamPosition with a normal MIDI stream, or the driver isn't ready.");
+			return DebugResult("MODM_PAUSE", MMSYSERR_NOTENABLED, "You can't call midiStreamPause with a normal MIDI stream, or the driver isn't ready.");
 
 		if (!((CookedPlayer*)dwUser)->Paused) {
-			((CookedPlayer*)dwUser)->Paused = !((CookedPlayer*)dwUser)->Paused;
-
+			((CookedPlayer*)dwUser)->Paused = TRUE;
 			ResetSynth(FALSE);
 			PrintMessageToDebugLog("MODM_PAUSE", "CookedPlayer is now paused.");
 		}
@@ -542,7 +546,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	}
 	case MODM_STOP: {
 		if (!bass_initialized || !dwUser)
-			return DebugResult("MODM_STOP", MIDIERR_NOTREADY, "You can't call midiStreamPosition with a normal MIDI stream, or the driver isn't ready.");
+			return DebugResult("MODM_STOP", MIDIERR_NOTREADY, "You can't call midiStreamStop with a normal MIDI stream, or the driver isn't ready.");
 
 		PrintMessageToDebugLog("MODM_STOP", "The app requested OmniMIDI to stop CookedPlayer.");
 		((CookedPlayer*)dwUser)->Paused = TRUE;
@@ -563,6 +567,36 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		ResetSynth(FALSE);
 
 		PrintMessageToDebugLog("MODM_STOP", "CookedPlayer is now stopped.");
+		return MMSYSERR_NOERROR;
+	}
+	case MODM_RESET: {
+		// Stop all the current active voices
+		if (dwUser)
+		{
+			PrintMessageToDebugLog("MODM_RESET", "The app requested OmniMIDI to reset CookedPlayer.");
+			((CookedPlayer*)dwUser)->Paused = TRUE;
+
+			LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
+			while (hdr)
+			{
+				LockForWriting(&((CookedPlayer*)dwUser)->Lock);
+				PrintMessageToDebugLog("MODM_RESTART", "Marking buffer as done and not in queue anymore...");
+				hdr->dwFlags &= ~MHDR_INQUEUE;
+				hdr->dwFlags |= MHDR_DONE;
+				UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
+
+				CustomCallback((HMIDIOUT)OMHMIDI, MM_MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+				hdr = hdr->lpNext;
+			}
+
+			ResetSynth(FALSE);
+			((CookedPlayer*)dwUser)->Paused = FALSE;
+		}
+		else {
+			PrintMessageToDebugLog("MODM_RESET", "The app sent a reset command.");
+			ResetSynth(FALSE);
+		}
+
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_PREPARE:
@@ -587,12 +621,6 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 	case MODM_SETVOLUME: {
 		// The app isn't allowed to set the volume, everything's fine anyway
 		PrintMessageToDebugLog("MODM_SETVOLUME", "Dummy, the app has no control over the driver's audio output.");
-		return MMSYSERR_NOERROR;
-	}
-	case MODM_RESET: {
-		// Stop all the current active voices
-		PrintMessageToDebugLog("MODM_RESET", "The app sent a reset command.");
-		ResetSynth(FALSE);
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_OPEN: {
@@ -637,9 +665,6 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 				{
 					PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
 
-					PrintMessageToDebugLog("MODM_OPEN", "Checking if old CookedPlayer thread is alive...");
-					KillOldCookedPlayer(dwUser);
-
 					// Prepare the CookedPlayer
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
 
@@ -656,7 +681,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 
 					// Create player thread
 					PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
-					CookedThread.ThreadHandle = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)CookedPlayerSystem, *(LPVOID*)dwUser, NULL, (LPDWORD)CookedThread.ThreadAddress);
+					CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)dwUser, 0, &CookedThread.ThreadAddress);
 
 					PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
 				}
@@ -733,11 +758,13 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		return DebugResult("DRV_QUERYDEVICEINTERFACE", MMSYSERR_NOTSUPPORTED, "DRV_QUERYDEVICEINTERFACE not supported by OmniMIDI.");
 	default: {
 		// Unrecognized uMsg
-		CHAR Msg[MAX_PATH];
-		sprintf_s(Msg, 
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+		sprintf(Msg, 
 			"The application sent an unknown message! ID: 0x%08x - dwUser: 0x%08x - dwParam1: 0x%08x - dwParam2: 0x%08x", 
 			uMsg, dwUser, dwParam1, dwParam2);
-		return DebugResult("modMessage", MMSYSERR_ERROR, Msg);
+		RetVal = DebugResult("modMessage", MMSYSERR_ERROR, Msg);
+		free(Msg);
+		return RetVal;
 	}
 	}
 }

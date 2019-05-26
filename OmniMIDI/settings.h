@@ -43,15 +43,17 @@ void CloseRegistryKey(RegKey &hKey) {
 	}
 }
 
-BOOL CloseThread(HANDLE thread) {
+BOOL CloseThread(Thread* thread) {
 	// Wait for the thread to finish its job
-	if (thread) {
+	if (thread->ThreadHandle) {
 		PrintMessageToDebugLog("CloseThread", "Waiting for passed thread to finish...");
-		WaitForSingleObject(thread, INFINITE);
+		WaitForSingleObject(thread->ThreadHandle, INFINITE);
 
 		// And mark it as NULL
 		PrintMessageToDebugLog("CloseThread", "Cleaning up...");
-		thread = NULL;
+		CloseHandle(thread->ThreadHandle);
+		thread->ThreadHandle = NULL;
+		thread->ThreadAddress = NULL;
 
 		PrintMessageToDebugLog("CloseThread", "Thread is down.");
 		return TRUE;
@@ -84,7 +86,6 @@ long long TimeNow() {
 
 void LoadSoundfont(int whichsf) {
 	DWORD CurrentList = (whichsf + 1);
-	wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
 
 	if (!SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, ListToLoad)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");

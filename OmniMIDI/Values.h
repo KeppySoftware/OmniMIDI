@@ -29,7 +29,7 @@ static UINT CPUThreadsAvailable = 0;
 #define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some old MIDI apps (Such as GZDoom)
 
 // path
-#define NTFS_MAX_PATH 32767
+#define NTFS_MAX_PATH	32767
 
 // Settings managed by client
 static BOOL AlreadyStartedOnce = FALSE;
@@ -93,7 +93,7 @@ static DWORD SNType = REG_SZ, SNSize = sizeof(SynthNameW);
 typedef struct Thread
 {
 	HANDLE ThreadHandle = NULL;
-	ULONG ThreadAddress = NULL;
+	UINT ThreadAddress = NULL;
 	FILETIME Time, Kernel, User;
 	ULARGE_INTEGER CPU, KernelCPU, UserCPU;
 	BOOL DebugAvailable;					// <<<<<<<< USED INTERNALLY BY OMNIMIDI!
@@ -126,6 +126,7 @@ static const FLOAT sndbflen = 256.0f;		// AudToWAV
 static FLOAT *sndbf;						// AudToWAV
 
 // Settings and debug
+static wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
 typedef struct SoundFontList
 {
 	int EnableState;
@@ -156,11 +157,6 @@ static const DWORD prioval[] =
 };
 
 // Built-in blacklist
-static const LPCWSTR CookedPlayerBlacklist[] =
-{
-	_T("wmplayer.exe"),
-};
-
 static const LPCWSTR BuiltInBlacklist[] =
 {
 	_T("Battle.net Launcher.exe"),

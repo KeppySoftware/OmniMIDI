@@ -23,14 +23,18 @@ VOID KillOldCookedPlayer(DWORD_PTR dwUser) {
 	if (IsThisThreadActive(CookedThread.ThreadHandle))
 	{
 		CookedPlayerHasToGo = TRUE;
-		CloseThread(CookedThread.ThreadHandle);
-		CookedPlayerHasToGo = FALSE;
-		if (dwUser) free((*(CookedPlayer * *)dwUser));
+		if (WaitForSingleObject(CookedThread.ThreadHandle, INFINITE) == WAIT_OBJECT_0) {
+			CloseHandle(CookedThread.ThreadHandle);
+			CookedThread.ThreadHandle = nullptr;
+			CookedThread.ThreadAddress = NULL;
+			CookedPlayerHasToGo = FALSE;
+		}
 	}
 }
 
-DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
+void CookedPlayerSystem(CookedPlayer* Player)
 {
+	char Msg[MAX_PATH] = { 0 };
 	QWORD ticker = 0;
 	QWORD tickdiff = 0;
 	int sleeptime = 0;
@@ -214,6 +218,7 @@ DWORD WINAPI CookedPlayerSystem(CookedPlayer* Player)
 	// Close the thread
 	PrintMessageToDebugLog("CookedPlayerSystem", "Closing CookedPlayer thread...");
 	CloseHandle(CookedThread.ThreadHandle);
-	CookedThread.ThreadHandle = NULL;
-	return 0;
+	CookedThread.ThreadHandle = nullptr;
+	CookedThread.ThreadAddress = 0;
+	_endthreadex(0);
 }

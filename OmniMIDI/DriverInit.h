@@ -49,7 +49,7 @@ DWORD WINAPI DebugParser(Thread* DPThread) {
 }
 */
 
-DWORD WINAPI DebugPipe(LPVOID lpV) {
+void DebugPipe(LPVOID lpV) {
 	// Thread DPThread;
 
 	PrintMessageToDebugLog("DebugPipe", "Initializing debug pipe thread...");
@@ -84,11 +84,12 @@ DWORD WINAPI DebugPipe(LPVOID lpV) {
 	}
 	PrintMessageToDebugLog("DebugPipe", "Closing debug pipe thread...");
 	CloseHandle(DThread.ThreadHandle);
-	DThread.ThreadHandle = NULL;
-	return 0;
+	DThread.ThreadHandle = nullptr;
+	DThread.ThreadAddress = 0;
+	_endthreadex(0);
 }
 
-DWORD WINAPI EventsProcesser(LPVOID lpV) {
+void EventsProcesser(LPVOID lpV) {
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -109,11 +110,12 @@ DWORD WINAPI EventsProcesser(LPVOID lpV) {
 
 	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
 	CloseHandle(EPThread.ThreadHandle);
-	EPThread.ThreadHandle = NULL;
-	return 0;
+	EPThread.ThreadHandle = nullptr;
+	EPThread.ThreadAddress = 0;
+	_endthreadex(0);
 }
 
-DWORD WINAPI FastEventsProcesser(LPVOID lpV) {
+void FastEventsProcesser(LPVOID lpV) {
 	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -131,19 +133,20 @@ DWORD WINAPI FastEventsProcesser(LPVOID lpV) {
 
 	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
 	CloseHandle(EPThread.ThreadHandle);
-	EPThread.ThreadHandle = NULL;
-	return 0;
+	EPThread.ThreadHandle = nullptr;
+	EPThread.ThreadAddress = 0;
+	_endthreadex(0);
 }
 
 void InitializeEventsProcesserThread() {
 	// If the EventProcesser thread is not valid, then open a new one
-	if (EPThread.ThreadHandle == NULL) {
-		EPThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? FastEventsProcesser : EventsProcesser), NULL, 0, (LPDWORD)EPThread.ThreadAddress);
+	if (!EPThread.ThreadHandle) {
+		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), NULL, 0, &EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
 }
 
-DWORD WINAPI AudioEngine(LPVOID lpParam) {
+void AudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
@@ -173,11 +176,12 @@ DWORD WINAPI AudioEngine(LPVOID lpParam) {
 
 	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
 	CloseHandle(ATThread.ThreadHandle);
-	ATThread.ThreadHandle = NULL;
-	return 0;
+	ATThread.ThreadHandle = nullptr;
+	ATThread.ThreadAddress = 0;
+	_endthreadex(0);
 }
 
-DWORD WINAPI FastAudioEngine(LPVOID lpParam) {
+void FastAudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("FastAudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
@@ -206,8 +210,9 @@ DWORD WINAPI FastAudioEngine(LPVOID lpParam) {
 
 	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	CloseHandle(ATThread.ThreadHandle);
-	ATThread.ThreadHandle = NULL;
-	return 0;
+	ATThread.ThreadHandle = nullptr;
+	ATThread.ThreadAddress = 0;
+	_endthreadex(0);
 }
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) {
@@ -237,7 +242,12 @@ BOOL IsThisThreadActive(HANDLE thread) {
 	return result;
 }
 
-void CheckIfThreadClosed(HANDLE thread) {
+void CheckIfThreadClosed(Thread* thread) {
+	if (!thread->ThreadHandle) {
+		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "The address of the given thread is null, so it's not online.");
+		return;
+	}
+
 	// Check if the thread is still alive
 	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "Checking if previous thread passed to this function is still alive...");
 	BOOL result = (WaitForSingleObject(thread, 0) != WAIT_OBJECT_0);
@@ -246,9 +256,10 @@ void CheckIfThreadClosed(HANDLE thread) {
 	if (result) {
 		// KILL IT. DO IT.
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It is! I'm now waiting for it to stop...");
+
 		WaitForSingleObject(thread, INFINITE);
-		CloseHandle(thread);
-		thread = NULL;
+		thread->ThreadAddress = NULL;
+		thread->ThreadHandle = NULL;
 
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It stopped! Starting thread again...");
 		return;
@@ -262,18 +273,18 @@ void CloseThreads(BOOL MainClose) {
 
 	// Wait for each thread to close, and free their handles
 	PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
-	if (!CloseThread(ATThread.ThreadHandle))
+	if (!CloseThread(&ATThread))
 		PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
 
 	PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
-	if (!CloseThread(EPThread.ThreadHandle))
+	if (!CloseThread(&EPThread))
 		PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
 
 	if (MainClose)
 	{
 		// Close main as well
 		PrintMessageToDebugLog("CloseThreadsFunc", "Closing main thread...");
-		if (!CloseThread(HealthThread.ThreadHandle))
+		if (!CloseThread(&HealthThread))
 			PrintMessageToDebugLog("CloseThreadsFunc", "Main thread is already closed.");
 	}
 
@@ -289,16 +300,16 @@ BOOL CreateThreads(BOOL startup) {
 
 	if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
-		CheckIfThreadClosed(ATThread.ThreadHandle);
-		ATThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, (LPDWORD)ATThread.ThreadAddress);
+		CheckIfThreadClosed(&ATThread);
+		ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
 		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
-	if (!DThread.ThreadHandle)
+	if (!DThread.ThreadAddress)
 	{
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening debug thread...");
-		DThread.ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DebugPipe, NULL, 0, (LPDWORD)DThread.ThreadAddress);
+		DThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)DebugPipe, NULL, 0, &DThread.ThreadAddress);
 		SetThreadPriority(DThread.ThreadHandle, THREAD_PRIORITY_NORMAL);
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
