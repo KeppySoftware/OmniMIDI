@@ -101,7 +101,7 @@ The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of December 3rd, 2018, these are the functions available in the Keppy's Direct MIDI API.<br />
+As of May 27th, 2019, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 ### **InitializeKDMAPIStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.<br />
@@ -191,7 +191,10 @@ KDMDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSe
 ...
 	DWORD Voices = 10;
 	DWORD Frequency = 0;
-	
+
+	// Tell the driver that you're going to manage the settings from now on
+	KDMDriverSettings(0, OM_MANAGE, nullptr, 0);
+
 	// I want to change the voices
 	KDMDriverSettings(OM_MAXVOICES, OM_SET, &Voices, sizeof(Voices));
 	
@@ -201,6 +204,9 @@ KDMDriverSettings = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "DriverSe
 		// "The frequency is now 44100Hz!"
 		printf("The frequency is now %dHz", Frequency);
 	}
+
+	// Stop managing the settings
+	KDMDriverSettings(0, OM_LEAVE, nullptr, 0);
 ...
 ```
 <hr />
