@@ -17,16 +17,24 @@ namespace OmniMIDIConfigurator
         public PreciseControlVol()
         {
             InitializeComponent();
-            decimal VolVal = (decimal)OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value / 100;
-            VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
-            VolTrackBar.Maximum = OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Maximum;
+            VolValN.Value = (decimal)OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value;
+            VolValN.Maximum = VolTrackBar.Maximum = OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Maximum;
             VolTrackBar.Value = OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value;
         }
 
         private void VolTrackBar_Scroll(object sender, EventArgs e)
         {
-            decimal VolVal = (decimal)VolTrackBar.Value / 100;
-            VolIntView.Text = String.Format("{0}%", VolVal.ToString("000.00"));
+            VolValN.Scroll -= VolValN_ValueChanged;
+            VolValN.Value = (decimal)VolTrackBar.Value;
+            VolValN.Scroll += VolValN_ValueChanged;
+            OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value = VolTrackBar.Value;
+        }
+
+        private void VolValN_ValueChanged(object sender, EventArgs e)
+        {
+            VolTrackBar.Scroll -= VolTrackBar_Scroll;
+            VolTrackBar.Value = (int)VolValN.Value;
+            VolTrackBar.Scroll += VolTrackBar_Scroll;
             OmniMIDIConfiguratorMain.Delegate.VolTrackBar.Value = VolTrackBar.Value;
         }
 

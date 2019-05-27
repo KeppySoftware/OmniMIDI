@@ -121,6 +121,7 @@ static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and
 static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
 static HFX ChVolume;						// Volume
 static DWORD RestartValue = 0;				// For AudToWAV
+static BOOL UnlimitedChannels = 0;			// For KDMAPI
 
 static const FLOAT sndbflen = 256.0f;		// AudToWAV
 static FLOAT *sndbf;						// AudToWAV

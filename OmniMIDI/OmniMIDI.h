@@ -27,6 +27,8 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 // Settings
 #define OM_SET						0x0
 #define OM_GET						0x1
+#define OM_MANAGE					0x2
+#define OM_LEAVE					0x3
 
 #define OM_CAPFRAMERATE				0x10000
 #define OM_DEBUGMMODE				0x10001
@@ -65,6 +67,8 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define OM_DELAYNOTEOFFVAL			0x10031
 
 #define OM_CHANUPDLENGTH			0x10032
+
+#define OM_UNLOCKCHANS				0x10033
 
 // The debug info struct, you can set the default values by assigning DEFAULT_DEBUG
 typedef struct

@@ -11,7 +11,7 @@ typedef long NTSTATUS;
 
 // KDMAPI version
 #define CUR_MAJOR	1
-#define CUR_MINOR	51
+#define CUR_MINOR	52
 #define CUR_BUILD	0
 #define CUR_REV		0
 
@@ -100,6 +100,7 @@ void NTSleep(__int64 usec) {
 static DWORD DummyPlayBufData() { return 0; }
 static VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
 static MMRESULT DummyParseData(DWORD dwParam1) { return MIDIERR_NOTREADY; }
+static BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
 
 // Hyper switch
 static BOOL HyperMode = 0;
@@ -107,6 +108,7 @@ static MMRESULT(*_PrsData)(DWORD dwParam1) = DummyParseData;
 static VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
 static DWORD(*_PlayBufData)(void) = DummyPlayBufData;
 static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
+static BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 
@@ -145,6 +147,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 
 		hinst = hModule;
 		DisableThreadLibraryCalls(hinst);
+		BASS_MIDI_StreamEvent = DummyBMSE;
 
 		if (!NtDelayExecution || !NtQuerySystemTime) {
 			NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");

@@ -30,9 +30,10 @@
         {
             this.VolTrackBar = new System.Windows.Forms.TrackBar();
             this.ReturnOK = new System.Windows.Forms.Button();
-            this.VolIntView = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.VolValN = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VolValN)).BeginInit();
             this.SuspendLayout();
             // 
             // VolTrackBar
@@ -51,27 +52,13 @@
             // ReturnOK
             // 
             this.ReturnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ReturnOK.Location = new System.Drawing.Point(251, 90);
+            this.ReturnOK.Location = new System.Drawing.Point(243, 84);
             this.ReturnOK.Name = "ReturnOK";
             this.ReturnOK.Size = new System.Drawing.Size(75, 23);
             this.ReturnOK.TabIndex = 17;
             this.ReturnOK.Text = "OK";
             this.ReturnOK.UseVisualStyleBackColor = true;
             this.ReturnOK.Click += new System.EventHandler(this.ReturnOK_Click);
-            // 
-            // VolIntView
-            // 
-            this.VolIntView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolIntView.BackColor = System.Drawing.Color.Transparent;
-            this.VolIntView.Enabled = false;
-            this.VolIntView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolIntView.Location = new System.Drawing.Point(14, 69);
-            this.VolIntView.Name = "VolIntView";
-            this.VolIntView.Size = new System.Drawing.Size(311, 12);
-            this.VolIntView.TabIndex = 18;
-            this.VolIntView.Text = "000.00%";
-            this.VolIntView.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label1
             // 
@@ -82,14 +69,33 @@
             this.label1.TabIndex = 19;
             this.label1.Text = "Set the exact value you want the knob to use:";
             // 
+            // VolValN
+            // 
+            this.VolValN.Location = new System.Drawing.Point(260, 10);
+            this.VolValN.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.VolValN.Name = "VolValN";
+            this.VolValN.Size = new System.Drawing.Size(58, 20);
+            this.VolValN.TabIndex = 20;
+            this.VolValN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.VolValN.Value = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.VolValN.ValueChanged += new System.EventHandler(this.VolValN_ValueChanged);
+            // 
             // PreciseControlVol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(334, 121);
+            this.ClientSize = new System.Drawing.Size(330, 119);
             this.ControlBox = false;
+            this.Controls.Add(this.VolValN);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.VolIntView);
             this.Controls.Add(this.ReturnOK);
             this.Controls.Add(this.VolTrackBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -101,6 +107,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Fine tune the volume knob";
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.VolValN)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,7 +117,7 @@
 
         public System.Windows.Forms.TrackBar VolTrackBar;
         private System.Windows.Forms.Button ReturnOK;
-        public System.Windows.Forms.Label VolIntView;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown VolValN;
     }
 }

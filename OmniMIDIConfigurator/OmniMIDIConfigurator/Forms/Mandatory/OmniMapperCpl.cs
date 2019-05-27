@@ -16,6 +16,7 @@ namespace OmniMIDIConfigurator
     {
         private const String CurDrvLab = "Current device: {0}";
         private static RegistryKey ActiveMovieKey = null;
+        private static RegistryKey MIDIMapperKey = null;
         private static Int32 DeviceCount;
 
         public OmniMapperCpl()
@@ -33,6 +34,7 @@ namespace OmniMIDIConfigurator
                 CLSID.Close();
 
                 ActiveMovieKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\ActiveMovie\devenum\{4EFE2452-168A-11D1-BC76-00C04FB9453B}\Default MidiOut Device", true);
+                MIDIMapperKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Multimedia\MIDIMap", true);
 
                 MIDIOUTCAPS OutCaps = new MIDIOUTCAPS();
                 for (uint i = 0; i < DeviceCount; i++)
@@ -63,7 +65,8 @@ namespace OmniMIDIConfigurator
                 else
                 {
                     Text = String.Format("Change {0} settings", Functions.IsWindows8OrLater() ? "Windows Media Player MIDI output" : "MIDI mapper");
-                    MIDIOutList.SelectedIndex = Convert.ToInt32(ActiveMovieKey.GetValue("MidiOutId"));
+                    if (ActiveMovieKey != null) MIDIOutList.SelectedIndex = Convert.ToInt32(ActiveMovieKey.GetValue("MidiOutId"));
+                    else MIDIOutList.SelectedIndex = MIDIOutList.FindStringExact(MIDIMapperKey.GetValue("szPname", "Microsoft GS Wavetable Synth").ToString());
                     CurDevice.Text = String.Format(CurDrvLab, MIDIOutList.Items[MIDIOutList.SelectedIndex].ToString());
                 }
             }
@@ -77,8 +80,17 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                ActiveMovieKey.SetValue("MidiOutId", MIDIOutList.SelectedIndex, RegistryValueKind.DWord);
-                ActiveMovieKey.Close();
+                if (ActiveMovieKey != null)
+                {
+                    ActiveMovieKey.SetValue("MidiOutId", MIDIOutList.SelectedIndex, RegistryValueKind.DWord);
+                    ActiveMovieKey.Close();
+                }
+
+                if (MIDIMapperKey != null)
+                {
+                    MIDIMapperKey.SetValue("szPname", MIDIOutList.SelectedItem.ToString(), RegistryValueKind.String);
+                    MIDIMapperKey.Close();
+                }
             }
             catch (Exception ex)
             {

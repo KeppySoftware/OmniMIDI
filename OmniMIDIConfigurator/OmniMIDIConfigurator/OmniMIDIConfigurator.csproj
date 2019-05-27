@@ -232,12 +232,6 @@
     <Compile Include="Forms\Mandatory\OmniMapperCpl.Designer.cs">
       <DependentUpon>OmniMapperCpl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Mandatory\MIDIMapperSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Mandatory\MIDIMapperSettings.Designer.cs">
-      <DependentUpon>MIDIMapperSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -340,9 +334,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\MIDIEventsParserSettings.resx">
       <DependentUpon>MIDIEventsParserSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Mandatory\MIDIMapperSettings.resx">
-      <DependentUpon>MIDIMapperSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\OmniMapperCpl.resx">
       <DependentUpon>OmniMapperCpl.cs</DependentUpon>

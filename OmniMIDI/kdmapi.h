@@ -5,7 +5,14 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 #pragma once
 
-#define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) case Setting: if (cbValue != sizeof(Type)) return FALSE; if (Mode = OM_SET) SettingStruct = *(Type*)Value; else if (Mode = OM_GET) *(Type*)Value = SettingStruct; else return FALSE; break;
+#define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) \
+	case Setting: \
+		if (!SettingsManagedByClient) PrintMessageToDebugLog(#Setting, "Please send OM_MANAGE first!!!"); return FALSE; \
+		if (cbValue != sizeof(Type)) return FALSE; \
+		if (Mode = OM_SET) SettingStruct = *(Type*)Value; \
+		else if (Mode = OM_GET) *(Type*)Value = SettingStruct; \
+		else return FALSE; \
+		break;
 
 // F**k WinMM and Microsoft
 typedef VOID(CALLBACK * WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
@@ -276,7 +283,7 @@ VOID KDMAPI ResetKDMAPIStream() {
 }
 
 BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
-	return BASS_MIDI_StreamEvent(OMStream, chan, eventtype, param);
+	return _BMSE(OMStream, chan, eventtype, param);
 }
 
 MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
@@ -292,6 +299,9 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
+	if (!bass_initialized)						// The driver isn't ready
+		return DebugResult("PrepareLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
+
 	if (!IIMidiHdr)										// Buffer doesn't exist
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
@@ -311,6 +321,9 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
+	if (!bass_initialized)						// The driver isn't ready
+		return DebugResult("UnprepareLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
+
 	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
@@ -344,7 +357,7 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 	// Do the stuff with it
-	BOOL res = bass_initialized ? SendLongToBASSMIDI(IIMidiHdr) : MIDIERR_NOTREADY;
+	BOOL res = SendLongToBASSMIDI(IIMidiHdr);
 
 	// Mark the buffer as done
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
@@ -359,6 +372,8 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
 			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));
 
+		sprintf(Msg + strlen(Msg), "\n");
+
 		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, Msg);
 	}
 
@@ -371,9 +386,20 @@ MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR * IIMidiHdr) {
 }
 
 BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
-	BOOL DontMissNotesTemp = ManagedSettings.DontMissNotes;
+	switch (Setting) 
+	{
 
-	switch (Setting) {
+	case OM_MANAGE:
+	{
+		SettingsManagedByClient = TRUE;
+		return TRUE;
+	}
+
+	case OM_LEAVE:
+	{
+		SettingsManagedByClient = FALSE;
+		return TRUE;
+	}
 
 		DriverSettingsCase(OM_CAPFRAMERATE, Mode, BOOL, ManagedSettings.CapFramerate, Value, cbValue);
 		DriverSettingsCase(OM_DEBUGMMODE, Mode, DWORD, ManagedSettings.DebugMode, Value, cbValue);
@@ -411,57 +437,28 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 
 		DriverSettingsCase(OM_CHANUPDLENGTH, Mode, DWORD, ManagedSettings.ChannelUpdateLength, Value, cbValue);
 
+		DriverSettingsCase(OM_UNLOCKCHANS, Mode, BOOL, UnlimitedChannels, Value, cbValue);
+
 	default:
+	{
 		MessageBox(NULL, L"Unknown setting passed to DriverSettings.", L"OmniMIDI - KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 		return FALSE;
 	}
 
-	if (Mode == OM_SET) {
-		PrintMessageToDebugLog("KDMAPI_DS", "Applying new settings to the driver...");
-
-		// The new value is different from the temporary one, reset the synth
-		// to avoid stuck notes or crashes
-		if (DontMissNotesTemp != ManagedSettings.DontMissNotes) ResetSynth(TRUE);
-
-		// Stuff lol
-		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) ManagedSettings.MinVelIgnore = 1;
-		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) ManagedSettings.MaxVelIgnore = 1;
-
-		// Parse the new volume value, and set it
-		SynthVolume = (float)ManagedSettings.OutputVolume / 10000.0f;
-		ChVolumeStruct.fCurrent = 1.0f;
-		ChVolumeStruct.fTarget = SynthVolume;
-		ChVolumeStruct.fTime = 0.0f;
-		ChVolumeStruct.lCurve = 0;
-
-		if (AlreadyInitializedViaKDMAPI) {
-			BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-			CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Set", FALSE);
-
-			// Set the rendering time threshold, if the driver's own panic system is disabled
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-
-			// Set the stream's attributes
-			BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 1", TRUE);
-			BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 2", TRUE);
-			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 3", TRUE);
-			BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 4", TRUE);
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 5", TRUE);
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 6", TRUE);
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 7", TRUE);
-			BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-			CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", TRUE);
-		}
-
-		PrintMessageToDebugLog("KDMAPI_DS", "Done.");
 	}
+
+	if (Mode == OM_SET) 
+	{
+		if (AlreadyInitializedViaKDMAPI)
+		{
+			PrintMessageToDebugLog("KDMAPI_DS", "Applying new settings to the driver...");
+			LoadSettingsRT();
+			PrintMessageToDebugLog("KDMAPI_DS", "Done.");
+		}
+		else PrintMessageToDebugLog("KDMAPI_DS", "The new settings will be applied once the driver is started.");
+	}
+	else PrintMessageToDebugLog("KDMAPI_DS", "Copied required setting to pointed value.");
+
 	return TRUE;
 }
 
