@@ -159,221 +159,6 @@ void CrashMessage(LPCSTR part) {
 	exit(ErrorID);
 }
 
-static __declspec(noinline) void ToHex32(char* Target, DWORD val)
-{
-	sprintf(Target + strlen(Target), "%08X", val);
-}
-
-static __declspec(noinline) void ToHex64(char* Target, QWORD valin)
-{
-	DWORD* valp = (DWORD*)&valin;
-	ToHex32(Target, valp[1]);
-	ToHex32(Target, valp[0]);
-}
-
-static __declspec(noinline) void WritePointer(char* Target, size_t valin)
-{
-	if (sizeof(valin) > 4)
-		ToHex64(Target, valin);
-	else
-		ToHex32(Target, valin);
-}
-
-static BOOL IsExceptionValid(DWORD ex) {
-	switch (ex)
-	{
-	case EXCEPTION_ACCESS_VIOLATION:
-	case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
-	case EXCEPTION_BREAKPOINT:
-	case EXCEPTION_DATATYPE_MISALIGNMENT:
-	case EXCEPTION_FLT_DENORMAL_OPERAND:
-	case EXCEPTION_FLT_DIVIDE_BY_ZERO:
-	case EXCEPTION_FLT_INEXACT_RESULT:
-	case EXCEPTION_FLT_INVALID_OPERATION:
-	case EXCEPTION_FLT_OVERFLOW:
-	case EXCEPTION_FLT_STACK_CHECK:
-	case EXCEPTION_FLT_UNDERFLOW:
-	case EXCEPTION_ILLEGAL_INSTRUCTION:
-	case EXCEPTION_IN_PAGE_ERROR:
-	case EXCEPTION_INT_DIVIDE_BY_ZERO:
-	case EXCEPTION_INT_OVERFLOW:
-	case EXCEPTION_INVALID_DISPOSITION:
-	case EXCEPTION_NONCONTINUABLE_EXCEPTION:
-	case EXCEPTION_PRIV_INSTRUCTION:
-	case EXCEPTION_SINGLE_STEP:
-	case EXCEPTION_STACK_OVERFLOW:
-		return TRUE;
-	default:
-		return FALSE;
-	}
-}
-
-static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
-	if (!IsExceptionValid(exc->ExceptionRecord->ExceptionCode)) return 0;
-
-	HANDLE CurrentProcess = GetCurrentProcess();
-	MEMORY_BASIC_INFORMATION MBI;
-	BYTE* StackTrace[1024];
-	DWORD ret = CaptureStackBackTrace(0, 1024, (PVOID*)StackTrace, 0);
-
-	char MessageBuf[NTFS_MAX_PATH];
-	char NameBuf[NTFS_MAX_PATH];
-
-	sprintf(MessageBuf, "The program performed an illegal operation!\n\nIf you're the developer, check the stacktrace to see where the crash occured.\nIf you're a normal user, report this issue to either KaleidonKep99 on GitHub or the app developer.\n\n");
-	if (ret) {
-		sprintf(MessageBuf + strlen(MessageBuf), "== Stacktrace ==");
-		while (ret--) {
-			sprintf(MessageBuf + strlen(MessageBuf), "\n");
-			WritePointer(MessageBuf, (size_t)StackTrace[ret]);
-
-			if (!VirtualQuery(StackTrace[ret], &MBI, sizeof(MBI)))
-				continue;
-
-			HMODULE mod = (HMODULE)MBI.AllocationBase;
-
-			if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
-				continue;
-
-			NameBuf[31] = 0;
-			sprintf(MessageBuf + strlen(MessageBuf), " (");
-			sprintf(MessageBuf + strlen(MessageBuf), NameBuf);
-			sprintf(MessageBuf + strlen(MessageBuf), "+");
-			ToHex32(MessageBuf, (DWORD)(StackTrace[ret] - (BYTE*)mod));
-			sprintf(MessageBuf + strlen(MessageBuf), ")");
-		}
-		sprintf(MessageBuf + strlen(MessageBuf), "\n ");
-	}
-	else sprintf(MessageBuf + strlen(MessageBuf), " * No stack trace available\n\n");
-
-	sprintf(MessageBuf + strlen(MessageBuf), "\n== Exception ==");
-
-	switch (exc->ExceptionRecord->ExceptionCode)
-	{
-		arre(EXCEPTION_ACCESS_VIOLATION);
-		arre(EXCEPTION_ARRAY_BOUNDS_EXCEEDED);
-		arre(EXCEPTION_BREAKPOINT);
-		arre(EXCEPTION_DATATYPE_MISALIGNMENT);
-		arre(EXCEPTION_FLT_DENORMAL_OPERAND);
-		arre(EXCEPTION_FLT_DIVIDE_BY_ZERO);
-		arre(EXCEPTION_FLT_INEXACT_RESULT);
-		arre(EXCEPTION_FLT_INVALID_OPERATION);
-		arre(EXCEPTION_FLT_OVERFLOW);
-		arre(EXCEPTION_FLT_STACK_CHECK);
-		arre(EXCEPTION_FLT_UNDERFLOW);
-		arre(EXCEPTION_ILLEGAL_INSTRUCTION);
-		arre(EXCEPTION_IN_PAGE_ERROR);
-		arre(EXCEPTION_INT_DIVIDE_BY_ZERO);
-		arre(EXCEPTION_INT_OVERFLOW);
-		arre(EXCEPTION_INVALID_DISPOSITION);
-		arre(EXCEPTION_NONCONTINUABLE_EXCEPTION);
-		arre(EXCEPTION_PRIV_INSTRUCTION);
-		arre(EXCEPTION_SINGLE_STEP);
-		arre(EXCEPTION_STACK_OVERFLOW);
-	default: 
-		sprintf(MessageBuf + strlen(MessageBuf), "\nCode: unk"); 
-		ToHex32(MessageBuf, exc->ExceptionRecord->ExceptionCode);
-		break;
-	}
-
-	sprintf(MessageBuf + strlen(MessageBuf), "\nAddress: "); 
-	WritePointer(MessageBuf, (size_t)exc->ExceptionRecord->ExceptionAddress);
-	if (exc->ExceptionRecord->NumberParameters)
-	{
-		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[0]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[0]);
-		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[1]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[1]);
-		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[2]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[2]);
-	}
-	sprintf(MessageBuf + strlen(MessageBuf), "\n\n");
-
-	sprintf(MessageBuf + strlen(MessageBuf), "== RegDump ==");
-#ifdef _M_AMD64
-	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Rip);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nRAX: "); WritePointer(MessageBuf, exc->ContextRecord->Rax);
-	sprintf(MessageBuf + strlen(MessageBuf), " RCX: "); WritePointer(MessageBuf, exc->ContextRecord->Rcx);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nRDX: "); WritePointer(MessageBuf, exc->ContextRecord->Rdx);
-	sprintf(MessageBuf + strlen(MessageBuf), " RBX: "); WritePointer(MessageBuf, exc->ContextRecord->Rbx);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nRSP: "); WritePointer(MessageBuf, exc->ContextRecord->Rsp);
-	sprintf(MessageBuf + strlen(MessageBuf), " RBP: "); WritePointer(MessageBuf, exc->ContextRecord->Rbp);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nRSI: "); WritePointer(MessageBuf, exc->ContextRecord->Rsi);
-	sprintf(MessageBuf + strlen(MessageBuf), " RDI: "); WritePointer(MessageBuf, exc->ContextRecord->Rdi);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nDR0: "); WritePointer(MessageBuf, exc->ContextRecord->Dr0);
-	sprintf(MessageBuf + strlen(MessageBuf), " DR1: "); WritePointer(MessageBuf, exc->ContextRecord->Dr1);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nDR2: "); WritePointer(MessageBuf, exc->ContextRecord->Dr2);
-	sprintf(MessageBuf + strlen(MessageBuf), " DR3: "); WritePointer(MessageBuf, exc->ContextRecord->Dr3);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nDR6: "); WritePointer(MessageBuf, exc->ContextRecord->Dr6);
-	sprintf(MessageBuf + strlen(MessageBuf), " DR7: "); WritePointer(MessageBuf, exc->ContextRecord->Dr7);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nR8 : "); WritePointer(MessageBuf, exc->ContextRecord->R8);
-	sprintf(MessageBuf + strlen(MessageBuf), " R9 : "); WritePointer(MessageBuf, exc->ContextRecord->R9);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nR10: "); WritePointer(MessageBuf, exc->ContextRecord->R10);
-	sprintf(MessageBuf + strlen(MessageBuf), " R11: "); WritePointer(MessageBuf, exc->ContextRecord->R11);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nR12: "); WritePointer(MessageBuf, exc->ContextRecord->R12);
-	sprintf(MessageBuf + strlen(MessageBuf), " R13: "); WritePointer(MessageBuf, exc->ContextRecord->R13);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nR14: "); WritePointer(MessageBuf, exc->ContextRecord->R14);
-	sprintf(MessageBuf + strlen(MessageBuf), " R15: "); WritePointer(MessageBuf, exc->ContextRecord->R15);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nLBT: "); WritePointer(MessageBuf, exc->ContextRecord->LastBranchToRip);
-	sprintf(MessageBuf + strlen(MessageBuf), " LBF: "); WritePointer(MessageBuf, exc->ContextRecord->LastBranchFromRip);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nLET: "); WritePointer(MessageBuf, exc->ContextRecord->LastExceptionToRip);
-	sprintf(MessageBuf + strlen(MessageBuf), " LEF: "); WritePointer(MessageBuf, exc->ContextRecord->LastExceptionFromRip);
-#else
-#ifdef _M_ARM64
-	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Pc);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nLR : "); WritePointer(MessageBuf, exc->ContextRecord->Lr);
-	sprintf(MessageBuf + strlen(MessageBuf), " SP : "); WritePointer(MessageBuf, exc->ContextRecord->Sp);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nFP : "); WritePointer(MessageBuf, exc->ContextRecord->Fp);
-	sprintf(MessageBuf + strlen(MessageBuf), " CPS: "); WritePointer(MessageBuf, exc->ContextRecord->Cpsr);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nFPS: "); WritePointer(MessageBuf, exc->ContextRecord->Fpsr);
-	sprintf(MessageBuf + strlen(MessageBuf), " FPC: "); WritePointer(MessageBuf, exc->ContextRecord->Fpcr);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX0 : "); WritePointer(MessageBuf, exc->ContextRecord->X[0]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X1 : "); WritePointer(MessageBuf, exc->ContextRecord->X[1]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX2 : "); WritePointer(MessageBuf, exc->ContextRecord->X[2]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X3 : "); WritePointer(MessageBuf, exc->ContextRecord->X[3]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX4 : "); WritePointer(MessageBuf, exc->ContextRecord->X[4]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X5 : "); WritePointer(MessageBuf, exc->ContextRecord->X[5]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX6 : "); WritePointer(MessageBuf, exc->ContextRecord->X[6]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X7 : "); WritePointer(MessageBuf, exc->ContextRecord->X[7]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX8 : "); WritePointer(MessageBuf, exc->ContextRecord->X[8]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X9 : "); WritePointer(MessageBuf, exc->ContextRecord->X[9]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX10: "); WritePointer(MessageBuf, exc->ContextRecord->X[10]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X11: "); WritePointer(MessageBuf, exc->ContextRecord->X[11]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX12: "); WritePointer(MessageBuf, exc->ContextRecord->X[12]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X13: "); WritePointer(MessageBuf, exc->ContextRecord->X[13]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX14: "); WritePointer(MessageBuf, exc->ContextRecord->X[14]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X15: "); WritePointer(MessageBuf, exc->ContextRecord->X[15]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX16: "); WritePointer(MessageBuf, exc->ContextRecord->X[16]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X17: "); WritePointer(MessageBuf, exc->ContextRecord->X[17]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX18: "); WritePointer(MessageBuf, exc->ContextRecord->X[18]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X19: "); WritePointer(MessageBuf, exc->ContextRecord->X[19]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX20: "); WritePointer(MessageBuf, exc->ContextRecord->X[20]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X21: "); WritePointer(MessageBuf, exc->ContextRecord->X[21]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX22: "); WritePointer(MessageBuf, exc->ContextRecord->X[22]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X23: "); WritePointer(MessageBuf, exc->ContextRecord->X[23]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX24: "); WritePointer(MessageBuf, exc->ContextRecord->X[24]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X25: "); WritePointer(MessageBuf, exc->ContextRecord->X[25]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX26: "); WritePointer(MessageBuf, exc->ContextRecord->X[26]);
-	sprintf(MessageBuf + strlen(MessageBuf), " X27: "); WritePointer(MessageBuf, exc->ContextRecord->X[27]);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nX28: "); WritePointer(MessageBuf, exc->ContextRecord->X[28]);
-#else
-#ifdef _M_IX86
-	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Eip);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nEDI: "); WritePointer(MessageBuf, exc->ContextRecord->Edi);
-	sprintf(MessageBuf + strlen(MessageBuf), " ESI: "); WritePointer(MessageBuf, exc->ContextRecord->Esi);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nEBX: "); WritePointer(MessageBuf, exc->ContextRecord->Ebx);
-	sprintf(MessageBuf + strlen(MessageBuf), " EDX: "); WritePointer(MessageBuf, exc->ContextRecord->Edx);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nEXC: "); WritePointer(MessageBuf, exc->ContextRecord->Ecx);
-	sprintf(MessageBuf + strlen(MessageBuf), " EAX: "); WritePointer(MessageBuf, exc->ContextRecord->Eax);
-	sprintf(MessageBuf + strlen(MessageBuf), "\nEBP: "); WritePointer(MessageBuf, exc->ContextRecord->Ebp);
-#else
-	sprintf(MessageBuf + strlen(MessageBuf), " * Regdumps are not supported on this platform");
-#endif
-#endif
-#endif
-
-	MakeMiniDump(exc);
-	MessageBoxA(NULL, MessageBuf, "OmniMIDI - Unhandled Exception", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-
-	return EXCEPTION_EXECUTE_HANDLER;
-}
-
 bool GetVersionInfo(
 	LPCTSTR filename,
 	int &major,
@@ -763,6 +548,223 @@ void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 		// Flush buffer
 		fflush(DebugLog);
 	}
+}
+
+
+static __declspec(noinline) void ToHex32(char* Target, DWORD val)
+{
+	sprintf(Target + strlen(Target), "%08X", val);
+}
+
+static __declspec(noinline) void ToHex64(char* Target, QWORD valin)
+{
+	DWORD* valp = (DWORD*)& valin;
+	ToHex32(Target, valp[1]);
+	ToHex32(Target, valp[0]);
+}
+
+static __declspec(noinline) void WritePointer(char* Target, size_t valin)
+{
+	if (sizeof(valin) > 4)
+		ToHex64(Target, valin);
+	else
+		ToHex32(Target, valin);
+}
+
+static BOOL IsExceptionValid(DWORD ex) {
+	switch (ex)
+	{
+	case EXCEPTION_ACCESS_VIOLATION:
+	case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
+	case EXCEPTION_BREAKPOINT:
+	case EXCEPTION_DATATYPE_MISALIGNMENT:
+	case EXCEPTION_FLT_DENORMAL_OPERAND:
+	case EXCEPTION_FLT_DIVIDE_BY_ZERO:
+	case EXCEPTION_FLT_INEXACT_RESULT:
+	case EXCEPTION_FLT_INVALID_OPERATION:
+	case EXCEPTION_FLT_OVERFLOW:
+	case EXCEPTION_FLT_STACK_CHECK:
+	case EXCEPTION_FLT_UNDERFLOW:
+	case EXCEPTION_ILLEGAL_INSTRUCTION:
+	case EXCEPTION_IN_PAGE_ERROR:
+	case EXCEPTION_INT_DIVIDE_BY_ZERO:
+	case EXCEPTION_INT_OVERFLOW:
+	case EXCEPTION_INVALID_DISPOSITION:
+	case EXCEPTION_NONCONTINUABLE_EXCEPTION:
+	case EXCEPTION_PRIV_INSTRUCTION:
+	case EXCEPTION_SINGLE_STEP:
+	case EXCEPTION_STACK_OVERFLOW:
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+
+static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
+	if (!IsExceptionValid(exc->ExceptionRecord->ExceptionCode)) return 0;
+
+	HANDLE CurrentProcess = GetCurrentProcess();
+	MEMORY_BASIC_INFORMATION MBI;
+	BYTE* StackTrace[1024];
+	DWORD ret = CaptureStackBackTrace(0, 1024, (PVOID*)StackTrace, 0);
+
+	char MessageBuf[NTFS_MAX_PATH];
+	char NameBuf[NTFS_MAX_PATH];
+
+	sprintf(MessageBuf, "The program performed an illegal operation and will be shut down.\n\nIf you're the developer, check the stacktrace to see where the crash occured, or else report this issue to either KaleidonKep99 on GitHub or the app developer.\n\n");
+	if (ret) {
+		sprintf(MessageBuf + strlen(MessageBuf), "== Stacktrace ==");
+		while (ret--) {
+			sprintf(MessageBuf + strlen(MessageBuf), "\n");
+			WritePointer(MessageBuf, (size_t)StackTrace[ret]);
+
+			if (!VirtualQuery(StackTrace[ret], &MBI, sizeof(MBI)))
+				continue;
+
+			HMODULE mod = (HMODULE)MBI.AllocationBase;
+
+			if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
+				continue;
+
+			NameBuf[31] = 0;
+			sprintf(MessageBuf + strlen(MessageBuf), " (");
+			sprintf(MessageBuf + strlen(MessageBuf), NameBuf);
+			sprintf(MessageBuf + strlen(MessageBuf), "+");
+			ToHex32(MessageBuf, (DWORD)(StackTrace[ret] - (BYTE*)mod));
+			sprintf(MessageBuf + strlen(MessageBuf), ")");
+		}
+		sprintf(MessageBuf + strlen(MessageBuf), "\n ");
+	}
+	else sprintf(MessageBuf + strlen(MessageBuf), " * No stack trace available\n\n");
+
+	sprintf(MessageBuf + strlen(MessageBuf), "\n== Exception ==");
+
+	switch (exc->ExceptionRecord->ExceptionCode)
+	{
+		arre(EXCEPTION_ACCESS_VIOLATION);
+		arre(EXCEPTION_ARRAY_BOUNDS_EXCEEDED);
+		arre(EXCEPTION_BREAKPOINT);
+		arre(EXCEPTION_DATATYPE_MISALIGNMENT);
+		arre(EXCEPTION_FLT_DENORMAL_OPERAND);
+		arre(EXCEPTION_FLT_DIVIDE_BY_ZERO);
+		arre(EXCEPTION_FLT_INEXACT_RESULT);
+		arre(EXCEPTION_FLT_INVALID_OPERATION);
+		arre(EXCEPTION_FLT_OVERFLOW);
+		arre(EXCEPTION_FLT_STACK_CHECK);
+		arre(EXCEPTION_FLT_UNDERFLOW);
+		arre(EXCEPTION_ILLEGAL_INSTRUCTION);
+		arre(EXCEPTION_IN_PAGE_ERROR);
+		arre(EXCEPTION_INT_DIVIDE_BY_ZERO);
+		arre(EXCEPTION_INT_OVERFLOW);
+		arre(EXCEPTION_INVALID_DISPOSITION);
+		arre(EXCEPTION_NONCONTINUABLE_EXCEPTION);
+		arre(EXCEPTION_PRIV_INSTRUCTION);
+		arre(EXCEPTION_SINGLE_STEP);
+		arre(EXCEPTION_STACK_OVERFLOW);
+	default:
+		sprintf(MessageBuf + strlen(MessageBuf), "\nCode: unk");
+		ToHex32(MessageBuf, exc->ExceptionRecord->ExceptionCode);
+		break;
+	}
+
+	sprintf(MessageBuf + strlen(MessageBuf), "\nAddress: ");
+	WritePointer(MessageBuf, (size_t)exc->ExceptionRecord->ExceptionAddress);
+	if (exc->ExceptionRecord->NumberParameters)
+	{
+		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[0]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[0]);
+		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[1]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[1]);
+		sprintf(MessageBuf + strlen(MessageBuf), "\nParam[2]: "); WritePointer(MessageBuf, exc->ExceptionRecord->ExceptionInformation[2]);
+	}
+	sprintf(MessageBuf + strlen(MessageBuf), "\n\n");
+
+	sprintf(MessageBuf + strlen(MessageBuf), "== RegDump ==");
+#ifdef _M_AMD64
+	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Rip);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRAX: "); WritePointer(MessageBuf, exc->ContextRecord->Rax);
+	sprintf(MessageBuf + strlen(MessageBuf), " RCX: "); WritePointer(MessageBuf, exc->ContextRecord->Rcx);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRDX: "); WritePointer(MessageBuf, exc->ContextRecord->Rdx);
+	sprintf(MessageBuf + strlen(MessageBuf), " RBX: "); WritePointer(MessageBuf, exc->ContextRecord->Rbx);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRSP: "); WritePointer(MessageBuf, exc->ContextRecord->Rsp);
+	sprintf(MessageBuf + strlen(MessageBuf), " RBP: "); WritePointer(MessageBuf, exc->ContextRecord->Rbp);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nRSI: "); WritePointer(MessageBuf, exc->ContextRecord->Rsi);
+	sprintf(MessageBuf + strlen(MessageBuf), " RDI: "); WritePointer(MessageBuf, exc->ContextRecord->Rdi);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nDR0: "); WritePointer(MessageBuf, exc->ContextRecord->Dr0);
+	sprintf(MessageBuf + strlen(MessageBuf), " DR1: "); WritePointer(MessageBuf, exc->ContextRecord->Dr1);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nDR2: "); WritePointer(MessageBuf, exc->ContextRecord->Dr2);
+	sprintf(MessageBuf + strlen(MessageBuf), " DR3: "); WritePointer(MessageBuf, exc->ContextRecord->Dr3);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nDR6: "); WritePointer(MessageBuf, exc->ContextRecord->Dr6);
+	sprintf(MessageBuf + strlen(MessageBuf), " DR7: "); WritePointer(MessageBuf, exc->ContextRecord->Dr7);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR8 : "); WritePointer(MessageBuf, exc->ContextRecord->R8);
+	sprintf(MessageBuf + strlen(MessageBuf), " R9 : "); WritePointer(MessageBuf, exc->ContextRecord->R9);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR10: "); WritePointer(MessageBuf, exc->ContextRecord->R10);
+	sprintf(MessageBuf + strlen(MessageBuf), " R11: "); WritePointer(MessageBuf, exc->ContextRecord->R11);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR12: "); WritePointer(MessageBuf, exc->ContextRecord->R12);
+	sprintf(MessageBuf + strlen(MessageBuf), " R13: "); WritePointer(MessageBuf, exc->ContextRecord->R13);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nR14: "); WritePointer(MessageBuf, exc->ContextRecord->R14);
+	sprintf(MessageBuf + strlen(MessageBuf), " R15: "); WritePointer(MessageBuf, exc->ContextRecord->R15);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nLBT: "); WritePointer(MessageBuf, exc->ContextRecord->LastBranchToRip);
+	sprintf(MessageBuf + strlen(MessageBuf), " LBF: "); WritePointer(MessageBuf, exc->ContextRecord->LastBranchFromRip);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nLET: "); WritePointer(MessageBuf, exc->ContextRecord->LastExceptionToRip);
+	sprintf(MessageBuf + strlen(MessageBuf), " LEF: "); WritePointer(MessageBuf, exc->ContextRecord->LastExceptionFromRip);
+#else
+#ifdef _M_ARM64
+	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Pc);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nLR : "); WritePointer(MessageBuf, exc->ContextRecord->Lr);
+	sprintf(MessageBuf + strlen(MessageBuf), " SP : "); WritePointer(MessageBuf, exc->ContextRecord->Sp);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nFP : "); WritePointer(MessageBuf, exc->ContextRecord->Fp);
+	sprintf(MessageBuf + strlen(MessageBuf), " CPS: "); WritePointer(MessageBuf, exc->ContextRecord->Cpsr);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nFPS: "); WritePointer(MessageBuf, exc->ContextRecord->Fpsr);
+	sprintf(MessageBuf + strlen(MessageBuf), " FPC: "); WritePointer(MessageBuf, exc->ContextRecord->Fpcr);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX0 : "); WritePointer(MessageBuf, exc->ContextRecord->X[0]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X1 : "); WritePointer(MessageBuf, exc->ContextRecord->X[1]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX2 : "); WritePointer(MessageBuf, exc->ContextRecord->X[2]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X3 : "); WritePointer(MessageBuf, exc->ContextRecord->X[3]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX4 : "); WritePointer(MessageBuf, exc->ContextRecord->X[4]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X5 : "); WritePointer(MessageBuf, exc->ContextRecord->X[5]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX6 : "); WritePointer(MessageBuf, exc->ContextRecord->X[6]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X7 : "); WritePointer(MessageBuf, exc->ContextRecord->X[7]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX8 : "); WritePointer(MessageBuf, exc->ContextRecord->X[8]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X9 : "); WritePointer(MessageBuf, exc->ContextRecord->X[9]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX10: "); WritePointer(MessageBuf, exc->ContextRecord->X[10]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X11: "); WritePointer(MessageBuf, exc->ContextRecord->X[11]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX12: "); WritePointer(MessageBuf, exc->ContextRecord->X[12]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X13: "); WritePointer(MessageBuf, exc->ContextRecord->X[13]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX14: "); WritePointer(MessageBuf, exc->ContextRecord->X[14]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X15: "); WritePointer(MessageBuf, exc->ContextRecord->X[15]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX16: "); WritePointer(MessageBuf, exc->ContextRecord->X[16]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X17: "); WritePointer(MessageBuf, exc->ContextRecord->X[17]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX18: "); WritePointer(MessageBuf, exc->ContextRecord->X[18]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X19: "); WritePointer(MessageBuf, exc->ContextRecord->X[19]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX20: "); WritePointer(MessageBuf, exc->ContextRecord->X[20]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X21: "); WritePointer(MessageBuf, exc->ContextRecord->X[21]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX22: "); WritePointer(MessageBuf, exc->ContextRecord->X[22]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X23: "); WritePointer(MessageBuf, exc->ContextRecord->X[23]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX24: "); WritePointer(MessageBuf, exc->ContextRecord->X[24]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X25: "); WritePointer(MessageBuf, exc->ContextRecord->X[25]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX26: "); WritePointer(MessageBuf, exc->ContextRecord->X[26]);
+	sprintf(MessageBuf + strlen(MessageBuf), " X27: "); WritePointer(MessageBuf, exc->ContextRecord->X[27]);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nX28: "); WritePointer(MessageBuf, exc->ContextRecord->X[28]);
+#else
+#ifdef _M_IX86
+	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Eip);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEDI: "); WritePointer(MessageBuf, exc->ContextRecord->Edi);
+	sprintf(MessageBuf + strlen(MessageBuf), " ESI: "); WritePointer(MessageBuf, exc->ContextRecord->Esi);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEBX: "); WritePointer(MessageBuf, exc->ContextRecord->Ebx);
+	sprintf(MessageBuf + strlen(MessageBuf), " EDX: "); WritePointer(MessageBuf, exc->ContextRecord->Edx);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEXC: "); WritePointer(MessageBuf, exc->ContextRecord->Ecx);
+	sprintf(MessageBuf + strlen(MessageBuf), " EAX: "); WritePointer(MessageBuf, exc->ContextRecord->Eax);
+	sprintf(MessageBuf + strlen(MessageBuf), "\nEBP: "); WritePointer(MessageBuf, exc->ContextRecord->Ebp);
+#else
+	sprintf(MessageBuf + strlen(MessageBuf), " * Regdumps are not supported on this platform");
+#endif
+#endif
+#endif
+
+	PrintMessageToDebugLog("OmniMIDICrashHandler", MessageBuf);
+	MessageBoxA(NULL, MessageBuf, "OmniMIDI - Unhandled Exception", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+	MakeMiniDump(exc);
+
+	return EXCEPTION_EXECUTE_HANDLER;
 }
 
 BOOL EnableBuiltInHandler(LPCSTR Stage) {
