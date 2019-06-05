@@ -84,6 +84,7 @@ typedef DWORD HPLUGIN;		// Plugin handle
 #define BASS_ERROR_NONET	32	// no internet connection could be opened
 #define BASS_ERROR_CREATE	33	// couldn't create the file
 #define BASS_ERROR_NOFX		34	// effects are not available
+#define BASS_ERROR_PLAYING	35  // already playing
 #define BASS_ERROR_NOTAVAIL	37	// requested data/action is not available
 #define BASS_ERROR_DECODE	38	// the channel is/isn't a "decoding channel"
 #define BASS_ERROR_DX		39	// a sufficient DirectX version is not installed

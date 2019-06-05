@@ -72,28 +72,22 @@ namespace OmniMIDIDebugWindow
 
         // Debug information
         private CultureInfo CultureTo = CultureInfo.CreateSpecificCulture("it-IT");
-        private BindingList<String> KSPipes = new BindingList<String>();
         string currentappreturn;
         string bitappreturn;
-        const int tryConnectTimeout = 15000;
 
         // Required for KS
         FileVersionInfo Driver { get; set; }
-        RegistryKey Debug = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI", false);
         RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", false);
-        RegistryKey Watchdog = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Watchdog", false);
         RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
-        String LogPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\DebugOutput.txt";
 
         // Windows information
+        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_VideoController");
+        ManagementObjectSearcher mosEnc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Chassis");
         ComputerInfo CI = new ComputerInfo();
         string FullVersion;
         string bit;
 
         // CPU/GPU information
-        ManagementObjectSearcher mosProcessor = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Processor");
-        ManagementObjectSearcher mosGPU = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_VideoController");
-        ManagementObjectSearcher mosEnc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM CIM_Chassis");
         string cpubit = "32";
         int cpuclock = 0;
         string cpumanufacturer = "Unknown";
@@ -266,7 +260,7 @@ namespace OmniMIDIDebugWindow
                 }
                 else
                 {
-                    if (Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor == 1)
+                    if (Environment.OSVersion.Version.Major == 5 && (Environment.OSVersion.Version.Minor == 1 || Environment.OSVersion.Version.Minor == 2))
                     {
                         if (osVersionInfo.wProductType == OSInfo.VER_NT_SERVER)
                             WinLogoTT.SetToolTip(WinLogo, "You're using Windows Server 2003.");
@@ -354,19 +348,31 @@ namespace OmniMIDIDebugWindow
             try
             {
                 String Frequency = "";
-                // Get CPU info
-                foreach (ManagementObject moProcessor in mosProcessor.Get())
-                {
-                    cpuclock = int.Parse(moProcessor["maxclockspeed"].ToString());
-                    cpubit = CPUArch(int.Parse(moProcessor["Architecture"].ToString()));
-                    cpuname = moProcessor["name"].ToString();
-                    cpumanufacturer = moProcessor["manufacturer"].ToString();
-                    coreCount += int.Parse(moProcessor["NumberOfCores"].ToString());
-                }
 
-                // Get GPU info
                 try
                 {
+                    // Get CPU info
+                    using (var managementObject = new ManagementObject("Win32_Processor.DeviceID='CPU0'"))
+                    {
+                        cpuclock = int.Parse(managementObject["MaxClockSpeed"].ToString());
+                        cpubit = CPUArch(int.Parse(managementObject["Architecture"].ToString()));
+                        cpuname = managementObject["Name"].ToString();
+                        cpumanufacturer = managementObject["Manufacturer"].ToString();
+                        coreCount += int.Parse(managementObject["NumberOfCores"].ToString());
+                    }
+                }
+                catch
+                {
+                    cpuclock = 0;
+                    cpubit = "Unknown";
+                    cpuname = "Unknown CPU";
+                    cpumanufacturer = "Unknown manufacturer";
+                    coreCount += Environment.ProcessorCount;
+                }
+
+                try
+                {
+                    // Get GPU info
                     foreach (ManagementObject moGPU in mosGPU.Get())
                     {
                         gpuchip = moGPU["VideoProcessor"].ToString();
@@ -423,8 +429,8 @@ namespace OmniMIDIDebugWindow
                 else
                     Frequency = String.Format("{0}GHz", ((float)cpuclock / 1000).ToString("0.00"));
 
-                COS.Text = String.Format("{0} ({1}, {2})", OSInfo.Name, FullVersion, bit);
-                CPU.Text = String.Format("{0} ({1} processor)", cpuname, cpubit);
+                COS.Text = String.Format("{0} ({1}, {2})", OSInfo.Name.Replace("Microsoft ", ""), FullVersion, bit);
+                CPU.Text = String.Format("{0} ({1} architecture)", cpuname, cpubit);
                 CPUInfo.Text = String.Format("{0}, {1}/{2} cores, {3} ({4}MHz)", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency, cpuclock);
                 GPU.Text = gpuname;
                 GPUInternalChip.Text = gpuchip;

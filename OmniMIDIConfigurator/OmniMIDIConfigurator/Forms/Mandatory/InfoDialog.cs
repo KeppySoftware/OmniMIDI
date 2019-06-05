@@ -77,7 +77,7 @@ namespace OmniMIDIConfigurator
 
             if (Properties.Settings.Default.IsItPreRelease) DriverVer.Text += " (Pre-release build)";
 
-            WinName.Text = String.Format("{0} ({1})", OSInfo.Name, Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
+            WinName.Text = String.Format("{0} ({1})", OSInfo.Name.Replace("Microsoft ", ""), Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit");
 
             if (Environment.OSVersion.Version.Major == 10) // If OS is Windows 10, get UBR too
             {
@@ -94,9 +94,7 @@ namespace OmniMIDIConfigurator
                 }
                 else
                 {
-                    int SP = Int32.Parse(Regex.Match(Environment.OSVersion.ServicePack, @"\d+").Value, NumberFormatInfo.InvariantInfo);
-
-                    if (SP > 0)
+                    if (Int32.Parse(Regex.Match(Environment.OSVersion.ServicePack, @"\d+").Value, NumberFormatInfo.InvariantInfo) > 0)
                     {
                         WinVer.Text = String.Format("{0}.{1}.{2} ({3})",
                             Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,

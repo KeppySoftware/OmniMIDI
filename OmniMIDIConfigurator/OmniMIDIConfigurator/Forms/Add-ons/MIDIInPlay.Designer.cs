@@ -37,17 +37,16 @@
             this.ActivityLabel = new System.Windows.Forms.Label();
             this.StatusTimer = new System.Windows.Forms.Timer(this.components);
             this.RefreshInputs = new System.Windows.Forms.Button();
+            this.DataLog = new System.Windows.Forms.RichTextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.ActivityPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(315, 94);
+            this.label1.Size = new System.Drawing.Size(366, 79);
             this.label1.TabIndex = 0;
             this.label1.Text = "From within this test window, you can test if the MIDI inputs work properly,\r\nand" +
     " if OmniMIDI detects the events.\r\nKeep this window open to keep the stream alive" +
@@ -56,9 +55,8 @@
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 123);
+            this.label2.Location = new System.Drawing.Point(11, 118);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 13);
             this.label2.TabIndex = 1;
@@ -66,21 +64,20 @@
             // 
             // MIDIInList
             // 
-            this.MIDIInList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.MIDIInList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MIDIInList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MIDIInList.FormattingEnabled = true;
-            this.MIDIInList.Location = new System.Drawing.Point(70, 120);
+            this.MIDIInList.Location = new System.Drawing.Point(70, 115);
             this.MIDIInList.Name = "MIDIInList";
-            this.MIDIInList.Size = new System.Drawing.Size(172, 21);
+            this.MIDIInList.Size = new System.Drawing.Size(248, 21);
             this.MIDIInList.TabIndex = 2;
             this.MIDIInList.SelectedIndexChanged += new System.EventHandler(this.MIDIInList_SelectedIndexChanged);
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(30, 99);
+            this.label3.Location = new System.Drawing.Point(30, 94);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 13);
             this.label3.TabIndex = 3;
@@ -88,14 +85,14 @@
             // 
             // ActivityPanel
             // 
-            this.ActivityPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.ActivityPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ActivityPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.ActivityPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ActivityPanel.Controls.Add(this.ActivityLabel);
-            this.ActivityPanel.Location = new System.Drawing.Point(70, 96);
+            this.ActivityPanel.Location = new System.Drawing.Point(70, 91);
             this.ActivityPanel.Name = "ActivityPanel";
-            this.ActivityPanel.Size = new System.Drawing.Size(232, 21);
+            this.ActivityPanel.Size = new System.Drawing.Size(308, 21);
             this.ActivityPanel.TabIndex = 4;
             // 
             // ActivityLabel
@@ -105,7 +102,7 @@
             this.ActivityLabel.ForeColor = System.Drawing.Color.White;
             this.ActivityLabel.Location = new System.Drawing.Point(0, 0);
             this.ActivityLabel.Name = "ActivityLabel";
-            this.ActivityLabel.Size = new System.Drawing.Size(228, 17);
+            this.ActivityLabel.Size = new System.Drawing.Size(304, 17);
             this.ActivityLabel.TabIndex = 0;
             this.ActivityLabel.Text = "No activity.";
             this.ActivityLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -119,7 +116,8 @@
             // 
             // RefreshInputs
             // 
-            this.RefreshInputs.Location = new System.Drawing.Point(245, 119);
+            this.RefreshInputs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RefreshInputs.Location = new System.Drawing.Point(321, 114);
             this.RefreshInputs.Name = "RefreshInputs";
             this.RefreshInputs.Size = new System.Drawing.Size(57, 23);
             this.RefreshInputs.TabIndex = 5;
@@ -127,12 +125,38 @@
             this.RefreshInputs.UseVisualStyleBackColor = true;
             this.RefreshInputs.Click += new System.EventHandler(this.RefreshInputs_Click);
             // 
+            // DataLog
+            // 
+            this.DataLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataLog.BackColor = System.Drawing.Color.Black;
+            this.DataLog.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataLog.ForeColor = System.Drawing.Color.White;
+            this.DataLog.Location = new System.Drawing.Point(12, 167);
+            this.DataLog.Name = "DataLog";
+            this.DataLog.Size = new System.Drawing.Size(366, 185);
+            this.DataLog.TabIndex = 6;
+            this.DataLog.Text = "AAAAAAAAAAA";
+            this.DataLog.TextChanged += new System.EventHandler(this.DataLog_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 151);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Incoming data log:";
+            // 
             // MIDIInPlay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(314, 153);
+            this.ClientSize = new System.Drawing.Size(390, 364);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.DataLog);
             this.Controls.Add(this.RefreshInputs);
             this.Controls.Add(this.ActivityPanel);
             this.Controls.Add(this.label3);
@@ -163,5 +187,7 @@
         private System.Windows.Forms.Label ActivityLabel;
         private System.Windows.Forms.Timer StatusTimer;
         private System.Windows.Forms.Button RefreshInputs;
+        private System.Windows.Forms.RichTextBox DataLog;
+        private System.Windows.Forms.Label label4;
     }
 }

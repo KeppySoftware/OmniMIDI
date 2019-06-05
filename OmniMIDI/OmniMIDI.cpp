@@ -140,9 +140,18 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	switch (CallReason) {
 	case DLL_PROCESS_ATTACH:
 	{
+		BOOL pbDP = FALSE;
+
 		if (BannedProcesses()) {
 			OutputDebugStringA("Process is banned! Bye!");
 			return FALSE;
+		}
+
+		if (CheckRemoteDebuggerPresent(GetCurrentProcess(), &pbDP))
+		{
+			if (pbDP) {
+				MessageBoxA(NULL, "You're running OmniMIDI under a debugger!\n\nKeep in mind that the debugger might slow down the driver, making it perform and sound worse.\n\nPress OK to continue.", "OmniMIDI - WARNING", MB_ICONWARNING | MB_SYSTEMMODAL);
+			}
 		}
 
 		hinst = hModule;

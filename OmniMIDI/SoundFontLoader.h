@@ -37,14 +37,18 @@ LONGLONG FileSize(const wchar_t* name)
 
 static void SoundFontError(LPWSTR Cause, LPCWSTR Path) {
 	TCHAR Message[NTFS_MAX_PATH];
-	RtlZeroMemory(Message, sizeof(Message));
-	wsprintf(Message, L"%s\n\nAffected SoundFont: %s\n\nSolution:\nThe soundfont might be of an unknown format, its functions might be unsupported by BASSMIDI, or it might not exist in memory.\nPlease check if the path to the soundfont is correct, and ultimately check if the functions (If using a SFZ soundfont) are supported by BASSMIDI.\nIf they're not, contact Ian Luck about the issue at Un4seen forums.\n\nThe soundfont will not be loaded. Press OK to continue the loading process.", Cause, Path);
+	memset(Message, 0, sizeof(Message));
+
+	DWORD err = BASS_ErrorGetCode();
+	wsprintf(Message, L"%s\n\nBASS error code: %s\nError description: %s\n\nAffected SoundFont: %s\n\nSolution:\nThe soundfont might be of an unknown format, its functions might be unsupported by BASSMIDI, or it might not exist in memory.\nPlease check if the path to the soundfont is correct, and ultimately check if the functions (If using a SFZ soundfont) are supported by BASSMIDI.\nIf they're not, contact Ian Luck about the issue at Un4seen forums.\n\nThe soundfont will not be loaded. Press OK to continue the loading process.", 
+		Cause, ReturnBASSError(err), ReturnBASSErrorDesc(err), Path);
 	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONERROR);
 }
 
 static void SoundFontTooBig(LPWSTR Path) {
 	TCHAR Message[NTFS_MAX_PATH];
-	RtlZeroMemory(Message, sizeof(Message));
+	memset(Message, 0, sizeof(Message));
+
 	wsprintf(Message, L"The SoundFont is too big for this 32-bit app to load!\n\nAffected SoundFont: %s\n\nSolution:\nSwitch to the 64-bit version of this app (if it exists), or switch to another MIDI app that offers a 64-bit release.\n\nThe SoundFont will not be preloaded. Press OK to continue the loading process.", Path);
 	MessageBox(NULL, Message, L"OmniMIDI - SoundFont error", MB_OK | MB_ICONWARNING);
 }

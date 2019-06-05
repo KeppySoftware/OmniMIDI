@@ -3,46 +3,49 @@ OmniMIDI errors list
 */
 #pragma once
 
+#define Case(Error) case Error: return L#Error;
+
 LPCWSTR ReturnBASSError(INT ErrorCode) {
 	switch (ErrorCode) {
-	case -1: return L"BASS_ERROR_UNKNOWN";
-	case 0: return L"BASS_OK";
-	case 1: return L"BASS_ERROR_MEM";
-	case 2: return L"BASS_ERROR_FILEOPEN";
-	case 3: return L"BASS_ERROR_DRIVER";
-	case 4: return L"BASS_ERROR_BUFLOST";
-	case 5: return L"BASS_ERROR_HANDLE";
-	case 6: return L"BASS_ERROR_FORMAT";
-	case 7: return L"BASS_ERROR_POSITION";
-	case 8: return L"BASS_ERROR_INIT";
-	case 9: return L"BASS_ERROR_START";
-	case 10: return L"BASS_ERROR_SSL";
-	case 14: return L"BASS_ERROR_ALREADY";
-	case 18: return L"BASS_ERROR_NOCHAN";
-	case 19: return L"BASS_ERROR_ILLTYPE";
-	case 20: return L"BASS_ERROR_ILLPARAM";
-	case 21: return L"BASS_ERROR_NO3D";
-	case 22: return L"BASS_ERROR_NOEAX";
-	case 23: return L"BASS_ERROR_DEVICE";
-	case 24: return L"BASS_ERROR_NOPLAY";
-	case 25: return L"BASS_ERROR_FREQ";
-	case 27: return L"BASS_ERROR_NOTFILE";
-	case 29: return L"BASS_ERROR_NOHW";
-	case 31: return L"BASS_ERROR_EMPTY";
-	case 32: return L"BASS_ERROR_NONET";
-	case 33: return L"BASS_ERROR_CREATE";
-	case 34: return L"BASS_ERROR_NOFX";
-	case 35: return L"BASS_ERROR_PLAYING";
-	case 37: return L"BASS_ERROR_NOTAVAIL";
-	case 38: return L"BASS_ERROR_DECODE";
-	case 39: return L"BASS_ERROR_DX";
-	case 40: return L"BASS_ERROR_TIMEOUT";
-	case 41: return L"BASS_ERROR_FILEFORM";
-	case 42: return L"BASS_ERROR_SPEAKER";
-	case 43: return L"BASS_ERROR_VERSION";
-	case 44: return L"BASS_ERROR_CODEC";
-	case 45: return L"BASS_ERROR_ENDED";
-	case 46: return L"BASS_ERROR_BUSY";
+	Case(BASS_ERROR_ALREADY)
+	Case(BASS_ERROR_BUFLOST)
+	Case(BASS_ERROR_BUSY)
+	Case(BASS_ERROR_CODEC)
+	Case(BASS_ERROR_CREATE)
+	Case(BASS_ERROR_DECODE)
+	Case(BASS_ERROR_DEVICE)
+	Case(BASS_ERROR_DRIVER)
+	Case(BASS_ERROR_DX)
+	Case(BASS_ERROR_EMPTY)
+	Case(BASS_ERROR_ENDED)
+	Case(BASS_ERROR_FILEFORM)
+	Case(BASS_ERROR_FILEOPEN)
+	Case(BASS_ERROR_FORMAT)
+	Case(BASS_ERROR_FREQ)
+	Case(BASS_ERROR_HANDLE)
+	Case(BASS_ERROR_ILLPARAM)
+	Case(BASS_ERROR_ILLTYPE)
+	Case(BASS_ERROR_INIT)
+	Case(BASS_ERROR_MEM)
+	Case(BASS_ERROR_MIDI_INCLUDE)
+	Case(BASS_ERROR_NO3D)
+	Case(BASS_ERROR_NOCHAN)
+	Case(BASS_ERROR_NOEAX)
+	Case(BASS_ERROR_NOFX)
+	Case(BASS_ERROR_NOHW)
+	Case(BASS_ERROR_NONET)
+	Case(BASS_ERROR_NOPLAY)
+	Case(BASS_ERROR_NOTAVAIL)
+	Case(BASS_ERROR_NOTFILE)
+	Case(BASS_ERROR_PLAYING)
+	Case(BASS_ERROR_POSITION)
+	Case(BASS_ERROR_SPEAKER)
+	Case(BASS_ERROR_SSL)
+	Case(BASS_ERROR_START)
+	Case(BASS_ERROR_TIMEOUT)
+	Case(BASS_ERROR_UNKNOWN)
+	Case(BASS_ERROR_VERSION)
+	Case(BASS_OK)
 	default: return L"Unknown error.";
 	}
 }
@@ -87,7 +90,8 @@ LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	case 44: return L"Codec is not available or supported.";
 	case 45: return L"The stream has ended.";
 	case 46: return L"The device is busy. (eg. in 'exclusive' use by another process)";
-	default: return L"Unknown error.";
+	case 7000: return L"An SFZ #include directive file could not be opened.";
+	default: return L"No description available.";
 	}
 }
 
@@ -123,6 +127,8 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 		return L"BASS is unable to use the selected output. Make sure nothing is having exclusive control over it.";
 	case 46:
 		return L"Another app might've took exclusive use of the selected audio device. Try closing all the other audio applications, then try again. Ensure you're not running another exclusive-mode instance of OmniMIDI.";
+	case 7000:
+		return L"The SoundFont preset might be corrupted or invalid. Contact the original developer of the SoundFont, or use another one instead.";
 	case 5: case 8: case 11: case 12: case 13: case 15: case 16: case 17: case 19: case 38: case 43:
 		return L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.";
 	default: 
@@ -131,51 +137,34 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 }
 
 void ShowError(int error, int mode, wchar_t* engine, wchar_t* codeline, int showerror) {
+	wchar_t title[NTFS_MAX_PATH];
 	wchar_t main[NTFS_MAX_PATH];
-	memset(main, 0, sizeof(main));
 
-	wcscat(main, engine);
-	wcscat(main, L" encountered the following error: ");
+	memset(title, 0, sizeof(title));
+	memset(main, 0, sizeof(title));
 
-	wcscat(main, ReturnBASSError(error));
+	wsprintfW(main, L"%s encountered the following error: %s", engine, ReturnBASSError(error));
 	PrintBASSErrorMessageToDebugLog(ReturnBASSError(error), ReturnBASSErrorDesc(error));
 
 	if (showerror) {
-		TCHAR title[MAX_PATH];
-		memset(title, 0, sizeof(title));
+		wsprintfW(title, L"OmniMIDI - %s execution error", engine);
+		wsprintfW(main + wcslen(main), L" (E%d)", error);
 
-		std::wstring ernumb = std::to_wstring(error);
+		if (mode == 0) 
+			wsprintfW(main + wcslen(main), L"\n\nCode line error: %s", codeline);
 
-		wcscat(title, L"OmniMIDI - ");
-		wcscat(title, engine);
-		wcscat(title, L" execution error");
+		wsprintfW(main + wcslen(main), L"\n\nExplanation: %s", ReturnBASSErrorDesc(error));
 
-		wcscat(main, L" (E");
-		wcscat(main, ernumb.c_str());
-		wcscat(main, L")");
-
-		if (mode == 0) {
-			wcscat(main, L"\n\nCode line error: ");
-			wcscat(main, codeline);
-		}
-
-		wcscat(main, L"\n\nExplanation: ");
-		wcscat(main, ReturnBASSErrorDesc(error));
-
-		if (mode == 1) {
-			wcscat(main, L"\n\nWhat might have caused this error:\n");
-			wcscat(main, codeline);
-		}
-		else {
-			wcscat(main, L"\n\nPossible fixes:\n");
-			wcscat(main, ReturnBASSErrorFix(error));
-		}
-
-		wcscat(main, L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
+		wsprintfW(main + wcslen(main),
+			mode ? L"\n\nWhat might have caused this error:\n%s" : L"\n\nPossible fixes:\n%s", 
+			mode ? codeline : ReturnBASSErrorFix(error)
+		);
 
 		if (!_wcsicmp(engine, L"BASSASIO") && error != -1) {
-			wcscat(main, L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+			wsprintfW(main + wcslen(main), L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
 		}
+
+		wsprintfW(main + wcslen(main), L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
 
 		MessageBoxW(NULL, main, title, MB_OK | MB_ICONERROR);
 
