@@ -92,25 +92,25 @@ You need this software installed before attempting to run the setup:
 
 ### Minimum system requirements for MIDI playback on x86/x64 systems
 The minimum requirements for this synthesizer to work are the following:
-- A x86 CPU running at 1.6GHz (With SSE instruction set support)
-- 384MB of RAM
-- Realtek High Definition Audio or better<br />*(AC97 might work too, but it's really laggy.)*
-- Windows XP SP3 (XP SP2 x64) or greater (Server versions are supported too)
+- A x86 CPU running at 1GHz *(With at least MMX support)*
+- 256MB of RAM
+- Intel AC'97 capable controller or better
+- Windows XP SP3 *(XP SP2 x64)* or greater *(Server versions are supported too)*
 
 ### Minimum system requirements for MIDI playback on ARM64 systems
 The minimum requirements for this synthesizer to work are the following:
 - Qualcomm® Snapdragon™ 835, or any ARM® Cortex-A57 based chip running at 2GHz or more
-- 1536MB of RAM (Required by Windows)
-- Any sound device supported by Windows 10 ARM64 (Qualcomm® Aqstic™ or aptX™ DACs are recommended)
+- 1536MB of RAM *(Required by Windows)*
+- Any sound device supported by Windows 10 ARM64 *(Qualcomm® Aqstic™ or aptX™ DACs are recommended)*
 - Windows 10 Spring Creators Update 2018
 
 ### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
-- A octa-core CPU running at 3GHz (Ryzen 7 1700 or better recommended)
+- An hexa-core CPU running at 2.4GHz *(With AVX support)*
 - 16GB of RAM
 - Native Instruments Komplete Audio 6 or another dedicated ASIO-capable hardware interface
 - Windows 10 Pro for Workstations
-- Alternative MIDI Mapper and Windows Multimedia Wrapper for DAWs _(Both included in the driver's configurator, for easy installation)_
+- OmniMapper and Windows Multimedia Wrapper for DAWs _(Both included in the driver's configurator, for easy installation)_
 
 ### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
@@ -118,6 +118,7 @@ To compile (and test) the synthesizer, you need:
 - Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
 - Microsoft Windows SDK 7.1A (Windows XP C++ support for VS2017)
+- Microsoft Windows SDK 10.0.18361
 
 ## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)
