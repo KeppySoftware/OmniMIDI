@@ -199,6 +199,7 @@ static const LPCWSTR BuiltInBlacklist[] =
 	_T("spoolsv.exe"),
 	_T("vcpkgsrv.exe"),
 	_T("vmware-hostd.exe"),
+	_T("vmware-vmx.exe"),
 	_T("wininit.exe"),
 	_T("winlogon.exe"),
 };

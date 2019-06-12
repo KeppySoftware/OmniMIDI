@@ -240,7 +240,6 @@
             this.AMIDIMapInstallMenu = new System.Windows.Forms.MenuItem();
             this.AMIDIMapUninstallMenu = new System.Windows.Forms.MenuItem();
             this.menuItem40 = new System.Windows.Forms.MenuItem();
-            this.RegDriver = new System.Windows.Forms.MenuItem();
             this.SignatureCheck = new System.Windows.Forms.MenuItem();
             this.SelfSignedCertificate = new System.Windows.Forms.MenuItem();
             this.menuItem39 = new System.Windows.Forms.MenuItem();
@@ -2475,12 +2474,6 @@
             this.AMIDIMapUninstallMenu});
             this.menuItem40.Text = "OmniMapper";
             // 
-            // RegDriver
-            // 
-            this.RegDriver.Index = 5;
-            this.RegDriver.Text = "Register/Unregister the driver";
-            this.RegDriver.Click += new System.EventHandler(this.RegDriver_Click);
-            // 
             // SignatureCheck
             // 
             this.SignatureCheck.Index = 4;
@@ -2530,7 +2523,6 @@
             this.menuItem60,
             this.SelfSignedCertificate,
             this.SignatureCheck,
-            this.RegDriver,
             this.menuItem39,
             this.SetAssociationWithSFs,
             this.MIDIInOutTest,
@@ -3111,7 +3103,6 @@
         private System.Windows.Forms.MenuItem AMIDIMapInstallMenu;
         private System.Windows.Forms.MenuItem AMIDIMapUninstallMenu;
         private System.Windows.Forms.MenuItem menuItem40;
-        private System.Windows.Forms.MenuItem RegDriver;
         private System.Windows.Forms.MenuItem SignatureCheck;
         private System.Windows.Forms.MenuItem SelfSignedCertificate;
         private System.Windows.Forms.MenuItem menuItem39;

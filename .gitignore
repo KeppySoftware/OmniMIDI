@@ -12,8 +12,8 @@
 /external_packages/lib64/*.dll
 /Debug
 /OmniMIDIConfiguratorXP
-/OmniMIDIDriverRegister/KSDriverRegister/bin/
-/OmniMIDIDriverRegister/KSDriverRegister/obj/
+/OmniMIDIDriverRegister/OmniMIDIDriverRegister/bin/
+/OmniMIDIDriverRegister/OmniMIDIDriverRegister/obj/
 /OmniMIDIDriverRegister/output/
 /OmniMIDI/*.dll
 /OmniMIDI/*.exe
@@ -64,9 +64,6 @@
 /OmniMIDIDebugWindow/output/
 /OmniMIDIMixerWindow/OmniMIDIMixerWindow/bin
 /OmniMIDIMixerWindow/OmniMIDIMixerWindow/obj
-/OmniMIDIWatchdog/OmniMIDIWatchdog/bin/
-/OmniMIDIWatchdog/OmniMIDIWatchdog/obj/
-/OmniMIDIWatchdog/output/
 /OmniMIDIconfig
 /Release
 /ipch

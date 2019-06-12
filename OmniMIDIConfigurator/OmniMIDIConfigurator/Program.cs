@@ -30,8 +30,6 @@ namespace OmniMIDIConfigurator
         public const uint HWND_BROADCAST = 0xFFFF;
         public const short SW_RESTORE = 9;
     }
-
-
     internal static class WinMM
     {
         internal const int MMSYSERR_NOERROR = 0;
@@ -214,6 +212,11 @@ namespace OmniMIDIConfigurator
 
     static class Program
     {
+        public static RegistryKey driver32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+        public static RegistryKey driver64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+        public static RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
+        public static RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
+
         public static bool DebugMode = false;
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -313,6 +316,41 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        public static bool CheckDriverStatusInReg(String WhichBit, RegistryKey WhichKey)
+        {
+            bool Registered = false;
+            for (int i = 0; i <= 32; i++)
+            {
+                String iS = (i == 0) ? "" : i.ToString();
+
+                try
+                {
+                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "null").ToString() == "OmniMIDI\\OmniMIDI.dll")
+                    {
+                        Registered = true;
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(String.Format("No MIDI driver values available.\n\nError:\n{0}", ex.ToString()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    return false;
+                }
+            }
+
+            if (!Registered)
+            {
+                MessageBox.Show(
+                    String.Format("It looks like something unregistered the {0} version of the driver from the Windows registry.\nOmniMIDI can recover from this automatically.\n\nPress OK to let the register tool fix the issue.", WhichBit), 
+                    String.Format("OmniMIDI ~ {0} driver not registered", WhichBit), 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/omcrecover");
+            }
+
+            return Registered;
+        }
+
         public static uint BringToFrontMessage;
         static EventWaitHandle m;
         static void DoAnyway(String[] args)
@@ -324,8 +362,13 @@ namespace OmniMIDIConfigurator
                 if (!Functions.IsWindowsVistaOrNewer())
                 {
                     MessageBox.Show("This version of the configurator won't work on Windows XP and older!", "OmniMIDI Configurator - FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Application.ExitThread();
+                    return;
                 }
+
+                DebugToConsole(false, "Checking if driver is registered...", null);
+                if (!CheckDriverStatusInReg("x86", clsid32)) return;
+                if (Environment.Is64BitOperatingSystem)
+                    if (!CheckDriverStatusInReg("x64", clsid64)) return;
 
                 // Parse KDMAPI version
                 Int32 Major = 0, Minor = 0, Build = 0, Revision = 0;

@@ -20,71 +20,37 @@ namespace OmniMIDIDriverRegister
 
         static void Main(string[] args)
         {
-            List<string> copyme = new List<string>();
-            if (args.Length != 0)
-            {
-                foreach (String s in args)
-                {
-                    copyme.Add(s);
-                }
-            }
-            else
-            {
-                copyme.Add("/showdialog");
-            }
+            string arg = "/showdialog";
+            if (args.Length > 0) arg = args[0];
 
-            string[] arguments = new string[copyme.ToArray().Length];
-            copyme.ToArray().CopyTo(arguments, 0);
-
-            if (arguments[0] == "/register")
+            if (arg == "/omcrecover")
             {
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    Register(true, "x86", clsid32);
-                    Register(true, "x64", clsid64);
-                }
-                else
-                {
-                    Register(true, "x86", clsid32);
-                }
+                Register(true, "x86", clsid32);
+                if (Environment.Is64BitOperatingSystem) Register(true, "x64", clsid64);
+                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIConfigurator.exe");
+                return;
             }
-            else if (arguments[0] == "/unregister")
+            else if (arg == "/register")
             {
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    Unregister(true, "x86", clsid32);
-                    Unregister(true, "x64", clsid64);
-                }
-                else
-                {
-                    Unregister(true, "x86", clsid32);
-                }
+                Register(true, "x86", clsid32);
+                if (Environment.Is64BitOperatingSystem) Register(true, "x64", clsid64);
             }
-            else if (arguments[0] == "/registerv")
+            else if (arg == "/unregister")
             {
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    Register(false, "x86", clsid32);
-                    Register(false, "x64", clsid64);
-                }
-                else
-                {
-                    Register(false, "x86", clsid32);
-                }
+                Unregister(true, "x86", clsid32);
+                if (Environment.Is64BitOperatingSystem) Unregister(true, "x64", clsid64);
             }
-            else if (arguments[0] == "/unregisterv")
+            else if (arg == "/registerv")
             {
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    Unregister(false, "x86", clsid32);
-                    Unregister(false, "x64", clsid64);
-                }
-                else
-                {
-                    Unregister(false, "x86", clsid32);
-                }
+                Register(false, "x86", clsid32);
+                if (Environment.Is64BitOperatingSystem) Register(false, "x64", clsid64);
             }
-            else if (arguments[0] == "/associate")
+            else if (arg == "/unregisterv")
+            {
+                Unregister(false, "x86", clsid32);
+                if (Environment.Is64BitOperatingSystem) Unregister(false, "x64", clsid64);
+            }
+            else if (arg == "/associate")
             {
                 string ExecutableName = "OmniMIDIConfigurator.exe";
                 string OpenWith = Path.GetFullPath("OmniMIDIConfigurator.exe");
@@ -122,29 +88,29 @@ namespace OmniMIDIDriverRegister
                 }
                 catch { }
             }
-            else if (arguments[0] == "/rmidimap")
+            else if (arg == "/rmidimap")
             {
                 RegisterMidiMapper(true, false);
             }
-            else if (arguments[0] == "/umidimap")
+            else if (arg == "/umidimap")
             {
                 RegisterMidiMapper(true, true);
             }
-            else if (arguments[0] == "/rmidimapv")
+            else if (arg == "/rmidimapv")
             {
                 RegisterMidiMapper(false, false);
             }
-            else if (arguments[0] == "/umidimapv")
+            else if (arg == "/umidimapv")
             {
                 RegisterMidiMapper(false, true);
             }
-            else if (arguments[0] == "/showdialog")
+            else if (arg == "/showdialog")
             {
                 Application.EnableVisualStyles();
                 new OmniMIDIDefaultDialog().ShowDialog();
                 Application.Exit();
             }
-            else if (arguments[0] == "/help")
+            else if (arg == "/help")
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Keppy's Synthesizer Register/Unregister Tool\n");
@@ -171,17 +137,7 @@ namespace OmniMIDIDriverRegister
 
         public static void Register(bool IsSilent, String WhichBit, RegistryKey WhichKey)
         {
-            WhichKey.SetValue("midi", "wdmaud.drv");
-            try
-            {
-                if (WhichKey.GetValue("midi9").ToString() == "OmniMIDI\\OmniMIDI.dll")
-                {
-                    WhichKey.DeleteValue("midi9");
-                }
-            }
-            catch { }
-
-            for (int i = 1; i <= 9; i++)
+            for (int i = 1; i <= 32; i++)
             {
                 try
                 {
@@ -216,6 +172,33 @@ namespace OmniMIDIDriverRegister
             }
         }
 
+        public static void Unregister(bool IsSilent, String WhichBit, RegistryKey WhichKey)
+        {
+            for (int i = 1; i <= 32; i++)
+            {
+                String iS = (i < 1) ? "" : i.ToString();
+
+                try
+                {
+                    if (WhichKey.GetValue(String.Format("midi{0}", i)).ToString() == "OmniMIDI\\OmniMIDI.dll")
+                    {
+                        WhichKey.SetValue(String.Format("midi{0}", i), "wdmaud.drv");
+                        ShowMessage(IsSilent, String.Format("{0} driver succesfully unregistered.", WhichBit), "Information", MessageBoxIcon.Information);
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                catch
+                {
+                    ShowMessage(IsSilent, String.Format("{0} driver already unregistered.", WhichBit), "Information", MessageBoxIcon.Information);
+                    break;
+                }
+            }
+        }
+
         public static void RegisterMidiMapper(bool IsSilent, bool Uninstall)
         {
             if (!Uninstall)
@@ -244,31 +227,6 @@ namespace OmniMIDIDriverRegister
                     clsid32.SetValue("midimapper", "midimap.dll");
                 }
                 ShowMessage(IsSilent, "MIDI mapper succesfully unregistered.", "Information", MessageBoxIcon.Information);
-            }
-        }
-
-        public static void Unregister(bool IsSilent, String WhichBit, RegistryKey WhichKey)
-        {
-            for (int i = 1; i <= 9; i++)
-            {
-                try
-                {
-                    if (WhichKey.GetValue(String.Format("midi{0}", i)).ToString() == "OmniMIDI\\OmniMIDI.dll")
-                    {
-                        WhichKey.SetValue(String.Format("midi{0}", i), "wdmaud.drv");
-                        ShowMessage(IsSilent, String.Format("{0} driver succesfully unregistered.", WhichBit), "Information", MessageBoxIcon.Information);
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                catch
-                {
-                    ShowMessage(IsSilent, String.Format("{0} driver already unregistered.", WhichBit), "Information", MessageBoxIcon.Information);
-                    break;
-                }
             }
         }
     }
