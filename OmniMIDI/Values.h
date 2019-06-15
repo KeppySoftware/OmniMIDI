@@ -65,6 +65,7 @@ static BOOL BASSLoadedToMemory = FALSE;
 static BOOL ASIOReady = FALSE;
 static BOOL DisableChime = FALSE;
 static BOOL KDMAPIEnabled = FALSE;
+static BOOL IsKDMAPIViaWinMM = FALSE;
 static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 static CHAR SynthName[MAXPNAMELEN];			// Synthesizer name, but ASCII
 

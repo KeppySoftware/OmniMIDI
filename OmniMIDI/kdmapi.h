@@ -90,6 +90,7 @@ void Supervisor(LPVOID lpV) {
 
 BOOL DoStartClient() {
 	if (!DriverInitStatus) {
+		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
 		GetAppName();
 		CheckIfAppIsAllowedToUseOSD();
 
@@ -402,6 +403,18 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 	case OM_LEAVE:
 	{
 		SettingsManagedByClient = FALSE;
+		return TRUE;
+	}
+
+	case ON1I8F97TJ6S5SI07LDPJBSB:
+	{
+		IsKDMAPIViaWinMM = FALSE;
+		return TRUE;
+	}
+
+	case INVC2MDUBR3YR8DWOF2L55WL:
+	{
+		IsKDMAPIViaWinMM = TRUE;
 		return TRUE;
 	}
 

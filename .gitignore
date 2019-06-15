@@ -1,4 +1,5 @@
-// Ignore non-mandatory files
+
+
 *.suo
 *.tmp
 /*.dll
@@ -8,13 +9,8 @@
 /*.suo
 /*.user
 /*.vcxproj.user
-/external_packages/lib/*.dll
-/external_packages/lib64/*.dll
+/.vs
 /Debug
-/OmniMIDIConfiguratorXP
-/OmniMIDIDriverRegister/OmniMIDIDriverRegister/bin/
-/OmniMIDIDriverRegister/OmniMIDIDriverRegister/obj/
-/OmniMIDIDriverRegister/output/
 /OmniMIDI/*.dll
 /OmniMIDI/*.exe
 /OmniMIDI/*.exp
@@ -34,6 +30,22 @@
 /OmniMIDI/out
 /OmniMIDI/output
 /OmniMIDI/x64
+/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/LoudMax
+/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/Text/TelemetryLoginData.txt
+/OmniMIDIConfigurator/OmniMIDIConfigurator/bin
+/OmniMIDIConfigurator/OmniMIDIConfigurator/obj
+/OmniMIDIConfigurator/packages
+/OmniMIDIConfiguratorXP
+/OmniMIDIDebugWindow/OmniMIDIDebugWindow/bin/
+/OmniMIDIDebugWindow/OmniMIDIDebugWindow/obj/
+/OmniMIDIDebugWindow/output/
+/OmniMIDIDriverRegister/OmniMIDIDriverRegister/bin/
+/OmniMIDIDriverRegister/OmniMIDIDriverRegister/obj/
+/OmniMIDIDriverRegister/output/
+/OmniMIDIMixerWindow/OmniMIDIMixerWindow/bin
+/OmniMIDIMixerWindow/OmniMIDIMixerWindow/obj
+/OmniMIDIconfig
+/OmniMapper/.vs/
 /OmniMapper/OmniMapper/*.dll
 /OmniMapper/OmniMapper/*.exe
 /OmniMapper/OmniMapper/*.exp
@@ -46,31 +58,17 @@
 /OmniMapper/OmniMapper/*.suo
 /OmniMapper/OmniMapper/*.user
 /OmniMapper/OmniMapper/*.vcxproj.user
-/OmniMapper/.vs/
+/OmniMapper/OmniMapper/ARM64
 /OmniMapper/OmniMapper/Debug
 /OmniMapper/OmniMapper/Release
 /OmniMapper/OmniMapper/ipch
 /OmniMapper/OmniMapper/out
 /OmniMapper/OmniMapper/output
 /OmniMapper/OmniMapper/x64
-/OmniMapper/OmniMapper/ARM64
-/OmniMIDIConfigurator/packages
-/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/LoudMax
-/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/Text/TelemetryLoginData.txt
-/OmniMIDIConfigurator/OmniMIDIConfigurator/bin
-/OmniMIDIConfigurator/OmniMIDIConfigurator/obj
-/OmniMIDIDebugWindow/OmniMIDIDebugWindow/bin/
-/OmniMIDIDebugWindow/OmniMIDIDebugWindow/obj/
-/OmniMIDIDebugWindow/output/
-/OmniMIDIMixerWindow/OmniMIDIMixerWindow/bin
-/OmniMIDIMixerWindow/OmniMIDIMixerWindow/obj
-/OmniMIDIconfig
 /Release
+/external_packages/lib/*.dll
+/external_packages/lib64/*.dll
 /ipch
-/sign
-/.vs
-
-// Ignore SoundFont Packer output
 /sfpacker/*.dll
 /sfpacker/*.exe
 /sfpacker/*.opensdf
@@ -81,10 +79,14 @@
 /sfpacker/Debug
 /sfpacker/Release
 /sfpacker/ipch
-README.txt
-
-// Ignore some output files
+/sign
 OmniMIDI/signature.kep
+OmniMIDIConfigurator/.vs/OmniMIDIConfigurator/v15/Server/sqlite3/storage.ide-wal
+README.txt
+Sign WinMM patches and BASS.bat
+Sign and compile setup.bat
+Sign runtime.bat
+Sign, compile setup and create portable DLLs for devs.bat
 output/*.config
 output/*.dll
 output/*.manifest
@@ -93,18 +95,16 @@ output/*.vshost.exe
 output/*.xml
 output/64
 output/ARM64
-output/OmniMIDIDriverRegister.exe
 output/OmniMIDIConfigurator.exe
+output/OmniMIDIConfiguratorXP.exe
+Sign WinMM patches.bat
+Sign BASS.bat
+
 output/OmniMIDIDebugWindow.exe
+output/OmniMIDIDev.zip
+output/OmniMIDIDriverRegister.exe
 output/OmniMIDIMixerWindow.exe
-output/OmniMIDIWatchdog.exe
 output/OmniMIDISetup.exe
 output/OmniMIDIUpdate.exe
+output/OmniMIDIWatchdog.exe
 output/Test OmniMIDI Configurator.bat
-Sign and compile setup.bat
-Sign runtime.bat
-Sign WinMM patches and BASS.bat
-output/OmniMIDIDev.zip
-Sign, compile setup and create portable DLLs for devs.bat
-OmniMIDIConfigurator/.vs/OmniMIDIConfigurator/v15/Server/sqlite3/storage.ide-wal
-output/OmniMIDIConfiguratorXP.exe

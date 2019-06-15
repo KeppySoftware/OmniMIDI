@@ -11,7 +11,7 @@ typedef long NTSTATUS;
 
 // KDMAPI version
 #define CUR_MAJOR	1
-#define CUR_MINOR	52
+#define CUR_MINOR	60
 #define CUR_BUILD	0
 #define CUR_REV		0
 

@@ -715,10 +715,16 @@ void CheckVolume(BOOL Closing) {
 }
 
 template <typename T>
-std::string clean_double(const T a_value)
+std::string draw_number(const T a_value, int prec, DWORD compar, LPCSTR c1, LPCSTR c2)
 {
 	std::ostringstream out;
-	out.precision(0);
+	out.precision(prec);
+
+	if (a_value > compar)
+		out << c1;
+	else
+		out << c2;
+
 	out << std::fixed << a_value;
 	return out.str();
 }
@@ -782,12 +788,18 @@ void FillContentDebug(
 		for (int i = 0; i <= 15; ++i)
 			ActiveVoices += ManagedDebugInfo.ActiveVoices[i];
 
-		RTSSContent += "<A0=-5><A1=4><C0=FFA0A0><C1=FF00A0><C2=FFFFFF><C3=33FF33><C4=FF3333><S0=-50><S1=50>";
-		RTSSContent += "<C0>Rendering time:<S><C>	<A0>" + clean_double(CCUI0) + "<A><A1><S1> %<S><A>\n";
-		RTSSContent += "<C0>Active voices:<S><C>	<A0>" + std::to_string(ActiveVoices) + "<A><A1><S1> voices<S><A>\n";
-		RTSSContent += "<C0>KDMAPI status:<S><C>	<A0>";
-		if (KDMAPIStatus) RTSSContent += "<C3>ON\n<A><A1><S1><S><A>\n"; else RTSSContent += "<C4>OFF\n<A>\n";
-		RTSSContent += "<C2>Framerate:<C>	<A0><FR><A><A1><S1> FPS<S><A>";
+		RTSSContent += "<A0=-5><A1=4><C0=FFA0A0><C1=FF0000><C2=FFFFFF><C3=33FF33><C4=FF3333><C5=FFFF00><S0=-50><S1=50>";
+		RTSSContent += "<C0>Rendering time:<S>	 <A0>" + draw_number(CCUI0, 1, ManagedSettings.MaxRenderingTime, "<C1>", "<C>") + "%<A>\n";
+		RTSSContent += "<C0>Active voices:<S>	 <A0>" + draw_number(ActiveVoices, 0, ManagedSettings.MaxVoices, "<C1>", "<C>") + "<A>\n";
+		RTSSContent += "<C0>Init mode:<S><C>	 <A0>";
+		if (KDMAPIStatus) {
+			if (IsKDMAPIViaWinMM)
+				RTSSContent += "<C5>WinMMWRP\n<A>\n";
+			else
+				RTSSContent += "<C3>KDMAPI\n<A>\n";
+		} 
+		else RTSSContent += "<C4>WinMM\n<A>\n";
+		RTSSContent += "<C2>Framerate (<APP>):<C>	 <A0><FR><A>";
 
 		// Send the data to RTSS
 		UpdateOSD(RTSSContent.c_str());

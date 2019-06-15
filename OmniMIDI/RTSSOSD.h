@@ -19,66 +19,71 @@ BOOL IsOSDAvailable() {
 
 BOOL UpdateOSD(LPCSTR lpText) {
 	BOOL bResult = FALSE;
-	HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"RTSSSharedMemoryV2");
 
-	if (hMapFile)
-	{
-		LPVOID pMapAddr = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-		LPRTSS_SHARED_MEMORY pMem = (LPRTSS_SHARED_MEMORY)pMapAddr;
+	if (CanUseOSD) {
+		HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"RTSSSharedMemoryV2");
 
-		if (pMem)
+		if (hMapFile)
 		{
-			if ((pMem->dwSignature == 'RTSS') && (pMem->dwVersion >= 0x00020000))
+			LPVOID pMapAddr = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+			LPRTSS_SHARED_MEMORY pMem = (LPRTSS_SHARED_MEMORY)pMapAddr;
+
+			if (pMem)
 			{
-				for (DWORD dwPass = 0; dwPass < 2; dwPass++)
+				if ((pMem->dwSignature == 'RTSS') && (pMem->dwVersion >= 0x00020000))
 				{
-					for (DWORD dwEntry = 1; dwEntry < pMem->dwOSDArrSize; dwEntry++)
+					for (DWORD dwPass = 0; dwPass < 2; dwPass++)
 					{
-						RTSS_SHARED_MEMORY::LPRTSS_SHARED_MEMORY_OSD_ENTRY pEntry = (RTSS_SHARED_MEMORY::LPRTSS_SHARED_MEMORY_OSD_ENTRY)((LPBYTE)pMem + pMem->dwOSDArrOffset + dwEntry * pMem->dwOSDEntrySize);
-
-						if (dwPass)
+						for (DWORD dwEntry = 1; dwEntry < pMem->dwOSDArrSize; dwEntry++)
 						{
-							if (!strlen(pEntry->szOSDOwner))
-								strcpy_s(pEntry->szOSDOwner, sizeof(pEntry->szOSDOwner), "RTSSSharedMemorySample");
-						}
+							RTSS_SHARED_MEMORY::LPRTSS_SHARED_MEMORY_OSD_ENTRY pEntry = (RTSS_SHARED_MEMORY::LPRTSS_SHARED_MEMORY_OSD_ENTRY)((LPBYTE)pMem + pMem->dwOSDArrOffset + dwEntry * pMem->dwOSDEntrySize);
 
-						if (!strcmp(pEntry->szOSDOwner, "RTSSSharedMemorySample"))
-						{
-							if (pMem->dwVersion >= 0x00020007)
+							if (dwPass)
 							{
-								if (pMem->dwVersion >= 0x0002000e)
-								{
-									DWORD dwBusy = _interlockedbittestandset(&pMem->dwBusy, 0);
-
-									if (!dwBusy)
-									{
-										strncpy_s(pEntry->szOSDEx, sizeof(pEntry->szOSDEx), lpText, sizeof(pEntry->szOSDEx) - 1);
-										pMem->dwBusy = 0;
-									}
-								}
-								else strncpy_s(pEntry->szOSDEx, sizeof(pEntry->szOSDEx), lpText, sizeof(pEntry->szOSDEx) - 1);
-
+								if (!strlen(pEntry->szOSDOwner))
+									strcpy_s(pEntry->szOSDOwner, sizeof(pEntry->szOSDOwner), "RTSSSharedMemorySample");
 							}
-							else strncpy_s(pEntry->szOSD, sizeof(pEntry->szOSD), lpText, sizeof(pEntry->szOSD) - 1);
 
-							pMem->dwOSDFrame++;
-							bResult = TRUE;
-							break;
+							if (!strcmp(pEntry->szOSDOwner, "RTSSSharedMemorySample"))
+							{
+								if (pMem->dwVersion >= 0x00020007)
+								{
+									if (pMem->dwVersion >= 0x0002000e)
+									{
+										DWORD dwBusy = _interlockedbittestandset(&pMem->dwBusy, 0);
+
+										if (!dwBusy)
+										{
+											strncpy_s(pEntry->szOSDEx, sizeof(pEntry->szOSDEx), lpText, sizeof(pEntry->szOSDEx) - 1);
+											pMem->dwBusy = 0;
+										}
+									}
+									else strncpy_s(pEntry->szOSDEx, sizeof(pEntry->szOSDEx), lpText, sizeof(pEntry->szOSDEx) - 1);
+
+								}
+								else strncpy_s(pEntry->szOSD, sizeof(pEntry->szOSD), lpText, sizeof(pEntry->szOSD) - 1);
+
+								pMem->dwOSDFrame++;
+								bResult = TRUE;
+								break;
+							}
 						}
-					}
 
-					if (bResult) break;
+						if (bResult) break;
+					}
 				}
+				UnmapViewOfFile(pMapAddr);
 			}
-			UnmapViewOfFile(pMapAddr);
+			CloseHandle(hMapFile);
 		}
-		CloseHandle(hMapFile);
 	}
 
 	return bResult;
 }
 
 void ReleaseOSD() {
+	CanUseOSD = FALSE;
+
 	HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"RTSSSharedMemoryV2");
 
 	if (hMapFile)
