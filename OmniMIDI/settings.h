@@ -3,6 +3,38 @@ OmniMIDI settings loading system
 */
 #pragma once
 
+void CheckIfAppIsAllowedToUseOSD() {
+	// OSD system init
+	std::wstring OSDDir;
+
+	wchar_t UserProfile[MAX_PATH] = { 0 };
+	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
+
+	// Start the system
+	SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, UserProfile);
+
+	OSDDir.append(UserProfile);
+	OSDDir.append(_T("\\OmniMIDI\\lists\\OmniMIDI.osdlist"));
+
+	try {
+		if (PathFileExistsW(OSDDir.c_str())) {
+			std::wifstream file(OSDDir.c_str());
+
+			if (file) {
+				file.imbue(UTF8Support);
+
+				while (file.getline(TempString, sizeof(TempString) / sizeof(*TempString)))
+				{
+					if (_wcsicmp(AppNameW, TempString) == 0) CanUseOSD = TRUE;
+				}
+			}
+		}
+	}
+	catch (...) {
+		CrashMessage("OSDCheckUp");
+	}
+}
+
 void ResetSynth(BOOL SwitchingBufferMode) {
 	if (SwitchingBufferMode) {	
 		EVBuffer.ReadHead = 0;
@@ -682,6 +714,15 @@ void CheckVolume(BOOL Closing) {
 	}
 }
 
+template <typename T>
+std::string clean_double(const T a_value)
+{
+	std::ostringstream out;
+	out.precision(0);
+	out << std::fixed << a_value;
+	return out.str();
+}
+
 void FillContentDebug(
 	FLOAT CCUI0,				// Rendering time
 	INT HC,						// App's handles
@@ -695,6 +736,7 @@ void FillContentDebug(
 
 	std::locale::global(std::locale::classic());	// DO NOT REMOVE
 
+	// For debug window
 	std::string PipeContent;
 	DWORD bytesWritten;								// Needed for Windows 7 apparently...
 
@@ -711,10 +753,8 @@ void FillContentDebug(
 
 	ManagedDebugInfo.RenderingTime = CCUI0;
 
-	for (int i = 0; i <= 15; ++i) {
-		ManagedDebugInfo.ActiveVoices[i] = cvvalues[i];
-		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(cvvalues[i]);
-	}
+	for (int i = 0; i <= 15; ++i) 
+		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(ManagedDebugInfo.ActiveVoices[i]);
 
 	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
 	PipeContent += "\nHandles = " + std::to_string(HC);
@@ -732,6 +772,26 @@ void FillContentDebug(
 	*/
 
 	PipeContent += "\n\0";
+
+	// Check if RTSS OSD is available
+	if (IsOSDAvailable()) {
+		// It is, go push some data fam
+		std::string RTSSContent;
+
+		DWORD ActiveVoices = 0;
+		for (int i = 0; i <= 15; ++i)
+			ActiveVoices += ManagedDebugInfo.ActiveVoices[i];
+
+		RTSSContent += "<A0=-5><A1=4><C0=FFA0A0><C1=FF00A0><C2=FFFFFF><C3=33FF33><C4=FF3333><S0=-50><S1=50>";
+		RTSSContent += "<C0>Rendering time:<S><C>	<A0>" + clean_double(CCUI0) + "<A><A1><S1> %<S><A>\n";
+		RTSSContent += "<C0>Active voices:<S><C>	<A0>" + std::to_string(ActiveVoices) + "<A><A1><S1> voices<S><A>\n";
+		RTSSContent += "<C0>KDMAPI status:<S><C>	<A0>";
+		if (KDMAPIStatus) RTSSContent += "<C3>ON\n<A><A1><S1><S><A>\n"; else RTSSContent += "<C4>OFF\n<A>\n";
+		RTSSContent += "<C2>Framerate:<C>	<A0><FR><A><A1><S1> FPS<S><A>";
+
+		// Send the data to RTSS
+		UpdateOSD(RTSSContent.c_str());
+	}
 
 	WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), &bytesWritten, NULL);
 	if (hPipe == INVALID_HANDLE_VALUE || (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING)) StartDebugPipe(TRUE);
@@ -764,7 +824,7 @@ void ParseDebugData() {
 
 		for (int i = 0; i <= 15; ++i) {
 			int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
-			if (temp != -1) cvvalues[i] = temp;
+			if (temp != -1) ManagedDebugInfo.ActiveVoices[i] = temp;
 		}
 
 		/*
@@ -778,7 +838,7 @@ void ParseDebugData() {
 		RenderingTime = 0.0f;
 		ManagedDebugInfo.ASIOInputLatency = 0;
 		ManagedDebugInfo.ASIOOutputLatency = 0;
-		for (int i = 0; i <= 15; ++i) cvvalues[i] = 0;
+		for (int i = 0; i <= 15; ++i) ManagedDebugInfo.ActiveVoices[i] = 0;
 	}
 }
 

@@ -1385,6 +1385,11 @@ namespace OmniMIDIConfigurator
             new BlacklistSystem().ShowDialog();
         }
 
+        private void OpenTheRivaTunerOSDManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new RivaTunerSettings().ShowDialog();
+        }
+
         private void informationAboutTheDriverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.DebugToConsole(false, String.Format("Showing info about the driver."), null);
@@ -2299,16 +2304,6 @@ namespace OmniMIDIConfigurator
             MixerBox.Visible = true;
             VolumeCheck.Enabled = true;
             Properties.Settings.Default.Save();
-        }
-
-        private void changeDefault64bitMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void changeDefaultMIDIOutDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

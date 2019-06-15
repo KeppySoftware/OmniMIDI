@@ -203,7 +203,7 @@ namespace OmniMIDIConfigurator
 
         private void AEr_Click(object sender, EventArgs e)
         {
-            using (var form = new BlacklistSystemProcesses())
+            using (var form = new AddProcesses())
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -221,6 +221,7 @@ namespace OmniMIDIConfigurator
             {
                 ProgramsBlackList.Items.RemoveAt(ProgramsBlackList.SelectedIndices[i]);
             }
+
             SaveBlackList();
         }
 
@@ -241,7 +242,6 @@ namespace OmniMIDIConfigurator
                     MessageBox.Show("There was an error while saving the blacklist!\n\n.NET error:\n" + ex.Message.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-
         }
 
         private void EDBLi_Click(object sender, EventArgs e)

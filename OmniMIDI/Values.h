@@ -205,7 +205,6 @@ static const LPCWSTR BuiltInBlacklist[] =
 };
 
 // Per channel values
-static DWORD cvvalues[16];		// Active voices count per channel.
 static DWORD cvalues[16];		// Volume setting per channel.
 static DWORD cbank[16];			// MIDI bank setting per channel.
 static DWORD cpreset[16];		// MIDI preset setting for... you guess it!

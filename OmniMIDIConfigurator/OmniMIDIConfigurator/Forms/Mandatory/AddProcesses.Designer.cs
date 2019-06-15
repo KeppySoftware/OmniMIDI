@@ -1,6 +1,6 @@
 ﻿namespace OmniMIDIConfigurator
 {
-    partial class BlacklistSystemProcesses
+    partial class AddProcesses
     {
         /// <summary>
         /// Required designer variable.
@@ -42,7 +42,7 @@
             this.OKDone.Name = "OKDone";
             this.OKDone.Size = new System.Drawing.Size(137, 23);
             this.OKDone.TabIndex = 0;
-            this.OKDone.Text = "Blacklist these processes";
+            this.OKDone.Text = "Add these processes";
             this.OKDone.UseVisualStyleBackColor = true;
             this.OKDone.Click += new System.EventHandler(this.OKDone_Click);
             // 
@@ -85,7 +85,7 @@
             this.RefrLab.Text = "Refreshing...";
             this.RefrLab.Visible = false;
             // 
-            // BlacklistSystemProcesses
+            // AddProcesses
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -99,11 +99,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "BlacklistSystemProcesses";
+            this.Name = "AddProcesses";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Select the processes to ban";
+            this.Text = "Select the processes to add to the list";
             this.Load += new System.EventHandler(this.BlacklistSystemProcesses_Load);
             ((System.ComponentModel.ISupportInitialize)(this.RefreshList)).EndInit();
             this.ResumeLayout(false);

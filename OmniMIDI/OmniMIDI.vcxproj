@@ -34,6 +34,7 @@
     <ClInclude Include="LockSystem.h" />
     <ClInclude Include="OmniMIDI.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RTSSOSD.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SoundFontLoader.h" />
     <ClInclude Include="Values.h" />

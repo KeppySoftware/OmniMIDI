@@ -91,6 +91,7 @@ void Supervisor(LPVOID lpV) {
 BOOL DoStartClient() {
 	if (!DriverInitStatus) {
 		GetAppName();
+		CheckIfAppIsAllowedToUseOSD();
 
 		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
 
@@ -156,6 +157,9 @@ BOOL DoStartClient() {
 
 BOOL DoStopClient() {
 	if (DriverInitStatus) {
+		PrintMessageToDebugLog("StopDriver", "Releasing RTSS OSD...");
+		ReleaseOSD();
+
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
 		// Prevent BASS from reinitializing itself

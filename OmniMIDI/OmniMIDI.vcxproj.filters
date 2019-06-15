@@ -58,6 +58,9 @@
     <ClInclude Include="LockSystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="RTSSOSD.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

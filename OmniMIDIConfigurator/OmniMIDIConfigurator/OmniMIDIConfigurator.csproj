@@ -42,7 +42,7 @@
     </DefineConstants>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <Optimize>true</Optimize>
-    <WarningLevel>1</WarningLevel>
+    <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -102,11 +102,11 @@
     <Compile Include="Forms\Add-ons\WinMMTest.Designer.cs">
       <DependentUpon>WinMMTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Mandatory\BlacklistSystemProcesses.cs">
+    <Compile Include="Forms\Mandatory\AddProcesses.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Mandatory\BlacklistSystemProcesses.Designer.cs">
-      <DependentUpon>BlacklistSystemProcesses.cs</DependentUpon>
+    <Compile Include="Forms\Mandatory\AddProcesses.Designer.cs">
+      <DependentUpon>AddProcesses.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Mandatory\Advanced Settings\EVBufferManager.cs">
       <SubType>Form</SubType>
@@ -237,6 +237,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\RivaTunerSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Mandatory\Advanced Settings\RivaTunerSettings.Designer.cs">
+      <DependentUpon>RivaTunerSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="UpdateSystem\SelectBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -320,8 +326,11 @@
     <EmbeddedResource Include="Forms\Add-ons\WinMMTest.resx">
       <DependentUpon>WinMMTest.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Mandatory\BlacklistSystemProcesses.resx">
-      <DependentUpon>BlacklistSystemProcesses.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\RivaTunerSettings.resx">
+      <DependentUpon>RivaTunerSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Mandatory\AddProcesses.resx">
+      <DependentUpon>AddProcesses.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Mandatory\Advanced Settings\EVBufferManager.resx">
       <DependentUpon>EVBufferManager.cs</DependentUpon>

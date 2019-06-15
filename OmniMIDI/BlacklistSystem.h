@@ -26,6 +26,7 @@ DWORD BlackListSystem(){
 	// Blacklist system init
 	std::wstring DBLDir;
 	std::wstring UBLDir;
+
 	wchar_t SysDir32[MAX_PATH] = { 0 };
 	wchar_t UserProfile[MAX_PATH] = { 0 };
 	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
