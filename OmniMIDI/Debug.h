@@ -611,7 +611,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 	char MessageBuf[NTFS_MAX_PATH];
 	char NameBuf[NTFS_MAX_PATH];
 
-	sprintf(MessageBuf, "The program performed an illegal operation and will be shut down.\n\nIf you're the developer, check the stacktrace to see where the crash occured, or else report this issue to either KaleidonKep99 on GitHub or the app developer.\n\n");
+	sprintf(MessageBuf, "The program performed an illegal operation!\n\nIf you're the developer, check the stacktrace to see where the crash occured, or else report this issue to the OmniMIDI issues page on GitHub.\n\n");
 	if (ret) {
 		sprintf(MessageBuf + strlen(MessageBuf), "== Stacktrace ==");
 		while (ret--) {
@@ -680,6 +680,24 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 	sprintf(MessageBuf + strlen(MessageBuf), "== RegDump ==");
 #ifdef _M_AMD64
 	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Rip);
+	do
+	{
+		if (!VirtualQuery((BYTE*)exc->ContextRecord->Rip, &MBI, sizeof(MBI)))
+			continue;
+
+		HMODULE mod = (HMODULE)MBI.AllocationBase;
+
+		if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
+			continue;
+
+		NameBuf[31] = 0;
+		sprintf(MessageBuf + strlen(MessageBuf), " (On address ");
+		sprintf(MessageBuf + strlen(MessageBuf), NameBuf);
+		sprintf(MessageBuf + strlen(MessageBuf), "+");
+		WritePointer(MessageBuf, (DWORD)((BYTE*)exc->ContextRecord->Rip - (BYTE*)mod));
+		sprintf(MessageBuf + strlen(MessageBuf), ")");
+	} while (0);
+
 	sprintf(MessageBuf + strlen(MessageBuf), "\nRAX: "); WritePointer(MessageBuf, exc->ContextRecord->Rax);
 	sprintf(MessageBuf + strlen(MessageBuf), " RCX: "); WritePointer(MessageBuf, exc->ContextRecord->Rcx);
 	sprintf(MessageBuf + strlen(MessageBuf), "\nRDX: "); WritePointer(MessageBuf, exc->ContextRecord->Rdx);
@@ -747,6 +765,26 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 #else
 #ifdef _M_IX86
 	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Eip);
+	if (exc->ContextRecord->Eip) {
+		do
+		{
+			if (!VirtualQuery((BYTE*)exc->ContextRecord->Eip, &MBI, sizeof(MBI)))
+				continue;
+
+			HMODULE mod = (HMODULE)MBI.AllocationBase;
+
+			if (!GetModuleBaseNameA(CurrentProcess, mod, NameBuf, sizeof(NameBuf)))
+				continue;
+
+			NameBuf[31] = 0;
+			sprintf(MessageBuf + strlen(MessageBuf), " (On address ");
+			sprintf(MessageBuf + strlen(MessageBuf), NameBuf);
+			sprintf(MessageBuf + strlen(MessageBuf), "+");
+			WritePointer(MessageBuf, (DWORD)((BYTE*)exc->ContextRecord->Eip - (BYTE*)mod));
+			sprintf(MessageBuf + strlen(MessageBuf), ")");
+		} while (0);
+	}
+
 	sprintf(MessageBuf + strlen(MessageBuf), "\nEDI: "); WritePointer(MessageBuf, exc->ContextRecord->Edi);
 	sprintf(MessageBuf + strlen(MessageBuf), " ESI: "); WritePointer(MessageBuf, exc->ContextRecord->Esi);
 	sprintf(MessageBuf + strlen(MessageBuf), "\nEBX: "); WritePointer(MessageBuf, exc->ContextRecord->Ebx);
