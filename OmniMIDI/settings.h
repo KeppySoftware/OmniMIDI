@@ -439,6 +439,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		// Load the settings from the registry
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
+		// These settings should NOT be loaded in real-time
 		if (!RT) {
 			RegQueryValueEx(Configuration.Address, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioBitDepth, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
@@ -455,6 +456,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"MonoRendering", NULL, &dwType, (LPBYTE)&ManagedSettings.MonoRendering, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
 		}
+
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"ChannelUpdateLength", NULL, &dwType, (LPBYTE)&ManagedSettings.ChannelUpdateLength, &dwSize);
@@ -531,12 +533,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			// Close the threads for safety reasons
 			if (RT) stop_thread = TRUE;
 
-			if ((TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
-				EvBufferSize = TEvBufferSize;
-				EvBufferMultRatio = TEvBufferMultRatio;
-				AllocateMemory(Restart);
-			}
-
 			// Check if "Hyper-playback" mode has been enabled
 			_PrsData = HyperMode ? ParseDataHyper : ParseData;
 			_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
@@ -545,6 +541,12 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 			// Restart threads
 			if (RT) stop_thread = FALSE;
+		}
+
+		if (IsBootUp || (TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
+			EvBufferSize = TEvBufferSize;
+			EvBufferMultRatio = TEvBufferMultRatio;
+			AllocateMemory(Restart);
 		}
 
 		// Load the settings by comparing the temporary values to the driver's ones, to prevent overhead
@@ -662,8 +664,8 @@ void CheckVolume(BOOL Closing) {
 
 		if (!Closing && !stop_thread && BASSLoadedToMemory && bass_initialized) {
 			if (ManagedSettings.VolumeMonitor == TRUE && ManagedSettings.CurrentEngine > AUDTOWAV) {
-				float levels[2];
-				DWORD left, right;
+				float levels[2] = { -0.1f, -0.1f };
+				DWORD left = 0, right = 0;
 
 				switch (ManagedSettings.CurrentEngine) {
 				case WASAPI_ENGINE:
@@ -678,9 +680,11 @@ void CheckVolume(BOOL Closing) {
 					break;
 				}
 
-				DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
-				left = LOWORD(level);	// the left level
-				right = HIWORD(level);	// the right level
+				if (levels[0] > -0.1f && levels[1] > -0.1f) {
+					DWORD level = MAKELONG((WORD)(min(levels[0], 1) * 32768), (WORD)(min(levels[1], 1) * 32768));
+					left = LOWORD(level);	// the left level
+					right = HIWORD(level);	// the right level
+				}
 
 				RegSetValueEx(MainKey.Address, L"leftvol", 0, REG_DWORD, (LPBYTE)&left, sizeof(left));
 				RegSetValueEx(MainKey.Address, L"rightvol", 0, REG_DWORD, (LPBYTE)&right, sizeof(right));
@@ -867,7 +871,7 @@ void MixerCheck() {
 		for (int i = 0; i <= 15; ++i) 
 		{
 			swprintf_s(TempCh, MAXPNAMELEN, L"ch%d", i + 1);
-			swprintf_s(TempPs, MAXPNAMELEN, L"ch%upshift\0", i + 1);
+			swprintf_s(TempPs, MAXPNAMELEN, L"ch%dpshift\0", i + 1);
 
 			RegQueryValueEx(Channels.Address, TempCh, NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
 			RegQueryValueEx(Channels.Address, TempPs, NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
