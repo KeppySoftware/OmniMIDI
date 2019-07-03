@@ -59,6 +59,7 @@ typedef long NTSTATUS;
 #include <Dbghelp.h>
 #include <mmsystem.h>
 #include <dsound.h>
+#include <assert.h>
 #include "Resource.h"
 #include "OmniMIDI.h"
 #include "RTSSOSD.h"

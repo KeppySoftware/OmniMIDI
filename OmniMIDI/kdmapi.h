@@ -30,7 +30,7 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 
 		// It did, reload the settings and reallocate the memory for the buffer
 		CloseThreads(FALSE);
-		LoadSettings(TRUE);
+		LoadSettings(TRUE, FALSE);
 
 		// Initialize the BASS output device, and set up the streams
 		if (InitializeBASS(TRUE)) {
@@ -61,9 +61,9 @@ void Supervisor(LPVOID lpV) {
 			{
 				// It's alive, do registry stuff
 
-				LoadSettingsRT();			// Load real-time settings
+				LoadSettings(FALSE, TRUE);	// Load real-time settings
 				LoadCustomInstruments();	// Load custom instrument values from the registry
-				keybindings();				// Check for keystrokes (ALT+1, INS, etc..)
+				KeyShortcuts();				// Check for keystrokes (ALT+1, INS, etc..)
 				SFDynamicLoaderCheck();		// Check current active voices, rendering time, etc..
 				MixerCheck();				// Send dB values to the mixer
 				RevbNChor();				// Check if custom reverb/chorus values are enabled
@@ -121,7 +121,7 @@ BOOL DoStartClient() {
 			if (!BASSLoadedToMemory) CrashMessage("NoBASSFound");
 
 			// Load the settings, and allocate the memory for the EVBuffer
-			LoadSettings(FALSE);
+			LoadSettings(FALSE, FALSE);
 
 			// Initialize the BASS output device, and set up the streams
 			if (InitializeBASS(FALSE)) {
@@ -469,7 +469,7 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 		if (AlreadyInitializedViaKDMAPI)
 		{
 			PrintMessageToDebugLog("KDMAPI_DS", "Applying new settings to the driver...");
-			LoadSettingsRT();
+			LoadSettings(FALSE, TRUE);
 			PrintMessageToDebugLog("KDMAPI_DS", "Done.");
 		}
 		else PrintMessageToDebugLog("KDMAPI_DS", "The new settings will be applied once the driver is started.");

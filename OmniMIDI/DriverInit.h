@@ -322,10 +322,6 @@ BOOL CreateThreads(BOOL startup) {
 }
 
 void InitializeBASSVST() {
-#if defined(_M_ARM64)
-	return;
-#endif
-
 	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t LoudMax[MAX_PATH] = { 0 };
 
@@ -389,68 +385,6 @@ void InitializeStream(INT32 mixfreq) {
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
 }
 
-void InitializeBASSEnc() {
-	PrintMessageToDebugLog("InitializeBASSEncFunc", "Initializing BASSenc output...");
-
-	// Cast restart values
-	std::wostringstream rv;
-	rv << RestartValue;
-
-	// Initialize the values
-	typedef std::basic_string<TCHAR> tstring;
-	TCHAR encpath[MAX_PATH];
-	TCHAR confpath[MAX_PATH];
-	TCHAR buffer[MAX_PATH] = { 0 };
-	TCHAR * out;
-	DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
-
-	// Get name of the current app using OmniMIDI
-	if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
-	out = PathFindFileName(buffer);
-
-	// Append it to a temporary string, along with how many times it got restarted
-	// (Ex. "Dummy.exe - OmniMIDI Output File (Restart number 4).wav")
-	std::wstring stemp = tstring(out) + L" - OmniMIDI Output File (Restart number " + rv.str() + L").wav";
-	LPCWSTR result2 = stemp.c_str();
-
-	// Open the registry key, and check the current output path set in the configurator
-	DWORD cbValueLength = sizeof(confpath);
-	DWORD dwType = REG_SZ;
-	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
-
-	if (!RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, (LPBYTE)&confpath, &cbValueLength)) {
-		// If the folder exists, then set the path to that
-		PathAppend(encpath, confpath);
-		PathAppend(encpath, result2);
-		MessageBox(NULL, encpath, L"DEBUG", MB_OK);
-	}
-	// Otherwise, set the default path to the desktop
-	else if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
-
-	// Convert some values for the following MsgBox
-	const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"OmniMIDI", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
-	switch (result)
-	{
-	case IDYES:
-		// If the user chose to output to WAV, then continue initializing BASSEnc
-		BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_UNICODE, NULL, 0);
-		// Error handling
-		CheckUp(FALSE, ERRORCODE, L"Encoder Start", TRUE);
-		break;
-	case IDNO:
-		// Otherwise, open the configurator
-		TCHAR configuratorapp[MAX_PATH];
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
-		{
-			PathAppend(configuratorapp, _T("\\OmniMIDI\\OmniMIDIConfigurator.exe"));
-			ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
-			delete configuratorapp;
-		}
-	}
-
-	PrintMessageToDebugLog("InitializeBASSEncFunc", "BASSenc is now ready!");
-}
-
 void FreeUpBASS() {
 	// Deinitialize the BASS stream, then the output and free the library, since we need to restart it
 	BASS_StreamFree(OMStream);
@@ -475,46 +409,6 @@ void FreeUpBASSASIO() {
 	}
 #endif
 }
-
-/*
-
-// Legacy stuff, used for BASSWASAPI
-
-LONG WASAPIDetectID() {
-	try {
-		BASS_WASAPI_DEVICEINFO info;
-		char OutputName[MAX_PATH] = "None";
-
-		HKEY hKey;
-		LSTATUS lResultA;
-		LSTATUS lResultB;
-		DWORD dwType = REG_SZ;
-		DWORD dwSize = sizeof(OutputName);
-
-		lResultA = RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\OmniMIDI\\Configuration", 0, KEY_READ, &hKey);
-		lResultB = RegQueryValueExA(hKey, "WASAPIOutput", NULL, &dwType, (LPBYTE)&OutputName, &dwSize);
-
-		for (DWORD CurrentDevice = 0; BASS_WASAPI_GetDeviceInfo(CurrentDevice, &info); CurrentDevice++)
-		{
-			if ((strcmp(OutputName, info.name) == 0) &&
-				!(info.flags & BASS_DEVICE_LOOPBACK) &&
-				!(info.flags & BASS_DEVICE_INPUT) &&
-				!(info.flags & BASS_DEVICE_UNPLUGGED) &&
-				!(info.flags & BASS_DEVICE_DISABLED))
-			{
-				RegCloseKey(hKey);
-				return CurrentDevice;
-			}
-		}
-
-		RegCloseKey(hKey);
-		return 0;
-	}
-	catch (...) {
-		CrashMessage("WASAPIDetectID");
-	}
-}
-*/
 
 ULONG ASIODevicesCount() {
 	int count = 0;
@@ -555,45 +449,6 @@ LONG ASIODetectID() {
 	}
 	catch (...) {
 		CrashMessage("ASIODetectID");
-	}
-}
-
-void InitializeBASSOutput() {
-	// Final BASS initialization, set some settings
-	PrintMessageToDebugLog("InitializeBASSOutput", "Configuring stream...");
-	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
-	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-
-	PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
-	BASS_GetInfo(&info);
-
-	// The safest value is usually minbuf - 10
-	DWORD minbuf = info.minbuf - 10;
-
-	// If the minimum buffer is bigger than the requested buffer length, use the minimum buffer value instead
-	PrintMessageToDebugLog("InitializeBASSOutput", "Setting buffer...");
-	BASS_SetConfig(BASS_CONFIG_BUFFER, ((minbuf > ManagedSettings.BufferLength) ? minbuf : ManagedSettings.BufferLength));
-
-	// Print debug info
-	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo (in ms)", false, minbuf);
-	PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry (in ms)", false, ManagedSettings.BufferLength);
-
-	PrintMessageToDebugLog("InitializeBASSOutput", "Initializing stream...");
-	InitializeStream(ManagedSettings.AudioFrequency);
-
-	if (AudioOutput != NULL)
-	{
-		// If using WASAPI, disable playback buffering
-		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
-			PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
-			if (BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0))
-				BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
-		}
-
-		// And finally, open the stream
-		PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
-		BASS_ChannelPlay(OMStream, FALSE);
-		CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
 	}
 }
 
@@ -681,145 +536,6 @@ void PrepareVolumeKnob() {
 	CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Preparation", FALSE);
 }
 
-void FallbackToWASAPIEngine() {
-	// Something failed, fallback to WASAPI
-	ManagedSettings.CurrentEngine = WASAPI_ENGINE;
-
-	FreeUpBASSASIO();
-	FreeUpBASS();
-
-	if (InitializeBASSLibrary()) 
-		InitializeBASSOutput();
-	else CrashMessage("WASAPIFallback");
-}
-
-/*
-
-// Legacy stuff, used for BASSWASAPI
-
-void InitializeWASAPI() {
-	ManagedSettings.CurrentEngine = WASAPI_ENGINE;
-
-	BASS_WASAPI_INFO infoW;
-	BASS_WASAPI_DEVICEINFO infoDW;
-	LONG DeviceID = WASAPIDetectID();
-
-	BASS_WASAPI_Init(DeviceID, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-	CheckUp(FALSE, ERRORCODE, L"OMWASAPIInitInfo");
-	BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
-	CheckUp(FALSE, ERRORCODE, L"OMWASAPIGetDeviceInfo");
-	BASS_WASAPI_GetInfo(&infoW);
-	CheckUp(FALSE, ERRORCODE, L"OMWASAPIGetBufInfo");
-	BASS_WASAPI_Free();
-	CheckUp(FALSE, ERRORCODE, L"OMWASAPIFreeInfo");
-
-	InitializeStream(infoDW.mixfreq);
-
-	if (BASS_WASAPI_Init(DeviceID, 0, 2,
-		BASS_WASAPI_BUFFER | BASS_WASAPI_EVENT,
-		(wasapiex ? ((float)frames / 1000.0f) : infoW.buflen + 5),
-		0, WASAPIProc, NULL)) {
-		CheckUp(FALSE, ERRORCODE, L"OMInitWASAPI");
-		BASS_WASAPI_Start();
-		CheckUp(FALSE, ERRORCODE, L"OMStartStreamWASAPI");
-	}
-	else {
-		MessageBox(NULL, L"WASAPI is unavailable with the current device.\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\", then, after you're done, restart the MIDI application.\n\nFalling back to BASSEnc...\nPress OK to continue.", L"OmniMIDI - Can not open WASAPI device", MB_OK | MB_ICONERROR);
-		ManagedSettings.CurrentEngine = AUDTOWAV;
-		InitializeStream(ManagedSettings.AudioFrequency);
-		InitializeBASSEnc();
-		CheckUp(FALSE, ERRORCODE, L"OMInitEnc");
-	}
-}
-*/
-
-void InitializeWAVEnc() {
-	// Initialize the ".WAV mode"
-	InitializeStream(ManagedSettings.AudioFrequency);
-	InitializeBASSEnc();
-	CheckUp(FALSE, ERRORCODE, L"Encoder Initialization", TRUE);
-}
-
-void InitializeASIO() {
-	// Free BASSASIO again, just to be sure
-	FreeUpBASSASIO();
-
-	// Chec how many ASIO devices are available
-	if (ASIODevicesCount() < 1) {
-		// If no devices are available, return an error, and switch to WASAPI
-		PrintMessageToDebugLog("InitializeASIOFunc", "No ASIO devices available.");
-		MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-		FallbackToWASAPIEngine();
-		return;
-	}
-
-	// Check if driver is supposed to run in a separate thread (TURNED ON PERMANENTLY ATM)
-	// BOOL ASIOSeparateThread = TRUE;
-	// OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
-	// RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
-
-	// Get ASIO device to use
-	LONG DeviceToUse = ASIODetectID();
-	if (DeviceToUse == -1) {
-		// If no devices are available, return an error, and switch to WASAPI
-		PrintMessageToDebugLog("InitializeASIOFunc", "Failed to get a valid ASIO device.");
-		MessageBox(NULL, L"Failed to get a valid ASIO device.\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-		FallbackToWASAPIEngine();
-		return;
-	}
-
-	// If ASIO is successfully initialized, go on with the initialization process
-	PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
-	if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
-		CheckUp(TRUE, ERRORCODE, L"ASIO Initialized", TRUE);
-
-		// Set the audio frequency
-		BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
-		CheckUp(TRUE, ERRORCODE, L"ASIO Device Frequency Set", TRUE);
-
-		// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
-		BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-		CheckUp(TRUE, ERRORCODE, L"ASIO Device Format Set", TRUE);
-
-		// If mono rendering is enabled, set the audio frequency of the channels to half the value of the frequency selected
-		if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
-		// Else, set it to the default frequency
-		else BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency);
-		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Frequency Set", TRUE);
-
-		// Enable the channels
-		BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
-		CheckUp(TRUE, ERRORCODE, L"ASIO Channel Enable", TRUE);
-
-		// If mono rendering is enabled, mirror the left channel to the right one as well
-		if (ManagedSettings.MonoRendering) {
-			BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
-			CheckUp(TRUE, ERRORCODE, L"ASIO Device Mono Mode", TRUE);
-		}
-		// Else, go for stereo
-		else {
-			BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-			CheckUp(TRUE, ERRORCODE, L"ASIO Channel Join", TRUE);
-			// Set the bit depth for the right channel as well
-			BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-			CheckUp(TRUE, ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
-		}
-
-		// And start the ASIO output
-		BASS_ASIO_Start(0, std::thread::hardware_concurrency());
-		CheckUp(TRUE, ERRORCODE, L"ASIO Start Output", TRUE);
-
-		// Initialize the stream
-		InitializeStream(ManagedSettings.AudioFrequency);
-
-		PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
-	}
-	// Else, something is wrong
-	else CheckUp(TRUE, ERRORCODE, L"ASIO Initialization", TRUE);
-
-	ASIOReady = TRUE;
-}
-
 bool InitializeBASS(BOOL restart) {
 	PrintMessageToDebugLog("InitializeBASSFunc", "The driver is now initializing BASS. Please wait...");
 
@@ -837,22 +553,214 @@ bool InitializeBASS(BOOL restart) {
 
 	if (init)
 	{
-		// If ".WAV mode" is selected, initialize the decoding channel
-		if (ManagedSettings.CurrentEngine == AUDTOWAV)
-			InitializeWAVEnc();
-		// Else, initialize the default stream
-		else if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
-			InitializeBASSOutput();
+		SWITCHCHECK:
+		switch (ManagedSettings.CurrentEngine) {
+
+		case AUDTOWAV:
+		{
+			InitializeStream(ManagedSettings.AudioFrequency);
+
+			PrintMessageToDebugLog("InitializeBASSEncFunc", "Initializing BASSenc output...");
+
+			// Cast restart values
+			std::wostringstream rv;
+			rv << RestartValue;
+
+			// Initialize the values
+			typedef std::basic_string<TCHAR> tstring;
+			TCHAR encpath[MAX_PATH];
+			TCHAR confpath[MAX_PATH];
+			TCHAR buffer[MAX_PATH] = { 0 };
+			TCHAR* out;
+			DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
+
+			// Get name of the current app using OmniMIDI
+			if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
+			out = PathFindFileName(buffer);
+
+			// Append it to a temporary string, along with how many times it got restarted
+			// (Ex. "Dummy.exe - OmniMIDI Output File (Restart number 4).wav")
+			std::wstring stemp = tstring(out) + L" - OmniMIDI Output File (Restart number " + rv.str() + L").wav";
+			LPCWSTR result2 = stemp.c_str();
+
+			// Open the registry key, and check the current output path set in the configurator
+			DWORD cbValueLength = sizeof(confpath);
+			DWORD dwType = REG_SZ;
+			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+
+			if (!RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, (LPBYTE)& confpath, &cbValueLength)) {
+				// If the folder exists, then set the path to that
+				PathAppend(encpath, confpath);
+				PathAppend(encpath, result2);
+				MessageBox(NULL, encpath, L"DEBUG", MB_OK);
+			}
+			// Otherwise, set the default path to the desktop
+			else if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
+
+			// Convert some values for the following MsgBox
+			const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"OmniMIDI", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
+			switch (result)
+			{
+			case IDYES:
+				// If the user chose to output to WAV, then continue initializing BASSEnc
+				BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_UNICODE, NULL, 0);
+				// Error handling
+				CheckUp(FALSE, ERRORCODE, L"Encoder Start", TRUE);
+				break;
+			case IDNO:
+				// Otherwise, open the configurator
+				TCHAR configuratorapp[MAX_PATH];
+				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+				{
+					PathAppend(configuratorapp, _T("\\OmniMIDI\\OmniMIDIConfigurator.exe"));
+					ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);
+					delete configuratorapp;
+				}
+			}
+
+			PrintMessageToDebugLog("InitializeBASSEncFunc", "BASSenc is now ready!");
+			break;
+		}
+
+		case WASAPI_ENGINE:
+		case DXAUDIO_ENGINE:
+		{
+			// Final BASS initialization, set some settings
+			PrintMessageToDebugLog("InitializeBASSOutput", "Configuring stream...");
+			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+
+			PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
+			BASS_GetInfo(&info);
+
+			// The safest value is usually minbuf - 10
+			DWORD minbuf = info.minbuf - 10;
+
+			// If the minimum buffer is bigger than the requested buffer length, use the minimum buffer value instead
+			PrintMessageToDebugLog("InitializeBASSOutput", "Setting buffer...");
+			BASS_SetConfig(BASS_CONFIG_BUFFER, ((minbuf > ManagedSettings.BufferLength) ? minbuf : ManagedSettings.BufferLength));
+
+			// Print debug info
+			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo (in ms)", false, minbuf);
+			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry (in ms)", false, ManagedSettings.BufferLength);
+
+			PrintMessageToDebugLog("InitializeBASSOutput", "Initializing stream...");
+			InitializeStream(ManagedSettings.AudioFrequency);
+
+			if (AudioOutput != NULL)
+			{
+				// If using WASAPI, disable playback buffering
+				if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+					PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
+					if (BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0))
+						BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
+				}
+
+				// And finally, open the stream
+				PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
+				BASS_ChannelPlay(OMStream, FALSE);
+				CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
+			}
+			break;
+		}
+
 #if !defined(_M_ARM64)
-		// Or else, initialize ASIO
-		else if (ManagedSettings.CurrentEngine == ASIO_ENGINE)
-			InitializeASIO();
+		case ASIO_ENGINE:
+		{
+			// Free BASSASIO again, just to be sure
+			FreeUpBASSASIO();
+
+			// Chec how many ASIO devices are available
+			if (ASIODevicesCount() < 1) {
+				// If no devices are available, return an error, and switch to WASAPI
+				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+				FreeUpBASSASIO();
+				FreeUpBASS();
+				PrintMessageToDebugLog("InitializeASIOFunc", "No ASIO devices available.");
+				MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				goto SWITCHCHECK;
+			}
+
+			// Check if driver is supposed to run in a separate thread (TURNED ON PERMANENTLY ATM)
+			// BOOL ASIOSeparateThread = TRUE;
+			// OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+			// RegQueryValueEx(Configuration.Address, L"ASIOSeparateThread", NULL, &dwType, (LPBYTE)&ASIOSeparateThread, &dwSize);
+
+			// Get ASIO device to use
+			LONG DeviceToUse = ASIODetectID();
+			if (DeviceToUse == -1) {
+				// If no devices are available, return an error, and switch to WASAPI
+				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+				FreeUpBASSASIO();
+				FreeUpBASS();
+				PrintMessageToDebugLog("InitializeASIOFunc", "Failed to get a valid ASIO device.");
+				MessageBox(NULL, L"Failed to get a valid ASIO device.\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				goto SWITCHCHECK;
+			}
+
+			// If ASIO is successfully initialized, go on with the initialization process
+			PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
+			if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+				CheckUp(TRUE, ERRORCODE, L"ASIO Initialized", TRUE);
+
+				// Set the audio frequency
+				BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
+				CheckUp(TRUE, ERRORCODE, L"ASIO Device Frequency Set", TRUE);
+
+				// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
+				BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
+				CheckUp(TRUE, ERRORCODE, L"ASIO Device Format Set", TRUE);
+
+				// If mono rendering is enabled, set the audio frequency of the channels to half the value of the frequency selected
+				if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
+				// Else, set it to the default frequency
+				else BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency);
+				CheckUp(TRUE, ERRORCODE, L"ASIO Channel Frequency Set", TRUE);
+
+				// Enable the channels
+				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
+				CheckUp(TRUE, ERRORCODE, L"ASIO Channel Enable", TRUE);
+
+				// If mono rendering is enabled, mirror the left channel to the right one as well
+				if (ManagedSettings.MonoRendering) {
+					BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
+					CheckUp(TRUE, ERRORCODE, L"ASIO Device Mono Mode", TRUE);
+				}
+				// Else, go for stereo
+				else {
+					BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+					CheckUp(TRUE, ERRORCODE, L"ASIO Channel Join", TRUE);
+					// Set the bit depth for the right channel as well
+					BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
+					CheckUp(TRUE, ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
+				}
+
+				// And start the ASIO output
+				BASS_ASIO_Start(0, std::thread::hardware_concurrency());
+				CheckUp(TRUE, ERRORCODE, L"ASIO Start Output", TRUE);
+
+				// Initialize the stream
+				InitializeStream(ManagedSettings.AudioFrequency);
+
+				PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
+			}
+			// Else, something is wrong
+			else CheckUp(TRUE, ERRORCODE, L"ASIO Initialization", TRUE);
+
+			ASIOReady = TRUE;
+
+			break;
+		}
 #endif
-		else {
+
+		default:
+		{
 			PrintMessageToDebugLog("InitializeBASSFunc", "Unknown engine, falling back to WASAPI...");
 			ManagedSettings.CurrentEngine = WASAPI_ENGINE;
-			RegSetValueEx(Configuration.Address, L"CurrentEngine", NULL, dwType, (LPBYTE)&ManagedSettings.CurrentEngine, sizeof(DWORD));
-			InitializeBASSOutput();
+			RegSetValueEx(Configuration.Address, L"CurrentEngine", NULL, dwType, (LPBYTE)& ManagedSettings.CurrentEngine, sizeof(DWORD));
+			goto SWITCHCHECK;
+		}
+
 		}
 
 		if (!ApplyStreamSettings()) return FALSE;
@@ -860,8 +768,10 @@ bool InitializeBASS(BOOL restart) {
 		// Enable the volume knob in the configurator
 		if (ManagedSettings.CurrentEngine != AUDTOWAV) PrepareVolumeKnob();
 		
+#if !defined(_M_ARM64)
 		// Apply LoudMax, if requested
 		InitializeBASSVST();
+#endif
 	}
 
 	return init;
