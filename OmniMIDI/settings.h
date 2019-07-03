@@ -415,9 +415,24 @@ void LoadSettings(BOOL Restart, BOOL RT)
 {
 	try {
 		// Initialize the temp values
-		static DWORD TempSC, TempOV, TempHP, TempMV;
-		static BOOL TempESFX, TempNOFF1, TempISR, TempSI, TempDNFO, TempDMN;
+		static DWORD 
+			TempSC = ManagedSettings.SincConv, 
+			TempOV = ManagedSettings.OutputVolume, 
+			TempHP = HyperMode, 
+			TempMV = ManagedSettings.MaxVoices;
+
+		static BOOL 
+			TempESFX = ManagedSettings.EnableSFX, 
+			TempNOFF1 = ManagedSettings.NoteOff1, 
+			TempISR = ManagedSettings.IgnoreSysReset, 
+			TempSI = ManagedSettings.SincInter, 
+			TempDNFO = ManagedSettings.DisableNotesFadeOut, 
+			TempDMN = ManagedSettings.DontMissNotes;
+
 		static DWORD64 TEvBufferSize, TEvBufferMultRatio;
+
+		// If the driver is booting up, then return true
+		BOOL IsBootUp = (!RT && !Restart);
 
 		if (!RT) PrintMessageToDebugLog("LoadSettingsFuncs", "Loading settings from registry...");
 
@@ -503,19 +518,23 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			if (RT) ResetSynth(TRUE);
 		}
 
+		if (IsBootUp && (HyperMode && !DisableChime)) {
+			// It's enabled, do some beeps to notify the user (If the chime is enabled)
+			Beep(440, 100);
+			Beep(687, 100);
+		}
+
 		// Check if the value is different from the temporary one
-		if (TempHP != HyperMode || SettingsManagedByClient) {
-			if (RT) {
-				if (!SettingsManagedByClient) HyperMode = TempHP;
+		if (IsBootUp || TempHP != HyperMode || SettingsManagedByClient) {
+			if (!SettingsManagedByClient) HyperMode = TempHP;
 
-				// Close the threads for safety reasons
-				stop_thread = TRUE;
-			}
+			// Close the threads for safety reasons
+			if (RT) stop_thread = TRUE;
 
-			if ((!Restart && !RT) && (HyperMode && !DisableChime)) {
-				// It's enabled, do some beeps to notify the user (If the chime is enabled)
-				Beep(440, 100);
-				Beep(687, 100);
+			if ((TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
+				EvBufferSize = TEvBufferSize;
+				EvBufferMultRatio = TEvBufferMultRatio;
+				AllocateMemory(Restart);
 			}
 
 			// Check if "Hyper-playback" mode has been enabled
@@ -526,12 +545,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 			// Restart threads
 			if (RT) stop_thread = FALSE;
-		}
-
-		if ((!RT && !Restart) || (TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
-			EvBufferSize = TEvBufferSize;
-			EvBufferMultRatio = TEvBufferMultRatio;
-			AllocateMemory(Restart);
 		}
 
 		// Load the settings by comparing the temporary values to the driver's ones, to prevent overhead
