@@ -167,79 +167,77 @@ static BOOL FontLoader(LPWSTR in_path) {
 					}
 					else if (TempLine.find(L"sf.path") == 0 && TempSF.Path[0] == _T('\0'))
 					{
-						if (!AlreadyInitialized) continue;
+						if (AlreadyInitialized) {
+							// We've found the path! Parse it.
+							memset(TempSF.Path, 0, sizeof(TempSF.Path));
+							wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
 
-						// We've found the path! Parse it.
-						memset(TempSF.Path, 0, sizeof(TempSF.Path));
-						wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
+							PrintSoundFontToDebugLog(TempSF.Path, "Loaded SF path to SoundFontList struct.");
+						}
 
-						PrintSoundFontToDebugLog(TempSF.Path, "Loaded SF path to SoundFontList struct.");
 						continue;
 					}
 					else if (TempLine.find(L"sf.enabled") == 0)
 					{
-						if (AlreadyInitialized)
-						{
+						if (AlreadyInitialized) {
 							// We've found the enable state! Crush it!
 							TempSF.EnableState = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-
-							PrintMessageToDebugLog("NewSFLoader", "Loaded SF's enabled state to SoundFontList struct.");
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.enabled", TempSF.EnableState);
 						}
+
 						continue;
 					}
 					else if (TempLine.find(L"sf.srcp") == 0)
 					{
-						if (!AlreadyInitialized) 
-						{
+						if (AlreadyInitialized) {
 							// We've found the source preset! Take it!
 							TempSF.SourcePreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-
-							PrintMessageToDebugLog("NewSFLoader", "Loaded SF's source preset to SoundFontList struct.");
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.srcp", TempSF.SourcePreset);
 						}
+
 						continue;
 					}
 					else if (TempLine.find(L"sf.srcb") == 0)
 					{
-						if (!AlreadyInitialized)
-						{
+						if (AlreadyInitialized) {
 							// We've found the source bank! Read it!
 							TempSF.SourceBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-
-							PrintMessageToDebugLog("NewSFLoader", "Loaded SF's source bank to SoundFontList struct.");
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.srcb", TempSF.SourceBank);
 						}
+
 						continue;
 					}
 					else if (TempLine.find(L"sf.desp") == 0) // IT'S NOT DESPACITO
 					{
-						if (!AlreadyInitialized) 
+						if (AlreadyInitialized)
 						{
 							// We've found the destination preset! Munch it!
 							TempSF.DestinationPreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-
-							PrintMessageToDebugLog("NewSFLoader", "Loaded SF's destination preset to SoundFontList struct.");
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.desp", TempSF.DestinationPreset);
 						}
+
 						continue;
 					}
 					else if (TempLine.find(L"sf.desb") == 0)
 					{
-						if (!AlreadyInitialized)
+						if (AlreadyInitialized) 
 						{
 							// We've found the destination bank! Look at it!
 							TempSF.DestinationBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-
-							PrintMessageToDebugLog("NewSFLoader", "Loaded SF's destination bank to SoundFontList struct.");
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.desb", TempSF.DestinationBank);
 						}
+
 						continue;
 					}
 					else if (TempLine.find(L"sf.xgdrums") == 0)
 					{
-						if (!AlreadyInitialized)
+						if (AlreadyInitialized) 
 						{
-							// We've found the destination bank! Look at it!
+							// We've found the destination bank! I'm out of sentences to use...
 							TempSF.XGBankMode = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-
-							PrintMessageToDebugLog("NewSFLoader", "Loaded SF's XG drum setting to SoundFontList struct.");
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.xgdrums", TempSF.XGBankMode);
 						}
+
 						continue;
 					}
 					else continue;
