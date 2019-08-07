@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OmniMIDIConfiguratorMain));
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -214,6 +214,7 @@
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.openTheRivaTunerOSDManagerToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.LiveChangesTrigger = new System.Windows.Forms.MenuItem();
             this.hotkeys = new System.Windows.Forms.MenuItem();
             this.AutoLoad = new System.Windows.Forms.MenuItem();
@@ -289,7 +290,6 @@
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.VolumeCheck = new System.Windows.Forms.Timer(this.components);
-            this.openTheRivaTunerOSDManagerToolStripMenuItem = new System.Windows.Forms.MenuItem();
             this.Settings.SuspendLayout();
             this.VolPanel.SuspendLayout();
             this.MixerBox.SuspendLayout();
@@ -1783,7 +1783,7 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -2362,6 +2362,12 @@
             this.menuItem1.MergeType = System.Windows.Forms.MenuMerge.MergeItems;
             this.menuItem1.Text = "File";
             // 
+            // openTheRivaTunerOSDManagerToolStripMenuItem
+            // 
+            this.openTheRivaTunerOSDManagerToolStripMenuItem.Index = 3;
+            this.openTheRivaTunerOSDManagerToolStripMenuItem.Text = "Open the RivaTuner OSD manager";
+            this.openTheRivaTunerOSDManagerToolStripMenuItem.Click += new System.EventHandler(this.OpenTheRivaTunerOSDManagerToolStripMenuItem_Click);
+            // 
             // LiveChangesTrigger
             // 
             this.LiveChangesTrigger.Index = 3;
@@ -2870,12 +2876,6 @@
             // VolumeCheck
             // 
             this.VolumeCheck.Tick += new System.EventHandler(this.VolumeCheck_Tick);
-            // 
-            // openTheRivaTunerOSDManagerToolStripMenuItem
-            // 
-            this.openTheRivaTunerOSDManagerToolStripMenuItem.Index = 3;
-            this.openTheRivaTunerOSDManagerToolStripMenuItem.Text = "Open the RivaTuner OSD manager";
-            this.openTheRivaTunerOSDManagerToolStripMenuItem.Click += new System.EventHandler(this.OpenTheRivaTunerOSDManagerToolStripMenuItem_Click);
             // 
             // OmniMIDIConfiguratorMain
             // 

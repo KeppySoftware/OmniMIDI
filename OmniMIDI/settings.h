@@ -642,7 +642,6 @@ void SFDynamicLoaderCheck() {
 		// Check each value, to see if they're true or not
 		for (int i = 0; i <= 15; ++i) {
 			swprintf_s(TempRe, MAXPNAMELEN, L"rel%d", i + 1);
-
 			RegQueryValueEx(SFDynamicLoader.Address, TempRe, NULL, &dwType, (LPBYTE)&rvalues[i], &dwSize);
 
 			// Value "i" is true, reload the specific SoundFont list

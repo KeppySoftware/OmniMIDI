@@ -43,11 +43,11 @@ namespace OmniMIDIConfigurator
 
             if (IsEditingSoundfont) 
             {
-                SrcBankVal.Value = SettingsArray[0];
-                SrcPresetVal.Value = SettingsArray[1];
-                DesBankVal.Value = SettingsArray[2];
-                DesPresetVal.Value = SettingsArray[3];
-                XGMode.Checked = Convert.ToBoolean(SettingsArray[4]);
+                try { SrcBankVal.Value = SettingsArray[0]; } catch { SrcBankVal.Value = -1; }
+                try { SrcPresetVal.Value = SettingsArray[1]; } catch { SrcPresetVal.Value = -1; }
+                try { DesBankVal.Value = SettingsArray[2]; } catch { DesBankVal.Value = -1; }
+                try { DesPresetVal.Value = SettingsArray[3]; } catch { DesPresetVal.Value = 0; }
+                try { XGMode.Checked = Convert.ToBoolean(SettingsArray[4]); } catch { XGMode.Checked = false; }
             }
         }
 
@@ -71,12 +71,8 @@ namespace OmniMIDIConfigurator
         {
             var helpFile = Path.Combine(Path.GetTempPath(), "help.txt");
             File.WriteAllText(helpFile, Properties.Resources.gmlist);
-            Process.Start(helpFile);
-        }
-
-        private void BankNPresetSel_Load(object sender, EventArgs e)
-        {
-
+            Process.Start(helpFile).WaitForExit();
+            File.Delete(helpFile);
         }
     }
 }
