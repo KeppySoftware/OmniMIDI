@@ -270,6 +270,7 @@ VOID LoadBASSFunctions()
 		}
 		else PrintMessageToDebugLog("ImportBASS", "BASS has been already loaded by the driver.");
 
+		PrintMessageToDebugLog("ImportBASS", "Setting BASS flag to true.");
 		BASSLoadedToMemory = TRUE;
 	}
 	catch (...) {
@@ -375,6 +376,7 @@ void AllocateMemory(BOOL restart) {
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in amount of DWORDs)", FALSE, TempEvBufferSize);
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one DWORD is 4 bytes)", FALSE, EvBufferSize * 4);
+		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "Total RAM available (in bytes)", FALSE, status.ullTotalPhys);
 
 		// Begin allocating the EVBuffer
 		if (EVBuffer.Buffer != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
@@ -412,28 +414,29 @@ void AllocateMemory(BOOL restart) {
 }
 
 void LoadSettings(BOOL Restart, BOOL RT)
-{
+{	
+	// Initialize the temp values
+	DWORD
+		TempSC = ManagedSettings.SincConv,
+		TempOV = ManagedSettings.OutputVolume,
+		TempHP = HyperMode,
+		TempMV = ManagedSettings.MaxVoices;
+
+	BOOL
+		TempESFX = ManagedSettings.EnableSFX,
+		TempNOFF1 = ManagedSettings.NoteOff1,
+		TempISR = ManagedSettings.IgnoreSysReset,
+		TempSI = ManagedSettings.SincInter,
+		TempDNFO = ManagedSettings.DisableNotesFadeOut,
+		TempDMN = ManagedSettings.DontMissNotes;
+
+	DWORD64
+		TEvBufferSize = EvBufferSize,
+		TEvBufferMultRatio = EvBufferMultRatio;
+
 	try {
-		// Initialize the temp values
-		static DWORD 
-			TempSC = ManagedSettings.SincConv, 
-			TempOV = ManagedSettings.OutputVolume, 
-			TempHP = HyperMode, 
-			TempMV = ManagedSettings.MaxVoices;
-
-		static BOOL 
-			TempESFX = ManagedSettings.EnableSFX, 
-			TempNOFF1 = ManagedSettings.NoteOff1, 
-			TempISR = ManagedSettings.IgnoreSysReset, 
-			TempSI = ManagedSettings.SincInter, 
-			TempDNFO = ManagedSettings.DisableNotesFadeOut, 
-			TempDMN = ManagedSettings.DontMissNotes;
-
-		static DWORD64 TEvBufferSize, TEvBufferMultRatio;
-
 		// If the driver is booting up, then return true
 		BOOL IsBootUp = (!RT && !Restart);
-
 		if (!RT) PrintMessageToDebugLog("LoadSettingsFuncs", "Loading settings from registry...");
 
 		// Load the settings from the registry
@@ -916,9 +919,9 @@ void ReloadSFList(DWORD whichsflist){
 
 void KeyShortcuts()
 {
-	static bool ControlPressed;
-	static bool Keys[256];
-	static wchar_t OMConfiguratorDir[MAX_PATH];
+	bool ControlPressed;
+	bool Keys[256];
+	wchar_t OMConfiguratorDir[MAX_PATH];
 
 	try 
 	{

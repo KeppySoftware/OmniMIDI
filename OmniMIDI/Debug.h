@@ -39,24 +39,6 @@ double GetThreadUsage(Thread* Thread) {
 	return percent * 100;
 }
 
-std::wstring GetErrorAsString(DWORD ErrorID)
-{
-	//Get the error message, if any.
-	if (ErrorID == 0)
-		return std::wstring(L"No error detected."); //No error message has been recorded
-
-	LPWSTR messageBuffer = nullptr;
-	DWORD size = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL, ErrorID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&messageBuffer, 0, NULL);
-
-	std::wstring message(messageBuffer, size);
-
-	//Free the buffer.
-	LocalFree(messageBuffer);
-
-	return message;
-}
-
 void GetAppName() {
 	if (!InfoAlreadyGot)
 	{
@@ -136,12 +118,27 @@ void CrashMessage(LPCSTR part) {
 
 	sprintf(ErrorMessage, "An error has been detected while executing the following function: %s\n", part);
 
+	//Get the error message, if any.
 	if (ErrorID != 0) {
+		LPWSTR messageBuffer = NULL;
+		DWORD size = FormatMessageW(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL,
+			ErrorID,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPWSTR)& messageBuffer,
+			0,
+			NULL);
+
 		sprintf(
 			ErrorMessage + strlen(ErrorMessage), 
 			"\nError code: 0x%X - %s\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n", 
-			ErrorID, GetErrorAsString(ErrorID)
+			ErrorID, messageBuffer
 		);
+
+		//Free the buffer.
+		LocalFree(messageBuffer);
+		messageBuffer = NULL;
 	}
 
 	sprintf(
@@ -373,6 +370,26 @@ void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 		// Print to log
 		PrintCurrentTime();
 		sprintf(Msg, "Stage <<%s>> | %s\n", Stage, Status);
+		fprintf(DebugLog, Msg);
+		OutputDebugStringA(Msg);
+
+		free(Msg);
+
+		// Flush buffer
+		fflush(DebugLog);
+	}
+}
+
+void PrintBoolToDebugLog(LPCSTR Stage, BOOL Status) {
+	if (ManagedSettings.DebugMode) {
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+
+		// Debug log is busy now
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		// Print to log
+		PrintCurrentTime();
+		sprintf(Msg, "Stage <<%s>> | %s\n", Stage, Status ? "TRUE" : "FALSE");
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 

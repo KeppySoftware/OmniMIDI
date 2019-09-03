@@ -83,12 +83,12 @@ typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
 typedef NTSTATUS(NTAPI* NQST)(QWORD*);
 typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
 
-static NDE NtDelayExecution = 0;
-static NQST NtQuerySystemTime = 0;
-static DDP DefDriverProcImp = 0;
+NDE NtDelayExecution = 0;
+NQST NtQuerySystemTime = 0;
+DDP DefDriverProcImp = 0;
 
 // Blinx best game
-static HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
+HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
 
 #define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
 
@@ -99,18 +99,18 @@ void NTSleep(__int64 usec) {
 }
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
-static DWORD DummyPlayBufData() { return 0; }
-static VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
-static MMRESULT DummyParseData(DWORD dwParam1) { return MIDIERR_NOTREADY; }
-static BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
+DWORD DummyPlayBufData() { return 0; }
+VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
+MMRESULT DummyParseData(DWORD dwParam1) { return MIDIERR_NOTREADY; }
+BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
 
 // Hyper switch
-static BOOL HyperMode = 0;
-static MMRESULT(*_PrsData)(DWORD dwParam1) = DummyParseData;
-static VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
-static DWORD(*_PlayBufData)(void) = DummyPlayBufData;
-static DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
-static BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
+BOOL HyperMode = 0;
+MMRESULT(*_PrsData)(DWORD dwParam1) = DummyParseData;
+VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
+DWORD(*_PlayBufData)(void) = DummyPlayBufData;
+DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
+BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
 
@@ -135,7 +135,7 @@ static BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) 
 
 // OmniMIDI GUID
 // {62F3192B-A961-456D-ABCA-A5C95A14B9AA}
-static const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
+const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 {

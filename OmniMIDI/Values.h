@@ -5,7 +5,7 @@
 #define DEVICE_AVAILABLE 1
 
 // Things
-static UINT CPUThreadsAvailable = 0;
+UINT CPUThreadsAvailable = 0;
 
 #define GETSTATUS(f) ((f & 0xFF) & 0xF0)
 #define GETVELOCITY(f) (f >> 16)
@@ -32,46 +32,46 @@ static UINT CPUThreadsAvailable = 0;
 #define NTFS_MAX_PATH	32767
 
 // Settings managed by client
-static BOOL AlreadyStartedOnce = FALSE;
+BOOL AlreadyStartedOnce = FALSE;
 
 // EVBuffer
 typedef struct EventsBuffer {
-	DWORD*					Buffer;
+	DWORD* Buffer;
 	volatile ULONGLONG		ReadHead;
 	ULONGLONG				WriteHead;
 };
 // The buffer's structure
-static EventsBuffer EVBuffer;					// The buffer
-static DWORD LastRunningStatus = 0;				// Last running status
-static QWORD EvBufferSize = 4096;
-static DWORD EvBufferMultRatio = 1;
-static DWORD GetEvBuffSizeFromRAM = 0;
+EventsBuffer EVBuffer;							// The buffer
+DWORD LastRunningStatus = 0;				// Last running status
+QWORD EvBufferSize = 4096;
+DWORD EvBufferMultRatio = 1;
+DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
-static ULONGLONG TickStart = 0;			// For TGT64
-static HSTREAM OMStream = NULL;
-static HANDLE OMReady = NULL;
-static HMIDI OMHMIDI = NULL;
-static HDRVR OMHDRVR = NULL;
-static DWORD_PTR OMCallback = NULL;
-static DWORD_PTR OMInstance = NULL;
-static DWORD OMFlags = NULL;
+ULONGLONG TickStart = 0;			// For TGT64
+HSTREAM OMStream = NULL;
+HANDLE OMReady = NULL;
+HMIDI OMHMIDI = NULL;
+HDRVR OMHDRVR = NULL;
+DWORD_PTR OMCallback = NULL;
+DWORD_PTR OMInstance = NULL;
+DWORD OMFlags = NULL;
 
 // Important stuff
-static const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
-static BOOL DriverInitStatus = FALSE;
-static BOOL AlreadyInitializedViaKDMAPI = FALSE;
-static BOOL BASSLoadedToMemory = FALSE;
-static BOOL ASIOReady = FALSE;
-static BOOL DisableChime = FALSE;
-static BOOL KDMAPIEnabled = FALSE;
-static BOOL IsKDMAPIViaWinMM = FALSE;
-static WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
-static CHAR SynthName[MAXPNAMELEN];			// Synthesizer name, but ASCII
+const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
+BOOL DriverInitStatus = FALSE;
+BOOL AlreadyInitializedViaKDMAPI = FALSE;
+BOOL BASSLoadedToMemory = FALSE;
+BOOL ASIOReady = FALSE;
+BOOL DisableChime = FALSE;
+BOOL KDMAPIEnabled = FALSE;
+BOOL IsKDMAPIViaWinMM = FALSE;
+WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
+CHAR SynthName[MAXPNAMELEN];			// Synthesizer name, but ASCII
 
 // Stream
-static BASS_INFO info;
-static FLOAT SynthVolume = 1.0;
+BASS_INFO info;
+FLOAT SynthVolume = 1.0;
 
 // Registry system
 #define KEY_READY	ERROR_SUCCESS
@@ -83,12 +83,12 @@ typedef struct RegKey
 	LSTATUS Status = KEY_CLOSED;
 };
 
-static RegKey MainKey, Configuration, Channels, ChanOverride, SFDynamicLoader;
+RegKey MainKey, Configuration, Channels, ChanOverride, SFDynamicLoader;
 
-static DWORD Blank = NULL;
-static DWORD dwType = REG_DWORD, dwSize = sizeof(DWORD);
-static DWORD qwType = REG_QWORD, qwSize = sizeof(QWORD);
-static DWORD SNType = REG_SZ, SNSize = sizeof(SynthNameW);
+DWORD Blank = NULL;
+DWORD dwType = REG_DWORD, dwSize = sizeof(DWORD);
+DWORD qwType = REG_QWORD, qwSize = sizeof(QWORD);
+DWORD SNType = REG_SZ, SNSize = sizeof(SynthNameW);
 
 // Threads
 typedef struct Thread
@@ -100,35 +100,35 @@ typedef struct Thread
 	BOOL DebugAvailable;					// <<<<<<<< USED INTERNALLY BY OMNIMIDI!
 };
 
-static BOOL bass_initialized = FALSE;
-static BOOL block_bassinit = FALSE;
-static BOOL stop_thread = FALSE;
+BOOL bass_initialized = FALSE;
+BOOL block_bassinit = FALSE;
+BOOL stop_thread = FALSE;
 
-static Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
+Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
 
 // Mandatory values
-static HMODULE hinst = NULL;					// main DLL handle
-static HMODULE winmm = NULL;					// ?
+HMODULE hinst = NULL;					// main DLL handle
+HMODULE winmm = NULL;					// ?
 
-static CHAR AppPath[NTFS_MAX_PATH] = { 0 };		// debug info
-static TCHAR AppPathW[NTFS_MAX_PATH] = { 0 };	// debug info
-static CHAR AppName[MAX_PATH] = { 0 };			// debug info
-static TCHAR AppNameW[MAX_PATH] = { 0 };		// debug info
+CHAR AppPath[NTFS_MAX_PATH] = { 0 };		// debug info
+TCHAR AppPathW[NTFS_MAX_PATH] = { 0 };	// debug info
+CHAR AppName[MAX_PATH] = { 0 };			// debug info
+TCHAR AppNameW[MAX_PATH] = { 0 };		// debug info
 
-static HANDLE hPipe = INVALID_HANDLE_VALUE;		// debug info
+HANDLE hPipe = INVALID_HANDLE_VALUE;		// debug info
 
 // Main values
-static INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
-static BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
-static HFX ChVolume;						// Volume
-static DWORD RestartValue = 0;				// For AudToWAV
-static BOOL UnlimitedChannels = 0;			// For KDMAPI
+INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
+BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
+HFX ChVolume;						// Volume
+DWORD RestartValue = 0;				// For AudToWAV
+BOOL UnlimitedChannels = 0;			// For KDMAPI
 
-static const FLOAT sndbflen = 256.0f;		// AudToWAV
-static FLOAT *sndbf;						// AudToWAV
+const FLOAT sndbflen = 256.0f;		// AudToWAV
+FLOAT* sndbf;						// AudToWAV
 
 // Settings and debug
-static wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
+wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
 typedef struct SoundFontList
 {
 	int EnableState;
@@ -140,14 +140,14 @@ typedef struct SoundFontList
 	int XGBankMode;
 };
 
-static FILE* DebugLog = NULL;
-static BOOL SettingsManagedByClient;
-static FLOAT RenderingTime = 0.0f;
-static Settings ManagedSettings = Settings();
-static DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
+FILE* DebugLog = NULL;
+BOOL SettingsManagedByClient;
+FLOAT RenderingTime = 0.0f;
+Settings ManagedSettings = Settings();
+DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
 
 // Priority values
-static const DWORD prioval[] =
+const DWORD prioval[] =
 {
 	THREAD_PRIORITY_TIME_CRITICAL,
 	THREAD_PRIORITY_TIME_CRITICAL,
@@ -159,13 +159,13 @@ static const DWORD prioval[] =
 };
 
 // Built-in blacklist
-static BOOL CPBlacklisted = FALSE;
-static const LPCWSTR CookedPlayerBlacklist[] =
+BOOL CPBlacklisted = FALSE;
+const LPCWSTR CookedPlayerBlacklist[] =
 {
 	_T("wmplayer.exe"),
 };
 
-static const LPCWSTR BuiltInBlacklist[] =
+const LPCWSTR BuiltInBlacklist[] =
 {
 	_T("Battle.net Launcher.exe"),
 	_T("Discord.exe"),
@@ -206,12 +206,12 @@ static const LPCWSTR BuiltInBlacklist[] =
 };
 
 // Per channel values
-static DWORD cvalues[16];		// Volume setting per channel.
-static DWORD cbank[16];			// MIDI bank setting per channel.
-static DWORD cpreset[16];		// MIDI preset setting for... you guess it!
+DWORD cvalues[16];		// Volume setting per channel.
+DWORD cbank[16];			// MIDI bank setting per channel.
+DWORD cpreset[16];		// MIDI preset setting for... you guess it!
 
-static DWORD SynthType = MOD_MIDIPORT;
-static const DWORD SynthNamesTypes[7] =
+DWORD SynthType = MOD_MIDIPORT;
+const DWORD SynthNamesTypes[7] =
 {
 	MOD_FMSYNTH,
 	MOD_SYNTH,
@@ -223,23 +223,23 @@ static const DWORD SynthNamesTypes[7] =
 };
 
 // Reverb and chorus
-static DWORD reverb = 64;					// Reverb
-static DWORD chorus = 64;					// Chorus
+DWORD reverb = 64;					// Reverb
+DWORD chorus = 64;					// Chorus
 
 // Watchdog stuff
-static DWORD rvalues[16];
+DWORD rvalues[16];
 
 // -----------------------------------------------------------------------
 
-static const wchar_t * OMPipeTemplate = L"\\\\.\\pipe\\OmniMIDIDbg%u";
-static const wchar_t * OMFileTemplate = L"\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
-static const wchar_t * OMLetters[16] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q", L"R" };
+const wchar_t* OMPipeTemplate = L"\\\\.\\pipe\\OmniMIDIDbg%u";
+const wchar_t* OMFileTemplate = L"\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
+const wchar_t* OMLetters[16] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q", L"R" };
 
 // -----------------------------------------------------------------------
 
-static std::vector<HSOUNDFONT> SoundFontHandles;
-static std::vector<BASS_MIDI_FONTEX> SoundFontPresets;
+std::vector<HSOUNDFONT> SoundFontHandles;
+std::vector<BASS_MIDI_FONTEX> SoundFontPresets;
 
 // -----------------------------------------------------------------------
 
-static DWORD pitchshiftchan[16];
+DWORD pitchshiftchan[16];

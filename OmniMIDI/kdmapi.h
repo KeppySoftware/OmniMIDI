@@ -16,8 +16,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 
 // F**k WinMM and Microsoft
 typedef VOID(CALLBACK * WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
-static DWORD_PTR WMMCI;
-static WMMC CustomCallback = 0;
+DWORD_PTR WMMCI;
+WMMC CustomCallback = 0;
 
 // KDMAPI calls
 BOOL StreamHealthCheck(BOOL & Initialized) {
