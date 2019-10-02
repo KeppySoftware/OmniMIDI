@@ -72,6 +72,7 @@ typedef long NTSTATUS;
 #include <bass_vst.h>
 
 // Important
+#include "LockSystem.h"
 #include "Values.h"
 #include "Debug.h"
 
@@ -122,7 +123,6 @@ BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = Dummy
 
 // Variables
 #include "BASSErrors.h"
-#include "LockSystem.h"
 
 // OmniMIDI vital parts
 #include "SoundFontLoader.h"
@@ -377,7 +377,27 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	}
 }
 
-extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+MMRESULT DequeueMIDIHDRs(DWORD_PTR dwUser) 
+{
+	if (!dwUser)
+		return DebugResult("DequeueMIDIHDRs", MMSYSERR_INVALPARAM, "dwUser is not valid.");
+
+	for (LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue; hdr; hdr = hdr->lpNext)
+	{
+		LockForWriting(&((CookedPlayer*)dwUser)->Lock);
+		PrintMessageToDebugLog("MODM_RESET", "Marking buffer as done and not in queue anymore...");
+		hdr->dwFlags &= ~MHDR_INQUEUE;
+		hdr->dwFlags |= MHDR_DONE;
+		UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
+
+		CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+	}
+
+	return MMSYSERR_NOERROR;
+}
+
+MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+{
 	static BOOL PreventInit = FALSE;
 	MMRESULT RetVal = MMSYSERR_NOERROR;
 	
@@ -518,6 +538,8 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 			return DebugResult("MODM_GETPOS", MMSYSERR_INVALPARAM, "Invalid parameters.");
 
 		PrintMessageToDebugLog("MODM_GETPOS", "The app wants to know the current position of the stream.");
+
+		RESET:
 		switch (((MMTIME*)dwParam1)->wType) {
 		case TIME_BYTES:
 			PrintMessageToDebugLog("TIME_BYTES", "The app wanted it in bytes.");
@@ -534,7 +556,7 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		default:
 			PrintMessageToDebugLog("TIME_UNK", "Unrecognized wType. Parsing in the default format of ticks.");
 			((MMTIME*)dwParam1)->wType = TIME_TICKS;
-			((MMTIME*)dwParam1)->u.ticks = ((CookedPlayer*)dwUser)->TickAccumulator;
+			goto RESET;
 			break;
 		}
 
@@ -571,48 +593,18 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		PrintMessageToDebugLog("MODM_STOP", "The app requested OmniMIDI to stop CookedPlayer.");
 		((CookedPlayer*)dwUser)->Paused = TRUE;
 
-		LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
-		while (hdr)
-		{
-			LockForWriting(&((CookedPlayer*)dwUser)->Lock);
-			PrintMessageToDebugLog("MODM_STOP", "Marking buffer as done and not in queue anymore...");
-			hdr->dwFlags &= ~MHDR_INQUEUE;
-			hdr->dwFlags |= MHDR_DONE;
-			UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
-
-			CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
-			hdr = hdr->lpNext;
-		}
-
 		ResetSynth(FALSE);
+		RetVal = DequeueMIDIHDRs(dwUser);
 
-		PrintMessageToDebugLog("MODM_STOP", "CookedPlayer is now stopped.");
-		return MMSYSERR_NOERROR;
+		if (!RetVal) PrintMessageToDebugLog("MODM_STOP", "CookedPlayer is now stopped.");
+		return RetVal;
 	}
-	case MODM_RESET: {
+	case MODM_RESET:
 		// Stop all the current active voices
-		if (dwUser)
-		{
-			PrintMessageToDebugLog("MODM_RESET", "The app requested OmniMIDI to reset CookedPlayer.");
-
-			LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
-			while (hdr)
-			{
-				LockForWriting(&((CookedPlayer*)dwUser)->Lock);
-				PrintMessageToDebugLog("MODM_RESET", "Marking buffer as done and not in queue anymore...");
-				hdr->dwFlags &= ~MHDR_INQUEUE;
-				hdr->dwFlags |= MHDR_DONE;
-				UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
-
-				CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
-				hdr = hdr->lpNext;
-			}
-		}
-		else PrintMessageToDebugLog("MODM_RESET", "The app sent a reset command.");
-
 		ResetSynth(FALSE);
-		return MMSYSERR_NOERROR;
-	}
+
+		PrintMessageToDebugLog("MODM_RESET", (dwUser ? "The app requested OmniMIDI to reset CookedPlayer." : "The app sent a reset command."));
+		return (dwUser ? DequeueMIDIHDRs(dwUser) : MMSYSERR_NOERROR);
 	case MODM_PREPARE:
 		// Pass it to a KDMAPI function
 		return PrepareLongData((MIDIHDR*)dwParam1);
@@ -757,20 +749,9 @@ extern "C" STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser
 		return DebugResult("MODM_CLOSE", MMSYSERR_NOERROR, "The driver has been stopped");
 	}
 	case MODM_CACHEPATCHES:
-		// Not needed for OmniMIDI
-		PrintMessageToDebugLog("modMessage", "MODM_CACHEPATCHES is not required by OmniMIDI, since it uses SoundFonts.");
-		return MMSYSERR_NOTSUPPORTED;
 	case MODM_CACHEDRUMPATCHES:
-		// Not needed for OmniMIDI
-		PrintMessageToDebugLog("modMessage", "MODM_CACHEDRUMPATCHES is not required by OmniMIDI, since it uses SoundFonts.");
-		return MMSYSERR_NOTSUPPORTED;
 	case DRV_QUERYDEVICEINTERFACESIZE:
-		// Not needed for OmniMIDI
-		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACESIZE is not required by OmniMIDI.");
-		return MMSYSERR_NOTSUPPORTED;
 	case DRV_QUERYDEVICEINTERFACE:
-		// Not needed for OmniMIDI
-		PrintMessageToDebugLog("modMessage", "DRV_QUERYDEVICEINTERFACE is not required by OmniMIDI.");
 		return MMSYSERR_NOTSUPPORTED;
 	default: {
 		// Unrecognized uMsg

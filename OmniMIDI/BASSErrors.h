@@ -136,37 +136,48 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 	}
 }
 
-void ShowError(int error, int mode, wchar_t* engine, wchar_t* codeline, int showerror) {
-	wchar_t title[NTFS_MAX_PATH];
-	wchar_t main[NTFS_MAX_PATH];
+void ShowError(int error, int mode, CHAR* engine, CHAR* codeline, int showerror) {
+	CHAR title[NTFS_MAX_PATH] = { 0 };
+	CHAR main[NTFS_MAX_PATH] = { 0 };
 
-	memset(title, 0, sizeof(title));
-	memset(main, 0, sizeof(title));
+	WCHAR WBE[512] = { 0 };
+	WCHAR WBED[512] = { 0 };
 
-	wsprintfW(main, L"%s encountered the following error: %s", engine, ReturnBASSError(error));
-	PrintBASSErrorMessageToDebugLog(ReturnBASSError(error), ReturnBASSErrorDesc(error));
+	CHAR BE[512] = { 0 };
+	CHAR BED[512] = { 0 };
+	CHAR BEF[512] = { 0 };
+
+	swprintf_s(WBE, ReturnBASSError(error));
+	swprintf_s(WBED, ReturnBASSErrorDesc(error));
+
+	wcstombs(BE, ReturnBASSError(error), 512);
+	wcstombs(BED, ReturnBASSErrorDesc(error), 512);
+	wcstombs(BEF, ReturnBASSErrorFix(error), 512);
+
+	sprintf_s(main, sizeof(main), "%s encountered the following error: %s", engine, BE);
+	PrintBASSErrorMessageToDebugLog(WBE, WBED);
 
 	if (showerror) {
-		wsprintfW(title, L"OmniMIDI - %s execution error", engine);
-		wsprintfW(main + wcslen(main), L" (E%d)", error);
+		sprintf_s(title, sizeof(title), "OmniMIDI - %s execution error", engine);
+		sprintf_s(main + strlen(main), sizeof(main), " (E%d)", error);
 
 		if (mode == 0) 
-			wsprintfW(main + wcslen(main), L"\n\nCode line error: %s", codeline);
+			sprintf_s(main + strlen(main), sizeof(main), "\n\nCode line error: %s", codeline);
 
-		wsprintfW(main + wcslen(main), L"\n\nExplanation: %s", ReturnBASSErrorDesc(error));
+		sprintf_s(main + strlen(main), sizeof(main), "\n\nExplanation: %s", BED);
 
-		wsprintfW(main + wcslen(main),
-			mode ? L"\n\nWhat might have caused this error:\n%s" : L"\n\nPossible fixes:\n%s", 
-			mode ? codeline : ReturnBASSErrorFix(error)
+		sprintf_s(main + strlen(main), sizeof(main),
+			mode ? "\n\nWhat might have caused this error:\n%s" : "\n\nPossible fixes:\n%s", 
+			mode ? codeline : BEF
 		);
 
-		if (!_wcsicmp(engine, L"BASSASIO") && error != -1) {
-			wsprintfW(main + wcslen(main), L"\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
+		if (!_stricmp(engine, "BASSASIO") && error != -1) {
+			strcat_s(main, sizeof(main), "\n\nChange the device through the configurator, then try again.\nTo change it, please open the configurator, and go to \"More settings > Advanced audio settings > Change default audio output\"");
 		}
 
-		wsprintfW(main + wcslen(main), L"\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
+		strcat_s(main, sizeof(main), "\n\nIf you're unsure about what this means, please take a screenshot, and give it to KaleidonKep99.");
 
-		MessageBoxW(NULL, main, title, MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, main, title, MB_OK | MB_ICONERROR);
 
 		if ((error == -1 ||
 			error >= 2 && error <= 10 ||
@@ -179,10 +190,10 @@ void ShowError(int error, int mode, wchar_t* engine, wchar_t* codeline, int show
 	}
 }
 
-BOOL CheckUp(BOOL IsASIO, int mode, TCHAR * codeline, bool showerror) {
+BOOL CheckUp(BOOL IsASIO, int mode, CHAR* codeline, bool showerror) {
 	int error = IsASIO ? BASS_ASIO_ErrorGetCode() : BASS_ErrorGetCode();
 	if (error != 0) {
-		ShowError(error, mode, IsASIO ? L"BASSASIO" : L"BASS", codeline, showerror);
+		ShowError(error, mode, IsASIO ? "BASSASIO" : "BASS", codeline, showerror);
 		return FALSE;
 	}
 	return TRUE;

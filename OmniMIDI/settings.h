@@ -476,7 +476,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		RegQueryValueEx(Configuration.Address, L"IgnoreSysReset", NULL, &dwType, (LPBYTE)&TempISR, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"LimitTo88Keys", NULL, &dwType, (LPBYTE)&ManagedSettings.LimitTo88Keys, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"LiveChanges", NULL, &dwType, (LPBYTE)&ManagedSettings.LiveChanges, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"MT32Mode", NULL, &dwType, (LPBYTE)&ManagedSettings.MT32Mode, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"MaxRenderingTime", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxRenderingTime, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"MaxVelIgnore", NULL, &dwType, (LPBYTE)&ManagedSettings.MaxVelIgnore, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"MaxVoices", NULL, &dwType, (LPBYTE)&TempMV, &dwSize);
@@ -511,7 +510,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 				ChVolumeStruct.fTime = 0.0f;
 				ChVolumeStruct.lCurve = 0;
 				BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-				CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Set", FALSE);
+				CheckUp(FALSE, ERRORCODE, "Stream Volume FX Set", FALSE);
 			}
 		}
 

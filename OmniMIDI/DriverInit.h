@@ -3,33 +3,11 @@ OmniMIDI stream init
 */
 #pragma once
 
-void MT32SetInstruments() {
-	if (ManagedSettings.MT32Mode) {
-		// Send the default MT32 instruments to the channels
-		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_PROGRAM, 0);
-		BASS_MIDI_StreamEvent(OMStream, 1, MIDI_EVENT_PROGRAM, 36);
-		BASS_MIDI_StreamEvent(OMStream, 2, MIDI_EVENT_PROGRAM, 48);
-		BASS_MIDI_StreamEvent(OMStream, 3, MIDI_EVENT_PROGRAM, 61);
-		BASS_MIDI_StreamEvent(OMStream, 4, MIDI_EVENT_PROGRAM, 66);
-		BASS_MIDI_StreamEvent(OMStream, 5, MIDI_EVENT_PROGRAM, 96);
-		BASS_MIDI_StreamEvent(OMStream, 6, MIDI_EVENT_PROGRAM, 76);
-		BASS_MIDI_StreamEvent(OMStream, 7, MIDI_EVENT_PROGRAM, 76);
-		BASS_MIDI_StreamEvent(OMStream, 8, MIDI_EVENT_PROGRAM, 55);
-		BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_PROGRAM, 35);
-		BASS_MIDI_StreamEvent(OMStream, 10, MIDI_EVENT_PROGRAM, 0);
-		BASS_MIDI_StreamEvent(OMStream, 11, MIDI_EVENT_PROGRAM, 0);
-		BASS_MIDI_StreamEvent(OMStream, 12, MIDI_EVENT_PROGRAM, 0);
-		BASS_MIDI_StreamEvent(OMStream, 13, MIDI_EVENT_PROGRAM, 0);
-		BASS_MIDI_StreamEvent(OMStream, 14, MIDI_EVENT_PROGRAM, 0);
-		BASS_MIDI_StreamEvent(OMStream, 15, MIDI_EVENT_PROGRAM, 0);
-	}
-	else {
-		// Send the overridden instruments to the channels
-		if (ManagedSettings.OverrideInstruments) {
-			for (int i = 0; i <= 15; ++i) {
-				BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_BANK, cbank[i]);
-				BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
-			}
+void SetInstruments() {
+	if (ManagedSettings.OverrideInstruments) {
+		for (int i = 0; i <= 15; ++i) {
+			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_BANK, cbank[i]);
+			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
 		}
 	}
 }
@@ -48,6 +26,13 @@ DWORD WINAPI DebugParser(Thread* DPThread) {
 	return 0;
 }
 */
+
+void TerminateThread(Thread* thread, BOOL T, DWORD excode) {
+	CloseHandle(thread->ThreadHandle);
+	thread->ThreadHandle = nullptr;
+	thread->ThreadAddress = 0;
+	if (T) _endthreadex(excode);
+}
 
 void DebugPipe(LPVOID lpV) {
 	// Thread DPThread;
@@ -83,13 +68,12 @@ void DebugPipe(LPVOID lpV) {
 		DisconnectNamedPipe(hPipe);
 	}
 	PrintMessageToDebugLog("DebugPipe", "Closing debug pipe thread...");
-	CloseHandle(DThread.ThreadHandle);
-	DThread.ThreadHandle = nullptr;
-	DThread.ThreadAddress = 0;
-	_endthreadex(0);
+	TerminateThread(&DThread, TRUE, 0);
 }
 
 void EventsProcesser(LPVOID lpV) {
+	DWORD TI = (DWORD)lpV;
+	
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -97,7 +81,7 @@ void EventsProcesser(LPVOID lpV) {
 			// break from the EventProcesser's loop, and close the thread, and move the processing to AudioThread
 			if (ManagedSettings.NotesCatcherWithAudio) break;
 
-			MT32SetInstruments();
+			SetInstruments();
 
 			// Parse the notes until the audio thread is done
 			if (_PlayBufData() && !stop_thread) _FWAIT;
@@ -109,13 +93,12 @@ void EventsProcesser(LPVOID lpV) {
 	}
 
 	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
-	CloseHandle(EPThread.ThreadHandle);
-	EPThread.ThreadHandle = nullptr;
-	EPThread.ThreadAddress = 0;
-	_endthreadex(0);
+	TerminateThread(&EPThread, TRUE, 0);
 }
 
 void FastEventsProcesser(LPVOID lpV) {
+	DWORD TI = (DWORD)lpV;
+
 	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -132,16 +115,13 @@ void FastEventsProcesser(LPVOID lpV) {
 	}
 
 	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
-	CloseHandle(EPThread.ThreadHandle);
-	EPThread.ThreadHandle = nullptr;
-	EPThread.ThreadAddress = 0;
-	_endthreadex(0);
+	TerminateThread(&EPThread, TRUE, 0);
 }
 
-void InitializeEventsProcesserThread() {
+void InitializeEventsProcesserThreads() {
 	// If the EventProcesser thread is not valid, then open a new one
 	if (!EPThread.ThreadHandle) {
-		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), NULL, 0, &EPThread.ThreadAddress);
+		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), (void*)1, 0, &EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
 }
@@ -156,11 +136,11 @@ void AudioEngine(LPVOID lpParam) {
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
-					MT32SetInstruments();
+					SetInstruments();
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
-				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThread();
+				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
@@ -175,10 +155,7 @@ void AudioEngine(LPVOID lpParam) {
 	}
 
 	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
-	CloseHandle(ATThread.ThreadHandle);
-	ATThread.ThreadHandle = nullptr;
-	ATThread.ThreadAddress = 0;
-	_endthreadex(0);
+	TerminateThread(&ATThread, TRUE, 0);
 }
 
 void FastAudioEngine(LPVOID lpParam) {
@@ -198,7 +175,7 @@ void FastAudioEngine(LPVOID lpParam) {
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
-				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThread();
+				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
 				_WAIT;
 			}
@@ -209,20 +186,17 @@ void FastAudioEngine(LPVOID lpParam) {
 	}
 
 	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
-	CloseHandle(ATThread.ThreadHandle);
-	ATThread.ThreadHandle = nullptr;
-	ATThread.ThreadAddress = 0;
-	_endthreadex(0);
+	TerminateThread(&ATThread, TRUE, 0);
 }
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) {
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
-		MT32SetInstruments();
+		SetInstruments();
 		_PlayBufDataChk();
 	}
 	// Else, open the EventProcesser thread
-	else if (!EPThread.ThreadHandle) InitializeEventsProcesserThread();
+	else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
 	// Get the processed audio data, and send it to the ASIO device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
@@ -298,19 +272,30 @@ BOOL CreateThreads(BOOL startup) {
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
 
+	// Check if the current engine is ASIO
 	if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+		// It's not, we need a separate thread to render the audio
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
+
+		// Check if the audio thread is already present, and close it
 		CheckIfThreadClosed(&ATThread);
+
+		// Recreate it from scratch, and give it a priority
 		ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
 		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
+
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
-	if (!DThread.ThreadAddress)
+	// Check if the debug thread is working
+	if (!DThread.ThreadHandle)
 	{
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening debug thread...");
+
+		// It's not, initialize it and give it a priority
 		DThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)DebugPipe, NULL, 0, &DThread.ThreadAddress);
 		SetThreadPriority(DThread.ThreadHandle, THREAD_PRIORITY_NORMAL);
+
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
@@ -325,20 +310,25 @@ void InitializeBASSVST() {
 	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t LoudMax[MAX_PATH] = { 0 };
 
+	// Get the user profile path
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, LoudMax);
+
+	// Append the right DLL name to the path
 #if defined(_M_AMD64)
 	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax64.dll"));
 #elif defined(_M_IX86)
 	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax32.dll"));
 #endif
 
+	// If the DLL exists, begin the loading process
 	if (PathFileExists(LoudMax)) {
+		// Initialize BASS_VST
 		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
 		{
 			PathRemoveFileSpec(InstallPath);
-
 			LoadDriverModule(&bass_vst, InstallPath, L"bass_vst.dll", FALSE);
 
+			// If BASS_VST has been loaded succesfully, load the functions too
 			if (bass_vst)
 			{
 				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelSetDSP);
@@ -349,21 +339,16 @@ void InitializeBASSVST() {
 
 				BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
 			}
+			else { /* Nothing, probably on ARM64 */ }
 		}
 	}
 }
 
 void InitializeStream(INT32 mixfreq) {
-	bool isdecode = FALSE;
 	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
 
-	// If the current audio engine is DS or WASAPI, then it's not a decoding channel
-	if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE ||
-		ManagedSettings.CurrentEngine == WASAPI_ENGINE) 
-	{ isdecode = FALSE; }
-	// Else, it is
-	else
-	{ isdecode = TRUE; }
+	// If the current audio engine is DS or WASAPI, then it's not a decoding channel, else it is
+	bool isdecode = ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) ? FALSE : TRUE);
 		
 	// If the stream is still active, free it up again
 	if (OMStream) {
@@ -380,7 +365,7 @@ void InitializeStream(INT32 mixfreq) {
 		AudioRenderingType(TRUE, ManagedSettings.AudioBitDepth) | (ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | (ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX) | (ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0),
 		mixfreq);
 
-	CheckUp(FALSE, ERRORCODE, L"MIDI Stream Initialization", TRUE);
+	CheckUp(FALSE, ERRORCODE, "MIDI Stream Initialization", TRUE);
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
 }
@@ -398,7 +383,8 @@ void FreeUpBASS() {
 }
 
 void FreeUpBASSASIO() {
-#if !defined(_M_ARM64)
+#if !defined(_M_ARM64) // Only do this if on x86 and x64
+
 	if (BASSLoadedToMemory) {
 		// Free up ASIO before doing anything
 		BASS_ASIO_Stop();
@@ -407,13 +393,19 @@ void FreeUpBASSASIO() {
 		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
 		ASIOReady = FALSE;
 	}
+
 #endif
 }
 
-ULONG ASIODevicesCount() {
-	int count = 0;
+DWORD ASIODevicesCount() {
+	// Initialize BASSASIO device info
+	DWORD count = 0;
 	BASS_ASIO_DEVICEINFO info;
-	for (count = 0; BASS_ASIO_GetDeviceInfo(count, &info); count++) { /* I'm counting */ }
+
+	// Count the devices
+	for (/* NULL */; BASS_ASIO_GetDeviceInfo(count, &info); count++);
+
+	// Return the count
 	return count;
 }
 
@@ -455,8 +447,10 @@ LONG ASIODetectID() {
 BOOL InitializeBASSLibrary() {
 	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
 	BOOL isds = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
+	
 	// Stream flags
 	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) ? BASS_DEVICE_DSOUND : 0);
+	
 	// DWORDs on the registry are unsigned, so parse the value and subtract 1 to get the selected audio device
 	AudioOutput = ManagedSettings.AudioOutputReg - 1;
 
@@ -467,9 +461,14 @@ BOOL InitializeBASSLibrary() {
 		// force BASS to follow Windows' default device whenever it's changed
 		if (AudioOutput == -1) BASS_SetConfig(BASS_CONFIG_DEV_DEFAULT, 1);
 	}
-
-	BOOL init = BASS_Init(isds ? AudioOutput : 0, ManagedSettings.AudioFrequency, (isds ? (BASS_DEVICE_LATENCY | BASS_DEVICE_CPSPEAKERS) : 0) | flags, GetActiveWindow(), NULL);
-	CheckUp(FALSE, ERRORCODE, L"BASS Lib Initialization", TRUE);
+	
+	BOOL init = BASS_Init(
+		isds ? AudioOutput : 0, 
+		ManagedSettings.AudioFrequency, 
+		(isds ? ((ManagedSettings.ReduceBootUpDelay ? BASS_DEVICE_LATENCY : 0) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
+		GetActiveWindow(), 
+		NULL);
+	CheckUp(FALSE, ERRORCODE, "BASS Lib Initialization", TRUE);
 
 	/*
 	if (isds) {
@@ -499,28 +498,28 @@ BOOL ApplyStreamSettings() {
 	else {
 		// Load the settings to BASS
 		BASS_ChannelFlags(OMStream, ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX, BASS_MIDI_NOFX);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 1", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 1", TRUE);
 
 		BASS_ChannelFlags(OMStream, ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0, BASS_MIDI_NOTEOFF1);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 2", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 2", TRUE);
 
 		BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 3", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 3", TRUE);
 
 		BASS_ChannelFlags(OMStream, ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0, BASS_MIDI_SINCINTER);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 4", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 4", TRUE);
 
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_SRC, ManagedSettings.SincConv);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 5", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 5", TRUE);
 
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_VOICES, ManagedSettings.MaxVoices);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 6", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 6", TRUE);
 
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CPU, ManagedSettings.MaxRenderingTime);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 7", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 7", TRUE);
 
 		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_KILL, ManagedSettings.DisableNotesFadeOut);
-		CheckUp(FALSE, ERRORCODE, L"Stream Attributes 8", TRUE);
+		CheckUp(FALSE, ERRORCODE, "Stream Attributes 8", TRUE);
 	}
 	return TRUE;
 }
@@ -533,14 +532,14 @@ void PrepareVolumeKnob() {
 	ChVolumeStruct.fTime = 0.0f;
 	ChVolumeStruct.lCurve = 0;
 	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(FALSE, ERRORCODE, L"Stream Volume FX Preparation", FALSE);
+	CheckUp(FALSE, ERRORCODE, "Stream Volume FX Preparation", FALSE);
 }
 
 bool InitializeBASS(BOOL restart) {
 	PrintMessageToDebugLog("InitializeBASSFunc", "The driver is now initializing BASS. Please wait...");
 
 	// The user restarted the synth, add 1 to RestartValue, for the ".WAV mode"
-	if (restart == TRUE) {
+	if (restart) {
 		PrintMessageToDebugLog("InitializeBASSFunc", "The driver had to restart the stream.");
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 
@@ -575,11 +574,12 @@ bool InitializeBASS(BOOL restart) {
 			DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
 
 			// Get name of the current app using OmniMIDI
-			if (GetModuleFileName(NULL, buffer, bufSize) == bufSize) {}
+			if (GetModuleFileName(NULL, buffer, bufSize) == bufSize);
 			out = PathFindFileName(buffer);
 
 			// Append it to a temporary string, along with how many times it got restarted
 			// (Ex. "Dummy.exe - OmniMIDI Output File (Restart number 4).wav")
+
 			std::wstring stemp = tstring(out) + L" - OmniMIDI Output File (Restart number " + rv.str() + L").wav";
 			LPCWSTR result2 = stemp.c_str();
 
@@ -605,7 +605,7 @@ bool InitializeBASS(BOOL restart) {
 				// If the user chose to output to WAV, then continue initializing BASSEnc
 				BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_UNICODE, NULL, 0);
 				// Error handling
-				CheckUp(FALSE, ERRORCODE, L"Encoder Start", TRUE);
+				CheckUp(FALSE, ERRORCODE, "Encoder Start", TRUE);
 				break;
 			case IDNO:
 				// Otherwise, open the configurator
@@ -630,11 +630,14 @@ bool InitializeBASS(BOOL restart) {
 			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 
-			PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
-			BASS_GetInfo(&info);
+			DWORD minbuf = 0;
+			if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) {
+				PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
+				BASS_GetInfo(&info);
 
-			// The safest value is usually minbuf - 10
-			DWORD minbuf = info.minbuf - 10;
+				// The safest value is usually minbuf - 10
+				minbuf = info.minbuf - 10;
+			}
 
 			// If the minimum buffer is bigger than the requested buffer length, use the minimum buffer value instead
 			PrintMessageToDebugLog("InitializeBASSOutput", "Setting buffer...");
@@ -659,7 +662,7 @@ bool InitializeBASS(BOOL restart) {
 				// And finally, open the stream
 				PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
 				BASS_ChannelPlay(OMStream, FALSE);
-				CheckUp(FALSE, ERRORCODE, L"Channel Play", TRUE);
+				CheckUp(FALSE, ERRORCODE, "Channel Play", TRUE);
 			}
 			break;
 		}
@@ -701,43 +704,43 @@ bool InitializeBASS(BOOL restart) {
 			// If ASIO is successfully initialized, go on with the initialization process
 			PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
 			if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
-				CheckUp(TRUE, ERRORCODE, L"ASIO Initialized", TRUE);
+				CheckUp(TRUE, ERRORCODE, "ASIO Initialized", TRUE);
 
 				// Set the audio frequency
 				BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
-				CheckUp(TRUE, ERRORCODE, L"ASIO Device Frequency Set", TRUE);
+				CheckUp(TRUE, ERRORCODE, "ASIO Device Frequency Set", TRUE);
 
 				// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
 				BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-				CheckUp(TRUE, ERRORCODE, L"ASIO Device Format Set", TRUE);
+				CheckUp(TRUE, ERRORCODE, "ASIO Device Format Set", TRUE);
 
 				// If mono rendering is enabled, set the audio frequency of the channels to half the value of the frequency selected
 				if (ManagedSettings.MonoRendering == 1) BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency / 2);
 				// Else, set it to the default frequency
 				else BASS_ASIO_ChannelSetRate(FALSE, 0, ManagedSettings.AudioFrequency);
-				CheckUp(TRUE, ERRORCODE, L"ASIO Channel Frequency Set", TRUE);
+				CheckUp(TRUE, ERRORCODE, "ASIO Channel Frequency Set", TRUE);
 
 				// Enable the channels
 				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
-				CheckUp(TRUE, ERRORCODE, L"ASIO Channel Enable", TRUE);
+				CheckUp(TRUE, ERRORCODE, "ASIO Channel Enable", TRUE);
 
 				// If mono rendering is enabled, mirror the left channel to the right one as well
 				if (ManagedSettings.MonoRendering) {
 					BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
-					CheckUp(TRUE, ERRORCODE, L"ASIO Device Mono Mode", TRUE);
+					CheckUp(TRUE, ERRORCODE, "ASIO Device Mono Mode", TRUE);
 				}
 				// Else, go for stereo
 				else {
 					BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-					CheckUp(TRUE, ERRORCODE, L"ASIO Channel Join", TRUE);
+					CheckUp(TRUE, ERRORCODE, "ASIO Channel Join", TRUE);
 					// Set the bit depth for the right channel as well
 					BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-					CheckUp(TRUE, ERRORCODE, L"ASIO Channel Bit Depth Set", TRUE);
+					CheckUp(TRUE, ERRORCODE, "ASIO Channel Bit Depth Set", TRUE);
 				}
 
 				// And start the ASIO output
 				BASS_ASIO_Start(0, std::thread::hardware_concurrency());
-				CheckUp(TRUE, ERRORCODE, L"ASIO Start Output", TRUE);
+				CheckUp(TRUE, ERRORCODE, "ASIO Start Output", TRUE);
 
 				// Initialize the stream
 				InitializeStream(ManagedSettings.AudioFrequency);
@@ -745,7 +748,7 @@ bool InitializeBASS(BOOL restart) {
 				PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
 			}
 			// Else, something is wrong
-			else CheckUp(TRUE, ERRORCODE, L"ASIO Initialization", TRUE);
+			else CheckUp(TRUE, ERRORCODE, "ASIO Initialization", TRUE);
 
 			ASIOReady = TRUE;
 

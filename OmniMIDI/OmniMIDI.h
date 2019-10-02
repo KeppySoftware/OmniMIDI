@@ -113,7 +113,7 @@ typedef struct
 	BOOL IgnoreSysReset = FALSE;			// Ignore SysEx Reset events
 	BOOL LimitTo88Keys = FALSE;				// Limit to 88 keys
 	BOOL LiveChanges = FALSE;				// Live changes
-	BOOL MT32Mode = FALSE;					// Roland MT-32 mode
+	BOOL MT32Mode = FALSE;					// Roland MT-32 mode (DEPRECATED)
 	BOOL MonoRendering = FALSE;				// Mono rendering (Instead of stereo by default)
 	BOOL NoteOff1 = FALSE;					// Note cut INT
 	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
@@ -142,6 +142,8 @@ typedef struct
 	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
 
 	BOOL FollowDefaultAudioDevice = FALSE;	// Follow the default audio device whenever it's changed
+
+	BOOL ReduceBootUpDelay = FALSE;			// Reduce boot-up delay when using DirectSound
 } Settings;
 #endif
 

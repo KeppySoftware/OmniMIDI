@@ -209,7 +209,6 @@ BOOL __inline SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
 // since Running Status is a MANDATORY feature in MIDI drivers
 // and can not be skipped
 void __inline PBufData(void) {
-
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
 	if (dwParam1 & 0x80)
 		LastRunningStatus = (BYTE)dwParam1;
@@ -309,6 +308,7 @@ MMRESULT __inline ParseData(DWORD dwParam1) {
 	if (!EVBuffer.Buffer) return DebugResult("ParseData", MIDIERR_NOTREADY, "The events buffer isn't ready yet!");
 
 	// Prepare the event in the buffer
+	// LockForWriting(&EPThreadsL);
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
@@ -343,12 +343,15 @@ MMRESULT __inline ParseData(DWORD dwParam1) {
 		EVBuffer.WriteHead = NextWriteHead;
 	}
 
-	
+	// UnlockForWriting(&EPThreadsL);
+
 	// Go!
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT __inline ParseDataHyper(DWORD dwParam1) {
+MMRESULT __inline ParseDataHyper(DWORD dwParam1)
+{
+	// LockForWriting(&EPThreadsL);
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
@@ -357,6 +360,8 @@ MMRESULT __inline ParseDataHyper(DWORD dwParam1) {
 
 	if (NextWriteHead != EVBuffer.ReadHead)
 		EVBuffer.WriteHead = NextWriteHead; //skip notes properly
+
+	// UnlockForWriting(&EPThreadsL);
 
 	// Go!
 	return MMSYSERR_NOERROR;

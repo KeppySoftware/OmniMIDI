@@ -420,7 +420,7 @@ void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
 	}
 }
 
-void PrintBASSErrorMessageToDebugLog(LPCWSTR ErrorTitle, LPCWSTR ErrorDesc) {
+void PrintBASSErrorMessageToDebugLog(LPCWSTR BE, LPCWSTR BED) {
 	if (ManagedSettings.DebugMode) {
 		wchar_t* Msg = (wchar_t*)malloc(sizeof(wchar_t) * NTFS_MAX_PATH);
 
@@ -429,7 +429,7 @@ void PrintBASSErrorMessageToDebugLog(LPCWSTR ErrorTitle, LPCWSTR ErrorDesc) {
 
 		// Print to log
 		PrintCurrentTime();
-		swprintf(Msg, L"BASS error <<%s>> encountered | %s\n", ErrorTitle, ErrorDesc);
+		swprintf(Msg, L"BASS error <<%s>> encountered | %s\n", BE, BED);
 		fwprintf(DebugLog, Msg);
 		OutputDebugStringW(Msg);
 

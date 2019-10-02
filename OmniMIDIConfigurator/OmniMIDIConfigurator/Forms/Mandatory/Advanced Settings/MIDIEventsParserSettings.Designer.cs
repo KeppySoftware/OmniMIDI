@@ -41,7 +41,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.OverrideNoteLengthWA1 = new System.Windows.Forms.PictureBox();
             this.OverrideNoteLength = new System.Windows.Forms.CheckBox();
-            this.MT32Mode = new System.Windows.Forms.CheckBox();
             this.IgnoreNotes = new System.Windows.Forms.CheckBox();
             this.FullVelocityMode = new System.Windows.Forms.CheckBox();
             this.AllNotesIgnore = new System.Windows.Forms.CheckBox();
@@ -80,13 +79,12 @@
             this.ABS.Controls.Add(this.label1);
             this.ABS.Controls.Add(this.OverrideNoteLengthWA1);
             this.ABS.Controls.Add(this.OverrideNoteLength);
-            this.ABS.Controls.Add(this.MT32Mode);
             this.ABS.Controls.Add(this.IgnoreNotes);
             this.ABS.Controls.Add(this.FullVelocityMode);
             this.ABS.Controls.Add(this.AllNotesIgnore);
             this.ABS.Location = new System.Drawing.Point(12, 79);
             this.ABS.Name = "ABS";
-            this.ABS.Size = new System.Drawing.Size(345, 163);
+            this.ABS.Size = new System.Drawing.Size(345, 145);
             this.ABS.TabIndex = 11;
             this.ABS.TabStop = false;
             this.ABS.Text = "Ignore specific stuff/Set full velocity";
@@ -104,7 +102,7 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(332, 133);
+            this.label3.Location = new System.Drawing.Point(332, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(9, 13);
             this.label3.TabIndex = 19;
@@ -113,7 +111,7 @@
             // NoteOffDelayValue
             // 
             this.NoteOffDelayValue.DecimalPlaces = 3;
-            this.NoteOffDelayValue.Location = new System.Drawing.Point(267, 132);
+            this.NoteOffDelayValue.Location = new System.Drawing.Point(267, 113);
             this.NoteOffDelayValue.Name = "NoteOffDelayValue";
             this.NoteOffDelayValue.Size = new System.Drawing.Size(65, 20);
             this.NoteOffDelayValue.TabIndex = 11;
@@ -123,7 +121,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(225, 134);
+            this.label2.Location = new System.Drawing.Point(225, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(43, 13);
             this.label2.TabIndex = 17;
@@ -133,7 +131,7 @@
             // 
             this.OverrideNoteLengthWA2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.OverrideNoteLengthWA2.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
-            this.OverrideNoteLengthWA2.Location = new System.Drawing.Point(161, 134);
+            this.OverrideNoteLengthWA2.Location = new System.Drawing.Point(161, 115);
             this.OverrideNoteLengthWA2.Name = "OverrideNoteLengthWA2";
             this.OverrideNoteLengthWA2.Size = new System.Drawing.Size(14, 14);
             this.OverrideNoteLengthWA2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -144,7 +142,7 @@
             // DelayNoteOff
             // 
             this.DelayNoteOff.AutoSize = true;
-            this.DelayNoteOff.Location = new System.Drawing.Point(6, 133);
+            this.DelayNoteOff.Location = new System.Drawing.Point(6, 114);
             this.DelayNoteOff.Name = "DelayNoteOff";
             this.DelayNoteOff.Size = new System.Drawing.Size(156, 17);
             this.DelayNoteOff.TabIndex = 10;
@@ -155,7 +153,7 @@
             // 
             // NoteLengthValueMS
             // 
-            this.NoteLengthValueMS.Location = new System.Drawing.Point(332, 114);
+            this.NoteLengthValueMS.Location = new System.Drawing.Point(332, 95);
             this.NoteLengthValueMS.Name = "NoteLengthValueMS";
             this.NoteLengthValueMS.Size = new System.Drawing.Size(9, 13);
             this.NoteLengthValueMS.TabIndex = 14;
@@ -164,7 +162,7 @@
             // NoteLengthValue
             // 
             this.NoteLengthValue.DecimalPlaces = 3;
-            this.NoteLengthValue.Location = new System.Drawing.Point(267, 113);
+            this.NoteLengthValue.Location = new System.Drawing.Point(267, 94);
             this.NoteLengthValue.Name = "NoteLengthValue";
             this.NoteLengthValue.Size = new System.Drawing.Size(65, 20);
             this.NoteLengthValue.TabIndex = 9;
@@ -174,7 +172,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(225, 115);
+            this.label1.Location = new System.Drawing.Point(225, 96);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 12;
@@ -184,7 +182,7 @@
             // 
             this.OverrideNoteLengthWA1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.OverrideNoteLengthWA1.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
-            this.OverrideNoteLengthWA1.Location = new System.Drawing.Point(174, 115);
+            this.OverrideNoteLengthWA1.Location = new System.Drawing.Point(174, 96);
             this.OverrideNoteLengthWA1.Name = "OverrideNoteLengthWA1";
             this.OverrideNoteLengthWA1.Size = new System.Drawing.Size(14, 14);
             this.OverrideNoteLengthWA1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -195,7 +193,7 @@
             // OverrideNoteLength
             // 
             this.OverrideNoteLength.AutoSize = true;
-            this.OverrideNoteLength.Location = new System.Drawing.Point(6, 114);
+            this.OverrideNoteLength.Location = new System.Drawing.Point(6, 95);
             this.OverrideNoteLength.Name = "OverrideNoteLength";
             this.OverrideNoteLength.Size = new System.Drawing.Size(169, 17);
             this.OverrideNoteLength.TabIndex = 8;
@@ -203,17 +201,6 @@
             this.Requirements.SetToolTip(this.OverrideNoteLength, "This doesn\'t work while minimum playback mode is enabled.\r\n");
             this.OverrideNoteLength.UseVisualStyleBackColor = true;
             this.OverrideNoteLength.CheckedChanged += new System.EventHandler(this.OverrideNoteLength_CheckedChanged);
-            // 
-            // MT32Mode
-            // 
-            this.MT32Mode.AutoSize = true;
-            this.MT32Mode.Location = new System.Drawing.Point(6, 95);
-            this.MT32Mode.Name = "MT32Mode";
-            this.MT32Mode.Size = new System.Drawing.Size(140, 17);
-            this.MT32Mode.TabIndex = 7;
-            this.MT32Mode.Text = "Enable the MT-32 mode";
-            this.MT32Mode.UseVisualStyleBackColor = true;
-            this.MT32Mode.CheckedChanged += new System.EventHandler(this.MT32Mode_CheckedChanged);
             // 
             // IgnoreNotes
             // 
@@ -290,7 +277,7 @@
             this.OS.Controls.Add(this.EVBufDialog);
             this.OS.Controls.Add(this.RevbNChor);
             this.OS.Controls.Add(this.IgnoreNotesInterval);
-            this.OS.Location = new System.Drawing.Point(12, 248);
+            this.OS.Location = new System.Drawing.Point(12, 230);
             this.OS.Name = "OS";
             this.OS.Size = new System.Drawing.Size(345, 75);
             this.OS.TabIndex = 12;
@@ -333,7 +320,7 @@
             this.CAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CAE.AutoSize = true;
             this.CAE.Enabled = false;
-            this.CAE.Location = new System.Drawing.Point(15, 337);
+            this.CAE.Location = new System.Drawing.Point(15, 319);
             this.CAE.Name = "CAE";
             this.CAE.Size = new System.Drawing.Size(125, 13);
             this.CAE.TabIndex = 14;
@@ -342,7 +329,7 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(282, 332);
+            this.OKBtn.Location = new System.Drawing.Point(282, 314);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 15;
@@ -364,7 +351,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 367);
+            this.ClientSize = new System.Drawing.Size(369, 349);
             this.Controls.Add(this.ABS);
             this.Controls.Add(this.AOS);
             this.Controls.Add(this.OS);
@@ -409,7 +396,6 @@
         private System.Windows.Forms.CheckBox IgnoreNotes;
         private System.Windows.Forms.ToolTip Requirements;
         private System.Windows.Forms.Button EVBufDialog;
-        private System.Windows.Forms.CheckBox MT32Mode;
         private System.Windows.Forms.PictureBox OverrideNoteLengthWA1;
         private System.Windows.Forms.CheckBox OverrideNoteLength;
         private System.Windows.Forms.NumericUpDown NoteLengthValue;

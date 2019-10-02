@@ -1,10 +1,10 @@
 // OmniMIDI lock system
 
 // Lock system
-struct LockSystem {
+typedef struct LockSystem {
 	long volatile ReaderCount;
 	long volatile WriterCount;
-};
+} LockSystem;
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 extern "C" void LockForReading(LockSystem* LockStatus)

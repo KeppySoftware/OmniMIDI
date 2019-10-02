@@ -217,8 +217,5 @@ void CookedPlayerSystem(CookedPlayer* Player)
 
 	// Close the thread
 	PrintMessageToDebugLog("CookedPlayerSystem", "Closing CookedPlayer thread...");
-	CloseHandle(CookedThread.ThreadHandle);
-	CookedThread.ThreadHandle = nullptr;
-	CookedThread.ThreadAddress = 0;
-	_endthreadex(0);
+	TerminateThread(&CookedThread, TRUE, 0);
 }

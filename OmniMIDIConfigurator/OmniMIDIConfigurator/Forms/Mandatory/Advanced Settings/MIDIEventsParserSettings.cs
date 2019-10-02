@@ -37,8 +37,6 @@ namespace OmniMIDIConfigurator
             FullVelocityMode.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             FullVelocityMode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("FullVelocityMode", 0));
 
-            MT32Mode.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("MT32Mode", 0));
-
             OverrideNoteLength.Enabled = !Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0));
             OverrideNoteLength.Checked = Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("OverrideNoteLength", 0));
             NoteLengthValue.Enabled = (!Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("HyperPlayback", 0)) && Convert.ToBoolean(OmniMIDIConfiguratorMain.SynthSettings.GetValue("OverrideNoteLength", 0)));
@@ -84,11 +82,6 @@ namespace OmniMIDIConfigurator
         private void FullVelocityMode_CheckedChanged(object sender, EventArgs e)
         {
             OmniMIDIConfiguratorMain.SynthSettings.SetValue("FullVelocityMode", Convert.ToInt32(FullVelocityMode.Checked), RegistryValueKind.DWord);
-        }
-
-        private void MT32Mode_CheckedChanged(object sender, EventArgs e)
-        {
-            OmniMIDIConfiguratorMain.SynthSettings.SetValue("MT32Mode", Convert.ToInt32(MT32Mode.Checked), RegistryValueKind.DWord);
         }
 
         private void OverrideNoteLength_CheckedChanged(object sender, EventArgs e)

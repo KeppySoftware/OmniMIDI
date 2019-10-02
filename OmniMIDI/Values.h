@@ -105,6 +105,7 @@ BOOL block_bassinit = FALSE;
 BOOL stop_thread = FALSE;
 
 Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
+LockSystem EPThreadsL;
 
 // Mandatory values
 HMODULE hinst = NULL;					// main DLL handle
