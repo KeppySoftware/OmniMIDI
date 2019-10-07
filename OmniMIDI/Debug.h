@@ -528,8 +528,76 @@ void PrintEventToDebugLog(DWORD dwParam) {
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Stage <<MIDIEvent | %08X>> | Event ID: 0x%X, Channel: %u, Note: %u, Velocity: %u\n", 
-			dwParam, dwParam & 0xFF, GETCHANNEL(dwParam), GETVELOCITY(dwParam), GETNOTE(dwParam));
+
+		sprintf(Msg, "Stage <<MIDIEvent | %06X>> | Event ID: ", dwParam);
+		switch (dwParam & 0xF0) {
+		case 0x80:
+			sprintf(Msg + strlen(Msg), "Note off, Channel: %u, Key: %u\n", GETCHANNEL(dwParam), GETFP(dwParam));
+			break;
+		case 0x90:
+			if (GETSP(dwParam)) sprintf(Msg + strlen(Msg), "Note on, Channel: %u, Key: %u, Velocity: %u\n", GETCHANNEL(dwParam), GETFP(dwParam), GETSP(dwParam));
+			else sprintf(Msg + strlen(Msg), "Note off, Channel: %u, Key: %u\n", GETCHANNEL(dwParam), GETFP(dwParam));
+			break;
+		case 0xA0:
+			sprintf(Msg + strlen(Msg), "Polyphonic aftertouch, Channel: %u, Key: %u, Touch: %u\n", GETCHANNEL(dwParam), GETFP(dwParam), GETSP(dwParam));
+			break;
+		case 0xB0:
+			sprintf(Msg + strlen(Msg), "Control mode change, Channel: %u, Controller #: %u, Value: %u\n", GETCHANNEL(dwParam), GETFP(dwParam), GETSP(dwParam));
+			break;
+		case 0xC0:
+			sprintf(Msg + strlen(Msg), "Patch change, Channel: %u, Instrument #: %u\n", GETCHANNEL(dwParam), GETFP(dwParam));
+			break;
+		case 0xD0:
+			sprintf(Msg + strlen(Msg), "Channel aftertouch, Channel: %u, Pressure: %u\n", GETCHANNEL(dwParam), GETFP(dwParam));
+			break;
+		case 0xE0:
+			sprintf(Msg + strlen(Msg), "Pitch wheel, Channel: %u, LSB: %u, MSB: %u\n", GETCHANNEL(dwParam), GETFP(dwParam), GETSP(dwParam));
+			break;
+		case 0xF0:{
+			switch (dwParam & 0xFF) {
+			case 0xF0:
+				strcat(Msg, "Start of SysEx Msg");
+				break;
+			case 0xF1:
+				strcat(Msg, "MIDI Time Code Quarter Frame (SysCm)");
+				break;
+			case 0xF2:
+				strcat(Msg, "Song Position Pointer (SysCm)");
+				break;
+			case 0xF3:
+				strcat(Msg, "Song Select (SysCm)");
+				break;
+			case 0xF6:
+				strcat(Msg, "Tune Request (SysCm)");
+				break;
+			case 0xF7:
+				strcat(Msg, "End of SysEx Msg");
+				break;
+			case 0xF8:
+				strcat(Msg, "Timing Clock (SysCm)");
+				break;
+			case 0xFA:
+				strcat(Msg, "Start (SysRt)");
+				break;
+			case 0xFB:
+				strcat(Msg, "Continue (SysRt)");
+				break;
+			case 0xFC:
+				strcat(Msg, "Stop (SysRt)");
+				break;
+			case 0xFE:
+				strcat(Msg, "Active Sensing (SysRt)");
+				break;
+			case 0xFF:
+				strcat(Msg, "System Reset (SysRt)");
+				break;
+			default:
+				sprintf(Msg + strlen(Msg), "UNKNOWN (%02X)", dwParam & 0xFF);
+				break;
+			}
+			break;
+		}
+		}
 
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);

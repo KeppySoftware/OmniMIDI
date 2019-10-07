@@ -465,7 +465,7 @@ BOOL InitializeBASSLibrary() {
 	BOOL init = BASS_Init(
 		isds ? AudioOutput : 0, 
 		ManagedSettings.AudioFrequency, 
-		(isds ? ((ManagedSettings.ReduceBootUpDelay ? BASS_DEVICE_LATENCY : 0) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
+		(isds ? ((ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
 		GetActiveWindow(), 
 		NULL);
 	CheckUp(FALSE, ERRORCODE, "BASS Lib Initialization", TRUE);
@@ -632,11 +632,14 @@ bool InitializeBASS(BOOL restart) {
 
 			DWORD minbuf = 0;
 			if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) {
-				PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
-				BASS_GetInfo(&info);
+				if (!ManagedSettings.ReduceBootUpDelay) {
+					PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
+					BASS_GetInfo(&info);
 
-				// The safest value is usually minbuf - 10
-				minbuf = info.minbuf - 10;
+					// The safest value is usually minbuf - 10
+					minbuf = info.minbuf - 10;
+				}
+				else minbuf = 0;
 			}
 
 			// If the minimum buffer is bigger than the requested buffer length, use the minimum buffer value instead

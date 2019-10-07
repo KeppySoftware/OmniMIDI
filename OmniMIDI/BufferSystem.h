@@ -106,7 +106,7 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 
 	// PrintEventToDebugLog(dwParam1);
 
-	switch (GETSTATUS(dwParam1)) {
+	switch (GETCMD(dwParam1)) {
 	case MIDI_NOTEON:
 		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
 		return;
@@ -256,7 +256,7 @@ DWORD __inline PlayBufferedData(void) {
 	
 	if (EvBufferSize >= SMALLBUFFER)
 	{
-		if(!BufferCheck()) return 1;
+		if (!BufferCheck()) return 1;
 
 		do PBufData();
 		while (BufferCheck());
@@ -342,6 +342,8 @@ MMRESULT __inline ParseData(DWORD dwParam1) {
 		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 		EVBuffer.WriteHead = NextWriteHead;
 	}
+
+	PrintEventToDebugLog(dwParam1);
 
 	// UnlockForWriting(&EPThreadsL);
 
