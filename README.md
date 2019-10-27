@@ -95,7 +95,7 @@ The minimum requirements for this synthesizer to work are the following:
 - A x86 CPU running at 1GHz *(With at least MMX support)*
 - 256MB of RAM
 - Intel AC'97 capable controller or better
-- Windows XP SP3 *(XP SP2 x64)* or greater *(Server versions are supported too)*
+- Windows Vista SP2 or greater *(Server versions are supported too)*
 
 ### Minimum system requirements for MIDI playback on ARM64 systems
 The minimum requirements for this synthesizer to work are the following:
