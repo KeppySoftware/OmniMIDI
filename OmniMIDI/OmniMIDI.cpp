@@ -142,18 +142,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	switch (CallReason) {
 	case DLL_PROCESS_ATTACH:
 	{
-		BOOL pbDP = FALSE;
-
 		if (BannedProcesses()) {
 			OutputDebugStringA("Process is banned! Bye!");
 			return FALSE;
-		}
-
-		if (CheckRemoteDebuggerPresent(GetCurrentProcess(), &pbDP))
-		{
-			if (pbDP) {
-				MessageBoxA(NULL, "You're running OmniMIDI under a debugger!\n\nKeep in mind that the debugger might slow down the driver, making it perform and sound worse.\n\nPress OK to continue.", "OmniMIDI - WARNING", MB_ICONWARNING | MB_SYSTEMMODAL);
-			}
 		}
 
 		hinst = hModule;
@@ -165,12 +156,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 			NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQuerySystemTime");
 
 			if (!NtDelayExecution || !NtQuerySystemTime) {
-				MessageBoxA(NULL, "Failed to parse NT functions from NTDLL!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+				OutputDebugStringA("Failed to parse NT functions from NTDLL!\nPress OK to stop the loading process of OmniMIDI.");
 				return FALSE;
 			}
 
 			if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
-				MessageBoxA(NULL, "Failed to parse starting tick through NtQuerySystemTime!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+				OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime!\nPress OK to stop the loading process of OmniMIDI.");
 				return FALSE;
 			}
 
