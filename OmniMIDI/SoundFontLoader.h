@@ -102,7 +102,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 			}
 			else SoundFontError(L"Unable to load SoundFont!\nThe file does not exist.", in_path);
 		}
-		else if (!_wcsicmp(Extension, _T(".omlist")))
+		else if (!_wcsicmp(Extension, _T(".omlist")) || !_wcsicmp(Extension, _T(".csflist")))
 		{
 			// Open file
 			PrintMessageToDebugLog("NewSFLoader", "Opening SoundFont list...");

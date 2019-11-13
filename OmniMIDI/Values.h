@@ -110,6 +110,8 @@ LockSystem EPThreadsL;
 HMODULE hinst = NULL;					// main DLL handle
 HMODULE winmm = NULL;					// ?
 
+HANDLE CSFCheck = NULL;					// Common SoundFonts
+
 CHAR AppPath[NTFS_MAX_PATH] = { 0 };		// debug info
 TCHAR AppPathW[NTFS_MAX_PATH] = { 0 };	// debug info
 CHAR AppName[MAX_PATH] = { 0 };			// debug info
@@ -232,8 +234,9 @@ DWORD rvalues[16];
 // -----------------------------------------------------------------------
 
 const wchar_t* OMPipeTemplate = L"\\\\.\\pipe\\OmniMIDIDbg%u";
+const wchar_t* CSFFileTemplate = L"\\Common SoundFonts\\SoundFontList.csflist";
 const wchar_t* OMFileTemplate = L"\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
-const wchar_t* OMLetters[16] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q", L"R" };
+const wchar_t* OMLetters[15] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q"};
 
 // -----------------------------------------------------------------------
 

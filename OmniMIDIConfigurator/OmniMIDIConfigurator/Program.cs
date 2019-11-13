@@ -1,18 +1,14 @@
-﻿using System.Threading;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Net;
 using System.IO;
-using Microsoft.Win32;
-using System.Runtime.InteropServices;
 using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace OmniMIDIConfigurator
 {
@@ -30,378 +26,93 @@ namespace OmniMIDIConfigurator
         public const uint HWND_BROADCAST = 0xFFFF;
         public const short SW_RESTORE = 9;
     }
-    internal static class WinMM
-    {
-        internal const int MMSYSERR_NOERROR = 0;
-        internal const int CALLBACK_FUNCTION = 0x00030000;
-
-        internal delegate void MidiInProc(
-            IntPtr hMidiIn,
-            uint wMsg,
-            UIntPtr dwInstance,
-            UIntPtr dwParam1,
-            UIntPtr dwParam2);
-
-        internal delegate void MidiOutProc(
-            IntPtr hMidiOut,
-            uint wMsg,
-            UIntPtr dwInstance,
-            UIntPtr dwParam1,
-            UIntPtr dwParam2);
-
-        [DllImport("winmm")]
-        internal static extern int midiOutGetNumDevs();
-
-        [DllImport("winmm")]
-        internal static extern int midiOutGetDevCaps(
-            uint uDeviceID,
-            out MIDIOUTCAPS caps,
-            uint cbMidiOutCaps);
-
-        [DllImport("winmm.dll")]
-        internal static extern int midiOutClose(
-            IntPtr hMidiOut);
-
-        [DllImport("winmm.dll")]
-        internal static extern int midiOutOpen(
-            out IntPtr hMidiOut,
-            int uDeviceID,
-            MidiOutProc dwCallback,
-            IntPtr dwInstance, 
-            uint dwFlags);
-
-        [DllImport("winmm")]
-        internal static extern int midiInGetNumDevs();
-
-        [DllImport("winmm")]
-        internal static extern int midiInGetDevCaps(
-            uint uDeviceID,
-            out MIDIINCAPS caps,
-            uint cbMidiInCaps);
-
-        [DllImport("winmm")]
-        internal static extern int midiInClose(
-            IntPtr hMidiIn);
-
-        [DllImport("winmm")]
-        internal static extern int midiInOpen(
-            out IntPtr lphMidiIn,
-            int uDeviceID,
-            MidiInProc dwCallback,
-            IntPtr dwCallbackInstance,
-            int dwFlags);
-
-        [DllImport("winmm")]
-        internal static extern int midiInStart(
-            IntPtr hMidiIn);
-
-        [DllImport("winmm")]
-        internal static extern int midiInStop(
-            IntPtr hMidiIn);
-
-        [DllImport("winmm.dll")]
-        internal static extern int midiConnect(
-            IntPtr hMidi,
-            IntPtr hMidiOut, 
-            IntPtr pReserved);
-
-        [DllImport("winmm.dll")]
-        internal static extern int midiDisconnect(
-            IntPtr hMidi, 
-            IntPtr hMidiOut, 
-            IntPtr pReserved);
-    }
-
-    internal static class MIDIInEvent
-    {
-        // Internal
-        public const int MIM_OPEN = 0x3C1;
-        public const int MIM_CLOSE = 0x3C2;
-        public const int MIM_DATA = 0x3C3;
-        public const int MIM_LONGDATA = 0x3C4;
-        public const int MIM_ERROR = 0x3C5;
-        public const int MIM_LONGERROR = 0x3C6;
-        public const int MIM_MOREDATA = 0x3CC;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MIDIOUTCAPS
-    {
-        public ushort wMid;
-        public ushort wPid;
-        public uint vDriverVersion;     //MMVERSION
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-        public string szPname;
-        public ushort wTechnology;
-        public ushort wVoices;
-        public ushort wNotes;
-        public ushort wChannelMask;
-        public uint dwSupport;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MIDIINCAPS
-    {
-        public ushort wMid;
-        public ushort wPid;
-        public uint vDriverVersion;     // MMVERSION
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-        public string szPname;
-        public uint dwSupport;
-    }
-
-    static class KDMAPI
-    {
-        // KSDAPI info
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int ReturnKDMAPIVer(ref Int32 Major, ref Int32 Minor, ref Int32 Build, ref Int32 Revision);
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int InitializeKDMAPIStream();
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int TerminateKDMAPIStream();
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern void ResetKDMAPIStream();
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int IsKDMAPIAvailable();
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int SendDirectData(uint dwMsg);
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int SendDirectDataNoBuf(uint dwMsg);
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int SendDirectLongData(UIntPtr IIMidiHdr);
-
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int SendDirectLongDataNoBuf(UIntPtr IIMidiHdr);
-
-        public static String KDMAPIVer = "Null";
-    }
-
-    static class CrashMyComputer
-    {
-        public static bool DummyBool = false;
-        public static uint DummyDWORD = 0;
-
-        [DllImport("ntdll.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern uint RtlAdjustPrivilege(
-            int Privilege, 
-            bool bEnablePrivilege, 
-            bool IsThreadPrivilege, 
-            ref bool PreviousValue);
-
-        [DllImport("ntdll.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern uint NtRaiseHardError(
-            uint ErrorStatus,
-            uint NumberOfParameters,
-            uint UnicodeStringParameterMask,
-            IntPtr Parameters,
-            uint ValidResponseOption,
-            ref uint Response);
-    }
-
-    static class SecurityProtocolNET45
-    {
-        public static SecurityProtocolType Tls12 = (SecurityProtocolType)3072;
-    }
 
     static class Program
     {
-        public static RegistryKey driver32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-        public static RegistryKey driver64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-        public static RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
-        public static RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", false);
-
-        public static bool DebugMode = false;
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
         /// <summary>
         /// Punto di ingresso principale dell'applicazione.
         /// </summary>
-        /// 
-        [STAThread]
-        static void Main(String[] args)
-        {
-            foreach (String s in args)
-            {
-                if (s.ToLowerInvariant() == "/dbg" || s.ToLowerInvariant() == "/debugwindow")
-                {
-                    DebugMode = true;
-                    AllocConsole();
-                    break;
-                }
-            }
-            if (!File.Exists(String.Format("{0}\\OmniMIDI\\bass.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))) ||
-                !File.Exists(String.Format("{0}\\OmniMIDI\\bassmidi.dll", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86))))
-            {
-                DebugToConsole(false, "Can not find BASS libraries, trying to sideload them from the local directory...", null);
-                if (!File.Exists(String.Format("bass.dll")) ||
-                    !File.Exists(String.Format("bassmidi.dll")))
-                {
-                    MissingBASSLibs MissingBASSLib = new MissingBASSLibs("The system was unable to find the required BASS libraries");
-                    MissingBASSLib.Source = "BASS libraries not found";
-                    DebugToConsole(true, "Can not find BASS libraries", MissingBASSLib);
-                    MessageBox.Show("Can not find the required BASS libraries for the configurator to work.\nEnsure that BASS.DLL and BASSMIDI.DLL are present in the configurator's root folder.\nIf they're not, please reinstall the synthesizer.\n\nClick OK to close the configurator.", "OmniMIDI ~ Configurator - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    return;
-                }
-            }
+        private const int IDC_HAND = 32649;
 
-            UpdateToOmniMIDI();
-            DoAnyway(args);
-        }
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
 
-        public static string Truncate(this string value, int maxChars)
-        {
-            return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
-        }
+        // Mandatory values
+        public static RegistryKey Mixer = null;
+        public static RegistryKey SynthSettings = null;
+        public static RegistryKey Mapper = null;
+        public static RegistryKey Watchdog = null;
 
-        public static void ShowLastMessage(String message, Boolean isException)
-        {
-            try
-            {
-                OmniMIDIConfiguratorMain.Delegate.Status.Text = String.Format(OmniMIDIConfiguratorMain.StatusTemplate, message).Truncate(90);
-                if (isException)
-                {
-                    OmniMIDIConfiguratorMain.Delegate.StatusDoneOr.Text = "Exception";
-                    OmniMIDIConfiguratorMain.Delegate.StatusDoneOr.ForeColor = Color.DarkRed;
-                }
-                else
-                {
-                    OmniMIDIConfiguratorMain.Delegate.StatusDoneOr.Text = "OK";
-                    OmniMIDIConfiguratorMain.Delegate.StatusDoneOr.ForeColor = Color.DarkGreen;
-                }
-            }
-            catch { }
-        }
+        public const string MIPath = "SOFTWARE\\OmniMIDI";
+        public const string SSPath = "SOFTWARE\\OmniMIDI\\Configuration";
+        public const string MPPath = "SOFTWARE\\OmniMIDI\\Mapper";
+        public const string WPath = "SOFTWARE\\OmniMIDI\\Watchdog";
 
-        public static void DebugToConsole(bool isException, String message, Exception ex)
-        {
-            ShowLastMessage(message, isException);
-            if (DebugMode == true)
-            {
-                System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
-                String CurrentTime = DateTime.Now.ToString("MMMM dd, yyyy | hh:mm:ss.fff tt", ci);
-                try
-                {
-                    if (isException)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(String.Format("{0}", CurrentTime));
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write(String.Format(" - {0}", ex));
-                        Console.Write(Environment.NewLine);
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write(String.Format("{0}", CurrentTime));
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write(String.Format(" - {0}", message));
-                        Console.Write(Environment.NewLine);
-                    }
-                }
-                catch
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(" - Something went wrong while displaying the exception.");
-                    Console.Write(Environment.NewLine);
-                }
-            }
-        }
+        public static string OMFixedPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI";
+        public static string CSFFixedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Common SoundFonts";
 
-        public static bool CheckDriverStatusInReg(String WhichBit, RegistryKey WhichKey)
-        {
-            bool Registered = false;
-            for (int i = 0; i <= 32; i++)
-            {
-                String iS = (i == 0) ? "" : i.ToString();
+        public static string OMSFPath = OMFixedPath + "\\lists";
+        public static string DebugDataPath = OMFixedPath + "\\debug";
 
-                try
-                {
-                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "null").ToString() == "OmniMIDI\\OmniMIDI.dll")
-                    {
-                        Registered = true;
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(String.Format("No MIDI driver values available.\n\nError:\n{0}", ex.ToString()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    return false;
-                }
-            }
-
-            if (!Registered)
-            {
-                MessageBox.Show(
-                    String.Format("It looks like something unregistered the {0} version of the driver from the Windows registry.\nOmniMIDI can recover from this automatically.\n\nPress OK to let the register tool fix the issue.", WhichBit), 
-                    String.Format("OmniMIDI ~ {0} driver not registered", WhichBit), 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/omcrecover");
-            }
-
-            return Registered;
-        }
+        public static Cursor SystemHandCursor = new Cursor(LoadCursor(IntPtr.Zero, IDC_HAND));
 
         public static uint BringToFrontMessage;
         static EventWaitHandle m;
-        static void DoAnyway(String[] args)
+
+        public static string[] ListsPath = new string[]
         {
-            try
+            CSFFixedPath + "\\SoundFontList.csflist",
+            OMFixedPath + "\\lists\\OmniMIDI_A.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_B.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_C.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_D.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_E.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_F.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_G.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_H.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_I.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_L.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_M.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_N.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_O.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_P.omlist",
+            OMFixedPath + "\\lists\\OmniMIDI_Q.omlist"
+        };
+
+        [STAThread]
+        static void Main(String[] Args)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            if (!Functions.CheckDriverStatusInReg("x86", Functions.CLSID32)) return;
+            if (Environment.Is64BitOperatingSystem)
+                if (!Functions.CheckDriverStatusInReg("x64", Functions.CLSID64)) return;
+
+            OpenRequiredKey(ref Mixer, MIPath);
+            OpenRequiredKey(ref SynthSettings, SSPath);
+            OpenRequiredKey(ref Mapper, MPPath);
+            OpenRequiredKey(ref Watchdog, WPath);
+
+            if (!Directory.Exists(Path.GetDirectoryName(Program.ListsPath[0])))
             {
-                DebugToConsole(false, "Started configurator.", null);
+                Directory.CreateDirectory(Path.GetDirectoryName(Program.ListsPath[0]));
+            }
 
-                if (!Functions.IsWindowsVistaOrNewer())
+            if (Properties.Settings.Default.UpdateBranch == "choose")
+            {
+                SelectBranch frm = new SelectBranch();
+                frm.ShowInTaskbar = true;
+                frm.StartPosition = FormStartPosition.CenterScreen;
+                frm.ShowDialog();
+                frm.Dispose();
+            }
+
+            foreach (String Arg in Args)
+            {
+                switch (Arg.ToLowerInvariant())
                 {
-                    MessageBox.Show("This version of the configurator won't work on Windows XP and older!", "OmniMIDI Configurator - FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                DebugToConsole(false, "Checking if driver is registered...", null);
-                if (!CheckDriverStatusInReg("x86", clsid32)) return;
-                if (Environment.Is64BitOperatingSystem)
-                    if (!CheckDriverStatusInReg("x64", clsid64)) return;
-
-                // Parse KDMAPI version
-                Int32 Major = 0, Minor = 0, Build = 0, Revision = 0;
-                if (Convert.ToBoolean(KDMAPI.ReturnKDMAPIVer(ref Major, ref Minor, ref Build, ref Revision)))
-                    KDMAPI.KDMAPIVer = String.Format("{0}.{1}.{2} (Revision {3})", Major, Minor, Build, Revision);
-                else
-                {
-                    MessageBox.Show("Failed to initialize KDMAPI!\n\nPress OK to quit.", "OmniMIDI ~ Configurator | FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Application.ExitThread();
-                }
-
-                Application.SetCompatibleTextRenderingDefault(false);
-
-                int runmode = 0;
-                int window = 0;
-                bool ok;
-
-                BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIConfiguratorToFront");
-                m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIConfigurator", out ok);
-                if (!ok)
-                {
-                    WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
-                    return;
-                }
-
-                TriggerDate();
-
-                foreach (String s in args)
-                {
-                    if (s.ToLowerInvariant() == "/rei")
-                    {
-                        TLS12Enable(true);
-
+                    case "/rei":
                         FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
 
                         var current = Process.GetCurrentProcess();
@@ -412,231 +123,125 @@ namespace OmniMIDIConfigurator
 
                         UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
                         return;
-                    }
-                    else if (s.ToLowerInvariant() == "/toomni")
-                    {
-                        UpdateToOmniMIDI();
-                        return;
-                    }
-                    else if (s.ToLowerInvariant() == "/inf")
-                    {
-                        runmode = 2;
-                        window = 1;
-                        break;
-                    }
-                    /*
-                    else if (s.ToLowerInvariant() == "/winmmdbg")
-                    {
-                        runmode = 2;
-                        window = 2;
-                        break;
-                    }
-                    */
-                    else if (s.ToLowerInvariant() == "/egg")
-                    {
-                        CrashMyComputer.RtlAdjustPrivilege(19, true, false, ref CrashMyComputer.DummyBool);
-                        CrashMyComputer.NtRaiseHardError(0xC01E0200, 0U, 0U, IntPtr.Zero, 6U, ref CrashMyComputer.DummyDWORD);
-                        return;
-                    }
-                    else
-                    {
-                        runmode = 0;
-                        window = 0;
-                        break;
-                    }
+                        
                 }
-
-                TLS12Enable(false);
-
-                if (Properties.Settings.Default.UpdateBranch == "choose")
-                {
-                    SelectBranch frm = new SelectBranch();
-                    frm.ShowInTaskbar = true;
-                    frm.StartPosition = FormStartPosition.CenterScreen;
-                    frm.ShowDialog();
-                    frm.Dispose();
-                }
-
-                ExecuteForm(runmode, args, m, window);
             }
-            catch (Exception ex)
+
+            bool dummy;
+            BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIConfiguratorToFront");
+            m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIConfigurator", out dummy);
+            if (!dummy)
             {
-                MessageBox.Show(String.Format("Fatal error during the execution of the configurator!\nMore details: {0}\n\nPress OK to quit.", ex.ToString()), "OmniMIDI Configurator - FATAL ERROR", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
+                return;
+            }
+
+            GC.KeepAlive(BringToFrontMessage);
+            GC.KeepAlive(m);
+
+            Application.Run(new MainWindow());
+        }
+
+        private static void OpenRequiredKey(ref RegistryKey Key, String KeyPath)
+        {
+            Key = Registry.CurrentUser.OpenSubKey(KeyPath, true);
+            if (Key == null)
+            {
+                try
+                {
+                    Key = Registry.CurrentUser.CreateSubKey(KeyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
+                catch (Exception ex)
+                {
+                    Program.ShowError(
+                        4,
+                        "FATAL ERROR",
+                        "A fatal error has occured during the startup process of the configurator.\n\nThe configurator was unable to open the required registry keys.",
+                        ex);
+                    return;
+                }
             }
         }
 
-        public static void TLS12Enable(Boolean HideMessage)
+        public static bool TLS12Available()
         {
             try
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolNET45.Tls12;
-                Properties.Settings.Default.TLS12Missing = false;
-            }
-            catch
-            {
-                if (!Properties.Settings.Default.TLS12Missing && !HideMessage)
-                    MessageBox.Show("Your .NET Framework doesn't seem to support TLS 1.2 encryption." +
-                                    "\nThis might prevent the configurator from downloading the required update files." +
-                                    "\n\nPlease install .NET Framework 4.5, for seamless updates.", "OmniMIDI - TLS 1.2 protocol not found",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Properties.Settings.Default.TLS12Missing = true;
-            }
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+                return true;
+            } catch { }
             finally
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
+
+            return false;
         }
 
-        public static void TriggerDate()
+        /// <summary>
+        /// Shows a messagebox.
+        /// </summary>
+        /// <param name="Type">Type of error. 0 = Info, 1 = Question, 2 = Warning (OK), 3 = Warning (YesNo), 4 = Error (OK), 5 = Error (YesNo)</param>
+        public static DialogResult ShowError(Int32 Type, String Title, String Msg, Exception Ex)
         {
-            DateTime BirthDate = DateTime.Now;
-            Int32 CurrentYear = Convert.ToInt32(BirthDate.ToString("yyyy"));
-            Int32 YearsOld = (CurrentYear - 2015);
-            if (BirthDate.ToString("dd/MM") == "17/05")
-                MessageBox.Show(String.Format("Today, OmniMIDI turned {0} years old!\n\nThank you fellow user for using it and helping me with the development, and happy birthday, OmniMIDI!", (CurrentYear - 2015).ToString()), String.Format("{0} anniversary since the first release of OmniMIDI", Ordinal(YearsOld)), MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else if (BirthDate.ToString("dd/MM") == "05/12")
-                MessageBox.Show(String.Format("Today is Keppy's birthday! He turned {0} years old!\n\nHappy birthday, you potato!", (CurrentYear - 1999).ToString()), "Happy birthday to Kepperino", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+            String UMsg = Msg;
+            String UTitle = String.Format("OmniMIDI - {0}", Title);
+            MessageBoxButtons Btns;
+            MessageBoxIcon Icn;
 
-        public static string Ordinal(int number)
-        {
-            string suffix = String.Empty;
+            if (Ex != null)
+                UMsg += String.Format("\n\nException:\n{0}", Ex.ToString());
 
-            int ones = number % 10;
-            int tens = (int)Math.Floor(number / 10M) % 10;
-
-            if (tens == 1)
+            switch (Type)
             {
-                suffix = "th";
-            }
-            else
-            {
-                switch (ones)
-                {
-                    case 1:
-                        suffix = "st";
-                        break;
-                    case 2:
-                        suffix = "nd";
-                        break;
-                    case 3:
-                        suffix = "rd";
-                        break;
-                    default:
-                        suffix = "th";
-                        break;
-                }
-            }
-            return String.Format("{0}{1}", number, suffix);
-        }
+                case 0:
+                    Btns = MessageBoxButtons.OK;
+                    Icn = MessageBoxIcon.Information;
+                    break;
+                case 1:
+                    Btns = MessageBoxButtons.YesNo;
+                    Icn = MessageBoxIcon.Question;
+                    break;
+                case 2:
+                    Btns = MessageBoxButtons.OK;
+                    Icn = MessageBoxIcon.Warning;
+                    break;
+                case 3:
+                    Btns = MessageBoxButtons.YesNo;
+                    Icn = MessageBoxIcon.Warning;
+                    break;
+                case 4:
+                    Btns = MessageBoxButtons.OK;
+                    Icn = MessageBoxIcon.Hand;
+                    break;
+                case 5:
+                    Btns = MessageBoxButtons.YesNo;
+                    Icn = MessageBoxIcon.Hand;
+                    break;
+                default:
+                    Btns = MessageBoxButtons.OK;
+                    Icn = MessageBoxIcon.None;
+                    break;
 
-        public static void ExecuteForm(Int32 runmode, String[] args, EventWaitHandle m, Int32 form)
-        {
-            Application.EnableVisualStyles();
-            if (form == 0)
-                Application.Run(new OmniMIDIConfiguratorMain(args));
-            else if (form == 1)
-                Application.Run(new InfoDialog(1));
-            else if (form == 2)
-                Application.Run(new WinMMTest());
-            GC.KeepAlive(m);
-        }
-
-        public static void UpdateToOmniMIDI()
-        {
-            String UPSource = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Keppy's Synthesizer\\";
-            String UPDestination = Environment.GetEnvironmentVariable("USERPROFILE") + "\\OmniMIDI\\";
-
-            String[] OldLists =
-            {
-                UPDestination + "lists\\keppymidi.sflist",
-                UPDestination + "lists\\keppymidib.sflist",
-                UPDestination + "lists\\keppymidic.sflist",
-                UPDestination + "lists\\keppymidid.sflist",
-                UPDestination + "lists\\keppymidie.sflist",
-                UPDestination + "lists\\keppymidif.sflist",
-                UPDestination + "lists\\keppymidig.sflist",
-                UPDestination + "lists\\keppymidih.sflist",
-                UPDestination + "lists\\keppymidii.sflist",
-                UPDestination + "lists\\keppymidij.sflist",
-                UPDestination + "lists\\keppymidik.sflist",
-                UPDestination + "lists\\keppymidil.sflist",
-                UPDestination + "lists\\keppymidim.sflist",
-                UPDestination + "lists\\keppymidin.sflist",
-                UPDestination + "lists\\keppymidio.sflist",
-                UPDestination + "lists\\keppymidip.sflist",
-            };
-
-            RegistryKey Source = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Keppy's Synthesizer");
-            if (Source != null)
-            {
-                RegistryKey Destination = Registry.CurrentUser.CreateSubKey("SOFTWARE\\OmniMIDI");
-                Source.CopyTo(Destination);
-
-                Source.Close();
-                Destination.Close();
-
-                try { Registry.CurrentUser.DeleteSubKeyTree("SOFTWARE\\Keppy's Synthesizer", true); } catch { }
             }
 
-            if (Directory.Exists(UPSource))
-            {
-                try
-                {
-                    Directory.Delete(UPDestination, true);
-                    Directory.Move(UPSource, UPDestination);
-                    Directory.Delete(UPSource, true);
-                }
-                catch { }
-            }
-
-            // Some files
-            try { File.Move(UPDestination + "\\keppymididrv.favlist", UPDestination + "\\OmniMIDI.favlist"); } catch { }
-            try { File.Move(UPDestination + "\\blacklist\\keppymididrv.blacklist", UPDestination + "\\blacklist\\OmniMIDI.blacklist"); } catch { }
-
-            // SF lists
-            for (int i = 0; i < OldLists.Length; i++)
-            {
-                try { File.Move(OldLists[i], OmniMIDIConfiguratorMain.ListsPath[i]); } catch { }
-                try { File.Delete(String.Format("{0}{1}", UPDestination, Path.GetFileName(OldLists[i]))); } catch { }
-            }
-        }
-
-        public static void CopyTo(this RegistryKey src, RegistryKey dst)
-        {
-            // copy the values
-            foreach (var name in src.GetValueNames())
-            {
-                dst.SetValue(name, src.GetValue(name), src.GetValueKind(name));
-            }
-
-            // copy the subkeys
-            foreach (var name in src.GetSubKeyNames())
-            {
-                using (var srcSubKey = src.OpenSubKey(name, false))
-                {
-                    var dstSubKey = dst.CreateSubKey(name);
-                    srcSubKey.CopyTo(dstSubKey);
-                }
-            }
+            return MessageBox.Show(UMsg, UTitle, Btns, Icn);
         }
     }
-}
 
-public class MissingBASSLibs : Exception
-{
-    public MissingBASSLibs()
+    static class AudioEngine
     {
+        // Internal
+        public const int ENCODING_MODE = 0;
+        public const int DSOUND_OR_WASAPI = 1;
+        public const int PRO_INTERFACE = 2;
+
+        // Explicit names
+        public const int AUDTOWAV = 0;
+        public const int DSOUND_ENGINE = 1;
+        public const int ASIO_ENGINE = 2;
+        public const int WASAPI_ENGINE = 3;
     }
 
-    public MissingBASSLibs(string message)
-        : base(message)
-    {
-    }
-
-    public MissingBASSLibs(string message, Exception inner)
-        : base(message, inner)
-    {
-    }
 }

@@ -116,18 +116,24 @@ long long TimeNow() {
 	return (1000LL * now.QuadPart) / s_frequency.QuadPart;
 }
 
-void LoadSoundfont(int whichsf) {
+BOOL LoadSoundfont(int whichsf) {
+	BOOL RET = false;
 	DWORD CurrentList = (whichsf + 1);
 
-	if (!SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, ListToLoad)) {
+	if (!SHGetFolderPathW(NULL, whichsf ? CSIDL_PROFILE : CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, ListToLoad)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
-		RegSetValueExW(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&CurrentList, sizeof(CurrentList));
-		swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf], L"omlist");
-
-		if (FontLoader(ListToLoad)) PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
+		RegSetValueExW(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)& CurrentList, sizeof(CurrentList));
+		
+		if (!whichsf) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
+		else swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf], L"omlist");
+		
+		RET = FontLoader(ListToLoad);
+		if (RET) PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
 	}
+
+	return RET;
 }
 
 bool LoadSoundfontStartup() {
@@ -135,7 +141,7 @@ bool LoadSoundfontStartup() {
 	wchar_t CurrentString[NTFS_MAX_PATH] = { 0 };
 
 	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, CurrentAppList)) {
-		for (int i = 0; i <= 15; ++i) {
+		for (int i = 0; i < 15; ++i) {
 			swprintf_s(CurrentAppList + wcslen(CurrentAppList), NTFS_MAX_PATH, OMFileTemplate, L"applists", OMLetters[i], L"applist");
 
 			std::wifstream AppList(CurrentAppList);
@@ -145,7 +151,7 @@ bool LoadSoundfontStartup() {
 				{
 					if (!_wcsicmp(AppNameW, CurrentString) && !_wcsicmp(AppPathW, CurrentString)) {
 						PrintMessageToDebugLog("LoadSoundfontStartup", "Found list. Loading...");
-						LoadSoundfont(i);
+						LoadSoundfont(i + 1);
 						return TRUE;
 					}
 				}

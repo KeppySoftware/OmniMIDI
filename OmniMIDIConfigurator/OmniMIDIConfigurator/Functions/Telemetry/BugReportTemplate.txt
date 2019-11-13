@@ -1,6 +1,0 @@
-{
-  "title": "{0}'s bug report",
-  "body": "{1}",
-  "assignee": "KaleidonKep99",
-  ]
-}

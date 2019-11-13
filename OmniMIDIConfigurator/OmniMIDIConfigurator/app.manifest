@@ -1,27 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<asmv1:assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
   <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
-        <!-- Opzioni manifesto Controllo account utente
-            Se si desidera modificare il livello di Controllo account utente di Windows, sostituire il 
-            nodo requestedExecutionLevel con uno dei seguenti.
+        <!-- Opzioni manifesto di Controllo dell'account utente
+             Per modificare il livello di Controllo dell'account utente di Windows, sostituire il 
+             nodo requestedExecutionLevel con uno dei seguenti.
 
         <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
         <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
         <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
 
-            Specificando il nodo requestedExecutionLevel verrà disabilitata la virtualizzazione dei file e del registro di sistema.
-            Se si desidera utilizzare la virtualizzazione dei file e del registro di sistema per la compatibilità con le versioni precedenti, 
-            eliminare il nodo requestedExecutionLevel.
+            Se si specifica l'elemento requestedExecutionLevel, la funzionalità Virtualizzazione file system e registro di sistema verrà disabilitata. 
+            Rimuovere questo elemento se l'applicazione richiede questa virtualizzazione per
+            compatibilità con le versioni precedenti.
         -->
         <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
-      <applicationRequestMinimum>
-        <defaultAssemblyRequest permissionSetReference="FullTrust" />
-        <PermissionSet version="1" ID="FullTrust" Unrestricted="true" />
-      </applicationRequestMinimum>
     </security>
   </trustInfo>
 
@@ -40,7 +36,20 @@
     </application>
   </compatibility>
 
+  <!-- Indica che l'applicazione è sensibile ai valori DPI e non verrà scalata automaticamente da Windows in caso di
+       valori DPI maggiori. Le applicazioni Windows Presentation Foundation (WPF) sono automaticamente sensibili ai valori DPI, pertanto non è necessario 
+       acconsentire esplicitamente. Con le applicazioni Windows Form destinate a .NET Framework 4.6 per cui è stato acconsentito esplicitamente a questa impostazione, 
+       è anche necessario impostare 'EnableWindowsFormsHighDpiAutoResizing' su 'true' nel relativo file app.config. -->
+  <!--
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
+    </windowsSettings>
+  </application>
+  -->
+
   <!-- Abilita i temi per finestre di dialogo e controlli comuni di Windows (Windows XP e versioni successive) -->
+  <!--
   <dependency>
     <dependentAssembly>
       <assemblyIdentity
@@ -53,5 +62,6 @@
         />
     </dependentAssembly>
   </dependency>
+  -->
 
-</asmv1:assembly>
+</assembly>

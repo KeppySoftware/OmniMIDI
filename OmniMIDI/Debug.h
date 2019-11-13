@@ -278,6 +278,21 @@ void PrintCurrentTime() {
 		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
 }
 
+void PrintCurrentTimeW() {
+	// Get time
+	SYSTEMTIME stime;
+	FILETIME ltime;
+	FILETIME ftTimeStamp;
+
+	GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
+	FileTimeToLocalFileTime(&ftTimeStamp, &ltime); //convert in local time and store in ltime
+	FileTimeToSystemTime(&ltime, &stime); //convert in system time and store in stime
+
+	// Print to log
+	fwprintf(DebugLog, L"%02d-%02d-%04d %02d:%02d:%02d.%03d - ",
+		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
+}
+
 void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	if (ManagedSettings.DebugMode) {
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
@@ -372,6 +387,26 @@ void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 		sprintf(Msg, "Stage <<%s>> | %s\n", Stage, Status);
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
+
+		free(Msg);
+
+		// Flush buffer
+		fflush(DebugLog);
+	}
+}
+
+void PrintMessageWToDebugLog(LPCWSTR Stage, LPCWSTR Status) {
+	if (ManagedSettings.DebugMode) {
+		wchar_t* Msg = (wchar_t*)malloc(sizeof(wchar_t) * NTFS_MAX_PATH);
+
+		// Debug log is busy now
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		// Print to log
+		PrintCurrentTimeW();
+		swprintf(Msg, L"Stage <<%s>> | %s\n", Stage, Status);
+		fwprintf(DebugLog, Msg);
+		OutputDebugStringW(Msg);
 
 		free(Msg);
 

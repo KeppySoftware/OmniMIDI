@@ -12,7 +12,7 @@ namespace OmniMIDIConfigurator.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,94 +25,25 @@ namespace OmniMIDIConfigurator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("choose")]
-        public string UpdateBranch {
+        [global::System.Configuration.DefaultSettingValueAttribute("-9999, -9999")]
+        public global::System.Drawing.Point LastWindowPos {
             get {
-                return ((string)(this["UpdateBranch"]));
+                return ((global::System.Drawing.Point)(this["LastWindowPos"]));
             }
             set {
-                this["UpdateBranch"] = value;
+                this["LastWindowPos"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PatchInfoShow {
+        [global::System.Configuration.DefaultSettingValueAttribute("-1, -1")]
+        public global::System.Drawing.Size LastWindowSize {
             get {
-                return ((bool)(this["PatchInfoShow"]));
+                return ((global::System.Drawing.Size)(this["LastWindowSize"]));
             }
             set {
-                this["PatchInfoShow"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowOutputLevel {
-            get {
-                return ((bool)(this["ShowOutputLevel"]));
-            }
-            set {
-                this["ShowOutputLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AutoLoadList {
-            get {
-                return ((bool)(this["AutoLoadList"]));
-            }
-            set {
-                this["AutoLoadList"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TelemetryAlreadySeen {
-            get {
-                return ((bool)(this["TelemetryAlreadySeen"]));
-            }
-            set {
-                this["TelemetryAlreadySeen"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsItPreRelease {
-            get {
-                return ((bool)(this["IsItPreRelease"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool LiveChanges {
-            get {
-                return ((bool)(this["LiveChanges"]));
-            }
-            set {
-                this["LiveChanges"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool LiveChangesDisclaimer {
-            get {
-                return ((bool)(this["LiveChangesDisclaimer"]));
-            }
-            set {
-                this["LiveChangesDisclaimer"] = value;
+                this["LastWindowSize"] = value;
             }
         }
         
@@ -130,25 +61,85 @@ namespace OmniMIDIConfigurator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowMixerUnder {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastImportExportPath {
             get {
-                return ((bool)(this["ShowMixerUnder"]));
+                return ((string)(this["LastImportExportPath"]));
             }
             set {
-                this["ShowMixerUnder"] = value;
+                this["LastImportExportPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastBrowserPath {
+            get {
+                return ((string)(this["LastBrowserPath"]));
+            }
+            set {
+                this["LastBrowserPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("choose")]
+        public string UpdateBranch {
+            get {
+                return ((string)(this["UpdateBranch"]));
+            }
+            set {
+                this["UpdateBranch"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TLS12Missing {
+        public bool PreRelease {
             get {
-                return ((bool)(this["TLS12Missing"]));
+                return ((bool)(this["PreRelease"]));
             }
             set {
-                this["TLS12Missing"] = value;
+                this["PreRelease"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LiveChanges {
+            get {
+                return ((bool)(this["LiveChanges"]));
+            }
+            set {
+                this["LiveChanges"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoLoadList {
+            get {
+                return ((bool)(this["AutoLoadList"]));
+            }
+            set {
+                this["AutoLoadList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PatchInfoShow {
+            get {
+                return ((bool)(this["PatchInfoShow"]));
+            }
+            set {
+                this["PatchInfoShow"] = value;
             }
         }
     }
