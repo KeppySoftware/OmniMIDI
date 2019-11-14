@@ -190,6 +190,12 @@
     <Compile Include="Forms\OM\Secondary\SFListAssign.designer.cs">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Secondary\SoundFontInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Secondary\SoundFontInfo.designer.cs">
+      <DependentUpon>SoundFontInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OM\Secondary\WinMMPatches.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -227,6 +233,12 @@
     <Compile Include="Panels\SettingsPanel\SettingsExtension.cs" />
     <Compile Include="Extensions\Knob\Utility.cs" />
     <Compile Include="Extensions\OM\WinMM.cs" />
+    <Compile Include="Panels\Generic\NoAvailableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Panels\Generic\NoAvailableControl.Designer.cs">
+      <DependentUpon>NoAvailableControl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Extensions\Knob\KnobControl.resx">
       <DependentUpon>KnobControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -282,8 +294,14 @@
     <EmbeddedResource Include="Forms\OM\Secondary\SFListAssign.resx">
       <DependentUpon>SFListAssign.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Secondary\SoundFontInfo.resx">
+      <DependentUpon>SoundFontInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\WinMMPatches.resx">
       <DependentUpon>WinMMPatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Panels\Generic\NoAvailableControl.resx">
+      <DependentUpon>NoAvailableControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Panels\SettingsPanel\SettingsPanel.resx">
       <DependentUpon>SettingsPanel.cs</DependentUpon>

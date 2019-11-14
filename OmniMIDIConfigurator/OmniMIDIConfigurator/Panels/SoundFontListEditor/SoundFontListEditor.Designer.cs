@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -68,11 +68,14 @@
             this.OSF = new System.Windows.Forms.MenuItem();
             this.OSFd = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.ReLSFl = new System.Windows.Forms.MenuItem();
             this.MSu = new System.Windows.Forms.MenuItem();
             this.MSd = new System.Windows.Forms.MenuItem();
             this.ESF = new System.Windows.Forms.MenuItem();
             this.DSF = new System.Windows.Forms.MenuItem();
-            this.ReLSFl = new System.Windows.Forms.MenuItem();
+            this.CSFs = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.PSFs = new System.Windows.Forms.MenuItem();
             this.Lis = new OmniMIDIConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SrcBank = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -251,7 +254,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(1, 422);
+            this.ListOverride.Location = new System.Drawing.Point(1, 408);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 30;
@@ -420,6 +423,9 @@
             this.LisCM.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.OSF,
             this.OSFd,
+            this.menuItem2,
+            this.CSFs,
+            this.PSFs,
             this.menuItem3,
             this.ReLSFl,
             this.MSu,
@@ -441,38 +447,55 @@
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 2;
+            this.menuItem3.Index = 5;
             this.menuItem3.Text = "-";
+            // 
+            // ReLSFl
+            // 
+            this.ReLSFl.Index = 6;
+            this.ReLSFl.Text = "(Re)Load SoundFont list";
+            this.ReLSFl.Click += new System.EventHandler(this.LoadToApp_Click);
             // 
             // MSu
             // 
-            this.MSu.Index = 4;
+            this.MSu.Index = 7;
             this.MSu.Text = "Move SoundFont up";
             this.MSu.Click += new System.EventHandler(this.MvU_Click);
             // 
             // MSd
             // 
-            this.MSd.Index = 5;
+            this.MSd.Index = 8;
             this.MSd.Text = "Move SoundFont down";
             this.MSd.Click += new System.EventHandler(this.MvD_Click);
             // 
             // ESF
             // 
-            this.ESF.Index = 6;
+            this.ESF.Index = 9;
             this.ESF.Text = "Enable SoundFont";
             this.ESF.Click += new System.EventHandler(this.EnableSF_Click);
             // 
             // DSF
             // 
-            this.DSF.Index = 7;
+            this.DSF.Index = 10;
             this.DSF.Text = "Disable SoundFont";
             this.DSF.Click += new System.EventHandler(this.DisableSF_Click);
             // 
-            // ReLSFl
+            // CSFs
             // 
-            this.ReLSFl.Index = 3;
-            this.ReLSFl.Text = "(Re)Load SoundFont list";
-            this.ReLSFl.Click += new System.EventHandler(this.LoadToApp_Click);
+            this.CSFs.Index = 3;
+            this.CSFs.Text = "Copy SoundFont(s)";
+            this.CSFs.Click += new System.EventHandler(this.CSFs_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 2;
+            this.menuItem2.Text = "-";
+            // 
+            // PSFs
+            // 
+            this.PSFs.Index = 4;
+            this.PSFs.Text = "Paste SoundFont(s)";
+            this.PSFs.Click += new System.EventHandler(this.PSFs_Click);
             // 
             // Lis
             // 
@@ -499,20 +522,22 @@
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
             this.Lis.Location = new System.Drawing.Point(5, 34);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(639, 384);
+            this.Lis.Size = new System.Drawing.Size(639, 370);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
             this.Lis.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.Lis_ColumnWidthChanged);
             this.Lis.DragDrop += new System.Windows.Forms.DragEventHandler(this.Lis_DragDrop);
             this.Lis.DragEnter += new System.Windows.Forms.DragEventHandler(this.Lis_DragEnter);
+            this.Lis.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Lis_KeyDown);
+            this.Lis.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Lis_MouseDown);
             // 
             // SoundFont
             // 
@@ -583,7 +608,7 @@
             this.Controls.Add(this.RmvSF);
             this.Controls.Add(this.AddSF);
             this.Name = "SoundFontListEditor";
-            this.Size = new System.Drawing.Size(678, 437);
+            this.Size = new System.Drawing.Size(678, 423);
             this.Load += new System.EventHandler(this.SoundFontListEditor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -636,5 +661,8 @@
         private System.Windows.Forms.MenuItem MSd;
         private System.Windows.Forms.MenuItem ESF;
         private System.Windows.Forms.MenuItem DSF;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem CSFs;
+        private System.Windows.Forms.MenuItem PSFs;
     }
 }

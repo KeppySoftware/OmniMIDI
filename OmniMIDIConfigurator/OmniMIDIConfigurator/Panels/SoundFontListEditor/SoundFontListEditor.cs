@@ -80,6 +80,48 @@ namespace OmniMIDIConfigurator
             CSFWatcher.Created += new FileSystemEventHandler(OnChanged);
         }
 
+        private void CopySoundFonts()
+        {
+            String FCB;
+            List<String> CD = new List<String>();
+
+            foreach (ListViewItem item in Lis.SelectedItems)
+                CD.Add(item.Text);
+
+            FCB = String.Join("\t", CD.ToArray());
+
+            Clipboard.SetText(FCB);
+        }
+
+        private void PasteSoundFonts()
+        {
+            String FCB = Clipboard.GetText();
+
+            if (!String.IsNullOrEmpty(FCB))
+            {
+                String InvalidChars = new String(Path.GetInvalidPathChars());
+                String[] Is = FCB.Split('\t');
+
+                for (int i = 0; i < Is.Count(); i++)
+                {
+                    foreach (char C in InvalidChars)
+                    {
+                        Is[i] = Is[i].Replace(C.ToString(), "");
+                    }
+                }
+
+                ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(Is, false, true);
+
+                if (iSFs != null)
+                {
+                    foreach (ListViewItem iSF in iSFs)
+                        Lis.Items.Add(iSF);
+
+                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                }
+            }
+        }
+
         public void CloseCSFWatcher()
         {
             CSFWatcher.Dispose();
@@ -220,6 +262,29 @@ namespace OmniMIDIConfigurator
                 e.Effect = DragDropEffects.All;
             else
                 e.Effect = DragDropEffects.None;
+        }
+
+        private void Lis_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.Control | Keys.C))
+                CopySoundFonts();
+            else if (e.KeyData == (Keys.Control | Keys.V))
+                PasteSoundFonts();
+        }
+
+        private void Lis_MouseDown(object sender, MouseEventArgs e)
+        {
+            Lis.PointToClient(new Point(e.X, e.Y));
+
+            switch (e.Button)
+            {
+                case MouseButtons.Middle:
+                    Lis.Invalidate();
+                    Lis.SelectedItems.Clear();
+                    Lis.GetItemAt(e.X, e.Y).Selected = true;
+                    new SoundFontInfo(Lis.GetItemAt(e.X, e.Y).Text).ShowDialog();
+                    break;
+            }
         }
 
         private enum MoveDirection { Up = -1, Down = 1 };
@@ -428,6 +493,16 @@ namespace OmniMIDIConfigurator
 
                 Program.ShowError(0, "Export finished", String.Format("The list has been exported successfully to \"{0}\".", ExternalListExport.FileName), null);
             }
+        }
+
+        private void CSFs_Click(object sender, EventArgs e)
+        {
+            CopySoundFonts();
+        }
+
+        private void PSFs_Click(object sender, EventArgs e)
+        {
+            PasteSoundFonts();
         }
     }
 }

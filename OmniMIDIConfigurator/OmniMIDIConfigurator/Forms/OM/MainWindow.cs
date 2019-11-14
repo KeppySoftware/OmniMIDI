@@ -18,12 +18,34 @@ namespace OmniMIDIConfigurator
         {
             public static SoundFontListEditor SFLE;
             public static SettingsPanel SET;
+            public static NoAvailableControl NAC;
+        }
+
+        private void DestroyNACEmbed(ref BufferedPanel P)
+        {
+            if (OMWC.NAC != null)
+            {
+                P.Controls.Remove(OMWC.NAC);
+                OMWC.NAC.Dispose();
+            }
+        }
+
+        private void CreateNACEmbed(ref BufferedPanel P, Exception E)
+        {
+            DestroyNACEmbed(ref P);
+
+            OMWC.NAC = new NoAvailableControl(E);
+            OMWC.NAC.Dock = DockStyle.Fill;
+            OMWC.NAC.AutoScroll = false;
+            P.Controls.Add(OMWC.NAC);
         }
 
         private bool CreateSFLEEmbed(String[] SFs)
         {
             try
             {
+                DestroyNACEmbed(ref SFLEPanel);
+
                 if (OMWC.SFLE != null)
                 {
                     OMWC.SFLE.CloseCSFWatcher();
@@ -40,7 +62,7 @@ namespace OmniMIDIConfigurator
             }
             catch (Exception ex)
             {
-                Program.ShowError(4, "SFLE Embed Error", "An error has occured while creating the SoundFonts list editor embed.", ex);
+                CreateNACEmbed(ref SFLEPanel, ex);
             }
 
             return false;
@@ -50,6 +72,8 @@ namespace OmniMIDIConfigurator
         {
             try
             {
+                DestroyNACEmbed(ref SETPanel);
+
                 if (OMWC.SET != null)
                 {
                     ApplySettings.Click -= new EventHandler(OMWC.SET.ButtonToSaveSettings);
@@ -77,7 +101,7 @@ namespace OmniMIDIConfigurator
             }
             catch (Exception ex)
             {
-                Program.ShowError(4, "SET Embed Error", "An error has occured while creating the Settings panel embed.", ex);
+                CreateNACEmbed(ref SETPanel, ex);
             }
 
             return false;
