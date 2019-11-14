@@ -62,7 +62,7 @@ namespace OmniMIDIConfigurator
             if (SelectedListBox.SelectedIndex == 0) CSFWatcher.EnableRaisingEvents = true;
 
             // Add the SoundFonts before activating the CSFWatcher
-            if (SFs.Count() > 0)
+            if (SFs != null && SFs.Count() > 0)
             {
                 ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(SFs, false, true);
 
