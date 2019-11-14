@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -41,7 +40,6 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -73,6 +71,7 @@
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.RestoreConfSettings = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ReinstallDriver = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
@@ -86,6 +85,10 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
+            this.RestoreSFListEdWidth = new System.Windows.Forms.MenuItem();
+            this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -104,6 +107,7 @@
             this.MWTab.SelectedIndex = 0;
             this.MWTab.Size = new System.Drawing.Size(706, 460);
             this.MWTab.TabIndex = 0;
+            this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
             // ListsEdt
             // 
@@ -115,16 +119,6 @@
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
-            // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 436);
-            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -150,7 +144,7 @@
             this.ExportPres.Location = new System.Drawing.Point(269, 407);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(45, 23);
-            this.ExportPres.TabIndex = 52;
+            this.ExportPres.TabIndex = 6;
             this.ExportPres.Text = "Export";
             this.ExportPres.UseVisualStyleBackColor = true;
             // 
@@ -160,7 +154,7 @@
             this.ImportPres.Location = new System.Drawing.Point(222, 407);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(45, 23);
-            this.ImportPres.TabIndex = 51;
+            this.ImportPres.TabIndex = 5;
             this.ImportPres.Text = "Import";
             this.ImportPres.UseVisualStyleBackColor = true;
             // 
@@ -183,12 +177,11 @@
             this.QICombo.Items.AddRange(new object[] {
             "Audio engine settings",
             "Synthesizer settings",
-            "Miscellaneous settings",
-            "Legacy settings etc."});
+            "Debug & legacy set."});
             this.QICombo.Location = new System.Drawing.Point(77, 408);
             this.QICombo.Name = "QICombo";
             this.QICombo.Size = new System.Drawing.Size(130, 21);
-            this.QICombo.TabIndex = 5;
+            this.QICombo.TabIndex = 4;
             this.QICombo.SelectedIndexChanged += new System.EventHandler(this.QICombo_SelectedIndexChanged);
             // 
             // QILabel
@@ -220,16 +213,6 @@
             this.ApplySettings.TabIndex = 2;
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
-            // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(698, 403);
-            this.SETPanel.TabIndex = 1;
             // 
             // MWSStrip
             // 
@@ -357,6 +340,7 @@
             // 
             // menuItem8
             // 
+            this.menuItem8.Enabled = false;
             this.menuItem8.Index = 3;
             this.menuItem8.Text = "LoudMax is not available on ARM64 installs";
             // 
@@ -423,7 +407,10 @@
             this.MIDIInOutTest,
             this.menuItem15,
             this.DeleteUserData,
-            this.ReinstallDriver});
+            this.ReinstallDriver,
+            this.menuItem17,
+            this.RestoreSFListEdWidth,
+            this.RestoreConfSettings});
             this.menuItem1.Text = "Tools";
             // 
             // KACGuide
@@ -447,6 +434,12 @@
             // 
             this.menuItem15.Index = 3;
             this.menuItem15.Text = "-";
+            // 
+            // RestoreConfSettings
+            // 
+            this.RestoreConfSettings.Index = 8;
+            this.RestoreConfSettings.Text = "Restore all the configurator\'s internal settings";
+            this.RestoreConfSettings.Click += new System.EventHandler(this.RestoreConfSettings_Click);
             // 
             // DeleteUserData
             // 
@@ -530,6 +523,38 @@
             // CheckUpdates
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(698, 434);
+            this.SFLEPanel.TabIndex = 0;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(698, 402);
+            this.SETPanel.TabIndex = 1;
+            // 
+            // RestoreSFListEdWidth
+            // 
+            this.RestoreSFListEdWidth.Index = 7;
+            this.RestoreSFListEdWidth.Text = "Restore default SoundFonts list editor\'s column width";
+            this.RestoreSFListEdWidth.Visible = false;
+            this.RestoreSFListEdWidth.Click += new System.EventHandler(this.RestoreSFListEdWidth_Click);
+            // 
+            // menuItem17
+            // 
+            this.menuItem17.Index = 6;
+            this.menuItem17.Text = "-";
             // 
             // MainWindow
             // 
@@ -615,6 +640,9 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel VersionLabel;
         private System.ComponentModel.BackgroundWorker CheckUpdates;
+        private System.Windows.Forms.MenuItem RestoreConfSettings;
+        private System.Windows.Forms.MenuItem menuItem17;
+        private System.Windows.Forms.MenuItem RestoreSFListEdWidth;
     }
 }
 

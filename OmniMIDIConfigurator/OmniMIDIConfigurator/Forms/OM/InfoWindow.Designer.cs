@@ -95,7 +95,7 @@
             this.OKBtn.Location = new System.Drawing.Point(651, 244);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 24);
-            this.OKBtn.TabIndex = 2;
+            this.OKBtn.TabIndex = 4;
             this.OKBtn.Text = "OK";
             this.OKBtn.UseVisualStyleBackColor = true;
             this.OKBtn.Click += new System.EventHandler(this.OKBtn_Click);
@@ -153,7 +153,7 @@
             this.KDMAPIVer.Location = new System.Drawing.Point(105, 57);
             this.KDMAPIVer.Name = "KDMAPIVer";
             this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 13;
+            this.KDMAPIVer.TabIndex = 1;
             this.KDMAPIVer.TabStop = true;
             this.KDMAPIVer.Text = "KDMAPI VER";
             // 
@@ -315,7 +315,7 @@
             this.ChangeBranch.Location = new System.Drawing.Point(277, 244);
             this.ChangeBranch.Name = "ChangeBranch";
             this.ChangeBranch.Size = new System.Drawing.Size(101, 24);
-            this.ChangeBranch.TabIndex = 8;
+            this.ChangeBranch.TabIndex = 2;
             this.ChangeBranch.Text = "Change branch";
             this.ChangeBranch.UseVisualStyleBackColor = true;
             this.ChangeBranch.Click += new System.EventHandler(this.ChangeBranch_Click);
@@ -325,7 +325,7 @@
             this.CheckForUpdates.Location = new System.Drawing.Point(538, 244);
             this.CheckForUpdates.Name = "CheckForUpdates";
             this.CheckForUpdates.Size = new System.Drawing.Size(107, 24);
-            this.CheckForUpdates.TabIndex = 9;
+            this.CheckForUpdates.TabIndex = 3;
             this.CheckForUpdates.Text = "Check for updates";
             this.CheckForUpdates.UseVisualStyleBackColor = true;
             this.CheckForUpdates.Click += new System.EventHandler(this.CheckForUpdates_Click);

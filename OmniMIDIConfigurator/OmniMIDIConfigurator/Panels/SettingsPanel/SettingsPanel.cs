@@ -128,32 +128,8 @@ namespace OmniMIDIConfigurator
                 FastHotKeys.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FastHotkeys", 0));
                 DebugMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DebugMode", 0));
 
-                switch (Convert.ToInt32(Program.SynthSettings.GetValue("DriverPriority", 0)))
-                {
-                    case 0:
-                    default:
-                        DePrio.Checked = true;
-                        DePrio_CheckedChanged(null, null);
-                        break;
-                    case 1:
-                        RTPrio.Checked = true;
-                        break;
-                    case 2:
-                        HiPrio.Checked = true;
-                        break;
-                    case 3:
-                        HNPrio.Checked = true;
-                        break;
-                    case 4:
-                        NoPrio.Checked = true;
-                        break;
-                    case 5:
-                        LNPrio.Checked = true;
-                        break;
-                    case 6:
-                        LoPrio.Checked = true;
-                        break;
-                }
+                try { PrioBox.SelectedIndex = Convert.ToInt32(Program.SynthSettings.GetValue("DriverPriority", 0)); }
+                catch { PrioBox.SelectedIndex = 0; }
 
                 switch (Convert.ToInt32(Program.SynthSettings.GetValue("AudioBitDepth", 1)))
                 {
@@ -256,21 +232,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("FastHotkeys", Convert.ToInt32(FastHotKeys.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("DebugMode", Convert.ToInt32(DebugMode.Checked), RegistryValueKind.DWord);
 
-            if (DePrio.Checked)
-            {
-                Program.SynthSettings.SetValue("DriverPriority", 0, RegistryValueKind.DWord);
-            }
-            else
-            {
-                if (RTPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 0, RegistryValueKind.DWord);
-                else if (RTPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 1, RegistryValueKind.DWord);
-                else if (HiPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 2, RegistryValueKind.DWord);
-                else if (HNPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 3, RegistryValueKind.DWord);
-                else if (NoPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 4, RegistryValueKind.DWord);
-                else if (LNPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 5, RegistryValueKind.DWord);
-                else if (LoPrio.Checked) Program.SynthSettings.SetValue("DriverPriority", 6, RegistryValueKind.DWord);
-                else Program.SynthSettings.SetValue("DriverPriority", 0, RegistryValueKind.DWord);
-            }
+            Program.SynthSettings.SetValue("DriverPriority", PrioBox.SelectedIndex, RegistryValueKind.DWord);
 
             switch (AudioBitDepth.SelectedIndex)
             {
@@ -493,11 +455,6 @@ namespace OmniMIDIConfigurator
             ReverbV.Enabled = EnableRCOverride.Checked;
             ChorusL.Enabled = EnableRCOverride.Checked;
             ChorusV.Enabled = EnableRCOverride.Checked;
-        }
-
-        private void DePrio_CheckedChanged(object sender, EventArgs e)
-        {
-            PrioPal.Enabled = !DePrio.Checked;
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)

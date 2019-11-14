@@ -42,7 +42,7 @@ namespace OmniMIDIConfigurator
 
             VerLabel.Text = ReturnDriverAssemblyVersion(
                 "OmniMIDI", 
-                "Canary release ", 
+                "CR", 
                 new int[] { Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart }
                 );
             VerLabel.Cursor = Program.SystemHandCursor;
@@ -73,7 +73,7 @@ namespace OmniMIDIConfigurator
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
-            if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (PR Build)";
+            if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (PR)";
 
             OMBigLogo.Image = Properties.Resources.OMLauncher;
 
@@ -169,9 +169,7 @@ namespace OmniMIDIConfigurator
 
         private void ChangeBranch_Click(object sender, EventArgs e)
         {
-            SelectBranch frm = new SelectBranch();
-            frm.ShowDialog();
-            frm.Dispose();
+            new SelectBranch().ShowDialog();
 
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();

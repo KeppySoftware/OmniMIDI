@@ -20,8 +20,8 @@
     <Setting Name="UpdateBranch" Type="System.String" Scope="User">
       <Value Profile="(Default)">choose</Value>
     </Setting>
-    <Setting Name="PreRelease" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="PreRelease" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LiveChanges" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -31,6 +31,32 @@
     </Setting>
     <Setting Name="PatchInfoShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SFColumnsSize" Type="System.Int32[]" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfInt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
+&lt;/ArrayOfInt&gt;</Value>
+    </Setting>
+    <Setting Name="SFColumnsDefSize" Type="System.Int32[]" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfInt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;int&gt;425&lt;/int&gt;
+  &lt;int&gt;30&lt;/int&gt;
+  &lt;int&gt;30&lt;/int&gt;
+  &lt;int&gt;30&lt;/int&gt;
+  &lt;int&gt;30&lt;/int&gt;
+  &lt;int&gt;30&lt;/int&gt;
+  &lt;int&gt;53&lt;/int&gt;
+  &lt;int&gt;62&lt;/int&gt;
+&lt;/ArrayOfInt&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

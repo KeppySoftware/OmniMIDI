@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace OmniMIDIConfigurator
 {
@@ -19,19 +20,31 @@ namespace OmniMIDIConfigurator
         static FileSystemWatcher CSFWatcher;
         static Int32 SelectedIndexCSF;
 
-        public SoundFontListEditor()
+        public SoundFontListEditor(String[] SFs)
         {
             InitializeComponent();
 
             Delegate = this;
+
+            for (int i = 0; i < Lis.Columns.Count; i++)
+            {
+                if (Properties.Settings.Default.SFColumnsSize[i] != -1)
+                    Lis.Columns[i].Width = Properties.Settings.Default.SFColumnsSize[i];
+                else
+                {
+                    Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
+                    Properties.Settings.Default.Save();
+                }
+            }
+
+            // Attach context menu
+            Lis.ContextMenu = LisCM;
 
             // Spawn listener for shared list
             CSFWatcher = new FileSystemWatcher();
             CSFWatcher.Path = Path.GetDirectoryName(Program.ListsPath[0]);
             CSFWatcher.Filter = Path.GetFileName(Program.ListsPath[0]);
             CSFWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            CSFWatcher.Changed += new FileSystemEventHandler(OnChanged);
-            CSFWatcher.Created += new FileSystemEventHandler(OnChanged);
 
             SFlg.BackgroundImage = Properties.Resources.Question;
             CLi.BackgroundImage = Properties.Resources.ClearIcon;
@@ -47,6 +60,29 @@ namespace OmniMIDIConfigurator
 
             SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
             if (SelectedListBox.SelectedIndex == 0) CSFWatcher.EnableRaisingEvents = true;
+
+            // Add the SoundFonts before activating the CSFWatcher
+            if (SFs.Count() > 0)
+            {
+                ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(SFs, false, true);
+
+                if (iSFs != null)
+                {
+                    foreach (ListViewItem iSF in iSFs)
+                        Lis.Items.Add(iSF);
+
+                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                }
+            }
+
+            // Activate the CSFWatcher now by assigning the events, to avoid a race condition
+            CSFWatcher.Changed += new FileSystemEventHandler(OnChanged);
+            CSFWatcher.Created += new FileSystemEventHandler(OnChanged);
+        }
+
+        public void CloseCSFWatcher()
+        {
+            CSFWatcher.Dispose();
         }
 
         private void SoundFontListEditor_Load(object sender, EventArgs e)
@@ -154,6 +190,38 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        private void Lis_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        {
+            for (int i = 0; i < Lis.Columns.Count; i++)
+            {
+                Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
+                Properties.Settings.Default.Save();
+            }
+
+        }
+        private void Lis_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+
+            ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(s, BankPresetOverride.Checked, false);
+
+            if (iSFs != null)
+            {
+                foreach (ListViewItem iSF in iSFs)
+                    Lis.Items.Add(iSF);
+
+                SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+            }
+        }
+
+        private void Lis_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
         private enum MoveDirection { Up = -1, Down = 1 };
         private void MoveListViewItems(ListView sender, MoveDirection direction)
         {
@@ -182,6 +250,50 @@ namespace OmniMIDIConfigurator
             catch (Exception ex)
             {
                 ReloadListAfterError(ex);
+            }
+        }
+
+        private void OSF_Click(object sender, EventArgs e)
+        {
+            List<String> SFErr = new List<String>();
+
+            foreach (ListViewItem Item in Lis.SelectedItems)
+            {
+                try { Process.Start(Item.Text); }
+                catch { SFErr.Add(Item.Text); }
+            }
+
+            if (SFErr.Count > 0)
+            {
+                Program.ShowError(
+                    2,
+                    "Unable to open SoundFont(s)",
+                    String.Format(
+                        "The system was unable to open the following SoundFont(s). Either the SoundFont(s) do(es)n't exist, or there are no applications available for the task.\n\n{0}\n\nPress OK to continue.",
+                        String.Join(Environment.NewLine, SFErr.ToArray())),
+                    null);
+            }
+        }
+
+        private void OSFd_Click(object sender, EventArgs e)
+        {
+            List<String> SFErr = new List<String>();
+
+            foreach (ListViewItem Item in Lis.SelectedItems)
+            {
+                try { Process.Start("explorer.exe", String.Format("/select, \"{0}\"", Item.Text)); }
+                catch { SFErr.Add(Item.Text); }
+            }
+
+            if (SFErr.Count > 0)
+            {
+                Program.ShowError(
+                    2,
+                    "Unable to open SoundFont(s)",
+                    String.Format(
+                        "The system was unable to open the parent directory of the following SoundFont(s). Either the SoundFont(s) do(es)n't exist, or Windows Explorer is unable to access the path(s).\n\n{0}\n\nPress OK to continue.",
+                        String.Join(Environment.NewLine, SFErr.ToArray())),
+                    null);
             }
         }
 
@@ -223,7 +335,7 @@ namespace OmniMIDIConfigurator
             {
                 if (SoundFontImport.ShowDialog(this) == DialogResult.OK)
                 {
-                    ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(null, SoundFontImport.FileNames, BankPresetOverride.Checked);
+                    ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(SoundFontImport.FileNames, BankPresetOverride.Checked, false);
 
                     if (iSFs != null)
                     {

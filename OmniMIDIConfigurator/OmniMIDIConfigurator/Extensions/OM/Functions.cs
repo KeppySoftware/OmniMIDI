@@ -168,6 +168,10 @@ namespace OmniMIDIConfigurator
 
         public static void ResetDriverSettings()
         {
+            Properties.Settings.Default.AutoLoadList = false;
+            Properties.Settings.Default.LiveChanges = false;
+            Properties.Settings.Default.Save();
+
             foreach (SettingStruct Setting in DefaultSettings.ToArray())
             {
                 Program.SynthSettings.SetValue(Setting.SettingName, Setting.Value, RegistryValueKind.DWord);

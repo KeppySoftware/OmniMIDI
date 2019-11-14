@@ -82,6 +82,8 @@ namespace OmniMIDIConfigurator
         [STAThread]
         static void Main(String[] Args)
         {
+            List<String> SoundFontsToAdd = new List<String>();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -123,7 +125,9 @@ namespace OmniMIDIConfigurator
 
                         UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
                         return;
-                        
+                    default:
+                        SoundFontsToAdd.Add(Arg);
+                        break;
                 }
             }
 
@@ -139,7 +143,7 @@ namespace OmniMIDIConfigurator
             GC.KeepAlive(BringToFrontMessage);
             GC.KeepAlive(m);
 
-            Application.Run(new MainWindow());
+            Application.Run(new MainWindow(SoundFontsToAdd.ToArray()));
         }
 
         private static void OpenRequiredKey(ref RegistryKey Key, String KeyPath)

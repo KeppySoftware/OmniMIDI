@@ -67,9 +67,11 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        public static ListViewItem[] AddSFToList(String ListToEdit, String[] SFs, Boolean BPO)
+        public static ListViewItem[] AddSFToList(String[] SFs, Boolean BPO, Boolean NoErrs)
         {
             List<ListViewItem> iSFs = new List<ListViewItem>();
+            List<String> SFErrs = new List<String>();
+
             int BV = -1, PV = -1, DBV = 0, DPV = -1;
             bool XGMode = false;
 
@@ -87,7 +89,7 @@ namespace OmniMIDIConfigurator
                     // SoundFont is valid, continue
                     if (SFH != 0)
                     {
-                       BassMidi.BASS_MIDI_FontFree(SFH);
+                        BassMidi.BASS_MIDI_FontFree(SFH);
 
                         if (BPO | Path.GetExtension(SF).ToLowerInvariant() == ".sfz")
                         {
@@ -118,8 +120,23 @@ namespace OmniMIDIConfigurator
                         iSF.ForeColor = SFEnabled;
 
                         iSFs.Add(iSF);
-                    }               
-                    // Else, continue
+                    }
+                    else SFErrs.Add(SF);
+                }
+                else SFErrs.Add(SF);
+            }
+
+            if (!NoErrs)
+            {
+                if (SFErrs.Count > 0)
+                {
+                    Program.ShowError(
+                        4,
+                        "Invalid SoundFont(s) detected",
+                        String.Format(
+                            "The following SoundFont(s) were not valid, and have not been added to the list.\n\n{0}\n\nPress OK to continue",
+                            string.Join(Environment.NewLine, SFErrs.ToArray())),
+                        null);
                 }
             }
 

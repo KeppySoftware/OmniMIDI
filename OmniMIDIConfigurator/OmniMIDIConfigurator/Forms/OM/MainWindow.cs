@@ -20,17 +20,18 @@ namespace OmniMIDIConfigurator
             public static SettingsPanel SET;
         }
 
-        private bool CreateSFLEEmbed()
+        private bool CreateSFLEEmbed(String[] SFs)
         {
             try
             {
                 if (OMWC.SFLE != null)
                 {
+                    OMWC.SFLE.CloseCSFWatcher();
                     SFLEPanel.Controls.Remove(OMWC.SFLE);
                     OMWC.SFLE.Dispose();
                 }
 
-                OMWC.SFLE = new SoundFontListEditor();
+                OMWC.SFLE = new SoundFontListEditor(SFs);
                 OMWC.SFLE.Dock = DockStyle.Fill;
                 OMWC.SFLE.AutoScroll = false;
                 SFLEPanel.Controls.Add(OMWC.SFLE);
@@ -92,7 +93,7 @@ namespace OmniMIDIConfigurator
             Cursor = Cursors.Default;
         }
 
-        public MainWindow()
+        public MainWindow(String[] SFs)
         {
             // Initialize form
             InitializeComponent();
@@ -104,6 +105,7 @@ namespace OmniMIDIConfigurator
                 MWSStrip.Padding.Left,
                 MWSStrip.Padding.Bottom
                 );
+            MWTab_SelectedIndexChanged(null, null);
 
             // Check start location
             if (Properties.Settings.Default.LastWindowPos == new Point(-9999, -9999))
@@ -131,7 +133,7 @@ namespace OmniMIDIConfigurator
             OMAPCpl.Visible = Functions.CheckMIDIMapper();
 
             // Add dynamic controls
-            CreateSFLEEmbed();
+            CreateSFLEEmbed(SFs);
             CreateSETEmbed();
         }
 
@@ -141,6 +143,7 @@ namespace OmniMIDIConfigurator
             SuspendLayout();
             base.OnResizeBegin(e);
         }
+
         protected override void OnResizeEnd(EventArgs e)
         {
             ResumeLayout();
@@ -171,6 +174,11 @@ namespace OmniMIDIConfigurator
             // Nothing lul
         }
 
+        private void MWTab_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RestoreSFListEdWidth.Visible = (MWTab.SelectedIndex == 0);
+        }
+
         private void DriverInfo_Click(object sender, EventArgs e)
         {
             new InfoWindow().ShowDialog();
@@ -187,9 +195,6 @@ namespace OmniMIDIConfigurator
                     OMWC.SET.ScrollControlIntoView(OMWC.SET.SynthBox);
                     break;
                 case 2:
-                    OMWC.SET.ScrollControlIntoView(OMWC.SET.MiscBox);
-                    break;
-                case 3:
                     OMWC.SET.ScrollControlIntoView(OMWC.SET.LegacySetDia);
                     break;
                 default:
@@ -281,6 +286,31 @@ namespace OmniMIDIConfigurator
         private void MIDIInOutTest_Click(object sender, EventArgs e)
         {
             new MIDIInPlay().ShowDialog();
+        }
+
+        private void RestoreSFListEdWidth_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.SFColumnsSize = Properties.Settings.Default.SFColumnsDefSize;
+            Properties.Settings.Default.Save();
+            CreateSFLEEmbed(null);
+        }
+
+        private void RestoreConfSettings_Click(object sender, EventArgs e)
+        {
+            DialogResult RES = Program.ShowError(3, "Reset configurator's internal settings", "Are you sure you want to reset the configurator's internal settings?\n\nYou'll lose all your custom settings, like the position of the window, the size of the columns in the SoundFonts editor etc...", null);
+            if (RES == DialogResult.Yes)
+            {
+                String BeforeBranch = Properties.Settings.Default.UpdateBranch;
+
+                Properties.Settings.Default.Reset();
+                Properties.Settings.Default.UpdateBranch = BeforeBranch;
+                Properties.Settings.Default.Save();
+
+                new SelectBranch().ShowDialog();
+                CreateSFLEEmbed(null);
+                CreateSETEmbed();
+                ApplySettings.PerformClick();
+            }
         }
 
         private void DeleteUserData_Click(object sender, EventArgs e)

@@ -95,15 +95,12 @@ namespace OmniMIDIConfigurator.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool PreRelease {
             get {
                 return ((bool)(this["PreRelease"]));
-            }
-            set {
-                this["PreRelease"] = value;
             }
         }
         
@@ -140,6 +137,47 @@ namespace OmniMIDIConfigurator.Properties {
             }
             set {
                 this["PatchInfoShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfInt xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+</ArrayOfInt>")]
+        public int[] SFColumnsSize {
+            get {
+                return ((int[])(this["SFColumnsSize"]));
+            }
+            set {
+                this["SFColumnsSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfInt xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <int>425</int>
+  <int>30</int>
+  <int>30</int>
+  <int>30</int>
+  <int>30</int>
+  <int>30</int>
+  <int>53</int>
+  <int>62</int>
+</ArrayOfInt>")]
+        public int[] SFColumnsDefSize {
+            get {
+                return ((int[])(this["SFColumnsDefSize"]));
             }
         }
     }
