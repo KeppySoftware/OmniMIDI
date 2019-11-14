@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Microsoft.Win32;
 
 namespace OmniMIDIConfigurator
 {
@@ -255,6 +256,11 @@ namespace OmniMIDIConfigurator
             {
                 ReloadListAfterError(ex);
             }
+        }
+
+        private void LoadToApp_Click(object sender, EventArgs e)
+        {
+            Functions.LoadSoundFontList(SelectedListBox.SelectedIndex);
         }
 
         private void MvU_Click(object sender, EventArgs e)

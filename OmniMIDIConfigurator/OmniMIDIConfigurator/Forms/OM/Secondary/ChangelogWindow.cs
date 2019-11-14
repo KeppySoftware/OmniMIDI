@@ -8,8 +8,6 @@ namespace OmniMIDIConfigurator
 {
     public partial class ChangelogWindow : Form
     {
-        Boolean SwitchingChangelog = false;
-
         public ChangelogWindow(String version, Boolean IsItFromTheUpdateWindow)
         {
             InitializeComponent();
@@ -71,15 +69,13 @@ namespace OmniMIDIConfigurator
             }
             catch (WebException ex)
             {
-                Program.ShowError(4, "Error", "Failed to parse the changelog!\n\nThe HTML node for the changelog is invalid.", ex);
-                Close();
+                Program.ShowError(4, "Error", "Failed to parse the changelog, the HTML node for the changelog is invalid!\n\nYou might not be connected to the Internet, or GitHub might have rate-limited your IP address temporarily.", ex);
                 return null;
             }
         }
 
         private void GetChangelog(String version)
         {
-            SwitchingChangelog = true;
             ChangelogBrowser.AllowNavigation = true;
 
             try
@@ -92,20 +88,20 @@ namespace OmniMIDIConfigurator
                 VersionLabel.Text = String.Format("Changelog for version {0}", version);
                 HtmlNode rateNode = ReturnSelectedNode(version);
 
-                ChangelogBrowser.DocumentText = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml + "</font></body></html>";
+                if (rateNode != null)
+                    ChangelogBrowser.DocumentText = "<html><font face=\"Tahoma\">" + rateNode.InnerHtml + "</font></body></html>";
+                else
+                    ChangelogBrowser.DocumentText = "<html><font face=\"Tahoma\">No Internet connection available, or you're being rate limited by GitHub.</font></body></html>";
             }
             catch
             {
-                SwitchingChangelog = false;
                 ChangelogBrowser.AllowNavigation = false;
                 Program.ShowError(4, "Error", "An error has occurred while parsing the changelog from GitHub.", null);
-                Close();
             }
         }
 
         private void ChangelogBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            SwitchingChangelog = false;
             ChangelogBrowser.AllowNavigation = false;
         }
 

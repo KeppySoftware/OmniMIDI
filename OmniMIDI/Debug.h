@@ -591,43 +591,43 @@ void PrintEventToDebugLog(DWORD dwParam) {
 		case 0xF0:{
 			switch (dwParam & 0xFF) {
 			case 0xF0:
-				strcat(Msg, "Start of SysEx Msg");
+				strcat(Msg, "Start of SysEx Msg\n");
 				break;
 			case 0xF1:
-				strcat(Msg, "MIDI Time Code Quarter Frame (SysCm)");
+				strcat(Msg, "MIDI Time Code Quarter Frame (SysCm)\n");
 				break;
 			case 0xF2:
-				strcat(Msg, "Song Position Pointer (SysCm)");
+				strcat(Msg, "Song Position Pointer (SysCm)\n");
 				break;
 			case 0xF3:
-				strcat(Msg, "Song Select (SysCm)");
+				strcat(Msg, "Song Select (SysCm)\n");
 				break;
 			case 0xF6:
-				strcat(Msg, "Tune Request (SysCm)");
+				strcat(Msg, "Tune Request (SysCm)\n");
 				break;
 			case 0xF7:
-				strcat(Msg, "End of SysEx Msg");
+				strcat(Msg, "End of SysEx Msg\n");
 				break;
 			case 0xF8:
-				strcat(Msg, "Timing Clock (SysCm)");
+				strcat(Msg, "Timing Clock (SysCm)\n");
 				break;
 			case 0xFA:
-				strcat(Msg, "Start (SysRt)");
+				strcat(Msg, "Start (SysRt)\n");
 				break;
 			case 0xFB:
-				strcat(Msg, "Continue (SysRt)");
+				strcat(Msg, "Continue (SysRt)\n");
 				break;
 			case 0xFC:
-				strcat(Msg, "Stop (SysRt)");
+				strcat(Msg, "Stop (SysRt)\n");
 				break;
 			case 0xFE:
-				strcat(Msg, "Active Sensing (SysRt)");
+				strcat(Msg, "Active Sensing (SysRt)\n");
 				break;
 			case 0xFF:
-				strcat(Msg, "System Reset (SysRt)");
+				strcat(Msg, "System Reset (SysRt)\n");
 				break;
 			default:
-				sprintf(Msg + strlen(Msg), "UNKNOWN (%02X)", dwParam & 0xFF);
+				sprintf(Msg + strlen(Msg), "UNKNOWN (%02X)\n", dwParam & 0xFF);
 				break;
 			}
 			break;

@@ -88,6 +88,7 @@
             this.VerLabel.Size = new System.Drawing.Size(101, 24);
             this.VerLabel.TabIndex = 1;
             this.VerLabel.Text = "Template";
+            this.VerLabel.Click += new System.EventHandler(this.VerLabel_Click);
             // 
             // OKBtn
             // 

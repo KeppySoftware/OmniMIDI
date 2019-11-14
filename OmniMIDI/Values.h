@@ -47,6 +47,7 @@ DWORD EvBufferMultRatio = 1;
 DWORD GetEvBuffSizeFromRAM = 0;
 
 // Device stuff
+const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 ULONGLONG TickStart = 0;			// For TGT64
 HSTREAM OMStream = NULL;
 HANDLE OMReady = NULL;

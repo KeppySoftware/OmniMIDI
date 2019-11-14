@@ -43,6 +43,8 @@
             this.ApplySettings = new System.Windows.Forms.Button();
             this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.OMMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.OpenDW = new System.Windows.Forms.MenuItem();
@@ -83,9 +85,11 @@
             this.menuItem19 = new System.Windows.Forms.MenuItem();
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
+            this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
+            this.MWSStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MWTab
@@ -229,12 +233,31 @@
             // 
             // MWSStrip
             // 
+            this.MWSStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.VersionLabel});
             this.MWSStrip.Location = new System.Drawing.Point(0, 459);
             this.MWSStrip.Name = "MWSStrip";
             this.MWSStrip.Size = new System.Drawing.Size(704, 22);
             this.MWSStrip.SizingGrip = false;
             this.MWSStrip.TabIndex = 1;
             this.MWSStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(592, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            this.toolStripStatusLabel1.Text = " ";
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.Image = global::OmniMIDIConfigurator.Properties.Resources.ClearIcon;
+            this.VersionLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(97, 17);
+            this.VersionLabel.Text = "Version 0.0.0.0";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // OMMenu
             // 
@@ -504,6 +527,10 @@
             this.DLDriverSrc.Text = "Download the driver\'s source code";
             this.DLDriverSrc.Click += new System.EventHandler(this.DLDriverSrc_Click);
             // 
+            // CheckUpdates
+            // 
+            this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -523,6 +550,8 @@
             this.ListsEdt.ResumeLayout(false);
             this.Set.ResumeLayout(false);
             this.Set.PerformLayout();
+            this.MWSStrip.ResumeLayout(false);
+            this.MWSStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -583,6 +612,9 @@
         private System.Windows.Forms.MenuItem OpenRTSSOSDM;
         private System.Windows.Forms.MenuItem menuItem21;
         private System.Windows.Forms.MenuItem CloseConfigurator;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel VersionLabel;
+        private System.ComponentModel.BackgroundWorker CheckUpdates;
     }
 }
 

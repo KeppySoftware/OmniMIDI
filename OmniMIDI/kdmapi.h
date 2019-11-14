@@ -19,6 +19,12 @@ typedef VOID(CALLBACK * WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
 DWORD_PTR WMMCI;
 WMMC CustomCallback = 0;
 
+// In case the CustomCallback isn't ready
+void DoCallback(DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
+	if (CustomCallback)	CustomCallback((HMIDIOUT)OMHMIDI, msg, WMMCI, param1, param2);
+	else DriverCallback(OMCallback, OMFlags, OMHDRVR, msg, OMInstance, param1, param2);
+}
+
 // KDMAPI calls
 BOOL StreamHealthCheck(BOOL & Initialized) {
 	// If BASS is forbidden from initializing itself, then abort immediately

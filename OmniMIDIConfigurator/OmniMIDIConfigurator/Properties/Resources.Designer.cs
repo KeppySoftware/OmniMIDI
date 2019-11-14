@@ -103,6 +103,26 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap dlerror {
+            get {
+                object obj = ResourceManager.GetObject("dlerror", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap dlready {
+            get {
+                object obj = ResourceManager.GetObject("dlready", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap EnableIcon {
             get {
                 object obj = ResourceManager.GetObject("EnableIcon", resourceCulture);
@@ -186,6 +206,16 @@ namespace OmniMIDIConfigurator.Properties {
         internal static System.Drawing.Bitmap Octocat {
             get {
                 object obj = ResourceManager.GetObject("Octocat", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ok {
+            get {
+                object obj = ResourceManager.GetObject("ok", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

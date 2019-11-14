@@ -136,6 +136,7 @@
             this.LoadToApp.TabIndex = 25;
             this.LoadToApp.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.LoadToApp.UseVisualStyleBackColor = false;
+            this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
             this.LoadToApp.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonLoad);
             // 
             // IEL

@@ -82,10 +82,28 @@ namespace OmniMIDIConfigurator
             return false;
         }
 
+        private void SetHandCursor(object sender, EventArgs e)
+        {
+            Cursor = Program.SystemHandCursor;
+        }
+
+        private void SetDefaultCursor(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+
         public MainWindow()
         {
             // Initialize form
             InitializeComponent();
+
+            // Fix
+            MWSStrip.Padding = new Padding(
+                MWSStrip.Padding.Left,
+                MWSStrip.Padding.Top,
+                MWSStrip.Padding.Left,
+                MWSStrip.Padding.Bottom
+                );
 
             // Check start location
             if (Properties.Settings.Default.LastWindowPos == new Point(-9999, -9999))
@@ -102,6 +120,12 @@ namespace OmniMIDIConfigurator
 
             // Set menu
             Menu = OMMenu;
+
+            // Set updater
+            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
+            VersionLabel.Text = String.Format("Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
+ 
+            Shown += CheckUpdatesStartUp;
 
             // Check if MIDI mapper is available
             OMAPCpl.Visible = Functions.CheckMIDIMapper();
@@ -340,6 +364,65 @@ namespace OmniMIDIConfigurator
         private void DLDriverSrc_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/KeppySoftware/OmniMIDI");
+        }
+
+        private void CheckUpdatesStartUp(object sender, EventArgs e)
+        {
+            try { CheckUpdates.RunWorkerAsync(); } catch { }
+        }
+
+        private void CheckUpdates_DoWork(object sender, DoWorkEventArgs e)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                SetDefaultCursor(sender, null);
+
+                VersionLabel.Click -= CheckUpdatesStartUp;
+                VersionLabel.Image = Properties.Resources.ReloadIcon;
+
+                DriverInfo.Enabled = false;
+                CFUBtn.Enabled = false;
+                VersionLabel.Enabled = false;
+            });
+
+            String IUA = UpdateSystem.CheckForUpdatesMini().ToLowerInvariant();
+
+            switch (IUA)
+            {
+                case "yes":
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        VersionLabel.Click += CFUBtn_Click;
+                        VersionLabel.Image = Properties.Resources.dlready;
+
+                        DriverInfo.Enabled = true;
+                        CFUBtn.Enabled = true;
+                        VersionLabel.Enabled = true;
+                    });
+                    break;
+                case "no":
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        VersionLabel.Click += CheckUpdatesStartUp;
+                        VersionLabel.Image = Properties.Resources.ok;
+
+                        DriverInfo.Enabled = true;
+                        CFUBtn.Enabled = true;
+                        VersionLabel.Enabled = true;
+                    });
+                    break;
+                default:
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        VersionLabel.Click += CheckUpdatesStartUp;
+                        VersionLabel.Image = Properties.Resources.dlerror;
+
+                        DriverInfo.Enabled = true;
+                        CFUBtn.Enabled = true;
+                        VersionLabel.Enabled = true;
+                    });
+                    break;
+            }
         }
     }
 }

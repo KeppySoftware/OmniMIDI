@@ -529,5 +529,11 @@ namespace OmniMIDIConfigurator
                 Program.ShowError(4,"LoudMax Installation", "Crap, an error!\nAre you sure you closed all the apps using the driver? They might have locked LoudMax.", ex);
             }
         }
+
+        public static void LoadSoundFontList(int list)
+        {
+            Program.Watchdog.SetValue("currentsflist", list, RegistryValueKind.DWord);
+            Program.Watchdog.SetValue(String.Format("rel{0}", list), "1", RegistryValueKind.DWord);
+        }
     }
 }

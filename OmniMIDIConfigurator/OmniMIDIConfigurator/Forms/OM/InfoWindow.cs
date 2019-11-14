@@ -45,6 +45,7 @@ namespace OmniMIDIConfigurator
                 "Canary release ", 
                 new int[] { Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart }
                 );
+            VerLabel.Cursor = Program.SystemHandCursor;
 
             BASSVer.Text = ReturnDriverAssemblyVersion(
                 null,
@@ -72,7 +73,7 @@ namespace OmniMIDIConfigurator
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
-            if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (Pre-release build)";
+            if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (PR Build)";
 
             OMBigLogo.Image = Properties.Resources.OMLauncher;
 
@@ -138,6 +139,11 @@ namespace OmniMIDIConfigurator
         private void InfoWindow_Load(object sender, EventArgs e)
         {
             // Nothing lul
+        }
+
+        private void VerLabel_Click(object sender, EventArgs e)
+        {
+            new ChangelogWindow(Driver.FileVersion.ToString(), false).ShowDialog();
         }
 
         private void BecomePatron_Click(object sender, EventArgs e)

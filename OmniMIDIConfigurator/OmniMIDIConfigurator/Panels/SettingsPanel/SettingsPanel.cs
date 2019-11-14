@@ -15,6 +15,11 @@ namespace OmniMIDIConfigurator
 {
     public partial class SettingsPanel : UserControl
     {
+        const BufferedGraphics NO_MANAGED_BACK_BUFFER = null;
+
+        BufferedGraphicsContext GraphicManager;
+        BufferedGraphics ManagedBackBuffer;
+
         public static SettingsPanel Delegate;
 
         public SettingsPanel()
@@ -35,7 +40,31 @@ namespace OmniMIDIConfigurator
                 SpatialSound.Text += " (Not available on your version of Windows)";
             }
 
+            this.MouseWheel += new MouseEventHandler(SettingsPanel_MouseWheel);
+
             LoadSettings();
+        }
+
+        private const int WM_VSCROLL = 0x0115;
+        private const int WM_HSCROLL = 0x0114;
+
+        private void SettingsPanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            // Double buffering is useless, refresh it by yourself lol
+            this.SuspendLayout();
+            this.Refresh();
+            this.ResumeLayout();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_VSCROLL | m.Msg == WM_HSCROLL)
+            {
+                // Same thing here
+                this.Refresh();
+            }
+ 
+            base.WndProc(ref m);
         }
 
         private void CheckSincEnabled()

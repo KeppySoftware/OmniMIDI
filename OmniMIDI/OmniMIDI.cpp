@@ -93,12 +93,6 @@ HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst 
 
 #define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
 
-// F**k Sleep() tbh
-void NTSleep(__int64 usec) {
-	__int64 neg = (usec * -1);
-	NtDelayExecution(FALSE, &neg);
-}
-
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 DWORD DummyPlayBufData() { return 0; }
 VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
@@ -114,6 +108,12 @@ DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
+
+// F**k Sleep() tbh
+void NTSleep(__int64 usec) {
+	__int64 neg = (usec * -1);
+	NtDelayExecution(FALSE, &neg);
+}
 
 // Predefined sleep values, useful for redundancy
 #define _FWAIT NTSleep(1)								// Fast wait
@@ -132,10 +132,6 @@ BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = Dummy
 #include "DriverInit.h"
 #include "KDMAPI.h"
 #include "CookedPlayer.h"
-
-// OmniMIDI GUID
-// {62F3192B-A961-456D-ABCA-A5C95A14B9AA}
-const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 {
@@ -259,13 +255,13 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		if (!LoadedOnce) {
 			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Loading settings from the registry...");
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)& DisableChime, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)& SynthType, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)& ManagedSettings.DebugMode, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)& MID, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)& PID, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)& SynthNameW, &SNSize);
-			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)& ManagedSettings.DisableCookedPlayer, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&MID, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)&SynthNameW, &SNSize);
+			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 
 			// If the synth type ID is bigger than the size of the synth types array,
 			// set it automatically to MOD_MIDIPORT
@@ -288,7 +284,9 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Converting SynthNameW to SynthNameA...");
 			wcstombs(SynthName, SynthNameW, MAXPNAMELEN);
 
-			StreamCapable = (!ManagedSettings.DisableCookedPlayer && !CPBlacklisted);
+			StreamCapable = (ManagedSettings.DisableCookedPlayer || CPBlacklisted) ? 0 : MIDICAPS_STREAM;
+			if (!StreamCapable)
+				PrintMessageToDebugLog("MODM_GETDEVCAPS", "Either the app is blacklisted, or the user requested to disable CookedPlayer globally.");
 
 			LoadedOnce = TRUE;
 		}
@@ -301,7 +299,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		{
 			MIDICapsA = (MIDIOUTCAPSA*)capsPtr;
 			strncpy(MIDICapsA->szPname, SynthName, MAXPNAMELEN);
-			MIDICapsA->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
+			MIDICapsA->dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICapsA->wChannelMask = 0xFFFF;
 			MIDICapsA->wMid = MID;
 			MIDICapsA->wPid = PID;
@@ -315,7 +313,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		{
 			MIDICapsW = (MIDIOUTCAPSW*)capsPtr;
 			wcsncpy(MIDICapsW->szPname, SynthNameW, MAXPNAMELEN);
-			MIDICapsW->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
+			MIDICapsW->dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICapsW->wChannelMask = 0xFFFF;
 			MIDICapsW->wMid = MID;
 			MIDICapsW->wPid = PID;
@@ -332,7 +330,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps2A->ManufacturerGuid = OMCLSID;
 			MIDICaps2A->NameGuid = OMCLSID;
 			MIDICaps2A->ProductGuid = OMCLSID;
-			MIDICaps2A->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
+			MIDICaps2A->dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICaps2A->wChannelMask = 0xFFFF;
 			MIDICaps2A->wMid = MID;
 			MIDICaps2A->wPid = PID;
@@ -349,7 +347,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps2W->ManufacturerGuid = OMCLSID;
 			MIDICaps2W->NameGuid = OMCLSID;
 			MIDICaps2W->ProductGuid = OMCLSID;
-			MIDICaps2W->dwSupport = (StreamCapable ? MIDICAPS_STREAM : 0) | MIDICAPS_VOLUME;
+			MIDICaps2W->dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICaps2W->wChannelMask = 0xFFFF;
 			MIDICaps2W->wMid = MID;
 			MIDICaps2W->wPid = PID;
@@ -381,7 +379,7 @@ MMRESULT DequeueMIDIHDRs(DWORD_PTR dwUser)
 		hdr->dwFlags |= MHDR_DONE;
 		UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
 
-		CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, (DWORD_PTR)hdr, 0);
+		DoCallback(MOM_DONE, (DWORD_PTR)hdr, 0);
 	}
 
 	return MMSYSERR_NOERROR;
@@ -408,7 +406,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
 
 		// Tell the app that the buffer has been played
-		if (CustomCallback) CustomCallback((HMIDIOUT)OMHMIDI, MOM_DONE, WMMCI, dwParam1, 0);
+		DoCallback(MOM_DONE, dwParam1, 0);
 		// if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
 		return RetVal;
 	}
@@ -651,9 +649,11 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 
-			if (((DWORD)dwParam2 != CALLBACK_NULL) && ((DWORD)dwParam2 != CALLBACK_EVENT)) {
+			if (((DWORD)dwParam2 != CALLBACK_NULL) &&
+				((DWORD)dwParam2 != CALLBACK_EVENT)) {
 				CustomCallback = (WMMC)OMCallback;
 				WMMCI = OMInstance;
+				PrintMessageToDebugLog("MODM_OPEN", "Callback function ready.");
 			}
 
 			if ((DWORD)dwParam2 & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
@@ -688,17 +688,12 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 					return DebugResult("MODM_OPEN", MMSYSERR_NOTSUPPORTED, "MIDI_IO_COOKED is only supported with CALLBACK_FUNCTION! Preparation aborted.");
 				}
 			}
-			else if (ManagedSettings.DisableCookedPlayer) {
-				DoStopClient();
-				PreventInit = FALSE;
-				return DebugResult("MODM_OPEN", MMSYSERR_NOTSUPPORTED, "CookedPlayer has been disabled in the configurator.");
-			}
+			else if (ManagedSettings.DisableCookedPlayer)
+				PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
 
 			// Tell the app that the driver is ready
-			if (CustomCallback) {
-				PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app...");
-				CustomCallback((HMIDIOUT)OMHMIDI, MOM_OPEN, WMMCI, 0, 0);
-			}
+			PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app. if needed...");
+			DoCallback(MOM_OPEN, 0, 0);
 
 			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
 			PreventInit = FALSE;
@@ -727,10 +722,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 				DisableBuiltInHandler("MODM_CLOSE");
 			}
 
-			if (CustomCallback) {
-				PrintMessageToDebugLog("MODM_CLOSE", "Sending callback data to app...");
-				CustomCallback((HMIDIOUT)OMHMIDI, MOM_CLOSE, WMMCI, 0, 0);
-			}
+			DoCallback(MOM_CLOSE, 0, 0);
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
 		}
