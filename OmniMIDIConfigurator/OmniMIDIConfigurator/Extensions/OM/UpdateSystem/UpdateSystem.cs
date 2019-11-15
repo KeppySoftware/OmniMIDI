@@ -19,9 +19,9 @@ namespace OmniMIDIConfigurator
         public static string ProductName = "OmniMIDI";
         public static Octokit.GitHubClient UpdateClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(ProductName));
 
-        public static string UpdateFile = "https://github.com/KeppySoftware/OmniMIDI/releases/download/{0}/OmniMIDIUpdate.exe";
-        public static string SetupFile = "https://github.com/KeppySoftware/OmniMIDI/releases/download/{0}/OmniMIDISetup.exe";
-        public static string UpdatePage = "https://github.com/KaleidonKep99/OmniMIDI/releases/tag/{0}";
+        public static string UpdateFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDIUpdate.exe";
+        public static string SetupFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDISetup.exe";
+        public static string UpdatePage = Properties.Settings.Default.ProjectLink + "/releases/tag/{0}";
         public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
 
         public const int NORMAL = 0x0;
@@ -38,7 +38,7 @@ namespace OmniMIDIConfigurator
         {
             if (!ReturnVal.Equals("0.0.0.0"))
             {
-                if (!Program.TLS12Available())
+                if (Program.TLS12Available())
                 {
                     Forms.DLEngine frm = new Forms.DLEngine(ReturnVal, String.Format("Downloading update {0}...", ReturnVal, @"{0}"), null, null, InstallMode);
                     frm.StartPosition = FormStartPosition.CenterScreen;

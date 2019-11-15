@@ -158,7 +158,7 @@ namespace OmniMIDIConfigurator
 
         private void GitHubPage_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI");
+            Process.Start(Properties.Settings.Default.ProjectLink);
         }
 
         private void OMLicense_Click(object sender, EventArgs e)

@@ -180,5 +180,14 @@ namespace OmniMIDIConfigurator.Properties {
                 return ((int[])(this["SFColumnsDefSize"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/KeppySoftware/OmniMIDI")]
+        public string ProjectLink {
+            get {
+                return ((string)(this["ProjectLink"]));
+            }
+        }
     }
 }

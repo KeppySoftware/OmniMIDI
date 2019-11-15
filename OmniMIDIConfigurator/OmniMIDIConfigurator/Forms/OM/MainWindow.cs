@@ -304,7 +304,12 @@ namespace OmniMIDIConfigurator
 
         private void KACGuide_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI#how-can-i-get-rid-of-the-annoying-smartscreen-block-screen-and-stop-chrome-from-warning-me-not-to-download-your-driver");
+            Process.Start(
+                String.Format(
+                    "{0}#how-can-i-get-rid-of-the-annoying-smartscreen-block-screen-and-stop-chrome-from-warning-me-not-to-download-your-driver",
+                    Properties.Settings.Default.ProjectLink
+                    )
+                );
         }
 
         private void MIDIInOutTest_Click(object sender, EventArgs e)
@@ -371,7 +376,7 @@ namespace OmniMIDIConfigurator
 
         private void BugReport_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI/issues/");
+            Process.Start(String.Format("{0}/issues/", Properties.Settings.Default.ProjectLink));
         }
 
         private void CFUBtn_Click(object sender, EventArgs e)
@@ -412,12 +417,12 @@ namespace OmniMIDIConfigurator
 
         private void KDMAPIDoc_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI/blob/master/KDMAPI.md");
+            Process.Start(String.Format("{0}/blob/master/KDMAPI.md", Properties.Settings.Default.ProjectLink));
         }
 
         private void DLDriverSrc_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI");
+            Process.Start(Properties.Settings.Default.ProjectLink);
         }
 
         private void CheckUpdatesStartUp(object sender, EventArgs e)

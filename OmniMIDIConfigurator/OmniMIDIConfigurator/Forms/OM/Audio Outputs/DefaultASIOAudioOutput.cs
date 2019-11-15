@@ -170,7 +170,7 @@ namespace OmniMIDIConfigurator
 
         private void ASIODevicesSupport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/KeppySoftware/OmniMIDI#asio-support-details");
+            Process.Start(String.Format("{0}#asio-support-details", Properties.Settings.Default.ProjectLink));
         }
 
         private String[] DownloadDatabase(String Link)

@@ -64,7 +64,8 @@ namespace OmniMIDIConfigurator
                     request.CookieContainer = new System.Net.CookieContainer();
                     return true;
                 };
-                HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("https://github.com/KeppySoftware/OmniMIDI/releases/tag/{0}", version));
+
+                HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("{0}/releases/tag/{1}", Properties.Settings.Default.ProjectLink, version));
                 return doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body']");
             }
             catch (WebException ex)
