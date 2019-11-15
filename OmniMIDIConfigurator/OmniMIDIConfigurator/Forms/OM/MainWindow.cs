@@ -48,7 +48,7 @@ namespace OmniMIDIConfigurator
 
                 if (OMWC.SFLE != null)
                 {
-                    OMWC.SFLE.CloseCSFWatcher();
+                    OMWC.SFLE.CloseCSFWatcherExt();
                     SFLEPanel.Controls.Remove(OMWC.SFLE);
                     OMWC.SFLE.Dispose();
                 }

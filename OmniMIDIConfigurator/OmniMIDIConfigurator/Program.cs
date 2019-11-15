@@ -16,13 +16,35 @@ namespace OmniMIDIConfigurator
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern UInt32 RegisterWindowMessage(string lpString);
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern Boolean PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern Boolean SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
         [DllImport("user32.dll")]
         public static extern Boolean ShowWindow(IntPtr hWnd, int nCmdShow);
+
         [DllImport("user32.dll")]
         public static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
+        [DllImport("user32.dll")]
+        public static extern int GetScrollPos(System.IntPtr hWnd, int nBar);
+
+        [DllImport("user32.dll")]
+        public static extern int SetScrollPos(System.IntPtr hWnd, int nBar, int nPos, bool bRedraw);
+
+        [DllImport("user32.dll")]
+        public static extern bool LockWindowUpdate(IntPtr Handle);
+
+        public const int LVM_FIRST = 0x1000;
+        public const int LVM_SCROLL = LVM_FIRST + 20;
+        public const int SBS_HORZ = 0;
+        public const int SBS_VERT = 1;
+        public const int WM_HSCROLL = 0x114;
+        public const int WM_VSCROLL = 0x115;
+        public const int WM_SETREDRAW = 0x00B;
         public const uint HWND_BROADCAST = 0xFFFF;
         public const short SW_RESTORE = 9;
     }

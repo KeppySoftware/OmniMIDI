@@ -67,15 +67,15 @@
             this.LisCM = new System.Windows.Forms.ContextMenu();
             this.OSF = new System.Windows.Forms.MenuItem();
             this.OSFd = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.CSFs = new System.Windows.Forms.MenuItem();
+            this.PSFs = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.ReLSFl = new System.Windows.Forms.MenuItem();
             this.MSu = new System.Windows.Forms.MenuItem();
             this.MSd = new System.Windows.Forms.MenuItem();
             this.ESF = new System.Windows.Forms.MenuItem();
             this.DSF = new System.Windows.Forms.MenuItem();
-            this.CSFs = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.PSFs = new System.Windows.Forms.MenuItem();
             this.Lis = new OmniMIDIConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SrcBank = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -125,7 +125,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(649, 356);
+            this.EL.Location = new System.Drawing.Point(649, 332);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 14;
@@ -136,14 +136,14 @@
             // 
             // LoadToApp
             // 
-            this.LoadToApp.AccessibleDescription = "Load SoundFonts list to app";
-            this.LoadToApp.AccessibleName = "Load SoundFonts list to all OmniMIDI instances currently running";
+            this.LoadToApp.AccessibleDescription = "Load SoundFonts list to all OmniMIDI instances currently running";
+            this.LoadToApp.AccessibleName = "Load SoundFonts list to app";
             this.LoadToApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadToApp.BackColor = System.Drawing.Color.Transparent;
             this.LoadToApp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LoadToApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoadToApp.ForeColor = System.Drawing.Color.Transparent;
-            this.LoadToApp.Location = new System.Drawing.Point(649, 154);
+            this.LoadToApp.Location = new System.Drawing.Point(649, 94);
             this.LoadToApp.Name = "LoadToApp";
             this.LoadToApp.Size = new System.Drawing.Size(24, 24);
             this.LoadToApp.TabIndex = 10;
@@ -161,7 +161,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(649, 327);
+            this.IEL.Location = new System.Drawing.Point(649, 303);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 13;
@@ -288,7 +288,7 @@
             this.MvD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvD.ForeColor = System.Drawing.Color.Transparent;
-            this.MvD.Location = new System.Drawing.Point(649, 117);
+            this.MvD.Location = new System.Drawing.Point(649, 154);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(24, 24);
             this.MvD.TabIndex = 9;
@@ -306,7 +306,7 @@
             this.MvU.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvU.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvU.ForeColor = System.Drawing.Color.Transparent;
-            this.MvU.Location = new System.Drawing.Point(649, 94);
+            this.MvU.Location = new System.Drawing.Point(649, 131);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(24, 24);
             this.MvU.TabIndex = 8;
@@ -445,6 +445,23 @@
             this.OSFd.Text = "Open SoundFont\'s directory";
             this.OSFd.Click += new System.EventHandler(this.OSFd_Click);
             // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 2;
+            this.menuItem2.Text = "-";
+            // 
+            // CSFs
+            // 
+            this.CSFs.Index = 3;
+            this.CSFs.Text = "Copy SoundFont(s)";
+            this.CSFs.Click += new System.EventHandler(this.CSFs_Click);
+            // 
+            // PSFs
+            // 
+            this.PSFs.Index = 4;
+            this.PSFs.Text = "Paste SoundFont(s)";
+            this.PSFs.Click += new System.EventHandler(this.PSFs_Click);
+            // 
             // menuItem3
             // 
             this.menuItem3.Index = 5;
@@ -479,23 +496,6 @@
             this.DSF.Index = 10;
             this.DSF.Text = "Disable SoundFont";
             this.DSF.Click += new System.EventHandler(this.DisableSF_Click);
-            // 
-            // CSFs
-            // 
-            this.CSFs.Index = 3;
-            this.CSFs.Text = "Copy SoundFont(s)";
-            this.CSFs.Click += new System.EventHandler(this.CSFs_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 2;
-            this.menuItem2.Text = "-";
-            // 
-            // PSFs
-            // 
-            this.PSFs.Index = 4;
-            this.PSFs.Text = "Paste SoundFont(s)";
-            this.PSFs.Click += new System.EventHandler(this.PSFs_Click);
             // 
             // Lis
             // 

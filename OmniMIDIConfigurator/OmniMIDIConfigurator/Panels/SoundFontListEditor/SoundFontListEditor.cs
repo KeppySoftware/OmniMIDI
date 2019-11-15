@@ -16,9 +16,7 @@ namespace OmniMIDIConfigurator
     public partial class SoundFontListEditor : UserControl
     {
         public static SoundFontListEditor Delegate;
-        static bool Sizing = false;
-        static FileSystemWatcher CSFWatcher;
-        static Int32 SelectedIndexCSF;
+        static Boolean SelectedIndexCSF = true;
 
         public SoundFontListEditor(String[] SFs)
         {
@@ -40,11 +38,8 @@ namespace OmniMIDIConfigurator
             // Attach context menu
             Lis.ContextMenu = LisCM;
 
-            // Spawn listener for shared list
-            CSFWatcher = new FileSystemWatcher();
-            CSFWatcher.Path = Path.GetDirectoryName(Program.ListsPath[0]);
-            CSFWatcher.Filter = Path.GetFileName(Program.ListsPath[0]);
-            CSFWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            // Prepare CSFWatcher
+            SoundFontListExtension.OpenCSFWatcher(false, null);
 
             SFlg.BackgroundImage = Properties.Resources.Question;
             CLi.BackgroundImage = Properties.Resources.ClearIcon;
@@ -59,7 +54,8 @@ namespace OmniMIDIConfigurator
             EL.BackgroundImage = Properties.Resources.ExportIcon;
 
             SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
-            if (SelectedListBox.SelectedIndex == 0) CSFWatcher.EnableRaisingEvents = true;
+            if (SelectedListBox.SelectedIndex == 0)
+                SoundFontListExtension.StartCSFWatcher();
 
             // Add the SoundFonts before activating the CSFWatcher
             if (SFs != null && SFs.Count() > 0)
@@ -70,14 +66,26 @@ namespace OmniMIDIConfigurator
                 {
                     foreach (ListViewItem iSF in iSFs)
                         Lis.Items.Add(iSF);
-
-                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
                 }
             }
 
             // Activate the CSFWatcher now by assigning the events, to avoid a race condition
-            CSFWatcher.Changed += new FileSystemEventHandler(OnChanged);
-            CSFWatcher.Created += new FileSystemEventHandler(OnChanged);
+            SoundFontListExtension.OpenCSFWatcher(true, new FileSystemEventHandler(CSFHandler));
+        }
+
+        public void CloseCSFWatcherExt()
+        {
+            SoundFontListExtension.CloseCSFWatcher();
+        }
+
+        private void CSFHandler(object source, FileSystemEventArgs e)
+        {
+            if (SelectedIndexCSF && !SoundFontListExtension.StopCheck)
+            {
+                this.Invoke((Action)delegate {
+                    SoundFontListExtension.ChangeList(0, null, false, true);
+                });
+            }
         }
 
         private void CopySoundFonts()
@@ -117,29 +125,14 @@ namespace OmniMIDIConfigurator
                     foreach (ListViewItem iSF in iSFs)
                         Lis.Items.Add(iSF);
 
-                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
                 }
             }
-        }
-
-        public void CloseCSFWatcher()
-        {
-            CSFWatcher.Dispose();
         }
 
         private void SoundFontListEditor_Load(object sender, EventArgs e)
         {
             // Nothing lul
-        }
-
-        private void OnChanged(object source, FileSystemEventArgs e)
-        {
-            if (SelectedIndexCSF == 0)
-            {
-                this.Invoke((Action)delegate {
-                    SoundFontListExtension.ChangeList(SelectedIndexCSF, null, false, true);
-                });    
-            }
         }
 
         private void ReloadListAfterError(Exception ex)
@@ -189,7 +182,7 @@ namespace OmniMIDIConfigurator
 
         private void ButtonLoad(object sender, PaintEventArgs e)
         {
-            ColorButton((Button)sender, Pens.PowderBlue, e);
+            ColorButton((Button)sender, new Pen(Color.FromArgb(102, 153, 255)), e);
         }
 
         private void ImportListButton(object sender, PaintEventArgs e)
@@ -223,7 +216,7 @@ namespace OmniMIDIConfigurator
                         }
                     }
 
-                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
                 }
             }
             catch (Exception ex)
@@ -252,7 +245,7 @@ namespace OmniMIDIConfigurator
                 foreach (ListViewItem iSF in iSFs)
                     Lis.Items.Add(iSF);
 
-                SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
             }
         }
 
@@ -270,6 +263,10 @@ namespace OmniMIDIConfigurator
                 CopySoundFonts();
             else if (e.KeyData == (Keys.Control | Keys.V))
                 PasteSoundFonts();
+            else if (e.KeyData == (Keys.Control | Keys.Up))
+                MoveListViewItems(Lis, MoveDirection.Up);
+            else if (e.KeyData == (Keys.Control | Keys.Down))
+                MoveListViewItems(Lis, MoveDirection.Down);
         }
 
         private void Lis_MouseDown(object sender, MouseEventArgs e)
@@ -288,7 +285,7 @@ namespace OmniMIDIConfigurator
         }
 
         private enum MoveDirection { Up = -1, Down = 1 };
-        private void MoveListViewItems(ListView sender, MoveDirection direction)
+        private void MoveListViewItems(ListViewEx sender, MoveDirection direction)
         {
             try
             {
@@ -301,15 +298,28 @@ namespace OmniMIDIConfigurator
 
                 if (valid)
                 {
-                    foreach (ListViewItem item in sender.SelectedItems)
+                    List<int> Is = new List<int>();
+                    ListViewItem[] iTBM = sender.SelectedItems.Cast<ListViewItem>().ToArray();
+
+                    IEnumerable<ListViewItem> iTBMEnum;
+                    iTBMEnum = (direction == MoveDirection.Down) ? iTBM.Reverse() : iTBM;
+
+                    WinAPI.SendMessage(sender.Handle, WinAPI.WM_SETREDRAW, (IntPtr)0, IntPtr.Zero);
+                    foreach (ListViewItem item in iTBMEnum)
                     {
-                        string str = item.Text;
                         int index = item.Index + dir;
 
                         sender.Items.RemoveAt(item.Index);
-                        sender.Items.Insert(index, item);
+                        Is.Add(sender.Items.Insert(index, item).Index);
                     }
-                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+
+                    foreach (int I in Is)
+                        sender.Items[I].Selected = true;
+
+                    WinAPI.SendMessage(sender.Handle, WinAPI.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+                    sender.Refresh();
+
+                    SoundFontListExtension.SaveList(ref sender, SelectedListBox.SelectedIndex, null);
                 }
             }
             catch (Exception ex)
@@ -364,7 +374,7 @@ namespace OmniMIDIConfigurator
 
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedIndexCSF = SelectedListBox.SelectedIndex;
+            SelectedIndexCSF = (SelectedListBox.SelectedIndex == 0);
             SoundFontListExtension.ChangeList(SelectedListBox.SelectedIndex, null, false, false);
             Properties.Settings.Default.LastListSelected = SelectedListBox.SelectedIndex;
             Properties.Settings.Default.Save();
@@ -383,7 +393,7 @@ namespace OmniMIDIConfigurator
                 try
                 {
                     Lis.Items.Clear();
-                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
                     Program.ShowError(0, "Cleaning finished", String.Format("The list has been cleaned successfully.", ExternalListExport.FileName), null);
 
                 }
@@ -406,9 +416,9 @@ namespace OmniMIDIConfigurator
                     {
                         foreach (ListViewItem iSF in iSFs)
                             Lis.Items.Add(iSF);
-
-                        SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
                     }
+
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
                 }
             }
             catch (Exception ex)
@@ -426,7 +436,7 @@ namespace OmniMIDIConfigurator
                     foreach (int index in Lis.SelectedIndices.Cast<int>().Select(x => x).Reverse())
                         Lis.Items.RemoveAt(index);
 
-                    SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
                 }
             }
             catch (Exception ex)
@@ -438,6 +448,11 @@ namespace OmniMIDIConfigurator
         private void LoadToApp_Click(object sender, EventArgs e)
         {
             Functions.LoadSoundFontList(SelectedListBox.SelectedIndex);
+        }
+
+        private void SaveList_Click(object sender, EventArgs e)
+        {
+            SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
         }
 
         private void MvU_Click(object sender, EventArgs e)
@@ -473,7 +488,7 @@ namespace OmniMIDIConfigurator
                 foreach (string ListW in ExternalListImport.FileNames)
                     SoundFontListExtension.ChangeList(-1, ListW, true, false);
 
-                SoundFontListExtension.SaveList(SelectedListBox.SelectedIndex, null);
+                SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
 
                 Program.ShowError(0, "Import finished", "The selected lists have been imported successfully to the currently selected list in the configurator.", null);
             }
@@ -488,8 +503,6 @@ namespace OmniMIDIConfigurator
             {
                 Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(ExternalListExport.FileName);
                 Properties.Settings.Default.Save();
-
-                SoundFontListExtension.SaveList(-1, ExternalListExport.FileName);
 
                 Program.ShowError(0, "Export finished", String.Format("The list has been exported successfully to \"{0}\".", ExternalListExport.FileName), null);
             }

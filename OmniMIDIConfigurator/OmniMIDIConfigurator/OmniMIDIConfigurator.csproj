@@ -211,11 +211,6 @@
       <DependentUpon>SoundFontListEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Panels\SoundFontListEditor\SoundFontListExtension.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Extensions\OM\SFZ.cs" />
     <Compile Include="Extensions\OM\UpdateSystem\UpdateSystem.cs" />
     <Compile Include="Forms\OM\Secondary\TextReader.cs">
@@ -323,6 +318,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -391,6 +391,7 @@
     <Content Include="Resources\Icons\Octocat.png" />
     <Content Include="Resources\Icons\ok.png" />
     <Content Include="Resources\Icons\PatreonLogo.png" />
+    <Content Include="Resources\Icons\SaveIcon.png" />
     <Content Include="Resources\Icons\successicon.png" />
     <Content Include="Resources\Icons\TextLogo.png" />
     <Content Include="Resources\Icons\what.png" />
