@@ -534,6 +534,8 @@ namespace KnobControl
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
 		{
+            if (e.Button == MouseButtons.Right) return;
+
 			if (Utility.isPointinRectangle(new Point(e.X,e.Y),rKnob))
 			{
                 if (isFocused)
@@ -581,8 +583,9 @@ namespace KnobControl
         /// <param name="e"></param>
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			
-			if (Utility.isPointinRectangle(new Point(e.X,e.Y),rKnob))
+            if (e.Button == MouseButtons.Right) return;
+
+            if (Utility.isPointinRectangle(new Point(e.X,e.Y),rKnob))
 			{
                 if (isFocused == true && isKnobRotating == true)
                 {                    

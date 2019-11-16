@@ -49,6 +49,7 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.BufferText = new System.Windows.Forms.Label();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SincConv = new System.Windows.Forms.ComboBox();
@@ -68,7 +69,10 @@
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.SynthBox = new System.Windows.Forms.GroupBox();
+            this.AutoLoad = new System.Windows.Forms.CheckBox();
+            this.PrioLab = new System.Windows.Forms.Label();
             this.IgnoreNotesLV = new System.Windows.Forms.NumericUpDown();
+            this.PrioBox = new System.Windows.Forms.ComboBox();
             this.IgnoreNotesHV = new System.Windows.Forms.NumericUpDown();
             this.IgnoreNotesHL = new System.Windows.Forms.Label();
             this.IgnoreNotesLL = new System.Windows.Forms.Label();
@@ -98,24 +102,20 @@
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
             this.DebugMode = new System.Windows.Forms.CheckBox();
-            this.AutoLoad = new System.Windows.Forms.CheckBox();
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
             this.LiveChangesTrigger = new System.Windows.Forms.CheckBox();
             this.DisableChime = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
-            this.VolTrackBarMenu = new System.Windows.Forms.ContextMenu();
-            this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
-            this.menuItem57 = new System.Windows.Forms.MenuItem();
-            this.VolumeBoost = new System.Windows.Forms.MenuItem();
-            this.PrioBox = new System.Windows.Forms.ComboBox();
-            this.PrioLab = new System.Windows.Forms.Label();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeA2WOutDir = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeSynthMask = new OmniMIDIConfigurator.LinkLabelEx();
-            this.VolTrackBar = new KnobControl.KnobControl();
+            this.VolTrackBarMenu = new System.Windows.Forms.ContextMenu();
+            this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
+            this.menuItem57 = new System.Windows.Forms.MenuItem();
+            this.VolumeBoost = new System.Windows.Forms.MenuItem();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -418,6 +418,33 @@
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 6;
             // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
+            this.VolTrackBar.TabIndex = 16;
+            this.VolTrackBar.Value = 10000;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
             // BufferText
             // 
             this.BufferText.AutoSize = true;
@@ -682,6 +709,27 @@
             this.SynthBox.TabStop = false;
             this.SynthBox.Text = "Synthesizer settings";
             // 
+            // AutoLoad
+            // 
+            this.AutoLoad.AutoSize = true;
+            this.AutoLoad.Location = new System.Drawing.Point(9, 147);
+            this.AutoLoad.Name = "AutoLoad";
+            this.AutoLoad.Size = new System.Drawing.Size(593, 17);
+            this.AutoLoad.TabIndex = 23;
+            this.AutoLoad.Text = "Reload SoundFont list automatically after an edit (Does not apply to \"Shared list" +
+    "\", it will always be reloaded automatically)";
+            this.AutoLoad.UseVisualStyleBackColor = true;
+            // 
+            // PrioLab
+            // 
+            this.PrioLab.AutoSize = true;
+            this.PrioLab.Location = new System.Drawing.Point(6, 173);
+            this.PrioLab.Name = "PrioLab";
+            this.PrioLab.Size = new System.Drawing.Size(454, 13);
+            this.PrioLab.TabIndex = 59;
+            this.PrioLab.Text = "Threads affinity (Reducing the affinity could help on weak systems, but might int" +
+    "roduce latency)";
+            // 
             // IgnoreNotesLV
             // 
             this.IgnoreNotesLV.Cursor = System.Windows.Forms.Cursors.Default;
@@ -699,6 +747,24 @@
             0,
             0,
             0});
+            // 
+            // PrioBox
+            // 
+            this.PrioBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.PrioBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PrioBox.FormattingEnabled = true;
+            this.PrioBox.Items.AddRange(new object[] {
+            "Default",
+            "Real-time",
+            "High",
+            "Higher than normal",
+            "Normal",
+            "Lower than normal",
+            "Low"});
+            this.PrioBox.Location = new System.Drawing.Point(534, 170);
+            this.PrioBox.Name = "PrioBox";
+            this.PrioBox.Size = new System.Drawing.Size(130, 21);
+            this.PrioBox.TabIndex = 24;
             // 
             // IgnoreNotesHV
             // 
@@ -1006,17 +1072,6 @@
             this.DebugMode.UseVisualStyleBackColor = true;
             this.DebugMode.CheckedChanged += new System.EventHandler(this.DebugMode_CheckedChanged);
             // 
-            // AutoLoad
-            // 
-            this.AutoLoad.AutoSize = true;
-            this.AutoLoad.Location = new System.Drawing.Point(9, 147);
-            this.AutoLoad.Name = "AutoLoad";
-            this.AutoLoad.Size = new System.Drawing.Size(593, 17);
-            this.AutoLoad.TabIndex = 23;
-            this.AutoLoad.Text = "Reload SoundFont list automatically after an edit (Does not apply to \"Shared list" +
-    "\", it will always be reloaded automatically)";
-            this.AutoLoad.UseVisualStyleBackColor = true;
-            // 
             // FastHotKeys
             // 
             this.FastHotKeys.AutoSize = true;
@@ -1077,57 +1132,6 @@
             this.LegacySetDia.TabIndex = 2;
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
-            // 
-            // VolTrackBarMenu
-            // 
-            this.VolTrackBarMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.FineTuneKnobIt,
-            this.menuItem57,
-            this.VolumeBoost});
-            // 
-            // FineTuneKnobIt
-            // 
-            this.FineTuneKnobIt.Index = 0;
-            this.FineTuneKnobIt.Text = "Fine tune the volume knob";
-            // 
-            // menuItem57
-            // 
-            this.menuItem57.Index = 1;
-            this.menuItem57.Text = "-";
-            // 
-            // VolumeBoost
-            // 
-            this.VolumeBoost.Index = 2;
-            this.VolumeBoost.Text = "Enable volume boost";
-            this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
-            // 
-            // PrioBox
-            // 
-            this.PrioBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PrioBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PrioBox.FormattingEnabled = true;
-            this.PrioBox.Items.AddRange(new object[] {
-            "Default",
-            "Real-time",
-            "High",
-            "Higher than normal",
-            "Normal",
-            "Lower than normal",
-            "Low"});
-            this.PrioBox.Location = new System.Drawing.Point(534, 170);
-            this.PrioBox.Name = "PrioBox";
-            this.PrioBox.Size = new System.Drawing.Size(130, 21);
-            this.PrioBox.TabIndex = 24;
-            // 
-            // PrioLab
-            // 
-            this.PrioLab.AutoSize = true;
-            this.PrioLab.Location = new System.Drawing.Point(6, 173);
-            this.PrioLab.Name = "PrioLab";
-            this.PrioLab.Size = new System.Drawing.Size(454, 13);
-            this.PrioLab.TabIndex = 59;
-            this.PrioLab.Text = "Threads affinity (Reducing the affinity could help on weak systems, but might int" +
-    "roduce latency)";
             // 
             // DebugModeFolder
             // 
@@ -1190,32 +1194,29 @@
             this.ChangeSynthMask.Text = "Change how applications identify the synthesizer (Mask mode)";
             this.ChangeSynthMask.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeSynthMask_LinkClicked);
             // 
-            // VolTrackBar
+            // VolTrackBarMenu
             // 
-            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.EndAngle = 405F;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
-            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
-            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
-            this.VolTrackBar.ScaleDivisions = 10;
-            this.VolTrackBar.ScaleSubDivisions = 10;
-            this.VolTrackBar.ShowLargeScale = false;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.StartAngle = 135F;
-            this.VolTrackBar.TabIndex = 16;
-            this.VolTrackBar.Value = 10000;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            this.VolTrackBarMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.FineTuneKnobIt,
+            this.menuItem57,
+            this.VolumeBoost});
+            // 
+            // FineTuneKnobIt
+            // 
+            this.FineTuneKnobIt.Index = 0;
+            this.FineTuneKnobIt.Text = "Fine tune the volume knob";
+            this.FineTuneKnobIt.Click += new System.EventHandler(this.FineTuneKnobIt_Click);
+            // 
+            // menuItem57
+            // 
+            this.menuItem57.Index = 1;
+            this.menuItem57.Text = "-";
+            // 
+            // VolumeBoost
+            // 
+            this.VolumeBoost.Index = 2;
+            this.VolumeBoost.Text = "Enable volume boost";
+            this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
             // SettingsPanel
             // 

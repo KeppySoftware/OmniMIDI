@@ -14,12 +14,7 @@ using System.IO;
 namespace OmniMIDIConfigurator
 {
     public partial class SettingsPanel : UserControl
-    {
-        const BufferedGraphics NO_MANAGED_BACK_BUFFER = null;
-
-        BufferedGraphicsContext GraphicManager;
-        BufferedGraphics ManagedBackBuffer;
-
+    {    
         public static SettingsPanel Delegate;
 
         public SettingsPanel()
@@ -449,6 +444,15 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        private void FineTuneKnobIt_Click(object sender, EventArgs e)
+        {
+            PreciseControlVol PCV = new PreciseControlVol(VolTrackBar.Value, VolTrackBar.Maximum);
+
+            if (PCV.ShowDialog() == DialogResult.OK)
+                VolTrackBar.Value = PCV.NewVolume;
+
+            PCV.Dispose();
+        }
         private void EnableRCOverride_CheckedChanged(object sender, EventArgs e)
         {
             ReverbL.Enabled = EnableRCOverride.Checked;

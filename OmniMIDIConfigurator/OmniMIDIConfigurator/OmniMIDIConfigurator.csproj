@@ -178,6 +178,12 @@
     <Compile Include="Forms\OM\Secondary\OutputWAVDir.designer.cs">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Secondary\PreciseControlVol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Secondary\PreciseControlVol.designer.cs">
+      <DependentUpon>PreciseControlVol.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OM\Secondary\RivaTunerSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -282,6 +288,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\OutputWAVDir.resx">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Secondary\PreciseControlVol.resx">
+      <DependentUpon>PreciseControlVol.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\RivaTunerSettings.resx">
       <DependentUpon>RivaTunerSettings.cs</DependentUpon>
