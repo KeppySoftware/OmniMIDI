@@ -260,8 +260,10 @@ Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
 [Run]
-Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Windows64
-Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: WindowsIA32
+Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/showchangelog"; Flags: runascurrentuser postinstall skipifnotsilent waituntilidle; Check: Windows64
+Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/showchangelog"; Flags: runascurrentuser postinstall skipifnotsilent waituntilidle; Check: WindowsIA32
+Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall unchecked waituntilidle; Description: "Run the configurator, to set up soundfonts"; Check: Windows64
+Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall unchecked waituntilidle; Description: "Run the configurator, to set up soundfonts"; Check: WindowsIA32
 
 [Messages]
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.

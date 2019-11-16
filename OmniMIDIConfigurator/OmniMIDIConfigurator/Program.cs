@@ -104,6 +104,7 @@ namespace OmniMIDIConfigurator
         [STAThread]
         static void Main(String[] Args)
         {
+            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
             List<String> SoundFontsToAdd = new List<String>();
 
             Application.EnableVisualStyles();
@@ -137,8 +138,6 @@ namespace OmniMIDIConfigurator
                 switch (Arg.ToLowerInvariant())
                 {
                     case "/rei":
-                        FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
-
                         var current = Process.GetCurrentProcess();
                         Process.GetProcessesByName(current.ProcessName)
                             .Where(t => t.Id != current.Id)
@@ -147,6 +146,16 @@ namespace OmniMIDIConfigurator
 
                         UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
                         return;
+                    case "/showchangelog":
+                        if (Properties.Settings.Default.ShowChangelogStartUp)
+                        {
+                            try
+                            {
+                                new ChangelogWindow(Driver.FileVersion.ToString(), false).ShowDialog();
+                            }
+                            catch { }
+                        }
+                        break;
                     default:
                         SoundFontsToAdd.Add(Arg);
                         break;

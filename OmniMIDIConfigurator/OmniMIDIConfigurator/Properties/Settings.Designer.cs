@@ -189,5 +189,17 @@ namespace OmniMIDIConfigurator.Properties {
                 return ((string)(this["ProjectLink"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowChangelogStartUp {
+            get {
+                return ((bool)(this["ShowChangelogStartUp"]));
+            }
+            set {
+                this["ShowChangelogStartUp"] = value;
+            }
+        }
     }
 }

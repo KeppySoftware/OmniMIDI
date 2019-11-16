@@ -205,6 +205,8 @@ namespace OmniMIDIConfigurator
                         break;
                 }
 
+                ShowChangelogUpdate.Checked = Properties.Settings.Default.ShowChangelogStartUp;
+
                 Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
                 Functions.LiveChanges.PreviousFrequency = (int)Program.SynthSettings.GetValue("AudioFrequency", 44100);
                 Functions.LiveChanges.PreviousBuffer = (int)Program.SynthSettings.GetValue("BufferLength", 50);
@@ -283,6 +285,8 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DelayNoteOffValue", Convert.ToInt32(NoteOffDelayValue.Value * 1000), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("CurrentEngine", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
+
+            Properties.Settings.Default.ShowChangelogStartUp = ShowChangelogUpdate.Checked;
 
             if (OV)
             {

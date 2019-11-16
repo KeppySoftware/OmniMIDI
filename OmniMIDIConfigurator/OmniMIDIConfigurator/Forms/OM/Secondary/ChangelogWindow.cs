@@ -11,6 +11,15 @@ namespace OmniMIDIConfigurator
         public ChangelogWindow(String version, Boolean IsItFromTheUpdateWindow)
         {
             InitializeComponent();
+
+            if (this.Parent == null)
+            {
+                this.StartPosition = FormStartPosition.CenterScreen;
+                label1.Enabled = false;
+                ReleasesList.Enabled = false;
+                UpdateBtn.Enabled = false;
+            }
+
             UpdateBtn.Visible = !IsItFromTheUpdateWindow;
 
             var OnlyFirstTenReleases = new Octokit.ApiOptions

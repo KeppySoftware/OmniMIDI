@@ -71,9 +71,11 @@
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
-            this.RestoreConfSettings = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ReinstallDriver = new System.Windows.Forms.MenuItem();
+            this.menuItem17 = new System.Windows.Forms.MenuItem();
+            this.RestoreSFListEdWidth = new System.Windows.Forms.MenuItem();
+            this.RestoreConfSettings = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.DriverInfo = new System.Windows.Forms.MenuItem();
             this.BugReport = new System.Windows.Forms.MenuItem();
@@ -87,8 +89,6 @@
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
-            this.RestoreSFListEdWidth = new System.Windows.Forms.MenuItem();
-            this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -105,7 +105,7 @@
             this.MWTab.Location = new System.Drawing.Point(0, 0);
             this.MWTab.Name = "MWTab";
             this.MWTab.SelectedIndex = 0;
-            this.MWTab.Size = new System.Drawing.Size(706, 460);
+            this.MWTab.Size = new System.Drawing.Size(706, 461);
             this.MWTab.TabIndex = 0;
             this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
@@ -115,7 +115,7 @@
             this.ListsEdt.Location = new System.Drawing.Point(4, 22);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(698, 434);
+            this.ListsEdt.Size = new System.Drawing.Size(698, 435);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
@@ -435,12 +435,6 @@
             this.menuItem15.Index = 3;
             this.menuItem15.Text = "-";
             // 
-            // RestoreConfSettings
-            // 
-            this.RestoreConfSettings.Index = 8;
-            this.RestoreConfSettings.Text = "Restore all the configurator\'s internal settings";
-            this.RestoreConfSettings.Click += new System.EventHandler(this.RestoreConfSettings_Click);
-            // 
             // DeleteUserData
             // 
             this.DeleteUserData.Index = 4;
@@ -452,6 +446,24 @@
             this.ReinstallDriver.Index = 5;
             this.ReinstallDriver.Text = "Delete OmniMIDI\'s user data";
             this.ReinstallDriver.Click += new System.EventHandler(this.ReinstallDriver_Click);
+            // 
+            // menuItem17
+            // 
+            this.menuItem17.Index = 6;
+            this.menuItem17.Text = "-";
+            // 
+            // RestoreSFListEdWidth
+            // 
+            this.RestoreSFListEdWidth.Index = 7;
+            this.RestoreSFListEdWidth.Text = "Restore default SoundFonts list editor\'s column width";
+            this.RestoreSFListEdWidth.Visible = false;
+            this.RestoreSFListEdWidth.Click += new System.EventHandler(this.RestoreSFListEdWidth_Click);
+            // 
+            // RestoreConfSettings
+            // 
+            this.RestoreConfSettings.Index = 8;
+            this.RestoreConfSettings.Text = "Restore all the configurator\'s internal settings";
+            this.RestoreConfSettings.Click += new System.EventHandler(this.RestoreConfSettings_Click);
             // 
             // menuItem2
             // 
@@ -531,7 +543,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
             this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 434);
+            this.SFLEPanel.Size = new System.Drawing.Size(698, 435);
             this.SFLEPanel.TabIndex = 0;
             // 
             // SETPanel
@@ -543,18 +555,6 @@
             this.SETPanel.Name = "SETPanel";
             this.SETPanel.Size = new System.Drawing.Size(698, 402);
             this.SETPanel.TabIndex = 1;
-            // 
-            // RestoreSFListEdWidth
-            // 
-            this.RestoreSFListEdWidth.Index = 7;
-            this.RestoreSFListEdWidth.Text = "Restore default SoundFonts list editor\'s column width";
-            this.RestoreSFListEdWidth.Visible = false;
-            this.RestoreSFListEdWidth.Click += new System.EventHandler(this.RestoreSFListEdWidth_Click);
-            // 
-            // menuItem17
-            // 
-            this.menuItem17.Index = 6;
-            this.menuItem17.Text = "-";
             // 
             // MainWindow
             // 
