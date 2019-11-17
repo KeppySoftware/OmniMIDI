@@ -254,7 +254,7 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(1, 408);
+            this.ListOverride.Location = new System.Drawing.Point(1, 423);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 30;
@@ -529,7 +529,7 @@
             this.Lis.Location = new System.Drawing.Point(5, 34);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(639, 370);
+            this.Lis.Size = new System.Drawing.Size(639, 385);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -608,7 +608,7 @@
             this.Controls.Add(this.RmvSF);
             this.Controls.Add(this.AddSF);
             this.Name = "SoundFontListEditor";
-            this.Size = new System.Drawing.Size(678, 423);
+            this.Size = new System.Drawing.Size(678, 438);
             this.Load += new System.EventHandler(this.SoundFontListEditor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

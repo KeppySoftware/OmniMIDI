@@ -103,6 +103,7 @@ It'll be slower when playing Black MIDIs, and the latency will also be higher, b
 ## What functions are available?
 As of May 27th, 2019, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
+All the functions whose name starts with the **"int_"** nomenclature are not supposed to use by developers. They're internal functions used by WinMMWRP.<br />
 ### **InitializeKDMAPIStream**<br />
 It initializes the driver, its stream and all its required threads. There are no arguments.<br />
 The function returns TRUE if everything goes well, or else returns FALSE.

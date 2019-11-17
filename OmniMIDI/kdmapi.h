@@ -5,6 +5,8 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 #pragma once
 
+#define DEBUGCB(DB) PrintMessageToDebugLog("CB", #DB);
+
 #define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) \
 	case Setting: \
 		if (!SettingsManagedByClient) PrintMessageToDebugLog(#Setting, "Please send OM_MANAGE first!!!"); return FALSE; \
@@ -15,14 +17,238 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 		break;
 
 // F**k WinMM and Microsoft
-typedef VOID(CALLBACK * WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
-DWORD_PTR WMMCI;
-WMMC CustomCallback = 0;
+typedef VOID(CALLBACK* WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
+WMMC CustomCallback = nullptr;
+DWORD OMCallbackMode = CALLBACK_NULL;
 
 // In case the CustomCallback isn't ready
 void DoCallback(DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
-	if (CustomCallback)	CustomCallback((HMIDIOUT)OMHMIDI, msg, WMMCI, param1, param2);
-	else DriverCallback(OMCallback, OMFlags, OMHDRVR, msg, OMInstance, param1, param2);
+	switch (OMCallbackMode) {
+	case CALLBACK_FUNCTION:
+		DEBUGCB(CALLBACK_FUNCTION);
+		CustomCallback((HMIDIOUT)OMHMIDI, msg, OMInstance, param1, param2);
+		break;
+	case CALLBACK_EVENT:
+		DEBUGCB(CALLBACK_EVENT);
+		if (!SetEvent((HANDLE)OMCallback)) CrashMessage("DoCallbackSE");
+		break;
+	case CALLBACK_THREAD:
+		DEBUGCB(CALLBACK_THREAD);
+		if (!PostThreadMessage((DWORD)OMCallback, msg, param1, param2)) CrashMessage("DoCallbackPTM");
+		break;
+	case CALLBACK_WINDOW:
+		DEBUGCB(CALLBACK_WINDOW);
+		if (!PostMessage((HWND)OMCallback, msg, param1, param2)) CrashMessage("DoCallbackPM");
+		break;
+	default:
+		DEBUGCB(NULL);
+		if (!AlreadyInitializedViaKDMAPI) {
+			if (!DriverCallback(OMCallback, OMFlags, OMHDRVR, msg, OMInstance, param1, param2)) CrashMessage("DoCallbackDC");
+		}
+		break;
+	}
+}
+
+// CookedPlayer system
+VOID KillOldCookedPlayer(DWORD_PTR dwUser) {
+	if (IsThisThreadActive(CookedThread.ThreadHandle))
+	{
+		CookedPlayerHasToGo = TRUE;
+		if (WaitForSingleObject(CookedThread.ThreadHandle, INFINITE) == WAIT_OBJECT_0) {
+			CloseHandle(CookedThread.ThreadHandle);
+			CookedThread.ThreadHandle = nullptr;
+			CookedThread.ThreadAddress = NULL;
+			CookedPlayerHasToGo = FALSE;
+		}
+	}
+}
+
+void CookedPlayerSystem(CookedPlayer* Player)
+{
+	char Msg[MAX_PATH] = { 0 };
+	QWORD ticker = 0;
+	QWORD tickdiff = 0;
+	int sleeptime = 0;
+	int oldsleep = 0;
+	int deltasleep = 0;
+
+	DWORD delaytick = 0;
+	BOOL barrier = TRUE;			// This is horrible :s
+
+	const DWORD maxdelay = 10e4;	// Adjust responsiveness here
+	const DWORD adaption = 1e5;		// Adaptive timer nice time >:3
+
+	PrintMessageToDebugLog("CookedPlayerSystem", "Thread is alive!");
+
+	NtQuerySystemTime(&tickdiff);
+
+	while (!CookedPlayerHasToGo)
+	{
+		if (Player->Paused || !Player->MIDIHeaderQueue)
+		{
+			PrintMessageToDebugLog("CookedPlayerSystem", "Waiting for unpause and/or header...");
+			while (Player->Paused || !Player->MIDIHeaderQueue)
+			{
+				ticker = (QWORD)-(INT64)maxdelay;
+				NtDelayExecution(TRUE, (INT64*)&ticker);
+				NtQuerySystemTime(&tickdiff);				// Reset timer
+				deltasleep = 0;								// Reset drift
+				oldsleep = 0;
+				if (CookedPlayerHasToGo) break;
+			}
+			PrintMessageToDebugLog("CookedPlayerThread", "Playback started!");
+			continue;
+		}
+
+		if (delaytick)
+		{
+			NtQuerySystemTime(&ticker);
+			DWORD tdiff = (DWORD)(ticker - tickdiff);		// Calculate elapsed time
+			tickdiff = ticker;
+			int delt = (int)(tdiff - oldsleep);				// Calculate drift
+			deltasleep += delt;								// Accumlate drift
+
+			sleeptime = (delaytick * Player->TempoMulti);	// TODO: can overflow
+			//sleeptime *= speedcontrol;
+			oldsleep = sleeptime;
+
+			Player->TimeAccumulator += sleeptime;
+
+			if (deltasleep > 0)								// Can underflow, don't speed up if we pushed too hard
+				sleeptime -= deltasleep;					// Adjust for time drift
+
+			if (0) //if(sleeptime > maxdelay)
+			{ // Yes, this is very coarse, but the adaptive timer will keep it in sync
+				sleeptime = maxdelay;
+				DWORD acc = maxdelay / Player->TempoMulti;	// Time to ticks
+				if (!acc) acc = 1;
+
+				if (sleeptime <= 0)							// Overloaded
+				{
+					if (deltasleep < adaption);
+					else deltasleep = adaption;				// Don't overpush
+				}
+				else
+				{
+					INT64 usl = -((INT64)sleeptime);
+					NtDelayExecution(FALSE, &usl);
+				}
+
+				delaytick -= acc;
+				if (delaytick >> 31)
+					PrintMessageToDebugLog("CookedPlayerSystem", "Warning: DelayTick integer underflow!");
+				Player->TickAccumulator += acc;
+
+				continue;
+			}
+			else
+			{
+				if (sleeptime <= 0)							// Overloaded
+				{
+					if (deltasleep < adaption);
+					else deltasleep = adaption;				// Don't overpush
+				}
+				else
+				{
+					INT64 usl = -((INT64)sleeptime);
+					NtDelayExecution(FALSE, &usl);
+				}
+
+				Player->TickAccumulator += delaytick;
+				delaytick = 0;
+
+				continue;
+			}
+		}
+
+		LPMIDIHDR hdr = Player->MIDIHeaderQueue;
+
+		if (hdr->dwFlags & MHDR_DONE)
+		{
+			LockForWriting(&Player->Lock);
+			Player->MIDIHeaderQueue = hdr->lpNext;
+			UnlockForWriting(&Player->Lock);
+			continue;
+		}
+
+		while (!Player->Paused)
+		{
+			if (hdr->dwOffset >= hdr->dwBytesRecorded)
+			{
+				LockForWriting(&Player->Lock);
+				hdr->dwFlags |= MHDR_DONE;
+				hdr->dwFlags &= ~MHDR_INQUEUE;
+				LPMIDIHDR nexthdr = hdr->lpNext;
+				UnlockForWriting(&Player->Lock);
+
+				Player->MIDIHeaderQueue = nexthdr;
+
+				DoCallback(MOM_DONE, (DWORD_PTR)hdr, 0);
+
+				hdr->dwOffset = 0;
+				hdr = nexthdr;
+
+				break;
+			}
+
+			MIDIEVENT* evt = (MIDIEVENT*)(hdr->lpData + hdr->dwOffset);
+
+			if (barrier)
+			{
+				barrier = FALSE;
+				delaytick = evt->dwDeltaTime;
+
+				if (delaytick) break;
+			}
+
+			// Reset barrier
+			barrier = TRUE;
+
+			if (evt->dwEvent & MEVT_F_CALLBACK)
+			{
+				PrintMessageToDebugLog("CookedPlayerSystem", "Reached MEVT_F_CALLBACK! Let's warn the app about it.");
+				DoCallback(MOM_POSITIONCB, (DWORD_PTR)hdr, 0);
+			}
+
+			BYTE evid = (evt->dwEvent >> 24) & 0xBF;
+
+			/*
+			if(evid != MEVT_NOP && evid != MEVT_VERSION)
+			{
+				CrashMessage("CookedPlayerThread | evid not NOP", nullptr);
+			}
+			*/
+
+			switch (evid) {
+			case MEVT_SHORTMSG:
+				_PrsData(evt->dwEvent);
+				break;
+			case MEVT_LONGMSG:
+				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, evt->dwParms, evt->dwEvent & 0xFFFFFF);
+				break;
+			case MEVT_TEMPO:
+				Player->Tempo = evt->dwEvent & 0xFFFFFF;
+				Player->TempoMulti = (DWORD)((Player->Tempo * 10) / Player->TimeDiv);
+				break;
+			default:
+				break;
+			}
+
+			if (evt->dwEvent & MEVT_F_LONG)
+			{
+				DWORD acc = ((evt->dwEvent & 0xFFFFFF) + 3) & ~3;	// PAD
+				Player->ByteAccumulator += acc;
+				hdr->dwOffset += acc;
+			}
+
+			Player->ByteAccumulator += 0xC;
+			hdr->dwOffset += 0xC;
+		}
+	}
+
+	// Close the thread
+	PrintMessageToDebugLog("CookedPlayerSystem", "Closing CookedPlayer thread...");
+	TerminateThread(&CookedThread, TRUE, 0);
 }
 
 // KDMAPI calls
@@ -50,7 +276,8 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 
 		return FALSE;
 	}
-	else { if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != ASIO_ENGINE)) CreateThreads(FALSE);
+	else { 
+		if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != ASIO_ENGINE)) CreateThreads(FALSE);
 	}
 
 	return TRUE;
@@ -283,6 +510,53 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 	}
 
 	return FALSE;
+}
+
+VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM, DWORD OMF) {
+	// Copy values to memory
+	OMHMIDI = OMHM;
+	OMCallback = OMCB;
+	OMInstance = OMI;
+	OMFlags = OMF;
+	OMCallbackMode = OMCM;
+
+	// If callback function is required, assign it to CustomCallback
+	if (OMCallbackMode == CALLBACK_FUNCTION)
+		CustomCallback = (WMMC)OMCallback;
+
+	// Prepare registry for CookedPlayer
+	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+	RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
+
+	if ((DWORD)OMF & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
+		PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
+
+		// Prepare the CookedPlayer
+		PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
+
+		*(CookedPlayer**)OMU = (CookedPlayer*)malloc(sizeof(CookedPlayer));
+		memset(*(CookedPlayer**)OMU, 0, sizeof(**(CookedPlayer**)OMU));
+
+		(*(CookedPlayer**)OMU)->Paused = TRUE;
+		(*(CookedPlayer**)OMU)->Tempo = 500000;
+		(*(CookedPlayer**)OMU)->TimeDiv = 384;
+		(*(CookedPlayer**)OMU)->TempoMulti = (((*(CookedPlayer**)OMU)->Tempo * 10) / (*(CookedPlayer**)OMU)->TimeDiv);
+		PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", (*(CookedPlayer**)OMU)->TempoMulti);
+
+		PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer struct prepared.");
+
+		// Create player thread
+		PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
+		CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)OMU, 0, &CookedThread.ThreadAddress);
+
+		PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
+	}
+	else if (ManagedSettings.DisableCookedPlayer)
+		PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
+}
+
+VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
+	DoCallback(Msg, P1, P2);
 }
 
 VOID KDMAPI ResetKDMAPIStream() {

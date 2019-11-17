@@ -10,8 +10,8 @@ typedef unsigned __int64 QWORD;
 typedef long NTSTATUS;
 
 // KDMAPI version
-#define CUR_MAJOR	1
-#define CUR_MINOR	60
+#define CUR_MAJOR	2
+#define CUR_MINOR	0
 #define CUR_BUILD	0
 #define CUR_REV		0
 
@@ -131,7 +131,6 @@ void NTSleep(__int64 usec) {
 #include "BlacklistSystem.h"
 #include "DriverInit.h"
 #include "KDMAPI.h"
-#include "CookedPlayer.h"
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 {
@@ -632,64 +631,17 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			// Parse callback and instance
 			// AddVectoredExceptionHandler(1, OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
-			OMHMIDI = ((MIDIOPENDESC*)dwParam1)->hMidi;
-			OMCallback = ((MIDIOPENDESC*)dwParam1)->dwCallback;
-			OMInstance = ((MIDIOPENDESC*)dwParam1)->dwInstance;
-			OMFlags = HIWORD((DWORD)dwParam2);
+			LPMIDIOPENDESC OMMPD = ((MIDIOPENDESC*)dwParam1);
+			InitializeCallbackFeatures(OMMPD->hMidi, OMMPD->dwCallback, OMMPD->dwInstance, dwUser, (DWORD)dwParam2, HIWORD((DWORD)dwParam2));
+			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, OMFlags);
 
-			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", (MIDIOPENDESC*)dwParam1, dwUser, OMFlags);
+			// Enable handler if required
 			EnableBuiltInHandler("MODM_OPEN");
 
 			// Open the driver
 			PrintMessageToDebugLog("MODM_OPEN", "Initializing driver...");
 			DoStartClient();
 			ResetSynth(TRUE);
-
-			// Prepare registry for CookedPlayer
-			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
-
-			if (((DWORD)dwParam2 != CALLBACK_NULL) &&
-				((DWORD)dwParam2 != CALLBACK_EVENT)) {
-				CustomCallback = (WMMC)OMCallback;
-				WMMCI = OMInstance;
-				PrintMessageToDebugLog("MODM_OPEN", "Callback function ready.");
-			}
-
-			if ((DWORD)dwParam2 & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
-				// CookedPlayer only supports CALLBACK_FUNCTION
-				if (!((DWORD)dwParam2 & ~(MIDI_IO_COOKED | CALLBACK_FUNCTION)))
-				{
-					PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
-
-					// Prepare the CookedPlayer
-					PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
-
-					*(CookedPlayer**)dwUser = (CookedPlayer*)malloc(sizeof(CookedPlayer));
-					memset(*(CookedPlayer**)dwUser, 0, sizeof(**(CookedPlayer**)dwUser));
-
-					(*(CookedPlayer**)dwUser)->Paused = TRUE;
-					(*(CookedPlayer**)dwUser)->Tempo = 500000;
-					(*(CookedPlayer**)dwUser)->TimeDiv = 384;
-					(*(CookedPlayer**)dwUser)->TempoMulti = (((*(CookedPlayer**)dwUser)->Tempo * 10) / (*(CookedPlayer**)dwUser)->TimeDiv);
-					PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", (*(CookedPlayer**)dwUser)->TempoMulti);
-
-					PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer struct prepared.");
-
-					// Create player thread
-					PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
-					CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)dwUser, 0, &CookedThread.ThreadAddress);
-
-					PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
-				}
-				else {
-					DoStopClient();
-					PreventInit = FALSE;
-					return DebugResult("MODM_OPEN", MMSYSERR_NOTSUPPORTED, "MIDI_IO_COOKED is only supported with CALLBACK_FUNCTION! Preparation aborted.");
-				}
-			}
-			else if (ManagedSettings.DisableCookedPlayer)
-				PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
 
 			// Tell the app that the driver is ready
 			PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app. if needed...");

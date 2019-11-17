@@ -141,8 +141,8 @@ namespace OmniMIDIConfigurator
                 3,
                 "Error",
                 String.Format(
-                    "Oh snap!\nThe configurator encountered an error while editing the following list:\n{0}\n\nDo you want to reload the list?",
-                    Program.ListsPath[SelectedListBox.SelectedIndex]
+                    "Oh snap!\nThe configurator encountered an error while editing the following list:\n{0}\n\nDo you want to reload the list?\n\n{1}",
+                    Program.ListsPath[SelectedListBox.SelectedIndex], ex.ToString()
                 ),
                 null
             );

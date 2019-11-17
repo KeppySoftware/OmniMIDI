@@ -46,6 +46,22 @@ QWORD EvBufferSize = 4096;
 DWORD EvBufferMultRatio = 1;
 DWORD GetEvBuffSizeFromRAM = 0;
 
+// Cooked player struct
+static BOOL CookedPlayerHasToGo = FALSE;
+typedef struct CookedPlayer
+{
+	LPMIDIHDR MIDIHeaderQueue;			// MIDIHDR buffer
+	BOOL Paused;						// Is the player paused?
+	DWORD Tempo;						// Player tempo
+	DWORD TimeDiv;						// Player time division
+	DWORD TempoMulti;					// Player time multiplier
+	DWORD TimeAccumulator;				// ?
+	DWORD ByteAccumulator;				// ?
+	DWORD TickAccumulator;				// ?
+	LockSystem Lock;					// LockSystem
+	DWORD_PTR dwInstance;
+};
+
 // Device stuff
 const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 ULONGLONG TickStart = 0;			// For TGT64

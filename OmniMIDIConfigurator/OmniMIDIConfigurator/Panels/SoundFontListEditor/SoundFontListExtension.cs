@@ -117,10 +117,11 @@ namespace OmniMIDIConfigurator
                     Path.GetExtension(SF).ToLowerInvariant() == ".sfpack")
                 {
                     // Check if it's valid
-                    int SFH = BassMidi.BASS_MIDI_FontInit(SF);
+                    int SFH = BassMidi.BASS_MIDI_FontInit(SF, BASSFlag.BASS_DEFAULT);
+                    BASSError Err = Bass.BASS_ErrorGetCode();
 
                     // SoundFont is valid, continue
-                    if (SFH != 0)
+                    if (Err == 0)
                     {
                         BassMidi.BASS_MIDI_FontFree(SFH);
 
@@ -159,9 +160,9 @@ namespace OmniMIDIConfigurator
                 else SFErrs.Add(SF);
             }
 
-            if (!NoErrs)
+            if (SFErrs.Count > 0)
             {
-                if (SFErrs.Count > 0)
+                if (!NoErrs)
                 {
                     Program.ShowError(
                         4,
@@ -171,6 +172,8 @@ namespace OmniMIDIConfigurator
                             string.Join(Environment.NewLine, SFErrs.ToArray())),
                         null);
                 }
+
+                return new ListViewItem[] { };
             }
 
             return iSFs.ToArray();

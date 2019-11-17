@@ -17,4 +17,6 @@ EXPORTS
 	DriverSettings
 	GetDriverDebugInfo
 	LoadCustomSoundFontsList
+	int_ICF = InitializeCallbackFeatures
+	int_RCF = RunCallbackFunction
 	timeGetTime64
