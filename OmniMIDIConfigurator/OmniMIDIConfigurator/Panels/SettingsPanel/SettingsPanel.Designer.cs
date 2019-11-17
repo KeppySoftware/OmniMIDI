@@ -49,7 +49,6 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
-            this.VolTrackBar = new KnobControl.KnobControl();
             this.BufferText = new System.Windows.Forms.Label();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SincConv = new System.Windows.Forms.ComboBox();
@@ -105,17 +104,19 @@
             this.FineTuneKnobIt = new System.Windows.Forms.MenuItem();
             this.menuItem57 = new System.Windows.Forms.MenuItem();
             this.VolumeBoost = new System.Windows.Forms.MenuItem();
-            this.ChangeSynthMask = new OmniMIDIConfigurator.LinkLabelEx();
             this.DisableChime = new System.Windows.Forms.CheckBox();
-            this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
             this.LiveChangesTrigger = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
-            this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.DebugMode = new System.Windows.Forms.CheckBox();
-            this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
             this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
+            this.UseTGT = new System.Windows.Forms.CheckBox();
+            this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
+            this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ChangeSynthMask = new OmniMIDIConfigurator.LinkLabelEx();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -356,7 +357,7 @@
             this.PolyphonyLimit.TabIndex = 4;
             this.PolyphonyLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PolyphonyLimit.ThousandsSeparator = true;
-            this.Requirements.SetToolTip(this.PolyphonyLimit, "If there are currently more voices active than the new limit, then some voices wi" +
+            this.ButtonsDesc.SetToolTip(this.PolyphonyLimit, "If there are currently more voices active than the new limit, then some voices wi" +
         "ll be killed to meet the limit.");
             this.PolyphonyLimit.Value = new decimal(new int[] {
             500,
@@ -418,33 +419,6 @@
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 6;
             // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.EndAngle = 405F;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
-            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
-            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
-            this.VolTrackBar.ScaleDivisions = 10;
-            this.VolTrackBar.ScaleSubDivisions = 10;
-            this.VolTrackBar.ShowLargeScale = false;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.StartAngle = 135F;
-            this.VolTrackBar.TabIndex = 16;
-            this.VolTrackBar.Value = 10000;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
-            // 
             // BufferText
             // 
             this.BufferText.AutoSize = true;
@@ -491,6 +465,7 @@
             this.SincConv.Name = "SincConv";
             this.SincConv.Size = new System.Drawing.Size(85, 21);
             this.SincConv.TabIndex = 9;
+            this.ButtonsDesc.SetToolTip(this.SincConv, "Higher interpolation settings will require more CPU cycles.");
             // 
             // SincConvLab
             // 
@@ -513,6 +488,7 @@
             this.SincInter.TabIndex = 8;
             this.SincInter.Text = "Enable sinc interpolation (Improves audio quality, but increases rendering time)";
             this.SincInter.UseVisualStyleBackColor = true;
+            this.SincInter.CheckedChanged += new System.EventHandler(this.SincInter_CheckedChanged);
             // 
             // EnableSFX
             // 
@@ -1085,18 +1061,6 @@
             this.VolumeBoost.Text = "Enable volume boost";
             this.VolumeBoost.Click += new System.EventHandler(this.VolumeBoost_Click);
             // 
-            // ChangeSynthMask
-            // 
-            this.ChangeSynthMask.AutoSize = true;
-            this.ChangeSynthMask.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeSynthMask.Location = new System.Drawing.Point(6, 178);
-            this.ChangeSynthMask.Name = "ChangeSynthMask";
-            this.ChangeSynthMask.Size = new System.Drawing.Size(299, 13);
-            this.ChangeSynthMask.TabIndex = 44;
-            this.ChangeSynthMask.TabStop = true;
-            this.ChangeSynthMask.Text = "Change how applications identify the synthesizer (Mask mode)";
-            this.ChangeSynthMask.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeSynthMask_LinkClicked);
-            // 
             // DisableChime
             // 
             this.DisableChime.AutoSize = true;
@@ -1106,18 +1070,6 @@
             this.DisableChime.TabIndex = 40;
             this.DisableChime.Text = "Disable \"Minimum Playback\"/\"Debug Mode\" chime (Could also speed up startup)";
             this.DisableChime.UseVisualStyleBackColor = true;
-            // 
-            // ChangeEVBuf
-            // 
-            this.ChangeEVBuf.AutoSize = true;
-            this.ChangeEVBuf.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeEVBuf.Location = new System.Drawing.Point(6, 160);
-            this.ChangeEVBuf.Name = "ChangeEVBuf";
-            this.ChangeEVBuf.Size = new System.Drawing.Size(211, 13);
-            this.ChangeEVBuf.TabIndex = 43;
-            this.ChangeEVBuf.TabStop = true;
-            this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
-            this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
             // 
             // LiveChangesTrigger
             // 
@@ -1129,6 +1081,7 @@
             this.LiveChangesTrigger.Text = "Enable live changes for all the settings (Could led to program crashes if you\'re " +
     "not careful)";
             this.LiveChangesTrigger.UseVisualStyleBackColor = true;
+            this.LiveChangesTrigger.CheckedChanged += new System.EventHandler(this.LiveChangesTrigger_CheckedChanged);
             // 
             // label15
             // 
@@ -1151,18 +1104,6 @@
     "ists and more)";
             this.FastHotKeys.UseVisualStyleBackColor = true;
             // 
-            // SpatialSound
-            // 
-            this.SpatialSound.AutoSize = true;
-            this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.SpatialSound.Location = new System.Drawing.Point(6, 196);
-            this.SpatialSound.Name = "SpatialSound";
-            this.SpatialSound.Size = new System.Drawing.Size(148, 13);
-            this.SpatialSound.TabIndex = 46;
-            this.SpatialSound.TabStop = true;
-            this.SpatialSound.Text = "Change spatial sound settings";
-            this.SpatialSound.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SpatialSound_LinkClicked);
-            // 
             // DebugMode
             // 
             this.DebugMode.AutoSize = true;
@@ -1173,6 +1114,47 @@
             this.DebugMode.Text = "Enable debug log (Will slow down the MIDI application, use it only when needed)";
             this.DebugMode.UseVisualStyleBackColor = true;
             this.DebugMode.CheckedChanged += new System.EventHandler(this.DebugMode_CheckedChanged);
+            // 
+            // LegacySetDia
+            // 
+            this.LegacySetDia.Controls.Add(this.UseTGT);
+            this.LegacySetDia.Controls.Add(this.ShowChangelogUpdate);
+            this.LegacySetDia.Controls.Add(this.DebugModeFolder);
+            this.LegacySetDia.Controls.Add(this.DebugMode);
+            this.LegacySetDia.Controls.Add(this.SpatialSound);
+            this.LegacySetDia.Controls.Add(this.FastHotKeys);
+            this.LegacySetDia.Controls.Add(this.label15);
+            this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
+            this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
+            this.LegacySetDia.Controls.Add(this.DisableChime);
+            this.LegacySetDia.Controls.Add(this.ChangeSynthMask);
+            this.LegacySetDia.Location = new System.Drawing.Point(3, 867);
+            this.LegacySetDia.Name = "LegacySetDia";
+            this.LegacySetDia.Size = new System.Drawing.Size(670, 239);
+            this.LegacySetDia.TabIndex = 2;
+            this.LegacySetDia.TabStop = false;
+            this.LegacySetDia.Text = "Debug and legacy settings";
+            // 
+            // ShowChangelogUpdate
+            // 
+            this.ShowChangelogUpdate.AutoSize = true;
+            this.ShowChangelogUpdate.Location = new System.Drawing.Point(9, 158);
+            this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
+            this.ShowChangelogUpdate.Size = new System.Drawing.Size(313, 17);
+            this.ShowChangelogUpdate.TabIndex = 47;
+            this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
+            this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
+            // 
+            // UseTGT
+            // 
+            this.UseTGT.AutoSize = true;
+            this.UseTGT.Location = new System.Drawing.Point(9, 139);
+            this.UseTGT.Name = "UseTGT";
+            this.UseTGT.Size = new System.Drawing.Size(617, 17);
+            this.UseTGT.TabIndex = 48;
+            this.UseTGT.Text = "Use stock timeGetTime function instead of QueryPerformanceCounter (WinMMWRP patch" +
+    "ed apps only, could improve audio)";
+            this.UseTGT.UseVisualStyleBackColor = true;
             // 
             // DebugModeFolder
             // 
@@ -1187,34 +1169,68 @@
             this.DebugModeFolder.Visible = false;
             this.DebugModeFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DebugModeFolder_LinkClicked);
             // 
-            // LegacySetDia
+            // SpatialSound
             // 
-            this.LegacySetDia.Controls.Add(this.ShowChangelogUpdate);
-            this.LegacySetDia.Controls.Add(this.DebugModeFolder);
-            this.LegacySetDia.Controls.Add(this.DebugMode);
-            this.LegacySetDia.Controls.Add(this.SpatialSound);
-            this.LegacySetDia.Controls.Add(this.FastHotKeys);
-            this.LegacySetDia.Controls.Add(this.label15);
-            this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
-            this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
-            this.LegacySetDia.Controls.Add(this.DisableChime);
-            this.LegacySetDia.Controls.Add(this.ChangeSynthMask);
-            this.LegacySetDia.Location = new System.Drawing.Point(3, 867);
-            this.LegacySetDia.Name = "LegacySetDia";
-            this.LegacySetDia.Size = new System.Drawing.Size(670, 220);
-            this.LegacySetDia.TabIndex = 2;
-            this.LegacySetDia.TabStop = false;
-            this.LegacySetDia.Text = "Debug and legacy settings";
+            this.SpatialSound.AutoSize = true;
+            this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.SpatialSound.Location = new System.Drawing.Point(6, 215);
+            this.SpatialSound.Name = "SpatialSound";
+            this.SpatialSound.Size = new System.Drawing.Size(148, 13);
+            this.SpatialSound.TabIndex = 46;
+            this.SpatialSound.TabStop = true;
+            this.SpatialSound.Text = "Change spatial sound settings";
+            this.SpatialSound.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SpatialSound_LinkClicked);
             // 
-            // ShowChangelogUpdate
+            // ChangeEVBuf
             // 
-            this.ShowChangelogUpdate.AutoSize = true;
-            this.ShowChangelogUpdate.Location = new System.Drawing.Point(9, 139);
-            this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
-            this.ShowChangelogUpdate.Size = new System.Drawing.Size(313, 17);
-            this.ShowChangelogUpdate.TabIndex = 47;
-            this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
-            this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
+            this.ChangeEVBuf.AutoSize = true;
+            this.ChangeEVBuf.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ChangeEVBuf.Location = new System.Drawing.Point(6, 179);
+            this.ChangeEVBuf.Name = "ChangeEVBuf";
+            this.ChangeEVBuf.Size = new System.Drawing.Size(211, 13);
+            this.ChangeEVBuf.TabIndex = 43;
+            this.ChangeEVBuf.TabStop = true;
+            this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
+            this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
+            // 
+            // ChangeSynthMask
+            // 
+            this.ChangeSynthMask.AutoSize = true;
+            this.ChangeSynthMask.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ChangeSynthMask.Location = new System.Drawing.Point(6, 197);
+            this.ChangeSynthMask.Name = "ChangeSynthMask";
+            this.ChangeSynthMask.Size = new System.Drawing.Size(299, 13);
+            this.ChangeSynthMask.TabIndex = 44;
+            this.ChangeSynthMask.TabStop = true;
+            this.ChangeSynthMask.Text = "Change how applications identify the synthesizer (Mask mode)";
+            this.ChangeSynthMask.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeSynthMask_LinkClicked);
+            // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
+            this.VolTrackBar.TabIndex = 16;
+            this.VolTrackBar.Value = 10000;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // SettingsPanel
             // 
@@ -1224,7 +1240,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1091);
+            this.Size = new System.Drawing.Size(678, 1113);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1335,5 +1351,6 @@
         private LinkLabelEx DebugModeFolder;
         public System.Windows.Forms.GroupBox LegacySetDia;
         public System.Windows.Forms.CheckBox ShowChangelogUpdate;
+        public System.Windows.Forms.CheckBox UseTGT;
     }
 }

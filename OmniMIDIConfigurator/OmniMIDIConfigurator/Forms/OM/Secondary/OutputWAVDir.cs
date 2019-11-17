@@ -33,12 +33,15 @@ namespace OmniMIDIConfigurator
             try
             {
                 if (String.IsNullOrEmpty(DefaultDir.Text))
-                    NewOutputDir.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);       
+                    NewOutputDir.InitialDirectory = Properties.Settings.Default.LastBrowserPath;       
                 else
                     NewOutputDir.InitialDirectory = DefaultDir.Text;
 
                 if (NewOutputDir.ShowDialog() == CommonFileDialogResult.Ok)
                 {
+                    Properties.Settings.Default.LastBrowserPath = NewOutputDir.FileName;
+                    Properties.Settings.Default.Save();
+
                     RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", true);
                     Settings.SetValue("AudToWAVFolder", NewOutputDir.FileName, RegistryValueKind.String);
                     NewDir.Text = NewOutputDir.FileName;

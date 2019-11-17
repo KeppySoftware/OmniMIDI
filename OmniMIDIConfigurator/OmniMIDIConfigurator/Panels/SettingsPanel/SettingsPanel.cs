@@ -205,6 +205,7 @@ namespace OmniMIDIConfigurator
                         break;
                 }
 
+                UseTGT.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("StockWinMM", 0));
                 ShowChangelogUpdate.Checked = Properties.Settings.Default.ShowChangelogStartUp;
 
                 Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
@@ -285,6 +286,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DelayNoteOffValue", Convert.ToInt32(NoteOffDelayValue.Value * 1000), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("CurrentEngine", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("StockWinMM", Convert.ToInt32(UseTGT.Checked), RegistryValueKind.DWord);
 
             Properties.Settings.Default.ShowChangelogStartUp = ShowChangelogUpdate.Checked;
 
@@ -452,6 +454,34 @@ namespace OmniMIDIConfigurator
 
             PCV.Dispose();
         }
+
+        private void LiveChangesTrigger_CheckedChanged(object sender, EventArgs e)
+        {
+            String Desc1 = LiveChangesTrigger.Checked ? "Requires a restart of the audio stream to work." : null;
+            String Desc2 = LiveChangesTrigger.Checked ? "Requires a restart of the application to work." : null;
+
+            // Stream restart
+            Requirements.SetToolTip(AudioEngBox, Desc1);
+            Requirements.SetToolTip(AudioBitDepth, Desc1);
+            Requirements.SetToolTip(Frequency, Desc1);
+            Requirements.SetToolTip(bufsize, Desc1);
+            Requirements.SetToolTip(MonophonicFunc, Desc1);
+            Requirements.SetToolTip(PrioBox, Desc1);
+
+            // App restart
+            Requirements.SetToolTip(KSDAPIBox, Desc2);
+            Requirements.SetToolTip(DisableCookedPlayer, Desc2);
+            Requirements.SetToolTip(DisableChime, Desc2);
+            Requirements.SetToolTip(DebugMode, Desc2);
+            Requirements.SetToolTip(UseTGT, Desc2);
+        }
+
+        private void SincInter_CheckedChanged(object sender, EventArgs e)
+        {
+            SincConvLab.Enabled = SincInter.Checked;
+            SincConv.Enabled = SincInter.Checked;
+        }
+
         private void EnableRCOverride_CheckedChanged(object sender, EventArgs e)
         {
             ReverbL.Enabled = EnableRCOverride.Checked;

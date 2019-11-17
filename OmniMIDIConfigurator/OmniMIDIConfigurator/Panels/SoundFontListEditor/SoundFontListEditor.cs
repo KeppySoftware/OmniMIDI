@@ -58,24 +58,32 @@ namespace OmniMIDIConfigurator
             {
                 foreach (String SF in SFs)
                 {
-                    using (AddToWhichList TF = new AddToWhichList(SF))
+                    if (Path.GetExtension(SF).ToLowerInvariant() == ".sf1" |
+                        Path.GetExtension(SF).ToLowerInvariant() == ".sf2" |
+                        Path.GetExtension(SF).ToLowerInvariant() == ".sfz" |
+                        Path.GetExtension(SF).ToLowerInvariant() == ".sfark" |
+                        Path.GetExtension(SF).ToLowerInvariant() == ".sfpack")
                     {
-                        if (TF.ShowDialog() == DialogResult.OK)
+                        using (AddToWhichList TF = new AddToWhichList(SF))
                         {
-                            SelectedListBox.SelectedIndex = TF.Index;
-
-                            String[] TSF = new String[] { SF };
-                            ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(TSF, false, true);
-
-                            if (iSFs != null)
+                            if (TF.ShowDialog() == DialogResult.OK)
                             {
-                                foreach (ListViewItem iSF in iSFs)
-                                    Lis.Items.Add(iSF);
-                            }
+                                SelectedListBox.SelectedIndex = TF.Index;
 
-                            SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+                                String[] TSF = new String[] { SF };
+                                ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(TSF, false, true);
+
+                                if (iSFs != null)
+                                {
+                                    foreach (ListViewItem iSF in iSFs)
+                                        Lis.Items.Add(iSF);
+                                }
+
+                                SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+                            }
                         }
                     }
+
                 }
             }
 
@@ -408,7 +416,7 @@ namespace OmniMIDIConfigurator
                 {
                     Lis.Items.Clear();
                     SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
-                    Program.ShowError(0, "Cleaning finished", String.Format("The list has been cleaned successfully.", ExternalListExport.FileName), null);
+                    Program.ShowError(0, "Cleaning finished", "The list has been cleaned successfully.", null);
 
                 }
                 catch (Exception ex)
@@ -420,11 +428,21 @@ namespace OmniMIDIConfigurator
 
         private void AddSF_Click(object sender, EventArgs e)
         {
+            OpenFileDialog OFD = new OpenFileDialog()
+            {
+                Multiselect = true,
+                InitialDirectory = Properties.Settings.Default.LastSoundFontPath,
+                Filter = "Soundfont files | *.sf2; *.sfz; *.sfpack"
+            };
+
             try
             {
-                if (SoundFontImport.ShowDialog(this) == DialogResult.OK)
+                if (OFD.ShowDialog(this) == DialogResult.OK)
                 {
-                    ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(SoundFontImport.FileNames, BankPresetOverride.Checked, false);
+                    Properties.Settings.Default.LastSoundFontPath = Path.GetDirectoryName(OFD.FileNames[0]);
+                    Properties.Settings.Default.Save();
+
+                    ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(OFD.FileNames, BankPresetOverride.Checked, false);
 
                     if (iSFs != null)
                     {
@@ -439,6 +457,8 @@ namespace OmniMIDIConfigurator
             {
                 ReloadListAfterError(ex);
             }
+
+            OFD.Dispose();
         }
 
         private void RmvSF_Click(object sender, EventArgs e)
@@ -491,35 +511,56 @@ namespace OmniMIDIConfigurator
 
         private void IEL_Click(object sender, EventArgs e)
         {
-            ExternalListImport.FileName = "";
-            ExternalListImport.InitialDirectory = Properties.Settings.Default.LastImportExportPath;
-
-            if (ExternalListImport.ShowDialog(this) == DialogResult.OK)
+            OpenFileDialog OFD = new OpenFileDialog()
             {
-                Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(ExternalListImport.FileNames[0]);
-                Properties.Settings.Default.Save();
+                Multiselect = true,
+                InitialDirectory = Properties.Settings.Default.LastImportExportPath,
+                Filter = "Soundfont lists | *.sflist; *.omlist; *.txt;"
+            };
 
-                foreach (string ListW in ExternalListImport.FileNames)
-                    SoundFontListExtension.ChangeList(-1, ListW, true, false);
+            try
+            {
+                if (OFD.ShowDialog(this) == DialogResult.OK)
+                {
+                    Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(OFD.FileNames[0]);
+                    Properties.Settings.Default.Save();
 
-                SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+                    foreach (string ListW in OFD.FileNames)
+                        SoundFontListExtension.ChangeList(-1, ListW, true, false);
 
-                Program.ShowError(0, "Import finished", "The selected lists have been imported successfully to the currently selected list in the configurator.", null);
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+
+                    Program.ShowError(0, "Import finished", "The selected lists have been imported successfully to the currently selected list in the configurator.", null);
+                }
             }
+            catch (Exception ex)
+            {
+                ReloadListAfterError(ex);
+            }
+
+            OFD.Dispose();
         }
 
         private void EL_Click(object sender, EventArgs e)
         {
-            ExternalListExport.FileName = "";
-            ExternalListExport.InitialDirectory = Properties.Settings.Default.LastImportExportPath;
-
-            if (ExternalListExport.ShowDialog(this) == DialogResult.OK)
+            SaveFileDialog SFD = new SaveFileDialog()
             {
-                Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(ExternalListExport.FileName);
+                OverwritePrompt = true,
+                InitialDirectory = Properties.Settings.Default.LastImportExportPath,
+                Filter = "Soundfont lists | *.sflist; *.omlist; *.txt;"
+            };
+
+            if (SFD.ShowDialog(this) == DialogResult.OK)
+            {
+                Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(SFD.FileName);
                 Properties.Settings.Default.Save();
 
-                Program.ShowError(0, "Export finished", String.Format("The list has been exported successfully to \"{0}\".", ExternalListExport.FileName), null);
+                SoundFontListExtension.SaveList(ref Lis, -1, SFD.FileName);
+
+                Program.ShowError(0, "Export finished", String.Format("The list has been exported successfully to \"{0}\".", SFD.FileName), null);
             }
+
+            SFD.Dispose();
         }
 
         private void CSFs_Click(object sender, EventArgs e)

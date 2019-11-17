@@ -139,17 +139,18 @@ namespace OmniMIDIConfigurator
                                     DPV = BPOW.DesPresetValueReturn;
                                     XGMode = BPOW.XGModeC;
                                 }
+                                else continue;
                             }
                         }
 
                         FileInfo file = new FileInfo(SF);
                         ListViewItem iSF = new ListViewItem(new[]
                         {
-                                SF,
-                                BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), XGMode ? "Yes" : "No",
-                                ReturnSoundFontFormat(Path.GetExtension(SF)),
-                                ReturnSoundFontSize(SF, Path.GetExtension(SF), file.Length)
-                            });
+                            SF,
+                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), XGMode ? "Yes" : "No",
+                            ReturnSoundFontFormat(Path.GetExtension(SF)),
+                            ReturnSoundFontSize(SF, Path.GetExtension(SF), file.Length)
+                        });
 
                         iSF.ForeColor = SFEnabled;
 

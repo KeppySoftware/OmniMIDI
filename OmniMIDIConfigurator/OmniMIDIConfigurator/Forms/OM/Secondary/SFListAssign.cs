@@ -126,13 +126,14 @@ namespace OmniMIDIConfigurator
         private void addAnAppToTheListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AddApp.InitialDirectory = Properties.Settings.Default.LastBrowserPath;
+
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
-                foreach (string str in AddApp.FileNames)
-                    AddAppToList(str);
-
                 Properties.Settings.Default.LastBrowserPath = Path.GetDirectoryName(AddApp.FileNames[0]);
                 Properties.Settings.Default.Save();
+
+                foreach (string str in AddApp.FileNames)
+                    AddAppToList(str);
             }
         }
 

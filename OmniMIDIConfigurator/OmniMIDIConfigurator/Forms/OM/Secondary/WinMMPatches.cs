@@ -19,23 +19,59 @@ namespace OmniMIDIConfigurator
 
         private void WMMW_Click(object sender, EventArgs e)
         {
-            Boolean Status = Functions.ApplyWinMMWRPPatch(false);
-            PatchStatusLabel.ForeColor = Status ? Color.DarkGreen : Color.DarkRed;
-            PatchStatusLabel.Text = Status ? "Stock patch installed!" : "Error!";
+            switch (Functions.ApplyWinMMWRPPatch(false))
+            {
+                case DialogResult.OK:
+                    PatchStatusLabel.ForeColor = Color.DarkGreen;
+                    PatchStatusLabel.Text = "Stock patch installed!";
+                    break;
+                case DialogResult.No:
+                    PatchStatusLabel.ForeColor = Color.DarkRed;
+                    PatchStatusLabel.Text = "Error!";
+                    break;
+                case DialogResult.Abort:
+                    PatchStatusLabel.ForeColor = Color.DarkGray;
+                    PatchStatusLabel.Text = "Aborted.";
+                    break;
+            }
         }
 
         private void WMMD_Click(object sender, EventArgs e)
         {
-            Boolean Status = Functions.ApplyWinMMWRPPatch(true);
-            PatchStatusLabel.ForeColor = Status ? Color.DarkGreen : Color.DarkRed;
-            PatchStatusLabel.Text = Status ? "DAW patch installed!" : "Error!";
+            switch (Functions.ApplyWinMMWRPPatch(false))
+            {
+                case DialogResult.OK:
+                    PatchStatusLabel.ForeColor = Color.DarkGreen;
+                    PatchStatusLabel.Text = "DAW patch installed!";
+                    break;
+                case DialogResult.No:
+                    PatchStatusLabel.ForeColor = Color.DarkRed;
+                    PatchStatusLabel.Text = "Error!";
+                    break;
+                case DialogResult.Abort:
+                    PatchStatusLabel.ForeColor = Color.DarkGray;
+                    PatchStatusLabel.Text = "Aborted.";
+                    break;
+            }
         }
 
         private void UnpatchApp_Click(object sender, EventArgs e)
         {
-            Boolean Status = Functions.RemoveWinMMPatch();
-            PatchStatusLabel.ForeColor = Status ? Color.DarkGreen : Color.DarkRed;
-            PatchStatusLabel.Text = Status ? "Successfully removed patch!" : "Error!";
+            switch (Functions.RemoveWinMMPatch())
+            {
+                case DialogResult.OK:
+                    PatchStatusLabel.ForeColor = Color.DarkGreen;
+                    PatchStatusLabel.Text = "Patch removed successfully!";
+                    break;
+                case DialogResult.No:
+                    PatchStatusLabel.ForeColor = Color.DarkRed;
+                    PatchStatusLabel.Text = "Error!";
+                    break;
+                case DialogResult.Abort:
+                    PatchStatusLabel.ForeColor = Color.DarkGray;
+                    PatchStatusLabel.Text = "Aborted.";
+                    break;
+            }
         }
 
         private void BMPatch_HelpRequested(object sender, HelpEventArgs hlpevent)

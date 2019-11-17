@@ -61,9 +61,6 @@
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SoundFontImport = new System.Windows.Forms.OpenFileDialog();
-            this.ExternalListImport = new System.Windows.Forms.OpenFileDialog();
-            this.ExternalListExport = new System.Windows.Forms.SaveFileDialog();
             this.LisCM = new System.Windows.Forms.ContextMenu();
             this.OSF = new System.Windows.Forms.MenuItem();
             this.OSFd = new System.Windows.Forms.MenuItem();
@@ -398,26 +395,6 @@
             this.columnHeader8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader8.Width = 62;
             // 
-            // SoundFontImport
-            // 
-            this.SoundFontImport.FileName = "Add soundfonts to the list...";
-            this.SoundFontImport.Filter = "Soundfont files|*.sf2;*.sfz;*.sfpack;";
-            this.SoundFontImport.Multiselect = true;
-            this.SoundFontImport.RestoreDirectory = true;
-            this.SoundFontImport.SupportMultiDottedExtensions = true;
-            // 
-            // ExternalListImport
-            // 
-            this.ExternalListImport.Filter = "Soundfont lists|*.sflist;*.omlist;*.txt;";
-            this.ExternalListImport.Multiselect = true;
-            this.ExternalListImport.RestoreDirectory = true;
-            this.ExternalListImport.SupportMultiDottedExtensions = true;
-            // 
-            // ExternalListExport
-            // 
-            this.ExternalListExport.Filter = "Soundfont list|*.omlist";
-            this.ExternalListExport.RestoreDirectory = true;
-            // 
             // LisCM
             // 
             this.LisCM.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -649,9 +626,6 @@
         public System.Windows.Forms.ColumnHeader columnHeader7;
         public System.Windows.Forms.ColumnHeader columnHeader8;
         public ListViewEx Lis;
-        private System.Windows.Forms.OpenFileDialog SoundFontImport;
-        public System.Windows.Forms.OpenFileDialog ExternalListImport;
-        public System.Windows.Forms.SaveFileDialog ExternalListExport;
         private System.Windows.Forms.ContextMenu LisCM;
         private System.Windows.Forms.MenuItem OSF;
         private System.Windows.Forms.MenuItem OSFd;

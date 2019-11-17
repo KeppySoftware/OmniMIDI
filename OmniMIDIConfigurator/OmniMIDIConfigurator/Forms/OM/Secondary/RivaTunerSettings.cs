@@ -43,7 +43,6 @@ namespace OmniMIDIConfigurator
         private void RivaTunerSettings_Load(object sender, EventArgs e)
         {
             ProgramsList.ContextMenu = RivaOSDContext;
-            AddAllowedProgram.InitialDirectory = Properties.Settings.Default.LastBrowserPath;
 
             if (!File.Exists(RTSSOSDListPath))
                 File.Create(RTSSOSDListPath).Dispose();
@@ -119,7 +118,9 @@ namespace OmniMIDIConfigurator
             }
             else
             {
+                AddAllowedProgram.InitialDirectory = Properties.Settings.Default.LastBrowserPath;
                 AddAllowedProgram.FileName = "";
+
                 if (AddAllowedProgram.ShowDialog() == DialogResult.OK)
                 {
                     foreach (string str in AddAllowedProgram.FileNames)

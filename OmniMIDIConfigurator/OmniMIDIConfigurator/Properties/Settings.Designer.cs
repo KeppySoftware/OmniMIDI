@@ -130,18 +130,6 @@ namespace OmniMIDIConfigurator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PatchInfoShow {
-            get {
-                return ((bool)(this["PatchInfoShow"]));
-            }
-            set {
-                this["PatchInfoShow"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <ArrayOfInt xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
   <int>-1</int>
@@ -199,6 +187,30 @@ namespace OmniMIDIConfigurator.Properties {
             }
             set {
                 this["ShowChangelogStartUp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastSoundFontPath {
+            get {
+                return ((string)(this["LastSoundFontPath"]));
+            }
+            set {
+                this["LastSoundFontPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastPatchPath {
+            get {
+                return ((string)(this["LastPatchPath"]));
+            }
+            set {
+                this["LastPatchPath"] = value;
             }
         }
     }

@@ -121,6 +121,7 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("Reverb", 0),
             new SettingStruct ("SincConv", 0),
             new SettingStruct ("SincInter", 0),
+            new SettingStruct ("StockWinMM", 0),
             new SettingStruct ("SynthType", 2),
             new SettingStruct ("VID", 0xFFFF),
             new SettingStruct ("VolumeBoost", 0),
@@ -149,6 +150,9 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
+                    Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(Export ? SFD.FileName : OFD.FileName);
+                    Properties.Settings.Default.Save();
+
                     using (Process E = new Process())
                     {
                         E.StartInfo.FileName = "reg.exe";
@@ -177,8 +181,6 @@ namespace OmniMIDIConfigurator
                         null);
                 }
             }
-
-            Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(Export ? SFD.FileName : OFD.FileName);
 
             OFD.Dispose();
             SFD.Dispose();
@@ -381,12 +383,12 @@ namespace OmniMIDIConfigurator
             Boolean isElevated = IsProcessElevated();
             String MessageString = String.Format("You don't have the rights to edit the target folder!{0}", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
             
-            DialogResult Message = Program.ShowError(isElevated ? 3 : 4, "Permissions required", MessageString, null);
+            DialogResult Message = Program.ShowError(isElevated ? 4 : 3, "Permissions required", MessageString, null);
             if (Message == DialogResult.Yes)
             {
                 try
                 {
-                    ProcessStartInfo elevated = new ProcessStartInfo(System.Reflection.Assembly.GetEntryAssembly().Location, "/WINMMWRP");
+                    ProcessStartInfo elevated = new ProcessStartInfo(System.Reflection.Assembly.GetEntryAssembly().Location);
                     elevated.UseShellExecute = true;
                     elevated.Verb = "runas";
                     Process.Start(elevated);
@@ -427,27 +429,23 @@ namespace OmniMIDIConfigurator
             return (Functions.CLSID32.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll");
         }
 
-        public static Boolean ApplyWinMMWRPPatch(Boolean DAWMode)
+        public static DialogResult ApplyWinMMWRPPatch(Boolean DAWMode)
         {
-            if ((Environment.OSVersion.Version.Major <= 6 && Environment.OSVersion.Version.Minor < 2) && Properties.Settings.Default.PatchInfoShow == true)
-            {
-                Properties.Settings.Default.PatchInfoShow = false;
-                Properties.Settings.Default.Save();
-                Program.ShowError(0, "Information", "The patch is not needed on Windows 7 and older, but you can install it anyway.", null);
-            }
-
             OpenFileDialog WinMMDialog = new OpenFileDialog();
-            try
-            {
-                WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
-                WinMMDialog.Title = "Select an application to patch";
-                WinMMDialog.Multiselect = false;
-                WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
+            WinMMDialog.Title = "Select an application to patch";
+            WinMMDialog.Multiselect = false;
+            WinMMDialog.InitialDirectory = Properties.Settings.Default.LastPatchPath;
 
-                if (WinMMDialog.ShowDialog() == DialogResult.OK)
+            if (WinMMDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
                 {
                     MachineType BitApp = GetAppCompiledMachineType(WinMMDialog.FileName);
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
+
+                    Properties.Settings.Default.LastPatchPath = WinMMDialog.FileName;
+                    Properties.Settings.Default.Save();
 
                     if (DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32")) ||
                         DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64")) ||
@@ -455,7 +453,7 @@ namespace OmniMIDIConfigurator
                     {
                         Program.ShowError(4, "Error", "I'm afraid I can't do that, Dave.", null);
                         WinMMDialog.Dispose();
-                        return false;
+                        return DialogResult.No;
                     }
 
                     RemovePatchFiles(WinMMDialog.FileName, true);
@@ -469,32 +467,41 @@ namespace OmniMIDIConfigurator
                     {
                         Program.ShowError(4, "Error", "Unable to patch the following executable!\nThe configurator can only patch x86, x86-64 and ARM64 executables.\n\nPress OK to continue", null);
                         WinMMDialog.Dispose();
-                        return false;
+                        return DialogResult.No;
                     }
-
-                    WinMMDialog.Dispose();
-                    return true;
                 }
+                catch
+                {
+                    RestartAsAdmin();
+                    WinMMDialog.Dispose();
+                    return DialogResult.No;
+                }
+
+                WinMMDialog.Dispose();
+                return DialogResult.OK;
             }
-            catch { RestartAsAdmin(); }
 
             WinMMDialog.Dispose();
-            return false;
+            return DialogResult.Abort;
         }
 
-        public static Boolean RemoveWinMMPatch()
+        public static DialogResult RemoveWinMMPatch()
         {
             OpenFileDialog WinMMDialog = new OpenFileDialog();
-            try
-            {
-                WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
-                WinMMDialog.Title = "Select an application to unpatch";
-                WinMMDialog.Multiselect = false;
-                WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-                if (WinMMDialog.ShowDialog() == DialogResult.OK)
+            WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
+            WinMMDialog.Title = "Select an application to unpatch";
+            WinMMDialog.Multiselect = false;
+            WinMMDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            if (WinMMDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
                 {
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
+
+                    Properties.Settings.Default.LastPatchPath = WinMMDialog.FileName;
+                    Properties.Settings.Default.Save();
 
                     if (DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "System32")) ||
                         DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64")) ||
@@ -502,17 +509,24 @@ namespace OmniMIDIConfigurator
                     {
                         Program.ShowError(4, "Error", "I'm afraid I can't do that, Dave.", null);
                         WinMMDialog.Dispose();
-                        return false;
+                        return DialogResult.No;
                     }
 
                     RemovePatchFiles(WinMMDialog.FileName, false);
                 }
+                catch 
+                {
+                    RestartAsAdmin();
+                    WinMMDialog.Dispose();
+                    return DialogResult.No;
+                }
 
-                return true;
+                WinMMDialog.Dispose();
+                return DialogResult.OK;
             }
-            catch { RestartAsAdmin(); }
 
-            return false;
+            WinMMDialog.Dispose();
+            return DialogResult.Abort;
         }
 
         private static void RemovePatchFiles(String DirectoryPath, Boolean Silent)
@@ -522,7 +536,7 @@ namespace OmniMIDIConfigurator
             foreach (String DeleteMe in DeleteTheseFiles)
                 File.Delete(String.Format("{0}\\{1}", Path.GetDirectoryName(DirectoryPath), DeleteMe));
 
-            if (!Silent) MessageBox.Show(String.Format("\"{0}\" has been succesfully unpatched!", Path.GetFileName(DirectoryPath)), "OmniMIDI - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!Silent) MessageBox.Show(String.Format("\"{0}\" has been successfully unpatched!", Path.GetFileName(DirectoryPath)), "OmniMIDI - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static void LoudMaxInstall()
