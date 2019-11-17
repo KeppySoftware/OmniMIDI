@@ -348,11 +348,6 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private void ChangeA2WOutDir_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            new OutputWAVDir().ShowDialog();
-        }
-
         private void SpatialSound_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Functions.OpenAdvancedAudioSettings("spatial", "This function requires Windows 10 Creators Update or newer.");

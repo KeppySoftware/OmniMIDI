@@ -208,6 +208,17 @@ namespace OmniMIDIConfigurator
             new InfoWindow().ShowDialog();
         }
 
+        private void ImportPres_Click(object sender, EventArgs e)
+        {
+            Functions.SettingsRegEditor(false);
+            CreateSETEmbed();
+        }
+
+        private void ExportPres_Click(object sender, EventArgs e)
+        {
+            Functions.SettingsRegEditor(true);
+        }
+
         private void QICombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (QICombo.SelectedIndex)
@@ -247,6 +258,16 @@ namespace OmniMIDIConfigurator
             new RivaTunerSettings().ShowDialog();
         }
 
+        private void AssignListToApp_Click(object sender, EventArgs e)
+        {
+            new SFListAssign().ShowDialog();
+        }
+
+        private void ChangeWAVOutput_Click(object sender, EventArgs e)
+        {
+            new OutputWAVDir().ShowDialog();
+        }
+
         private void CloseConfigurator_Click(object sender, EventArgs e)
         {
             try
@@ -263,6 +284,16 @@ namespace OmniMIDIConfigurator
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             CloseConfigurator_Click(null, null);
+        }
+
+        private void OMDRegister_Click(object sender, EventArgs e)
+        {
+            Functions.DriverRegistry(false);
+        }
+
+        private void OMDUnregister_Click(object sender, EventArgs e)
+        {
+            Functions.DriverRegistry(true);
         }
 
         private void OMAPCpl_Click(object sender, EventArgs e)

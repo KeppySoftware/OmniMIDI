@@ -13,46 +13,23 @@ namespace OmniMIDIConfigurator
 {
     public partial class SFListAssign : Form
     {
-        public string LastBrowserPath { get; set; }
-
         public static string soundfontnewlocation = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
         public static string PathToAllLists = soundfontnewlocation + "\\OmniMIDI\\applists";
         public string[] ListsPath = new string[]
         {
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_A.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_B.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_C.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_D.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_E.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_F.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_G.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_H.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_I.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_L.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_M.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_N.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_O.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_P.applist",
-            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_Q.applist"
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_G.applist"
         };
-
-        public int whichone { get; set; }
 
         public string CurrentList { get; set; }
 
         public SFListAssign()
         {
             InitializeComponent();
-            if (Convert.ToInt32(Program.SynthSettings.GetValue("Extra8Lists", 0)) == 1)
-            {
-                SelectedListBox.Items.Add("List 10");
-                SelectedListBox.Items.Add("List 11");
-                SelectedListBox.Items.Add("List 12");
-                SelectedListBox.Items.Add("List 13");
-                SelectedListBox.Items.Add("List 14");
-                SelectedListBox.Items.Add("List 15");
-                SelectedListBox.Items.Add("List 16");
-            }
         }
 
         private void ChangeList(string WhichList)
@@ -110,7 +87,7 @@ namespace OmniMIDIConfigurator
 
         private void ClearAppList()
         {
-            DialogResult dialogResult = MessageBox.Show(String.Format("Are you sure you want to clear the list {0}?", whichone), "Assign a soundfont list to a specific app", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult dialogResult = MessageBox.Show(String.Format("Are you sure you want to clear the list {0}?", SelectedListBox.SelectedIndex), "Assign a soundfont list to a specific app", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
                 Lis.Items.Clear();
@@ -148,7 +125,7 @@ namespace OmniMIDIConfigurator
 
         private void addAnAppToTheListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddApp.InitialDirectory = LastBrowserPath;
+            AddApp.InitialDirectory = Properties.Settings.Default.LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
                 foreach (string str in AddApp.FileNames)
@@ -161,7 +138,7 @@ namespace OmniMIDIConfigurator
 
         private void addAnAppToTheListAppNameOnlyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddApp.InitialDirectory = LastBrowserPath;
+            AddApp.InitialDirectory = Properties.Settings.Default.LastBrowserPath;
             if (AddApp.ShowDialog() == DialogResult.OK)
             {
                 foreach (string str in AddApp.FileNames)
@@ -185,7 +162,6 @@ namespace OmniMIDIConfigurator
         private void SelectedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             CurrentList = ListsPath[SelectedListBox.SelectedIndex];
-            whichone = SelectedListBox.SelectedIndex + 1;
             ChangeList(CurrentList);
         }
     }

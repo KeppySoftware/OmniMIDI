@@ -5,8 +5,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 */
 #pragma once
 
-#define DEBUGCB(DB) PrintMessageToDebugLog("CB", #DB);
-
 #define DriverSettingsCase(Setting, Mode, Type, SettingStruct, Value, cbValue) \
 	case Setting: \
 		if (!SettingsManagedByClient) PrintMessageToDebugLog(#Setting, "Please send OM_MANAGE first!!!"); return FALSE; \
@@ -25,34 +23,23 @@ DWORD OMCallbackMode = CALLBACK_NULL;
 void DoCallback(DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
 	switch (OMCallbackMode) {
 	case CALLBACK_FUNCTION:
-		DEBUGCB(CALLBACK_FUNCTION);
 		CustomCallback((HMIDIOUT)OMHMIDI, msg, OMInstance, param1, param2);
 		break;
 	case CALLBACK_EVENT:
-		DEBUGCB(CALLBACK_EVENT);
 		if (!SetEvent((HANDLE)OMCallback)) CrashMessage("DoCallbackSE");
 		break;
 	case CALLBACK_THREAD:
-		DEBUGCB(CALLBACK_THREAD);
 		if (!PostThreadMessage((DWORD)OMCallback, msg, param1, param2)) CrashMessage("DoCallbackPTM");
 		break;
 	case CALLBACK_WINDOW:
-		DEBUGCB(CALLBACK_WINDOW);
 		if (!PostMessage((HWND)OMCallback, msg, param1, param2)) CrashMessage("DoCallbackPM");
-		break;
-	default:
-		DEBUGCB(NULL);
-		if (!AlreadyInitializedViaKDMAPI) {
-			if (!DriverCallback(OMCallback, OMFlags, OMHDRVR, msg, OMInstance, param1, param2)) CrashMessage("DoCallbackDC");
-		}
 		break;
 	}
 }
 
 // CookedPlayer system
 VOID KillOldCookedPlayer(DWORD_PTR dwUser) {
-	if (IsThisThreadActive(CookedThread.ThreadHandle))
-	{
+	if (IsThisThreadActive(CookedThread.ThreadHandle)) {
 		CookedPlayerHasToGo = TRUE;
 		if (WaitForSingleObject(CookedThread.ThreadHandle, INFINITE) == WAIT_OBJECT_0) {
 			CloseHandle(CookedThread.ThreadHandle);

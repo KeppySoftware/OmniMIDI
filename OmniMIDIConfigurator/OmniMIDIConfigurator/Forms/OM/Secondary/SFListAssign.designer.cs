@@ -1,4 +1,5 @@
-﻿namespace OmniMIDIConfigurator{
+﻿namespace OmniMIDIConfigurator
+{
     partial class SFListAssign
     {
         /// <summary>
@@ -79,8 +80,7 @@
             "List 5",
             "List 6",
             "List 7",
-            "List 8",
-            "List 9"});
+            "List 8"});
             this.SelectedListBox.Location = new System.Drawing.Point(117, 61);
             this.SelectedListBox.Name = "SelectedListBox";
             this.SelectedListBox.Size = new System.Drawing.Size(521, 21);

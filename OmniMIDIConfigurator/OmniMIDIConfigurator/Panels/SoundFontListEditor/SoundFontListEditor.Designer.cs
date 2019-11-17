@@ -415,7 +415,7 @@
             // 
             // ExternalListExport
             // 
-            this.ExternalListExport.Filter = "Soundfont list|*.omlist;";
+            this.ExternalListExport.Filter = "Soundfont list|*.omlist";
             this.ExternalListExport.RestoreDirectory = true;
             // 
             // LisCM

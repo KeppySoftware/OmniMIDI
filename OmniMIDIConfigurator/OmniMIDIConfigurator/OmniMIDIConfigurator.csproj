@@ -103,6 +103,12 @@
     <Compile Include="Forms\OM\Audio Outputs\DefaultAudioOutput.designer.cs">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Secondary\AddToWhichList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Secondary\AddToWhichList.designer.cs">
+      <DependentUpon>AddToWhichList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OM\Secondary\MaskSynthAsAnother.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -255,6 +261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Audio Outputs\DefaultAudioOutput.resx">
       <DependentUpon>DefaultAudioOutput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Secondary\AddToWhichList.resx">
+      <DependentUpon>AddToWhichList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\MaskSynthAsAnother.resx">
       <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>

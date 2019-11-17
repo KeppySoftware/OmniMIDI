@@ -65,6 +65,7 @@ namespace OmniMIDIConfigurator
         public static RegistryKey Mapper = null;
         public static RegistryKey Watchdog = null;
 
+        public const string HKCU = "HKEY_CURRENT_USER\\";
         public const string MIPath = "SOFTWARE\\OmniMIDI";
         public const string SSPath = "SOFTWARE\\OmniMIDI\\Configuration";
         public const string MPPath = "SOFTWARE\\OmniMIDI\\Mapper";
@@ -90,15 +91,7 @@ namespace OmniMIDIConfigurator
             OMFixedPath + "\\lists\\OmniMIDI_D.omlist",
             OMFixedPath + "\\lists\\OmniMIDI_E.omlist",
             OMFixedPath + "\\lists\\OmniMIDI_F.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_G.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_H.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_I.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_L.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_M.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_N.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_O.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_P.omlist",
-            OMFixedPath + "\\lists\\OmniMIDI_Q.omlist"
+            OMFixedPath + "\\lists\\OmniMIDI_G.omlist"
         };
 
         [STAThread]
@@ -110,9 +103,9 @@ namespace OmniMIDIConfigurator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (!Functions.CheckDriverStatusInReg("x86", Functions.CLSID32)) return;
+            Functions.CheckDriverStatusInReg("x86", Functions.CLSID32);
             if (Environment.Is64BitOperatingSystem)
-                if (!Functions.CheckDriverStatusInReg("x64", Functions.CLSID64)) return;
+                Functions.CheckDriverStatusInReg("x64", Functions.CLSID64);
 
             OpenRequiredKey(ref Mixer, MIPath);
             OpenRequiredKey(ref SynthSettings, SSPath);

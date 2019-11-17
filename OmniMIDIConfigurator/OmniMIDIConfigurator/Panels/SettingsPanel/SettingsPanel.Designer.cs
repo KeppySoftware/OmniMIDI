@@ -113,7 +113,6 @@
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.DebugMode = new System.Windows.Forms.CheckBox();
-            this.ChangeA2WOutDir = new OmniMIDIConfigurator.LinkLabelEx();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
             this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
@@ -1156,7 +1155,7 @@
             // 
             this.SpatialSound.AutoSize = true;
             this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.SpatialSound.Location = new System.Drawing.Point(6, 214);
+            this.SpatialSound.Location = new System.Drawing.Point(6, 196);
             this.SpatialSound.Name = "SpatialSound";
             this.SpatialSound.Size = new System.Drawing.Size(148, 13);
             this.SpatialSound.TabIndex = 46;
@@ -1175,18 +1174,6 @@
             this.DebugMode.UseVisualStyleBackColor = true;
             this.DebugMode.CheckedChanged += new System.EventHandler(this.DebugMode_CheckedChanged);
             // 
-            // ChangeA2WOutDir
-            // 
-            this.ChangeA2WOutDir.AutoSize = true;
-            this.ChangeA2WOutDir.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeA2WOutDir.Location = new System.Drawing.Point(6, 196);
-            this.ChangeA2WOutDir.Name = "ChangeA2WOutDir";
-            this.ChangeA2WOutDir.Size = new System.Drawing.Size(148, 13);
-            this.ChangeA2WOutDir.TabIndex = 45;
-            this.ChangeA2WOutDir.TabStop = true;
-            this.ChangeA2WOutDir.Text = "Change WAV output directory";
-            this.ChangeA2WOutDir.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeA2WOutDir_LinkClicked);
-            // 
             // DebugModeFolder
             // 
             this.DebugModeFolder.AutoSize = true;
@@ -1204,7 +1191,6 @@
             // 
             this.LegacySetDia.Controls.Add(this.ShowChangelogUpdate);
             this.LegacySetDia.Controls.Add(this.DebugModeFolder);
-            this.LegacySetDia.Controls.Add(this.ChangeA2WOutDir);
             this.LegacySetDia.Controls.Add(this.DebugMode);
             this.LegacySetDia.Controls.Add(this.SpatialSound);
             this.LegacySetDia.Controls.Add(this.FastHotKeys);
@@ -1215,7 +1201,7 @@
             this.LegacySetDia.Controls.Add(this.ChangeSynthMask);
             this.LegacySetDia.Location = new System.Drawing.Point(3, 867);
             this.LegacySetDia.Name = "LegacySetDia";
-            this.LegacySetDia.Size = new System.Drawing.Size(670, 238);
+            this.LegacySetDia.Size = new System.Drawing.Size(670, 220);
             this.LegacySetDia.TabIndex = 2;
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
@@ -1238,7 +1224,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1109);
+            this.Size = new System.Drawing.Size(678, 1091);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1346,7 +1332,6 @@
         public System.Windows.Forms.CheckBox FastHotKeys;
         private LinkLabelEx SpatialSound;
         public System.Windows.Forms.CheckBox DebugMode;
-        private LinkLabelEx ChangeA2WOutDir;
         private LinkLabelEx DebugModeFolder;
         public System.Windows.Forms.GroupBox LegacySetDia;
         public System.Windows.Forms.CheckBox ShowChangelogUpdate;

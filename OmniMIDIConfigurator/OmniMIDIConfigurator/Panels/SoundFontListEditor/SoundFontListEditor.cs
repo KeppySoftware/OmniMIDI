@@ -53,21 +53,35 @@ namespace OmniMIDIConfigurator
             IEL.BackgroundImage = Properties.Resources.ImportIcon;
             EL.BackgroundImage = Properties.Resources.ExportIcon;
 
-            SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
-            if (SelectedListBox.SelectedIndex == 0)
-                SoundFontListExtension.StartCSFWatcher();
-
             // Add the SoundFonts before activating the CSFWatcher
             if (SFs != null && SFs.Count() > 0)
             {
-                ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(SFs, false, true);
-
-                if (iSFs != null)
+                foreach (String SF in SFs)
                 {
-                    foreach (ListViewItem iSF in iSFs)
-                        Lis.Items.Add(iSF);
+                    using (AddToWhichList TF = new AddToWhichList(SF))
+                    {
+                        if (TF.ShowDialog() == DialogResult.OK)
+                        {
+                            SelectedListBox.SelectedIndex = TF.Index;
+
+                            String[] TSF = new String[] { SF };
+                            ListViewItem[] iSFs = SoundFontListExtension.AddSFToList(TSF, false, true);
+
+                            if (iSFs != null)
+                            {
+                                foreach (ListViewItem iSF in iSFs)
+                                    Lis.Items.Add(iSF);
+                            }
+
+                            SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+                        }
+                    }
                 }
             }
+
+            SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
+            if (SelectedListBox.SelectedIndex == 0)
+                SoundFontListExtension.StartCSFWatcher();
 
             // Activate the CSFWatcher now by assigning the events, to avoid a race condition
             SoundFontListExtension.OpenCSFWatcher(true, new FileSystemEventHandler(CSFHandler));

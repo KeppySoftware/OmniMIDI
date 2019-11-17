@@ -127,6 +127,63 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("VolumeMonitor", 0)
         };
 
+        public static void SettingsRegEditor(bool Export)
+        {
+            OpenFileDialog OFD = new OpenFileDialog()
+            {
+                Multiselect = false,
+                InitialDirectory = Properties.Settings.Default.LastImportExportPath,
+                Filter = "Registry file | *.reg"
+            };
+
+            SaveFileDialog SFD = new SaveFileDialog()
+            {
+                OverwritePrompt = true,
+                InitialDirectory = Properties.Settings.Default.LastImportExportPath,
+                Filter = "Registry file | *.reg"
+            };
+
+            DialogResult RES = Export ? SFD.ShowDialog() : OFD.ShowDialog();
+
+            if (RES == DialogResult.OK)
+            {
+                try
+                {
+                    using (Process E = new Process())
+                    {
+                        E.StartInfo.FileName = "reg.exe";
+                        E.StartInfo.UseShellExecute = false;
+                        E.StartInfo.RedirectStandardOutput = true;
+                        E.StartInfo.RedirectStandardError = true;
+                        E.StartInfo.CreateNoWindow = true;
+                        E.StartInfo.Arguments = 
+                            String.Format(
+                                "{0} {1}\"{2}\" {3}", 
+                                Export ? "export" : "import",
+                                Export ? String.Format("\"{0}{1}\" ", Program.HKCU, Program.SSPath) : String.Empty,                              
+                                Export ? SFD.FileName : OFD.FileName,
+                                Export ? "/y" : String.Empty);
+
+                        E.Start();
+                        E.WaitForExit();
+                    }
+                }
+                catch
+                {
+                    Program.ShowError(
+                        4,
+                        String.Format("Error while {0} settings", Export ? "exporting" : "importing"),
+                        "An error has occurred during the execution of the task.\n\nPress OK to continue.",
+                        null);
+                }
+            }
+
+            Properties.Settings.Default.LastImportExportPath = Path.GetDirectoryName(Export ? SFD.FileName : OFD.FileName);
+
+            OFD.Dispose();
+            SFD.Dispose();
+        }
+
         public static bool IsWindowsVistaOrNewer()
         {
             return (Environment.OSVersion.Version.Major >= 6);
@@ -181,13 +238,13 @@ namespace OmniMIDIConfigurator
         public static bool CheckDriverStatusInReg(String WhichBit, RegistryKey WhichKey)
         {
             bool Registered = false;
-            for (int i = 0; i <= 32; i++)
+            for (int i = 0; i < 32; i++)
             {
                 String iS = (i == 0) ? "" : i.ToString();
 
                 try
                 {
-                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "null").ToString() == "OmniMIDI\\OmniMIDI.dll")
+                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "wdmaud.drv").ToString() == "OmniMIDI\\OmniMIDI.dll")
                     {
                         Registered = true;
                         break;
@@ -202,12 +259,12 @@ namespace OmniMIDIConfigurator
 
             if (!Registered)
             {
-                MessageBox.Show(
-                    String.Format("It looks like something unregistered the {0} version of the driver from the Windows registry.\nOmniMIDI can recover from this automatically.\n\nPress OK to let the register tool fix the issue.", WhichBit),
+                DialogResult RES = MessageBox.Show(
+                    String.Format("It looks like something unregistered the {0} version of the driver from the registry.\n\nPress Yes if you want the configurator to fix the issue.", WhichBit),
                     String.Format("OmniMIDI ~ {0} driver not registered", WhichBit),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/omcrecover");
+                if (RES == DialogResult.Yes) Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/register");
             }
 
             return Registered;
@@ -322,19 +379,33 @@ namespace OmniMIDIConfigurator
         public static void RestartAsAdmin()
         {
             Boolean isElevated = IsProcessElevated();
-
             String MessageString = String.Format("You don't have the rights to edit the target folder!{0}", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
-            MessageBoxButtons MessageButtons = isElevated ? MessageBoxButtons.OK : MessageBoxButtons.YesNo;
-            MessageBoxIcon MessageIcon = isElevated ? MessageBoxIcon.Hand : MessageBoxIcon.Exclamation;
-           
-            DialogResult Message = Program.ShowError(4, "Permissions error", MessageString, null);
+            
+            DialogResult Message = Program.ShowError(isElevated ? 3 : 4, "Permissions required", MessageString, null);
             if (Message == DialogResult.Yes)
             {
-                ProcessStartInfo elevated = new ProcessStartInfo(System.Reflection.Assembly.GetEntryAssembly().Location, "/WINMMWRP");
-                elevated.UseShellExecute = true;
-                elevated.Verb = "runas";
-                Process.Start(elevated);
-                Application.ExitThread();
+                try
+                {
+                    ProcessStartInfo elevated = new ProcessStartInfo(System.Reflection.Assembly.GetEntryAssembly().Location, "/WINMMWRP");
+                    elevated.UseShellExecute = true;
+                    elevated.Verb = "runas";
+                    Process.Start(elevated);
+                    Application.ExitThread();
+                }
+                catch { }
+            }
+        }
+
+        public static void DriverRegistry(Boolean Uninstall)
+        {
+            try
+            {
+                Process Proc = Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", Uninstall ? "/unregisterv" : "/registerv");
+                Proc.WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                Program.ShowError(4, "Error", "There was an error while trying to register/unregister the driver.", ex);
             }
         }
 
@@ -347,7 +418,7 @@ namespace OmniMIDIConfigurator
             }
             catch (Exception ex)
             {
-                Program.ShowError(4, "Error", "There was an error while trying to register/unregister the driver.", ex);
+                Program.ShowError(4, "Error", "There was an error while trying to register/unregister the MIDI mapper.", ex);
             }
         }
 
