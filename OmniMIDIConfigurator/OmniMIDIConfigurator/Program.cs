@@ -144,7 +144,7 @@ namespace OmniMIDIConfigurator
                         {
                             try
                             {
-                                new ChangelogWindow(Driver.FileVersion.ToString(), false).ShowDialog();
+                                new ChangelogWindow(Driver.FileVersion.ToString(), true).ShowDialog();
                             }
                             catch { }
                         }

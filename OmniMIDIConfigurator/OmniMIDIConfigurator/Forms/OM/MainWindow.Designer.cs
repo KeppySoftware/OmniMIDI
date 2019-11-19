@@ -51,6 +51,7 @@
             this.OpenRTSSOSDM = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.AssignListToApp = new System.Windows.Forms.MenuItem();
+            this.ChangeWAVOutput = new System.Windows.Forms.MenuItem();
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.CloseConfigurator = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -62,6 +63,10 @@
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.WMWPatch = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem16 = new System.Windows.Forms.MenuItem();
+            this.OMDRegister = new System.Windows.Forms.MenuItem();
+            this.OMDUnregister = new System.Windows.Forms.MenuItem();
+            this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.OMAPInstall = new System.Windows.Forms.MenuItem();
             this.OMAPUninstall = new System.Windows.Forms.MenuItem();
@@ -89,13 +94,9 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
-            this.ChangeWAVOutput = new System.Windows.Forms.MenuItem();
-            this.menuItem16 = new System.Windows.Forms.MenuItem();
-            this.OMDRegister = new System.Windows.Forms.MenuItem();
-            this.OMDUnregister = new System.Windows.Forms.MenuItem();
+            this.DWCF = new System.Windows.Forms.MenuItem();
             this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
-            this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -140,7 +141,7 @@
             this.Set.Location = new System.Drawing.Point(4, 22);
             this.Set.Name = "Set";
             this.Set.Padding = new System.Windows.Forms.Padding(3);
-            this.Set.Size = new System.Drawing.Size(698, 435);
+            this.Set.Size = new System.Drawing.Size(698, 456);
             this.Set.TabIndex = 1;
             this.Set.Text = "Settings";
             this.Set.UseVisualStyleBackColor = true;
@@ -148,7 +149,7 @@
             // ExportPres
             // 
             this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ExportPres.Location = new System.Drawing.Point(269, 407);
+            this.ExportPres.Location = new System.Drawing.Point(269, 428);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(45, 23);
             this.ExportPres.TabIndex = 6;
@@ -159,7 +160,7 @@
             // ImportPres
             // 
             this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ImportPres.Location = new System.Drawing.Point(222, 407);
+            this.ImportPres.Location = new System.Drawing.Point(222, 428);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(45, 23);
             this.ImportPres.TabIndex = 5;
@@ -172,7 +173,7 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(208, 406);
+            this.SeparatorPres.Location = new System.Drawing.Point(208, 427);
             this.SeparatorPres.Name = "SeparatorPres";
             this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
             this.SeparatorPres.TabIndex = 50;
@@ -187,7 +188,7 @@
             "Audio engine settings",
             "Synthesizer settings",
             "Debug & legacy set."});
-            this.QICombo.Location = new System.Drawing.Point(77, 408);
+            this.QICombo.Location = new System.Drawing.Point(77, 429);
             this.QICombo.Name = "QICombo";
             this.QICombo.Size = new System.Drawing.Size(130, 21);
             this.QICombo.TabIndex = 4;
@@ -197,7 +198,7 @@
             // 
             this.QILabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.QILabel.AutoSize = true;
-            this.QILabel.Location = new System.Drawing.Point(8, 412);
+            this.QILabel.Location = new System.Drawing.Point(8, 433);
             this.QILabel.Name = "QILabel";
             this.QILabel.Size = new System.Drawing.Size(66, 13);
             this.QILabel.TabIndex = 4;
@@ -206,7 +207,7 @@
             // RestoreDefault
             // 
             this.RestoreDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RestoreDefault.Location = new System.Drawing.Point(516, 407);
+            this.RestoreDefault.Location = new System.Drawing.Point(516, 428);
             this.RestoreDefault.Name = "RestoreDefault";
             this.RestoreDefault.Size = new System.Drawing.Size(95, 23);
             this.RestoreDefault.TabIndex = 3;
@@ -216,7 +217,7 @@
             // ApplySettings
             // 
             this.ApplySettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplySettings.Location = new System.Drawing.Point(617, 407);
+            this.ApplySettings.Location = new System.Drawing.Point(617, 428);
             this.ApplySettings.Name = "ApplySettings";
             this.ApplySettings.Size = new System.Drawing.Size(75, 23);
             this.ApplySettings.TabIndex = 2;
@@ -309,6 +310,12 @@
             this.AssignListToApp.Text = "Assign a soundfont list to a specific app";
             this.AssignListToApp.Click += new System.EventHandler(this.AssignListToApp_Click);
             // 
+            // ChangeWAVOutput
+            // 
+            this.ChangeWAVOutput.Index = 6;
+            this.ChangeWAVOutput.Text = "Change WAV output directory";
+            this.ChangeWAVOutput.Click += new System.EventHandler(this.ChangeWAVOutput_Click);
+            // 
             // menuItem21
             // 
             this.menuItem21.Index = 7;
@@ -385,6 +392,31 @@
             this.menuItem5.Index = 3;
             this.menuItem5.Text = "-";
             // 
+            // menuItem16
+            // 
+            this.menuItem16.Index = 4;
+            this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.OMDRegister,
+            this.OMDUnregister});
+            this.menuItem16.Text = "OmniMIDI register tool";
+            // 
+            // OMDRegister
+            // 
+            this.OMDRegister.Index = 0;
+            this.OMDRegister.Text = "Register the driver";
+            this.OMDRegister.Click += new System.EventHandler(this.OMDRegister_Click);
+            // 
+            // OMDUnregister
+            // 
+            this.OMDUnregister.Index = 1;
+            this.OMDUnregister.Text = "Unregister the driver";
+            this.OMDUnregister.Click += new System.EventHandler(this.OMDUnregister_Click);
+            // 
+            // menuItem20
+            // 
+            this.menuItem20.Index = 5;
+            this.menuItem20.Text = "-";
+            // 
             // menuItem10
             // 
             this.menuItem10.Index = 6;
@@ -435,7 +467,8 @@
             this.ReinstallDriver,
             this.menuItem17,
             this.RestoreSFListEdWidth,
-            this.RestoreConfSettings});
+            this.RestoreConfSettings,
+            this.DWCF});
             this.menuItem1.Text = "Tools";
             // 
             // KACGuide
@@ -561,31 +594,11 @@
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
             // 
-            // ChangeWAVOutput
+            // DWCF
             // 
-            this.ChangeWAVOutput.Index = 6;
-            this.ChangeWAVOutput.Text = "Change WAV output directory";
-            this.ChangeWAVOutput.Click += new System.EventHandler(this.ChangeWAVOutput_Click);
-            // 
-            // menuItem16
-            // 
-            this.menuItem16.Index = 4;
-            this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.OMDRegister,
-            this.OMDUnregister});
-            this.menuItem16.Text = "OmniMIDI register tool";
-            // 
-            // OMDRegister
-            // 
-            this.OMDRegister.Index = 0;
-            this.OMDRegister.Text = "Register the driver";
-            this.OMDRegister.Click += new System.EventHandler(this.OMDRegister_Click);
-            // 
-            // OMDUnregister
-            // 
-            this.OMDUnregister.Index = 1;
-            this.OMDUnregister.Text = "Unregister the driver";
-            this.OMDUnregister.Click += new System.EventHandler(this.OMDUnregister_Click);
+            this.DWCF.Index = 9;
+            this.DWCF.Text = "Enable UI performance mode";
+            this.DWCF.Click += new System.EventHandler(this.DWCF_Click);
             // 
             // SFLEPanel
             // 
@@ -604,13 +617,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SETPanel.Location = new System.Drawing.Point(0, 0);
             this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(698, 402);
+            this.SETPanel.Size = new System.Drawing.Size(698, 423);
             this.SETPanel.TabIndex = 1;
-            // 
-            // menuItem20
-            // 
-            this.menuItem20.Index = 5;
-            this.menuItem20.Text = "-";
             // 
             // MainWindow
             // 
@@ -706,6 +714,7 @@
         private System.Windows.Forms.MenuItem OMDRegister;
         private System.Windows.Forms.MenuItem OMDUnregister;
         private System.Windows.Forms.MenuItem menuItem20;
+        private System.Windows.Forms.MenuItem DWCF;
     }
 }
 

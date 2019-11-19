@@ -22,9 +22,6 @@ namespace OmniMIDIConfigurator
         public static Boolean Quitting = false;
 
         public static string LastMIDIPath { get; set; }
-        bool bye;
-        bool skip;
-        String SoundFontT;
 
         // Preview
         String OriginalSF;
@@ -56,7 +53,6 @@ namespace OmniMIDIConfigurator
                     Close();
                     return;
                 }
-                SoundFontT = sf;
                 fonthandle = BassMidi.BASS_MIDI_FontInit(sf);
                 f = new FileInfo(sf);
                 next = sf;
@@ -71,7 +67,6 @@ namespace OmniMIDIConfigurator
                     Close();
                     return;
                 }
-                SoundFontT = SoundFont;
                 fonthandle = BassMidi.BASS_MIDI_FontInit(SoundFont);
                 f = new FileInfo(SoundFont);
                 next = SoundFont;
@@ -292,8 +287,6 @@ namespace OmniMIDIConfigurator
                     return;
                 }
 
-                int howmanytimes = 1;
-
                 long len = Bass.BASS_ChannelGetLength(hStream, BASSMode.BASS_POS_BYTE);
                 Bass.BASS_ChannelPlay(hStream, false);
                 ChangePreviewButtonText("Stop SoundFont preview", true);
@@ -306,7 +299,7 @@ namespace OmniMIDIConfigurator
                     {
                         break;
                     }
-                    System.Threading.Thread.Sleep(1);
+                    Thread.Sleep(1);
                 }
 
                 if (!Quitting)

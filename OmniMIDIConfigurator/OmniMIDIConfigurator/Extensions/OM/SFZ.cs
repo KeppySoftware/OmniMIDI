@@ -23,7 +23,6 @@ namespace OmniMIDIConfigurator
                         foreach (FileInfo File in FileInfoSFZ2) size2 += File.Length;
                         file.Close();
                         return size2;
-                        break;
                     }
                 }
                 file.Close();
@@ -42,10 +41,7 @@ namespace OmniMIDIConfigurator
                     foreach (FileInfo File in FileInfoSFZ) size += File.Length;
                     return size;
                 }
-                catch (Exception ex)
-                {
-                    return 0;
-                }
+                catch { return 0; }
             }
         }
     }

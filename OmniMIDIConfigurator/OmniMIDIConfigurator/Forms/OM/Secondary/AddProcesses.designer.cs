@@ -38,7 +38,8 @@
             // 
             // OKDone
             // 
-            this.OKDone.Location = new System.Drawing.Point(218, 260);
+            this.OKDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKDone.Location = new System.Drawing.Point(314, 371);
             this.OKDone.Name = "OKDone";
             this.OKDone.Size = new System.Drawing.Size(137, 23);
             this.OKDone.TabIndex = 0;
@@ -48,16 +49,21 @@
             // 
             // RunningProcessesList
             // 
+            this.RunningProcessesList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.RunningProcessesList.FormattingEnabled = true;
+            this.RunningProcessesList.IntegralHeight = false;
             this.RunningProcessesList.Location = new System.Drawing.Point(12, 12);
             this.RunningProcessesList.Name = "RunningProcessesList";
             this.RunningProcessesList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.RunningProcessesList.Size = new System.Drawing.Size(343, 238);
+            this.RunningProcessesList.Size = new System.Drawing.Size(439, 349);
             this.RunningProcessesList.TabIndex = 1;
             // 
             // Cancel
             // 
-            this.Cancel.Location = new System.Drawing.Point(147, 260);
+            this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Cancel.Location = new System.Drawing.Point(243, 371);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(65, 23);
             this.Cancel.TabIndex = 2;
@@ -67,8 +73,9 @@
             // 
             // RefreshList
             // 
+            this.RefreshList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.RefreshList.Image = global::OmniMIDIConfigurator.Properties.Resources.ReloadIcon;
-            this.RefreshList.Location = new System.Drawing.Point(12, 260);
+            this.RefreshList.Location = new System.Drawing.Point(12, 371);
             this.RefreshList.Name = "RefreshList";
             this.RefreshList.Size = new System.Drawing.Size(23, 23);
             this.RefreshList.TabIndex = 3;
@@ -77,8 +84,9 @@
             // 
             // RefrLab
             // 
+            this.RefrLab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.RefrLab.AutoSize = true;
-            this.RefrLab.Location = new System.Drawing.Point(41, 265);
+            this.RefrLab.Location = new System.Drawing.Point(41, 376);
             this.RefrLab.Name = "RefrLab";
             this.RefrLab.Size = new System.Drawing.Size(67, 13);
             this.RefrLab.TabIndex = 4;
@@ -89,7 +97,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(367, 295);
+            this.ClientSize = new System.Drawing.Size(463, 406);
             this.ControlBox = false;
             this.Controls.Add(this.RefrLab);
             this.Controls.Add(this.RefreshList);

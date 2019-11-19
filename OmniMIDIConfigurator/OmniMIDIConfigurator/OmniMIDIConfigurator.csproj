@@ -442,6 +442,7 @@
     <Content Include="Resources\Icons\wir.png" />
     <Content Include="Resources\Images\OMLauncher.png" />
     <Content Include="Resources\Icons\PayPalLogo.png" />
+    <Content Include="Resources\Images\OMLauncherFish.png" />
     <Content Include="Resources\LoudMax\LoudMax32.dll" />
     <Content Include="Resources\LoudMax\LoudMax64.dll" />
     <Content Include="Resources\WinMM\winmm32DAW.dll" />

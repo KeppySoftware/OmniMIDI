@@ -21,7 +21,6 @@ namespace OmniMIDIConfigurator.Forms
         String FullURL;
         String MessageToDisplay;
         String DestinationPath;
-        String DeleteThisIfFailed;
         Uri URL;
         int InstallMode;
         bool DriverReinstall;

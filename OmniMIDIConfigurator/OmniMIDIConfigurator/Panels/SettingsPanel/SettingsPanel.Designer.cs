@@ -49,6 +49,7 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.BufferText = new System.Windows.Forms.Label();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SincConv = new System.Windows.Forms.ComboBox();
@@ -110,13 +111,12 @@
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
             this.DebugMode = new System.Windows.Forms.CheckBox();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
-            this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
             this.UseTGT = new System.Windows.Forms.CheckBox();
+            this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeSynthMask = new OmniMIDIConfigurator.LinkLabelEx();
-            this.VolTrackBar = new KnobControl.KnobControl();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -419,6 +419,33 @@
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 6;
             // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
+            this.VolTrackBar.TabIndex = 16;
+            this.VolTrackBar.Value = 10000;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
             // BufferText
             // 
             this.BufferText.AutoSize = true;
@@ -715,6 +742,11 @@
             0,
             0,
             0});
+            this.IgnoreNotesLV.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.IgnoreNotesLV.Name = "IgnoreNotesLV";
             this.IgnoreNotesLV.Size = new System.Drawing.Size(38, 20);
             this.IgnoreNotesLV.TabIndex = 32;
@@ -752,7 +784,7 @@
             0,
             0});
             this.IgnoreNotesHV.Minimum = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
@@ -1085,8 +1117,6 @@
             // 
             // label15
             // 
-            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.Location = new System.Drawing.Point(6, 18);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(657, 42);
@@ -1117,6 +1147,8 @@
             // 
             // LegacySetDia
             // 
+            this.LegacySetDia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.LegacySetDia.Controls.Add(this.UseTGT);
             this.LegacySetDia.Controls.Add(this.ShowChangelogUpdate);
             this.LegacySetDia.Controls.Add(this.DebugModeFolder);
@@ -1135,16 +1167,6 @@
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
             // 
-            // ShowChangelogUpdate
-            // 
-            this.ShowChangelogUpdate.AutoSize = true;
-            this.ShowChangelogUpdate.Location = new System.Drawing.Point(9, 158);
-            this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
-            this.ShowChangelogUpdate.Size = new System.Drawing.Size(313, 17);
-            this.ShowChangelogUpdate.TabIndex = 47;
-            this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
-            this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
-            // 
             // UseTGT
             // 
             this.UseTGT.AutoSize = true;
@@ -1156,8 +1178,19 @@
     "ed apps only, could improve audio)";
             this.UseTGT.UseVisualStyleBackColor = true;
             // 
+            // ShowChangelogUpdate
+            // 
+            this.ShowChangelogUpdate.AutoSize = true;
+            this.ShowChangelogUpdate.Location = new System.Drawing.Point(9, 158);
+            this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
+            this.ShowChangelogUpdate.Size = new System.Drawing.Size(313, 17);
+            this.ShowChangelogUpdate.TabIndex = 47;
+            this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
+            this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
+            // 
             // DebugModeFolder
             // 
+            this.DebugModeFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DebugModeFolder.AutoSize = true;
             this.DebugModeFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.DebugModeFolder.Location = new System.Drawing.Point(554, 64);
@@ -1204,33 +1237,6 @@
             this.ChangeSynthMask.TabStop = true;
             this.ChangeSynthMask.Text = "Change how applications identify the synthesizer (Mask mode)";
             this.ChangeSynthMask.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeSynthMask_LinkClicked);
-            // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.EndAngle = 405F;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
-            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
-            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
-            this.VolTrackBar.ScaleDivisions = 10;
-            this.VolTrackBar.ScaleSubDivisions = 10;
-            this.VolTrackBar.ShowLargeScale = false;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.StartAngle = 135F;
-            this.VolTrackBar.TabIndex = 16;
-            this.VolTrackBar.Value = 10000;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // SettingsPanel
             // 

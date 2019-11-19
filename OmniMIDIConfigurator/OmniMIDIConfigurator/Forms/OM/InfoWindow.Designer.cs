@@ -92,6 +92,7 @@
             // 
             // OKBtn
             // 
+            this.OKBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.OKBtn.Location = new System.Drawing.Point(651, 244);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 24);
@@ -366,6 +367,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.OKBtn;
             this.ClientSize = new System.Drawing.Size(738, 280);
             this.Controls.Add(this.BecomePatron);
             this.Controls.Add(this.BB);

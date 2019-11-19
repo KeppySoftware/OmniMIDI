@@ -213,5 +213,17 @@ namespace OmniMIDIConfigurator.Properties {
                 this["LastPatchPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DrawControlsFaster {
+            get {
+                return ((bool)(this["DrawControlsFaster"]));
+            }
+            set {
+                this["DrawControlsFaster"] = value;
+            }
+        }
     }
 }

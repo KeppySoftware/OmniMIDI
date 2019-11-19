@@ -30,26 +30,29 @@ namespace OmniMIDIConfigurator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BlacklistSystem));
             this.BlackListDef = new System.Windows.Forms.Label();
             this.ProgramsBlackList = new System.Windows.Forms.ListBox();
             this.AddBlacklistedProgram = new System.Windows.Forms.OpenFileDialog();
             this.BlacklistContext = new System.Windows.Forms.ContextMenu();
-            this.AE = new System.Windows.Forms.MenuItem();
-            this.AEr = new System.Windows.Forms.MenuItem();
-            this.RE = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.CBLi = new System.Windows.Forms.MenuItem();
             this.EDBLi = new System.Windows.Forms.Button();
             this.UDBLi = new System.Windows.Forms.Button();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // BlackListDef
             // 
             this.BlackListDef.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.BlackListDef.Location = new System.Drawing.Point(12, 9);
+            this.BlackListDef.Location = new System.Drawing.Point(12, 5);
             this.BlackListDef.Name = "BlackListDef";
-            this.BlackListDef.Size = new System.Drawing.Size(401, 67);
+            this.BlackListDef.Size = new System.Drawing.Size(514, 67);
             this.BlackListDef.TabIndex = 26;
             this.BlackListDef.Text = resources.GetString("BlackListDef.Text");
             this.BlackListDef.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -68,7 +71,7 @@ namespace OmniMIDIConfigurator
             this.ProgramsBlackList.Margin = new System.Windows.Forms.Padding(0);
             this.ProgramsBlackList.Name = "ProgramsBlackList";
             this.ProgramsBlackList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ProgramsBlackList.Size = new System.Drawing.Size(677, 290);
+            this.ProgramsBlackList.Size = new System.Drawing.Size(677, 328);
             this.ProgramsBlackList.TabIndex = 21;
             this.ProgramsBlackList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProgramsBlackList_KeyDown);
             // 
@@ -80,49 +83,11 @@ namespace OmniMIDIConfigurator
             this.AddBlacklistedProgram.ReadOnlyChecked = true;
             this.AddBlacklistedProgram.Title = "Add a program to the blacklist...";
             // 
-            // BlacklistContext
-            // 
-            this.BlacklistContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.AE,
-            this.AEr,
-            this.RE,
-            this.menuItem3,
-            this.CBLi});
-            // 
-            // AE
-            // 
-            this.AE.Index = 0;
-            this.AE.Text = "Add executable(s) from file";
-            this.AE.Click += new System.EventHandler(this.AddBlackList_Click);
-            // 
-            // AEr
-            // 
-            this.AEr.Index = 1;
-            this.AEr.Text = "Add executable(s) from running processes";
-            this.AEr.Click += new System.EventHandler(this.AEr_Click);
-            // 
-            // RE
-            // 
-            this.RE.Index = 2;
-            this.RE.Text = "Remove executable(s)";
-            this.RE.Click += new System.EventHandler(this.RemoveBlackList_Click);
-            // 
-            // menuItem3
-            // 
-            this.menuItem3.Index = 3;
-            this.menuItem3.Text = "-";
-            // 
-            // CBLi
-            // 
-            this.CBLi.Index = 4;
-            this.CBLi.Text = "Clear blacklist";
-            this.CBLi.Click += new System.EventHandler(this.ClearBlacklist_Click);
-            // 
             // EDBLi
             // 
             this.EDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EDBLi.BackColor = System.Drawing.Color.Transparent;
-            this.EDBLi.Location = new System.Drawing.Point(549, 12);
+            this.EDBLi.Location = new System.Drawing.Point(550, 20);
             this.EDBLi.Name = "EDBLi";
             this.EDBLi.Size = new System.Drawing.Size(134, 23);
             this.EDBLi.TabIndex = 32;
@@ -134,7 +99,7 @@ namespace OmniMIDIConfigurator
             // 
             this.UDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.UDBLi.BackColor = System.Drawing.Color.Transparent;
-            this.UDBLi.Location = new System.Drawing.Point(549, 34);
+            this.UDBLi.Location = new System.Drawing.Point(550, 42);
             this.UDBLi.Name = "UDBLi";
             this.UDBLi.Size = new System.Drawing.Size(134, 23);
             this.UDBLi.TabIndex = 33;
@@ -142,17 +107,63 @@ namespace OmniMIDIConfigurator
             this.UDBLi.UseVisualStyleBackColor = false;
             this.UDBLi.Click += new System.EventHandler(this.UDBLi_Click);
             // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem2,
+            this.menuItem3,
+            this.menuItem4,
+            this.menuItem5,
+            this.menuItem6});
+            this.menuItem1.Text = "File";
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 0;
+            this.menuItem2.Text = "Add executable(s) from file";
+            this.menuItem2.Click += new System.EventHandler(this.AddBlackList_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "Add executable(s) from running processes";
+            this.menuItem3.Click += new System.EventHandler(this.AEr_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 2;
+            this.menuItem4.Text = "Remove executable(s)";
+            this.menuItem4.Click += new System.EventHandler(this.RemoveBlackList_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 3;
+            this.menuItem5.Text = "-";
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 4;
+            this.menuItem6.Text = "Clear blacklist";
+            this.menuItem6.Click += new System.EventHandler(this.ClearBlacklist_Click);
+            // 
             // BlacklistSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(695, 385);
+            this.ClientSize = new System.Drawing.Size(695, 423);
             this.Controls.Add(this.UDBLi);
             this.Controls.Add(this.EDBLi);
             this.Controls.Add(this.BlackListDef);
             this.Controls.Add(this.ProgramsBlackList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Menu = this.mainMenu1;
             this.Name = "BlacklistSystem";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -168,12 +179,14 @@ namespace OmniMIDIConfigurator
         internal System.Windows.Forms.ListBox ProgramsBlackList;
         private System.Windows.Forms.OpenFileDialog AddBlacklistedProgram;
         private ContextMenu BlacklistContext;
-        private MenuItem AE;
-        private MenuItem RE;
-        private MenuItem menuItem3;
-        private MenuItem CBLi;
         private Button EDBLi;
         private Button UDBLi;
-        private MenuItem AEr;
+        private MainMenu mainMenu1;
+        private MenuItem menuItem1;
+        private MenuItem menuItem2;
+        private MenuItem menuItem3;
+        private MenuItem menuItem4;
+        private MenuItem menuItem5;
+        private MenuItem menuItem6;
     }
 }

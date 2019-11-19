@@ -118,15 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BlackListDef.Text" xml:space="preserve">
-    <value>Add a program to the blacklist by right-clicking it, and selecting "Add executable(s)".
-To add a name manually, hold SHIFT while clicking "Add executable(s)".
+    <value>To manage the blacklist down below, use the "File" menu.
+To type the program name to blacklist manually, hold SHIFT while clicking "Add executable(s) from file".
 
-The blacklist parser is not case sensitive, and spaces are recognized.</value>
+The blacklist system is not case sensitive, and spaces are recognized.</value>
   </data>
   <metadata name="AddBlacklistedProgram.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <metadata name="BlacklistContext.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>195, 17</value>
+  </metadata>
+  <metadata name="mainMenu1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>333, 17</value>
   </metadata>
 </root>

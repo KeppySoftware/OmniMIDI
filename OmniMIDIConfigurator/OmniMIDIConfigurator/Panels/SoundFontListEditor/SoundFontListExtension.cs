@@ -375,7 +375,7 @@ namespace OmniMIDIConfigurator
                                     catch { }
                                 }
                             }
-                            catch (Exception ex)
+                            catch
                             {
                                 iSF = new ListViewItem(new[] {
                                         "Unrecognizable SoundFont",

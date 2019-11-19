@@ -152,6 +152,7 @@ namespace OmniMIDIConfigurator
             VersionLabel.Text = String.Format("Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
  
             Shown += CheckUpdatesStartUp;
+            DWCF.Checked = Properties.Settings.Default.DrawControlsFaster;
 
             // Check if MIDI mapper is available
             OMAPCpl.Visible = Functions.CheckMIDIMapper();
@@ -164,13 +165,13 @@ namespace OmniMIDIConfigurator
         // Wait for the resizing process to end before refreshing the window again
         protected override void OnResizeBegin(EventArgs e)
         {
-            SuspendLayout();
+            if (Properties.Settings.Default.DrawControlsFaster) SuspendLayout();
             base.OnResizeBegin(e);
         }
 
         protected override void OnResizeEnd(EventArgs e)
         {
-            ResumeLayout();
+            if (Properties.Settings.Default.DrawControlsFaster) ResumeLayout();
             base.OnResizeEnd(e);
         }
         // Wait for the resizing process to end before refreshing the window again
@@ -370,6 +371,34 @@ namespace OmniMIDIConfigurator
                 CreateSFLEEmbed(null);
                 CreateSETEmbed();
                 ApplySettings.PerformClick();
+            }
+        }
+
+        private void DWCF_Click(object sender, EventArgs e)
+        {
+            switch (DWCF.Checked)
+            {
+                case true:
+                    Properties.Settings.Default.DrawControlsFaster = false;
+                    Properties.Settings.Default.Save();
+
+                    CreateSETEmbed();
+
+                    DWCF.Checked = false;
+                    break;
+                case false:
+                default:
+                    DialogResult RES = Program.ShowError(3, "Enable UI performance mode", "Enabling this setting could introduce flickering, but will reduce CPU usage and increase performance on weak computers.\n\nPress Yes if you want to continue and apply the setting.", null);
+                    if (RES == DialogResult.Yes)
+                    {
+                        Properties.Settings.Default.DrawControlsFaster = true;
+                        Properties.Settings.Default.Save();
+
+                        CreateSETEmbed();
+
+                        DWCF.Checked = true;
+                    }
+                    break;
             }
         }
 

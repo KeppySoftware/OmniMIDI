@@ -75,7 +75,8 @@ namespace OmniMIDIConfigurator
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
             if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (PR)";
 
-            OMBigLogo.Image = Properties.Resources.OMLauncher;
+            OMBigLogo.Image = 
+                (DateTime.Today.Month == 4 && DateTime.Today.Day == 1) ? Properties.Resources.OMLauncherFish : Properties.Resources.OMLauncher;
 
             BB.Location = new Point(OMBigLogo.Size.Width - BB.Size.Width - 8, OMBigLogo.Size.Height - BB.Size.Height - 8);
             BB.Parent = OMBigLogo;
@@ -111,7 +112,7 @@ namespace OmniMIDIConfigurator
                     if (Environment.OSVersion.Version.Minor > 1)
                     {
                         WinVer.Text = String.Format(
-                            "{0}.{1}.{2}",
+                            "Version {0}.{1}\nBuild {2}",
                             Environment.OSVersion.Version.Major,
                             Environment.OSVersion.Version.Minor,
                             Environment.OSVersion.Version.Build
@@ -121,13 +122,13 @@ namespace OmniMIDIConfigurator
                     {
                         if (Int32.Parse(Regex.Match(Environment.OSVersion.ServicePack, @"\d+").Value, NumberFormatInfo.InvariantInfo) > 0)
                         {
-                            WinVer.Text = String.Format("{0}.{1}.{2} ({3})",
+                            WinVer.Text = String.Format("{0}.{1}\nBuild {2}, Service Pack {3}",
                                 Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
                                 Environment.OSVersion.Version.Build, Environment.OSVersion.ServicePack);
                         }
                         else
                         {
-                            WinVer.Text = String.Format("{0}.{1}.{2}",
+                            WinVer.Text = String.Format("{0}.{1}\nBuild {2}",
                                 Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor,
                                 Environment.OSVersion.Version.Build);
                         }

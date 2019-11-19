@@ -46,20 +46,18 @@ namespace OmniMIDIConfigurator
         private void SettingsPanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             // Double buffering is useless, refresh it by yourself lol
-            this.SuspendLayout();
-            this.Refresh();
-            this.ResumeLayout();
+
         }
 
-        protected override void WndProc(ref Message m)
+        protected override CreateParams CreateParams
         {
-            if (m.Msg == WM_VSCROLL | m.Msg == WM_HSCROLL)
+            get
             {
-                // Same thing here
-                this.Refresh();
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= Properties.Settings.Default.DrawControlsFaster ? 0 : 0x02000000;
+                cp.Style &= ~0x02000000;
+                return cp;
             }
- 
-            base.WndProc(ref m);
         }
 
         private void CheckSincEnabled()
@@ -177,8 +175,15 @@ namespace OmniMIDIConfigurator
                 DisableCookedPlayer.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableCookedPlayer", 0));
                 AllNotesIgnore.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllNotes", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
-                IgnoreNotesLV.Value = Convert.ToInt32(Program.SynthSettings.GetValue("MinVelIgnore", 0));
-                IgnoreNotesHV.Value = Convert.ToInt32(Program.SynthSettings.GetValue("MaxVelIgnore", 1));
+
+                Int32 LV = Convert.ToInt32(Program.SynthSettings.GetValue("MinVelIgnore", 1));
+                Int32 HV = Convert.ToInt32(Program.SynthSettings.GetValue("MaxVelIgnore", 2));
+                if (LV > HV) LV = HV;
+                if (LV < IgnoreNotesLV.Minimum | LV > IgnoreNotesLV.Maximum) LV = (int)IgnoreNotesLV.Minimum;
+                if (HV < IgnoreNotesHV.Minimum | HV > IgnoreNotesHV.Maximum) HV = (int)IgnoreNotesHV.Minimum;
+                IgnoreNotesLV.Value = LV;
+                IgnoreNotesHV.Value = HV;
+
                 CapFram.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("CapFramerate", 1));
                 Limit88.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("LimitTo88Keys", 0));
                 FullVelocityMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FullVelocityMode", 0));
@@ -275,8 +280,11 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DisableCookedPlayer", Convert.ToInt32(DisableCookedPlayer.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
+
+            if (IgnoreNotesLV.Value > IgnoreNotesHV.Value) IgnoreNotesLV.Value = IgnoreNotesHV.Value;
             Program.SynthSettings.SetValue("MinVelIgnore", IgnoreNotesLV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("MaxVelIgnore", IgnoreNotesHV.Value, RegistryValueKind.DWord);
+
             Program.SynthSettings.SetValue("CapFramerate", Convert.ToInt32(CapFram.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("LimitTo88Keys", Convert.ToInt32(Limit88.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("FullVelocityMode", Convert.ToInt32(FullVelocityMode.Checked), RegistryValueKind.DWord);
