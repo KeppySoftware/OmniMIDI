@@ -38,6 +38,8 @@ namespace OmniMIDIConfigurator
             OMWC.NAC.Dock = DockStyle.Fill;
             OMWC.NAC.AutoScroll = false;
             P.Controls.Add(OMWC.NAC);
+
+            MessageBox.Show(E.ToString());
         }
 
         private bool CreateSFLEEmbed(String[] SFs)

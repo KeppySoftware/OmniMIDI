@@ -837,6 +837,8 @@
             this.Preload.TabIndex = 22;
             this.Preload.Text = "Preload SoundFont in memory (Might cause a delay depending on computer and SoundF" +
     "ont)";
+            this.ButtonsDesc.SetToolTip(this.Preload, "You can also choose not to preload specific SoundFonts, to reduce the memory usag" +
+        "e.");
             this.Preload.UseVisualStyleBackColor = true;
             // 
             // label7

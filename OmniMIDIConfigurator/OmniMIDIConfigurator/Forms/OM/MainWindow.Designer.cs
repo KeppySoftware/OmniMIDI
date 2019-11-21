@@ -83,6 +83,7 @@
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.RestoreSFListEdWidth = new System.Windows.Forms.MenuItem();
             this.RestoreConfSettings = new System.Windows.Forms.MenuItem();
+            this.DWCF = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.DriverInfo = new System.Windows.Forms.MenuItem();
             this.BugReport = new System.Windows.Forms.MenuItem();
@@ -94,7 +95,6 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
-            this.DWCF = new System.Windows.Forms.MenuItem();
             this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
@@ -141,7 +141,7 @@
             this.Set.Location = new System.Drawing.Point(4, 22);
             this.Set.Name = "Set";
             this.Set.Padding = new System.Windows.Forms.Padding(3);
-            this.Set.Size = new System.Drawing.Size(698, 456);
+            this.Set.Size = new System.Drawing.Size(698, 435);
             this.Set.TabIndex = 1;
             this.Set.Text = "Settings";
             this.Set.UseVisualStyleBackColor = true;
@@ -523,6 +523,12 @@
             this.RestoreConfSettings.Text = "Restore all the configurator\'s internal settings";
             this.RestoreConfSettings.Click += new System.EventHandler(this.RestoreConfSettings_Click);
             // 
+            // DWCF
+            // 
+            this.DWCF.Index = 9;
+            this.DWCF.Text = "Enable UI performance mode";
+            this.DWCF.Click += new System.EventHandler(this.DWCF_Click);
+            // 
             // menuItem2
             // 
             this.menuItem2.Index = 3;
@@ -593,12 +599,6 @@
             // CheckUpdates
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
-            // 
-            // DWCF
-            // 
-            this.DWCF.Index = 9;
-            this.DWCF.Text = "Enable UI performance mode";
-            this.DWCF.Click += new System.EventHandler(this.DWCF_Click);
             // 
             // SFLEPanel
             // 

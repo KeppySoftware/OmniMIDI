@@ -434,6 +434,7 @@
     <Content Include="Resources\Icons\Octocat.png" />
     <Content Include="Resources\Icons\ok.png" />
     <Content Include="Resources\Icons\PatreonLogo.png" />
+    <Content Include="Resources\Icons\PreloadIcon.png" />
     <Content Include="Resources\Icons\SaveIcon.png" />
     <Content Include="Resources\Icons\successicon.png" />
     <Content Include="Resources\Icons\TextLogo.png" />

@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
             "127",
             "127",
+            "Yes",
             "Yes",
             "0",
             "0"}, -1);
@@ -71,6 +72,7 @@
             this.MSd = new System.Windows.Forms.MenuItem();
             this.ESF = new System.Windows.Forms.MenuItem();
             this.DSF = new System.Windows.Forms.MenuItem();
+            this.Preload = new System.Windows.Forms.Button();
             this.Lis = new OmniMIDIConfigurator.ListViewEx();
             this.SoundFont = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SrcBank = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -78,6 +80,7 @@
             this.DesBank = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DesPres = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.XGDrums = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.PreloadSF = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
@@ -120,7 +123,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(649, 220);
+            this.EL.Location = new System.Drawing.Point(649, 349);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 14;
@@ -156,7 +159,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(649, 191);
+            this.IEL.Location = new System.Drawing.Point(649, 320);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 13;
@@ -247,7 +250,7 @@
             this.MvD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvD.ForeColor = System.Drawing.Color.Transparent;
-            this.MvD.Location = new System.Drawing.Point(649, 154);
+            this.MvD.Location = new System.Drawing.Point(649, 178);
             this.MvD.Name = "MvD";
             this.MvD.Size = new System.Drawing.Size(24, 24);
             this.MvD.TabIndex = 9;
@@ -265,7 +268,7 @@
             this.MvU.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvU.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvU.ForeColor = System.Drawing.Color.Transparent;
-            this.MvU.Location = new System.Drawing.Point(649, 131);
+            this.MvU.Location = new System.Drawing.Point(649, 155);
             this.MvU.Name = "MvU";
             this.MvU.Size = new System.Drawing.Size(24, 24);
             this.MvU.TabIndex = 8;
@@ -434,6 +437,24 @@
             this.DSF.Index = 10;
             this.DSF.Text = "Disable SoundFont";
             // 
+            // Preload
+            // 
+            this.Preload.AccessibleDescription = "Toggles the preload of the samples for the selected SoundFonts";
+            this.Preload.AccessibleName = "Toggle preload for selected SoundFonts";
+            this.Preload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Preload.BackColor = System.Drawing.Color.Transparent;
+            this.Preload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Preload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Preload.ForeColor = System.Drawing.Color.Transparent;
+            this.Preload.Location = new System.Drawing.Point(649, 117);
+            this.Preload.Name = "Preload";
+            this.Preload.Size = new System.Drawing.Size(24, 24);
+            this.Preload.TabIndex = 32;
+            this.Preload.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.Preload.UseVisualStyleBackColor = false;
+            this.Preload.Click += new System.EventHandler(this.Preload_Click);
+            this.Preload.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonLoad);
+            // 
             // Lis
             // 
             this.Lis.AccessibleDescription = "The SoundFonts list";
@@ -453,15 +474,16 @@
             this.DesBank,
             this.DesPres,
             this.XGDrums,
+            this.PreloadSF,
             this.SFFormat,
             this.SFSize});
             this.Lis.FullRowSelect = true;
             this.Lis.GridLines = true;
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
-            listViewItem1.StateImageIndex = 0;
+            listViewItem2.StateImageIndex = 0;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -480,47 +502,61 @@
             // 
             // SoundFont
             // 
+            this.SoundFont.Tag = "SF";
             this.SoundFont.Text = "SoundFont";
             this.SoundFont.Width = 425;
             // 
             // SrcBank
             // 
+            this.SrcBank.Tag = "SrcB";
             this.SrcBank.Text = "SB";
             this.SrcBank.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SrcBank.Width = 30;
             // 
             // SrcPres
             // 
+            this.SrcPres.Tag = "SrcP";
             this.SrcPres.Text = "SP";
             this.SrcPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SrcPres.Width = 30;
             // 
             // DesBank
             // 
+            this.DesBank.Tag = "DesB";
             this.DesBank.Text = "DB";
             this.DesBank.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.DesBank.Width = 30;
             // 
             // DesPres
             // 
+            this.DesPres.Tag = "DesP";
             this.DesPres.Text = "DP";
             this.DesPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.DesPres.Width = 30;
             // 
             // XGDrums
             // 
+            this.XGDrums.Tag = "XG";
             this.XGDrums.Text = "XG";
             this.XGDrums.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.XGDrums.Width = 31;
             // 
+            // PreloadSF
+            // 
+            this.PreloadSF.Tag = "PSF";
+            this.PreloadSF.Text = "Preload";
+            this.PreloadSF.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // SFFormat
             // 
+            this.SFFormat.Tag = "SFF";
             this.SFFormat.Text = "Format";
             this.SFFormat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SFFormat.Width = 53;
             // 
             // SFSize
             // 
+            this.SFSize.Tag = "SFS";
             this.SFSize.Text = "Size";
             this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SFSize.Width = 62;
@@ -529,6 +565,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.Preload);
             this.Controls.Add(this.Lis);
             this.Controls.Add(this.SFlg);
             this.Controls.Add(this.Separator);
@@ -596,5 +633,7 @@
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem CSFs;
         private System.Windows.Forms.MenuItem PSFs;
+        private System.Windows.Forms.ColumnHeader PreloadSF;
+        public System.Windows.Forms.Button Preload;
     }
 }

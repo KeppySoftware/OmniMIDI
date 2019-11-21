@@ -620,5 +620,15 @@ namespace OmniMIDIConfigurator
             Program.Watchdog.SetValue("currentsflist", list, RegistryValueKind.DWord);
             Program.Watchdog.SetValue(String.Format("rel{0}", list), "1", RegistryValueKind.DWord);
         }
+
+        public static void ResetSpecificSetting(string PN)
+        {
+            var PV = Properties.Settings.Default.PropertyValues[PN];
+
+            PV.PropertyValue = PV.Property.DefaultValue;
+            PV.Deserialized = false;
+
+            Properties.Settings.Default[PN] = PV.PropertyValue;
+        }
     }
 }

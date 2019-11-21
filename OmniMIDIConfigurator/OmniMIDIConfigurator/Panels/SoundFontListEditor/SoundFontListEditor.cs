@@ -24,16 +24,20 @@ namespace OmniMIDIConfigurator
 
             Delegate = this;
 
-            for (int i = 0; i < Lis.Columns.Count; i++)
+            try
             {
-                if (Properties.Settings.Default.SFColumnsSize[i] != -1)
-                    Lis.Columns[i].Width = Properties.Settings.Default.SFColumnsSize[i];
-                else
+                for (int i = 0; i < Lis.Columns.Count; i++)
                 {
-                    Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
-                    Properties.Settings.Default.Save();
+                    if (Properties.Settings.Default.SFColumnsSize[i] != -1)
+                        Lis.Columns[i].Width = Properties.Settings.Default.SFColumnsSize[i];
+                    else
+                    {
+                        Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
+                        Properties.Settings.Default.Save();
+                    }
                 }
             }
+            catch { Functions.ResetSpecificSetting("SFColumnsSize"); }
 
             // Attach context menu
             Lis.ContextMenu = LisCM;
@@ -48,6 +52,7 @@ namespace OmniMIDIConfigurator
             MvU.BackgroundImage = Properties.Resources.MvUpIcon;
             MvD.BackgroundImage = Properties.Resources.MvDwIcon;
             LoadToApp.BackgroundImage = Properties.Resources.ReloadIcon;
+            Preload.BackgroundImage = Properties.Resources.PreloadIcon;
             IEL.BackgroundImage = Properties.Resources.ImportIcon;
             EL.BackgroundImage = Properties.Resources.ExportIcon;
 
@@ -56,11 +61,7 @@ namespace OmniMIDIConfigurator
             {
                 foreach (String SF in SFs)
                 {
-                    if (Path.GetExtension(SF).ToLowerInvariant() == ".sf1" |
-                        Path.GetExtension(SF).ToLowerInvariant() == ".sf2" |
-                        Path.GetExtension(SF).ToLowerInvariant() == ".sfz" |
-                        Path.GetExtension(SF).ToLowerInvariant() == ".sfark" |
-                        Path.GetExtension(SF).ToLowerInvariant() == ".sfpack")
+                    if (SoundFontListExtension.CheckSupportedFormat(Path.GetExtension(SF)))
                     {
                         using (AddToWhichList TF = new AddToWhichList(SF))
                         {
@@ -215,11 +216,15 @@ namespace OmniMIDIConfigurator
 
         private void Lis_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
-            for (int i = 0; i < Lis.Columns.Count; i++)
+            try
             {
-                Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
-                Properties.Settings.Default.Save();
+                for (int i = 0; i < Lis.Columns.Count; i++)
+                {
+                    Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
+                    Properties.Settings.Default.Save();
+                }
             }
+            catch { Functions.ResetSpecificSetting("SFColumnsSize"); }
         }
 
         private void Lis_DragDrop(object sender, DragEventArgs e)
@@ -458,6 +463,35 @@ namespace OmniMIDIConfigurator
         private void LoadToApp_Click(object sender, EventArgs e)
         {
             Functions.LoadSoundFontList(SelectedListBox.SelectedIndex);
+        }
+
+        private void Preload_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
+                {
+                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
+                    {
+                        switch (Lis.SelectedItems[i].SubItems[6].Text.ToLowerInvariant())
+                        {
+                            default:
+                            case "yes":
+                                Lis.SelectedItems[i].SubItems[6].Text = "No";
+                                break;
+                            case "no":
+                                Lis.SelectedItems[i].SubItems[6].Text = "Yes";
+                                break;
+                        }
+                    }
+
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReloadListAfterError(ex);
+            }
         }
 
         private void SaveList_Click(object sender, EventArgs e)

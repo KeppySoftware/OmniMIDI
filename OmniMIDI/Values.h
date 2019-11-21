@@ -151,6 +151,7 @@ wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
 typedef struct SoundFontList
 {
 	int EnableState;
+	int Preload;
 	wchar_t Path[NTFS_MAX_PATH];
 	int SourcePreset;
 	int SourceBank;

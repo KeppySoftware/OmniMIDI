@@ -120,6 +120,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 				SoundFontList TempSF;
 				wcsncpy(TempSF.Path, L"\0", NTFS_MAX_PATH);
 				TempSF.EnableState = FALSE;
+				TempSF.Preload = FALSE;
 				TempSF.SourcePreset = -1;
 				TempSF.SourceBank = -1;
 				TempSF.DestinationPreset = -1;
@@ -157,7 +158,6 @@ static BOOL FontLoader(LPWSTR in_path) {
 					else if (TempLine.find(L"sf.end") == 0)
 					{
 						if (AlreadyInitialized) {
-							// We've found the enable state! Crush it!
 							AlreadyInitialized = FALSE;
 							TempSoundFonts->push_back(TempSF);
 
@@ -183,6 +183,16 @@ static BOOL FontLoader(LPWSTR in_path) {
 							// We've found the enable state! Crush it!
 							TempSF.EnableState = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
 							PrintStreamValueToDebugLog("NewSFLoader", "sf.enabled", TempSF.EnableState);
+						}
+
+						continue;
+					}
+					else if (TempLine.find(L"sf.preload") == 0)
+					{
+						if (AlreadyInitialized) {
+							// We've found the preload state! Bop it!
+							TempSF.Preload = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.preload", TempSF.Preload);
 						}
 
 						continue;
@@ -269,7 +279,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 					PrintSoundFontToDebugLog(CurrentSF->Path, "Preparing BASS_MIDI_FONTEX...");
 					BASS_MIDI_FONTEX FEX = { font, CurrentSF->SourcePreset, CurrentSF->SourceBank, CurrentSF->DestinationPreset, CurrentSF->DestinationBank, 0 };
 
-					if (ManagedSettings.PreloadSoundFonts) {
+					if (ManagedSettings.PreloadSoundFonts && CurrentSF->Preload) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");
 #if defined(_M_IX86)
 						if (FileSize(CurrentSF->Path) <= 1073741824) {
