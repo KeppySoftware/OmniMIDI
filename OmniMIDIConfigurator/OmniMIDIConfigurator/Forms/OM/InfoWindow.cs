@@ -70,6 +70,8 @@ namespace OmniMIDIConfigurator
             }
             else KDMAPIVer.Text = "N/A";
 
+            CopyrightLabel.Text = String.Format(CopyrightLabel.Text, DateTime.Today.Year);
+
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());

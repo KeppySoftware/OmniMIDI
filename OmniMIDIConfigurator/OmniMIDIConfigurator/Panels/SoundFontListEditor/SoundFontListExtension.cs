@@ -47,6 +47,19 @@ namespace OmniMIDIConfigurator
             CSFWatcher.Dispose();
         }
 
+        public static bool CheckSupportedFormat(string FE)
+        {
+            foreach (String FF in Properties.Settings.Default.SupportedFormats)
+            {
+                if (FE.ToLowerInvariant() == FF)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string ReturnSoundFontFormat(string fileext)
         {
             if (fileext.ToLowerInvariant() == ".sf1")
@@ -55,12 +68,8 @@ namespace OmniMIDIConfigurator
                 return "SF2";
             else if (fileext.ToLowerInvariant() == ".sfz")
                 return "SFZ";
-            else if (fileext.ToLowerInvariant() == ".ssx")
-                return "Enc. SF";
-            else if (fileext.ToLowerInvariant() == ".sfpack")
-                return "SF Pack";
-            else if (fileext.ToLowerInvariant() == ".sfark")
-                return "SF Arch.";
+            else if (fileext.ToLowerInvariant() == ".sf2pack")
+                return "SF2 Pack";
             else
                 return "N/A";
         }
@@ -73,12 +82,8 @@ namespace OmniMIDIConfigurator
                 return "SoundFont 2.x by Creative Labs";
             else if (fileext.ToLowerInvariant() == ".sfz")
                 return "SoundFontZ by Cakewalk™";
-            else if (fileext.ToLowerInvariant() == ".ssx")
-                return "Princess Soft Encrypted SoundFont";
-            else if (fileext.ToLowerInvariant() == ".sfpack")
-                return "SoundFont compressed package";
-            else if (fileext.ToLowerInvariant() == ".sfark")
-                return "SoundFont Archive (SfARK)";
+            else if (fileext.ToLowerInvariant() == ".sf2pack")
+                return "SoundFont 2 compressed package";
             else
                 return "Unknown format";
         }
@@ -108,11 +113,7 @@ namespace OmniMIDIConfigurator
 
             foreach (String SF in SFs)
             {
-                if (Path.GetExtension(SF).ToLowerInvariant() == ".sf1" |
-                    Path.GetExtension(SF).ToLowerInvariant() == ".sf2" |              
-                    Path.GetExtension(SF).ToLowerInvariant() == ".sfz" |
-                    Path.GetExtension(SF).ToLowerInvariant() == ".sfark" |
-                    Path.GetExtension(SF).ToLowerInvariant() == ".sfpack")
+                if (CheckSupportedFormat(Path.GetExtension(SF)))
                 {
                     // Check if it's valid
                     int SFH = BassMidi.BASS_MIDI_FontInit(SF, BASSFlag.BASS_DEFAULT);
@@ -389,7 +390,10 @@ namespace OmniMIDIConfigurator
                         }
 
                         foreach (ListViewItem uiSF in iSFs)
-                            SoundFontListEditor.Delegate.Lis.Items.Add(uiSF);
+                        {
+                            if (CheckSupportedFormat(Path.GetExtension(uiSF.Text)))
+                                SoundFontListEditor.Delegate.Lis.Items.Add(uiSF);
+                        }                           
                     }
                     MS.Dispose();
                 }

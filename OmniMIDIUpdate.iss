@@ -1,8 +1,8 @@
-#define Author "KaleidonKep99"
+#define Author "Keppy's Software"
 #define Icon "Branding\OMSetupICO.ico"
 #define Configurator "OmniMIDIConfigurator"
-#define Copyright 'Copyright (c) 2011 KaleidonKep99 & SonoSooS. All rights reserved.'
-#define DebugWindow "OmniMIDIDebugWindow"
+#define Copyright "Copyright (c) 2011 Keppy's Software. All rights reserved."
+#define DebugWindow "OmniMIDIDebugWindow"  
 #define Description "OmniMIDI, User-Mode Windows MIDI Driver"
 #define DriverRegister "OmniMIDIDriverRegister"
 #define Email 'kaleidonkep99@outlook.com'
@@ -11,7 +11,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '10.0.0.9'
+#define Version '10.0.0.10'
                          
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'

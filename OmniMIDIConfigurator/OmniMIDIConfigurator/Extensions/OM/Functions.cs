@@ -543,8 +543,7 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                bool bit32 = false;
-                bool bit64 = false;
+                bool bit32 = false, bit64 = false;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\LoudMax";
 
                 if (!Directory.Exists(userfolder))
@@ -586,8 +585,7 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                bool bit32 = false;
-                bool bit64 = false;
+                bool bit32 = false, bit64 = false;
                 string userfolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\LoudMax";
 
                 // 32-bit DLL
@@ -596,7 +594,6 @@ namespace OmniMIDIConfigurator
                     File.Delete(userfolder + "\\LoudMax32.dll");
                     bit32 = true;
                 }
-                else MessageBox.Show("LoudMax 32-bit seems to be already uninstalled.", "OmniMIDI - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 // 64-bit DLL
                 if (File.Exists(userfolder + "\\LoudMax64.dll"))
@@ -604,12 +601,11 @@ namespace OmniMIDIConfigurator
                     File.Delete(userfolder + "\\LoudMax64.dll");
                     bit64 = true;
                 }
-                else MessageBox.Show("LoudMax 64-bit seems to be already uninstalled.", "OmniMIDI - Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
+                if (Directory.Exists(userfolder))
+                    Directory.Delete(userfolder);
 
-                Directory.Delete(userfolder);
-
-                if (bit32 == true && bit64 == true)
+                if (bit32 == true || bit64 == true)
                     MessageBox.Show("LoudMax successfully uninstalled!", "OmniMIDI - Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }

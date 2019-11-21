@@ -327,6 +327,7 @@ namespace OmniMIDIConfigurator
                 }
             }
 
+            System.Media.SystemSounds.Question.Play();
             Properties.Settings.Default.Save();
         }
 

@@ -36,7 +36,6 @@
             this.PayPalDonation = new System.Windows.Forms.PictureBox();
             this.GitHubPage = new System.Windows.Forms.PictureBox();
             this.DIGroup = new System.Windows.Forms.GroupBox();
-            this.KDMAPIVer = new OmniMIDIConfigurator.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
             this.BASSVer = new System.Windows.Forms.Label();
@@ -58,6 +57,7 @@
             this.OMLicense = new System.Windows.Forms.PictureBox();
             this.BB = new System.Windows.Forms.PictureBox();
             this.BecomePatron = new System.Windows.Forms.PictureBox();
+            this.KDMAPIVer = new OmniMIDIConfigurator.LinkLabelEx();
             ((System.ComponentModel.ISupportInitialize)(this.OMBigLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PayPalDonation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GitHubPage)).BeginInit();
@@ -107,7 +107,8 @@
             this.CopyrightLabel.Name = "CopyrightLabel";
             this.CopyrightLabel.Size = new System.Drawing.Size(241, 26);
             this.CopyrightLabel.TabIndex = 3;
-            this.CopyrightLabel.Text = "Ⓒ 2011 KaleidonKep99 && SonoSooS\r\nFork of BASSMIDI Driver by Kode54 and Mudlord";
+            this.CopyrightLabel.Text = "Copyright Ⓒ 2011-{0} Keppy\'s Software\r\nFork of BASSMIDI Driver by Kode54 and Mudl" +
+    "ord";
             // 
             // PayPalDonation
             // 
@@ -146,17 +147,6 @@
             this.DIGroup.TabIndex = 6;
             this.DIGroup.TabStop = false;
             this.DIGroup.Text = "Driver information";
-            // 
-            // KDMAPIVer
-            // 
-            this.KDMAPIVer.AutoSize = true;
-            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.KDMAPIVer.Location = new System.Drawing.Point(105, 57);
-            this.KDMAPIVer.Name = "KDMAPIVer";
-            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 1;
-            this.KDMAPIVer.TabStop = true;
-            this.KDMAPIVer.Text = "KDMAPI VER";
             // 
             // CurBranch
             // 
@@ -362,6 +352,17 @@
             this.BecomePatron.TabStop = false;
             this.BecomePatron.Click += new System.EventHandler(this.BecomePatron_Click);
             this.BecomePatron.MouseHover += new System.EventHandler(this.BecomePatron_MouseHover);
+            // 
+            // KDMAPIVer
+            // 
+            this.KDMAPIVer.AutoSize = true;
+            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.KDMAPIVer.Location = new System.Drawing.Point(105, 57);
+            this.KDMAPIVer.Name = "KDMAPIVer";
+            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
+            this.KDMAPIVer.TabIndex = 1;
+            this.KDMAPIVer.TabStop = true;
+            this.KDMAPIVer.Text = "KDMAPI VER";
             // 
             // InfoWindow
             // 

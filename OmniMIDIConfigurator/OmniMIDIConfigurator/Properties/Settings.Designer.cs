@@ -225,5 +225,20 @@ namespace OmniMIDIConfigurator.Properties {
                 this["DrawControlsFaster"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>.sf1</string>
+  <string>.sf2</string>
+  <string>.sf2pack</string>
+  <string>.sfz</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection SupportedFormats {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["SupportedFormats"]));
+            }
+        }
     }
 }

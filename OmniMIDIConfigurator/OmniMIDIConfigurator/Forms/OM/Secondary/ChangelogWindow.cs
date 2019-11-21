@@ -61,14 +61,14 @@ namespace OmniMIDIConfigurator
             return true;
         }
 
-        private HtmlAgilityPack.HtmlNode ReturnSelectedNode(String version)
+        private HtmlNode ReturnSelectedNode(String version)
         {
             try
             {
-                HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+                HtmlWeb web = new HtmlWeb();
                 web.PreRequest += request =>
                 {
-                    request.CookieContainer = new System.Net.CookieContainer();
+                    request.CookieContainer = new CookieContainer();
                     return true;
                 };
 

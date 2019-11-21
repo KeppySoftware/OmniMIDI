@@ -400,11 +400,15 @@ namespace OmniMIDIConfigurator
 
         private void AddSF_Click(object sender, EventArgs e)
         {
+            String F = "SoundFont files | ";
+            foreach (String Fi in Properties.Settings.Default.SupportedFormats)
+                F += String.Format("*{0}; ", Fi);
+
             OpenFileDialog OFD = new OpenFileDialog()
             {
                 Multiselect = true,
                 InitialDirectory = Properties.Settings.Default.LastSoundFontPath,
-                Filter = "Soundfont files | *.sf2; *.sfz; *.sfpack"
+                Filter = F
             };
 
             try

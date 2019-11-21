@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
 [assembly: AssemblyTitle("OmniMIDI ~ Configurator")]
-[assembly: AssemblyDescription("OmniMIDI New Configurator (.NET)")]
+[assembly: AssemblyDescription("OmniMIDI Configurator (.NET)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("KaleidonKep99")]
+[assembly: AssemblyCompany("Keppy's Software")]
 [assembly: AssemblyProduct("OmniMIDI")]
-[assembly: AssemblyCopyright("© Riccardo Loi 2011")]
+[assembly: AssemblyCopyright("Copyright Ⓒ 2011 Keppy's Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
