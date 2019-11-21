@@ -48,8 +48,6 @@ namespace OmniMIDIConfigurator
             MvU.BackgroundImage = Properties.Resources.MvUpIcon;
             MvD.BackgroundImage = Properties.Resources.MvDwIcon;
             LoadToApp.BackgroundImage = Properties.Resources.ReloadIcon;
-            EnableSF.BackgroundImage = Properties.Resources.EnableIcon;
-            DisableSF.BackgroundImage = Properties.Resources.DisableIcon;
             IEL.BackgroundImage = Properties.Resources.ImportIcon;
             EL.BackgroundImage = Properties.Resources.ExportIcon;
 
@@ -88,11 +86,6 @@ namespace OmniMIDIConfigurator
             }
 
             SelectedListBox.SelectedIndex = Properties.Settings.Default.LastListSelected;
-            if (SelectedListBox.SelectedIndex == 0)
-                SoundFontListExtension.StartCSFWatcher();
-
-            // Activate the CSFWatcher now by assigning the events, to avoid a race condition
-            SoundFontListExtension.OpenCSFWatcher(true, new FileSystemEventHandler(CSFHandler));
         }
 
         public void CloseCSFWatcherExt()
@@ -154,7 +147,8 @@ namespace OmniMIDIConfigurator
 
         private void SoundFontListEditor_Load(object sender, EventArgs e)
         {
-            // Nothing lul
+            // A
+            Lis.ItemChecked += new ItemCheckedEventHandler(Lis_ItemChecked);
         }
 
         private void ReloadListAfterError(Exception ex)
@@ -192,16 +186,6 @@ namespace OmniMIDIConfigurator
             ColorButton((Button)sender, Pens.Sienna, e);
         }
 
-        private void ButtonEnable(object sender, PaintEventArgs e)
-        {
-            ColorButton((Button)sender, Pens.Green, e);
-        }
-
-        private void ButtonDisable(object sender, PaintEventArgs e)
-        {
-            ColorButton((Button)sender, Pens.Red, e);
-        }
-
         private void ButtonLoad(object sender, PaintEventArgs e)
         {
             ColorButton((Button)sender, new Pen(Color.FromArgb(102, 153, 255)), e);
@@ -224,27 +208,9 @@ namespace OmniMIDIConfigurator
             ColorButton((Button)sender, Pens.Coral, e);
         }
 
-        private void SFEDSwitch(bool status)
+        private void Lis_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            try
-            {
-                if (Lis.SelectedIndices.Count != -1 && Lis.SelectedIndices.Count > 0)
-                {
-                    for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
-                    {
-                        if (Lis.SelectedItems[i].ForeColor != (status ? SoundFontListExtension.SFEnabled : SoundFontListExtension.SFDisabled))
-                        {
-                            Lis.SelectedItems[i].ForeColor = (status ? SoundFontListExtension.SFEnabled : SoundFontListExtension.SFDisabled);
-                        }
-                    }
-
-                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
-                }
-            }
-            catch (Exception ex)
-            {
-                ReloadListAfterError(ex);
-            }
+            SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
         }
 
         private void Lis_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
@@ -254,8 +220,8 @@ namespace OmniMIDIConfigurator
                 Properties.Settings.Default.SFColumnsSize[i] = Lis.Columns[i].Width;
                 Properties.Settings.Default.Save();
             }
-
         }
+
         private void Lis_DragDrop(object sender, DragEventArgs e)
         {
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
@@ -341,7 +307,7 @@ namespace OmniMIDIConfigurator
                     WinAPI.SendMessage(sender.Handle, WinAPI.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
                     sender.Refresh();
 
-                    SoundFontListExtension.SaveList(ref sender, SelectedListBox.SelectedIndex, null);
+                    SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
                 }
             }
             catch (Exception ex)
@@ -400,6 +366,12 @@ namespace OmniMIDIConfigurator
             SoundFontListExtension.ChangeList(SelectedListBox.SelectedIndex, null, false, false);
             Properties.Settings.Default.LastListSelected = SelectedListBox.SelectedIndex;
             Properties.Settings.Default.Save();
+
+            if (SelectedListBox.SelectedIndex == 0)
+                SoundFontListExtension.StartCSFWatcher();
+
+            // Activate the CSFWatcher now by assigning the events, to avoid a race condition
+            SoundFontListExtension.OpenCSFWatcher(true, new FileSystemEventHandler(CSFHandler));
         }
 
         private void SFlg_Click(object sender, EventArgs e)
@@ -497,16 +469,6 @@ namespace OmniMIDIConfigurator
         private void MvD_Click(object sender, EventArgs e)
         {
             MoveListViewItems(Lis, MoveDirection.Down);
-        }
-
-        private void EnableSF_Click(object sender, EventArgs e)
-        {
-            SFEDSwitch(true);
-        }
-
-        private void DisableSF_Click(object sender, EventArgs e)
-        {
-            SFEDSwitch(false);
         }
 
         private void IEL_Click(object sender, EventArgs e)

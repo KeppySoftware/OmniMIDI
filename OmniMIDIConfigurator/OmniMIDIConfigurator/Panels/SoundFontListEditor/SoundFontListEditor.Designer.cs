@@ -45,8 +45,6 @@
             this.BankPresetOverride = new System.Windows.Forms.CheckBox();
             this.SelectedListBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.DisableSF = new System.Windows.Forms.Button();
-            this.EnableSF = new System.Windows.Forms.Button();
             this.ListOverride = new System.Windows.Forms.Label();
             this.CLi = new System.Windows.Forms.Button();
             this.MvD = new System.Windows.Forms.Button();
@@ -122,7 +120,7 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(649, 332);
+            this.EL.Location = new System.Drawing.Point(649, 220);
             this.EL.Name = "EL";
             this.EL.Size = new System.Drawing.Size(24, 30);
             this.EL.TabIndex = 14;
@@ -158,7 +156,7 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(649, 303);
+            this.IEL.Location = new System.Drawing.Point(649, 191);
             this.IEL.Name = "IEL";
             this.IEL.Size = new System.Drawing.Size(24, 30);
             this.IEL.TabIndex = 13;
@@ -209,49 +207,13 @@
             this.label1.TabIndex = 17;
             this.label1.Text = "Select list to edit:";
             // 
-            // DisableSF
-            // 
-            this.DisableSF.AccessibleDescription = "Disable selected SoundFonts in the SoundFonts list";
-            this.DisableSF.AccessibleName = "Disable selected SoundFonts";
-            this.DisableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DisableSF.BackColor = System.Drawing.Color.Transparent;
-            this.DisableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.DisableSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DisableSF.ForeColor = System.Drawing.Color.Transparent;
-            this.DisableSF.Location = new System.Drawing.Point(649, 214);
-            this.DisableSF.Name = "DisableSF";
-            this.DisableSF.Size = new System.Drawing.Size(24, 24);
-            this.DisableSF.TabIndex = 12;
-            this.DisableSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.DisableSF.UseVisualStyleBackColor = false;
-            this.DisableSF.Click += new System.EventHandler(this.DisableSF_Click);
-            this.DisableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonDisable);
-            // 
-            // EnableSF
-            // 
-            this.EnableSF.AccessibleDescription = "Enable selected SoundFonts in the SoundFonts list";
-            this.EnableSF.AccessibleName = "Enable selected SoundFonts";
-            this.EnableSF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.EnableSF.BackColor = System.Drawing.Color.Transparent;
-            this.EnableSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.EnableSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EnableSF.ForeColor = System.Drawing.Color.Transparent;
-            this.EnableSF.Location = new System.Drawing.Point(649, 191);
-            this.EnableSF.Name = "EnableSF";
-            this.EnableSF.Size = new System.Drawing.Size(24, 24);
-            this.EnableSF.TabIndex = 11;
-            this.EnableSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.EnableSF.UseVisualStyleBackColor = false;
-            this.EnableSF.Click += new System.EventHandler(this.EnableSF_Click);
-            this.EnableSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonEnable);
-            // 
             // ListOverride
             // 
             this.ListOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(1, 423);
+            this.ListOverride.Location = new System.Drawing.Point(1, 439);
             this.ListOverride.Name = "ListOverride";
             this.ListOverride.Size = new System.Drawing.Size(414, 13);
             this.ListOverride.TabIndex = 30;
@@ -466,13 +428,11 @@
             // 
             this.ESF.Index = 9;
             this.ESF.Text = "Enable SoundFont";
-            this.ESF.Click += new System.EventHandler(this.EnableSF_Click);
             // 
             // DSF
             // 
             this.DSF.Index = 10;
             this.DSF.Text = "Disable SoundFont";
-            this.DSF.Click += new System.EventHandler(this.DisableSF_Click);
             // 
             // Lis
             // 
@@ -485,6 +445,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Lis.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.Lis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Lis.CheckBoxes = true;
             this.Lis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.SoundFont,
             this.SrcBank,
@@ -498,6 +459,7 @@
             this.Lis.GridLines = true;
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
+            listViewItem1.StateImageIndex = 0;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
             this.Lis.LabelWrap = false;
@@ -506,7 +468,7 @@
             this.Lis.Location = new System.Drawing.Point(5, 34);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(639, 385);
+            this.Lis.Size = new System.Drawing.Size(639, 401);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -576,8 +538,6 @@
             this.Controls.Add(this.BankPresetOverride);
             this.Controls.Add(this.SelectedListBox);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.DisableSF);
-            this.Controls.Add(this.EnableSF);
             this.Controls.Add(this.ListOverride);
             this.Controls.Add(this.CLi);
             this.Controls.Add(this.MvD);
@@ -585,7 +545,7 @@
             this.Controls.Add(this.RmvSF);
             this.Controls.Add(this.AddSF);
             this.Name = "SoundFontListEditor";
-            this.Size = new System.Drawing.Size(678, 438);
+            this.Size = new System.Drawing.Size(678, 454);
             this.Load += new System.EventHandler(this.SoundFontListEditor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -609,8 +569,6 @@
         public System.Windows.Forms.Button LoadToApp;
         public System.Windows.Forms.Button IEL;
         public System.Windows.Forms.Label label1;
-        public System.Windows.Forms.Button DisableSF;
-        public System.Windows.Forms.Button EnableSF;
         public System.Windows.Forms.Label ListOverride;
         public System.Windows.Forms.Button CLi;
         public System.Windows.Forms.Button MvD;

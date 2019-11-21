@@ -147,7 +147,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
 	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
-		if ((((dwParam1 & 0xFF) & 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
+		if (((dwParam1& 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
 			BASS_MIDI_EVENT e[2] = { 0, 0 };
 
 			e[0].event = MIDI_EVENT_NOTE;
@@ -168,7 +168,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, ManagedSettings.OverrideNoteLength ? 2 : 1);
 			return;
 		}
-		else if (((dwParam1 & 0xFF) & 0xF0) == 0x80) {
+		else if ((dwParam1 & 0xF0) == 0x80) {
 			if (!ManagedSettings.OverrideNoteLength && ManagedSettings.DelayNoteOff) {
 				BASS_MIDI_EVENT e;
 

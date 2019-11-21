@@ -14,8 +14,6 @@ namespace OmniMIDIConfigurator
     class SoundFontListExtension
     {
         public static Boolean StopCheck = false;
-        public static Color SFEnabled = Color.FromKnownColor(KnownColor.ControlText);
-        public static Color SFDisabled = Color.FromKnownColor(KnownColor.GrayText);
 
         static FileSystemWatcher CSFWatcher;
 
@@ -152,7 +150,7 @@ namespace OmniMIDIConfigurator
                             ReturnSoundFontSize(SF, Path.GetExtension(SF), file.Length)
                         });
 
-                        iSF.ForeColor = SFEnabled;
+                        iSF.Checked = true;
 
                         iSFs.Add(iSF);
                     }
@@ -311,7 +309,7 @@ namespace OmniMIDIConfigurator
                                              ReturnSoundFontSize(SF, Path.GetExtension(SF), File.Length)
                                         });
 
-                                    iSF.ForeColor = ES ? SFEnabled : SFDisabled;
+                                    iSF.Checked = ES;
 
                                     iSFs.Add(iSF);
 
@@ -368,7 +366,7 @@ namespace OmniMIDIConfigurator
                                                 ReturnSoundFontSize(StripSFZValues(L), Path.GetExtension(StripSFZValues(L)), file.Length)
                                             });
 
-                                        iSF.ForeColor = SFEnabled;
+                                        iSF.Checked = true;
 
                                         if (!ImportMode) SoundFontListEditor.Delegate.Lis.Items.Add(iSF);
                                     }
@@ -442,12 +440,12 @@ namespace OmniMIDIConfigurator
                     sw.WriteLine(String.Format("// SoundFont n°{0}", SFCount));
                     sw.WriteLine("sf.start");
                     sw.WriteLine(String.Format("sf.path = {0}", item.Text));
-                    sw.WriteLine(String.Format("sf.enabled = {0}", (item.ForeColor == SFEnabled) ? "1" : "0"));
+                    sw.WriteLine(String.Format("sf.enabled = {0}", item.Checked ? 1 : 0));
                     sw.WriteLine(String.Format("sf.srcb = {0}", item.SubItems[1].Text));
                     sw.WriteLine(String.Format("sf.srcp = {0}", item.SubItems[2].Text));
                     sw.WriteLine(String.Format("sf.desb = {0}", item.SubItems[3].Text));
                     sw.WriteLine(String.Format("sf.desp = {0}", item.SubItems[4].Text));
-                    sw.WriteLine(String.Format("sf.xgdrums = {0}", (item.SubItems[5].Text.Equals("Yes")) ? "1" : "0"));
+                    sw.WriteLine(String.Format("sf.xgdrums = {0}", item.SubItems[5].Text.ToLowerInvariant().Equals("yes") ? 1 : 0));
                     sw.WriteLine("sf.end\n");
                     SFCount++;
                 }
@@ -463,7 +461,7 @@ namespace OmniMIDIConfigurator
                 {
                     if (CurList == 1 | Properties.Settings.Default.AutoLoadList)
                         Program.Watchdog.SetValue(String.Format("rel{0}", CurList), 1, Microsoft.Win32.RegistryValueKind.DWord);
-                }            
+                }
             }
         }
     }

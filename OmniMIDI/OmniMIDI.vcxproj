@@ -774,7 +774,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\libarm64</AdditionalLibraryDirectories>
-      <MinimumRequiredVersion>6.0</MinimumRequiredVersion>
+      <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <LargeAddressAware>
       </LargeAddressAware>
       <Driver>NotSet</Driver>
