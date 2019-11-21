@@ -146,7 +146,7 @@ namespace OmniMIDIConfigurator
                         ListViewItem iSF = new ListViewItem(new[]
                         {
                             SF,
-                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), XGMode ? "Yes" : "No",
+                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), XGMode ? "Yes" : "No", "Yes",
                             ReturnSoundFontFormat(Path.GetExtension(SF)),
                             ReturnSoundFontSize(SF, Path.GetExtension(SF), file.Length)
                         });
