@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Media;
 
 namespace OmniMIDIConfigurator
 {
@@ -99,7 +100,9 @@ namespace OmniMIDIConfigurator
             if (SelectedIndexCSF && !SoundFontListExtension.StopCheck)
             {
                 this.Invoke((Action)delegate {
-                    SoundFontListExtension.ChangeList(0, null, false, true);
+                    Lis.ItemChecked -= new ItemCheckedEventHandler(Lis_ItemChecked);
+                    SelectedListBox_SelectedIndexChanged(null, null);
+                    Lis.ItemChecked += new ItemCheckedEventHandler(Lis_ItemChecked);
                 });
             }
         }
