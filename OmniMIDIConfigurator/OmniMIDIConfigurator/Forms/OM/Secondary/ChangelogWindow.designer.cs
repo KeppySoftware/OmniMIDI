@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangelogWindow));
             this.ChangelogBrowser = new System.Windows.Forms.WebBrowser();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.OkBtn = new System.Windows.Forms.Button();
@@ -115,6 +116,7 @@
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.ChangelogBrowser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ChangelogWindow";

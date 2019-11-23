@@ -96,14 +96,23 @@ namespace OmniMIDIConfigurator
         }
 
         private void CSFHandler(object source, FileSystemEventArgs e)
-        {
-            if (SelectedIndexCSF && !SoundFontListExtension.StopCheck)
+        {            
+            if (e.ChangeType == WatcherChangeTypes.Created || e.ChangeType == WatcherChangeTypes.Changed && 
+                (SelectedIndexCSF && !SoundFontListExtension.StopCheck))
             {
-                this.Invoke((Action)delegate {
-                    Lis.ItemChecked -= new ItemCheckedEventHandler(Lis_ItemChecked);
-                    SelectedListBox_SelectedIndexChanged(null, null);
-                    Lis.ItemChecked += new ItemCheckedEventHandler(Lis_ItemChecked);
-                });
+                String CSFCST = File.ReadAllText(Program.ListsPath[0]);
+
+                if (SoundFontListExtension.CSFCS != CSFCST)
+                {
+                    SoundFontListExtension.CSFCS = CSFCST;
+
+                    this.Invoke((Action)delegate {
+                        Lis.ItemChecked -= new ItemCheckedEventHandler(Lis_ItemChecked);
+                        SelectedListBox_SelectedIndexChanged(null, null);
+                        Lis.ItemChecked += new ItemCheckedEventHandler(Lis_ItemChecked);
+                    });
+                }
+
             }
         }
 

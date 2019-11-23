@@ -144,7 +144,12 @@ namespace OmniMIDIConfigurator
                         {
                             try
                             {
-                                new ChangelogWindow(Driver.FileVersion.ToString(), true).ShowDialog();
+                                ChangelogWindow F = new ChangelogWindow(Driver.FileVersion.ToString(), true);
+                                F.FormBorderStyle = FormBorderStyle.FixedDialog;
+                                F.ShowIcon = true;
+                                F.ShowInTaskbar = true;
+                                F.ShowDialog();
+                                F.Dispose();
                             }
                             catch { }
                         }

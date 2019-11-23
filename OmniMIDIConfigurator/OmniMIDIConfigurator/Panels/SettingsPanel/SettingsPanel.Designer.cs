@@ -1174,10 +1174,10 @@
             this.UseTGT.AutoSize = true;
             this.UseTGT.Location = new System.Drawing.Point(9, 139);
             this.UseTGT.Name = "UseTGT";
-            this.UseTGT.Size = new System.Drawing.Size(617, 17);
+            this.UseTGT.Size = new System.Drawing.Size(577, 17);
             this.UseTGT.TabIndex = 48;
-            this.UseTGT.Text = "Use stock timeGetTime function instead of QueryPerformanceCounter (WinMMWRP patch" +
-    "ed apps only, could improve audio)";
+            this.UseTGT.Text = "Use stock timeGetTime function instead of NtDelayExecution (WinMMWRP patched apps" +
+    " only, could improve audio)";
             this.UseTGT.UseVisualStyleBackColor = true;
             // 
             // ShowChangelogUpdate

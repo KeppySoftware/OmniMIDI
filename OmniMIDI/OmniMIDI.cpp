@@ -88,8 +88,9 @@ NDE NtDelayExecution = 0;
 NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;
 
-// Blinx best game
-HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;	// BASS libs handles
+// BASS (and plugins) handles
+HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;
+HPLUGIN bassflac = NULL;
 
 #define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
 
