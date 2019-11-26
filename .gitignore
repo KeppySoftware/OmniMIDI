@@ -44,6 +44,10 @@
 /OmniMIDIDriverRegister/output/
 /OmniMIDIMixerWindow/OmniMIDIMixerWindow/bin
 /OmniMIDIMixerWindow/OmniMIDIMixerWindow/obj
+/OmniMIDIDevEnum/.vs/
+/OmniMIDIDevEnum/OmniMIDIDevEnum/bin/
+/OmniMIDIDevEnum/OmniMIDIDevEnum/obj/
+/OmniMIDIDevEnum/output/
 /OmniMIDIconfig
 /OmniMapper/.vs/
 /OmniMapper/OmniMapper/*.dll
@@ -108,3 +112,4 @@ output/OmniMIDISetup.exe
 output/OmniMIDIUpdate.exe
 output/OmniMIDIWatchdog.exe
 output/Test OmniMIDI Configurator.bat
+output/OmniMIDIDevEnum.exe

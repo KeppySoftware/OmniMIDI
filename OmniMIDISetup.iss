@@ -6,19 +6,20 @@
 #define use_msiproduct
 
 #define Author "Keppy's Software"
-#define Icon "Branding\OMSetupICO.ico"
 #define Configurator "OmniMIDIConfigurator"
 #define Copyright "Copyright (c) 2011 Keppy's Software. All rights reserved."
 #define DebugWindow "OmniMIDIDebugWindow"
 #define Description "OmniMIDI, User-Mode Windows MIDI Driver"
+#define DevEnum "OmniMIDIDevEnum"
 #define DriverRegister "OmniMIDIDriverRegister"
 #define Email 'kaleidonkep99@outlook.com'
+#define Icon "Branding\OMSetupICO.ico"
 #define InstallDir "OmniMIDI"
 #define Link 'https://github.com/KaleidonKep99/Keppy-s-Synthesizer'
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '10.0.0.13'
+#define Version '10.0.0.14'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -77,16 +78,19 @@ DisableWelcomePage=False
 
 [Files]
 ; 64-bit OS
+Source: "{#outputdir64}\{#DevEnum}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 Source: "{#outputdir64}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 
 ; ARM64 OS
+; Source: "{#outputdirARM64}\{#DevEnum}.exe"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 Source: "{#outputdirARM64}\{#InstallDir}.dll"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 Source: "{#outputdirARM64}\{#MIDIMapper}.dll"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 
 ; 32-bit files for AMD64 and ARM64
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
+Source: "{#outputdir32}\{#DevEnum}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
 Source: "{#outputdir32}\{#MIDIMapper}.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
@@ -96,6 +100,7 @@ Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{syswow64}\{#InstallDir}"; Dest
 ; 32-bit files for IA32 OS
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
+Source: "{#outputdir32}\{#DevEnum}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64

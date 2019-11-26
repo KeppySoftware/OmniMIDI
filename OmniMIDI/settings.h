@@ -270,6 +270,7 @@ VOID LoadBASSFunctions()
 				LOADLIBFUNCTION(bass, BASS_GetDeviceInfo);
 				LOADLIBFUNCTION(bass, BASS_GetInfo);
 				LOADLIBFUNCTION(bass, BASS_Init);
+				LOADLIBFUNCTION(bass, BASS_PluginFree);
 				LOADLIBFUNCTION(bass, BASS_PluginLoad);
 				LOADLIBFUNCTION(bass, BASS_SetConfig);
 				LOADLIBFUNCTION(bass, BASS_SetDevice);
@@ -315,6 +316,7 @@ VOID UnloadBASSFunctions() {
 		if (BASSLoadedToMemory) {
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
 			_BMSE = DummyBMSE;
+			BASS_PluginFree(bassflac);
 			FreeLibrary(bass);
 			FreeLibrary(bassmidi);
 			FreeLibrary(bassenc);

@@ -32,6 +32,7 @@
             this.MIDIOutList = new System.Windows.Forms.ComboBox();
             this.ApplyBtn = new System.Windows.Forms.Button();
             this.CurDevice = new System.Windows.Forms.Label();
+            this.Pltfrm = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -53,6 +54,7 @@
             this.MIDIOutList.Name = "MIDIOutList";
             this.MIDIOutList.Size = new System.Drawing.Size(335, 21);
             this.MIDIOutList.TabIndex = 3;
+            this.MIDIOutList.SelectedIndexChanged += new System.EventHandler(this.MIDIOutList_SelectedIndexChanged);
             // 
             // ApplyBtn
             // 
@@ -74,11 +76,21 @@
             this.CurDevice.TabIndex = 5;
             this.CurDevice.Text = "Current device: None";
             // 
+            // Pltfrm
+            // 
+            this.Pltfrm.AutoSize = true;
+            this.Pltfrm.Location = new System.Drawing.Point(9, 85);
+            this.Pltfrm.Name = "Pltfrm";
+            this.Pltfrm.Size = new System.Drawing.Size(71, 13);
+            this.Pltfrm.TabIndex = 6;
+            this.Pltfrm.Text = "Platform: i386";
+            // 
             // OmniMapperCpl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(359, 114);
+            this.Controls.Add(this.Pltfrm);
             this.Controls.Add(this.CurDevice);
             this.Controls.Add(this.ApplyBtn);
             this.Controls.Add(this.MIDIOutList);
@@ -103,5 +115,6 @@
         private System.Windows.Forms.ComboBox MIDIOutList;
         private System.Windows.Forms.Button ApplyBtn;
         private System.Windows.Forms.Label CurDevice;
+        private System.Windows.Forms.Label Pltfrm;
     }
 }
