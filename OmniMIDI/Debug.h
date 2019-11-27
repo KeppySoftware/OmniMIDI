@@ -330,8 +330,8 @@ void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam
 void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
-		char* LibraryA = (char*)malloc(sizeof(char) * MAX_PATH);
-		wcstombs(LibraryA, LibraryW, wcslen(LibraryW) + 1);
+		char* LibraryA = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+		wcstombs(LibraryA, LibraryW, sizeof(LibraryA));
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
@@ -352,7 +352,7 @@ void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 
 void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
-		char* Msg = (char*)malloc(sizeof(char) * MAX_PATH);
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 		char* SoundFontA = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
 		wcstombs(SoundFontA, SoundFontW, wcslen(SoundFontW) + 1);

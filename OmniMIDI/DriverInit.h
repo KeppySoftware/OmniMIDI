@@ -323,24 +323,20 @@ void InitializeBASSVST() {
 	// If the DLL exists, begin the loading process
 	if (PathFileExists(LoudMax)) {
 		// Initialize BASS_VST
-		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
+		LoadDriverModule(&bass_vst, L"bass_vst.dll", FALSE);
+
+		// If BASS_VST has been loaded succesfully, load the functions too
+		if (bass_vst)
 		{
-			PathRemoveFileSpec(InstallPath);
-			LoadDriverModule(&bass_vst, InstallPath, L"bass_vst.dll", FALSE);
+			LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelSetDSP);
+			LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelFree);
+			LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelCreate);
+			LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEvent);
+			LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEventRaw);
 
-			// If BASS_VST has been loaded succesfully, load the functions too
-			if (bass_vst)
-			{
-				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelSetDSP);
-				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelFree);
-				LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelCreate);
-				LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEvent);
-				LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEventRaw);
-
-				BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
-			}
-			else { /* Nothing, probably on ARM64 */ }
+			BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
 		}
+		else { /* Nothing, probably on ARM64 */ }
 	}
 }
 

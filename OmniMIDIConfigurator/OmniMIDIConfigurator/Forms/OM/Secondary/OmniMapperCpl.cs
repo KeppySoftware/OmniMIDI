@@ -118,6 +118,7 @@ namespace OmniMIDIConfigurator
                 }
 
                 // ARM64 support isn't needed for now
+                PAarch64.Image = Properties.Resources.what;
 
                 foreach (MIDIDevices DV in MDevs)
                     MIDIOutList.Items.Add(DV.PName);
@@ -126,7 +127,6 @@ namespace OmniMIDIConfigurator
                 {
                     bool Found = false;
                     String SelDevice = Program.Mapper.GetValue("TrgtSynth", "Microsoft GS Wavetable Synth").ToString();
-                    CurDevice.Text = String.Format(CurDrvLab, SelDevice, FindMIDIDevice(SelDevice));
                     for (int i = 0; i < MIDIOutList.Items.Count; i++)
                     {
                         if (MIDIOutList.Items[i].ToString().Equals(SelDevice))
@@ -144,7 +144,6 @@ namespace OmniMIDIConfigurator
                     Text = String.Format("Change {0} settings", Functions.IsWindows8OrLater() ? "Windows Media Player MIDI output" : "MIDI mapper");
                     if (ActiveMovieKey != null) MIDIOutList.SelectedIndex = Convert.ToInt32(ActiveMovieKey.GetValue("MidiOutId"));
                     else MIDIOutList.SelectedIndex = MIDIOutList.FindStringExact(MIDIMapperKey.GetValue("szPname", "Microsoft GS Wavetable Synth").ToString());
-                    CurDevice.Text = String.Format(CurDrvLab, MIDIOutList.Items[MIDIOutList.SelectedIndex].ToString());
                 }
             }
             catch (Exception ex)
@@ -180,7 +179,11 @@ namespace OmniMIDIConfigurator
             var L = MDevs.FindIndex(x => x.PName == MIDIOutList.Items[MIDIOutList.SelectedIndex].ToString());
 
             if (L != -1)
-                Pltfrm.Text = String.Format("Available platforms: {0}{1}{2}", MDevs[L].i386 ? "x86" : "", MDevs[L].AMD64 ? ", x64" : "", MDevs[L].ARM64 ? ", ARM64" : "");
+            {
+                Pi386.Image = MDevs[L].i386 ? Properties.Resources.ok : Properties.Resources.error;
+                PAMD64.Image = MDevs[L].AMD64 ? Properties.Resources.ok : Properties.Resources.error;
+                // PAarch64.Image = MDevs[L].ARM64 ? Properties.Resources.ok : Properties.Resources.error;
+            }
         }
 
         private void ApplyBtn_Click(object sender, EventArgs e)

@@ -164,142 +164,135 @@ bool LoadSoundfontStartup() {
 	}
 }
 
-void LoadDriverModule(HMODULE * Target, wchar_t * InstallPath, wchar_t * RequestedLib, BOOL Mandatory) 
-{
+void LoadDriverModule(HMODULE * Target, LPWSTR RequestedLib, BOOL Mandatory) {
+	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
 	if (!(*Target = LoadLibrary(RequestedLib))) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
-		wcscat(DLLPath, InstallPath);
-		wcscat(DLLPath, L"\\");
-		wcscat(DLLPath, RequestedLib);
-		if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
-			if (Mandatory) {
-				DLLLoadError(DLLPath);
-				exit(0);
+		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
+		{
+			PathRemoveFileSpec(InstallPath);
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\%s", InstallPath, RequestedLib);
+			if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
+				if (Mandatory) {
+					DLLLoadError(DLLPath);
+					exit(0);
+				}
+				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It probably requires some missing dependencies.");
 			}
-			else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It probably requires some missing dependencies.");
+			else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 		}
-		else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
 
-void LoadPluginModule(HPLUGIN* Target, wchar_t* InstallPath, wchar_t* RequestedLib, BOOL Mandatory) {
+void LoadPluginModule(HPLUGIN* Target, LPWSTR RequestedLib, BOOL Mandatory) {
+	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
 	if (!(*Target)) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No plugin has been found in memory. The driver will now load the DLL...");
-		wcscat(DLLPath, InstallPath);
-		wcscat(DLLPath, L"\\");
-		wcscat(DLLPath, RequestedLib);
-		*Target = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
-		if (BASS_ErrorGetCode() != 0) {
-			if (Mandatory) {
-				DLLLoadError(DLLPath);
-				exit(0);
+		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
+		{
+			PathRemoveFileSpec(InstallPath);
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\%s", InstallPath, RequestedLib);
+			*Target = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
+			if (BASS_ErrorGetCode() != 0) {
+				if (Mandatory) {
+					DLLLoadError(DLLPath);
+					exit(0);
+				}
+				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It probably requires some missing dependencies or isn't supported by this version of BASS.");
 			}
-			else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It probably requires some missing dependencies or isn't supported by this version of BASS.");
+			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
 		}
-		else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");
 }
 
 VOID LoadBASSFunctions()
 {
-	wchar_t InstallPath[MAX_PATH] = { 0 };
-
 	try {
 		if (!BASSLoadedToMemory) {
-			if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
-			{
-				PathRemoveFileSpec(InstallPath);
+			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
-				PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
+			// Load modules
+			LoadDriverModule(&bass, L"bass.dll", TRUE);
+			LoadDriverModule(&bassmidi, L"bassmidi.dll", TRUE);
+			LoadDriverModule(&bassenc, L"bassenc.dll", TRUE);
+			LoadDriverModule(&bassasio, L"bassasio.dll", TRUE);
 
-				// Load modules
-				LoadDriverModule(&bass, InstallPath, L"bass.dll", TRUE);
-				LoadDriverModule(&bassmidi, InstallPath, L"bassmidi.dll", TRUE);
-				LoadDriverModule(&bassenc, InstallPath, L"bassenc.dll", TRUE);
-				LoadDriverModule(&bassasio, InstallPath, L"bassasio.dll", TRUE);
+			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
-				PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
+			// Load all the functions into memory
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnable);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnableMirror);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelGetLevel);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelJoin);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelReset);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetFormat);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetRate);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetVolume);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ControlPanel);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ErrorGetCode);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_Free);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetDeviceInfo);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetLatency);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetRate);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_Init);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_SetRate);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_Start);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_Stop);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelPause);
+			LOADLIBFUNCTION(bassenc, BASS_Encode_Start);
+			LOADLIBFUNCTION(bassenc, BASS_Encode_Stop);
+			LOADLIBFUNCTION(bass, BASS_ChannelFlags);
+			LOADLIBFUNCTION(bass, BASS_ChannelGetAttribute);
+			LOADLIBFUNCTION(bass, BASS_ChannelGetData);
+			LOADLIBFUNCTION(bass, BASS_ChannelGetLevelEx);
+			LOADLIBFUNCTION(bass, BASS_ChannelIsActive);
+			LOADLIBFUNCTION(bass, BASS_ChannelPlay);
+			LOADLIBFUNCTION(bass, BASS_ChannelRemoveFX);
+			LOADLIBFUNCTION(bass, BASS_ChannelSeconds2Bytes);
+			LOADLIBFUNCTION(bass, BASS_ChannelSeconds2Bytes);
+			LOADLIBFUNCTION(bass, BASS_ChannelSetAttribute);
+			LOADLIBFUNCTION(bass, BASS_ChannelSetDevice);
+			LOADLIBFUNCTION(bass, BASS_ChannelSetFX);
+			LOADLIBFUNCTION(bass, BASS_ChannelSetSync);
+			LOADLIBFUNCTION(bass, BASS_ChannelStop);
+			LOADLIBFUNCTION(bass, BASS_ChannelUpdate);
+			LOADLIBFUNCTION(bass, BASS_ErrorGetCode);
+			LOADLIBFUNCTION(bass, BASS_FXSetParameters);
+			LOADLIBFUNCTION(bass, BASS_Free);
+			LOADLIBFUNCTION(bass, BASS_GetDevice);
+			LOADLIBFUNCTION(bass, BASS_GetDeviceInfo);
+			LOADLIBFUNCTION(bass, BASS_GetInfo);
+			LOADLIBFUNCTION(bass, BASS_Init);
+			LOADLIBFUNCTION(bass, BASS_PluginFree);
+			LOADLIBFUNCTION(bass, BASS_PluginLoad);
+			LOADLIBFUNCTION(bass, BASS_SetConfig);
+			LOADLIBFUNCTION(bass, BASS_SetDevice);
+			LOADLIBFUNCTION(bass, BASS_SetVolume);
+			LOADLIBFUNCTION(bass, BASS_Stop);
+			LOADLIBFUNCTION(bass, BASS_StreamFree);
+			LOADLIBFUNCTION(bass, BASS_Update);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontFree);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontInit);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontLoad);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamCreate);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamEvent);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamEvents);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamGetEvent);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamLoadSamples);
+			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamSetFonts);
 
-				// Load all the functions into memory
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnable);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnableMirror);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelGetLevel);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelJoin);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelReset);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetFormat);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetRate);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetVolume);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ControlPanel);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ErrorGetCode);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_Free);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_GetDeviceInfo);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_GetLatency);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_GetRate);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_Init);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_SetRate);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_Start);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_Stop);
-				LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelPause);
-				LOADLIBFUNCTION(bassenc, BASS_Encode_Start);
-				LOADLIBFUNCTION(bassenc, BASS_Encode_Stop);
-				LOADLIBFUNCTION(bass, BASS_ChannelFlags);
-				LOADLIBFUNCTION(bass, BASS_ChannelGetAttribute);
-				LOADLIBFUNCTION(bass, BASS_ChannelGetData);
-				LOADLIBFUNCTION(bass, BASS_ChannelGetLevelEx);
-				LOADLIBFUNCTION(bass, BASS_ChannelIsActive);
-				LOADLIBFUNCTION(bass, BASS_ChannelPlay);
-				LOADLIBFUNCTION(bass, BASS_ChannelRemoveFX);
-				LOADLIBFUNCTION(bass, BASS_ChannelSeconds2Bytes);
-				LOADLIBFUNCTION(bass, BASS_ChannelSeconds2Bytes);
-				LOADLIBFUNCTION(bass, BASS_ChannelSetAttribute);
-				LOADLIBFUNCTION(bass, BASS_ChannelSetDevice);
-				LOADLIBFUNCTION(bass, BASS_ChannelSetFX);
-				LOADLIBFUNCTION(bass, BASS_ChannelSetSync);
-				LOADLIBFUNCTION(bass, BASS_ChannelStop);
-				LOADLIBFUNCTION(bass, BASS_ChannelUpdate);
-				LOADLIBFUNCTION(bass, BASS_ErrorGetCode);
-				LOADLIBFUNCTION(bass, BASS_FXSetParameters);
-				LOADLIBFUNCTION(bass, BASS_Free);
-				LOADLIBFUNCTION(bass, BASS_GetDevice);
-				LOADLIBFUNCTION(bass, BASS_GetDeviceInfo);
-				LOADLIBFUNCTION(bass, BASS_GetInfo);
-				LOADLIBFUNCTION(bass, BASS_Init);
-				LOADLIBFUNCTION(bass, BASS_PluginFree);
-				LOADLIBFUNCTION(bass, BASS_PluginLoad);
-				LOADLIBFUNCTION(bass, BASS_SetConfig);
-				LOADLIBFUNCTION(bass, BASS_SetDevice);
-				LOADLIBFUNCTION(bass, BASS_SetVolume);
-				LOADLIBFUNCTION(bass, BASS_Stop);
-				LOADLIBFUNCTION(bass, BASS_StreamFree);
-				LOADLIBFUNCTION(bass, BASS_Update);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontFree);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontInit);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontLoad);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamCreate);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamEvent);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamEvents);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamGetEvent);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamLoadSamples);
-				LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamSetFonts);
+			_BMSE = BASS_MIDI_StreamEvent;
 
-				_BMSE = BASS_MIDI_StreamEvent;
+			// Load plugins
+			LoadPluginModule(&bassflac, L"bassflac.dll", TRUE);
 
-				// Load plugins
-				LoadPluginModule(&bassflac, InstallPath, L"bassflac.dll", TRUE);
-
-				PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
-			}
-			else {
-				PrintMessageToDebugLog("ImportBASS", "Failed to locate main directory for libs.");
-				BASSLoadedToMemory = FALSE;
-				return;
-			}
+			PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
 		}
 		else PrintMessageToDebugLog("ImportBASS", "BASS has been already loaded by the driver.");
 
@@ -764,41 +757,45 @@ void FillContentDebug(
 	std::locale::global(std::locale::classic());	// DO NOT REMOVE
 
 	// For debug window
-	std::string PipeContent;
+	std::wstring PipeContent;
 	DWORD bytesWritten;								// Needed for Windows 7 apparently...
 
-	PipeContent += "OMDebugInfo";
-	PipeContent += "\nCurrentApp = ";
-	PipeContent += AppPath;
+	PipeContent.append(L"OMDebugInfo");
+	PipeContent.append(L"|CurrentApp = ");
+	PipeContent.append(AppPathW);
 #if defined(_M_AMD64)
-	PipeContent += "\nBitApp = 64-bit";
+	PipeContent.append(L"|BitApp = 64-bit");
 #elif defined(_M_IX86)
-	PipeContent += "\nBitApp = 32-bit";
+	PipeContent.append(L"|BitApp = 32-bit");
 #elif defined(_M_ARM64)
-	PipeContent += "\nBitApp = 64-bit (ARM)";
+	PipeContent.append(L"|BitApp = 64-bit (ARM)");
 #endif
 
 	ManagedDebugInfo.RenderingTime = CCUI0;
 
 	for (int i = 0; i <= 15; ++i) 
-		PipeContent += "\nCV" + std::to_string(i) + " = " + std::to_string(ManagedDebugInfo.ActiveVoices[i]);
+		PipeContent.append(L"|CV" + std::to_wstring(i) + L" = " + std::to_wstring(ManagedDebugInfo.ActiveVoices[i]));
 
-	PipeContent += "\nCurCPU = " + std::to_string(CCUI0);
-	PipeContent += "\nHandles = " + std::to_string(HC);
-	PipeContent += "\nRAMUsage = " + std::to_string(RUI);
-	PipeContent += "\nOMDirect = " + std::to_string(KDMAPIStatus);
-	PipeContent += "\nASIOInLat = " + std::to_string(IL);
-	PipeContent += "\nASIOOutLat = " + std::to_string(OL);
+	PipeContent.append(L"|CurCPU = " + std::to_wstring(CCUI0));
+	PipeContent.append(L"|Handles = " + std::to_wstring(HC));
+	PipeContent.append(L"|RAMUsage = " + std::to_wstring(RUI));
+	PipeContent.append(L"|OMDirect = " + std::to_wstring(KDMAPIStatus));
+	PipeContent.append(L"|ASIOInLat = " + std::to_wstring(IL));
+	PipeContent.append(L"|ASIOOutLat = " + std::to_wstring(OL));
 
 	/*
-	PipeContent += "\nBufferOverload = " + std::to_string(BUFOVD);
-	PipeContent += "\nHealthThreadTime = " + std::to_string(GetThreadUsage(&HealthThread));
-	PipeContent += "\nATThreadTime = " + std::to_string(GetThreadUsage(&ATThread));
-	PipeContent += "\nEPThreadTime = " + std::to_string(GetThreadUsage(&EPThread));
-	PipeContent += "\nCookedThreadTime = " + std::to_string(GetThreadUsage(&CookedThread));
+	PipeContent += L"|BufferOverload = " + std::to_wstring(BUFOVD);
+	PipeContent += L"|HealthThreadTime = " + std::to_wstring(GetThreadUsage(&HealthThread));
+	PipeContent += L"|ATThreadTime = " + std::to_wstring(GetThreadUsage(&ATThread));
+	PipeContent += L"|EPThreadTime = " + std::to_wstring(GetThreadUsage(&EPThread));
+	PipeContent += L"|CookedThreadTime = " + std::to_wstring(GetThreadUsage(&CookedThread));
 	*/
 
-	PipeContent += "\n\0";
+	PipeContent.append(L"\n\0");
+
+	const WCHAR* PCW = PipeContent.c_str();
+	WriteFile(hPipe, (LPVOID)PCW, wcslen(PCW) * sizeof(wchar_t), &bytesWritten, NULL);
+	if (hPipe == INVALID_HANDLE_VALUE || (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING)) StartDebugPipe(TRUE);
 
 	// Check if RTSS OSD is available
 	if (IsOSDAvailable()) {
@@ -825,9 +822,6 @@ void FillContentDebug(
 		// Send the data to RTSS
 		UpdateOSD(RTSSContent.c_str());
 	}
-
-	WriteFile(hPipe, PipeContent.c_str(), PipeContent.length(), &bytesWritten, NULL);
-	if (hPipe == INVALID_HANDLE_VALUE || (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING)) StartDebugPipe(TRUE);
 }
 
 void ParseDebugData() {

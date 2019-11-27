@@ -444,7 +444,8 @@ namespace OmniMIDIDebugWindow
 
         private void OpenAppLocat_Click(object sender, EventArgs e) // Opens the directory of the current app that's using OmniMIDI
         {
-            Process.Start(Path.GetDirectoryName(CurrentApp.RemoveGarbageCharacters()));
+            try { Process.Start(Path.GetDirectoryName(CurrentApp)); }
+            catch { }
         }
 
         private void CopyToClipBoardCmd() // Copies content of window to clipboard
@@ -514,12 +515,12 @@ namespace OmniMIDIDebugWindow
             Application.ExitThread(); // R.I.P. debug
         }
 
-        private void UpdateActiveVoicesPerChannel(StreamReader StreamDebugReader, Boolean ClosingPipe)
+        private void UpdateActiveVoicesPerChannel(String Value, Boolean ClosingPipe)
         {
             int x;
 
             if (ClosingPipe) for (x = 0; x <= 15; ++x) CHs[x] = 0;
-            else for(x = 0; x <= 15; ++x) if (!ReadPipeUInt64(StreamDebugReader, String.Format("CV{0}", x), ref CHs[x])) CHs[x] = 0;
+            else for(x = 0; x <= 15; ++x) if (!ReadPipeUInt64(Value, String.Format("CV{0}", x), ref CHs[x])) CHs[x] = 0;
         }
 
         private string GetActiveVoices()
@@ -556,57 +557,51 @@ namespace OmniMIDIDebugWindow
             return value.Substring(A2);
         }
 
-        private bool ReadPipeBoolean(StreamReader StreamDebugReader, String RequestedValue, ref Int32 ValueToChange)
+        private bool ReadPipeBoolean(String Value, String RequestedValue, ref Int32 ValueToChange)
         {
             try
             {
-                string temp = StreamDebugReader.ReadLine();
-
-                if (DebugName(temp).Equals("OMDirect")) ValueToChange = Convert.ToInt32(DebugValue(temp));
+                if (DebugName(Value).Equals("OMDirect")) ValueToChange = Convert.ToInt32(DebugValue(Value));
                 return true;
             }
             catch { return false; }
         }
 
-        private bool ReadPipeString(StreamReader StreamDebugReader, String RequestedValue, ref String ValueToChange)
+        private bool ReadPipeString(String Value, String RequestedValue, ref String ValueToChange)
         {
             try
             {
-                string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = DebugValue(temp); 
+                if (DebugName(Value).Equals(RequestedValue)) ValueToChange = DebugValue(Value); 
                 return true;
             }
             catch { return false; }
         }
 
-        private bool ReadPipeSingle(StreamReader StreamDebugReader, String RequestedValue, ref Single ValueToChange)
+        private bool ReadPipeSingle(String Value, String RequestedValue, ref Single ValueToChange)
         {
             try
             {
-                string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = (Single.Parse(DebugValue(temp), NumberStyles.Any, CultureTo) / 1000000.0f);
+                if (DebugName(Value).Equals(RequestedValue)) ValueToChange = (Single.Parse(DebugValue(Value), NumberStyles.Any, CultureTo) / 1000000.0f);
                 return true;
             }
             catch { return false; }
         }
 
-        private bool ReadPipeDouble(StreamReader StreamDebugReader, String RequestedValue, ref Double ValueToChange)
+        private bool ReadPipeDouble(String Value, String RequestedValue, ref Double ValueToChange)
         {
             try
             {
-                string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = (Double.Parse(DebugValue(temp), NumberStyles.Any, CultureTo) / 1000000.0);
+                if (DebugName(Value).Equals(RequestedValue)) ValueToChange = (Double.Parse(DebugValue(Value), NumberStyles.Any, CultureTo) / 1000000.0);
                 return true;
             }
             catch { return false; }
         }
 
-        private bool ReadPipeUInt64(StreamReader StreamDebugReader, String RequestedValue, ref UInt64 ValueToChange)
+        private bool ReadPipeUInt64(String Value, String RequestedValue, ref UInt64 ValueToChange)
         {
             try
             {
-                string temp = StreamDebugReader.ReadLine();
-                if (DebugName(temp).Equals(RequestedValue)) ValueToChange = Convert.ToUInt64(DebugValue(temp));
+                if (DebugName(Value).Equals(RequestedValue)) ValueToChange = Convert.ToUInt64(DebugValue(Value));
                 return true;
             }
             catch { return false; }
@@ -620,10 +615,10 @@ namespace OmniMIDIDebugWindow
         Int32 KDMAPIStatus = 0;
         Double ASIOInLat = 0.0f;
         Double ASIOOutLat = 0.0f;
-        Double HealthThreadTime = 0.0f;
-        Double ATThreadTime = 0.0f;
-        Double EPThreadTime = 0.0f;
-        Double CookedThreadTime = 0.0f;
+        // Double HealthThreadTime = 0.0f;
+        // Double ATThreadTime = 0.0f;
+        // Double EPThreadTime = 0.0f;
+        // Double CookedThreadTime = 0.0f;
         // Int32 BufferOverload = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
@@ -631,20 +626,29 @@ namespace OmniMIDIDebugWindow
             {
                 if (!ClosingPipe)
                 {
-                    if (!ReadPipeString(StreamDebugReader, "CurrentApp", ref CurrentApp)) CurrentApp = "Nothing";
-                    if (!ReadPipeString(StreamDebugReader, "BitApp", ref BitApp)) BitApp = "N/A";
-                    if (!ReadPipeSingle(StreamDebugReader, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
-                    if (!ReadPipeUInt64(StreamDebugReader, "Handles", ref Handles)) Handles = 0;
-                    if (!ReadPipeUInt64(StreamDebugReader, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
-                    if (!ReadPipeBoolean(StreamDebugReader, "OMDirect", ref KDMAPIStatus)) KDMAPIStatus = 0;
-                    if (!ReadPipeDouble(StreamDebugReader, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
-                    if (!ReadPipeDouble(StreamDebugReader, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
-                    // if (!ReadPipeDouble(StreamDebugReader, "HealthThreadTime", ref HealthThreadTime)) HealthThreadTime = 0.0f;
-                    // if (!ReadPipeDouble(StreamDebugReader, "ATThreadTime", ref ATThreadTime)) ATThreadTime = 0.0f;
-                    // if (!ReadPipeDouble(StreamDebugReader, "EPThreadTime", ref EPThreadTime)) EPThreadTime = 0.0f;
-                    // if (!ReadPipeDouble(StreamDebugReader, "CookedThreadTime", ref CookedThreadTime)) CookedThreadTime = 0.0f;
-                    // if (!ReadPipeBoolean(StreamDebugReader, "BufferOverload", ref BufferOverload)) BufferOverload = 0;
-                    UpdateActiveVoicesPerChannel(StreamDebugReader, ClosingPipe);
+                    String LN = StreamDebugReader.ReadLine();
+
+                    if (String.IsNullOrEmpty(LN))
+                        return;
+
+                    String[] STRs = LN.Split(new char[] { '|' });
+                    foreach (String STR in STRs)
+                    {
+                        if (!ReadPipeString(STR, "CurrentApp", ref CurrentApp)) CurrentApp = "N/A";
+                        if (!ReadPipeString(STR, "BitApp", ref BitApp)) BitApp = "N/A";
+                        if (!ReadPipeSingle(STR, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
+                        if (!ReadPipeUInt64(STR, "Handles", ref Handles)) Handles = 0;
+                        if (!ReadPipeUInt64(STR, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
+                        if (!ReadPipeBoolean(STR, "OMDirect", ref KDMAPIStatus)) KDMAPIStatus = 0;
+                        if (!ReadPipeDouble(STR, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
+                        if (!ReadPipeDouble(STR, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
+                        // if (!ReadPipeDouble(StreamDebugReader, "HealthThreadTime", ref HealthThreadTime)) HealthThreadTime = 0.0f;
+                        // if (!ReadPipeDouble(StreamDebugReader, "ATThreadTime", ref ATThreadTime)) ATThreadTime = 0.0f;
+                        // if (!ReadPipeDouble(StreamDebugReader, "EPThreadTime", ref EPThreadTime)) EPThreadTime = 0.0f;
+                        // if (!ReadPipeDouble(StreamDebugReader, "CookedThreadTime", ref CookedThreadTime)) CookedThreadTime = 0.0f;
+                        // if (!ReadPipeBoolean(StreamDebugReader, "BufferOverload", ref BufferOverload)) BufferOverload = 0;
+                        UpdateActiveVoicesPerChannel(STR, ClosingPipe);
+                    }
                 }
                 else
                 {
@@ -656,10 +660,10 @@ namespace OmniMIDIDebugWindow
                     KDMAPIStatus = 0;
                     ASIOInLat = 0.0f;
                     ASIOOutLat = 0.0f;
-                    HealthThreadTime = 0.0f;
-                    ATThreadTime = 0.0f;
-                    EPThreadTime = 0.0f;
-                    CookedThreadTime = 0.0f;
+                    // HealthThreadTime = 0.0f;
+                    // ATThreadTime = 0.0f;
+                    // EPThreadTime = 0.0f;
+                    // CookedThreadTime = 0.0f;
                     // BufferOverload = 0;
                     UpdateActiveVoicesPerChannel(null, ClosingPipe);
                 }
@@ -677,15 +681,15 @@ namespace OmniMIDIDebugWindow
             if (Tabs.SelectedIndex == 0)
             {
                 // Time to write all the stuff to the string builder
-                if (Path.GetFileName(CurrentApp.RemoveGarbageCharacters()) == "0")
+                if (Path.GetFileName(CurrentApp) == "0")
                 {
                     OpenAppLocat.Enabled = false;
                     currentappreturn = "Nothing";
                 }
-                else currentappreturn = System.IO.Path.GetFileName(CurrentApp.RemoveGarbageCharacters());
+                else currentappreturn = System.IO.Path.GetFileName(CurrentApp);
 
-                if (BitApp.RemoveGarbageCharacters() == "0") bitappreturn = "...";
-                else bitappreturn = BitApp.RemoveGarbageCharacters();
+                if (BitApp == "0") bitappreturn = "...";
+                else bitappreturn = BitApp;
 
                 HCountV.Text = String.Format("{0} handles", Handles);
                 RAMUsageV.Text = GetCurrentRAMUsage(RAMUsage);
@@ -827,9 +831,10 @@ namespace OmniMIDIDebugWindow
                 using (PipeClient = new NamedPipeClientStream(".", String.Format("OmniMIDIDbg{0}", Program.SelectedDebugVal), PipeDirection.InOut, PipeOptions.Asynchronous))
                 {
                     PipeClient.Connect();
+
                     if (PipeClient.IsConnected)
                     {
-                        using (StreamReader StreamDebugReader = new StreamReader(PipeClient))
+                        using (StreamReader StreamDebugReader = new StreamReader(PipeClient, Encoding.Unicode))
                         {
                             try
                             {
@@ -929,16 +934,6 @@ namespace OmniMIDIDebugWindow
                 Thread.Sleep(50);
             }
         }
-    }
-}
-
-public static class RegexConvert
-{
-    // Some stuff I use to remove garbage text from the strings
-    public static string RemoveGarbageCharacters(this string input)
-    {
-        Regex rgx = new Regex("[^a-zA-Z0-9()!'-_.\\\\ ]");
-        return rgx.Replace(input, "");
     }
 }
 
