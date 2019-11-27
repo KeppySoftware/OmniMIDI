@@ -3,6 +3,7 @@ OmniMIDI debug functions
 */
 
 #define CurrentError(Message, Error, Text) case Error: sprintf_s(Message, NTFS_MAX_PATH, "Error %s:\n%s", #Error, #Text); break
+#define DefError(Message, Error, Text) sprintf_s(Message, NTFS_MAX_PATH, "Error %s:\n%s", #Error, #Text); break
 #define arre(wat) case wat: sprintf(MessageBuf + strlen(MessageBuf), "\nCode: %s", #wat); break
 
 static HANDLE ExceptionHandler = nullptr;
@@ -1017,24 +1018,20 @@ MMRESULT DebugResult(LPCSTR Stage, MMRESULT ErrorToDisplay, LPCSTR ExactError) {
 
 	switch (ErrorToDisplay) {
 		CurrentError(ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
-		CurrentError(ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous midiStreamOpen/midiOutOpen call.");
-		CurrentError(ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application doesn't let it return data quickly enough.");
+		CurrentError(ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous InitializeKDMAPIStream/midiStreamOpen/midiOutOpen call.");
+		CurrentError(ErrorString, MMSYSERR_MOREDATA, "The driver has more data to return, but the MIDI application won't let it return data quickly enough.");
 		CurrentError(ErrorString, MMSYSERR_NODRIVERCB, "The driver does not call DriverCallback.");
-		CurrentError(ErrorString, MMSYSERR_NODRIVER, "No device driver is present.");
-		CurrentError(ErrorString, MMSYSERR_HANDLEBUSY, "The specified handle is being used simultaneously by another thread.");
-		CurrentError(ErrorString, MMSYSERR_INVALIDALIAS, "The specified alias was not found.");
 		CurrentError(ErrorString, MMSYSERR_INVALHANDLE, "The handle of the specified device is invalid.");
-		CurrentError(ErrorString, MMSYSERR_INVALFLAG, "An invalid flag was passed to modMessage through argument dwParam2.");
+		CurrentError(ErrorString, MMSYSERR_INVALFLAG, "An invalid flag was passed to modMessage.");
 		CurrentError(ErrorString, MMSYSERR_INVALPARAM, "An invalid parameter was passed to modMessage.");
 		CurrentError(ErrorString, MMSYSERR_NOTENABLED, "The driver failed to load or initialize.");
 		CurrentError(ErrorString, MMSYSERR_NOTSUPPORTED, "The function requested by the message is not supported.");
-		CurrentError(ErrorString, MIDIERR_NOTREADY, "The hardware is busy with other data.");
-		CurrentError(ErrorString, MIDIERR_UNPREPARED, "The buffer pointed to by lpMidiOutHdr has not been prepared.");
-		CurrentError(ErrorString, MIDIERR_STILLPLAYING, "Buffers are still in the queue.");
+		CurrentError(ErrorString, MIDIERR_NOTREADY, "The driver is busy processing other data.");
+		CurrentError(ErrorString, MIDIERR_UNPREPARED, "The specified data block has not been prepared.");
+		CurrentError(ErrorString, MIDIERR_STILLPLAYING, "There are data blocks still in queue.");
 		CurrentError(ErrorString, MMSYSERR_BADDEVICEID, "The specified device ID is out of range.");
 	default:
-		sprintf_s(ErrorString, NTFS_MAX_PATH, "UNKNOWN:\nUnspecified error.");
-		break;
+		DefError(ErrorString, MMSYSERR_ERROR, "Unspecified error.");
 	}
 
 	if (ExactError) {
@@ -1045,7 +1042,7 @@ MMRESULT DebugResult(LPCSTR Stage, MMRESULT ErrorToDisplay, LPCSTR ExactError) {
 	if (ManagedSettings.DebugMode || ErrorToDisplay == MMSYSERR_ALLOCATED) {
 		if (ManagedSettings.DebugMode) strcat(ErrorString, "\n\nIf you're the developer of this app, please check if all the MIDI calls have been done correctly.");
 		PrintMessageToDebugLog(Stage, ErrorString);
-		MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
+		MessageBoxA(NULL, ErrorString, "OmniMIDI - WinMM API/KDMAPI ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
 	}
 
 	return ErrorToDisplay;

@@ -181,7 +181,7 @@ namespace OmniMIDIConfigurator
 
         private void CheckForUpdates_Click(object sender, EventArgs e)
         {
-            UpdateSystem.CheckForUpdates(false, false, false);
+            UpdateSystem.CheckForUpdates((Control.ModifierKeys == Keys.Shift), false, false);
         }
 
         private void BecomePatron_MouseHover(object sender, EventArgs e)

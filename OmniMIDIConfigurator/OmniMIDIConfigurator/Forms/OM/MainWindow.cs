@@ -443,8 +443,7 @@ namespace OmniMIDIConfigurator
 
         private void CFUBtn_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift) UpdateSystem.CheckForUpdates(true, false, false);
-            else UpdateSystem.CheckForUpdates(false, false, false);
+            UpdateSystem.CheckForUpdates((Control.ModifierKeys == Keys.Shift), false, false);
         }
 
         private void ChangelogCurrent_Click(object sender, EventArgs e)

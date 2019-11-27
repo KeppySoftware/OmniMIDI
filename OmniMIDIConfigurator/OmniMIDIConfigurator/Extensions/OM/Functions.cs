@@ -13,6 +13,34 @@ using Un4seen.Bass;
 
 namespace OmniMIDIConfigurator
 {
+    class PA
+    {
+        [DllImport("kernel32.dll")]
+        public static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
+
+        public const short PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFF;
+        public const short PROCESSOR_ARCHITECTURE_ARM64 = 12;
+        public const short PROCESSOR_ARCHITECTURE_AMD64 = 9;
+        public const short PROCESSOR_ARCHITECTURE_IA64 = 6;
+        public const short PROCESSOR_ARCHITECTURE_INTEL = 0;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SYSTEM_INFO
+        {
+            public short wProcessorArchitecture;
+            public short wReserved;
+            public int dwPageSize;
+            public IntPtr lpMinimumApplicationAddress;
+            public IntPtr lpMaximumApplicationAddress;
+            public IntPtr dwActiveProcessorMask;
+            public int dwNumberOfProcessors;
+            public int dwProcessorType;
+            public int dwAllocationGranularity;
+            public short wProcessorLevel;
+            public short wProcessorRevision;
+        }
+    }
+
     class Functions
     {   
         // Disable WoW64 directory redirection
@@ -31,31 +59,6 @@ namespace OmniMIDIConfigurator
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
-
-        [DllImport("kernel32.dll")]
-        private static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
-
-        public const short PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFF;
-        public const short PROCESSOR_ARCHITECTURE_ARM64 = 12;
-        public const short PROCESSOR_ARCHITECTURE_AMD64 = 9;
-        public const short PROCESSOR_ARCHITECTURE_IA64 = 6;
-        public const short PROCESSOR_ARCHITECTURE_INTEL = 0;
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct SYSTEM_INFO
-        {
-            public short wProcessorArchitecture;
-            public short wReserved;
-            public int dwPageSize;
-            public IntPtr lpMinimumApplicationAddress;
-            public IntPtr lpMaximumApplicationAddress;
-            public IntPtr dwActiveProcessorMask;
-            public int dwNumberOfProcessors;
-            public int dwProcessorType;
-            public int dwAllocationGranularity;
-            public short wProcessorLevel;
-            public short wProcessorRevision;
-        }
 
         public static RegistryKey D32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
         public static RegistryKey D64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
@@ -127,6 +130,29 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("VolumeBoost", 0),
             new SettingStruct ("VolumeMonitor", 0)
         };
+
+        public static string GetProcessorArchitecture()
+        {
+            PA.SYSTEM_INFO si = new PA.SYSTEM_INFO();
+            PA.GetNativeSystemInfo(ref si);
+            switch (si.wProcessorArchitecture)
+            {
+                case PA.PROCESSOR_ARCHITECTURE_AMD64:
+                    return "AMD64";
+
+                case PA.PROCESSOR_ARCHITECTURE_IA64:
+                    return "IA64";
+
+                case PA.PROCESSOR_ARCHITECTURE_INTEL:
+                    return "i386";
+
+                case PA.PROCESSOR_ARCHITECTURE_ARM64:
+                    return "AArch64";
+
+                default:
+                    return "NA";
+            }
+        }
 
         public static void SettingsRegEditor(bool Export)
         {

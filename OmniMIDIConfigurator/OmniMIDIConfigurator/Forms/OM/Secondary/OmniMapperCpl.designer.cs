@@ -122,16 +122,14 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Enabled = false;
             this.label4.Location = new System.Drawing.Point(30, 131);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(92, 13);
+            this.label4.Size = new System.Drawing.Size(93, 13);
             this.label4.TabIndex = 11;
-            this.label4.Text = "ARM64 (Aarch64)";
+            this.label4.Text = "ARM64 (AArch64)";
             // 
             // PAarch64
             // 
-            this.PAarch64.Enabled = false;
             this.PAarch64.Location = new System.Drawing.Point(12, 129);
             this.PAarch64.Name = "PAarch64";
             this.PAarch64.Size = new System.Drawing.Size(16, 16);

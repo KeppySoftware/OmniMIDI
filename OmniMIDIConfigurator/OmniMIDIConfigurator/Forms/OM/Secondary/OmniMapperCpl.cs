@@ -45,8 +45,13 @@ namespace OmniMIDIConfigurator
                     Ex = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
                     break;
                 case "AMD64":
-                case "ARM64":
                     if (!Environment.Is64BitOperatingSystem)
+                        return new String[0];
+
+                    Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
+                    break;
+                case "ARM64":
+                    if (!Environment.Is64BitOperatingSystem || !(Functions.GetProcessorArchitecture() == "ARM64"))
                         return new String[0];
 
                     Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
@@ -70,16 +75,6 @@ namespace OmniMIDIConfigurator
             return Output.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public String FindMIDIDevice(String Dev)
-        {
-            var L = MDevs.FindIndex(x => x.PName == Dev);
-
-            if (L != -1)
-                return String.Format("{0}{1}{2}", MDevs[L].i386 ? "x86" : "", MDevs[L].AMD64 ? ", x64" : "", MDevs[L].ARM64 ? ", ARM64" : "");
-
-            return "N/A";
-        }
-
         public OmniMapperCpl()
         {
             InitializeComponent();
@@ -95,7 +90,7 @@ namespace OmniMIDIConfigurator
 
                 String[] i386 = ReturnMIDIDevices("i386");
                 String[] AMD64 = ReturnMIDIDevices("AMD64");
-                // String[] ARM64 = ReturnMIDIDevices("ARM64");
+                String[] ARM64 = ReturnMIDIDevices("ARM64");
 
                 foreach (String D in i386)
                 {
@@ -117,8 +112,15 @@ namespace OmniMIDIConfigurator
                         MDevs[L] = new MIDIDevices() { PName = D, i386 = MDevs[L].i386, AMD64 = true, ARM64 = MDevs[L].ARM64 };
                 }
 
-                // ARM64 support isn't needed for now
-                PAarch64.Image = Properties.Resources.what;
+                foreach (String D in ARM64)
+                {
+                    var L = MDevs.FindIndex(x => x.PName == D);
+
+                    if (L == -1)
+                        MDevs.Add(new MIDIDevices() { PName = D, i386 = false, AMD64 = false, ARM64 = true });
+                    else
+                        MDevs[L] = new MIDIDevices() { PName = D, i386 = MDevs[L].i386, AMD64 = MDevs[L].AMD64, ARM64 = true };
+                }
 
                 foreach (MIDIDevices DV in MDevs)
                     MIDIOutList.Items.Add(DV.PName);
@@ -182,7 +184,7 @@ namespace OmniMIDIConfigurator
             {
                 Pi386.Image = MDevs[L].i386 ? Properties.Resources.ok : Properties.Resources.error;
                 PAMD64.Image = MDevs[L].AMD64 ? Properties.Resources.ok : Properties.Resources.error;
-                // PAarch64.Image = MDevs[L].ARM64 ? Properties.Resources.ok : Properties.Resources.error;
+                PAarch64.Image = MDevs[L].ARM64 ? Properties.Resources.ok : Properties.Resources.error;
             }
         }
 
@@ -190,9 +192,9 @@ namespace OmniMIDIConfigurator
         {
             var L = MDevs.FindIndex(x => x.PName == MIDIOutList.Items[MIDIOutList.SelectedIndex].ToString());
 
-            if (Environment.Is64BitOperatingSystem && !(MDevs[L].i386 && MDevs[L].AMD64))
+            if (Environment.Is64BitOperatingSystem && (!MDevs[L].i386 && !(MDevs[L].AMD64 || MDevs[L].ARM64)))
             {
-                DialogResult Message = Program.ShowError(3, "Warning", "The selected driver isn't available for both x86 and x64 platforms.\n\nAre you sure you want to set it as the default MIDI Mapper device?", null);
+                DialogResult Message = Program.ShowError(3, "Warning", "The selected driver isn't available for both 32-bit and 64-bit platforms.\n\nAre you sure you want to set it as the default MIDI Mapper device?", null);
                 if (Message == DialogResult.No)
                     return;
             }
