@@ -633,8 +633,16 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			// AddVectoredExceptionHandler(1, OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
 			LPMIDIOPENDESC OMMPD = ((MIDIOPENDESC*)dwParam1);
-			InitializeCallbackFeatures(OMMPD->hMidi, OMMPD->dwCallback, OMMPD->dwInstance, dwUser, (DWORD)dwParam2, HIWORD((DWORD)dwParam2));
 			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, OMFlags);
+
+			if ((DWORD)dwParam2 != NULL && (OMMPD->dwCallback == NULL|| OMMPD->dwInstance == NULL)) {
+				MessageBox(NULL, 
+					L"The application requested the driver to use a callback feature, but no valid callback address/instance information has been given.\nPlease report this issue to the application developer.\n\nPress OK to continue.",
+					L"OmniMIDI - ERROR", MB_SYSTEMMODAL | MB_ICONERROR | MB_OK);
+
+				InitializeCallbackFeatures(OMMPD->hMidi, NULL, NULL, dwUser, NULL, NULL);
+			}
+			else InitializeCallbackFeatures(OMMPD->hMidi, OMMPD->dwCallback, OMMPD->dwInstance, dwUser, (DWORD)dwParam2, HIWORD((DWORD)dwParam2));
 
 			// Enable handler if required
 			EnableBuiltInHandler("MODM_OPEN");
