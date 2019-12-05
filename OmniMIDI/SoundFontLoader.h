@@ -20,7 +20,7 @@ static void FreeFonts()
 		}
 	}
 	catch (...) {
-		CrashMessage("FreeFonts");
+		CrashMessage(L"FreeFonts");
 	}
 }
 
@@ -325,6 +325,6 @@ static BOOL FontLoader(LPWSTR in_path) {
 		return FALSE;
 	}
 	catch (...) {
-		CrashMessage("LoadFontItem");
+		CrashMessage(L"LoadFontItem");
 	}
 }

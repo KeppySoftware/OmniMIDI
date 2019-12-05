@@ -26,13 +26,13 @@ void DoCallback(DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
 		CustomCallback((HMIDIOUT)OMHMIDI, msg, OMInstance, param1, param2);
 		break;
 	case CALLBACK_EVENT:
-		if (!SetEvent((HANDLE)OMCallback)) CrashMessage("DoCallbackSE");
+		if (!SetEvent((HANDLE)OMCallback)) CrashMessage(L"DoCallbackSE");
 		break;
 	case CALLBACK_THREAD:
-		if (!PostThreadMessage((DWORD)OMCallback, msg, param1, param2)) CrashMessage("DoCallbackPTM");
+		if (!PostThreadMessage((DWORD)OMCallback, msg, param1, param2)) CrashMessage(L"DoCallbackPTM");
 		break;
 	case CALLBACK_WINDOW:
-		if (!PostMessage((HWND)OMCallback, msg, param1, param2)) CrashMessage("DoCallbackPM");
+		if (!PostMessage((HWND)OMCallback, msg, param1, param2)) CrashMessage(L"DoCallbackPM");
 		break;
 	}
 }
@@ -52,7 +52,6 @@ VOID KillOldCookedPlayer(DWORD_PTR dwUser) {
 
 void CookedPlayerSystem(CookedPlayer* Player)
 {
-	char Msg[MAX_PATH] = { 0 };
 	QWORD ticker = 0;
 	QWORD tickdiff = 0;
 	int sleeptime = 0;
@@ -202,7 +201,7 @@ void CookedPlayerSystem(CookedPlayer* Player)
 			/*
 			if(evid != MEVT_NOP && evid != MEVT_VERSION)
 			{
-				CrashMessage("CookedPlayerThread | evid not NOP", nullptr);
+				CrashMessage(L"CookedPlayerThread | evid not NOP", nullptr);
 			}
 			*/
 
@@ -297,7 +296,7 @@ void Supervisor(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage("SettingsAndHealthThread");
+		CrashMessage(L"SettingsAndHealthThread");
 	}
 
 	// Close the thread
@@ -335,7 +334,7 @@ BOOL DoStartClient() {
 			LoadBASSFunctions();
 
 			// If BASS is still unavailable, commit suicide
-			if (!BASSLoadedToMemory) CrashMessage("NoBASSFound");
+			if (!BASSLoadedToMemory) CrashMessage(L"NoBASSFound");
 
 			// Load the settings, and allocate the memory for the EVBuffer
 			LoadSettings(FALSE, FALSE);
@@ -499,47 +498,53 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 	return FALSE;
 }
 
-VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM, DWORD OMF) {
+VOID KDMAPI InitializeCallbackFeatures(BOOL OSV, HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM, DWORD OMF) {
 	// Copy values to memory
 	OMHMIDI = OMHM;
 	OMCallback = OMCB;
 	OMInstance = OMI;
-	OMFlags = OMF;
-	OMCallbackMode = OMCM;
 
-	// If callback function is required, assign it to CustomCallback
-	if (OMCallbackMode == CALLBACK_FUNCTION)
-		CustomCallback = (WMMC)OMCallback;
+	BOOL NV = (!OMCallback && !OMInstance);
+	OMCallbackMode = NV ? NULL : OMCM;
+	OMFlags = NV ? NULL : OMF;
+	
+	if (NV && OMCM) PrintMessageToDebugLog("MODM_OPEN", "The application requested the driver to use callbacks, but no callback address has been given.");
 
-	// Prepare registry for CookedPlayer
-	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-	RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
+	if (!OSV) {
+		// If callback function is required, assign it to CustomCallback
+		if (OMCallbackMode == CALLBACK_FUNCTION)
+			CustomCallback = (WMMC)OMCallback;
 
-	if ((DWORD)OMF & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
-		PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
+		// Prepare registry for CookedPlayer
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+		RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 
-		// Prepare the CookedPlayer
-		PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
+		if ((DWORD)OMF & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
+			PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
 
-		*(CookedPlayer**)OMU = (CookedPlayer*)malloc(sizeof(CookedPlayer));
-		memset(*(CookedPlayer**)OMU, 0, sizeof(**(CookedPlayer**)OMU));
+			// Prepare the CookedPlayer
+			PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
 
-		(*(CookedPlayer**)OMU)->Paused = TRUE;
-		(*(CookedPlayer**)OMU)->Tempo = 500000;
-		(*(CookedPlayer**)OMU)->TimeDiv = 384;
-		(*(CookedPlayer**)OMU)->TempoMulti = (((*(CookedPlayer**)OMU)->Tempo * 10) / (*(CookedPlayer**)OMU)->TimeDiv);
-		PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", (*(CookedPlayer**)OMU)->TempoMulti);
+			*(CookedPlayer**)OMU = (CookedPlayer*)malloc(sizeof(CookedPlayer));
+			memset(*(CookedPlayer**)OMU, 0, sizeof(**(CookedPlayer**)OMU));
 
-		PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer struct prepared.");
+			(*(CookedPlayer**)OMU)->Paused = TRUE;
+			(*(CookedPlayer**)OMU)->Tempo = 500000;
+			(*(CookedPlayer**)OMU)->TimeDiv = 384;
+			(*(CookedPlayer**)OMU)->TempoMulti = (((*(CookedPlayer**)OMU)->Tempo * 10) / (*(CookedPlayer**)OMU)->TimeDiv);
+			PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", (*(CookedPlayer**)OMU)->TempoMulti);
 
-		// Create player thread
-		PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
-		CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)OMU, 0, &CookedThread.ThreadAddress);
+			PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer struct prepared.");
 
-		PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
+			// Create player thread
+			PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
+			CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)OMU, 0, &CookedThread.ThreadAddress);
+
+			PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
+		}
+		else if (ManagedSettings.DisableCookedPlayer)
+			PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
 	}
-	else if (ManagedSettings.DisableCookedPlayer)
-		PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
 }
 
 VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {

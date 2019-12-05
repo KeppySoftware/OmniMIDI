@@ -31,7 +31,7 @@ void CheckIfAppIsAllowedToUseOSD() {
 		}
 	}
 	catch (...) {
-		CrashMessage("OSDCheckUp");
+		CrashMessage(L"OSDCheckUp");
 	}
 }
 
@@ -54,7 +54,7 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
 		// If the key failed to open, throw a crash (If needed)
-		if (hKey.Status != KEY_READY && Mandatory) CrashMessage("hKeyOpen");
+		if (hKey.Status != KEY_READY && Mandatory) CrashMessage(L"hKeyOpen");
 	}
 }
 
@@ -63,12 +63,12 @@ void CloseRegistryKey(RegKey &hKey) {
 		// Try to flush the key
 		LSTATUS Action = RegFlushKey(hKey.Address);
 		// If the key can't be flushed, throw a crash
-		if (Action != ERROR_SUCCESS) CrashMessage("hKeyFlush");
+		if (Action != ERROR_SUCCESS) CrashMessage(L"hKeyFlush");
 
 		// Try to close the key
 		Action = RegCloseKey(hKey.Address);
 		// If the key can't be closed, throw a crash
-		if (Action != ERROR_SUCCESS) CrashMessage("hKeyClose");
+		if (Action != ERROR_SUCCESS) CrashMessage(L"hKeyClose");
 
 		// Everything is fine, mark the key as closed
 		hKey.Status = KEY_CLOSED;
@@ -300,7 +300,7 @@ VOID LoadBASSFunctions()
 		BASSLoadedToMemory = TRUE;
 	}
 	catch (...) {
-		CrashMessage("BASSLibLoad");
+		CrashMessage(L"BASSLibLoad");
 	}
 }
 
@@ -322,7 +322,7 @@ VOID UnloadBASSFunctions() {
 		BASSLoadedToMemory = FALSE;
 	}
 	catch (...) {
-		CrashMessage("BASSLibUnload");
+		CrashMessage(L"BASSLibUnload");
 	}
 }
 
@@ -436,7 +436,7 @@ void AllocateMemory(BOOL restart) {
 		}
 	}
 	catch (...) {
-		CrashMessage("EVBufAlloc");
+		CrashMessage(L"EVBufAlloc");
 	}
 }
 
@@ -621,7 +621,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		if (!RT) PrintMessageToDebugLog("LoadSettingsFuncs", "Settings loaded.");
 	}
 	catch (...) {
-		CrashMessage("LoadSettings");
+		CrashMessage(L"LoadSettings");
 	}
 }
 
@@ -643,7 +643,7 @@ void LoadCustomInstruments() {
 		}
 	}
 	catch (...) {
-		CrashMessage("LoadCustomInstruments");
+		CrashMessage(L"LoadCustomInstruments");
 	}
 }
 
@@ -681,7 +681,7 @@ void SFDynamicLoaderCheck() {
 		}
 	}
 	catch (...) {
-		CrashMessage("SFDynamicLoaderCheck");
+		CrashMessage(L"SFDynamicLoaderCheck");
 	}
 }
 
@@ -724,7 +724,7 @@ void CheckVolume(BOOL Closing) {
 		}
 	}
 	catch (...) {
-		CrashMessage("VolumeMonitor");
+		CrashMessage(L"VolumeMonitor");
 	}
 }
 
@@ -887,7 +887,7 @@ void SendDebugDataToPipe() {
 		FlushFileBuffers(hPipe);
 	}
 	catch (...) {
-		CrashMessage("DebugPipePush");
+		CrashMessage(L"DebugPipePush");
 	}
 }
 
@@ -909,7 +909,7 @@ void MixerCheck() {
 		}
 	}
 	catch (...) {
-		CrashMessage("MixerCheck");
+		CrashMessage(L"MixerCheck");
 	}
 }
 
@@ -930,7 +930,7 @@ void RevbNChor() {
 		}
 	}
 	catch (...) {
-		CrashMessage("ReverbAndChorusCheck");
+		CrashMessage(L"ReverbAndChorusCheck");
 	}
 }
 
@@ -940,7 +940,7 @@ void ReloadSFList(DWORD whichsflist){
 		LoadSoundfont(whichsflist);
 	}
 	catch (...) {
-		CrashMessage("ReloadListCheck");
+		CrashMessage(L"ReloadListCheck");
 	}
 }
 
@@ -1059,6 +1059,6 @@ void KeyShortcuts()
 		}
 	}
 	catch (...) {
-		CrashMessage("HotKeysCheck");
+		CrashMessage(L"HotKeysCheck");
 	}
 }

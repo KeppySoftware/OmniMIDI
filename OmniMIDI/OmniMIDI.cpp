@@ -422,6 +422,9 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			return DebugResult("MODM_STRMDATA", MMSYSERR_INVALPARAM, "The buffer doesn't exist, hasn't been allocated or is not valid.");
 		}
 
+		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_ISSTRM))
+			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "This is not a stream buffer.");
+
 		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_PREPARED))
 			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "The buffer is not prepared.");
 
@@ -635,14 +638,14 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			LPMIDIOPENDESC OMMPD = ((MIDIOPENDESC*)dwParam1);
 			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, OMFlags);
 
-			if ((DWORD)dwParam2 != NULL && (OMMPD->dwCallback == NULL|| OMMPD->dwInstance == NULL)) {
-				MessageBox(NULL, 
-					L"The application requested the driver to use a callback feature, but no valid callback address/instance information has been given.\nPlease report this issue to the application developer.\n\nPress OK to continue.",
-					L"OmniMIDI - ERROR", MB_SYSTEMMODAL | MB_ICONERROR | MB_OK);
-
-				InitializeCallbackFeatures(OMMPD->hMidi, NULL, NULL, dwUser, NULL, NULL);
-			}
-			else InitializeCallbackFeatures(OMMPD->hMidi, OMMPD->dwCallback, OMMPD->dwInstance, dwUser, (DWORD)dwParam2, HIWORD((DWORD)dwParam2));
+			InitializeCallbackFeatures(
+				FALSE,
+				OMMPD->hMidi,
+				OMMPD->dwCallback,
+				OMMPD->dwInstance,
+				dwUser,
+				(DWORD)dwParam2,
+				HIWORD((DWORD)dwParam2));
 
 			// Enable handler if required
 			EnableBuiltInHandler("MODM_OPEN");

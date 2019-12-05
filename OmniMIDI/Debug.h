@@ -111,43 +111,41 @@ static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
 	return;
 }
 
-void CrashMessage(LPCSTR part) {
-	char* ErrorMessage = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+void CrashMessage(LPCWSTR part) {
+	WCHAR ErrorMessage[NTFS_MAX_PATH] = { 0 };
 	DWORD ErrorID = GetLastError();
 
-	fprintf(DebugLog, "(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
+	fwprintf(DebugLog, L"(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
 
-	sprintf(ErrorMessage, "An error has been detected while executing the following function: %s\n", part);
+	swprintf(ErrorMessage, L"An error has been detected while executing the following function: %s\n", part);
 
 	//Get the error message, if any.
 	if (ErrorID != 0) {
-		LPWSTR messageBuffer = NULL;
-		DWORD size = FormatMessageW(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		TCHAR* ERR;
+		if (FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 			NULL,
 			ErrorID,
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPWSTR)& messageBuffer,
+			(LPWSTR)&ERR,
 			0,
-			NULL);
+			NULL)) 
+		{
+			swprintf(
+				ErrorMessage + wcslen(ErrorMessage),
+				L"\nError code: 0x%08X - %s\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n",
+				ErrorID, ERR
+			);
 
-		sprintf(
-			ErrorMessage + strlen(ErrorMessage), 
-			"\nError code: 0x%X - %s\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n", 
-			ErrorID, messageBuffer
-		);
-
-		//Free the buffer.
-		LocalFree(messageBuffer);
-		messageBuffer = NULL;
+			LocalFree(ERR);
+		}
 	}
 
-	sprintf(
-		ErrorMessage + strlen(ErrorMessage),
-		"\nClick OK to close the program."
+	swprintf(
+		ErrorMessage + wcslen(ErrorMessage),
+		L"\nClick OK to close the program."
 	);
 
-	MessageBoxA(NULL, ErrorMessage, "OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 
 	block_bassinit = TRUE;
 	stop_thread = TRUE;
@@ -942,30 +940,12 @@ BOOL DisableBuiltInHandler(LPCSTR Stage) {
 	if (ExceptionHandler != nullptr) {
 		PrintMessageToDebugLog(Stage, "Removing OmniMIDICrashHandler...");
 		if (!RemoveVectoredExceptionHandler(ExceptionHandler)) {
-			CrashMessage("DIsableBuiltInHandlerFail");
+			CrashMessage(L"DIsableBuiltInHandlerFail");
 			return FALSE;
 		}
 	}
 
 	return TRUE;
-}
-
-std::string GetLastErrorAsString() {
-	//Get the error message, if any.
-	DWORD errorMessageID = ::GetLastError();
-	if (errorMessageID == 0)
-		return std::string(); //No error message has been recorded
-
-	LPSTR messageBuffer = nullptr;
-	size_t size = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_ENGLISH_US), (LPWSTR)&messageBuffer, 0, NULL);
-
-	std::string message(messageBuffer, size);
-
-	//Free the buffer.
-	LocalFree(messageBuffer);
-
-	return message;
 }
 
 void StartDebugPipe(BOOL RestartingPipe) {
@@ -1002,11 +982,9 @@ Retry:
 		{
 			// It did. If the pipe value isn above the maximum instances, throw a crash
 			if (PipeVal > PIPE_UNLIMITED_INSTANCES)
-			{
-				std::string Error = GetLastErrorAsString();
-				CrashMessage(Error.c_str());
-			}
-			else PipeVal++;
+				CrashMessage(L"TooManyPipes");
+			else
+				PipeVal++;
 		}
 	}
 }
@@ -1015,7 +993,7 @@ MMRESULT DebugResult(LPCSTR Stage, MMRESULT ErrorToDisplay, LPCSTR ExactError) {
 	if (!ErrorToDisplay) return MMSYSERR_NOERROR;
 
 	CHAR ErrorString[NTFS_MAX_PATH] = { 0 };
-
+	
 	switch (ErrorToDisplay) {
 		CurrentError(ErrorString, MMSYSERR_NOMEM, "The system is unable to allocate or lock memory.");
 		CurrentError(ErrorString, MMSYSERR_ALLOCATED, "The driver has been already allocated in a previous InitializeKDMAPIStream/midiStreamOpen/midiOutOpen call.");

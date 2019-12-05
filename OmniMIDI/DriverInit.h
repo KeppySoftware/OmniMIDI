@@ -89,7 +89,7 @@ void EventsProcesser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage("EventsProcesserThread");
+		CrashMessage(L"EventsProcesserThread");
 	}
 
 	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
@@ -111,7 +111,7 @@ void FastEventsProcesser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage("FastEventsProcesserThread");
+		CrashMessage(L"FastEventsProcesserThread");
 	}
 
 	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
@@ -151,7 +151,7 @@ void AudioEngine(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage("AudioEngineThread");
+		CrashMessage(L"AudioEngineThread");
 	}
 
 	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
@@ -182,7 +182,7 @@ void FastAudioEngine(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage("FastAudioEngineThread");
+		CrashMessage(L"FastAudioEngineThread");
 	}
 
 	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
@@ -436,7 +436,7 @@ LONG ASIODetectID() {
 		return -1;
 	}
 	catch (...) {
-		CrashMessage("ASIODetectID");
+		CrashMessage(L"ASIODetectID");
 	}
 }
 

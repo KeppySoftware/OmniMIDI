@@ -80,6 +80,6 @@ DWORD BlackListSystem(){
 		return DEVICE_AVAILABLE;
 	}
 	catch (...) {
-		CrashMessage("BlacklistCheckUp");
+		CrashMessage(L"BlacklistCheckUp");
 	}
 }
