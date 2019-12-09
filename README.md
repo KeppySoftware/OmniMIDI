@@ -52,15 +52,8 @@ Here's a list of applications that currently have *native* support for the Keppy
 - Ultralight MIDI Player by Pipiramine, a clone of Piano From Above made in Java: https://pipiraworld.web.fc2.com/ump/en.html
 - Zenith by Arduano, a multipurpose MIDI render with different graphic styles: https://arduano.github.io/Zenith-MIDI/start
 
-### I'm here just for the WinMM patch. How can I get it without downloading your driver?
-Aw, do you have something against it?
-<br />
-Aight, here is the version without the KDMAPI. It will perform worse though.
-<br />
-[Click me for the direct download](https://github.com/KeppySoftware/OmniMIDI/raw/master/OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/VanillaWinMM.zip)
-
 ### Can you make a WinMM patch for other drivers too?
-I am definitely planning a patch for VirtualMIDISynth, but I don't know about other drivers.
+There's a patch available for VirtualMIDISynth. You can get it here: https://github.com/KeppySoftware/WinMMWRP/releases/tag/4.2A
 
 ## Reviews
 ### [Gingeas](https://www.youtube.com/user/gingeas), famous YouTuber who uploads Black MIDI videos:
@@ -87,8 +80,7 @@ Click here: [Features compared to other software synthesizers](#features-compare
 
 ### Required software for it to work
 You need this software installed before attempting to run the setup:
-- [Microsoft .NET Framework 4.0 if you're on Windows XP](https://www.microsoft.com/en-US/download/details.aspx?id=17718)
-- [Microsoft .NET Framework 4.5.2 if you're on Vista and newer](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
+- [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
 
 ### Minimum system requirements for MIDI playback on x86/x64 systems
 The minimum requirements for this synthesizer to work are the following:
@@ -115,10 +107,9 @@ For the best experience, it's recommended to run the synthesizer on a PC with th
 ### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
 - Microsoft Visual Studio 2019
-- Inno Setup 5.5.6 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
+- Inno Setup 6.0.3 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
-- Microsoft Windows SDK 7.1A (Windows XP C++ support for VS2017)
-- Microsoft Windows SDK 10.0.18361
+- Microsoft Windows SDK 10.0.18362
 
 ## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)
@@ -131,7 +122,7 @@ You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://
 Easy-to-use configurator|✔️|✔️|✔️|❌
 Smaller memory footprint|✔️|❌|❌|❌
 First driver to support Windows ARM64|✔️|❌|❌|❌
-Support for Windows XP|⚠️|✔️|✔️|✔️
+Support for Windows XP|❌|✔️|✔️|✔️
 Support for MIDI Stream API|✔️|❌|❌|❌
 Suitable for day-to-day<br />music playback|✔️<span>*</span>|✔️|✔️|✔️
 Suitable for professional<br />music production|✔️|❌|❌|❌
