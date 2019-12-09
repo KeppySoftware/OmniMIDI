@@ -15,34 +15,6 @@ namespace OmniMIDIConfigurator
             UIntPtr dwParam1,
             UIntPtr dwParam2);
 
-        internal delegate void MidiOutProc(
-            IntPtr hMidiOut,
-            uint wMsg,
-            UIntPtr dwInstance,
-            UIntPtr dwParam1,
-            UIntPtr dwParam2);
-
-        [DllImport("winmm")]
-        internal static extern int midiOutGetNumDevs();
-
-        [DllImport("winmm")]
-        internal static extern int midiOutGetDevCaps(
-            uint uDeviceID,
-            out MIDIOUTCAPS caps,
-            uint cbMidiOutCaps);
-
-        [DllImport("winmm.dll")]
-        internal static extern int midiOutClose(
-            IntPtr hMidiOut);
-
-        [DllImport("winmm.dll")]
-        internal static extern int midiOutOpen(
-            out IntPtr hMidiOut,
-            int uDeviceID,
-            MidiOutProc dwCallback,
-            IntPtr dwInstance,
-            uint dwFlags);
-
         [DllImport("winmm")]
         internal static extern int midiInGetNumDevs();
 
@@ -95,21 +67,6 @@ namespace OmniMIDIConfigurator
         public const int MIM_ERROR = 0x3C5;
         public const int MIM_LONGERROR = 0x3C6;
         public const int MIM_MOREDATA = 0x3CC;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MIDIOUTCAPS
-    {
-        public ushort wMid;
-        public ushort wPid;
-        public uint vDriverVersion;     //MMVERSION
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-        public string szPname;
-        public ushort wTechnology;
-        public ushort wVoices;
-        public ushort wNotes;
-        public ushort wChannelMask;
-        public uint dwSupport;
     }
 
     [StructLayout(LayoutKind.Sequential)]

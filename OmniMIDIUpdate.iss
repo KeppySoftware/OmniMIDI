@@ -12,7 +12,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '10.0.2.0'
+#define Version '10.0.3.0'
                          
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -37,7 +37,7 @@ AppSupportURL={#Link}/issues
 AppUpdatesURL={#Link}/releases
 AppVersion={#Version}
 ArchitecturesAllowed=x86 x64 arm64
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64 arm64
 CloseApplications=yes
 Compression=lzma2/ultra64
 CompressionThreads=2
@@ -67,6 +67,7 @@ VersionInfoDescription={#Description}
 VersionInfoProductName={#ProductName}
 VersionInfoTextVersion={#Description}
 VersionInfoVersion={#Version}
+WizardStyle=modern
 WizardImageFile=scripts\image.bmp
 WizardSmallImageFile=scripts\smallimage.bmp
 DisableWelcomePage=False

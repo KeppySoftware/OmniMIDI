@@ -91,6 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Donate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Donate.Designer.cs">
+      <DependentUpon>Donate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\Knob\KnobControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -229,6 +235,13 @@
     <Compile Include="Forms\OM\Secondary\WinMMPatches.designer.cs">
       <DependentUpon>WinMMPatches.cs</DependentUpon>
     </Compile>
+    <Compile Include="Panels\MIDIConverter\MIDIConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Panels\MIDIConverter\MIDIConverter.Designer.cs">
+      <DependentUpon>MIDIConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Panels\MIDIConverter\MIDIConverterExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Panels\SoundFontListEditor\SoundFontListEditor.cs">
@@ -260,6 +273,9 @@
     <Compile Include="Panels\Generic\NoAvailableControl.Designer.cs">
       <DependentUpon>NoAvailableControl.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Donate.resx">
+      <DependentUpon>Donate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Extensions\Knob\KnobControl.resx">
       <DependentUpon>KnobControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -329,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Panels\Generic\NoAvailableControl.resx">
       <DependentUpon>NoAvailableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Panels\MIDIConverter\MIDIConverter.resx">
+      <DependentUpon>MIDIConverter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Panels\SettingsPanel\SettingsPanel.resx">
       <DependentUpon>SettingsPanel.cs</DependentUpon>
@@ -442,6 +461,7 @@
     <Content Include="Resources\Icons\what.png" />
     <Content Include="Resources\Icons\wi.png" />
     <Content Include="Resources\Icons\wir.png" />
+    <Content Include="Resources\Images\DonateBtn.png" />
     <Content Include="Resources\Images\OMLauncher.png" />
     <Content Include="Resources\Icons\PayPalLogo.png" />
     <Content Include="Resources\Images\OMLauncherFish.png" />

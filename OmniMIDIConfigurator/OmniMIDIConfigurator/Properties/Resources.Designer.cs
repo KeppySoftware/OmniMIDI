@@ -123,6 +123,16 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DonateBtn {
+            get {
+                object obj = ResourceManager.GetObject("DonateBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap EnableIcon {
             get {
                 object obj = ResourceManager.GetObject("EnableIcon", resourceCulture);

@@ -172,6 +172,14 @@ namespace OmniMIDIConfigurator
             GC.KeepAlive(BringToFrontMessage);
             GC.KeepAlive(m);
 
+            // Donation dialog
+            DateTime CD = DateTime.Now;
+            Double D = (CD.Date - Properties.Settings.Default.DonationShownWhen).TotalDays;
+            if (D > 30 && !Properties.Settings.Default.DonationDoNotShow)
+            {
+                new Donate().ShowDialog();
+            }
+
             Application.Run(new MainWindow(SoundFontsToAdd.ToArray()));
         }
 

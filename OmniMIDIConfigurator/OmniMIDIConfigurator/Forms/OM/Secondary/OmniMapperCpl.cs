@@ -26,7 +26,6 @@ namespace OmniMIDIConfigurator
         private const String CurDrvLab = "Current device: {0} (Platforms: {1})";
         private static RegistryKey ActiveMovieKey = null;
         private static RegistryKey MIDIMapperKey = null;
-        private static Int32 DeviceCount;
         private List<MIDIDevices> MDevs = new List<MIDIDevices>();
 
         private String[] ReturnMIDIDevices(String Mode)
@@ -51,7 +50,7 @@ namespace OmniMIDIConfigurator
                     Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
                     break;
                 case "ARM64":
-                    if (!Environment.Is64BitOperatingSystem || !(Functions.GetProcessorArchitecture() == "ARM64"))
+                    if (!Environment.Is64BitOperatingSystem && !(Functions.GetProcessorArchitecture() == "ARM64"))
                         return new String[0];
 
                     Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
@@ -78,7 +77,6 @@ namespace OmniMIDIConfigurator
         public OmniMapperCpl()
         {
             InitializeComponent();
-            DeviceCount = WinMM.midiOutGetNumDevs();
         }
 
         private void OmniMapperCpl_Load(object sender, EventArgs e)
